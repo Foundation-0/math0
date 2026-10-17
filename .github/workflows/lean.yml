@@ -1,0 +1,17 @@
+name: Lean verification
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build and audit every result
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Math0 (fails on any sorry, non-standard axiom, or statement mismatch)
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: lean
