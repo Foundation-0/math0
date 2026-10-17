@@ -44,6 +44,72 @@
    "summary": "For every n ∈ ℕ and every simple graph G on the vertex set Fin n with exactly ⌊n²/4⌋ + 1 edges, G contains at least ⌊n/2⌋ triangles (3-cliques).",
    "notes": "Rademacher (1941, unpublished, reported by Erdős): a graph with ⌊n²/4⌋+1 edges has at least ⌊n/2⌋ triangles. Erdős, \"On a theorem of Rademacher-Turán\", Illinois J. Math. 6 (1962) 122-127, proves t⌊n/2⌋ for t < cn. Lovász–Simonovits (1976) and Nikiforov–Khadzhiivanov, C. R. Acad. Bulgare Sci. (1981), settle the case t < ⌊n/2⌋ (erdosproblems #1010, status: proved). An existing Lean 4 formalization of the general statement, which implies this variant at t = 1, is plby/lean-proofs src/latest/ErdosProblems/Erdos1010.lean (commit 8822f7ddef30fadbd92e1c6ab4ed897af356af5e, theorem erdos_1010 at L612). It is linked through the formal_proof attribute on Erdos1010.erdos_1010 in /home/user/math0/lean/.lake/packages/formal_conjectures/FormalConjectures/ErdosProblems/1010.lean.",
    "date": "2026-10-17"
+  },
+  {
+   "id": "ErdosProblems/1048::erdos_1048.variants.diam_ge_two_is_best",
+   "slug": "erdos1048-erdos-1048-variants-diam-ge-two-is-best",
+   "title": "Erdős 1048: the component of {|zⁿ| ≤ 1} containing 0 has diameter exactly 2",
+   "area": "Complex analysis",
+   "source": "Erdős Problem #1048",
+   "source_url": "https://www.erdosproblems.com/1048",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/ErdosProblems/1048.lean",
+    "decl": "Erdos1048.erdos_1048.variants.diam_ge_two_is_best",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/ErdosProblems/Erdos1048_erdos_1048_variants_diam_ge_two_is_best.lean",
+   "our_decl": "Math0.Erdos1048.diam_ge_two_is_best",
+   "summary": "For every natural number n ≥ 1, the connected component containing 0 of the level set {z ∈ ℂ : |zⁿ| ≤ 1} has (extended) diameter exactly 2. So the Erdős–Herzog–Piranian bound, which says the component containing 0 has diameter ≥ 2 when all roots lie in |z| ≤ r ≤ 1/2, is attained by f(z) = zⁿ.",
+   "notes": "- Erdős, P., Herzog, F. and Piranian, G., \"Metric properties of polynomials\", J. Analyse Math. 6 (1958), 125–148. This is the source of the diam ≥ 2 bound for 0 ≤ r ≤ 1/2 and of the remark that zⁿ shows it is sharp.\n- Pommerenke, Ch., \"On metric properties of complex polynomials\", Michigan Math. J. (1961), 97–115.\n- erdosproblems.com/1048: status \"disproved (Lean)\" as of 2026-01-27.\n- The existing Lean proof at https://github.com/plby/lean-proofs/blob/main/src/v4.29.1/ErdosProblems/Erdos1048.lean (Aristotle / Boris Alexeev) covers only the main disproof, `not_erdos_1048`, through Pommerenke's zⁿ − rⁿ example with r > 1. It does not prove `erdos_1048.variants.diam_ge_two_is_best`.",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "ErdosProblems/142::erdos_142",
+   "slug": "erdos142-erdos-142",
+   "title": "Erdős 142: no single k-independent asymptotic formula for r_k(N)",
+   "area": "Number theory",
+   "source": "Erdős Problem #142",
+   "source_url": "https://www.erdosproblems.com/142",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/ErdosProblems/142.lean",
+    "decl": "Erdos142.erdos_142",
+    "category": "research open"
+   },
+   "mode": "refutes_every_answer",
+   "classification": "misformalization",
+   "lean_file": "lean/Math0/ErdosProblems/Erdos142_erdos_142.lean",
+   "our_decl": "Math0.Erdos142.erdos_142_refuted",
+   "summary": "Let r_k(N) = Set.IsAPOfLengthFree.maxCard k N be the largest size of a subset of {1,...,N} that contains no non-trivial k-term arithmetic progression. The upstream statement says that for every k ∈ ℕ, the sequence N ↦ r_k(N) is asymptotically equivalent (as N → ∞) to erdos_142.answer : ℕ → ℝ, which is one fixed function that does not depend on k. We prove that this fails for every possible choice of that function: ∀ a : ℕ → ℝ, ¬ ∀ k, (fun N => (r k N : ℝ)) ~[atTop] a.",
+   "notes": "Erdős Problem 142 ($10000 prize) is open. In erdosproblems problems.yaml, entry \"142\" has status \"open\" and formal_status \"unformalized\". The OEIS sequences A003002–A003005 give r_3 through r_6. Known bounds include:\n- Szemerédi: r_k(N) = o(N).\n- Behrend and Rankin: lower bounds of the form N·exp(-c(log N)^{1/ℓ}).\n- Kelley–Meka (2023) and Bloom–Sisask: r_3(N) ≤ N·exp(-c(log N)^{1/9}).\n- Green–Tao: k = 4.\n- Leng–Sah–Sawhney (2024): k ≥ 5.\n\nNo asymptotic formula r_k(N) ~ f_k(N) is known for any k ≥ 3. The Lean result does not touch this question. It only shows that the upstream statement, with one answer for every k ∈ ℕ including k = 1 and k = 2, is false, which is a trivial consequence of r_1(N) = N and r_2(N) ≤ 1. Sources:\n- erdosproblems.com/142: the problem is open, $10000 prize; the page says an asymptotic formula is \"still far out of reach, even for k=3\", lists bounds by Kelley–Meka (k=3), Green–Tao (k=4) and Leng–Sah–Sawhney (k≥5), and notes Erdős's [Er80] remark that it is not known whether r_k/r_{k+1} → 0.\n- erdosproblems.com/forum/thread/142: only one unrelated comment, and nothing about the formal statement.\n\nUpstream formal-conjectures history (google-deepmind/formal-conjectures):\n- Commit 2c24ebe7 (#7327, 2026-10-14, M. Firsching): introduced the k-independent top-level `def erdos_142.answer : ℕ → ℝ := sorry`.\n- Commit 7f64240c (#5810, 2026-09-12, S. Mercuri): changed Θ to ~ (fixes #5628 and #4922).\n- Commit bf0ea56f (#1187, 2025-11-11): noted maxCard 0/1 N = N and",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "ErdosProblems/142::erdos_142.variants.isTheta",
+   "slug": "erdos142-erdos-142-variants-istheta",
+   "title": "Erdős 142 (Θ variant): no k-independent order of magnitude for r_k(N)",
+   "area": "Number theory",
+   "source": "Erdős Problem #142",
+   "source_url": "https://www.erdosproblems.com/142",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/ErdosProblems/142.lean",
+    "decl": "Erdos142.erdos_142.variants.isTheta",
+    "category": "research open"
+   },
+   "mode": "refutes_every_answer",
+   "classification": "misformalization",
+   "lean_file": "lean/Math0/ErdosProblems/Erdos142_erdos_142_variants_isTheta.lean",
+   "our_decl": "Math0.Erdos142.not_isTheta",
+   "summary": "Let r_k(N) = Set.IsAPOfLengthFree.maxCard k N be the largest size of a subset of {1,...,N} that contains no non-trivial k-term arithmetic progression. The upstream statement asks for one function answer : ℕ → ℝ such that for every k ∈ ℕ, (N ↦ r_k(N)) =Θ[atTop] answer. We prove the negation for every possible value of the unknown: for all a : ℕ → ℝ, ¬ ∀ k : ℕ, (fun N => (r k N : ℝ)) =Θ[atTop] a.",
+   "notes": "Erdős Problem 142 (erdosproblems.com/142, $10000 prize, listed open, OEIS A003002–A003005) asks for the order of magnitude, or an asymptotic formula, of r_k(N), the largest subset of {1,...,N} with no k-term AP.\n\nKnown results:\n- Szemerédi: r_k(N) = o(N).\n- Behrend (k = 3) and Rankin (general k): lower bounds of the form N·exp(−c(log N)^{1/ℓ}).\n- Gowers: upper bounds for general k.\n- Kelley–Meka (2023), improved by Bloom–Sisask: r_3(N) ≤ N·exp(−c(log N)^{1/12}), later exponent 1/9.\n- Green–Tao: bounds for r_4.\n- Leng–Sah–Sawhney (2024): r_k(N) ≤ N·exp(−(log log N)^{c_k}).\n\nThe order of magnitude of r_k is open for every k ≥ 3.\n\nThe facts the refutation uses are trivial and belong to the formal library: r_1(N) = N (`Set.IsAPOfLengthFree.maxCard_one`), and r_2(N) ≤ 1 because any two points form a 2-term AP. I know of no previous Lean artifact reporting that `erdos_142.variants.isTheta` (or the sibling `erdos_142`) is false because its answer does not depend on k. - erdosproblems.com/142: open, $10000; it gives order of magnitude as the \"more reasonable\" goal and cites [Er80], [Va99]. Best known bounds: Kelley–Meka 2023 (k=3), Green–Tao 2017 (k=4), Leng–Sah–Sawhney 2024 (k≥5). Lower bounds: Behrend 1946 and Rankin 1961.\n- erdosproblems.com/forum/thread/142: a single comment by jleng01 (2026-08-09), unrelated to formalization.\n- google-deepmind/formal-conjectures PR #5446 (open, 2026-09-10): flags 142.lean:37,56 as answer slots that cannot depend on the required binder k.\n- PR #5",
+   "date": "2026-10-17"
   }
  ]
 }

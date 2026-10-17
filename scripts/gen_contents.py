@@ -18,7 +18,20 @@ CLASS_LABEL = {
     "known-result-already-formalized": "Independent formal proof (an implying Lean proof already exists elsewhere)",
     "misformalization": "Misformalization found (upstream statement does not match the problem)",
 }
-VERB = {"proves": "proves", "refutes": "refutes (proves the negation of)", "answers": "answers"}
+VERB = {
+    "proves": "proves",
+    "refutes": "refutes (proves the negation of)",
+    "answers": "answers",
+    "refutes_every_answer": "refutes, for every possible value of its unknown,",
+}
+
+
+MODE_NOTE = {
+    "proves": "",
+    "refutes": " (negated)",
+    "answers": " with its unknown replaced by an explicit value",
+    "refutes_every_answer": " negated and universally quantified over the unknown",
+}
 
 
 def upstream_link(e):
@@ -45,7 +58,7 @@ def result_readme(e):
         f"The Lean file [`{e['lean_file']}`](../../{e['lean_file']}) {VERB[e['mode']]} the upstream statement "
         f"{upstream_link(e)} (formal-conjectures at commit `{u['commit'][:7]}`, upstream category "
         f"`{u['category']}`). Its final command `#math0_{e['mode']}` checks that our theorem's type is "
-        f"syntactically identical to the upstream statement{' (negated)' if e['mode'] == 'refutes' else ''} "
+        f"syntactically identical to the upstream statement{MODE_NOTE[e['mode']]} "
         "and that the proof uses no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.",
         "",
     ]

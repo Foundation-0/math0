@@ -22,6 +22,10 @@ Sources:
 - A web search for "1117175146" with Lean found nothing.
 - Conclusion: the statement is known (a computational fact due to Grechuk), and this appears to be its first Lean formalization.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex
