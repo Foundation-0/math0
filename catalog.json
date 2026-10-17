@@ -2,6 +2,28 @@
  "formal_conjectures_commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
  "results": [
   {
+   "id": "Arxiv/0805.3777/TensorRank::isMaxRank_le_two_mul_isGenericRank",
+   "slug": "arxiv-0805-3777-ismaxrank-le-two-mul-isgenericrank",
+   "title": "Maximal tensor rank is at most twice the generic rank (Blekherman–Teitler)",
+   "area": "Algebraic geometry, Linear algebra",
+   "source": "arXiv:0805.3777",
+   "source_url": "https://arxiv.org/abs/0805.3777",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/Arxiv/0805.3777/TensorRank.lean",
+    "decl": "Arxiv.«0805.3777».isMaxRank_le_two_mul_isGenericRank",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Arxiv/Arxiv_0805_3777_isMaxRank_le_two_mul_isGenericRank.lean",
+   "our_decl": "Math0.Arxiv.«0805.3777».isMaxRank_le_two_mul_isGenericRank",
+   "summary": "Let ds be any list of dimensions, and consider complex tensors (Holor ℂ ds) with the product topology on HolorIndex ds → ℂ. Suppose r is a generic rank: there is an open dense set U of tensors, all of CP rank exactly r. Suppose R is the maximal rank: R is the largest CP rank of any tensor of format ds. Then R ≤ 2r. This is [BT15, Theorem 1] (Blekherman–Teitler), as formalized in formal-conjectures (FormalConjectures/Arxiv/0805.3777/TensorRank.lean).",
+   "notes": "The source is G. Blekherman and Z. Teitler, \"On maximum, typical and generic ranks\", Math. Ann. 362 (2015), 1021–1031, doi:10.1007/s00208-014-1150-3, arXiv:1402.2371, Theorem 1. It states that the maximum rank is at most twice the generic rank for any nondegenerate irreducible variety. The case here is the Segre variety, i.e. tensors. The upstream file is FormalConjectures/Arxiv/0805.3777/TensorRank.lean, which builds on Friedland, LAA 436 (2012), arXiv:0805.3777. It has no formal_proof link for this item, and I know of no earlier Lean proof.",
+   "date": "2026-10-17"
+  },
+  {
    "id": "ErdosProblems/10::erdos_10.variants.grechuk_example",
    "slug": "erdos10-erdos-10-variants-grechuk-example",
    "title": "Grechuk's example: 1117175146 is not a prime plus at most three powers of two",
@@ -68,6 +90,72 @@
    "date": "2026-10-17"
   },
   {
+   "id": "ErdosProblems/1121::erdos_1121.variants.higher_dimension",
+   "slug": "erdos1121-erdos-1121-variants-higher-dimension",
+   "title": "Goodman–Goodman covering theorem for balls in ℝ^d (Erdős 1121, higher-dimensional variant)",
+   "area": "Discrete geometry",
+   "source": "Erdős Problem #1121",
+   "source_url": "https://www.erdosproblems.com/1121",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/ErdosProblems/1121.lean",
+    "decl": "Erdos1121.erdos_1121.variants.higher_dimension",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/ErdosProblems/Erdos1121_erdos_1121_variants_higher_dimension.lean",
+   "our_decl": "Math0.Erdos1121.erdos_1121_higher_dimension",
+   "summary": "Let d, n be natural numbers, c_1,…,c_n points of ℝ^d and r_1,…,r_n > 0. Suppose that for every nonzero v ∈ ℝ^d and every t ∈ ℝ, if the hyperplane {p : ⟨v,p⟩ = t} meets none of the closed balls B_i = B̄(c_i, r_i), then either ⟨v,c_i⟩ < t for all i or ⟨v,c_i⟩ > t for all i. Then there is z ∈ ℝ^d with ⋃_i B_i ⊆ B̄(z, R), where R = Σ_i r_i.",
+   "notes": "The result is Goodman, A. W. and Goodman, R. E., \"A circle covering theorem\", Amer. Math. Monthly 52 (1945), 494–498. The upstream docstring notes that their proof generalises to higher dimensions. Hadwiger, \"Nonseparable convex systems\", Amer. Math. Monthly 54 (1947), 583–585, extends it to convex bodies. Bezdek and Litvak, \"Packing convex bodies by cylinders\", Discrete Comput. Geom. (2016), 725–738, give an alternative proof. erdosproblems.com/1121 lists the problem as \"proved (Lean)\". That refers to the 2D statement, whose existing Lean proof (https://github.com/plby/lean-proofs/blob/main/src/v4.29.1/ErdosProblems/Erdos1121.lean, by Aristotle and Amogh Parab) is restricted to EuclideanSpace ℝ (Fin 2). The higher-dimensional variant has no formal_proof link in the pinned upstream or the current upstream main branch.",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "ErdosProblems/1136::erdos_1136.variants.mueller",
+   "slug": "erdos1136-erdos-1136-variants-mueller",
+   "title": "Müller's set avoids sums equal to powers of two and has density 1/2 (Erdős 1136)",
+   "area": "Number theory",
+   "source": "Erdős Problem #1136",
+   "source_url": "https://www.erdosproblems.com/1136",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/ErdosProblems/1136.lean",
+    "decl": "Erdos1136.erdos_1136.variants.mueller",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-already-formalized",
+   "lean_file": "lean/Math0/ErdosProblems/Erdos1136_erdos_1136_variants_mueller.lean",
+   "our_decl": "Math0.Erdos1136.erdos_1136_mueller",
+   "summary": "Let M be the set of natural numbers n such that n ≡ 3·2^i (mod 2^{i+2}) for some i ≥ 0. Then (1) no a, b ∈ M (not necessarily distinct) satisfy a + b = 2^k for any k ≥ 0, and (2) M has natural density 1/2: #(M ∩ [0,b)) / b → 1/2 as b → ∞.",
+   "notes": "The result is H. Müller, \"Über ein additiv-zahlentheoretisches Problem von P. Erdős\", Mitt. Math. Ges. Hamburg (2011), 75-78. erdosproblems.com/1136 lists the status \"proved (Lean)\" (2026-04-19). Earlier Lean proofs exist:\n- plby/lean-proofs src/v4.29.1/ErdosProblems/Erdos1136.lean (by Aristotle, L. Luccioli and W. van Doorn), which proves the same set is sum-free (`A_sumfree`) and has density 1/2 (`A_density_half`).\n- Luccioli's gist on live.lean-lang.org.\n- Woett/Lean-files ErdosProblem1136.lean.",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "ErdosProblems/1136::erdos_1136.variants.upper_bound",
+   "slug": "erdos1136-erdos-1136-variants-upper-bound",
+   "title": "Sets avoiding sums equal to powers of two have lower density at most 1/2 (Müller)",
+   "area": "Number theory",
+   "source": "Erdős Problem #1136",
+   "source_url": "https://www.erdosproblems.com/1136",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/ErdosProblems/1136.lean",
+    "decl": "Erdos1136.erdos_1136.variants.upper_bound",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-already-formalized",
+   "lean_file": "lean/Math0/ErdosProblems/Erdos1136_erdos_1136_variants_upper_bound.lean",
+   "our_decl": "Math0.Erdos1136.upper_bound",
+   "summary": "Let A ⊆ ℕ be such that a + b ≠ 2^k for all a, b ∈ A (not necessarily distinct) and all k ≥ 0. Then the lower natural density of A, liminf_{N→∞} |A ∩ [0, N)| / N, is at most 1/2.",
+   "notes": "Müller, Helmut, \"Über ein additiv-zahlentheoretisches Problem von P. Erdős\", Mitt. Math. Ges. Hamburg (2011), 75-78. Müller proves the existence of a set with density 1/2 and that every such set has density at most 1/2. erdosproblems.com/1136 has status \"proved (Lean)\" in problems.yaml (formal_status Lean, 2026-04-19). The existing Lean proof is linked from the upstream formal_proof attribute: https://github.com/plby/lean-proofs/blob/main/src/v4.29.1/ErdosProblems/Erdos1136.lean (Aristotle, Lorenzo Luccioli, Wouter van Doorn). It contains `sumfree_upperDensity_le_half`, an upper density ≤ 1/2 bound for any power-of-two-sum-free S ⊆ ℕ, and `main_result`. Related formalizations are Luccioli's gist (mathlib v4.28.0) and https://github.com/Woett/Lean-files/blob/main/ErdosProblem1136.lean.",
+   "date": "2026-10-17"
+  },
+  {
    "id": "ErdosProblems/142::erdos_142",
    "slug": "erdos142-erdos-142",
    "title": "Erdős 142: no single k-independent asymptotic formula for r_k(N)",
@@ -109,6 +197,28 @@
    "our_decl": "Math0.Erdos142.not_isTheta",
    "summary": "Let r_k(N) = Set.IsAPOfLengthFree.maxCard k N be the largest size of a subset of {1,...,N} that contains no non-trivial k-term arithmetic progression. The upstream statement asks for one function answer : ℕ → ℝ such that for every k ∈ ℕ, (N ↦ r_k(N)) =Θ[atTop] answer. We prove the negation for every possible value of the unknown: for all a : ℕ → ℝ, ¬ ∀ k : ℕ, (fun N => (r k N : ℝ)) =Θ[atTop] a.",
    "notes": "Erdős Problem 142 (erdosproblems.com/142, $10000 prize, listed open, OEIS A003002–A003005) asks for the order of magnitude, or an asymptotic formula, of r_k(N), the largest subset of {1,...,N} with no k-term AP.\n\nKnown results:\n- Szemerédi: r_k(N) = o(N).\n- Behrend (k = 3) and Rankin (general k): lower bounds of the form N·exp(−c(log N)^{1/ℓ}).\n- Gowers: upper bounds for general k.\n- Kelley–Meka (2023), improved by Bloom–Sisask: r_3(N) ≤ N·exp(−c(log N)^{1/12}), later exponent 1/9.\n- Green–Tao: bounds for r_4.\n- Leng–Sah–Sawhney (2024): r_k(N) ≤ N·exp(−(log log N)^{c_k}).\n\nThe order of magnitude of r_k is open for every k ≥ 3.\n\nThe facts the refutation uses are trivial and belong to the formal library: r_1(N) = N (`Set.IsAPOfLengthFree.maxCard_one`), and r_2(N) ≤ 1 because any two points form a 2-term AP. I know of no previous Lean artifact reporting that `erdos_142.variants.isTheta` (or the sibling `erdos_142`) is false because its answer does not depend on k. - erdosproblems.com/142: open, $10000; it gives order of magnitude as the \"more reasonable\" goal and cites [Er80], [Va99]. Best known bounds: Kelley–Meka 2023 (k=3), Green–Tao 2017 (k=4), Leng–Sah–Sawhney 2024 (k≥5). Lower bounds: Behrend 1946 and Rankin 1961.\n- erdosproblems.com/forum/thread/142: a single comment by jleng01 (2026-08-09), unrelated to formalization.\n- google-deepmind/formal-conjectures PR #5446 (open, 2026-09-10): flags 142.lean:37,56 as answer slots that cannot depend on the required binder k.\n- PR #5",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "ErdosProblems/723::erdos_723.variants.prime_power_is_projplane_order",
+   "slug": "erdos723-erdos-723-variants-prime-power-is-projplane-order",
+   "title": "Projective planes exist for every prime-power order (Erdős 723, existence variant)",
+   "area": "Combinatorics",
+   "source": "Erdős Problem #723",
+   "source_url": "https://www.erdosproblems.com/723",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/ErdosProblems/723.lean",
+    "decl": "Erdos723.erdos_723.variants.prime_power_is_projplane_order",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/ErdosProblems/Erdos723_erdos_723_variants_prime_power_is_projplane_order.lean",
+   "our_decl": "Math0.Erdos723.prime_power_is_projplane_order",
+   "summary": "For every natural number n that is a prime power, there exist types P, L (in Type), a membership (incidence) relation between P and L, Fintype structures on P and L, and a projective plane structure pp on (P, L) whose order is exactly n.",
+   "notes": "The construction of the Desarguesian projective plane PG(2, q) for every prime power q goes back to O. Veblen and W. H. Bussey, \"Finite projective geometries\", Trans. AMS 7 (1906), 241–259. Standard textbook sources are M. Hall, \"Combinatorial Theory\", and P. Dembowski, \"Finite Geometries\" (1968). The open converse is the prime power conjecture (Erdős Problem 723). Related results are Bruck–Ryser (1949), and Lam–Thiel–Swiercz (1989), who showed there is no plane of order 10. In Lean, Mathlib's Combinatorics/Configuration.lean has `Configuration.ofField` (the ProjectivePlane instance on ℙ(K³)) and `ProjectivePlane.card_points`, and LinearAlgebra/Projectivization/Cardinality.lean has `Projectivization.card_of_finrank`. Mathlib does not state the order of ofField or the existence of a plane of every prime-power order, and erdosproblems.com lists 723 as formal_status \"unformalized\".",
    "date": "2026-10-17"
   }
  ]

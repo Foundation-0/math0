@@ -1,0 +1,504 @@
+% math0 manuscript template. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\small, columns=fullflexible, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+% listings does not handle multi-byte UTF-8 input; map the characters used below.
+\lstset{literate={∀}{{$\forall$}}1 {ℕ}{{$\mathbb{N}$}}1 {→}{{$\to$}}1 {≤}{{$\le$}}1
+  {·}{{$\cdot$}}1 {⊆}{{$\subseteq$}}1, keepspaces=true, basicstyle=\ttfamily\footnotesize}
+\setlength{\emergencystretch}{3em}
+\newcommand{\floor}[1]{\left\lfloor #1\right\rfloor}
+\newcommand{\Tri}{\mathcal{T}}
+\newcommand{\adj}{\sim}
+\newcommand{\lean}[1]{\texttt{#1}}
+
+\title[Rademacher's theorem in Lean 4]{Graphs with $\lfloor n^2/4\rfloor+1$ edges contain at least $\lfloor n/2\rfloor$ triangles: a Lean~4 proof of Rademacher's theorem}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 17, 2026}
+
+\begin{document}
+\begin{abstract}
+We give a complete, self-contained proof of Rademacher's theorem: every simple graph on $n$
+vertices with exactly $\lfloor n^2/4\rfloor+1$ edges contains at least $\lfloor n/2\rfloor$
+triangles. The proof is a strong induction over vertex subsets. It derives Mantel's theorem
+along the way and splits on the degree sums along the edges of a triangle. The result is
+classical. It is the case $t=1$ of Erdős Problem~\#1010, whose general form was proved by
+Lovász--Simonovits and by Nikiforov--Khadzhiivanov, and a Lean proof of that general form
+already exists. Our contribution is therefore an independent formal proof of a known result. It
+is verified in Lean~4 with Mathlib against the statement
+\texttt{Erdos1010.erdos\_1010.variants.rademacher} of the formal-conjectures repository and uses
+only the standard axioms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Mantel's theorem~\cite{Mantel} says that a graph on $n$ vertices with more than
+$\lfloor n^2/4\rfloor$ edges contains a triangle. The bound is attained by the balanced complete
+bipartite graph $K_{\lceil n/2\rceil,\lfloor n/2\rfloor}$. In 1941 Rademacher proved, without
+publishing it, that one edge beyond this threshold already forces many triangles: every graph on
+$n$ vertices with $\lfloor n^2/4\rfloor+1$ edges contains at least $\lfloor n/2\rfloor$ triangles.
+The result first appeared in print, with a short proof, in a paper of Erdős~\cite{Erdos55}; see also~\cite{Erdos62} and the account
+in~\cite{LiuPikhurko}. The bound is sharp. Add one edge inside the larger part of
+$K_{\lceil n/2\rceil,\lfloor n/2\rfloor}$ (with $n\ge 3$). Every triangle of the resulting graph
+contains the added edge, and its third vertex lies in the other part, so there are exactly
+$\lfloor n/2\rfloor$ triangles.
+
+Erdős~\cite{Erdos62} extended Rademacher's theorem: a graph on $n$ vertices with
+$\lfloor n^2/4\rfloor+t$ edges contains at least $t\lfloor n/2\rfloor$ triangles whenever $t<cn$,
+for some absolute constant $c>0$. He asked whether the same holds for all
+$t<\lfloor n/2\rfloor$. This is Erdős Problem~\#1010 on the website maintained by
+Bloom~\cite{EP1010}. The question was answered affirmatively, independently by Lovász and
+Simonovits~\cite{LovaszSimonovits} and by Nikiforov and Khadzhiivanov~\cite{NikiforovKh}.
+The more general Erdős--Rademacher problem asks for the minimum number of triangles in a graph of
+given order and size. It has a large literature. For large $n$ and edge density bounded away
+from $1$, it was solved exactly by Liu, Pikhurko and Staden~\cite{LPS}, whose introduction surveys
+the history.
+
+\subsection*{Formal statements and prior formalization}
+The formal-conjectures repository~\cite{FC} formalizes Problem~\#1010 in Lean~4 as
+\texttt{Erdos1010.erdos\_1010}. It also records Rademacher's case $t=1$ as a separate statement,
+\texttt{Erdos1010.erdos\_1010.variants.rademacher}, which is the statement proved here. Both are
+tagged \texttt{research solved}. The upstream file attaches a \texttt{formal\_proof} link to the
+general statement \texttt{erdos\_1010}. The link points to a Lean~4 proof in the repository
+\texttt{plby/lean-proofs}~\cite{plby} (file
+\nolinkurl{src/latest/ErdosProblems/Erdos1010.lean}, commit \texttt{8822f7d}). That proof covers
+every finite vertex type and every $t<\lfloor n/2\rfloor$. Taking $t=1$ gives the present
+statement for $n\ge 4$. The remaining cases are trivial (Remark~\ref{rem:small}). The variant
+itself carries no \texttt{formal\_proof} attribute upstream, but a formal proof of a statement
+that implies it was already available. We therefore do not claim a first formalization.
+
+What this note adds is an independent machine-checked proof of the variant, stated exactly as
+upstream. The proof is a short, self-contained double induction and needs about 330 lines of
+Lean. According to its header, the existing development uses maximum-cut charge bounds and a
+reduction for odd orders. The argument formalized here is elementary, and we make no claim that it
+is new as a piece of mathematics. Its first half is the standard inductive proof of Mantel's
+theorem.
+
+\section{Statement}
+
+All graphs are finite and simple. For a graph $G$ we write $u\adj v$ when $u$ and $v$ are
+adjacent, $e(G)$ for the number of edges, and $t(G)$ for the number of triangles, i.e.\ of
+$3$-element vertex sets that span a complete graph.
+
+\begin{theorem}[Rademacher]\label{thm:main}
+Let $n\ge 0$ and let $G$ be a simple graph on the vertex set $\{0,\dots,n-1\}$ with
+$e(G)=\lfloor n^2/4\rfloor+1$. Then $t(G)\ge\lfloor n/2\rfloor$.
+\end{theorem}
+
+The upstream statement is copied below verbatim from the file
+\nolinkurl{FormalConjectures/ErdosProblems/1010.lean} of formal-conjectures at commit
+\texttt{c77fdd4}. It sits inside \lean{namespace Erdos1010}, with \lean{open SimpleGraph} in
+effect:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+open scoped Classical in
+/--
+Rademacher proved that every graph on $n$ vertices with $\lfloor n^2/4\rfloor+1$ edges contains at
+least $\lfloor n/2\rfloor$ triangles.
+-/
+@[category research solved, AMS 5]
+theorem erdos_1010.variants.rademacher : ∀ n : ℕ, ∀ G : SimpleGraph (Fin n),
+    G.edgeFinset.card = n ^ 2 / 4 + 1 → n / 2 ≤ (G.cliqueFinset 3).card := by
+  sorry
+\end{lstlisting}
+Here \lean{n \textasciicircum{} 2 / 4} and \lean{n / 2} use natural-number division, so they equal
+$\lfloor n^2/4\rfloor$ and $\lfloor n/2\rfloor$. The finset \lean{G.cliqueFinset 3} consists of
+the $3$-element vertex sets that are cliques, i.e.\ the unordered triangles. The decidability
+instances that \lean{edgeFinset} and \lean{cliqueFinset} need come from \lean{open scoped Classical}.
+So the formal statement is exactly Theorem~\ref{thm:main}.
+
+\begin{remark}\label{rem:small}
+For $n\le 2$ the hypothesis is impossible, because $e(G)\le\binom n2<\lfloor n^2/4\rfloor+1$. For
+$n=3$ it forces $G=K_3$, and then $t(G)=1=\lfloor 3/2\rfloor$. The proof below does not treat
+these cases separately. The theorem also holds with ``at least $\lfloor n^2/4\rfloor+1$ edges'',
+since deleting edges cannot create triangles. In fact the Lean proof establishes the ``at least''
+form for every vertex subset (Theorem~\ref{thm:strong}).
+\end{remark}
+
+\section{Proof}
+
+Fix a finite vertex set $V$ and a simple graph $G$ on $V$. All sets below are subsets of $V$.
+
+\begin{definition}\label{def:notation}
+For $S\subseteq V$ and $v\in V$ (not necessarily in $S$) let $[v\adj w]\in\{0,1\}$ be the
+adjacency indicator, and define
+\[
+  d_S(v)=\sum_{w\in S}[v\adj w],\qquad D(S)=\sum_{v\in S}d_S(v),\qquad
+  \Tri(S)=\{U\subseteq S:\ U \text{ is a triangle of } G\}.
+\]
+So $d_S(v)=|N(v)\cap S|$ and $D(S)=2e(G[S])$. In Lean these are \lean{dg}, \lean{D} and
+\lean{tri}; \lean{tri G S} is \lean{(G.cliqueFinset 3).filter (· ⊆ S)}.
+\end{definition}
+
+We prove the following stronger statement. It is the Lean lemma \lean{main}.
+
+\begin{theorem}\label{thm:strong}
+For every $S\subseteq V$, if $D(S)\ge 2\bigl(\lfloor |S|^2/4\rfloor+1\bigr)$, then
+$|\Tri(S)|\ge\lfloor |S|/2\rfloor$.
+\end{theorem}
+
+\subsection{Bookkeeping lemmas}
+
+\begin{lemma}[\lean{dg\_erase}, \lean{D\_erase}]\label{lem:erase}
+Let $x\in S$. For every $v\in V$, $d_S(v)=[v\adj x]+d_{S\setminus x}(v)$. Moreover
+$D(S)=D(S\setminus x)+2d_S(x)$.
+\end{lemma}
+\begin{proof}
+The first identity splits off the term $w=x$. For the second, split off $v=x$ in $D(S)$ and apply
+the first identity to the remaining terms:
+\[
+  D(S)=d_S(x)+\sum_{v\in S\setminus x}\bigl([x\adj v]+d_{S\setminus x}(v)\bigr)
+      =d_S(x)+d_{S\setminus x}(x)+D(S\setminus x).
+\]
+Here we used the symmetry $[v\adj x]=[x\adj v]$. Finally $d_{S\setminus x}(x)=d_S(x)$, because
+$[x\adj x]=0$.
+\end{proof}
+
+\begin{lemma}[\lean{D\_erase\_two}]\label{lem:erase2}
+If $x,y\in S$ and $x\adj y$, then $D(S)+2=D(S\setminus\{x,y\})+2d_S(x)+2d_S(y)$.
+\end{lemma}
+\begin{proof}
+We have $y\in S\setminus x$ since $x\ne y$. Apply Lemma~\ref{lem:erase} twice:
+$D(S)=D(S\setminus\{x,y\})+2d_{S\setminus x}(y)+2d_S(x)$. Also
+$d_S(y)=[y\adj x]+d_{S\setminus x}(y)=1+d_{S\setminus x}(y)$.
+\end{proof}
+
+\begin{lemma}[\lean{sq\_div\_four}]\label{lem:arith}
+For every $M\in\mathbb N$, $\lfloor (M+2)^2/4\rfloor=\lfloor M^2/4\rfloor+M+1$.
+\end{lemma}
+\begin{proof}
+$(M+2)^2=M^2+4(M+1)$.
+\end{proof}
+
+\begin{lemma}[\lean{step\_bound}]\label{lem:step}
+Let $x,y\in S$ with $x\adj y$ and $d_S(x)+d_S(y)\le|S|$, and suppose
+$D(S)\ge2(\lfloor|S|^2/4\rfloor+1)$. Put $S'=S\setminus\{x,y\}$. Then $|S'|=|S|-2$ and
+$D(S')\ge 2(\lfloor|S'|^2/4\rfloor+1)$.
+\end{lemma}
+\begin{proof}
+Let $M=|S'|$, so $|S|=M+2$. By Lemmas~\ref{lem:erase2} and~\ref{lem:arith},
+\[
+  D(S')=D(S)+2-2\bigl(d_S(x)+d_S(y)\bigr)
+  \ge 2\bigl(\lfloor M^2/4\rfloor+M+2\bigr)+2-2(M+2)=2\bigl(\lfloor M^2/4\rfloor+1\bigr).\qedhere
+\]
+\end{proof}
+
+\begin{lemma}[\lean{exists\_common}]\label{lem:common}
+If $x,y\in V$ and $d_S(x)+d_S(y)>|S|$, then some $z\in S$ satisfies $x\adj z$ and $y\adj z$.
+\end{lemma}
+\begin{proof}
+The sets $N(x)\cap S$ and $N(y)\cap S$ are subsets of $S$ whose sizes add up to more than $|S|$.
+By inclusion--exclusion their intersection is nonempty.
+\end{proof}
+
+\subsection{Mantel's theorem}
+
+\begin{lemma}[Mantel; \lean{mantel}]\label{lem:mantel}
+If $D(S)\ge2(\lfloor|S|^2/4\rfloor+1)$, then there are $x,y,z\in S$ with $x\adj y$, $x\adj z$
+and $y\adj z$.
+\end{lemma}
+\begin{proof}
+We use strong induction on $|S|$. Since $D(S)>0$, $S$ contains an edge $xy$
+(\lean{exists\_adj\_of\_D\_pos}). If $d_S(x)+d_S(y)>|S|$, Lemma~\ref{lem:common} gives a common
+neighbour $z\in S$. Otherwise Lemma~\ref{lem:step} shows that $S\setminus\{x,y\}$ satisfies the
+hypothesis. Since it is smaller than $S$, the induction hypothesis gives a triangle inside it,
+and hence inside $S$.
+\end{proof}
+
+The three vertices are automatically distinct, because $G$ has no loops. So $\{x,y,z\}\in\Tri(S)$
+(\lean{mem\_tri}).
+
+\subsection{The two cases}
+
+Let $N=|S|$ and let $xyz$ be a triangle in $S$.
+
+\begin{lemma}[Case 1; \lean{case\_one}]\label{lem:case1}
+Suppose $D(S)\ge2(\lfloor N^2/4\rfloor+1)$ and $d_S(x)+d_S(y)\le N$. Put $S'=S\setminus\{x,y\}$
+and suppose Theorem~\ref{thm:strong} holds for $S'$. Then $|\Tri(S)|\ge\lfloor N/2\rfloor$.
+\end{lemma}
+\begin{proof}
+By Lemma~\ref{lem:step}, $S'$ satisfies the hypothesis of Theorem~\ref{thm:strong} and
+$|S'|=N-2$, so $|\Tri(S')|\ge\lfloor (N-2)/2\rfloor$. Every triangle in $S'$ is a triangle in $S$
+(\lean{tri\_mono}). The triangle $\{x,y,z\}$ lies in $\Tri(S)$ but not in $\Tri(S')$, because
+$x\notin S'$. Hence $|\Tri(S)|\ge\lfloor (N-2)/2\rfloor+1=\lfloor N/2\rfloor$. The last equality
+uses $N\ge2$, which holds because $S$ contains the triangle $\{x,y,z\}$.
+\end{proof}
+
+\begin{lemma}[Case 2; \lean{case\_two}]\label{lem:case2}
+Suppose $d_S(x)+d_S(y)>N$, $d_S(y)+d_S(z)>N$ and $d_S(x)+d_S(z)>N$. Then
+$|\Tri(S)|\ge\lfloor N/2\rfloor$.
+\end{lemma}
+No assumption on the number of edges is needed here.
+\begin{proof}
+Let $R=S\setminus\{x,y,z\}$, so $|R|=N-3$. Each of $x,y,z$ is adjacent to the other two and not
+to itself. So three applications of Lemma~\ref{lem:erase} give
+\begin{equation}\label{eq:dR}
+  d_S(x)=2+d_R(x),\qquad d_S(y)=2+d_R(y),\qquad d_S(z)=2+d_R(z).
+\end{equation}
+Index the three edges of the triangle by $i\in\{0,1,2\}$ as $e_0=\{x,y\}$, $e_1=\{y,z\}$,
+$e_2=\{x,z\}$. In Lean, $e_i=\{p_i,r_i\}$ with $p=(x,y,x)$ and $r=(y,z,z)$. Let
+\[
+  P=\{(w,i)\in R\times\{0,1,2\}:\ w \text{ is adjacent to both endpoints of } e_i\},
+  \qquad f(w,i)=e_i\cup\{w\}.
+\]
+
+\emph{Counting $P$.} Fix $w\in R$ and let $k_w=[x\adj w]+[y\adj w]+[z\adj w]\in\{0,1,2,3\}$. The
+three edges $e_i$ are the three pairs of vertices from $\{x,y,z\}$. So the number of $i$ with
+$(w,i)\in P$ equals $\binom{k_w}{2}$, and $k_w\le\binom{k_w}{2}+1$ for $k_w\le3$. Summing over
+$w\in R$ gives
+\begin{equation}\label{eq:P}
+  d_R(x)+d_R(y)+d_R(z)\le|P|+|R|.
+\end{equation}
+In Lean this is \lean{sum\_le\_sum} followed by a case split over the eight adjacency patterns of
+$w$ with $x,y,z$.
+
+\emph{Injectivity.} Each $f(w,i)$ is a triangle in $S$. Its vertices lie in $S$, $e_i$ is an edge,
+and $w$ is adjacent to both ends of $e_i$. The map $f$ is injective on $P$. Indeed, suppose
+$f(w,i)=f(w',i')$. Then $w$ is the only element of $f(w,i)$ outside $\{x,y,z\}$, so $w=w'$, and
+then $e_i=f(w,i)\cap\{x,y,z\}$ determines $i$. In Lean, $w=w'$ is shown first, and then all nine
+pairs $(i,i')$ are checked by comparing which of $x,y,z$ belong to the two sets. Finally
+$\{x,y,z\}\notin f(P)$, because every element of $f(P)$ contains a vertex of $R$. Therefore
+$\{\{x,y,z\}\}\cup f(P)\subseteq\Tri(S)$ is a disjoint union, and
+\[
+  |\Tri(S)|\ge|P|+1.
+\]
+
+\emph{Conclusion.} By \eqref{eq:P} and \eqref{eq:dR},
+\[
+  |\Tri(S)|\ge d_R(x)+d_R(y)+d_R(z)-|R|+1=d_S(x)+d_S(y)+d_S(z)-6-(N-3)+1.
+\]
+Adding the three hypotheses gives $2(d_S(x)+d_S(y)+d_S(z))\ge3N+3$. So
+$2|\Tri(S)|\ge 3N+3-2N-4=N-1$, and since $|\Tri(S)|$ is an integer,
+$|\Tri(S)|\ge\lceil (N-1)/2\rceil=\lfloor N/2\rfloor$. In Lean this last step is a single
+\lean{omega} call over natural numbers, using the facts above.
+\end{proof}
+
+\subsection{Proof of Theorems~\ref{thm:strong} and~\ref{thm:main}}
+
+\begin{proof}[Proof of Theorem~\ref{thm:strong}]
+We use strong induction on $|S|$ (\lean{main}). Lemma~\ref{lem:mantel} gives a triangle $xyz$ in
+$S$. If one of its edges, say $uv$, has $d_S(u)+d_S(v)\le|S|$, apply Lemma~\ref{lem:case1} to
+that edge and the third vertex. The required instance of the theorem for $S\setminus\{u,v\}$ is
+the induction hypothesis, since $|S\setminus\{u,v\}|<|S|$ (\lean{card\_erase\_two\_lt}). In Lean the
+three edges are handled by three calls to \lean{case\_one} with the vertices permuted. Otherwise
+all three degree sums exceed $|S|$, and Lemma~\ref{lem:case2} applies.
+\end{proof}
+
+No separate base case is needed. When $|S|\le 2$ the hypothesis fails. Inside the induction this
+is visible because Lemma~\ref{lem:mantel} produces three distinct vertices of $S$.
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Take $V=\{0,\dots,n-1\}$ and $S=V$. By the handshake lemma (Mathlib's
+\lean{sum\_degrees\_eq\_twice\_card\_edges}; Lean lemma \lean{D\_univ}), $D(V)=2e(G)=2(\lfloor
+n^2/4\rfloor+1)$. So Theorem~\ref{thm:strong} gives $|\Tri(V)|\ge\lfloor n/2\rfloor$, and
+$\Tri(V)$ is the set of all triangles of $G$.
+\end{proof}
+
+\section{Machine verification}
+
+\subsection*{Files and declarations}
+The proof is in the file
+\begin{center}
+\nolinkurl{lean/Math0/ErdosProblems/Erdos1010_erdos_1010_variants_rademacher.lean}
+\end{center}
+of the math0 repository (\url{https://github.com/Foundation-0/math0}), in namespace
+\lean{Math0.Erdos1010}. It has 333 lines. The main theorem is stated by reference to the upstream
+type:
+\begin{lstlisting}
+theorem erdos_1010_rademacher : type_of% @Erdos1010.erdos_1010.variants.rademacher := by
+  intro n G h
+  classical
+  have key := main G _ (univ : Finset (Fin n)) rfl (by rw [D_univ, h]; simp)
+  simpa [tri] using key
+
+end Math0.Erdos1010
+
+#math0_proves Math0.Erdos1010.erdos_1010_rademacher Erdos1010.erdos_1010.variants.rademacher
+\end{lstlisting}
+The auxiliary development is stated for an arbitrary \lean{Fintype V} with decidable equality and
+decidable adjacency. It is instantiated at \lean{Fin n} with the classical instances of the
+upstream statement. The correspondence with the text is: Definition~\ref{def:notation}:
+\lean{ind}, \lean{dg}, \lean{D}, \lean{tri}; Lemma~\ref{lem:erase}: \lean{dg\_erase},
+\lean{D\_erase}; Lemma~\ref{lem:erase2}: \lean{D\_erase\_two}; Lemma~\ref{lem:arith}:
+\lean{sq\_div\_four}; Lemma~\ref{lem:step}: \lean{step\_bound}; Lemma~\ref{lem:common}:
+\lean{exists\_common} (with \lean{dg\_eq\_card}); Lemma~\ref{lem:mantel}: \lean{mantel}
+(with \lean{exists\_adj\_of\_D\_pos}); Lemmas~\ref{lem:case1} and~\ref{lem:case2}:
+\lean{case\_one}, \lean{case\_two} (with \lean{mem\_tri}, \lean{tri\_mono});
+Theorem~\ref{thm:strong}: \lean{main}; the handshake step: \lean{D\_univ}. The proof involves no
+large finite computation. The only case analyses are the eight adjacency patterns in~\eqref{eq:P}
+and the nine pairs $(i,i')$ in the injectivity argument. Both are discharged by \lean{by\_cases},
+\lean{fin\_cases} and \lean{simp} and are checked by the kernel like any other proof term. The
+file contains no \lean{sorry}, \lean{native\_decide}, \lean{axiom} or \lean{set\_option}.
+
+\subsection*{Audit}
+The last command of the file, \lean{\#math0\_proves}, is defined in
+\nolinkurl{lean/Math0/Audit.lean}. It fails the build unless the following hold.
+\begin{enumerate}
+\item The type of \lean{Math0.Erdos1010.erdos\_1010\_rademacher} is syntactically identical to the
+type of the upstream declaration \lean{Erdos1010.erdos\_1010.variants.rademacher}. The comparison
+ignores metadata annotations only: no unfolding and no definitional equality. The universe
+parameters must also agree.
+\item The theorem depends on no axioms beyond \lean{propext}, \lean{Classical.choice} and
+\lean{Quot.sound}. This is computed with Lean's \lean{collectAxioms}. It rules out
+\lean{sorryAx}, the axioms behind \lean{native\_decide}, and custom axioms.
+\end{enumerate}
+On compilation the file reports:
+\begin{lstlisting}[language={},basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Erdos1010.erdos_1010_rademacher' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Erdos1010.erdos_1010_rademacher' proves 'Erdos1010.erdos_1010.variants.rademacher'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+The toolchain is Lean~4~\cite{Lean4} at version \texttt{v4.33.1} with Mathlib~\cite{mathlib} at version \texttt{v4.33.1}. The upstream statements come
+from formal-conjectures at commit \texttt{c77fdd446d23539302aa73bcfae4a9fa962b8382}
+(\texttt{c77fdd4}), pinned in \nolinkurl{lean/lakefile.toml}. To reproduce, run
+\nolinkurl{scripts/verify.sh} from a checkout of the repository with \texttt{elan} installed. It
+fetches the Mathlib cache, builds every result with \texttt{lake build}, checks that the
+formal-conjectures and Mathlib package checkouts have no local modifications, and reports the
+number of statement checks that passed. To check this file alone, run the following in the
+\texttt{lean} directory. It takes well under a minute once the dependencies are built.
+\begin{lstlisting}[language={}]
+lake env lean Math0/ErdosProblems/Erdos1010_erdos_1010_variants_rademacher.lean
+\end{lstlisting}
+
+\begin{thebibliography}{10}
+
+\bibitem{EP1010}
+T.~F. Bloom, \emph{Erdős Problem \#1010},
+\url{https://www.erdosproblems.com/1010}, accessed 2026-10-17.
+
+\bibitem{Erdos55}
+P.~Erdős, \emph{Some theorems on graphs}, Riveon Lematematika \textbf{9} (1955), 13--17.
+
+\bibitem{Erdos62}
+P.~Erdős, \emph{On a theorem of {R}ademacher--{T}urán}, Illinois J. Math. \textbf{6} (1962),
+122--127.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horváth, Y.~Dillies, C.~Sönne, E.~Wieser, F.~Zhang,
+T.~Hubert, B.~Agüera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving
+benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository:
+\url{https://github.com/google-deepmind/formal-conjectures}, commit \texttt{c77fdd4}.
+
+\bibitem{LiuPikhurko}
+X.~Liu and O.~Pikhurko, \emph{A note on extremal constructions for the
+{E}rdős--{R}ademacher problem}, Combin. Probab. Comput. \textbf{34} (2025), no.~1, 52--62;
+arXiv:2311.18753.
+
+\bibitem{LPS}
+H.~Liu, O.~Pikhurko, and K.~Staden, \emph{The exact minimum number of triangles in graphs with
+given order and size}, Forum Math. Pi \textbf{8} (2020), e8.
+
+\bibitem{LovaszSimonovits}
+L.~Lovász and M.~Simonovits, \emph{On the number of complete subgraphs of a graph}, in:
+Proceedings of the Fifth British Combinatorial Conference (Aberdeen, 1975), Congressus
+Numerantium XV, Utilitas Math., Winnipeg, 1976, pp.~431--441.
+
+\bibitem{Mantel}
+W.~Mantel, \emph{Problem 28}, Wiskundige Opgaven \textbf{10} (1907), 60--61.
+
+\bibitem{mathlib}
+The mathlib Community, \emph{The {L}ean mathematical library}, in: Proceedings of the 9th ACM
+SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020,
+pp.~367--381.
+
+\bibitem{Lean4}
+L.~de~Moura and S.~Ullrich, \emph{The {L}ean 4 theorem prover and programming language}, in:
+Automated Deduction -- CADE 28, Lecture Notes in Computer Science, vol.~12699, Springer, 2021,
+pp.~625--635.
+
+\bibitem{NikiforovKh}
+V.~S. Nikiforov and N.~G. Khadzhiivanov, \emph{Solution of the problem of {P}. {E}rdős on the
+number of triangles in graphs with $n$ vertices and $[n^2/4]+l$ edges}, C. R. Acad. Bulgare Sci.
+\textbf{34} (1981), no.~7, 969--970.
+
+\bibitem{plby}
+\texttt{plby/lean-proofs}, \nolinkurl{src/latest/ErdosProblems/Erdos1010.lean}, theorem
+\texttt{erdos\_1010}, commit \texttt{8822f7ddef30fadbd92e1c6ab4ed897af356af5e},
+\url{https://github.com/plby/lean-proofs}, accessed 2026-10-17.
+
+\end{thebibliography}
+
+\end{document}
