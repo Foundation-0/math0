@@ -82,4 +82,29 @@ elab "#math0_answers " ours:ident ppSpace theirs:ident " with " theirAns:ident "
     | .const n us => if n == ta then some (.const oa us) else none
     | _ => none) "answer"
 
+/-- Misformalization reports for value questions: `ours` must have exactly the type
+`∀ a, ¬ (upstream type with the unknown `theirAns` replaced by `a`)`, i.e. the upstream statement
+is false whatever value is chosen for its unknown. -/
+elab "#math0_refutes_every_answer " ours:ident ppSpace theirs:ident " with " theirAns:ident :
+    command => do
+  let o ← liftCoreM <| realizeGlobalConstNoOverloadWithInfo ours
+  let t ← liftCoreM <| realizeGlobalConstNoOverloadWithInfo theirs
+  let ta ← liftCoreM <| realizeGlobalConstNoOverloadWithInfo theirAns
+  let oi ← getConstInfo o
+  let ti ← getConstInfo t
+  let ai ← getConstInfo ta
+  unless oi.levelParams == ti.levelParams && ai.levelParams.isEmpty do
+    throwError "math0 statement check failed: universe parameters differ or the unknown is polymorphic"
+  let expected ← liftTermElabM do
+    withLocalDeclD `a ai.type fun a => do
+      let body := (stripMData ti.type).replace fun
+        | .const n _ => if n == ta then some a else none
+        | _ => none
+      mkForallFVars #[a] (mkNot body)
+  unless stripMData oi.type == stripMData expected do
+    throwError "math0 statement check failed: '{o}' does not refute '{t}' for every value of '{ta}'.\n\
+      ours:     {oi.type}\nexpected: {expected}"
+  auditAxioms o
+  logInfo m!"math0 statement check: '{o}' refutes '{t}' for every value of '{ta}'"
+
 end Math0.Audit
