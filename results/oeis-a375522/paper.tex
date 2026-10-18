@@ -108,13 +108,13 @@
 \title[A counterexample to a conjecture in OEIS A375522]{The greedy prime-reciprocal sums of OEIS A375781:\\ $S_2(42)-S_1(42)=5$, refuting a conjecture of Sigrist and Sloane}
 \author{math0}
 \address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
-\date{October 17, 2026}
+\date{October 18, 2026}
 
 \begin{document}
 \begin{abstract}
 Let $p_k$ be the $k$-th prime, let $b(k)$ (OEIS A375781) be the least positive integer keeping $s(k)=\sum_{j\le k}1/(p_j\,b(j))$ below $1$, and write $s(n)=S_1(n)/S_2(n)$ in lowest terms (A375521, A375522).
 Sigrist and Sloane conjectured that $S_2(n)-S_1(n)=1$ for all $n\ge1$ except $n=4,6$, having checked $n\le 34$.
-We show that $S_2(42)-S_1(42)=5$, so the conjecture is false; to our knowledge this is a new result. As $S_2(42)$ has about $4\cdot 10^{11}$ digits, the proof tracks the numerator of $1-s(n)$ exactly and its denominator only modulo a shrinking modulus, with a lemma certifying each step.
+We show that $S_2(42)-S_1(42)=5$, so the conjecture is false; to our knowledge this is a new result. As $S_2(42)$ has about $3.9\cdot 10^{11}$ decimal digits, the proof tracks the numerator of $1-s(n)$ exactly and its denominator only modulo a shrinking modulus, with a lemma certifying each step.
 The proof is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, checked against the OEIS data and frozen before the proof attempt.
 \end{abstract}
 \maketitle
@@ -128,14 +128,14 @@ Equivalently, the remainder $1-s(n)$ is a unit fraction for every $n\ge1$ except
 
 The conjecture is modelled on a theorem about the harmonic series. For the analogous greedy sequence A374663, with $k$ in place of $p_k$, Sigrist proved that every remainder $1-s(n)$ with $n>1$ is the reciprocal of an integer \cite{OEISrel,SigristProof}.
 In A375528 \cite{OEISrel}, the analogue for the lucky numbers, Sloane writes that for the primes ``it seems that all partial sums except for $n = 4$ and $6$ have this property''.
-The sequences are discussed in Sloane's talk at the Rutgers Experimental Mathematics Seminar \cite{SloaneTalk}; the slides list them and give no counterexample.
-The related entry A376048 cites a manuscript in preparation by Sigrist and Sloane, \emph{Dampening Down a Divergent Series} \cite{SiSl}.
+The sequences are discussed in Sloane's talk at the Rutgers Experimental Mathematics Seminar \cite{SloaneTalk}; the slides list them and give no counterexample. They also state a more general conjecture (Conjecture~4 there): for such dampened series there are a constant $c$ and integers $e_n$ with $s(n)=(e_n-c)/e_n$ for all sufficiently large~$n$. Our result does not decide that conjecture.
+The entries A374663 and A376048 \cite{OEISrel} cite a manuscript in preparation by Sigrist and Sloane, \emph{Dampening Down a Divergent Series} \cite{SiSl}.
 
 \subsection*{Result and status}
 We prove that $S_2(42)-S_1(42)=5$ (Theorem~\ref{thm:main}), so the conjecture is false.
 The math0 referees found no earlier counterexample or proof in the revision histories of A375522 and the related entries above, the slides of \cite{SloaneTalk}, arXiv (the recent collection \cite{Fried} of proofs of OEIS conjectures does not treat these sequences), web searches, or the formal-conjectures repository \cite{FC}, which does not contain this conjecture. The archive of the SeqFan mailing list could not be reached and was not searched. With that caveat, we classify the result as \emph{new}.
 
-The difficulty is size. If $1-s(n-1)=1/D$, then $1-s(n)=(p_n-r)/\bigl(D(D+p_n-r)\bigr)$ with $r=D\bmod p_n$ (Remark~\ref{rem:unit}), so the denominators roughly square at each step: $\log_{10}S_2(20)\approx 92406$, and $S_2(42)$ has about $3.9\cdot10^{11}$ decimal digits. We never compute $S_2(42)$. Instead we track the small numerator $u_n$ of $1-s(n)$ exactly and the denominator only modulo a modulus that shrinks at each step (Lemma~\ref{lem:mod}); the Lean kernel runs and checks this computation.
+The difficulty is size. If $1-s(n-1)=1/D$, then $1-s(n)=(p_n-r)/\bigl(D(D+p_n-r)\bigr)$ with $r=D\bmod p_n$ (Remark~\ref{rem:unit}), so the denominators roughly square at each step: $S_2(20)$ has $92406$ decimal digits, and $S_2(42)$ has about $3.9\cdot10^{11}$ digits. We never compute $S_2(42)$. Instead we track the small numerator $u_n$ of $1-s(n)$ exactly and the denominator only modulo a modulus that shrinks at each step (Lemma~\ref{lem:mod}); the Lean kernel runs and checks this computation.
 Numerical computations outside the formal proof show that $n=42$ is the smallest counterexample, and that further counterexamples occur at $n=50$ (difference $3$), $n=56$ and $n=59$ (difference $5$ in both cases), with no others for $n\le 70$.
 
 \section{Statement}\label{sec:statement}
@@ -210,7 +210,7 @@ def statement : Prop :=
 \emph{Range.} The comment concerns $n\ge1$ (at $n=0$ the difference is $1$ anyway).
 \emph{Data.} The kernel checks, by \texttt{decide +kernel}, that the definitions reproduce all $11$ listed terms of A375522 (\decl{a_data}), A375521 (\decl{S1_data}) and A375781 (\decl{b_data}), and that the differences for $n=1,\dots,24$ are $1,1,1,2,1,2,1,1,\dots,1$, as in the comment (\decl{diff_data}). This also confirms the reading of ``$k$'' as $\mathrm{prime}(k)$.
 
-Corollary~\ref{cor:main} is the Lean theorem \decl{Math0.Frontier.A375522.result}, whose type is \texttt{¬ statement}.
+Corollary~\ref{cor:main} is the Lean theorem \decl{Math0.Frontier.A375522.result}, whose type is \texttt{¬ statement}. Theorem~\ref{thm:main} is not a separate exported Lean declaration. It follows from the private lemmas \decl{diff_eq}, \decl{T_spec}, \decl{mrun_spec} and \decl{mrun_42} of Section~\ref{sec:proof}, which are kernel-checked in the same file and combined in the proof of \decl{result}.
 
 \section{Proof}\label{sec:proof}
 
@@ -356,13 +356,13 @@ math0 statement check: 'Math0.Frontier.A375522.result' refutes 'Math0.Statements
 \end{lstlisting}
 
 \subsection*{Toolchain and reproduction}
-We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root; it builds all math0 results with \texttt{lake build} (re-running every audit command) and checks that the pinned dependencies are unmodified. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A375522.lean} in \path{lean/}; this took $17$ seconds on our machine.
-Two math0 referees reimplemented the run in Python with other starting moduli (up to $(2000!)^4$), with identical results.
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root; it builds all math0 results with \texttt{lake build} (re-running every audit command) and checks that the pinned dependencies are unmodified. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A375522.lean} in \path{lean/}; this took about one minute of wall-clock time on our machine.
+Two math0 referees reimplemented the run in Python, with $X_0=(190!)^2$ and with other starting moduli up to $(2000!)^4$, and obtained identical results.
 
 \begin{thebibliography}{99}
 
 \bibitem{FC}
-M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. \url{https://github.com/google-deepmind/formal-conjectures}.
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. \url{https://github.com/google-deepmind/formal-conjectures}.
 
 \bibitem{Fried}
 S.~Fried, \emph{Further proofs of conjectures from the OEIS}, arXiv:2607.24832, 2026.
@@ -377,13 +377,13 @@ L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming lang
 The OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, entry A375522 (R.~Sigrist and N.~J.~A. Sloane), revision \#25, Apr 22 2025, \url{https://oeis.org/A375522}.
 
 \bibitem{OEISrel}
-The OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, entries A375521 (R.~Sigrist and N.~J.~A. Sloane), A375781 and A374983 (R.~Sigrist), A375516 and A375528 (N.~J.~A. Sloane), at \url{https://oeis.org/}.
+The OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, entries A375521 (R.~Sigrist and N.~J.~A. Sloane), A374663, A374983 and A375781 (R.~Sigrist), A375516, A375528 and A376048 (N.~J.~A. Sloane), at \url{https://oeis.org/}.
 
 \bibitem{SigristProof}
 R.~Sigrist, \emph{Proof of Theorem} (in A374983), Aug 26 2024, revised Sep 01 2024, \url{https://oeis.org/A374983/a374983.txt}.
 
 \bibitem{SiSl}
-R.~Sigrist and N.~J.~A. Sloane, \emph{Dampening Down a Divergent Series}, manuscript in preparation, September 2024 (cited in OEIS A376048).
+R.~Sigrist and N.~J.~A. Sloane, \emph{Dampening Down a Divergent Series}, manuscript in preparation, September 2024 (cited in OEIS A374663 and A376048).
 
 \bibitem{SloaneTalk}
 N.~J.~A. Sloane, \emph{A Nasty Surprise in a Sequence and Other OEIS Stories}, Experimental Mathematics Seminar, Rutgers University, Oct 10 2024. Video: \url{https://www.youtube.com/watch?v=3RAYoaKMckM}; slides: \url{https://sites.math.rutgers.edu/~zeilberg/expmath/sloane85BD.pdf}.

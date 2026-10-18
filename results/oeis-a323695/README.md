@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: A323695 (G.f.: Sum_{n>=0} x^n (1 - x^(n+1))^n/(1 +
 
 Referees: OEIS A323695 (Hanna, Feb 23 2019; still labeled "(conjecture)" at rev #24, Dec 15 2024; history checked) and its cross-references A323696, A324300 (same conjecture for an i-variant, also unproved), A323675 and A323680. Sibling results proved by others, which do not cover A323695: A325046, odd terms iff N = m(m+1), in S. Fried, "Further proofs of conjectures from the OEIS", arXiv:2607.24832 (Thm 50), also in google-deepmind/alphaproof-nexus-results; A323557, odd terms at r(r+1), in T. Adamczewski, "OEIS Open", arXiv:2608.11941 and AlphaProof Nexus (Tsoukalas et al.). A323695 is in neither google-deepmind/formal-conjectures nor epoch-research/LeanOpenProblems. It is not mentioned in Fried's arXiv:2410.07237 (JIS 25.4.3), JIS 26.1.8 or arXiv:2606.09913. MathOverflow, Math StackExchange and SeqFan searches found nothing.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

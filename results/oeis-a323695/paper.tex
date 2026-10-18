@@ -104,7 +104,7 @@
 \title[Odd coefficients of the generating function of OEIS A323695]{The coefficients of $\sum_{m\ge0}x^m(1-x^{m+1})^m/(1+x^{m+1})^{m+1}$ are odd only at indices $k(k+2)$}
 \author{math0}
 \address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
-\date{October 17, 2026}
+\date{October 18, 2026}
 
 \begin{document}
 \begin{abstract}
@@ -112,7 +112,7 @@ Let $a(n)$ be the coefficient of $x^n$ in $\sum_{m\ge0}x^m(1-x^{m+1})^m/(1+x^{m+
 In 2019 P.~D.~Hanna conjectured that the odd terms occur only at $n=k(k+2)$, $k\ge0$.
 We prove this conjecture: modulo $2$ the $m$-th summand reduces to $x^m/(1+x^{m+1})$, so $a(n)$ is congruent modulo $2$ to the number of divisors of $n+1$, which is odd only when $n+1$ is a perfect square; the same argument gives the converse, which is also recorded in the entry.
 To our knowledge this is a new, though elementary, result: the conjecture is still marked as open in the OEIS, and we found no proof in the literature.
-The conjecture is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, whose definitions are proved equal to the generating-function coefficients and are checked by the kernel against all $121$ listed terms; this statement is not part of the formal-conjectures repository.
+The proof is checked in Lean~4 against a statement that math0 formalized from the OEIS entry; there the sequence is proved equal to the coefficients of the generating function and is checked by the kernel against all $121$ listed terms. This statement is not part of the formal-conjectures repository.
 \end{abstract}
 \maketitle
 
@@ -123,12 +123,12 @@ The OEIS entry A323695, contributed by Paul D.~Hanna on February~23, 2019 \cite{
   A(x)=\sum_{n\ge0}a(n)x^n=\sum_{m\ge0}\frac{x^m\,(1-x^{m+1})^m}{(1+x^{m+1})^{m+1}}
   =1+2x^2-3x^3+2x^4+2x^6-14x^7+15x^8+\cdots.
 \end{equation}
-The entry lists the terms $a(0),\dots,a(120)$ and links a table of $a(n)$ for $n\le 10201$, both by Hanna. Its first comment is the conjecture that odd terms occur only at $n=k(k+2)$. Its formula section states, without proof, the converse $a(n(n+2))\equiv1\pmod2$, as well as $a(4n+1)=0$ and $a(p-1)=2$ for odd primes~$p$. The odd terms $a(k(k+2))$ form the sequence A323696 \cite{A323696}.
+The entry lists the terms $a(0),\dots,a(120)$ and links a table of $a(n)$ for $n\le 10201$, both by Hanna. Its first comment is the conjecture that odd terms occur only at $n=k(k+2)$. Its formula section states, without proof, the converse $a(n(n+2))\equiv1\pmod2$, as well as $a(4n+1)=0$ and $a(p-1)=2$ for odd primes~$p$. The terms $a(k(k+2))$ form the sequence A323696 \cite{A323696}.
 
-Hanna contributed several related series of the shape $\sum_m x^m P_m(x)^m/Q_m(x)^{m+1}$ with parity conjectures of the same kind. For A324300 \cite{A324300}, with summands $x^m(x^{m+1}+i)^m/(1+ix^{m+1})^{m+1}$, the entry conjectures that odd terms occur only at $n=k(k+2)$; it is also still open. For A323557 and A325046 \cite{A323557,A325046}, with summands $x^m(1+x^m)^m/(1+x^{m+1})^{m+1}$ and $x^m(1+x^m)^m/(1-x^{m+1})^{m+1}$, the conjecture is that odd terms occur only at $n=m(m+1)$. Both of these have been settled. Fried proved the A325046 conjecture in a note attached to the entry \cite{FriedNote}, and again in \cite[pp.~50--51]{Fried}. The AI system AlphaProof Nexus \cite{APN} produced Lean proofs of both conjectures, and the two entries also point to a proof in Adamczewski's study \cite{Ad}. In those two cases the factors $(1+x^m)^m$ and $(1\pm x^{m+1})^{m+1}$ do not cancel modulo~$2$, and the published arguments are longer. For A323695 the numerator and denominator have the same base modulo~$2$, and the proof below is short.
+Hanna contributed several related series of the shape $\sum_m x^m P_m(x)^m/Q_m(x)^{m+1}$ with parity conjectures of the same kind. For A324300 \cite{A324300}, with summands $x^m(x^{m+1}+i)^m/(1+ix^{m+1})^{m+1}$, the entry conjectures that odd terms occur only at $n=k(k+2)$; this conjecture is also still marked as open, and we know of no proof. For A323557 and A325046 \cite{A323557,A325046}, with summands $x^m(1+x^m)^m/(1+x^{m+1})^{m+1}$ and $x^m(1+x^m)^m/(1-x^{m+1})^{m+1}$, the conjecture is that odd terms occur only at $n=m(m+1)$. Both of these have been settled. Fried proved the A325046 conjecture in a note attached to the entry \cite{FriedNote}, and again in \cite[pp.~50--51]{Fried}. The AI system AlphaProof Nexus \cite{APN} produced Lean proofs of both conjectures, and the two entries also point to a proof in Adamczewski's study \cite{Ad}. In those two cases the factors $(1+x^m)^m$ and $(1\pm x^{m+1})^{m+1}$ do not cancel modulo~$2$, and the published arguments are longer. For A323695 the numerator and denominator have the same base modulo~$2$, and the proof below is short.
 
 \subsection*{Status and prior work}
-The comment in A323695 is still tagged ``(conjecture)'' in the current revision~\#24 (December~15, 2024). The math0 referees read the edit history of the entry, which records only changes to the examples, the table, and a cross-reference, and they checked the cross-referenced entries A323675, A323680, A323696 and A324300; none contains a proof. A323695 is not among the OEIS statements of the formal-conjectures repository \cite{FC}, nor among the $492$ OEIS conjectures of the OEIS Open benchmark \cite{Ad}. The proofs of the sibling conjectures cited above \cite{FriedNote,Fried,APN,Ad} do not treat A323695, and it is not mentioned in Fried's earlier papers on OEIS conjectures that the referees checked. Searches of MathOverflow, Mathematics Stack Exchange and the SeqFan mailing list found nothing. We therefore classify the result as \emph{new}, with the caveat that it is elementary: once the series is reduced modulo~$2$, the argument takes a few lines.
+The comment in A323695 is still tagged ``(conjecture)'' in the current revision~\#24 (December~15, 2024). The edit history of the entry consists of Hanna's own edits of February~23--24, 2019, which built up the entry, and a change to a cross-reference in December~2024; no revision mentions a proof. The math0 referees also checked the cross-referenced entries A323675, A323680, A323696 and A324300; none contains a proof. A323695 is not among the OEIS statements of the formal-conjectures repository \cite{FC}, nor among the $492$ OEIS conjectures of the OEIS Open benchmark \cite{Ad}. The proofs of the sibling conjectures cited above \cite{FriedNote,Fried,APN,Ad} do not treat A323695, and it is not mentioned in Fried's earlier papers on OEIS conjectures that the referees checked. Searches of MathOverflow, Mathematics Stack Exchange and the SeqFan mailing list found nothing. We therefore classify the result as \emph{new}, with the caveat that it is elementary: once the series is reduced modulo~$2$, the argument takes a few lines.
 
 \section{Statement}\label{sec:statement}
 
@@ -152,7 +152,7 @@ The entry, including this comment, is by Paul D.~Hanna, February~23, 2019.
 For every $n\ge0$, if $a(n)$ is odd, then $n=k(k+2)$ for some integer $k\ge0$. Equivalently, if $a(n)$ is odd, then $n+1$ is a perfect square.
 \end{theorem}
 
-The proof also gives the converse and an exact description of the parity; only Theorem~\ref{thm:main} is formalized, together with the congruence of Lemma~\ref{lem:cast}.
+The proof also gives the converse and an exact description of the parity; only Theorem~\ref{thm:main} is formalized, together with the congruence of Lemma~\ref{lem:cast} in the form $a(N)\equiv\#\{m\le N:(m+1)\mid(N+1)\}\pmod 2$ (the identification of this count with $d(N+1)$ is not formalized).
 
 \begin{theorem}\label{thm:full}
 For every $N\ge0$, $a(N)\equiv d(N+1)\pmod 2$, where $d$ is the number-of-divisors function. Consequently, $a(N)$ is odd if and only if $N=k(k+2)$ for some $k\ge0$.
@@ -270,7 +270,7 @@ This is the Lean proof of \decl{result}. Let $a(n)$ be odd and suppose, for a co
 \end{proof}
 
 \begin{proof}[Proof of Theorem~\ref{thm:full}]
-The congruence is Lemma~\ref{lem:cast}. If $N\ne k(k+2)$ for all $k$, then $a(N)$ is even by Lemma~\ref{lem:even}. If $N=k(k+2)$, then $N+1=(k+1)^2$, and the map $\sigma$ from the proof of Lemma~\ref{lem:even} is still an involution of $D_N$ (properties (1) and (2) did not use the hypothesis). By the computation in (3), its fixed points are the $m\in D_N$ with $(m+1)^2=N+1$, so $k$ is its only fixed point. The other elements of $D_N$ fall into $2$-element orbits, so $|D_N|$ is odd and $a(N)$ is odd.
+The congruence is Lemma~\ref{lem:cast}. If $N\ne k(k+2)$ for all $k$, then $a(N)$ is even by Lemma~\ref{lem:even}. If $N=k(k+2)$, then $N+1=(k+1)^2$, and the map $\sigma$ from the proof of Lemma~\ref{lem:even} is still an involution of $D_N$ (properties (1) and (2) did not use the hypothesis). By the computation in (3), its fixed points are the $m\in D_N$ with $(m+1)^2=N+1$. Since $k\le N$ and $(k+1)\mid(k+1)^2$, we have $k\in D_N$, so $k$ is its only fixed point. The other elements of $D_N$ fall into $2$-element orbits, so $|D_N|$ is odd and $a(N)$ is odd.
 \end{proof}
 
 In particular, Theorem~\ref{thm:full} proves the formula $a(n(n+2))\equiv1\pmod2$ of the entry. It is consistent with the listed values, for example $a(3)=-3$, $a(8)=15$, $a(15)=-93$ and $a(24)=323$, and with $a(p-1)=2$ for odd primes~$p$, where $d(p)=2$. A referee checked independently, by direct computation in Python, that $a(n)\equiv d(n+1)\pmod 2$ for all $n\le10201$ in Hanna's table \cite{A323695}. This check is not part of the formal verification.
@@ -305,7 +305,7 @@ theorem result : statement := by
   rw [cast_a, sum_eq_zero n hne] at h1
   exact absurd h1 (by decide)
 \end{lstlisting}
-The core of \decl{map_summand} is the computation in the proof of Lemma~\ref{lem:map}. After the three factors are generalized to variables $s$, $e$ and $u$, it is a \texttt{calc} chain whose steps are closed by \texttt{rw} with $ue=1$ and $u^{m+1}s=x^mu^m$ and by \texttt{ring}. The proof does no large computation: the only uses of \texttt{decide} check $1+1=0$ and $0\ne1$ in $\Z/2\Z$, and the remaining coefficient and divisibility goals in Lemma~\ref{lem:coeff} are closed by \texttt{simp}, \texttt{omega} and standard divisibility lemmas. The kernel evaluation \decl{a_data} in the statement file is a check of the definitions against the OEIS data and is not used by the proof.
+The core of \decl{map_summand} is the computation in the proof of Lemma~\ref{lem:map}. After the three factors are generalized to variables $s$, $e$ and $u$, it is a \texttt{calc} chain whose steps are closed by \texttt{rw} with $ue=1$ and $u^{m+1}s=x^mu^m$ and by \texttt{ring}. The proof does no large computation: the only uses of \texttt{decide} check the identities $-1=1$, $-0=0$, $1+1=0$ and $0\ne1$ in $\Z/2\Z$, and the remaining coefficient and divisibility goals in Lemma~\ref{lem:coeff} are closed by \texttt{simp}, \texttt{omega} and standard divisibility lemmas. The kernel evaluation \decl{a_data} in the statement file is a check of the definitions against the OEIS data and is not used by the proof.
 
 \subsection*{Audit}
 The file ends with
