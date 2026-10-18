@@ -973,6 +973,29 @@
    "date": "2026-10-18"
   },
   {
+   "id": "OEIS-frontier/A215010",
+   "slug": "oeis-a215010",
+   "title": "An equiangular decagon with sides in arithmetic progression (A215010)",
+   "area": "Discrete geometry",
+   "source": "OEIS A215010",
+   "source_url": "https://oeis.org/A215010",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A215010.lean",
+    "decl": "Math0.Statements.A215010.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-refutes",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A215010.lean",
+   "our_decl": "Math0.Frontier.A215010.result : ¬ Math0.Statements.A215010.statement",
+   "summary": "Garcia's conjecture (OEIS A215010) says that hexagons are the only equiangular simple convex polygons whose integer side lengths are the N terms t, t+d, ..., t+(N-1)d (with d ≥ 1) of an arithmetic progression, in some order. Formally: if N ≥ 3, every side t + σ(k)·d is positive, and Σ_k (t + σ(k)d)·exp(2πik/N) = 0 for a permutation σ of Fin N, then N = 6. We prove that this is false. Take N = 10 and t = d = 1, with consecutive sides (1, 4, 5, 8, 9, 2, 3, 6, 7, 10), so σ = (0, 3, 4, 7, 8, 1, 2, 5, 6, 9). This gives an equiangular decagon.",
+   "notes": "Conjecture as stated in OEIS: \"Conjecture: hexagons are the only simple convex polygons with equal interior angles with such property, due to the fact that cos(Pi/3) = 1/2.\" Here 'such property' means integer side lengths in arithmetic progression t+m*d, as in the entry name. (entry by _Robin Garcia_, Jul 31 2012)\n\nReferees: Prior refutations, all at least as old as or published soon after Garcia's 2012 conjecture:\n\n(1) OEIS A118887 (H. Pfoertner, May 03 2006). \"Number of ways to place n objects with weights 1,...,n evenly spaced around a circle so it balances.\" T. D. Noe, Sep 13 2005: \"Also number of equiangular polygons whose sides are some permutation of 1,2,3,...,n.\" The data have included a(10)=24, a(12)=732, a(14)=720, a(15)=48 since the first revision in 2006. W. Edwin Clark (Sep 14 2005) proved there are no solutions when n is a prime power. J. Sondow (Oct 17 2013) records that Murray Klamkin proved solutions exist when n is not a prime power, and adds the formula a(A024619(n)) > 0. The problem was proposed by Brendan McKay on the SeqFan mailing list, Sep 12 2005. https://oeis.org/A118887\n\n(2) G. J. Woeginger, \"Nothing new about equiangular polygons\", Amer. Math. Monthly 120(9) (2013) 849–850, doi:10.4169/amer.math.monthly.120.09.849. Abstract: \"We survey results on equiangular n-vertex polygons with edge lengths in arithmetic progression. Such a polygon exists if and only if n has at least two distinct prime factors.\" This is exactly the A215010 setting, and it gives n = 10, 12, 14, 15, ... as counterexamples.\n\n(3) Supporting references:\n- D. Ball, \"Equiangular polygons\", Math. Gazette 86 (2002) 396–407.\n- A. Bernoff, \"Bernoff's Puzzler\", MuddMath Newsletter 4(1) (2005), p. 10.\n- M. Munteanu and L. Munteanu, \"Rational equiangular polygons\", Applied Math. 4 (2013) 1460–1465, doi:10.4236/am.2013.410197.\n- U. Abel, \"Coincidence of the barycentre and the geometric centre of weighted points\", Math. Gazette (online Oct 2019). It restates the criterion: at least two distinct prime factors.\n\nA215010 itself (history checked through revision #43, Jan 23 2015) never cites any of these, and its conjecture remains uncorrected. I found no earlier formalization in Lean or any other proof assistant.",
+   "date": "2026-10-18"
+  },
+  {
    "id": "OEIS-frontier/A294512",
    "slug": "oeis-a294512",
    "title": "Lang's conjecture a(n) = A250400(n+1)/(n+1) for A294512 fails at n = 164",
