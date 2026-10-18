@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "math0-gfq"
+version = "0.1.0"
+description = "Exact minimum-distance checker for linear codes over GF(q), q in 2..9 (prime powers)"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+gfq-check = "gfq.cli:main"
+
+[tool.setuptools]
+packages = ["gfq"]
