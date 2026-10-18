@@ -904,6 +904,29 @@
    "date": "2026-10-17"
   },
   {
+   "id": "OEIS-frontier/A005590",
+   "slug": "oeis-a005590",
+   "title": "Zeros of a(3n) for the signed Stern sequence A005590 are exactly the fibbinary numbers",
+   "area": "Number theory",
+   "source": "OEIS A005590",
+   "source_url": "https://oeis.org/A005590",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A005590.lean",
+    "decl": "Math0.Statements.A005590.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A005590.lean",
+   "our_decl": "Math0.Frontier.A005590.result",
+   "summary": "Let a : N -> Z be given by a(0)=0, a(1)=1, a(2n)=a(n), a(2n+1)=a(n+1)-a(n) (OEIS A005590). Then for every n >= 0, a(3n)=0 if and only if n is fibbinary (OEIS A003714), i.e. the binary representation of n has no two adjacent 1 bits. This is Ralf Stephan's 2003 conjecture.",
+   "notes": "Conjecture as stated in OEIS: Conjecture: a(3n)=0 iff n in A003714. - _Ralf Stephan_, May 02 2003\n\nReferees: I found no prior resolution.\n- OEIS A005590 (local mirror, rev #97, Nov 2025) still marks Stephan's 2003 claim as a conjecture.\n- Related OEIS entries: A003714, A277335 (= 3·A003714, the zero set of A005590, not cross-linked to it), A290258.\n- R. Stephan, arXiv:math/0409509: the conjecture is not listed. R. Stephan, arXiv:math/0307027: lists A005590 only in a table.\n- J.-P. Allouche and J. Shallit, 'The ring of k-regular sequences', TCS 98 (1992): Example 7 shows 2-regularity only.\n- J.-P. Allouche and M. Mendès France, arXiv:1202.0211: links A005590 to Thue–Morse, nothing on zeros.\n- No hits in S. Northshield, arXiv:1503.03433; C. Defant, arXiv:1506.07824; B. Reznick, arXiv:math/0610601; or S. Fried, arXiv:2607.24832 (abstract only).\n- Not in the OEIS Open / Tsoukalas et al. 492-conjecture set (arXiv:2608.11941, 2605.22763) and not in google-deepmind/formal-conjectures.\n- Not checked: B. Reznick, 'A new sequence with many properties', Abstracts AMS 5 (1984) 16. Its scan is on oeis.org, which is rate-limited here.",
+   "date": "2026-10-18"
+  },
+  {
    "id": "OEIS-frontier/A091817",
    "slug": "oeis-a091817",
    "title": "Quet's integrality conjecture for A091817 holds",
@@ -1065,6 +1088,29 @@
    "date": "2026-10-18"
   },
   {
+   "id": "OEIS-frontier/A326602",
+   "slug": "oeis-a326602",
+   "title": "A326602: a(n) is odd iff n is a square",
+   "area": "Sequences and series",
+   "source": "OEIS A326602",
+   "source_url": "https://oeis.org/A326602",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A326602.lean",
+    "decl": "Math0.Statements.A326602.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A326602.lean",
+   "our_decl": "Math0.Frontier.A326602.result",
+   "summary": "Let A(x) = Sum_{n>=0} (x^(2n-1)+1)^n x^n / (1+x^(2n+1))^(n+1) in Z[[x]] (the n=0 summand is 1/(1+x)), and let a(n) = [x^(2n)] A(x). Then for every n >= 0, a(n) is odd if and only if n is a perfect square (n = k^2 for some k >= 0, so 0 counts as a square).",
+   "notes": "Conjecture as stated in OEIS: A326602 (G.f.: Sum_{n>=0} (x^(2n-1)+1)^n x^n/(1+x^(2n+1))^(n+1), an even function; a(n) = [x^(2n)]): \"a(n) is odd iff n is square (conjecture).\" (_Paul D. Hanna_, Aug 08 2019). Same family: A323689 (Sum (x^n+i)^n/(1+i x^n)^(n+1)): \"Odd terms occur only at n = k^2 for k >= 0 (conjecture);\" (Hanna, Feb 14 2019); A323675 (Sum x^n (x^n+i)^n/(1+i x^(n+1))^(n+1)): \"It appears that odd terms occur only at n*(n+1)\" (Hanna, Feb 10 2019); A323690 (Sum (x^(n+1)+i)^n/(1+i x^n)^(n+1)): \"the first column consists of all the odd terms\" (triangle rows start at n(n+1)) (Hanna, Feb 13 2019).\n\nReferees: No prior resolution of A326602 found.\n- OEIS A326602 (local mirror and upstream oeisdata) is still at revision #19, Aug 11 2019, and still says \"a(n) is odd iff n is square (conjecture)\". No later edits or proof links.\n\nClosest prior work (same involution or parity method, different sequences):\n- A323557 (odd terms only at n(n+1)): proved by AlphaProof Nexus (github.com/google-deepmind/alphaproof-nexus-results, APNOutputs/OEIS/oeis_323557_conjecture_0.lean) and in T. Adamczewski, \"OEIS Open: How many conjectures can language models turn into theorems?\", arXiv:2608.11941, Appendix A. Also R. Stephan's comment of Jun 01 2026 on A323557.\n- A325046: S. Fried, \"Proof of a conjecture stated in A325046\" (OEIS a325046.pdf, 2025), and \"Further proofs of conjectures from the OEIS\", arXiv:2607.24832, Sec. 3.8 / Thm 50.\n\nNeither arXiv paper mentions A326602, and A326602 is absent from google-deepmind/formal-conjectures, so it was not in the Tsoukalas et al. or OEIS Open benchmark sets.",
+   "date": "2026-10-18"
+  },
+  {
    "id": "OEIS-frontier/A338885",
    "slug": "oeis-a338885",
    "title": "A338885: the smallest number in row 655 is 104, not A228286(655) = 115",
@@ -1085,6 +1131,75 @@
    "our_decl": "Math0.Frontier.A338885.result : ¬ Math0.Statements.A338885.statement",
    "summary": "Kagey's conjecture in OEIS A338885 says that for every n ≥ 2, the smallest k for which a diagonal lattice rectangle (integer vertices, no side parallel to the x-axis) lies in the n X k box [0,n]×[0,k] and touches all four of its sides is A228286(n) = min{x + y*z : x, y, z ≥ 1, x*y + z = n}. This is false. For n = 655, the value k = 104 is in the row, but A228286(655) = 115 ≥ 105. So A228286(655) is not the least element of row 655.",
    "notes": "Conjecture as stated in OEIS: \"Conjecture: The smallest number in the n-th row is A228286(n).\" (entry by _Peter Kagey_, Nov 14 2020; a second conjecture in the same entry, \"The largest number in the n-th row is A033638(n)\", is true; see approach)\n\nReferees: I found no prior resolution.\n- OEIS A338885 (Kagey, Nov 14 2020): I checked both the local mirror and the latest raw oeisdata version (rev #22, Sep 11 2021). The conjecture is still listed, with no counterexample noted, and the b-file covers only rows 2..101.\n- Cross-references (local mirror): A228286, A228287, A228288, A338886, A338887, A033638, A085582, A113751. None of them mentions a resolution.\n- Code Golf SE question 213754 \"Rectangles in rectangles\", read via the Stack Exchange API: neither the answers nor the comments mention the conjecture.\n- Web searches (OEIS/A338885, Kagey, SeqFan, the min x+yz / ab+cd formulations, ARML 2013) turned up nothing relevant.\n- Independent computation: n = 655 is the smallest counterexample (row min 104 vs A228286 = 115). Further counterexamples are at n = 845, 909 and 1019 for n <= 1200.",
+   "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A344710",
+   "slug": "oeis-a344710",
+   "title": "A344710: non-obtuse lattice triangles with sides >= sqrt(n) have |det| > (sqrt 3 / 2) n",
+   "area": "Discrete geometry",
+   "source": "OEIS A344710",
+   "source_url": "https://oeis.org/A344710",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A344710.lean",
+    "decl": "Math0.Statements.A344710.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A344710.lean",
+   "our_decl": "Math0.Frontier.A344710.result",
+   "summary": "For every n >= 1, let a(n) be the least value of |det(B-A, C-A)| (twice the area) over lattice triangles ABC in Z^2 that are non-degenerate and non-obtuse and have all three squared side lengths >= n. Then sqrt(3/4) * n < a(n). This is Waldmann's conjectured inequality in OEIS A344710.",
+   "notes": "Conjecture as stated in OEIS: Formula: \"a(n) > sqrt(3/4)*n (conjectured).\" Comment: \"Conjectured next terms (from the conjectured inequality a(n) > sqrt(3/4)*n) are a(50,...,64) ?= 45, 48, 48, 52, 55, 55, 55, 55, 55, 56, 56, 56, 56, 56, 56.\" (entry by _Jonathan F. Waldmann_, May 26 2021). A344845 has the same inequality a(n) > sqrt(3/4)*m (conjectured), by the same author, May 29 2021.\n\nReferees: A. Mazel, I. Stuhl, Y. Suhov, \"High-density hard-core model on Z^2 and norm equations in ring Z[...]\", arXiv:1909.11648 (v1 25 Sep 2019; v3 22 Jun 2023). Lemma 3.4.4, eq. (3.1): sqrt(3)D^2/2 < S(D) < sqrt(3)D^2/2 + sqrt(2)D. S(D) is twice the minimal area of non-obtuse Z^2-triangles with sides >= D, so A344710(n) = S(sqrt n). The paper calls the lower bound \"obvious\". D. Krachun, \"Triangles on Z^2 and sliding phenomenon\" / \"Extreme Gibbs measures for high-density hard-core model on Z^2\", arXiv:1912.07566 (Dec 2019 / Jun 2020). Definition 2.1 gives the same S(D) for all D > 0, and Theorem 2 gives S(D) = (sqrt3/2)D^2 + O(D^{4/5}). The underlying inequality is the classical one: a non-obtuse triangle with all sides >= D has area >= (sqrt3/4)D^2, since area = (1/2)ab sin C with the largest angle C in [60,90] degrees. Equality would need an equilateral lattice triangle, and Z^2 has none. OEIS A344710 and A344845 (local mirror and GitHub, revisions #84/#52 of Feb 2022) still list the inequality as conjectured.",
+   "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A348484",
+   "slug": "oeis-a348484",
+   "title": "A348484: no two squares two steps apart; the conjectured formula holds",
+   "area": "Discrete geometry",
+   "source": "OEIS A348484",
+   "source_url": "https://oeis.org/A348484",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A348484.lean",
+    "decl": "Math0.Statements.A348484.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A348484.lean",
+   "our_decl": "Math0.Frontier.A348484.result",
+   "summary": "For every n >= 1, let a(n) be the largest number of squares you can choose on an n x n board so that no two chosen squares are exactly two steps apart in the same row or in the same column. Then a(n) = n^2/2 if n ≡ 0 (mod 4), a(n) = (n^2+1)/2 if n is odd, and a(n) = n^2/2 + 2 if n ≡ 2 (mod 4). (This is Yang Hong's conjecture in OEIS A348484.)",
+   "notes": "Conjecture as stated in OEIS: %F A348484 Conjectures: a(n) = n^2/2 for n == 0 (mod 4). a(n) = (n^2 + 1)/2 for n == 1 or 3 (mod 4). a(n) = n^2/2 + 2 for n == 2 (mod 4).  (Entry by _Yang Hong_, Oct 20 2021; last edit #33, Dec 06 2022.)\n\nReferees: OEIS A348484 (Yang Hong, Oct 20 2021; latest revision #33, Dec 06 2022) still marks the formulas as \"Conjectures\". R. J. Mathar's Dec 2022 comment gives a 2×2-block checkerboard construction. Its g.f. -x(1+2x-2x^2+2x^3+x^4)/((1+x)(1+x^2)(x-1)^3) matches the conjectured values, but he states it only as a lower bound. Cross-reference: A048716 (the 1-D row condition, k AND 4k = 0). I found no published or online proof of the upper bound on arXiv, Math StackExchange, MathOverflow, SeqFan or general web search. The result does follow directly from the standard fact that a grid graph P_a□P_b has independence number ⌈ab/2⌉, because the \"two apart\" graph is a disjoint union of four such grids.",
+   "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A362086",
+   "slug": "oeis-a362086",
+   "title": "OEIS A362086: every denominator of 1/(2-3/(3-4/(...(n-1)-n/(-3)))) except 9 is 1 or a prime",
+   "area": "Number theory",
+   "source": "OEIS A362086",
+   "source_url": "https://oeis.org/A362086",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A362086.lean",
+    "decl": "Math0.Statements.A362086.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A362086.lean",
+   "our_decl": "Math0.Frontier.A362086.result",
+   "summary": "For n >= 3 let a(n) be the reduced denominator of 1/(2 - 3/(3 - 4/(4 - ... ((n-1) - n/(-3))))), evaluated in Q from the inside out. Then for every n >= 3 with a(n) != 9, a(n) is 1 or a prime. (Mohammed Bouras's conjecture; the value 9 occurs at n = 5.)",
+   "notes": "Conjecture as stated in OEIS: Conjecture: Except for 9, every term of this sequence is either a prime or 1. (Mohammed Bouras, May 28 2023)\n\nReferees: OEIS A362086 (local mirror, revision #35, May 09 2024): \"Conjecture: Except for 9, every term of this sequence is either a prime or 1.\" No proof is recorded. Related prior work, none of which settles A362086:\n- M. Bouras, \"A New Primes-Generating Sequence\", arXiv:2509.09745 (2025). Lists A362086 in its Table 1 family; the primality property is stated only as a conjecture.\n- B. Cloitre, \"On the sequence A356247\" (2025), OEIS attachment a356247_1.pdf. Proves Conjectures 1-3 for the innermost -1 analogue, A356247.\n- T. Adamczewski, \"OEIS Open: How many conjectures can language models turn into theorems?\", arXiv:2608.11941 (2026), together with the AlphaProof Nexus Lean files oeis_363347_conjecture_2.lean and oeis_a363102_conjecture_1.lean. Proves the analogues for innermost -2 (A363102) and -4 (A363347).\nA362086 appears in neither the alphaproof-nexus-results repository nor the epoch-research LeanOpenProblems and LeanOpenProblems-results repositories. Searches of arXiv, MathOverflow and Math StackExchange found no proof or counterexample.",
    "date": "2026-10-18"
   },
   {
