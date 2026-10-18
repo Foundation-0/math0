@@ -1,0 +1,6 @@
+{
+ "command": "python3 -m gfq --q 4 --json best/q4_n22_k6_d12.txt",
+ "exit_code": 0,
+ "stdout": "{\n  \"q\": 4,\n  \"n\": 22,\n  \"k\": 6,\n  \"d\": 12,\n  \"lower_bound\": 12,\n  \"upper_bound\": 12,\n  \"complete\": true,\n  \"codeword_certificate\": [\n    1,\n    0,\n    0,\n    0,\n    3,\n    0,\n    2,\n    2,\n    0,\n    2,\n    3,\n    0,\n    2,\n    0,\n    0,\n    2,\n    3,\n    0,\n    3,\n    1,\n    0,\n    1\n  ],\n  \"certificate_checked\": true,\n  \"method\": \"brute\",\n  \"enumerated\": 1365,\n  \"num_info_sets\": 0\n}\n",
+ "stderr": ""
+}
