@@ -107,4 +107,24 @@ elab "#math0_refutes_every_answer " ours:ident ppSpace theirs:ident " with " the
   auditAxioms o
   logInfo m!"math0 statement check: '{o}' refutes '{t}' for every value of '{ta}'"
 
+/-- For statements that math0 formalizes itself (they live in `Math0/Statements/`, each a
+`def statement : Prop` written and reviewed before any proof attempt): `ours` must have type exactly
+`stmt` or exactly `¬ stmt`, and both `stmt` and `ours` must use only the permitted axioms (so the
+statement cannot hide a `sorry`). -/
+elab "#math0_settles " ours:ident ppSpace stmt:ident : command => do
+  let o ← liftCoreM <| realizeGlobalConstNoOverloadWithInfo ours
+  let s ← liftCoreM <| realizeGlobalConstNoOverloadWithInfo stmt
+  let si ← getConstInfo s
+  unless si.levelParams.isEmpty && stripMData si.type == .sort .zero do
+    throwError "math0 statement check failed: '{s}' must be a universe-monomorphic definition of type Prop"
+  unless si matches .defnInfo _ do
+    throwError "math0 statement check failed: '{s}' must be a definition"
+  auditAxioms s
+  let ty := stripMData (← getConstInfo o).type
+  let verb ← if ty == .const s [] then pure "proves"
+    else if ty == mkNot (.const s []) then pure "refutes"
+    else throwError "math0 statement check failed: the type of '{o}' is neither '{s}' nor '¬ {s}'"
+  auditAxioms o
+  logInfo m!"math0 statement check: '{o}' {verb} '{s}'"
+
 end Math0.Audit

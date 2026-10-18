@@ -23,6 +23,8 @@ VERB = {
     "refutes": "refutes (proves the negation of)",
     "answers": "answers",
     "refutes_every_answer": "refutes, for every possible value of its unknown,",
+    "settles-proves": "proves",
+    "settles-refutes": "refutes (proves the negation of)",
 }
 
 
@@ -31,12 +33,36 @@ MODE_NOTE = {
     "refutes": " (negated)",
     "answers": " with its unknown replaced by an explicit value",
     "refutes_every_answer": " negated and universally quantified over the unknown",
+    "settles-proves": "",
+    "settles-refutes": " (negated)",
 }
 
 
 def upstream_link(e):
     u = e["upstream"]
+    if e.get("statement_origin") == "math0":
+        return f"[`{u['decl']}`]({u['file']}) (math0, from {e['source']})"
     return f"[`{u['decl']}`]({FC_URL}/blob/{u['commit']}/{u['file']})"
+
+
+def verification_text(e):
+    u = e["upstream"]
+    if e.get("statement_origin") == "math0":
+        return (
+            f"The statement was formalized by math0 from the conjecture in [{e['source']}]({e['source_url']}) "
+            f"as [`{u['decl']}`](../../{u['file']}). Its definitions are checked by the kernel against the OEIS data, "
+            "and it was reviewed for fidelity and frozen before any proof attempt. The Lean file "
+            f"[`{e['lean_file']}`](../../{e['lean_file']}) {VERB[e['mode']]} it; the final command `#math0_settles` checks that "
+            "our theorem's type is exactly the statement or its negation and that both use no axioms beyond "
+            "`propext`, `Classical.choice` and `Quot.sound`."
+        )
+    return (
+        f"The Lean file [`{e['lean_file']}`](../../{e['lean_file']}) {VERB[e['mode']]} the upstream statement "
+        f"{upstream_link(e)} (formal-conjectures at commit `{u['commit'][:7]}`, upstream category "
+        f"`{u['category']}`). Its final command `#math0_{e['mode']}` checks that our theorem's type is "
+        f"syntactically identical to the upstream statement{MODE_NOTE[e['mode']]} "
+        "and that the proof uses no axioms beyond `propext`, `Classical.choice` and `Quot.sound`."
+    )
 
 
 def result_readme(e):
@@ -55,11 +81,7 @@ def result_readme(e):
         "",
         "## Verification",
         "",
-        f"The Lean file [`{e['lean_file']}`](../../{e['lean_file']}) {VERB[e['mode']]} the upstream statement "
-        f"{upstream_link(e)} (formal-conjectures at commit `{u['commit'][:7]}`, upstream category "
-        f"`{u['category']}`). Its final command `#math0_{e['mode']}` checks that our theorem's type is "
-        f"syntactically identical to the upstream statement{MODE_NOTE[e['mode']]} "
-        "and that the proof uses no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.",
+        verification_text(e),
         "",
     ]
     if e.get("notes"):
