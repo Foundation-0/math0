@@ -24,6 +24,138 @@
    "date": "2026-10-17"
   },
   {
+   "id": "Arxiv/1609.08688/sIncreasingrTuples::maximalLength_ge_of_isSquare",
+   "slug": "arxiv-1609-08688-maximallength-ge-of-issquare",
+   "title": "Gowers–Long lower bound: F(k²) ≥ k³ for 2-increasing sequences of triples",
+   "area": "Combinatorics",
+   "source": "arXiv:1609.08688",
+   "source_url": "https://arxiv.org/abs/1609.08688",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/Arxiv/1609.08688/sIncreasingrTuples.lean",
+    "decl": "Arxiv.«1609.08688».maximalLength_ge_of_isSquare",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Arxiv/Arxiv_1609_08688_maximalLength_ge_of_isSquare.lean",
+   "our_decl": "Math0.Arxiv.«1609.08688».maximalLength_ge_of_isSquare",
+   "summary": "Say that a triple a = (a_1,a_2,a_3) is 2-less than b = (b_1,b_2,b_3) if a_i < b_i for at least two coordinates i. A finite sequence of triples is 2-increasing if every earlier term is 2-less than every later term. Let F(n) be the largest length of a 2-increasing sequence of triples with all coordinates in {1,...,n}. (Formally, F(n) is the sSup in ℕ of the set of such lengths.) If n is a perfect square then (√n)^3 ≤ F(n), i.e. F(k^2) ≥ k^3 for every natural number k.",
+   "notes": "The source is W. T. Gowers and J. Long, \"The length of an s-increasing sequence of r-tuples\", arXiv:1609.08688, published in Combinatorics, Probability and Computing 30 (2021), 686–721. Proposition 1.4 states F(n) ≤ n^2 for all n, and F(n) ≥ n^{3/2} when n is a perfect square, using the lexicographic construction of triples ((a,b),(a,c),(b,c)). The result is known and elementary. In formal-conjectures, both the pinned checkout and the latest upstream HEAD (d9ce556, 2026-10-17) still leave `maximalLength_ge_of_isSquare` as `sorry`. The upper bound `maximalLength_le` is already proved upstream. I found no existing Lean proof of the lower bound.",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "Arxiv/2602.05192/FirstProof4::four_2",
+   "slug": "arxiv-2602-05192-four-2",
+   "title": "Finite free Stam inequality in degree 2 (First Proof, Problem 4, n = 2): it holds with equality",
+   "area": "Real analysis",
+   "source": "arXiv:2602.05192",
+   "source_url": "https://arxiv.org/abs/2602.05192",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/Arxiv/2602.05192/FirstProof4.lean",
+    "decl": "Arxiv.«2602.05192».four_2",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-already-formalized",
+   "lean_file": "lean/Math0/Arxiv/Arxiv_2602_05192_four_2.lean",
+   "our_decl": "Math0.Arxiv.«2602.05192».four_2",
+   "summary": "Let p and q be monic real polynomials of degree 2, each having 2 real roots counted with multiplicity. Let p ⊞_2 q be their finite additive convolution, Σ_{k=0}^{2} c_k x^{2-k} with c_k = Σ_{i+j=k} (2-i)!(2-j)!/(2!(2-k)!) a_i b_j, where a_i and b_j are the coefficients of x^{2-i} in p and x^{2-j} in q. For a monic polynomial with simple roots λ_1,…,λ_n, set Φ_n(p) = Σ_i (Σ_{j≠i} 1/(λ_i-λ_j))^2, and set Φ_n(p) = ∞ when p has a repeated root. Then, in [0,∞], 1/Φ_2(p) + 1/Φ_2(q) ≤ 1/Φ_2(p ⊞_2 q). In fact equality always holds.",
+   "notes": "The problem is First Proof (Abouzaid, Blumberg, Hairer, Kileel, Kolda, Nelson, Spielman, Srivastava, Ward, Weinberger, Williams), arXiv:2602.05192v2, Problem 4: the finite free Stam / harmonic-mean inequality for ⊞_n. ⊞_n is the finite free additive convolution of Marcus–Spielman–Srivastava (\"Finite free convolutions of polynomials\"; \"Interlacing families II\"). The general statement was answered affirmatively by the First Proof solutions. It was formalized in Lean 4 by FrenzyMath's Archon in the repository frenzymath/Archon-FirstProof-Results, file FirstProof/FirstProof4/Problem4.lean, theorem harmonic_mean_inequality_full, for all n ≥ 2 with zero sorrys according to its README. Upstream links that file as `formal_proof` on `four`. The n = 2 case is an elementary identity: ⊞_2 adds discriminants (second cumulants), so equality holds.",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "Arxiv/2605.12342/Conjecture1::conjecture_1.variants.rank_3_3",
+   "slug": "arxiv-2605-12342-conjecture-1-variants-rank-3-3",
+   "title": "Γ_{3⊕3} (equal-sign pairs in S₃ × S₃) is not 2-generated",
+   "area": "Group theory",
+   "source": "arXiv:2605.12342",
+   "source_url": "https://arxiv.org/abs/2605.12342",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/Arxiv/2605.12342/Conjecture1.lean",
+    "decl": "Arxiv.«2605.12342».conjecture_1.variants.rank_3_3",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Arxiv/Arxiv_2605_12342_conjecture_1_variants_rank_3_3.lean",
+   "our_decl": "Math0.Arxiv.«2605.12342».rank_3_3",
+   "summary": "Let Γ = Γ_{3⊕3} = {(σ₁, σ₂) ∈ S₃ × S₃ : sgn σ₁ = sgn σ₂}. In the formal statement Γ is the kernel of (σ₁,σ₂) ↦ sgn σ₁ · sgn σ₂⁻¹. For all h₁, h₂ ∈ Γ, the subgroup of Γ generated by {h₁, h₂} is not all of Γ. So Γ is not 2-generated, which is the rank-3 claim Fernandes records in arXiv:2605.12342.",
+   "notes": "V. H. Fernandes, \"Groups of permutations that are even on maximal proper subsets, and related monoids\", arXiv:2605.12342 (2026). It states, as a GAP computation, that Γ3⊕3, Γ4⊕3 and Γ4⊕4 are not 2-generated, so rank(Γ3⊕3) = 3, and gives Conjecture 1 for all other (m, n). It also follows from elementary group theory: Γ3⊕3 is the generalized dihedral group Dih(C3×C3), and any 2-generated subgroup of it has order at most 9. Existing Lean work: K. Kitamura, github.com/KitaKen1/fernandes-conjecture-1-lean, proves only the main conjecture_1 (the non-exceptional cases are 2-generated), not the rank-3 exceptions. Upstream formal-conjectures main (checked 2026-10-17) still has `sorry` for conjecture_1.variants.rank_3_3.",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "Arxiv/math.0608009/PoissonConjecture::poisson_conjecture.variants.jacobian_implication",
+   "slug": "arxiv-math-0608009-poisson-conjecture-variants-jacobian-implication",
+   "title": "The Jacobian conjecture in dimension 2n implies the Poisson conjecture in dimension n",
+   "area": "Algebraic geometry, Nonassociative algebra",
+   "source": "arXiv:math.0608009",
+   "source_url": "https://arxiv.org/abs/math.0608009",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/Arxiv/math.0608009/PoissonConjecture.lean",
+    "decl": "Arxiv.«math.0608009».poisson_conjecture.variants.jacobian_implication",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Arxiv/Arxiv_math_0608009_poisson_conjecture_variants_jacobian_implication.lean",
+   "our_decl": "Math0.Arxiv.«math.0608009».jacobian_implication",
+   "summary": "Let K be a field of characteristic zero and n a natural number. Suppose the Jacobian conjecture holds in 2n variables over K: every polynomial map F : K^{2n} -> K^{2n} whose Jacobian determinant is a unit of K[x_1,...,x_{2n}] has a polynomial two-sided compositional inverse. Then every K-algebra endomorphism phi of K[x_1..x_n, y_1..y_n] that preserves the canonical Poisson bracket {f,g} = sum_i (d_{x_i} f d_{y_i} g - d_{y_i} f d_{x_i} g) on the generators, i.e. {phi(X_v), phi(X_w)} = {X_v, X_w} for all v, w, is bijective. (Adjamagbo and van den Essen, arXiv math/0608009, Theorems 1 and 7.)",
+   "notes": "K. Adjamagbo and A. van den Essen, \"On the equivalence of the Jacobian, Dixmier and Poisson conjectures in any characteristic\", arXiv math/0608009, published as \"A proof of the equivalence of the Dixmier, Jacobian and Poisson conjectures\", Acta Math. Vietnam. 32 (2007) 205-214. Theorem 1 / Theorem 7 there state JC_{2n} ⇒ PC_n ⇒ DC_n ⇒ JC_n; JC_{2n} ⇒ PC_n is the step proved here. Related: Bass-Connell-Wright 1982 (DC_n ⇒ JC_n); Tsuchimoto and Belov-Kanel-Kontsevich (JC_{2n} ⇒ DC_n). Upstream records JC as false in dimension 3 (Alpöge 2026) and PC_2 as false (Long 2026), so the hypothesis here is false for n ≥ 2 and the case that still matters, JC_2 ⇒ PC_1, is nontrivial. Upstream has no formal_proof link for this item.",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "Books/BugeaudDistributionModuloOne/Problem10_9::problem_10_9.variants.dimH_lt_one",
+   "slug": "bugeaud09-problem-10-9-variants-dimh-lt-one",
+   "title": "The set of Mahler Z-numbers is countable, so its Hausdorff dimension is 0, which is less than 1",
+   "area": "Number theory",
+   "source": "Books / BugeaudDistributionModuloOne / Problem10_9",
+   "source_url": "",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/Books/BugeaudDistributionModuloOne/Problem10_9.lean",
+    "decl": "Bugeaud09.problem_10_9.variants.dimH_lt_one",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Books/Bugeaud09_problem_10_9_variants_dimH_lt_one.lean",
+   "our_decl": "Math0.Bugeaud09.dimH_lt_one",
+   "summary": "A Z-number is a real ξ > 0 such that the fractional part {ξ (3/2)^n} lies in [0, 1/2) for every integer n ≥ 1. The set Z of all Z-numbers has Hausdorff dimension < 1, i.e. dimH {ξ : ℝ | IsZNumber ξ} < 1 in ℝ≥0∞. Flatto, Lagarias and Pollington (1995) proved this result, recorded in Bugeaud, Problem 10.9. We prove something stronger, going back to Mahler (1968): Z is countable, so dimH Z = 0.",
+   "notes": "Mahler, K. \"An unsolved problem on the powers of 3/2\", J. Austral. Math. Soc. 8 (1968) 313-321: shows each interval [k, k+1) contains at most one Z-number, so the set of Z-numbers is countable (hence of Lebesgue measure 0 and Hausdorff dimension 0). Flatto, Lagarias and Pollington, \"On the range of fractional parts {ξ(p/q)^n}\", Acta Arith. 70 (1995) 125-147, credited by the upstream docstring; for this particular set their result is weaker than Mahler's countability. Bugeaud, \"Distribution modulo one and Diophantine approximation\" (CUP 2012), Ch. 10, Problem 10.9. I know of no prior Lean formalization: the upstream formal_conjectures statement is `sorry` with no formal_proof link, and Mathlib has no Z-number results.",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "Books/BugeaudDistributionModuloOne/Problem10_9::problem_10_9.variants.measure_zero",
+   "slug": "bugeaud09-problem-10-9-variants-measure-zero",
+   "title": "Mahler's Z-numbers form a Lebesgue-null set",
+   "area": "Number theory",
+   "source": "Books / BugeaudDistributionModuloOne / Problem10_9",
+   "source_url": "",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/Books/BugeaudDistributionModuloOne/Problem10_9.lean",
+    "decl": "Bugeaud09.problem_10_9.variants.measure_zero",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Books/Bugeaud09_problem_10_9_variants_measure_zero.lean",
+   "our_decl": "Math0.Bugeaud09.measure_zero",
+   "summary": "A Z-number is a real number ξ > 0 such that the fractional part {ξ (3/2)^n} lies in [0, 1/2) for every integer n ≥ 1. The set of Z-numbers has Lebesgue measure zero (Mahler 1968; Bugeaud, Distribution modulo one and Diophantine approximation, Problem 10.9, measure-zero variant). Formally: MeasureTheory.volume {ξ : ℝ | IsZNumber ξ} = 0.",
+   "notes": "K. Mahler, \"An unsolved problem on the powers of 3/2\", J. Austral. Math. Soc. 8 (1968) 313-321: at most one Z-number in each interval [k, k+1) (n ≥ 0 normalization), so Z-numbers are countable, with counting function O(x^0.7). This gives measure zero. Y. Bugeaud, Distribution Modulo One and Diophantine Approximation (CUP 2012), Ch. 10, Problem 10.9. Flatto–Lagarias–Pollington, Acta Arith. 70 (1995), is the source of the related dimH variant. I know of no earlier Lean formalization: the upstream formal-conjectures item is a `sorry` with no formal_proof link. I could not search GitHub because session access is limited to configured repositories.",
+   "date": "2026-10-17"
+  },
+  {
    "id": "ErdosProblems/10::erdos_10.variants.grechuk_example",
    "slug": "erdos10-erdos-10-variants-grechuk-example",
    "title": "Grechuk's example: 1117175146 is not a prime plus at most three powers of two",
@@ -43,6 +175,50 @@
    "our_decl": "Math0.Erdos10.erdos_10_grechuk_example",
    "summary": "Let N = 1117175146. There is no prime p and no multiset of at most three natural numbers e_1, ..., e_k (k ≤ 3, repetitions allowed) with N = p + 2^{e_1} + ... + 2^{e_k}. Formally: 1117175146 ∉ sumPrimeAndTwoPows 3, where sumPrimeAndTwoPows k = { p + Σ_{e ∈ pows} 2^e : p prime, pows a multiset of naturals with card pows ≤ k }.",
    "notes": "Sources:\n- erdosproblems.com/10: the problem is open; it records Bogdan Grechuk's observation that 1117175146 is not a prime plus at most 3 powers of 2, without showing how it was verified. The local problems.yaml lists problem 10 with status open and formalized \"yes\", with no Lean proof noted for this example.\n- Related references: Granville and Soundararajan (1998), the conjecture this example bears on for even integers; Crocker (1971), the infinitude construction.\n- The upstream formal_proof link for the infinite variant `erdos_10.variants.grechuk` (DaryxXx gist e112c74c…, Main.lean) does not contain 1117175146. The `two_pows` link is to anatoliiohorodnyk/lean-fc-proofs, whose (truncated) listing has no grechuk_example file.\n- A web search for \"1117175146\" with Lean found nothing.\n- Conclusion: the statement is known (a computational fact due to Grechuk), and this appears to be its first Lean formalization.",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "ErdosProblems/1000::erdos_1000.variants.limsup_eq_one",
+   "slug": "erdos1000-erdos-1000-variants-limsup-eq-one",
+   "title": "Erdős Problem 1000: liminf φ_A(k)/n_k = 0 forces limsup φ_A(k)/n_k = 1",
+   "area": "Number theory",
+   "source": "Erdős Problem #1000",
+   "source_url": "https://www.erdosproblems.com/1000",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/ErdosProblems/1000.lean",
+    "decl": "Erdos1000.erdos_1000.variants.limsup_eq_one",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/ErdosProblems/Erdos1000_erdos_1000_variants_limsup_eq_one.lean",
+   "our_decl": "Math0.Erdos1000.limsup_eq_one",
+   "summary": "Let n_0 < n_1 < n_2 < ... be a strictly increasing sequence of positive integers. Let φ_A(k) be the number of integers 1 ≤ m ≤ n_k such that n_k / gcd(m, n_k) divides no n_j with j < k. Put r_k = φ_A(k)/n_k. If liminf_{k→∞} r_k = 0, then limsup_{k→∞} r_k = 1. (Erdős [Er64b], recorded as erdosproblems.com/1000.)",
+   "notes": "The result is Erdős, P., \"Problems and results on diophantine approximations\", Compositio Math. 16 (1964), 52-65 [Er64b]: if liminf φ_A(k)/n_k = 0 then limsup φ_A(k)/n_k = 1. The function φ_A was introduced by Cassels, \"Some metrical theorems in Diophantine approximation. I\", Proc. Cambridge Philos. Soc. (1950) [Ca50b]. Cassels's existence result (liminf of the Cesàro averages equal to 0) shows the hypothesis can hold. Haight's PhD thesis [Ha] settled the main problem: the averages can tend to 0. The problem is erdosproblems.com/1000, listed as \"proved (Lean)\". That status refers to the main problem, whose existing formalization is https://github.com/plby/lean-proofs/blob/main/src/v4.29.1/ErdosProblems/Erdos1000.lean. That file covers only the main existence theorem, not the limsup_eq_one variant.",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "ErdosProblems/1008::erdos_1008.variants.lower_bound",
+   "slug": "erdos1008-erdos-1008-variants-lower-bound",
+   "title": "Erdős Problem 1008: every graph with m edges has a C4-free subgraph with at least √m/2 edges",
+   "area": "Combinatorics",
+   "source": "Erdős Problem #1008",
+   "source_url": "https://www.erdosproblems.com/1008",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/ErdosProblems/1008.lean",
+    "decl": "Erdos1008.erdos_1008.variants.lower_bound",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-already-formalized",
+   "lean_file": "lean/Math0/ErdosProblems/Erdos1008_erdos_1008_variants_lower_bound.lean",
+   "our_decl": "Math0.Erdos1008.lower_bound",
+   "summary": "There is a constant c > 0 such that for every finite type V and every simple graph G on V, some subgraph H ≤ G contains no copy of the 4-cycle C4 and satisfies c · m^{1/2} ≤ |E(H)|, where m = |E(G)|. (Erdős, [Er71], called this bound \"trivial\" and asked for m^{2/3}.) We prove it with c = 1/2.",
+   "notes": "The source is Erdős [Er71], \"Some unsolved problems in graph theory and combinatorial analysis\" (1971), which notes that ≫ m^{1/2} is trivial and asks for m^{2/3}. The m^{2/3} bound was proved by Conlon, Fox and Sudakov [CFS14b], \"Large subgraphs without complete bipartite graphs\" (arXiv:1401.6711), and Hunter gave a simpler proof in the erdosproblems forum. The main statement is formalized in Lean at https://github.com/plby/lean-proofs/blob/main/src/v4.29.1/ErdosProblems/Erdos1008.lean (Aristotle / Boris Alexeev), with constant 1/2 and exponent 2/3, and erdosproblems.com lists 1008 as \"proved (Lean)\". The exponent-1/2 variant follows immediately from that formalized result. The folklore argument used here (max degree versus maximum matching, m ≤ 2Δν) is standard.",
    "date": "2026-10-17"
   },
   {
@@ -90,6 +266,50 @@
    "date": "2026-10-17"
   },
   {
+   "id": "ErdosProblems/1098::erdos_1098.variants.upper_bound",
+   "slug": "erdos1098-erdos-1098-variants-upper-bound",
+   "title": "Cliques in the non-commuting graph have at most [G : Z(G)] vertices",
+   "area": "Combinatorics, Group theory",
+   "source": "Erdős Problem #1098",
+   "source_url": "https://www.erdosproblems.com/1098",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/ErdosProblems/1098.lean",
+    "decl": "Erdos1098.erdos_1098.variants.upper_bound",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-already-formalized",
+   "lean_file": "lean/Math0/ErdosProblems/Erdos1098_erdos_1098_variants_upper_bound.lean",
+   "our_decl": "Math0.Erdos1098.upper_bound",
+   "summary": "Let G be a group and let Γ(G) be its non-commuting graph: the vertices are the elements of G, and g and h are adjacent iff gh ≠ hg. If the centre Z(G) has finite index n = [G : Z(G)], then Γ(G) contains no complete subgraph on n + 1 vertices (Lean: `(nonCommutingGraph G).CliqueFree ((Subgroup.center G).index + 1)` under `[(Subgroup.center G).FiniteIndex]`). This is the remark Neumann (1976) made in answering Erdős Problem 1098.",
+   "notes": "B. H. Neumann, \"A problem of Paul Erdős on groups\", J. Austral. Math. Soc. Ser. A 21 (1976), 467–472. It proves that Γ(G) has no infinite clique iff [G:Z(G)] < ∞, and remarks that a clique has at most [G:Z(G)] vertices. erdosproblems.com/1098 lists the problem as \"proved (Lean)\" (problems.yaml, 2026-05-02). The existing Lean formalization is plby/lean-proofs, src/v4.29.1/ErdosProblems/Erdos1098.lean, which is linked as formal_proof on upstream erdos_1098. Its theorem `erdos1098` contains the same coset-injection bound S.card ≤ Nat.card (G ⧸ center G) for pairwise non-commuting finsets under finite index, and `IsFIZGroup.isPEGroup` uses the same argument.",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "ErdosProblems/1119::erdos_1119.variants.erdos_wetzel",
+   "slug": "erdos1119-erdos-1119-variants-erdos-wetzel",
+   "title": "Erdős–Wetzel theorem: if ℵ₁ < 𝔠, families of entire functions with countably many values at each point are countable",
+   "area": "Logic, Complex analysis",
+   "source": "Erdős Problem #1119",
+   "source_url": "https://www.erdosproblems.com/1119",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/ErdosProblems/1119.lean",
+    "decl": "Erdos1119.erdos_1119.variants.erdos_wetzel",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-already-formalized",
+   "lean_file": "lean/Math0/ErdosProblems/Erdos1119_erdos_1119_variants_erdos_wetzel.lean",
+   "our_decl": "Math0.Erdos1119.erdos_wetzel",
+   "summary": "Assume ℵ₁ < 𝔠. Let F be a set of entire functions ℂ → ℂ such that for every z₀ ∈ ℂ the set of values {f(z₀) : f ∈ F} is countable. Then F is countable. (Formally, the hypothesis ℵ_1 < 𝔠 is stated in an arbitrary universe `Cardinal.{u_1}`.)",
+   "notes": "- Erdős, P., \"An interpolation problem associated with the continuum hypothesis\", Michigan Math. J. 11 (1964), 9–10. This is the original theorem: ¬CH implies the family is countable, and CH gives an uncountable counterexample.\n- Hayman, W. K., Research problems in function theory (1974), Problem 2.46.\n- Kumar–Shelah, Fund. Math. 2017, and Schilhan–Weinert, J. London Math. Soc. 2024. These give the independence of the general-cardinal problem.\n- Earlier formalizations:\n  - plby/lean-proofs (Boris Alexeev; Codex/GPT), src/latest/ErdosProblems/Erdos1119.lean at commit 8822f7ddef30fadbd92e1c6ab4ed897af356af5e. It proves easy_case and `erdos_1119` (ℵ_1 < 𝔠 → pointwise-countable entire family is countable), and aliases it to `erdos_1119.variants.erdos_wetzel`.\n  - Collin Yuanjie Ren, Lean proof of the full Wetzel/CH biconditional (github.com/CollinYuanjieRen/awards, jsp-000930-cyr). It is credited in the erdosproblems.com formal_status note, and the formalized state there is \"yes\".\n  - L. C. Paulson, \"Wetzel's Problem and the Continuum Hypothesis\", Isabelle AFP (2022).",
+   "date": "2026-10-17"
+  },
+  {
    "id": "ErdosProblems/1121::erdos_1121.variants.higher_dimension",
    "slug": "erdos1121-erdos-1121-variants-higher-dimension",
    "title": "Goodman–Goodman covering theorem for balls in ℝ^d (Erdős 1121, higher-dimensional variant)",
@@ -134,6 +354,28 @@
    "date": "2026-10-17"
   },
   {
+   "id": "ErdosProblems/1136::erdos_1136.variants.multiples_of_three",
+   "slug": "erdos1136-erdos-1136-variants-multiples-of-three",
+   "title": "The multiples of 3 avoid sums equal to powers of two and have density 1/3",
+   "area": "Number theory",
+   "source": "Erdős Problem #1136",
+   "source_url": "https://www.erdosproblems.com/1136",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/ErdosProblems/1136.lean",
+    "decl": "Erdos1136.erdos_1136.variants.multiples_of_three",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/ErdosProblems/Erdos1136_erdos_1136_variants_multiples_of_three.lean",
+   "our_decl": "Math0.Erdos1136.erdos_1136_multiples_of_three",
+   "summary": "Let A = {n ∈ ℕ : 3 ∣ n}. (i) For all a, b ∈ A (not necessarily distinct) and all k ≥ 0, a + b ≠ 2^k. (ii) A has natural density 1/3: the quantity #(A ∩ [0, b)) / #[0, b) tends to 1/3 as b → ∞. This is the trivial benchmark in Erdős Problem 1136, which asks for a set with lower density greater than 1/3 and the same avoidance property.",
+   "notes": "Erdős Problem 1136 (erdosproblems.com/1136; problems.yaml gives status \"proved (Lean)\", last updated 2026-04-19). H. Müller, \"Über ein additiv-zahlentheoretisches Problem von P. Erdős\", Mitt. Math. Ges. Hamburg (2011), 75-78: Müller's set has density 1/2, and density 1/2 is optimal. The density-1/3 example using multiples of 3 is a folklore fact noted as trivial in the upstream docstring. The existing Lean proof at plby/lean-proofs (src/v4.29.1/ErdosProblems/Erdos1136.lean) formalizes the main problem, Müller's set and the upper bound, but not the multiples-of-3 variant.",
+   "date": "2026-10-17"
+  },
+  {
    "id": "ErdosProblems/1136::erdos_1136.variants.upper_bound",
    "slug": "erdos1136-erdos-1136-variants-upper-bound",
    "title": "Sets avoiding sums equal to powers of two have lower density at most 1/2 (Müller)",
@@ -153,6 +395,94 @@
    "our_decl": "Math0.Erdos1136.upper_bound",
    "summary": "Let A ⊆ ℕ be such that a + b ≠ 2^k for all a, b ∈ A (not necessarily distinct) and all k ≥ 0. Then the lower natural density of A, liminf_{N→∞} |A ∩ [0, N)| / N, is at most 1/2.",
    "notes": "Müller, Helmut, \"Über ein additiv-zahlentheoretisches Problem von P. Erdős\", Mitt. Math. Ges. Hamburg (2011), 75-78. Müller proves the existence of a set with density 1/2 and that every such set has density at most 1/2. erdosproblems.com/1136 has status \"proved (Lean)\" in problems.yaml (formal_status Lean, 2026-04-19). The existing Lean proof is linked from the upstream formal_proof attribute: https://github.com/plby/lean-proofs/blob/main/src/v4.29.1/ErdosProblems/Erdos1136.lean (Aristotle, Lorenzo Luccioli, Wouter van Doorn). It contains `sumfree_upperDensity_le_half`, an upper density ≤ 1/2 bound for any power-of-two-sum-free S ⊆ ℕ, and `main_result`. Related formalizations are Luccioli's gist (mathlib v4.28.0) and https://github.com/Woett/Lean-files/blob/main/ErdosProblem1136.lean.",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "ErdosProblems/1148::erdos_1148.variants.weaker",
+   "slug": "erdos1148-erdos-1148-variants-weaker",
+   "title": "Every n is x² + y² − z² with max(x², y², z²) ≤ n + 2√n",
+   "area": "Number theory",
+   "source": "Erdős Problem #1148",
+   "source_url": "https://www.erdosproblems.com/1148",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/ErdosProblems/1148.lean",
+    "decl": "Erdos1148.erdos_1148.variants.weaker",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/ErdosProblems/Erdos1148_erdos_1148_variants_weaker.lean",
+   "our_decl": "Math0.Erdos1148.erdos_1148_weaker",
+   "summary": "For every natural number n there exist natural numbers x, y, z with n = x² + y² − z² (the subtraction is truncated subtraction on ℕ) and x², y², z² ≤ n + 2√n, where √n is the real square root. This is the relaxed form of Erdős Problem 1148, which [Va99] calls \"obvious\".",
+   "notes": "[Va99] \"Some of Paul's favorite problems\", the booklet for the conference \"Paul Erdős and his mathematics\" (Budapest, 1999), calls the n + 2√n relaxation \"obvious\". The main Erdős 1148 problem (bound ≤ n, for large n) was proved by Chojecki [Ch26], \"Bounded Representations by x²+y²−z²\" (2026). Its Lean proof is plby/lean-proofs src/latest/ErdosProblems/Erdos1148.lean at commit 8822f7d, and it covers only the main theorem for large n, not the weaker variant for every n. In erdosproblems.com's problems.yaml, problem 1148 has status \"proved (Lean)\" and OEIS entries A390380 and A393168. The upstream formal-conjectures file FormalConjectures/ErdosProblems/1148.lean has a formal_proof link on erdos_1148 only.",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "ErdosProblems/1180::erdos_1180.variants.optimal",
+   "slug": "erdos1180-erdos-1180-variants-optimal",
+   "title": "Erdős 1180, \"optimal\" variant: false as stated (C_ε grows exponentially in 1/ε, because the constant must cover all primes)",
+   "area": "Number theory",
+   "source": "Erdős Problem #1180",
+   "source_url": "https://www.erdosproblems.com/1180",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/ErdosProblems/1180.lean",
+    "decl": "Erdos1180.erdos_1180.variants.optimal",
+    "category": "research open"
+   },
+   "mode": "refutes",
+   "classification": "misformalization",
+   "lean_file": "lean/Math0/ErdosProblems/Erdos1180_erdos_1180_variants_optimal.lean",
+   "our_decl": "Math0.Erdos1180.not_erdos_1180_variants_optimal",
+   "summary": "For ε > 0 let C(ε) be the least natural number C such that for every prime p and every residue a mod p there is a multiset s of integers n with 1 ≤ n ≤ p^ε and gcd(n,p)=1, |s| ≤ C, and Σ_{n∈s} n^{-1} ≡ a (mod p). If no such C exists, C(ε) = 0 (Lean's sInf ∅ = 0). The upstream statement says: for every δ > 0, C(ε) ≤ ε^{-(1+δ)} for all sufficiently small ε > 0. We prove the negation: there is a δ > 0 (δ = 1 works) such that C(ε) > ε^{-2} for arbitrarily small ε > 0, namely ε = 1/(m+1) for every large m.",
+   "notes": "Erdős and Graham, Old and new problems and results in combinatorial number theory (1980), the source of the question. Shparlinski, Arch. Math. (Basel) 2002, pp. 445–448: at most ε⁻³ summands for all p ≥ P(ε). Glibichuk, Mat. Zametki 2006, pp. 384–395: at most ε⁻² summands for all p ≥ P(ε); his covering lemma is the 8XY = F_p result for antisymmetric Y with |X||Y| > p. erdosproblems.com/1180 is marked proved, and its remark that \"it may be that C_ε ≤ ε^{-1-o(1)}\" is meant for large primes. The upstream formal-conjectures file 1180.lean already notes, in the docstring of variants.shparlinski, that no polynomial bound can hold for all primes. Upstream also links Lean proofs of the main statement and the shparlinski, glibichuk and lower_bound variants (plby/lean-proofs and linrock/math-proofs). The Glibichuk part of this file is adapted from plby/lean-proofs. The \"optimal\" variant has no prior formal resolution I know of. Its falsity as formalized follows from the small-prime obstruction that the upstream file itself states. - erdosproblems.com/1180. The ε^{-1-o(1)} question is listed there as still open. The page credits Shparlinski with ≪ε^{-3}, Glibichuk with ≪ε^{-2}, and Croot with (log p)^{3+o(1)}.\n- [Sh02] I. E. Shparlinski, \"On a question of Erdős and Graham\", Arch. Math. (Basel) 78 (2002), 445–448.\n- [Gl06] A. A. Glibichuk, Mat. Zametki 79 (2006), 384–395 (mathnet.ru mzm2708): N = 8([1/ε+1/2]+1)^2 summands for sufficiently large p.\n- Upstream formal-conjectures commit 377",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "ErdosProblems/1193::erdos_1193.parts.i",
+   "slug": "erdos1193-erdos-1193-parts-i",
+   "title": "Erdős Problem 1193 (i): the lower density of {n : 1_A*1_A(n) = g(n)} need not be 0",
+   "area": "Combinatorics, Number theory",
+   "source": "Erdős Problem #1193",
+   "source_url": "https://www.erdosproblems.com/1193",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/ErdosProblems/1193.lean",
+    "decl": "Erdos1193.erdos_1193.parts.i",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-already-formalized",
+   "lean_file": "lean/Math0/ErdosProblems/Erdos1193_erdos_1193_parts_i.lean",
+   "our_decl": "Math0.Erdos1193.erdos_1193_parts_i",
+   "summary": "It is not true that for every A ⊆ ℕ and every non-decreasing g : ℕ → ℕ with g(n) > 0 for all n, the set {n ∈ ℕ : 1_A ∗ 1_A(n) = g(n)} has lower natural density 0. Here 1_A ∗ 1_A(n) = #{(a,b) ∈ ℕ² : a + b = n, a ∈ A, b ∈ A} counts ordered representations (with 0 ∈ ℕ). The lower density of S is liminf_{N→∞} #(S ∩ [0,N)) / N.",
+   "notes": "The problem is Erdős Problem #1193 (erdosproblems.com/1193), from P. Erdős, \"A survey of problems in combinatorial number theory\", Ann. Discrete Math. (1980), 89–115. The site marks it \"solved (Lean)\": the literal question is trivially false via A = ℕ, which gives 1_A∗1_A(n) = n+1. The existing Lean formalization is plby/lean-proofs src/v4.29.1/ErdosProblems/Erdos1193.lean (Aristotle / Pietro Monticone; forum thread erdosproblems.com/forum/thread/1193#post-5360). It is linked from the upstream variant erdos_1193.variants.sumRep_univ and proves the key identity conv_ind univ n = n+1, but not the density step.",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "ErdosProblems/1193::erdos_1193.parts.ii",
+   "slug": "erdos1193-erdos-1193-parts-ii",
+   "title": "Erdős Problem 1193 (ii): the upper density of {n : 1_A*1_A(n) = g(n)} need not be bounded away from 1",
+   "area": "Combinatorics, Number theory",
+   "source": "Erdős Problem #1193",
+   "source_url": "https://www.erdosproblems.com/1193",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/ErdosProblems/1193.lean",
+    "decl": "Erdos1193.erdos_1193.parts.ii",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-already-formalized",
+   "lean_file": "lean/Math0/ErdosProblems/Erdos1193_erdos_1193_parts_ii.lean",
+   "our_decl": "Math0.Erdos1193.erdos_1193_parts_ii",
+   "summary": "There is no real constant c < 1 such that for every A ⊆ ℕ and every monotone g : ℕ → ℕ with g(n) > 0 for all n, the set {n ∈ ℕ : sumRep A n = g n} has upper density < c. Here sumRep A n is the number of ordered pairs (a, b) ∈ A × A with a + b = n (i.e. 1_A * 1_A(n)), and the upper density of S ⊆ ℕ is limsup_{N→∞} |S ∩ [0, N)| / N.",
+   "notes": "Erdős, P., \"A survey of problems in combinatorial number theory\", Ann. Discrete Math. (1980), 89-115 [Er80]. erdosproblems.com/1193 says the question as stated is trivially \"no\" because of A = ℕ (1_A*1_A(n) = n+1), and its data file gives the status as \"solved (Lean)\" (2026-04-13). An existing Lean formalization is linked from the upstream formal_conjectures file: https://github.com/plby/lean-proofs/blob/main/src/v4.29.1/ErdosProblems/Erdos1193.lean.",
    "date": "2026-10-17"
   },
   {
@@ -219,6 +549,94 @@
    "our_decl": "Math0.Erdos723.prime_power_is_projplane_order",
    "summary": "For every natural number n that is a prime power, there exist types P, L (in Type), a membership (incidence) relation between P and L, Fintype structures on P and L, and a projective plane structure pp on (P, L) whose order is exactly n.",
    "notes": "The construction of the Desarguesian projective plane PG(2, q) for every prime power q goes back to O. Veblen and W. H. Bussey, \"Finite projective geometries\", Trans. AMS 7 (1906), 241–259. Standard textbook sources are M. Hall, \"Combinatorial Theory\", and P. Dembowski, \"Finite Geometries\" (1968). The open converse is the prime power conjecture (Erdős Problem 723). Related results are Bruck–Ryser (1949), and Lam–Thiel–Swiercz (1989), who showed there is no plane of order 10. In Lean, Mathlib's Combinatorics/Configuration.lean has `Configuration.ofField` (the ProjectivePlane instance on ℙ(K³)) and `ProjectivePlane.card_points`, and LinearAlgebra/Projectivization/Cardinality.lean has `Projectivization.card_of_finrank`. Mathlib does not state the order of ofField or the existence of a plane of every prime-power order, and erdosproblems.com lists 723 as formal_status \"unformalized\".",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "ErdosProblems/750::erdos_750.variants.c_gt_quarter",
+   "slug": "erdos750-erdos-750-variants-c-gt-quarter",
+   "title": "Erdős–Hajnal: infinite chromatic number with independent sets of size m/2 − cm for every c > 1/4",
+   "area": "Combinatorics",
+   "source": "Erdős Problem #750",
+   "source_url": "https://www.erdosproblems.com/750",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/ErdosProblems/750.lean",
+    "decl": "Erdos750.erdos_750.variants.c_gt_quarter",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-already-formalized",
+   "lean_file": "lean/Math0/ErdosProblems/Erdos750_erdos_750_variants_c_gt_quarter.lean",
+   "our_decl": "Math0.Erdos750.c_gt_quarter",
+   "summary": "For every real c > 1/4 (formally c ∈ ℝ≥0) there is a graph G, on a vertex type in any prescribed universe, with chromatic number ∞, such that every set S of m ≥ 1 vertices contains an independent set I with m/2 − c·m ≤ |I|. The subtraction is truncated subtraction in ℝ≥0.",
+   "notes": "The problem and its variants:\n- Erdős and Hajnal [ErHa67b], \"On chromatic graphs\", Mat. Lapok (1967), 1–4: graphs of infinite chromatic number in which every m-vertex subgraph has an independent set of size at least m/2 − cm, for any c > 1/4. The classical example is the shift graph with the random-cut argument used here.\n- Erdős, Hajnal and Szemerédi [EHS82]: the f(m) = εm case, via a comment by Sellke on erdosproblems.\n- Chojecki with GPT-5.5 Pro (ulam.ai/research/erdos750.pdf): the general f → ∞ case.\n- Stiebitz [St85], Sachs and Stiebitz [SaSt89], Müller and Stehlík [MuSt19]: the generalised Mycielskian chromatic bound used in that proof.\n\nExisting Lean proofs:\n- plby/lean-proofs src/latest/ErdosProblems/Erdos750.lean, commit 8822f7dd: an unconditional `theorem erdos_750` in formal-conjectures form. It implies variants.c_gt_quarter directly by taking f(m) = c·m.\n- Jayyhk/erdos-lean problems/750/Erdos750.lean.\n- Shashi456/erdos-formalizations: the conditional version.\n- erdosproblems.com lists #750 as \"proved (Lean)\", last updated 2025-08-31.",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "ErdosProblems/816::erdos_816.variants.complete_bipartite",
+   "slug": "erdos816-erdos-816-variants-complete-bipartite",
+   "title": "K_{n,n+1} is extremal for Erdős Problem 816",
+   "area": "Combinatorics",
+   "source": "Erdős Problem #816",
+   "source_url": "https://www.erdosproblems.com/816",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/ErdosProblems/816.lean",
+    "decl": "Erdos816.erdos_816.variants.complete_bipartite",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/ErdosProblems/Erdos816_erdos_816_variants_complete_bipartite.lean",
+   "our_decl": "Math0.Erdos816.erdos_816_complete_bipartite",
+   "summary": "For every natural number n, the complete bipartite graph K_{n,n+1} (vertex set Fin n ⊕ Fin (n+1), so 2n+1 vertices) has exactly n^2 + n edges, and it does not contain two distinct vertices u ≠ v with deg u = deg v that are joined by a path of length 3.",
+   "notes": "Erdős Problem 816 (Erdős–Hajnal), erdosproblems.com/816 (status: proved, not marked as Lean). [Er91] Erdős, Problems and results in combinatorial analysis and combinatorial number theory (1991), where K_{n,n+1} is the standard example showing that n^2+n edges do not suffice. [ChMa25] K. Chen and J. Ma, arXiv:2503.19569 (2025), proved the main conjecture and showed that for n ≥ 600, K_{n,n+1} is the unique exception with n^2+n edges. The main theorem has an existing Lean proof at plby/lean-proofs (commit 8822f7d, src/latest/ErdosProblems/Erdos816.lean, L939), but that file contains no K_{n,n+1} or complete_bipartite lemma. So this variant appears to be formalized here for the first time.",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "ErdosProblems/835::johnsonGraph_18_9_chromaticNumber",
+   "slug": "erdos835-johnsongraph-18-9-chromaticnumber",
+   "title": "The Johnson graph J(18, 9) has chromatic number at least 11",
+   "area": "Combinatorics",
+   "source": "Erdős Problem #835",
+   "source_url": "https://www.erdosproblems.com/835",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/ErdosProblems/835.lean",
+    "decl": "Erdos835.johnsonGraph_18_9_chromaticNumber",
+    "category": "research solved"
+   },
+   "mode": "proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/ErdosProblems/Erdos835_johnsonGraph_18_9_chromaticNumber.lean",
+   "our_decl": "Math0.Erdos835.johnsonGraph_18_9_chromaticNumber",
+   "summary": "Let J(18, 9) be the Johnson graph. Its vertices are the 9-element subsets of an 18-element set, and two vertices are adjacent when they share exactly 8 elements. Then χ(J(18, 9)) > 9 + 1, so χ(J(18, 9)) ≥ 11. This is the case k = 9 of Erdős Problem 835, which asks whether χ(J(2k, k)) = k + 1 for some k > 2.",
+   "notes": "Erdős Problem 835 (erdosproblems.com/835). problems.yaml lists its status as \"verifiable\" and its formal_status as \"unformalized\"; there is no \"(Lean)\" marker. The general question stays open, but the k = 9 case is known. The odd-k lower bound χ(J(2k,k)) > k+1 follows from Johnson's bound for constant-weight codes (S. M. Johnson, 1962) through α(J(2k,k)) ≤ A(2k,4,k). For k = 9 this gives α ≤ 4420 and χ ≥ ⌈48620/4420⌉ = 11. The bound is tabulated on A. E. Brouwer's Johnson-graphs page (aeb.win.tue.nl/graphs/Johnson.html). Ma and Tang (2025, github.com/QuanyuTang/erdos-problem-835) prove χ(J(2k,k)) > k+1 for every k > 2 with k+1 composite, which includes k = 9. No previous sorry-free Lean proof was found: in formal_conjectures, indepNum_johnson_le_johnsonBound is sorry, and every upstream lower-bound statement depends on it or is itself sorry.",
+   "date": "2026-10-17"
+  },
+  {
+   "id": "GreensOpenProblems/44::green_44",
+   "slug": "green44-green-44",
+   "title": "Sieving [N] by half the classes mod 1000 primes below N^{9/10} can leave more than N/10 (Green's Problem 44 refuted as formalized)",
+   "area": "Number theory",
+   "source": "Ben Green's 100 open problems, #44",
+   "source_url": "https://people.maths.ox.ac.uk/greenbj/papers/open-problems.pdf#problem.44",
+   "upstream": {
+    "repo": "google-deepmind/formal-conjectures",
+    "commit": "c77fdd446d23539302aa73bcfae4a9fa962b8382",
+    "file": "FormalConjectures/GreensOpenProblems/44.lean",
+    "decl": "Green44.green_44",
+    "category": "research open"
+   },
+   "mode": "refutes",
+   "classification": "known-result-already-formalized",
+   "lean_file": "lean/Math0/GreensOpenProblems/Green44_green_44.lean",
+   "our_decl": "Math0.Green44.green_44_false",
+   "summary": "Green's Open Problem 44 (from Erdős 1980, Section 6, Problem 3): sieve [N] by removing half the residue classes mod p_i, for primes 2 ≤ p_1 < ... < p_1000 < N^{9/10}. Does the remaining set have size at most N/10? The formal statement Green44.green_44 says yes: for all N, all strictly increasing p : Fin 1000 → ℕ of primes with p_999^10 < N^9, and all A_i ⊆ ZMod p_i with |A_i| = ⌊p_i/2⌋, the set {x ∈ [1,N] : x mod p_i ∉ A_i for all i} has 10·|remaining| ≤ N. We prove the negation. Counterexample: N = 100000, p_0 < ... < p_999 the 1000 consecutive primes 20011, ..., 30161, and A_i the upper half {⌈p_i/2⌉, ..., p_i − 1} of the residues mod p_i.",
+   "notes": "Sources:\n- Erdős, \"A survey of problems in combinatorial number theory\", Ann. Discrete Math. 6 (1980) 89-115, p.107, §6 Problem 3 (scan at https://users.renyi.hu/~p_erdos/1980-03.pdf).\n- B. Green, 100 Open Problems, Problem 44 (https://people.maths.ox.ac.uk/greenbj/papers/open-problems.pdf, Dec 2025 version; no update recorded).\n- Erdős Problem #1202 (https://www.erdosproblems.com/1202): \"resolved in the negative by Price and GPT-5.4 Pro\". It identifies the problem with Green #44. Last edited 2026-04-12; local DB marks it solved on 2026-04-04. Write-up: https://www.overleaf.com/read/qyhdmrchqnvb.\n- #1202 forum thread (https://www.erdosproblems.com/forum/thread/1202): Z. Hunter and T. Bloom, 16-17 Apr 2026, on large-sieve bounds and refinements.\n- Justin Sun Prize catalog entry JSP-001007 (TheJustinSunPrize/awards, problems/catalog-1001-1022.md): \"Solved, Price and GPT-5.4 Pro\".\n- Existing Lean formalization: github.com/tester-lean/awards @ f26433803cfbd924569aebbdcc1c39321ecb9971, submissions/jsp-001007. Theorems JSP001007.green44_counterexample (every k ≥ 1, all large N, more than N/10 survivors, p^10 < N^9, |A_i| = (p-1)/2) and JSP001007.not_green44_conjecture. Submitted as https://github.com/TheJustinSunPrize/awards/issues/104 on 2026-09-16; pending and unreviewed. Its header cites formal-conjectures Green44.\n- Upstream formal-conjectures main: GreensOpenProblems/44.lean is still tagged \"research open\"; there is no ErdosProblems/1202.lean. - **Erdős's original:** Erdős, \"A",
    "date": "2026-10-17"
   }
  ]
