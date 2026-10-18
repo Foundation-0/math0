@@ -1,0 +1,109 @@
+{
+ "source": "https://www.codetables.de/BKLC/ (Markus Grassl)",
+ "retrieved": "2026-10-18",
+ "fields": {
+  "GF(2)": {
+   "n_max": 256,
+   "entries": 32896,
+   "open": 25859,
+   "constructions_missing": 0,
+   "median_gap": 8,
+   "max_gap": 29,
+   "open_by_n": {
+    "1-50": 183,
+    "51-100": 2427,
+    "101-150": 4888,
+    "151-200": 7310,
+    "201-250": 9734,
+    "251-300": 1317
+   }
+  },
+  "GF(3)": {
+   "n_max": 243,
+   "entries": 29646,
+   "open": 25684,
+   "constructions_missing": 5911,
+   "median_gap": 14.0,
+   "max_gap": 40,
+   "open_by_n": {
+    "1-50": 545,
+    "51-100": 2948,
+    "101-150": 5477,
+    "151-200": 7923,
+    "201-250": 8791
+   }
+  },
+  "GF(4)": {
+   "n_max": 256,
+   "entries": 32896,
+   "open": 29374,
+   "constructions_missing": 10545,
+   "median_gap": 18.0,
+   "max_gap": 44,
+   "open_by_n": {
+    "1-50": 620,
+    "51-100": 3094,
+    "101-150": 5615,
+    "151-200": 8072,
+    "201-250": 10555,
+    "251-300": 1418
+   }
+  },
+  "GF(5)": {
+   "n_max": 130,
+   "entries": 8515,
+   "open": 7056,
+   "constructions_missing": 356,
+   "median_gap": 9.0,
+   "max_gap": 25,
+   "open_by_n": {
+    "1-50": 725,
+    "51-100": 3236,
+    "101-150": 3095
+   }
+  },
+  "GF(7)": {
+   "n_max": 100,
+   "entries": 5050,
+   "open": 4071,
+   "constructions_missing": 307,
+   "median_gap": 7,
+   "max_gap": 19,
+   "open_by_n": {
+    "1-50": 775,
+    "51-100": 3296
+   },
+   "median_gap_n_le_50": 3,
+   "median_gap_n_gt_50": 9.0,
+   "open_n_gt_50": 3296
+  },
+  "GF(8)": {
+   "n_max": 130,
+   "entries": 8515,
+   "open": 7202,
+   "constructions_missing": 1606,
+   "median_gap": 10.0,
+   "max_gap": 26,
+   "open_by_n": {
+    "1-50": 780,
+    "51-100": 3277,
+    "101-150": 3145
+   }
+  },
+  "GF(9)": {
+   "n_max": 130,
+   "entries": 8515,
+   "open": 7265,
+   "constructions_missing": 593,
+   "median_gap": 9,
+   "max_gap": 25,
+   "open_by_n": {
+    "1-50": 803,
+    "51-100": 3268,
+    "101-150": 3194
+   }
+  }
+ },
+ "open_total": 106511,
+ "open_non_binary": 80652
+}
