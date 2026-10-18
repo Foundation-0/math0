@@ -904,6 +904,52 @@
    "date": "2026-10-17"
   },
   {
+   "id": "OEIS-frontier/A091817",
+   "slug": "oeis-a091817",
+   "title": "Quet's integrality conjecture for A091817 holds",
+   "area": "Number theory",
+   "source": "OEIS A091817",
+   "source_url": "https://oeis.org/A091817",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A091817.lean",
+    "decl": "Math0.Statements.A091817.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A091817.lean",
+   "our_decl": "Math0.Frontier.A091817.result",
+   "summary": "For every prime p >= 3, write H(p-3) = 1 + 1/2 + ... + 1/(p-3) = N/D in lowest terms (H(0) = 0/1). Then p divides 2N - 3D. Equivalently, every term a(n) = (2N - 3D)/p of OEIS A091817 (p the (n+1)-th prime, n >= 1) is an integer.",
+   "notes": "Conjecture as stated in OEIS: Leroy Quet conjectures that the terms are always integral. This is true for p < 3*10^4. (Entry: (2*numerator(H(p-3)) - 3*denominator(H(p-3)))/p, Bouayoun and Stephan, Mar 07 2004)\n\nReferees: - OEIS A091817 and its history (oeis.org/history?seq=A091817): the conjecture is still stated as open, verified for p < 3*10^4, and has no proof note.\n- Classical source: H(p-1) ≡ 0 (mod p) (Wolstenholme 1862; Hardy & Wright, An Introduction to the Theory of Numbers, Thm 115).\n- Explicit reflection congruence H_{p-k} ≡ H_{k-1} (mod p), 1 <= k <= p-1: Z.-W. Sun & L.-L. Zhao, \"Arithmetic theory of harmonic numbers (II)\", Colloq. Math. 130 (2013), 67-78, arXiv:0911.4433 (proof of (2.2)). Taking k = 3 gives H_{p-3} ≡ 3/2 (mod p), which settles the conjecture at once.\n- The same lemma is cited in arXiv:1108.2361 (Lemma 2.1 of its ref. [13]) and arXiv:1803.02966.\n- Analogous k = 2 fact in OEIS A064169 (Adamchuk, Jun 09 2006: p divides a(p-2)).\n- No prior formalization found:\n  - not in google-deepmind/formal-conjectures (checked locally at commit c77fdd4);\n  - not among the OEIS Open benchmark statements (Adamczewski, arXiv:2608.11941);\n  - no other formal proof turned up in searches.",
+   "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A175385",
+   "slug": "oeis-a175385",
+   "title": "∑_{i=1..n} C(2n-i-1, i-1)/i is never an integer for n > 1 (A175385)",
+   "area": "Number theory",
+   "source": "OEIS A175385",
+   "source_url": "https://oeis.org/A175385",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A175385.lean",
+    "decl": "Math0.Statements.A175385.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "known-result-already-formalized",
+   "lean_file": "lean/Math0/Frontier/OEIS/A175385.lean",
+   "our_decl": "Math0.Frontier.A175385.result",
+   "summary": "For every integer n ≥ 2, the rational number S(n) = ∑_{i=1}^{n} C(2n-i-1, i-1)/i is not an integer. This is the Shevelev–Seidov conjecture from OEIS A175385.",
+   "notes": "Conjecture as stated in OEIS: We conjecture that Sum_{i=1..n} ((1/i)*C(2n-i-1,i-1)) is not an integer for n>1. (Vladimir Shevelev, Zak Seidov, Apr 24 2010)\n\nReferees: OEIS A175386 (cross-reference of A175385), comment by Ralf Stephan, May 25 2026: the conjecture was proved by an autonomous AI agent (AlphaProof Nexus). Lean file: https://github.com/google-deepmind/alphaproof-nexus-results/blob/main/APNOutputs/OEIS/oeis_175386_conjecture_0.lean (theorem target_theorem_0: for n > 1, the denominator of S(n) is not 1; checked, no sorry). Papers: G. Tsoukalas et al., \"Advancing Mathematics Research with AI-Driven Formal Proof Search\", arXiv:2605.22763 (May 2026); T. Adamczewski, \"OEIS Open: How many conjectures can language models turn into theorems?\", arXiv:2608.11941 (Aug 2026), cited by OEIS for the proof on p. 15, Appendix A. Classical implication: P. S. Bruckman, \"Lucas Pseudoprimes Are Odd\", Fibonacci Quarterly 32(2) (1994) 155-157 (https://www.mathstat.dal.ca/FQ/Scanned/32-2/bruckman2.pdf). No even composite N has N | L_N − 1, and with 2n·S(n) = L_{2n} − 1 this settles the conjecture. The A175385 entry itself (https://oeis.org/A175385, history up to #14, Mar 2023) records no proof.",
+   "date": "2026-10-18"
+  },
+  {
    "id": "OEIS-frontier/A209802",
    "slug": "oeis-a209802",
    "title": "Positivity of the exponential Mertens function (A209802)",
@@ -947,6 +993,52 @@
    "our_decl": "Math0.Frontier.A294512.result : ¬ Math0.Statements.A294512.statement",
    "summary": "Let V(n) = sum_{k=0}^{n} 1/((k+1)(3k+1)) and let a(n) be the denominator of V(n) in lowest terms (OEIS A294512). Let A250400(m) be the numerator, in lowest terms, of the harmonic mean m / sum_{j=1}^{m} 1/(j(3j-2)) of the first m octagonal numbers. Lang's conjecture (A294512, FORMULA, 2017) says that A250400(n+1)/(n+1) = a(n) in Q for every n >= 0. This is false. The first failure is at n = 164, where A250400(165)/165 = a(164)/11.",
    "notes": "Conjecture as stated in OEIS: A294512 (Denominators of partial sums of the reciprocals of octagonal numbers), FORMULA: \"a(n) = A250400(n+1)/(n+1), n >= 0. [conjecture].\" (entry by _Wolfdieter Lang_, Nov 01 2017). Companion A294513 (Lang, Nov 02 2017): \"a(n) = 2*A250327(n+1)/(n+1) [conjecture].\"\n\nReferees: OEIS A294512 (W. Lang, Nov 01 2017; history #1-#13, last edit Nov 12 2017, formula \"a(n) = A250400(n+1)/(n+1), n >= 0. [conjecture]\" still present). OEIS A250401 (C. Barker 2014; Lang comment Nov 01 2017 conditional on \"n+1 divides A250400(n+1)\", still present, history #1-#19). OEIS A250400 (C. Barker, Nov 21 2014, b-file n=1..1000, which contains A250400(165) = 15*a(164)). Sibling Lang conjectures in A294513, A294515 are unresolved there too. Not in google-deepmind/formal-conjectures (FormalConjectures/OEIS); not in Tsoukalas et al. / Epoch OEIS Open (arXiv 2608.11941; github.com/epoch-research/LeanOpenProblems-results; SeqFan thread \"Language models resolving OEIS conjectures\", Aug 2026). No SeqFan, MathOverflow, MSE or arXiv discussion found. Independent check: the failures for n < 3000 are exactly n = 164 (gcd 11) and n = 2413 (gcd 17).",
+   "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A323695",
+   "slug": "oeis-a323695",
+   "title": "Odd terms of A323695 occur only at n = k(k+2)",
+   "area": "Sequences and series",
+   "source": "OEIS A323695",
+   "source_url": "https://oeis.org/A323695",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A323695.lean",
+    "decl": "Math0.Statements.A323695.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A323695.lean",
+   "our_decl": "Math0.Frontier.A323695.result",
+   "summary": "Let a(N) be the coefficient of x^N in Sum_{m>=0} x^m (1 - x^(m+1))^m / (1 + x^(m+1))^(m+1) (OEIS A323695, offset 0). If a(n) is odd, then n = k(k+2) for some natural number k. Equivalently, if a(n) is odd then n + 1 is a perfect square.",
+   "notes": "Conjecture as stated in OEIS: A323695 (G.f.: Sum_{n>=0} x^n (1 - x^(n+1))^n/(1 + x^(n+1))^(n+1)): \"Odd terms occur only at n = k*(k+2) for k >= 0 (conjecture);\" (_Paul D. Hanna_, Feb 23 2019). A324300 (G.f.: Sum_{n>=0} x^n (x^(n+1)+i)^n/(1 + i x^(n+1))^(n+1)): \"Odd terms occur only at n = k*(k+2) for k >= 0 (conjecture);\" (Hanna, Feb 21 2019).\n\nReferees: OEIS A323695 (Hanna, Feb 23 2019; still labeled \"(conjecture)\" at rev #24, Dec 15 2024; history checked) and its cross-references A323696, A324300 (same conjecture for an i-variant, also unproved), A323675 and A323680. Sibling results proved by others, which do not cover A323695: A325046, odd terms iff N = m(m+1), in S. Fried, \"Further proofs of conjectures from the OEIS\", arXiv:2607.24832 (Thm 50), also in google-deepmind/alphaproof-nexus-results; A323557, odd terms at r(r+1), in T. Adamczewski, \"OEIS Open\", arXiv:2608.11941 and AlphaProof Nexus (Tsoukalas et al.). A323695 is in neither google-deepmind/formal-conjectures nor epoch-research/LeanOpenProblems. It is not mentioned in Fried's arXiv:2410.07237 (JIS 25.4.3), JIS 26.1.8 or arXiv:2606.09913. MathOverflow, Math StackExchange and SeqFan searches found nothing.",
+   "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A375522",
+   "slug": "oeis-a375522",
+   "title": "A375522: S2(n) - S1(n) = 1 fails at n = 42 (the difference is 5)",
+   "area": "Number theory",
+   "source": "OEIS A375522",
+   "source_url": "https://oeis.org/A375522",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A375522.lean",
+    "decl": "Math0.Statements.A375522.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-refutes",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A375522.lean",
+   "our_decl": "Math0.Frontier.A375522.result",
+   "summary": "Let p_k be the k-th prime. Define s(0) = 0 and s(k) = s(k-1) + 1/(p_k b(k)), where b(k) = 1 + floor(1/((1 - s(k-1)) p_k)) (this is A375781). Write s(n) = S1(n)/S2(n) in lowest terms (S2 = A375522, S1 = A375521). Sigrist and Sloane conjectured that S2(n) - S1(n) = 1 for every n >= 1 except n = 4 and n = 6. This is false: S2(42) - S1(42) = 5. Lean: theorem result : ¬ statement.",
+   "notes": "Conjecture as stated in OEIS: The differences S2(n) - S1(n) are surprisingly small: for n = 1,2,...,34 the values S2(n) - S1(n) are: 1, 1, 1, 2, 1, 2, 1, 1, ..., 1 suggesting the conjecture that they are always 1 except for n = 4 and 6 (compare the Theorem in A374983). (Rémy Sigrist and N. J. A. Sloane, Aug 30 2024)\n\nReferees: The conjecture is in OEIS A375522 (R. Sigrist and N. J. A. Sloane, Aug 30 2024; comment added Aug 31 2024; current revision #25, Apr 22 2025). It is restated as still open (\"it seems\") in A375528 (Sloane, Sep/Oct 2024). Related: A375521, A375781, A374983/A375516 (harmonic analogue, proved by Sigrist), and Sloane, \"A Nasty Surprise in a Sequence and Other OEIS Stories\", Rutgers Experimental Math Seminar, Oct 10 2024 (slides list these sequences and a general Conjecture 4, with no counterexample). Sigrist and Sloane, \"Dampening Down a Divergent Series\", is still cited on OEIS as a manuscript in preparation. No prior counterexample or proof turned up in the OEIS histories, arXiv (e.g. Fried arXiv:2607.24832 does not cover it), web searches, or google-deepmind/formal-conjectures. The SeqFan archive could not be reached.",
    "date": "2026-10-18"
   },
   {

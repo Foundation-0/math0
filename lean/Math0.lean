@@ -42,8 +42,12 @@ import Math0.ErdosProblems.Erdos775_erdos_775_variants_moon_moser
 import Math0.ErdosProblems.Erdos816_erdos_816_variants_complete_bipartite
 import Math0.ErdosProblems.Erdos834_erdos_834_parts_ii
 import Math0.ErdosProblems.Erdos835_johnsonGraph_18_9_chromaticNumber
+import Math0.Frontier.OEIS.A091817
+import Math0.Frontier.OEIS.A175385
 import Math0.Frontier.OEIS.A209802
 import Math0.Frontier.OEIS.A294512
+import Math0.Frontier.OEIS.A323695
+import Math0.Frontier.OEIS.A375522
 import Math0.GreensOpenProblems.Green44_green_44
 import Math0.OEIS.OeisA51903_conjecture2
 import Math0.OEIS.OeisA51903_conjecture3
