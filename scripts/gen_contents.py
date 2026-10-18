@@ -6,11 +6,32 @@ file whose final command (#math0_proves / #math0_refutes / #math0_answers) is re
 """
 import json
 import os
+import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO_URL = "https://github.com/Foundation-0/math0"
 FC_URL = "https://github.com/google-deepmind/formal-conjectures"
+
+def _tracked_papers():
+    """Manuscripts committed to the repository. An untracked paper.pdf is a draft that has not
+    passed proofreading yet, so it is not linked."""
+    try:
+        out = subprocess.run(["git", "ls-files", "--", "results/*/paper.pdf"], cwd=ROOT,
+                             capture_output=True, text=True, check=True).stdout.split()
+    except (OSError, subprocess.CalledProcessError):
+        return None
+    return {path.split("/")[1] for path in out}
+
+
+TRACKED_PAPERS = _tracked_papers()
+
+
+def has_paper(slug):
+    if not os.path.exists(os.path.join(ROOT, "results", slug, "paper.pdf")):
+        return False
+    return TRACKED_PAPERS is None or slug in TRACKED_PAPERS
+
 
 CLASS_LABEL = {
     "new-result": "New result (open problem settled)",
@@ -86,7 +107,7 @@ def result_readme(e):
     ]
     if e.get("notes"):
         lines += ["## Notes", "", e["notes"], ""]
-    if os.path.exists(os.path.join(ROOT, "results", e["slug"], "paper.pdf")):
+    if has_paper(e["slug"]):
         lines += ["## Manuscript", "", "[paper.pdf](paper.pdf) ([source](paper.tex))", ""]
     lines += [
         "## Citation",
@@ -131,7 +152,7 @@ def write_highlights(entries, counts):
     ]
     for e in entries:
         if e["classification"] == "new-result":
-            paper = f" ([paper](results/{e['slug']}/paper.pdf))" if os.path.exists(os.path.join(ROOT, "results", e["slug"], "paper.pdf")) else ""
+            paper = f" ([paper](results/{e['slug']}/paper.pdf))" if has_paper(e["slug"]) else ""
             lines.append(f"* [{e['title']}](results/{e['slug']}/README.md){paper}")
     lines.append(end)
     pre, rest = text.split(start, 1)

@@ -1,11 +1,11 @@
 # Contents
 
-**63 results, every one checked by the Lean kernel against a statement published by a third party.**
+**64 results, every one checked by the Lean kernel against a statement published by a third party.**
 
 | Classification | Count |
 |---|---|
 | New result (open problem settled) | 12 |
-| First formal proof of a known result | 29 |
+| First formal proof of a known result | 30 |
 | Independent formal proof (an implying Lean proof already exists elsewhere) | 16 |
 | Misformalization found (upstream statement does not match the problem) | 6 |
 
@@ -56,9 +56,10 @@
 | 24 | [The fractional parts of (3/2)^n have infinitely many accumulation points](results/equidistribution-isaccumulationpoint-three-halves-pow-infinite/README.md) | Number theory | [`Equidistribution.isAccumulationPoint_three_halves_pow_infinite`](https://github.com/google-deepmind/formal-conjectures/blob/c77fdd446d23539302aa73bcfae4a9fa962b8382/FormalConjectures/Books/UniformDistributionOfSequences/Equidistribution.lean) | [Equidistribution_isAccumulationPoint_three_halves_pow_infinite.lean](lean/Math0/Books/Equidistribution_isAccumulationPoint_three_halves_pow_infinite.lean) |
 | 25 | [The multiples of 3 avoid sums equal to powers of two and have density 1/3](results/erdos1136-erdos-1136-variants-multiples-of-three/README.md) | Number theory | [`Erdos1136.erdos_1136.variants.multiples_of_three`](https://github.com/google-deepmind/formal-conjectures/blob/c77fdd446d23539302aa73bcfae4a9fa962b8382/FormalConjectures/ErdosProblems/1136.lean) | [Erdos1136_erdos_1136_variants_multiples_of_three.lean](lean/Math0/ErdosProblems/Erdos1136_erdos_1136_variants_multiples_of_three.lean) |
 | 26 | [The p-adic Littlewood conjecture for real quadratic irrationals](results/bugeaud08-problem-10-8-variants-quadratic/README.md) | Number theory | [`Bugeaud08.problem_10_8.variants.quadratic`](https://github.com/google-deepmind/formal-conjectures/blob/c77fdd446d23539302aa73bcfae4a9fa962b8382/FormalConjectures/Books/BugeaudDistributionModuloOne/Problem10_8.lean) | [Bugeaud08_problem_10_8_variants_quadratic.lean](lean/Math0/Books/Bugeaud08_problem_10_8_variants_quadratic.lean) |
-| 27 | [The set of Mahler Z-numbers is countable, so its Hausdorff dimension is 0, which is less than 1](results/bugeaud09-problem-10-9-variants-dimh-lt-one/README.md) | Number theory | [`Bugeaud09.problem_10_9.variants.dimH_lt_one`](https://github.com/google-deepmind/formal-conjectures/blob/c77fdd446d23539302aa73bcfae4a9fa962b8382/FormalConjectures/Books/BugeaudDistributionModuloOne/Problem10_9.lean) | [Bugeaud09_problem_10_9_variants_dimH_lt_one.lean](lean/Math0/Books/Bugeaud09_problem_10_9_variants_dimH_lt_one.lean) |
-| 28 | [A115026 has a term greater than 370: a(119) = 371](results/oeis-a115026/README.md) | Sequences and series | [`Math0.Statements.A115026.statement`](lean/Math0/Statements/OEIS/A115026.lean) (math0, from OEIS A115026) | [A115026.lean](lean/Math0/Frontier/OEIS/A115026.lean) |
-| 29 | [Positivity of the exponential Mertens function (A209802)](results/oeis-a209802/README.md) | Sequences and series | [`Math0.Statements.A209802.statement`](lean/Math0/Statements/OEIS/A209802.lean) (math0, from OEIS A209802) | [A209802.lean](lean/Math0/Frontier/OEIS/A209802.lean) |
+| 27 | [The period of 1/11^n is 2 * 11^(n-1)](results/oeis-a334603/README.md) | Number theory | [`Math0.Statements.A334603.statement`](lean/Math0/Statements/OEIS/A334603.lean) (math0, from OEIS A334603) | [A334603.lean](lean/Math0/Frontier/OEIS/A334603.lean) |
+| 28 | [The set of Mahler Z-numbers is countable, so its Hausdorff dimension is 0, which is less than 1](results/bugeaud09-problem-10-9-variants-dimh-lt-one/README.md) | Number theory | [`Bugeaud09.problem_10_9.variants.dimH_lt_one`](https://github.com/google-deepmind/formal-conjectures/blob/c77fdd446d23539302aa73bcfae4a9fa962b8382/FormalConjectures/Books/BugeaudDistributionModuloOne/Problem10_9.lean) | [Bugeaud09_problem_10_9_variants_dimH_lt_one.lean](lean/Math0/Books/Bugeaud09_problem_10_9_variants_dimH_lt_one.lean) |
+| 29 | [A115026 has a term greater than 370: a(119) = 371](results/oeis-a115026/README.md) | Sequences and series | [`Math0.Statements.A115026.statement`](lean/Math0/Statements/OEIS/A115026.lean) (math0, from OEIS A115026) | [A115026.lean](lean/Math0/Frontier/OEIS/A115026.lean) |
+| 30 | [Positivity of the exponential Mertens function (A209802)](results/oeis-a209802/README.md) | Sequences and series | [`Math0.Statements.A209802.statement`](lean/Math0/Statements/OEIS/A209802.lean) (math0, from OEIS A209802) | [A209802.lean](lean/Math0/Frontier/OEIS/A209802.lean) |
 
 ## Independent formal proof (an implying Lean proof already exists elsewhere)
 
