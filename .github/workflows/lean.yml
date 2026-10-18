@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Statements formalized by math0 are unchanged since their fidelity review
+        run: cd lean/Math0/Statements && sha256sum -c FROZEN.sha256
       - name: Build Math0 (fails on any sorry, non-standard axiom, or statement mismatch)
         uses: leanprover/lean-action@v1
         with:
