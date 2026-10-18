@@ -105,6 +105,40 @@ def result_readme(e):
     return "\n".join(lines)
 
 
+SHORT = {
+    "new-result": "new results",
+    "known-result-first-formalization": "first formal proofs of known results",
+    "known-result-already-formalized": "independent formal proofs",
+    "misformalization": "misformalization reports",
+}
+
+
+def write_highlights(entries, counts):
+    """Refresh the generated block between the HIGHLIGHTS markers in README.md."""
+    path = os.path.join(ROOT, "README.md")
+    text = open(path).read()
+    start, end = "<!-- HIGHLIGHTS:START -->", "<!-- HIGHLIGHTS:END -->"
+    if start not in text or end not in text:
+        return
+    lines = [
+        start,
+        f"**{len(entries)} verified results.** "
+        + ", ".join(f"{v} {SHORT[k]}" for k, v in counts.items() if v)
+        + ". Full list: [CONTENTS.md](CONTENTS.md).",
+        "",
+        "New results (open problems settled; each checked by the Lean kernel and judged new by an independent novelty referee):",
+        "",
+    ]
+    for e in entries:
+        if e["classification"] == "new-result":
+            paper = f" ([paper](results/{e['slug']}/paper.pdf))" if os.path.exists(os.path.join(ROOT, "results", e["slug"], "paper.pdf")) else ""
+            lines.append(f"* [{e['title']}](results/{e['slug']}/README.md){paper}")
+    lines.append(end)
+    pre, rest = text.split(start, 1)
+    post = rest.split(end, 1)[1]
+    open(path, "w").write(pre + "\n".join(lines) + post)
+
+
 def main():
     cat = json.load(open(os.path.join(ROOT, "catalog.json")))
     entries = sorted(cat["results"], key=lambda e: (list(CLASS_LABEL).index(e["classification"]), e["area"], e["title"]))
@@ -133,6 +167,7 @@ def main():
             )
         out.append("")
     open(os.path.join(ROOT, "CONTENTS.md"), "w").write("\n".join(out))
+    write_highlights(entries, counts)
     print(f"wrote CONTENTS.md and {len(entries)} result pages")
 
 
