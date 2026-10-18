@@ -950,6 +950,29 @@
    "date": "2026-10-18"
   },
   {
+   "id": "OEIS-frontier/A115026",
+   "slug": "oeis-a115026",
+   "title": "A115026 has a term greater than 370: a(119) = 371",
+   "area": "Sequences and series",
+   "source": "OEIS A115026",
+   "source_url": "https://oeis.org/A115026",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A115026.lean",
+    "decl": "Math0.Statements.A115026.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-refutes",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A115026.lean",
+   "our_decl": "Math0.Frontier.A115026.result : ¬ Math0.Statements.A115026.statement",
+   "summary": "Let F(m) be the sum of d^L over the decimal digits d of m, where L is the number of digits of m (A101337). For n >= 1, a(n) is the smallest element of the cycle that the orbit n, F(n), F(F(n)), ... eventually enters (A115026). Harvey P. Dale conjectured that a(n) <= 370 for all n >= 1. This is false: a(119) = 371.",
+   "notes": "Conjecture as stated in OEIS: \"Conjecture: no term is greater than 370. - _Harvey P. Dale_, Jun 08 2022\"\n\nReferees: OEIS A151543, \"Smallest precursor of n-th cycle in the 'Recurring Digital Invariant Variant' problem\" (N. J. A. Sloane, May 15 2009, based on an email from Eric Angelini, Feb 18 2009, with a cycle table by Hans Havermann). Its table entry \"13 { 119, 1, {371}}\" names 119 as the smallest number whose orbit under A101337 ends in the fixed point 371, so a(119) = 371. The same table has \"19 { 407, 1, {407}}\" and other cycles with minima above 370. Related pre-2022 OEIS entries: A151544 (2009) lists the cycle elements, including 371 and 407. A157714 (Havermann, Mar 2009) lists numbers in cycles of period greater than 1, such as 2929 and 18829. A005188 lists the narcissistic numbers 153, 370, 371, 407, 1634, ...; since 371 is a fixed point, a(371) = 371 > 370 trivially. Angelini's page \"A Recurring Digital Invariant Variant\" is at cetteadressecomportecinquantesignes.com/RecurDigit.htm, with a cached copy at oeis.org/A151543/a151543.pdf. The A115026 entry itself (revision #12, Jun 08 2022, unchanged upstream) still states the conjecture and has no correction or %E extension. Web searches found no explicit published retraction of Dale's comment. Sources: https://oeis.org/A115026, https://oeis.org/A151543, https://en.wikipedia.org/wiki/Narcissistic_number",
+   "date": "2026-10-18"
+  },
+  {
    "id": "OEIS-frontier/A175385",
    "slug": "oeis-a175385",
    "title": "∑_{i=1..n} C(2n-i-1, i-1)/i is never an integer for n > 1 (A175385)",
@@ -1085,6 +1108,29 @@
    "our_decl": "Math0.Frontier.A294512.result : ¬ Math0.Statements.A294512.statement",
    "summary": "Let V(n) = sum_{k=0}^{n} 1/((k+1)(3k+1)) and let a(n) be the denominator of V(n) in lowest terms (OEIS A294512). Let A250400(m) be the numerator, in lowest terms, of the harmonic mean m / sum_{j=1}^{m} 1/(j(3j-2)) of the first m octagonal numbers. Lang's conjecture (A294512, FORMULA, 2017) says that A250400(n+1)/(n+1) = a(n) in Q for every n >= 0. This is false. The first failure is at n = 164, where A250400(165)/165 = a(164)/11.",
    "notes": "Conjecture as stated in OEIS: A294512 (Denominators of partial sums of the reciprocals of octagonal numbers), FORMULA: \"a(n) = A250400(n+1)/(n+1), n >= 0. [conjecture].\" (entry by _Wolfdieter Lang_, Nov 01 2017). Companion A294513 (Lang, Nov 02 2017): \"a(n) = 2*A250327(n+1)/(n+1) [conjecture].\"\n\nReferees: OEIS A294512 (W. Lang, Nov 01 2017; history #1-#13, last edit Nov 12 2017, formula \"a(n) = A250400(n+1)/(n+1), n >= 0. [conjecture]\" still present). OEIS A250401 (C. Barker 2014; Lang comment Nov 01 2017 conditional on \"n+1 divides A250400(n+1)\", still present, history #1-#19). OEIS A250400 (C. Barker, Nov 21 2014, b-file n=1..1000, which contains A250400(165) = 15*a(164)). Sibling Lang conjectures in A294513, A294515 are unresolved there too. Not in google-deepmind/formal-conjectures (FormalConjectures/OEIS); not in Tsoukalas et al. / Epoch OEIS Open (arXiv 2608.11941; github.com/epoch-research/LeanOpenProblems-results; SeqFan thread \"Language models resolving OEIS conjectures\", Aug 2026). No SeqFan, MathOverflow, MSE or arXiv discussion found. Independent check: the failures for n < 3000 are exactly n = 164 (gcd 11) and n = 2413 (gcd 17).",
+   "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A300789",
+   "slug": "oeis-a300789",
+   "title": "Domino-tileable Young diagrams are exactly the colour-balanced ones (A300789)",
+   "area": "Discrete geometry",
+   "source": "OEIS A300789",
+   "source_url": "https://oeis.org/A300789",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A300789.lean",
+    "decl": "Math0.Statements.A300789.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A300789.lean",
+   "our_decl": "Math0.Frontier.A300789.result",
+   "summary": "For every integer partition y = (y_1 >= y_2 >= ... >= y_m), the Young diagram of y can be tiled by dominoes if and only if the number of odd parts in even positions equals the number of odd parts in odd positions. So the Heinz numbers of domino-tileable partitions (A300789) are exactly the Heinz numbers of partitions whose odd parts appear as often in even as in odd positions. Equivalently, a(n) = b(n) for all n >= 1, where a(n) and b(n) are the n-th smallest Heinz numbers of the two classes.",
+   "notes": "Conjecture as stated in OEIS: %C A300789 This sequence is conjectured to be the Heinz numbers of integer partitions in which the odd parts appear as many times in even as in odd positions.  (_Gus Wiseman_, Mar 12 2018)\n\nReferees: Already known, so the Lean proof is a first formalization, not a new result:\n- Classical 2-core / beta-number theory. I.G. Macdonald, Symmetric Functions and Hall Polynomials (2nd ed. 1995), Ch. I §1 Ex. 8, pp. 12-15: the r-core is empty iff the beta-numbers are equidistributed mod r. D.E. Littlewood, Modular representations of symmetric groups, Proc. Roy. Soc. A 209 (1951) 333-353.\n- Explicit statement of the parity form. S.P. Albion, \"Proof of some Littlewood identities conjectured by Lee, Rains and Warnaar\", arXiv:2108.12766, Lemma 2.1: empty 2-core (i.e. domino-tileable) iff {lambda_i + 2n - i} has n even and n odd elements, which is equivalent to the A300789 parity condition.\n- Black = white criterion for Young diagrams. Codeforces Round 609 editorial, problem 1268B/1269D \"Domino for Young\" (Dec 2019, codeforces.com/blog/entry/72358).\n- OEIS. A304710 (A. P. Heinz, May 2018) states the equivalence as fact: \"number of partitions of 2n where the number of odd parts in even positions differs from the number of odd parts in odd positions\". A000712 has Meeussen's 2013 comment and Karlsson's Dec 2025 comment. Heinz's Maple program and b-file for A300789 use the criterion.\n- The A300789 entry itself (rev #11, May 22 2018, local mirror = GitHub) still says \"conjectured\" and has no %E updates.",
    "date": "2026-10-18"
   },
   {
@@ -1292,6 +1338,29 @@
    "our_decl": "Math0.Frontier.A375522.result",
    "summary": "Let p_k be the k-th prime. Define s(0) = 0 and s(k) = s(k-1) + 1/(p_k b(k)), where b(k) = 1 + floor(1/((1 - s(k-1)) p_k)) (this is A375781). Write s(n) = S1(n)/S2(n) in lowest terms (S2 = A375522, S1 = A375521). Sigrist and Sloane conjectured that S2(n) - S1(n) = 1 for every n >= 1 except n = 4 and n = 6. This is false: S2(42) - S1(42) = 5. Lean: theorem result : ¬ statement.",
    "notes": "Conjecture as stated in OEIS: The differences S2(n) - S1(n) are surprisingly small: for n = 1,2,...,34 the values S2(n) - S1(n) are: 1, 1, 1, 2, 1, 2, 1, 1, ..., 1 suggesting the conjecture that they are always 1 except for n = 4 and 6 (compare the Theorem in A374983). (Rémy Sigrist and N. J. A. Sloane, Aug 30 2024)\n\nReferees: The conjecture is in OEIS A375522 (R. Sigrist and N. J. A. Sloane, Aug 30 2024; comment added Aug 31 2024; current revision #25, Apr 22 2025). It is restated as still open (\"it seems\") in A375528 (Sloane, Sep/Oct 2024). Related: A375521, A375781, A374983/A375516 (harmonic analogue, proved by Sigrist), and Sloane, \"A Nasty Surprise in a Sequence and Other OEIS Stories\", Rutgers Experimental Math Seminar, Oct 10 2024 (slides list these sequences and a general Conjecture 4, with no counterexample). Sigrist and Sloane, \"Dampening Down a Divergent Series\", is still cited on OEIS as a manuscript in preparation. No prior counterexample or proof turned up in the OEIS histories, arXiv (e.g. Fried arXiv:2607.24832 does not cover it), web searches, or google-deepmind/formal-conjectures. The SeqFan archive could not be reached.",
+   "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A393794",
+   "slug": "oeis-a393794",
+   "title": "The 1089-trick map has two 9-digit fixed points (A393794 uniqueness conjecture is false)",
+   "area": "Sequences and series",
+   "source": "OEIS A393794",
+   "source_url": "https://oeis.org/A393794",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A393794.lean",
+    "decl": "Math0.Statements.A393794.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-refutes",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A393794.lean",
+   "our_decl": "Math0.Frontier.A393794.result",
+   "summary": "Let rev(m) be the decimal reversal of m (leading zeros dropped), and let T(x) = D + rev(D) with D = |x - rev(x)|. Havenaar's conjecture in A393794 says that for every n >= 1, a(n) = 110*(10^(n+1) - 1) is the only fixed point of T with exactly n+4 decimal digits. This is false. For n = 5, x = 108910890 has 9 digits and satisfies T(x) = x, but x is not a(5) = 109999890.",
+   "notes": "Conjecture as stated in OEIS: \"a(n) is the unique fixed point of the 1089-trick map T among all (n+4)-digit numbers (verified exhaustively for n = 1..4; conjectured for all n >= 1).\" (comment in A393794, entry by _Remco Havenaar_, Feb 27 2026; the entry names the sequence 'Fixed points of the 1089-trick map' and gives a(n) = 110*(10^(n+1)-1))\n\nReferees: OEIS A393794 (Havenaar, Feb 27 2026; #19, Mar 10 2026, no correction as of GitHub oeisdata mirror). OEIS A001232 (numbers k with 9k = rev k; includes non-primitive 10891089; structure theorem by D. W. Wilson 1997 and M. F. Hasler 2022), from which 10*A001232 ⊂ Fix(T) follows trivially. R. Havenaar, SYNTRIAD/digit-dynamics GitHub repo (initial commit 2026-03-09): papers/paper_A.tex still states the uniqueness conjecture, while data/results_export.json experiment id 10 (truc_1089, 7-digit domain, 2026-02-25) lists 108910890 among T's fixed points without remark. Neither source states the contradiction. Y. Almirantis and W. Li, arXiv:2408.02527 and arXiv:2410.11784 study related reversal maps but not this T. No published refutation found.",
    "date": "2026-10-18"
   },
   {

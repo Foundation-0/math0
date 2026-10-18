@@ -20,7 +20,7 @@ quietly prove an easier statement than the one the problem's curators wrote down
 ## Highlights
 
 <!-- HIGHLIGHTS:START -->
-**60 verified results.** 11 new results, 27 first formal proofs of known results, 16 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
+**63 verified results.** 12 new results, 29 first formal proofs of known results, 16 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
 
 New results (open problems settled; each checked by the Lean kernel and judged new by an independent novelty referee):
 
@@ -31,10 +31,11 @@ New results (open problems settled; each checked by the Lean kernel and judged n
 * [OEIS A362086: every denominator of 1/(2-3/(3-4/(...(n-1)-n/(-3)))) except 9 is 1 or a prime](results/oeis-a362086/README.md)
 * [OEIS A363482: apart from 49, every denominator of 1/(2-3/(3-4/(...(n-1)-n/(-5)))) is 1 or a prime](results/oeis-a363482/README.md)
 * [Repunit residues: a(n) = n - 1 exactly for long period primes](results/oeis-a335012/README.md)
-* [Zeros of a(3n) for the signed Stern sequence A005590 are exactly the fibbinary numbers](results/oeis-a005590/README.md)
+* [Zeros of a(3n) for the signed Stern sequence A005590 are exactly the fibbinary numbers](results/oeis-a005590/README.md) ([paper](results/oeis-a005590/paper.pdf))
 * [A326602: a(n) is odd iff n is a square](results/oeis-a326602/README.md)
 * [Lang's conjecture a(n) = A250400(n+1)/(n+1) for A294512 fails at n = 164](results/oeis-a294512/README.md) ([paper](results/oeis-a294512/paper.pdf))
 * [Odd terms of A323695 occur only at n = k(k+2)](results/oeis-a323695/README.md) ([paper](results/oeis-a323695/paper.pdf))
+* [The 1089-trick map has two 9-digit fixed points (A393794 uniqueness conjecture is false)](results/oeis-a393794/README.md)
 <!-- HIGHLIGHTS:END -->
 
 ## Two tracks
