@@ -904,6 +904,52 @@
    "date": "2026-10-17"
   },
   {
+   "id": "OEIS-frontier/A209802",
+   "slug": "oeis-a209802",
+   "title": "Positivity of the exponential Mertens function (A209802)",
+   "area": "Sequences and series",
+   "source": "OEIS A209802",
+   "source_url": "https://oeis.org/A209802",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A209802.lean",
+    "decl": "Math0.Statements.A209802.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A209802.lean",
+   "our_decl": "Math0.Frontier.A209802.result",
+   "summary": "Let mu_e be the exponential Möbius function (A166234). It is multiplicative with mu_e(p^e) = mu(e), so mu_e(n) = prod_{p | n} mu(v_p(n)). Let a(n) = sum_{k=1}^{n} mu_e(k) (A209802). Then a(n) > 0 for every n >= 1. This is Zumkeller's conjecture in the OEIS entry.",
+   "notes": "Conjecture as stated in OEIS: A209802 (Partial sums of exponential Möbius function, A166234): \"Analog of Mertens's function, A002321; conjecture: a(n) > 0.\" (entry by _Reinhard Zumkeller_, Mar 13 2012)\n\nReferees: No explicit resolution of the A209802 conjecture found:\n- OEIS A209802 (https://oeis.org/A209802) and its history (https://oeis.org/history?seq=A209802, versions 1-29) still list \"conjecture: a(n) > 0\"; nothing about a proof is recorded.\n- A166234 (exponential Möbius function) and A368405 add nothing on positivity.\n\nPrior results that imply the conjecture at once:\n- K. Rogers, \"The Schnirelmann density of the squarefree integers\", Proc. Amer. Math. Soc. 15 (1964) 515-516, doi:10.1090/S0002-9939-1964-0163893-X. It proves Q(n) >= 53n/88 for all n, with equality only at n = 176.\n- L. Moser and R. A. MacLeod, \"The error term for the squarefree integers\", Canad. Math. Bull. 9 (1966), doi:10.4153/CMB-1966-039-4.\n- The same bound is recorded in an OEIS A013928 comment (M. Marcus 2012; C. R. Greathouse IV 2016).\n- L. Tóth, \"On certain arithmetic functions involving exponential divisors, II\", Annales Univ. Sci. Budapest. Sect. Comp. 27 (2007) 155-166, arXiv:0708.3557. It gives mu_e taking values in {-1, 0, 1} with mu_e(p) = 1, and the asymptotic sum mu_e(n) = c x + O(x^{1/2} log x) with c about 0.36094. That settles positivity only for large x.\n\nTogether these give a(n) >= 2Q(n) - n >= 9n/44 > 0 for all n >= 1.\n\nAlso checked, with nothing relevant found:\n- Lelechenko, arXiv:1405.7597\n- Cao and Zhai, J. Integer Seq. 13 (2010)\n- Web, MathOverflow and Math StackExchange searches",
+   "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A294512",
+   "slug": "oeis-a294512",
+   "title": "Lang's conjecture a(n) = A250400(n+1)/(n+1) for A294512 fails at n = 164",
+   "area": "Sequences and series",
+   "source": "OEIS A294512",
+   "source_url": "https://oeis.org/A294512",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A294512.lean",
+    "decl": "Math0.Statements.A294512.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-refutes",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A294512.lean",
+   "our_decl": "Math0.Frontier.A294512.result : ¬ Math0.Statements.A294512.statement",
+   "summary": "Let V(n) = sum_{k=0}^{n} 1/((k+1)(3k+1)) and let a(n) be the denominator of V(n) in lowest terms (OEIS A294512). Let A250400(m) be the numerator, in lowest terms, of the harmonic mean m / sum_{j=1}^{m} 1/(j(3j-2)) of the first m octagonal numbers. Lang's conjecture (A294512, FORMULA, 2017) says that A250400(n+1)/(n+1) = a(n) in Q for every n >= 0. This is false. The first failure is at n = 164, where A250400(165)/165 = a(164)/11.",
+   "notes": "Conjecture as stated in OEIS: A294512 (Denominators of partial sums of the reciprocals of octagonal numbers), FORMULA: \"a(n) = A250400(n+1)/(n+1), n >= 0. [conjecture].\" (entry by _Wolfdieter Lang_, Nov 01 2017). Companion A294513 (Lang, Nov 02 2017): \"a(n) = 2*A250327(n+1)/(n+1) [conjecture].\"\n\nReferees: OEIS A294512 (W. Lang, Nov 01 2017; history #1-#13, last edit Nov 12 2017, formula \"a(n) = A250400(n+1)/(n+1), n >= 0. [conjecture]\" still present). OEIS A250401 (C. Barker 2014; Lang comment Nov 01 2017 conditional on \"n+1 divides A250400(n+1)\", still present, history #1-#19). OEIS A250400 (C. Barker, Nov 21 2014, b-file n=1..1000, which contains A250400(165) = 15*a(164)). Sibling Lang conjectures in A294513, A294515 are unresolved there too. Not in google-deepmind/formal-conjectures (FormalConjectures/OEIS); not in Tsoukalas et al. / Epoch OEIS Open (arXiv 2608.11941; github.com/epoch-research/LeanOpenProblems-results; SeqFan thread \"Language models resolving OEIS conjectures\", Aug 2026). No SeqFan, MathOverflow, MSE or arXiv discussion found. Independent check: the failures for n < 3000 are exactly n = 164 (gcd 11) and n = 2413 (gcd 17).",
+   "date": "2026-10-18"
+  },
+  {
    "id": "OEIS/51903::conjecture2",
    "slug": "oeisa51903-conjecture2",
    "title": "No odd n with a(n) > 1 has b^n ≡ b^{a(n)} (mod n) for all b (OEIS A051903)",

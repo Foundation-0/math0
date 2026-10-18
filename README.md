@@ -17,6 +17,22 @@ imports that repository at a pinned commit. Each math0 proof then states its the
 of the upstream declaration* and is checked against it syntactically. A proof therefore cannot
 quietly prove an easier statement than the one the problem's curators wrote down.
 
+## Two tracks
+
+1. **Third-party statements.** Proofs of statements in formal-conjectures, checked against the
+   upstream declaration with no possibility of restating the goal.
+2. **The neglected frontier.** The curated lists (Erdős problems, Green's list, formal-conjectures)
+   are now swept continuously by several groups and automated reviewers. The referees in our first
+   track kept finding that "open" items had been settled weeks earlier. So math0 also mines
+   material almost nobody revisits: conjectures that OEIS contributors left in sequence entries,
+   in the "unglamorous" corners of number theory and geometry. These include patterns in series,
+   awkward fractions (Egyptian fractions, odd continued fractions, harmonic-number denominators)
+   and irregular shapes (lattice polygons, integer triangles, grid configurations).
+   Each such statement is formalized by one agent, with its definitions checked by the kernel
+   against the OEIS data. A second agent then reviews it for fidelity to the OEIS text and freezes
+   it (by hash) before a third agent attempts a proof or counterexample, which is checked with
+   `#math0_settles`.
+
 ## Why verification first
 
 Proof-shaped text is cheap to produce and expensive to check, whether a human or a model wrote
@@ -55,6 +71,8 @@ file:
 #math0_proves  Math0.Erdos10.erdos_10_grechuk_example Erdos10.erdos_10.variants.grechuk_example
 #math0_refutes ...   -- our theorem's type must be exactly `¬ (upstream type)`
 #math0_answers ...   -- value questions: upstream `X.answer` replaced by an explicit value
+#math0_refutes_every_answer ...  -- misformalized value questions: false for every possible answer
+#math0_settles ...   -- frontier track: proves or refutes a frozen math0 statement (a sorry-free Prop)
 ```
 
 Each command fails the build unless:

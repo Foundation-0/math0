@@ -1,13 +1,19 @@
 # Contents
 
-**43 results, every one checked by the Lean kernel against a statement published by a third party.**
+**45 results, every one checked by the Lean kernel against a statement published by a third party.**
 
 | Classification | Count |
 |---|---|
-| New result (open problem settled) | 0 |
-| First formal proof of a known result | 22 |
+| New result (open problem settled) | 1 |
+| First formal proof of a known result | 23 |
 | Independent formal proof (an implying Lean proof already exists elsewhere) | 15 |
 | Misformalization found (upstream statement does not match the problem) | 6 |
+
+## New result (open problem settled)
+
+| # | Result | Area | Upstream statement | Lean |
+|---|---|---|---|---|
+| 1 | [Lang's conjecture a(n) = A250400(n+1)/(n+1) for A294512 fails at n = 164](results/oeis-a294512/README.md) | Sequences and series | [`Math0.Statements.A294512.statement`](lean/Math0/Statements/OEIS/A294512.lean) (math0, from OEIS A294512) | [A294512.lean](lean/Math0/Frontier/OEIS/A294512.lean) |
 
 ## First formal proof of a known result
 
@@ -35,6 +41,7 @@
 | 20 | [The multiples of 3 avoid sums equal to powers of two and have density 1/3](results/erdos1136-erdos-1136-variants-multiples-of-three/README.md) | Number theory | [`Erdos1136.erdos_1136.variants.multiples_of_three`](https://github.com/google-deepmind/formal-conjectures/blob/c77fdd446d23539302aa73bcfae4a9fa962b8382/FormalConjectures/ErdosProblems/1136.lean) | [Erdos1136_erdos_1136_variants_multiples_of_three.lean](lean/Math0/ErdosProblems/Erdos1136_erdos_1136_variants_multiples_of_three.lean) |
 | 21 | [The p-adic Littlewood conjecture for real quadratic irrationals](results/bugeaud08-problem-10-8-variants-quadratic/README.md) | Number theory | [`Bugeaud08.problem_10_8.variants.quadratic`](https://github.com/google-deepmind/formal-conjectures/blob/c77fdd446d23539302aa73bcfae4a9fa962b8382/FormalConjectures/Books/BugeaudDistributionModuloOne/Problem10_8.lean) | [Bugeaud08_problem_10_8_variants_quadratic.lean](lean/Math0/Books/Bugeaud08_problem_10_8_variants_quadratic.lean) |
 | 22 | [The set of Mahler Z-numbers is countable, so its Hausdorff dimension is 0, which is less than 1](results/bugeaud09-problem-10-9-variants-dimh-lt-one/README.md) | Number theory | [`Bugeaud09.problem_10_9.variants.dimH_lt_one`](https://github.com/google-deepmind/formal-conjectures/blob/c77fdd446d23539302aa73bcfae4a9fa962b8382/FormalConjectures/Books/BugeaudDistributionModuloOne/Problem10_9.lean) | [Bugeaud09_problem_10_9_variants_dimH_lt_one.lean](lean/Math0/Books/Bugeaud09_problem_10_9_variants_dimH_lt_one.lean) |
+| 23 | [Positivity of the exponential Mertens function (A209802)](results/oeis-a209802/README.md) | Sequences and series | [`Math0.Statements.A209802.statement`](lean/Math0/Statements/OEIS/A209802.lean) (math0, from OEIS A209802) | [A209802.lean](lean/Math0/Frontier/OEIS/A209802.lean) |
 
 ## Independent formal proof (an implying Lean proof already exists elsewhere)
 
