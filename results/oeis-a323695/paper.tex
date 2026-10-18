@@ -1,0 +1,366 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,noncomputable,rw,at,by_contra,ring,generalize,split_ifs},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={∑}{{$\sum$}}1 {∈}{{$\in$}}1 {ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1
+    {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {→}{{$\to$}}1 {←}{{$\leftarrow$}}1 {≤}{{$\le$}}1
+    {≠}{{$\ne$}}1 {∧}{{$\wedge$}}1 {∣}{{$\mid$}}1 {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1
+    {…}{{$\ldots$}}1 {¬}{{$\neg$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+\newunicodechar{…}{\ensuremath{\ldots}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}_2}
+\newcommand{\coef}[1]{[x^{#1}]}
+
+\title[Odd coefficients of the generating function of OEIS A323695]{The coefficients of $\sum_{m\ge0}x^m(1-x^{m+1})^m/(1+x^{m+1})^{m+1}$ are odd only at indices $k(k+2)$}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 17, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $a(n)$ be the coefficient of $x^n$ in $\sum_{m\ge0}x^m(1-x^{m+1})^m/(1+x^{m+1})^{m+1}$, the sequence A323695 of the OEIS.
+In 2019 P.~D.~Hanna conjectured that the odd terms occur only at $n=k(k+2)$, $k\ge0$.
+We prove this conjecture: modulo $2$ the $m$-th summand reduces to $x^m/(1+x^{m+1})$, so $a(n)$ is congruent modulo $2$ to the number of divisors of $n+1$, which is odd only when $n+1$ is a perfect square; the same argument gives the converse, which is also recorded in the entry.
+To our knowledge this is a new, though elementary, result: the conjecture is still marked as open in the OEIS, and we found no proof in the literature.
+The conjecture is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, whose definitions are proved equal to the generating-function coefficients and are checked by the kernel against all $121$ listed terms; this statement is not part of the formal-conjectures repository.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+The OEIS entry A323695, contributed by Paul D.~Hanna on February~23, 2019 \cite{A323695}, is the sequence of coefficients of the power series
+\begin{equation}\label{eq:gf}
+  A(x)=\sum_{n\ge0}a(n)x^n=\sum_{m\ge0}\frac{x^m\,(1-x^{m+1})^m}{(1+x^{m+1})^{m+1}}
+  =1+2x^2-3x^3+2x^4+2x^6-14x^7+15x^8+\cdots.
+\end{equation}
+The entry lists the terms $a(0),\dots,a(120)$ and links a table of $a(n)$ for $n\le 10201$, both by Hanna. Its first comment is the conjecture that odd terms occur only at $n=k(k+2)$. Its formula section states, without proof, the converse $a(n(n+2))\equiv1\pmod2$, as well as $a(4n+1)=0$ and $a(p-1)=2$ for odd primes~$p$. The odd terms $a(k(k+2))$ form the sequence A323696 \cite{A323696}.
+
+Hanna contributed several related series of the shape $\sum_m x^m P_m(x)^m/Q_m(x)^{m+1}$ with parity conjectures of the same kind. For A324300 \cite{A324300}, with summands $x^m(x^{m+1}+i)^m/(1+ix^{m+1})^{m+1}$, the entry conjectures that odd terms occur only at $n=k(k+2)$; it is also still open. For A323557 and A325046 \cite{A323557,A325046}, with summands $x^m(1+x^m)^m/(1+x^{m+1})^{m+1}$ and $x^m(1+x^m)^m/(1-x^{m+1})^{m+1}$, the conjecture is that odd terms occur only at $n=m(m+1)$. Both of these have been settled. Fried proved the A325046 conjecture in a note attached to the entry \cite{FriedNote}, and again in \cite[pp.~50--51]{Fried}. The AI system AlphaProof Nexus \cite{APN} produced Lean proofs of both conjectures, and the two entries also point to a proof in Adamczewski's study \cite{Ad}. In those two cases the factors $(1+x^m)^m$ and $(1\pm x^{m+1})^{m+1}$ do not cancel modulo~$2$, and the published arguments are longer. For A323695 the numerator and denominator have the same base modulo~$2$, and the proof below is short.
+
+\subsection*{Status and prior work}
+The comment in A323695 is still tagged ``(conjecture)'' in the current revision~\#24 (December~15, 2024). The math0 referees read the edit history of the entry, which records only changes to the examples, the table, and a cross-reference, and they checked the cross-referenced entries A323675, A323680, A323696 and A324300; none contains a proof. A323695 is not among the OEIS statements of the formal-conjectures repository \cite{FC}, nor among the $492$ OEIS conjectures of the OEIS Open benchmark \cite{Ad}. The proofs of the sibling conjectures cited above \cite{FriedNote,Fried,APN,Ad} do not treat A323695, and it is not mentioned in Fried's earlier papers on OEIS conjectures that the referees checked. Searches of MathOverflow, Mathematics Stack Exchange and the SeqFan mailing list found nothing. We therefore classify the result as \emph{new}, with the caveat that it is elementary: once the series is reduced modulo~$2$, the argument takes a few lines.
+
+\section{Statement}\label{sec:statement}
+
+All power series have integer coefficients unless stated otherwise, and $\coef{N}f$ denotes the coefficient of $x^N$ in~$f$. For $m\ge0$ the series $(1+x^{m+1})^{m+1}$ has constant term~$1$, so it is a unit of $\Z[[x]]$.
+
+\begin{definition}\label{def:main}
+For $m\ge0$ let
+\[
+  S_m=x^m(1-x^{m+1})^m\,(1+x^{m+1})^{-(m+1)}\in\Z[[x]],
+\]
+and for $N\ge0$ let $a(N)=\sum_{m=0}^{N}\coef{N}S_m$.
+\end{definition}
+
+Since $S_m\in x^m\Z[[x]]$, the series $\sum_{m\ge0}S_m$ converges $x$-adically, and $a(N)$ is the coefficient of $x^N$ in its sum. So $a$ is the sequence A323695 with offset~$0$. The comment section of the entry contains, verbatim:
+\begin{quote}
+\texttt{Odd terms occur only at n = k*(k+2) for k >= 0 (conjecture);}
+\end{quote}
+The entry, including this comment, is by Paul D.~Hanna, February~23, 2019.
+
+\begin{theorem}\label{thm:main}
+For every $n\ge0$, if $a(n)$ is odd, then $n=k(k+2)$ for some integer $k\ge0$. Equivalently, if $a(n)$ is odd, then $n+1$ is a perfect square.
+\end{theorem}
+
+The proof also gives the converse and an exact description of the parity; only Theorem~\ref{thm:main} is formalized, together with the congruence of Lemma~\ref{lem:cast}.
+
+\begin{theorem}\label{thm:full}
+For every $N\ge0$, $a(N)\equiv d(N+1)\pmod 2$, where $d$ is the number-of-divisors function. Consequently, $a(N)$ is odd if and only if $N=k(k+2)$ for some $k\ge0$.
+\end{theorem}
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A323695.lean}. It was reviewed for fidelity and frozen (SHA-256 \texttt{6d745374\ldots 8edd}) before any proof attempt. The definitions and the statement are, verbatim except that docstrings are omitted:
+\begin{lstlisting}
+namespace Math0.Statements.A323695
+open PowerSeries
+
+noncomputable def summand (m : ℕ) : PowerSeries ℤ :=
+  X ^ m * (1 - X ^ (m + 1)) ^ m * invOfUnit ((1 + X ^ (m + 1)) ^ (m + 1)) 1
+
+noncomputable def A : PowerSeries ℤ :=
+  mk fun N => ∑ m ∈ Finset.range (N + 1), coeff N (summand m)
+
+def binom (n k : ℕ) : ℕ := n.descFactorial k / k.factorial
+
+def term (N m i : ℕ) : ℤ :=
+  if (m + 1) * i + m ≤ N ∧ (N - ((m + 1) * i + m)) % (m + 1) = 0 then
+    (-1) ^ i * (binom m i : ℤ) *
+      ((-1) ^ ((N - ((m + 1) * i + m)) / (m + 1)) *
+        (binom (m + (N - ((m + 1) * i + m)) / (m + 1)) m : ℤ))
+  else 0
+
+def coeffA (N : ℕ) : ℤ :=
+  ∑ m ∈ Finset.range (N + 1),
+    if (N + 1) % (m + 1) = 0 then ∑ i ∈ Finset.range (m + 1), term N m i else 0
+
+def a (N : ℕ) : ℤ := coeffA N
+
+def statement : Prop :=
+  ∀ n : ℕ, Odd (a n) → ∃ k : ℕ, n = k * (k + 2)
+\end{lstlisting}
+The file also proves the following facts, which tie these definitions to Definition~\ref{def:main} and to the OEIS data (proofs omitted, data list abbreviated):
+\begin{lstlisting}
+theorem summand_spec (m : ℕ) :
+    (1 + X ^ (m + 1)) ^ (m + 1) * summand m = X ^ m * (1 - X ^ (m + 1)) ^ m
+theorem hasSum_summand : HasSum summand A
+theorem a_eq_coeff (N : ℕ) : a N = coeff N A
+theorem a_data : (List.range 121).map (fun i => a (i + 0)) =
+    [1, 0, 2, -3, 2, 0, 2, -14, 15, 0, 2, -22, …, 3769924, -15721720, 8097455]
+\end{lstlisting}
+
+\emph{Encoding.} \texttt{invOfUnit f 1} is the inverse of a power series $f$ with constant coefficient~$1$, so \texttt{summand m} is $S_m$, as \decl{summand_spec} records. \decl{A} is defined coefficientwise as the finite sum of Definition~\ref{def:main}, and \decl{hasSum_summand} proves that it is the sum of the family $(S_m)_{m\ge0}$ in the product topology on $\Z[[x]]$. The sequence \decl{a} itself is given by an explicit formula, so that the kernel can evaluate it. Expanding $(1-y)^m=\sum_i(-1)^i\binom{m}{i}y^i$ and $(1+y)^{-(m+1)}=\sum_q(-1)^q\binom{m+q}{m}y^q$ with $y=x^{m+1}$, the term with indices $i,q$ contributes to $x^N$ exactly when $N=m+(m+1)(i+q)$; this is \texttt{term N m i}, with $q=(N-(m+1)i-m)/(m+1)$. Such a term exists only if $m+1$ divides $N+1$, so \decl{coeffA} skips the other values of~$m$; the lemma \decl{term_eq_zero} justifies the skip. The theorem \decl{a_eq_coeff} proves $a(N)=\coef{N}A$ for every~$N$, so the explicit formula is a theorem, not part of the definition of the sequence. The truncated subtraction and division in \decl{term} occur only inside the definition of \decl{a} and are covered by \decl{a_eq_coeff}.
+
+\emph{Data check.} \decl{a_data} checks all $121$ terms listed in the entry, $a(0),\dots,a(120)$, by \texttt{decide +kernel}, in about $20$ seconds. A referee compared this list with the OEIS data by script and found them identical.
+
+\emph{Reading of the conjecture.} ``Odd terms occur only at $n=k(k+2)$'' is the one-directional claim that $a(n)$ odd implies $\exists k\in\N,\ n=k(k+2)$, for all $n\ge0$. Here \decl{Odd} is taken in $\Z$, which handles the negative terms (for example $a(3)=-3$). The converse is stated separately in the formula section of the entry and is not marked as a conjecture there, so it is not part of \decl{statement}.
+
+\section{Proof}\label{sec:proof}
+
+Write $\F=\Z/2\Z$ and let $\pi\colon\Z[[x]]\to\F[[x]]$ be the ring homomorphism that reduces every coefficient modulo~$2$. Then $\coef{N}\pi(f)=\pi(\coef{N}f)$, where on the right $\pi$ denotes reduction $\Z\to\F$. For $b\ge1$ let
+\[
+  E_b=\sum_{j\ge0}(-1)^jx^{bj}\in\Z[[x]].
+\]
+In Lean, $E_b$ is obtained from $\sum_j\binom{0+j}{0}x^j=1/(1-x)$ by the substitutions $x\mapsto-x$ and $x\mapsto x^b$. The statement file proves the following two facts as the case $d=0$ of \decl{one_add_X_pow_pow_mul} and \decl{coeff_E}:
+\begin{equation}\label{eq:E}
+  (1+x^b)\,E_b=1,\qquad
+  \coef{r}E_b=\begin{cases}(-1)^{r/b}&\text{if }b\mid r,\\ 0&\text{otherwise.}\end{cases}
+\end{equation}
+
+\begin{lemma}[\decl{map_summand}]\label{lem:map}
+For every $m\ge0$, $\pi(S_m)=x^m\,\pi(E_{m+1})$ in $\F[[x]]$.
+\end{lemma}
+
+\begin{proof}
+Put $u=1+x^{m+1}$, $s=\pi(S_m)$ and $e=\pi(E_{m+1})$ in $\F[[x]]$. Since $-1=1$ in $\F[[x]]$, we have $\pi(1-x^{m+1})=1-x^{m+1}=u$. Applying $\pi$ to the identity $(1+x^{m+1})^{m+1}S_m=x^m(1-x^{m+1})^m$ gives $u^{m+1}s=x^mu^m$, and applying it to \eqref{eq:E} gives $ue=1$. Hence
+\[
+  s=(ue)^{m+1}s=e^{m+1}\bigl(u^{m+1}s\bigr)=e^{m+1}x^mu^m=x^m e\,(ue)^m=x^me.\qedhere
+\]
+\end{proof}
+
+\begin{lemma}[\decl{coeff_map_summand}]\label{lem:coeff}
+For all $N,m\ge0$,
+\[
+  \coef{N}\pi(S_m)=\begin{cases}1&\text{if }m\le N\text{ and }(m+1)\mid(N+1),\\0&\text{otherwise.}\end{cases}
+\]
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:map}, $\coef{N}\pi(S_m)=\coef{N}\bigl(x^m\pi(E_{m+1})\bigr)$. This is $0$ if $N<m$. If $m\le N$, it equals $\pi\bigl(\coef{N-m}E_{m+1}\bigr)$, which by \eqref{eq:E} is $\pi(\pm1)=1$ if $(m+1)\mid(N-m)$ and $0$ otherwise. Since $N+1=(N-m)+(m+1)$, we have $(m+1)\mid(N-m)$ if and only if $(m+1)\mid(N+1)$.
+\end{proof}
+
+For $N\ge0$ let $D_N=\{m\in\{0,\dots,N\}:(m+1)\mid(N+1)\}$. The map $m\mapsto m+1$ is a bijection from $D_N$ onto the set of divisors of $N+1$, since every divisor of $N+1$ lies in $\{1,\dots,N+1\}$. So $|D_N|=d(N+1)$.
+
+\begin{lemma}[\decl{cast_a}]\label{lem:cast}
+For every $N\ge0$, $a(N)\equiv|D_N|=d(N+1)\pmod2$.
+\end{lemma}
+
+\begin{proof}
+By \decl{a_eq_coeff} and the definition of $A$, $a(N)=\sum_{m=0}^{N}\coef{N}S_m$. Reducing modulo~$2$ and using Lemma~\ref{lem:coeff},
+\[
+  \pi(a(N))=\sum_{m=0}^{N}\coef{N}\pi(S_m)=\sum_{m=0}^{N}\bigl[(m+1)\mid(N+1)\text{ and }m\le N\bigr]=|D_N|\bmod 2.\qedhere
+\]
+\end{proof}
+
+\begin{lemma}[\decl{sum_eq_zero}]\label{lem:even}
+If $N\ne k(k+2)$ for every $k\in\N$, then $|D_N|$ is even.
+\end{lemma}
+
+\begin{proof}
+For $m\in D_N$ write $N+1=(m+1)c$ with $c=(N+1)/(m+1)\ge1$, and set $\sigma(m)=c-1$. Then:
+\begin{enumerate}
+\item $\sigma(m)\in D_N$: $c$ divides $N+1$, so $c\le N+1$ and $\sigma(m)=c-1\le N$, and $\sigma(m)+1=c$ divides $N+1$.
+\item $\sigma(\sigma(m))=(N+1)/c-1=m$.
+\item $\sigma(m)\ne m$: if $c-1=m$, then $N+1=(m+1)^2$, that is $N=m(m+2)$, which is excluded.
+\end{enumerate}
+So $\sigma$ is a fixed-point-free involution of $D_N$. Its orbits have two elements each, and $|D_N|$ is even. In the Lean proof this is an application of \decl{Finset.sum_involution} to the sum of the constant $1\in\F$ over $D_N$. Its four hypotheses are (1), (2), (3), and $1+1=0$ in $\F$, which pairs the two terms of each orbit.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+This is the Lean proof of \decl{result}. Let $a(n)$ be odd and suppose, for a contradiction, that $n\ne k(k+2)$ for every $k\in\N$. Since $a(n)$ is odd, its image in $\F$ is $1$. By Lemmas~\ref{lem:cast} and~\ref{lem:even}, this image is $|D_n|\bmod 2=0$. But $0\ne1$ in $\F$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:full}]
+The congruence is Lemma~\ref{lem:cast}. If $N\ne k(k+2)$ for all $k$, then $a(N)$ is even by Lemma~\ref{lem:even}. If $N=k(k+2)$, then $N+1=(k+1)^2$, and the map $\sigma$ from the proof of Lemma~\ref{lem:even} is still an involution of $D_N$ (properties (1) and (2) did not use the hypothesis). By the computation in (3), its fixed points are the $m\in D_N$ with $(m+1)^2=N+1$, so $k$ is its only fixed point. The other elements of $D_N$ fall into $2$-element orbits, so $|D_N|$ is odd and $a(N)$ is odd.
+\end{proof}
+
+In particular, Theorem~\ref{thm:full} proves the formula $a(n(n+2))\equiv1\pmod2$ of the entry. It is consistent with the listed values, for example $a(3)=-3$, $a(8)=15$, $a(15)=-93$ and $a(24)=323$, and with $a(p-1)=2$ for odd primes~$p$, where $d(p)=2$. A referee checked independently, by direct computation in Python, that $a(n)\equiv d(n+1)\pmod 2$ for all $n\le10201$ in Hanna's table \cite{A323695}. This check is not part of the formal verification.
+
+\begin{remark}[A324300; not formalized]\label{rem:A324300}
+The ring homomorphism $\Z[i]\to\F$ with $i\mapsto1$ sends the summand $x^m(x^{m+1}+i)^m(1+ix^{m+1})^{-(m+1)}$ of A324300 to $x^m(1+x^{m+1})^m(1+x^{m+1})^{-(m+1)}=x^m/(1+x^{m+1})=\pi(S_m)$. So if the coefficient of $x^N$ in the generating function of A324300 is $\alpha_N+\beta_Ni$ with $\alpha_N,\beta_N\in\Z$, then $\alpha_N+\beta_N\equiv d(N+1)\pmod 2$. The entry observes that the coefficients are real, that is, $\beta_N=0$. If this holds for all $N$, then the conjecture of A324300 \cite{A324300} follows in the same way. We have not proved that $\beta_N=0$, and we make no claim about A324300.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A323695.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A323695.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is
+\begin{center}
+\texttt{Math0.Frontier.A323695.result :\ Math0.Statements.A323695.statement}.
+\end{center}
+The auxiliary declarations are private: \decl{neg_one_eq} ($-1=1$ in $\F[[x]]$), \decl{E} (the series $E_b$), \decl{map_summand}, \decl{coeff_map_summand}, \decl{cast_a} and \decl{sum_eq_zero}, which are Lemmas~\ref{lem:map}--\ref{lem:even}. The proof uses \decl{summand_spec}, \decl{one_add_X_pow_pow_mul}, \decl{coeff_E} and \decl{a_eq_coeff} from the statement file and \decl{Finset.sum_involution} from Mathlib. The statements of the last three lemmas and the main proof read, verbatim:
+\begin{lstlisting}
+private theorem coeff_map_summand (N m : ℕ) :
+    coeff N (map (Int.castRingHom (ZMod 2)) (summand m)) =
+      if m + 1 ∣ N + 1 ∧ m ≤ N then 1 else 0
+private theorem cast_a (N : ℕ) :
+    ((a N : ℤ) : ZMod 2) =
+      ∑ m ∈ Finset.range (N + 1), if m + 1 ∣ N + 1 ∧ m ≤ N then (1 : ZMod 2) else 0
+private theorem sum_eq_zero (N : ℕ) (hN : ∀ k : ℕ, N ≠ k * (k + 2)) :
+    ∑ m ∈ Finset.range (N + 1), (if m + 1 ∣ N + 1 ∧ m ≤ N then (1 : ZMod 2) else 0) = 0
+
+theorem result : statement := by
+  intro n hodd
+  by_contra hne'
+  have hne : ∀ k : ℕ, n ≠ k * (k + 2) := fun k hk => hne' ⟨k, hk⟩
+  have h1 : ((a n : ℤ) : ZMod 2) = 1 := ZMod.intCast_eq_one_iff_odd.mpr hodd
+  rw [cast_a, sum_eq_zero n hne] at h1
+  exact absurd h1 (by decide)
+\end{lstlisting}
+The core of \decl{map_summand} is the computation in the proof of Lemma~\ref{lem:map}. After the three factors are generalized to variables $s$, $e$ and $u$, it is a \texttt{calc} chain whose steps are closed by \texttt{rw} with $ue=1$ and $u^{m+1}s=x^mu^m$ and by \texttt{ring}. The proof does no large computation: the only uses of \texttt{decide} check $1+1=0$ and $0\ne1$ in $\Z/2\Z$, and the remaining coefficient and divisibility goals in Lemma~\ref{lem:coeff} are closed by \texttt{simp}, \texttt{omega} and standard divisibility lemmas. The kernel evaluation \decl{a_data} in the statement file is a check of the definitions against the OEIS data and is not used by the proof.
+
+\subsection*{Audit}
+The file ends with
+\begin{center}
+\texttt{\#math0\_settles Math0.Frontier.A323695.result Math0.Statements.A323695.statement}.
+\end{center}
+This command is defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself. It fails unless (1) \decl{statement} is a definition of type \texttt{Prop} without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, which rejects \decl{sorryAx}, the axioms \decl{Lean.ofReduceBool} and \decl{Lean.trustCompiler} introduced by \decl{native_decide}, and custom axioms; and (3) the type of \decl{result} is syntactically the statement or its negation, after removing metadata annotations and with no unfolding. On this file it reports:
+\begin{lstlisting}
+math0 audit: 'Math0.Statements.A323695.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A323695.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A323695.result' proves 'Math0.Statements.A323695.statement'
+\end{lstlisting}
+Neither file contains \texttt{sorry}, \texttt{native\_decide}, \texttt{axiom} or \texttt{set\_option}.
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}. The repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root. It fetches the Mathlib build cache, builds all math0 results with \texttt{lake build}, which re-runs every audit command, checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. To check this result alone, run \texttt{lake build Math0.Statements.OEIS.A323695} (which includes the data check \decl{a_data}) and then \texttt{lake env lean Math0/Frontier/OEIS/A323695.lean} in the directory \path{lean}.
+
+\begin{thebibliography}{99}
+
+\bibitem{Ad}
+T.~Adamczewski, \emph{OEIS Open: How many conjectures can language models turn into theorems?}, arXiv:2608.11941, 2026. Code: \url{https://github.com/epoch-research/LeanOpenProblems}.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{FriedNote}
+S.~Fried, \emph{Proof of a conjecture stated in A325046}, 2025, \url{https://oeis.org/A325046/a325046.pdf}.
+
+\bibitem{Fried}
+S.~Fried, \emph{Further proofs of conjectures from the OEIS}, arXiv:2607.24832, 2026.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A323557}
+The OEIS Foundation Inc., \url{https://oeis.org/A323557}, entry by P.~D.~Hanna (2019).
+
+\bibitem{A323695}
+The OEIS Foundation Inc., \url{https://oeis.org/A323695}, entry by P.~D.~Hanna (2019).
+
+\bibitem{A323696}
+The OEIS Foundation Inc., \url{https://oeis.org/A323696}, entry by P.~D.~Hanna (2019).
+
+\bibitem{A324300}
+The OEIS Foundation Inc., \url{https://oeis.org/A324300}, entry by P.~D.~Hanna (2019).
+
+\bibitem{A325046}
+The OEIS Foundation Inc., \url{https://oeis.org/A325046}, entry by P.~D.~Hanna (2019).
+
+\bibitem{APN}
+G.~Tsoukalas et al., \emph{Advancing Mathematics Research with AI-Driven Formal Proof Search}, arXiv:2605.22763, 2026. Lean proofs: \url{https://github.com/google-deepmind/alphaproof-nexus-results}.
+
+\end{thebibliography}
+
+\end{document}

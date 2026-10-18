@@ -996,6 +996,29 @@
    "date": "2026-10-18"
   },
   {
+   "id": "OEIS-frontier/A229159",
+   "slug": "oeis-a229159",
+   "title": "Every odd prime is a side of a Heronian triangle (A229159)",
+   "area": "Discrete geometry",
+   "source": "OEIS A229159",
+   "source_url": "https://oeis.org/A229159",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A229159.lean",
+    "decl": "Math0.Statements.A229159.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A229159.lean",
+   "our_decl": "Math0.Frontier.A229159.result",
+   "summary": "For every prime p > 2 there are natural numbers x, y, z, A such that x, y, z satisfy the strict triangle inequalities (x < y + z, y < x + z, z < x + y), Heron's formula 16 A^2 = (x+y+z)(-x+y+z)(x-y+z)(x+y-z) holds in Z, and at least one of x, y, z equals p.",
+   "notes": "Conjecture as stated in OEIS: \"Conjecture: for all prime p > 2 there exists an integer-sided triangle with integer area where at least one side is of length p.\" (entry by _Michel Lagneau_, Sep 17 2013)\n\nReferees: Classical formula (n, (n^2-1)/2, (n^2+1)/2) for odd n, credited to the Pythagoreans (Proclus, Commentary on Euclid's Elements I.47; H. Eves, An Introduction to the History of Mathematics, sec. 3-4; cf. Euclid, Elements X, Lemma 1 before Prop. 29). OEIS A046079, comment by Richard R. Forberg, May 31 2013: \"For odd n: L = (n^2-1)/2 and H = L+1\". In the same entry, Ant King (Jan 29 2011) notes that for n > 2 the n with exactly one Pythagorean triangle on leg n are the primes and their doubles. OEIS A042965 (Sloane, May 30 2014): the primes that are a difference of two squares are exactly the odd primes. Related: A009004 (short legs of Pythagorean triangles). Mathlib has the Pythagorean triple classification (Mathlib/NumberTheory/PythagoreanTriples.lean) but not this Heronian statement. I found no source that addresses A229159's conjecture directly; it is resolved immediately by the classical formula.",
+   "date": "2026-10-18"
+  },
+  {
    "id": "OEIS-frontier/A294512",
    "slug": "oeis-a294512",
    "title": "Lang's conjecture a(n) = A250400(n+1)/(n+1) for A294512 fails at n = 164",
@@ -1039,6 +1062,52 @@
    "our_decl": "Math0.Frontier.A323695.result",
    "summary": "Let a(N) be the coefficient of x^N in Sum_{m>=0} x^m (1 - x^(m+1))^m / (1 + x^(m+1))^(m+1) (OEIS A323695, offset 0). If a(n) is odd, then n = k(k+2) for some natural number k. Equivalently, if a(n) is odd then n + 1 is a perfect square.",
    "notes": "Conjecture as stated in OEIS: A323695 (G.f.: Sum_{n>=0} x^n (1 - x^(n+1))^n/(1 + x^(n+1))^(n+1)): \"Odd terms occur only at n = k*(k+2) for k >= 0 (conjecture);\" (_Paul D. Hanna_, Feb 23 2019). A324300 (G.f.: Sum_{n>=0} x^n (x^(n+1)+i)^n/(1 + i x^(n+1))^(n+1)): \"Odd terms occur only at n = k*(k+2) for k >= 0 (conjecture);\" (Hanna, Feb 21 2019).\n\nReferees: OEIS A323695 (Hanna, Feb 23 2019; still labeled \"(conjecture)\" at rev #24, Dec 15 2024; history checked) and its cross-references A323696, A324300 (same conjecture for an i-variant, also unproved), A323675 and A323680. Sibling results proved by others, which do not cover A323695: A325046, odd terms iff N = m(m+1), in S. Fried, \"Further proofs of conjectures from the OEIS\", arXiv:2607.24832 (Thm 50), also in google-deepmind/alphaproof-nexus-results; A323557, odd terms at r(r+1), in T. Adamczewski, \"OEIS Open\", arXiv:2608.11941 and AlphaProof Nexus (Tsoukalas et al.). A323695 is in neither google-deepmind/formal-conjectures nor epoch-research/LeanOpenProblems. It is not mentioned in Fried's arXiv:2410.07237 (JIS 25.4.3), JIS 26.1.8 or arXiv:2606.09913. MathOverflow, Math StackExchange and SeqFan searches found nothing.",
+   "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A338885",
+   "slug": "oeis-a338885",
+   "title": "A338885: the smallest number in row 655 is 104, not A228286(655) = 115",
+   "area": "Discrete geometry",
+   "source": "OEIS A338885",
+   "source_url": "https://oeis.org/A338885",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A338885.lean",
+    "decl": "Math0.Statements.A338885.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-refutes",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A338885.lean",
+   "our_decl": "Math0.Frontier.A338885.result : ¬ Math0.Statements.A338885.statement",
+   "summary": "Kagey's conjecture in OEIS A338885 says that for every n ≥ 2, the smallest k for which a diagonal lattice rectangle (integer vertices, no side parallel to the x-axis) lies in the n X k box [0,n]×[0,k] and touches all four of its sides is A228286(n) = min{x + y*z : x, y, z ≥ 1, x*y + z = n}. This is false. For n = 655, the value k = 104 is in the row, but A228286(655) = 115 ≥ 105. So A228286(655) is not the least element of row 655.",
+   "notes": "Conjecture as stated in OEIS: \"Conjecture: The smallest number in the n-th row is A228286(n).\" (entry by _Peter Kagey_, Nov 14 2020; a second conjecture in the same entry, \"The largest number in the n-th row is A033638(n)\", is true; see approach)\n\nReferees: I found no prior resolution.\n- OEIS A338885 (Kagey, Nov 14 2020): I checked both the local mirror and the latest raw oeisdata version (rev #22, Sep 11 2021). The conjecture is still listed, with no counterexample noted, and the b-file covers only rows 2..101.\n- Cross-references (local mirror): A228286, A228287, A228288, A338886, A338887, A033638, A085582, A113751. None of them mentions a resolution.\n- Code Golf SE question 213754 \"Rectangles in rectangles\", read via the Stack Exchange API: neither the answers nor the comments mention the conjecture.\n- Web searches (OEIS/A338885, Kagey, SeqFan, the min x+yz / ab+cd formulations, ARML 2013) turned up nothing relevant.\n- Independent computation: n = 655 is the smallest counterexample (row min 104 vs A228286 = 115). Further counterexamples are at n = 845, 909 and 1019 for n <= 1200.",
+   "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A363482",
+   "slug": "oeis-a363482",
+   "title": "OEIS A363482: apart from 49, every denominator of 1/(2-3/(3-4/(...(n-1)-n/(-5)))) is 1 or a prime",
+   "area": "Number theory",
+   "source": "OEIS A363482",
+   "source_url": "https://oeis.org/A363482",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A363482.lean",
+    "decl": "Math0.Statements.A363482.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A363482.lean",
+   "our_decl": "Math0.Frontier.A363482.result",
+   "summary": "For n >= 3 let t_n = -5 and t_k = k - (k+1)/t_{k+1} for k = n-1, ..., 2. Let a(n) be the denominator, in lowest terms, of 1/t_2 = 1/(2-3/(3-4/(...(n-1)-n/(-5)))). Then for every n >= 3, either a(n) = 49, or a(n) = 1, or a(n) is prime. This is Bouras' conjecture (2023). The value 49 occurs only at n = 6.",
+   "notes": "Conjecture as stated in OEIS: Conjecture: Except for 49, every term of this sequence is either a prime or 1. (Mohammed Bouras, Jun 04 2023; 'The conjecture holds through n=10000' - Bill McEachen, Jul 08 2025)\n\nReferees: No prior resolution of A363482 found. Sources checked:\n- OEIS A363482 (local mirror, identical to upstream oeisdata #29, Jul 13 2025): conjecture plus a numerical check to n = 10000 (McEachen), no proof.\n- Bouras, \"A New Primes-Generating Sequence\", arXiv:2509.09745 (2025): lists A363482 as the k=5 case of n^2+(k-2)n-k, with observations only.\n- Epoch OEIS Open benchmark (github.com/epoch-research/LeanOpenProblems-results, metadata/oeis/conjectures.json): A363482 is absent.\n- google-deepmind/formal-conjectures: no A363482 file.\n- google-deepmind/alphaproof-nexus-results: no A363482 file.\n\nRelated prior results on sibling sequences:\n- A363102 (endpoint -2) proved: T. Adamczewski, \"OEIS Open: How many conjectures can language models turn into theorems?\", arXiv:2608.11941 (2026), Appendix A; also AlphaProof Nexus oeis_a363102_conjecture_1.lean.\n- A356247 (endpoint -1) proved: B. Cloitre, \"On the sequence A356247\" (2025, OEIS-hosted PDF a356247_1.pdf; not readable here).\n- A363347 (endpoint -4) conjectures 1-2 proved: AlphaProof Nexus oeis_363347_conjecture_2.lean; Adamczewski, arXiv:2608.11941.\n\nThe proof here follows the same template as the A363102 proof.",
    "date": "2026-10-18"
   },
   {

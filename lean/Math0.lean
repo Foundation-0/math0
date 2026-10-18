@@ -46,8 +46,11 @@ import Math0.Frontier.OEIS.A091817
 import Math0.Frontier.OEIS.A175385
 import Math0.Frontier.OEIS.A209802
 import Math0.Frontier.OEIS.A215010
+import Math0.Frontier.OEIS.A229159
 import Math0.Frontier.OEIS.A294512
 import Math0.Frontier.OEIS.A323695
+import Math0.Frontier.OEIS.A338885
+import Math0.Frontier.OEIS.A363482
 import Math0.Frontier.OEIS.A375522
 import Math0.GreensOpenProblems.Green44_green_44
 import Math0.OEIS.OeisA51903_conjecture2
