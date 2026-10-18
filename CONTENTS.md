@@ -1,10 +1,10 @@
 # Contents
 
-**58 results, every one checked by the Lean kernel against a statement published by a third party.**
+**60 results, every one checked by the Lean kernel against a statement published by a third party.**
 
 | Classification | Count |
 |---|---|
-| New result (open problem settled) | 9 |
+| New result (open problem settled) | 11 |
 | First formal proof of a known result | 27 |
 | Independent formal proof (an implying Lean proof already exists elsewhere) | 16 |
 | Misformalization found (upstream statement does not match the problem) | 6 |
@@ -15,13 +15,15 @@
 |---|---|---|---|---|
 | 1 | [A338885: the smallest number in row 655 is 104, not A228286(655) = 115](results/oeis-a338885/README.md) | Discrete geometry | [`Math0.Statements.A338885.statement`](lean/Math0/Statements/OEIS/A338885.lean) (math0, from OEIS A338885) | [A338885.lean](lean/Math0/Frontier/OEIS/A338885.lean) |
 | 2 | [A348484: no two squares two steps apart; the conjectured formula holds](results/oeis-a348484/README.md) | Discrete geometry | [`Math0.Statements.A348484.statement`](lean/Math0/Statements/OEIS/A348484.lean) (math0, from OEIS A348484) | [A348484.lean](lean/Math0/Frontier/OEIS/A348484.lean) |
-| 3 | [A375522: S2(n) - S1(n) = 1 fails at n = 42 (the difference is 5)](results/oeis-a375522/README.md) | Number theory | [`Math0.Statements.A375522.statement`](lean/Math0/Statements/OEIS/A375522.lean) (math0, from OEIS A375522) | [A375522.lean](lean/Math0/Frontier/OEIS/A375522.lean) |
-| 4 | [OEIS A362086: every denominator of 1/(2-3/(3-4/(...(n-1)-n/(-3)))) except 9 is 1 or a prime](results/oeis-a362086/README.md) | Number theory | [`Math0.Statements.A362086.statement`](lean/Math0/Statements/OEIS/A362086.lean) (math0, from OEIS A362086) | [A362086.lean](lean/Math0/Frontier/OEIS/A362086.lean) |
-| 5 | [OEIS A363482: apart from 49, every denominator of 1/(2-3/(3-4/(...(n-1)-n/(-5)))) is 1 or a prime](results/oeis-a363482/README.md) | Number theory | [`Math0.Statements.A363482.statement`](lean/Math0/Statements/OEIS/A363482.lean) (math0, from OEIS A363482) | [A363482.lean](lean/Math0/Frontier/OEIS/A363482.lean) |
-| 6 | [Zeros of a(3n) for the signed Stern sequence A005590 are exactly the fibbinary numbers](results/oeis-a005590/README.md) | Number theory | [`Math0.Statements.A005590.statement`](lean/Math0/Statements/OEIS/A005590.lean) (math0, from OEIS A005590) | [A005590.lean](lean/Math0/Frontier/OEIS/A005590.lean) |
-| 7 | [A326602: a(n) is odd iff n is a square](results/oeis-a326602/README.md) | Sequences and series | [`Math0.Statements.A326602.statement`](lean/Math0/Statements/OEIS/A326602.lean) (math0, from OEIS A326602) | [A326602.lean](lean/Math0/Frontier/OEIS/A326602.lean) |
-| 8 | [Lang's conjecture a(n) = A250400(n+1)/(n+1) for A294512 fails at n = 164](results/oeis-a294512/README.md) | Sequences and series | [`Math0.Statements.A294512.statement`](lean/Math0/Statements/OEIS/A294512.lean) (math0, from OEIS A294512) | [A294512.lean](lean/Math0/Frontier/OEIS/A294512.lean) |
-| 9 | [Odd terms of A323695 occur only at n = k(k+2)](results/oeis-a323695/README.md) | Sequences and series | [`Math0.Statements.A323695.statement`](lean/Math0/Statements/OEIS/A323695.lean) (math0, from OEIS A323695) | [A323695.lean](lean/Math0/Frontier/OEIS/A323695.lean) |
+| 3 | [A262957: Israel's b(n), c(n) are coprime integers and a(n) = b(n)](results/oeis-a262957/README.md) | Number theory | [`Math0.Statements.A262957.statement`](lean/Math0/Statements/OEIS/A262957.lean) (math0, from OEIS A262957) | [A262957.lean](lean/Math0/Frontier/OEIS/A262957.lean) |
+| 4 | [A375522: S2(n) - S1(n) = 1 fails at n = 42 (the difference is 5)](results/oeis-a375522/README.md) | Number theory | [`Math0.Statements.A375522.statement`](lean/Math0/Statements/OEIS/A375522.lean) (math0, from OEIS A375522) | [A375522.lean](lean/Math0/Frontier/OEIS/A375522.lean) |
+| 5 | [OEIS A362086: every denominator of 1/(2-3/(3-4/(...(n-1)-n/(-3)))) except 9 is 1 or a prime](results/oeis-a362086/README.md) | Number theory | [`Math0.Statements.A362086.statement`](lean/Math0/Statements/OEIS/A362086.lean) (math0, from OEIS A362086) | [A362086.lean](lean/Math0/Frontier/OEIS/A362086.lean) |
+| 6 | [OEIS A363482: apart from 49, every denominator of 1/(2-3/(3-4/(...(n-1)-n/(-5)))) is 1 or a prime](results/oeis-a363482/README.md) | Number theory | [`Math0.Statements.A363482.statement`](lean/Math0/Statements/OEIS/A363482.lean) (math0, from OEIS A363482) | [A363482.lean](lean/Math0/Frontier/OEIS/A363482.lean) |
+| 7 | [Repunit residues: a(n) = n - 1 exactly for long period primes](results/oeis-a335012/README.md) | Number theory | [`Math0.Statements.A335012.statement`](lean/Math0/Statements/OEIS/A335012.lean) (math0, from OEIS A335012) | [A335012.lean](lean/Math0/Frontier/OEIS/A335012.lean) |
+| 8 | [Zeros of a(3n) for the signed Stern sequence A005590 are exactly the fibbinary numbers](results/oeis-a005590/README.md) | Number theory | [`Math0.Statements.A005590.statement`](lean/Math0/Statements/OEIS/A005590.lean) (math0, from OEIS A005590) | [A005590.lean](lean/Math0/Frontier/OEIS/A005590.lean) |
+| 9 | [A326602: a(n) is odd iff n is a square](results/oeis-a326602/README.md) | Sequences and series | [`Math0.Statements.A326602.statement`](lean/Math0/Statements/OEIS/A326602.lean) (math0, from OEIS A326602) | [A326602.lean](lean/Math0/Frontier/OEIS/A326602.lean) |
+| 10 | [Lang's conjecture a(n) = A250400(n+1)/(n+1) for A294512 fails at n = 164](results/oeis-a294512/README.md) | Sequences and series | [`Math0.Statements.A294512.statement`](lean/Math0/Statements/OEIS/A294512.lean) (math0, from OEIS A294512) | [A294512.lean](lean/Math0/Frontier/OEIS/A294512.lean) |
+| 11 | [Odd terms of A323695 occur only at n = k(k+2)](results/oeis-a323695/README.md) | Sequences and series | [`Math0.Statements.A323695.statement`](lean/Math0/Statements/OEIS/A323695.lean) (math0, from OEIS A323695) | [A323695.lean](lean/Math0/Frontier/OEIS/A323695.lean) |
 
 ## First formal proof of a known result
 
