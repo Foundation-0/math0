@@ -43,8 +43,11 @@ import Math0.ErdosProblems.Erdos816_erdos_816_variants_complete_bipartite
 import Math0.ErdosProblems.Erdos834_erdos_834_parts_ii
 import Math0.ErdosProblems.Erdos835_johnsonGraph_18_9_chromaticNumber
 import Math0.Frontier.OEIS.A005590
+import Math0.Frontier.OEIS.A062887
 import Math0.Frontier.OEIS.A091817
+import Math0.Frontier.OEIS.A106505
 import Math0.Frontier.OEIS.A115026
+import Math0.Frontier.OEIS.A116184
 import Math0.Frontier.OEIS.A175385
 import Math0.Frontier.OEIS.A209802
 import Math0.Frontier.OEIS.A215010
@@ -66,6 +69,7 @@ import Math0.Frontier.OEIS.A362086
 import Math0.Frontier.OEIS.A363482
 import Math0.Frontier.OEIS.A375522
 import Math0.Frontier.OEIS.A386538
+import Math0.Frontier.OEIS.A392943
 import Math0.Frontier.OEIS.A393794
 import Math0.Frontier.OEIS.A397315
 import Math0.GreensOpenProblems.Green44_green_44

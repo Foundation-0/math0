@@ -927,6 +927,29 @@
    "date": "2026-10-18"
   },
   {
+   "id": "OEIS-frontier/A062887",
+   "slug": "oeis-a062887",
+   "title": "Odd descending-by-2 multiples exist exactly when 125 does not divide 2n+1 (A062887)",
+   "area": "Sequences and series",
+   "source": "OEIS A062887",
+   "source_url": "https://oeis.org/A062887",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A062887.lean",
+    "decl": "Math0.Statements.A062887.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A062887.lean",
+   "our_decl": "Math0.Frontier.A062887.result",
+   "summary": "Call a positive integer N admissible if all of its decimal digits are odd and, reading from left to right, each digit is 2 less (mod 10) than the one before it. Examples are 975, 75, 319 and 9753197. Let a(n) be the smallest admissible multiple of 2n+1, or 0 if there is none. Then for every n ≥ 0, a(n) = 0 if and only if 125 divides 2n+1.",
+   "notes": "Conjecture as stated in OEIS: \"Conjecture: The only numbers n for which a(n)=0 are those for which 2*n+1 is divisible by 125. - _Sean A. Irvine_, Apr 14 2023\"\n\nReferees: OEIS A062887 (Amarnath Murthy, 2001; conjecture added by Sean A. Irvine, Apr 14 2023; entry unchanged as of revision #12, checked in the local mirror dated 2026-10-17 and upstream oeisdata). Related: OEIS A062886 (Nathaniel Johnston, May 2011: zeros match 25 | 2n+1 for n ≤ 500, observed but not proved); OEIS A062885 (even-digit analogue: John W. Layman's argument for a(25) = −1, plus a Don Reble analysis file a062885.txt that I could not retrieve). Web searches (OEIS, MSE/MO-style queries, phrases about repeated 31975/97531 blocks and divisibility by 125) found no prior proof or counterexample.",
+   "date": "2026-10-19"
+  },
+  {
    "id": "OEIS-frontier/A091817",
    "slug": "oeis-a091817",
    "title": "Quet's integrality conjecture for A091817 holds",
@@ -950,6 +973,29 @@
    "date": "2026-10-18"
   },
   {
+   "id": "OEIS-frontier/A106505",
+   "slug": "oeis-a106505",
+   "title": "A106505: common sides of A/2A primitive triangles are periodic mod 8, so a(n+5) = a(n) + 8",
+   "area": "Discrete geometry",
+   "source": "OEIS A106505",
+   "source_url": "https://oeis.org/A106505",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A106505.lean",
+    "decl": "Math0.Statements.A106505.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A106505.lean",
+   "our_decl": "Math0.Frontier.A106505.result",
+   "summary": "Let IsSide(c) mean there are natural numbers x, y such that x, y, c are the sides of a non-degenerate triangle in which the angle opposite y is twice the angle opposite x, and gcd(x, y, c) = 1. Let a(n) be the n-th smallest such c (1-indexed): 5, 7, 9, 11, 13, 15, 16, 17, ... Then a(n+5) = a(n) + 8 for every n > 2 (Ralf Stephan's conjecture in OEIS A106505).",
+   "notes": "Conjecture as stated in OEIS: \"Conjecture: for n>2, a(n+5) = a(n) + 8. - _Ralf Stephan_, Nov 16 2010.\" Also: \"Empirical g.f.: ... - _Colin Barker_, Oct 05 2013\"\n\nReferees: No earlier proof found. OEIS A106505 (GitHub oeisdata main, rev #21, Apr 23 2021) still states it as a conjecture (Ralf Stephan, Nov 16 2010), with an empirical g.f. by Colin Barker (2013). OEIS A321499 (M. F. Hasler, Nov 2018; rev #24, Feb 2025) proves that {d²(2m+d)} = odd numbers > 1 together with multiples of 8 > 8, and records a(n+5) = a(n) + 8 for A321499 (D. A. Corneth). It still says \"Cf. A106505 (conjectured to be the sequence without the 3)\". The closely related A321501 complement analysis (Hasler) is also there. Related OEIS entries: A343063 and A343064 (B. Schott, 2021), which give the parametrization a = m² − k², b = mk, c = k² with gcd(m,k) = 1 and k < m < 2k, but no set characterization; and A229849, which says A106505 \"seems\" to give those values. Parametrization background: M. N. Deshpande, Math. Gazette (2002); K. Zelator, arXiv 1208.0497; R. S. Luthar (1984). None of these addresses the conjecture. Not covered in S. Fried, arXiv 2410.07237 or arXiv 2607.24832, nor in Adamczewski's OEIS Open benchmark (arXiv 2608.11941), which uses the Tsoukalas et al. dataset in epoch-research/LeanOpenProblems; also absent from google-deepmind/formal-conjectures.",
+   "date": "2026-10-19"
+  },
+  {
    "id": "OEIS-frontier/A115026",
    "slug": "oeis-a115026",
    "title": "A115026 has a term greater than 370: a(119) = 371",
@@ -971,6 +1017,29 @@
    "summary": "Let F(m) be the sum of d^L over the decimal digits d of m, where L is the number of digits of m (A101337). For n >= 1, a(n) is the smallest element of the cycle that the orbit n, F(n), F(F(n)), ... eventually enters (A115026). Harvey P. Dale conjectured that a(n) <= 370 for all n >= 1. This is false: a(119) = 371.",
    "notes": "Conjecture as stated in OEIS: \"Conjecture: no term is greater than 370. - _Harvey P. Dale_, Jun 08 2022\"\n\nReferees: OEIS A151543, \"Smallest precursor of n-th cycle in the 'Recurring Digital Invariant Variant' problem\" (N. J. A. Sloane, May 15 2009, based on an email from Eric Angelini, Feb 18 2009, with a cycle table by Hans Havermann). Its table entry \"13 { 119, 1, {371}}\" names 119 as the smallest number whose orbit under A101337 ends in the fixed point 371, so a(119) = 371. The same table has \"19 { 407, 1, {407}}\" and other cycles with minima above 370. Related pre-2022 OEIS entries: A151544 (2009) lists the cycle elements, including 371 and 407. A157714 (Havermann, Mar 2009) lists numbers in cycles of period greater than 1, such as 2929 and 18829. A005188 lists the narcissistic numbers 153, 370, 371, 407, 1634, ...; since 371 is a fixed point, a(371) = 371 > 370 trivially. Angelini's page \"A Recurring Digital Invariant Variant\" is at cetteadressecomportecinquantesignes.com/RecurDigit.htm, with a cached copy at oeis.org/A151543/a151543.pdf. The A115026 entry itself (revision #12, Jun 08 2022, unchanged upstream) still states the conjecture and has no correction or %E extension. Web searches found no explicit published retraction of Dale's comment. Sources: https://oeis.org/A115026, https://oeis.org/A151543, https://en.wikipedia.org/wiki/Narcissistic_number",
    "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A116184",
+   "slug": "oeis-a116184",
+   "title": "A116184: Adamchuk's conjectures on 37^3 dividing the numerator of sum_{k=1}^{36} 1/k^n",
+   "area": "Number theory",
+   "source": "OEIS A116184",
+   "source_url": "https://oeis.org/A116184",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A116184.lean",
+    "decl": "Math0.Statements.A116184.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A116184.lean",
+   "our_decl": "Math0.Frontier.A116184.result",
+   "summary": "Let H(n) = sum_{k=1}^{36} 1/k^n, a rational number. Claim (a): for every k >= 0, 37^3 divides the numerator of H(3 + 36k). Claim (b): if p > 37 is a prime and 37^3 divides the numerator of H(p), then p = 37k - 1 for some natural number k, that is, p ≡ -1 (mod 37).",
+   "notes": "Conjecture as stated in OEIS: Conjecture: All terms of the arithmetic progression 3+36k belong to a(n). ... It appears that all primes in a(n) that are greater than 37 are of the form 37k-1. (Alexander Adamchuk, Apr 08 2007)\n\nReferees: No explicit prior resolution of the A116184 conjecture found. OEIS A116184 is unchanged (rev #6, Feb 16 2025) with no %E line or resolving comment, and no other mirror entry cross-references it. Classical ingredients that make it an easy corollary:\n- J.W.L. Glaisher, Q. J. Math. 31 (1900) 321-353: H(p-1,m) ≡ -m(m+1)/(2(m+2))·p^2·B_{p-2-m} (mod p^3) for odd m ≤ p-3.\n- Z.-H. Sun, \"Congruences concerning Bernoulli numbers and Bernoulli polynomials\", Discrete Appl. Math. 105 (2000) 193-223: Thm 5.1(a) (k ≤ p-4) and the power-sum formula S_k ≡ pB_k + (p^2/2)kB_{k-1} + (p^3/6)k(k-1)B_{k-2} (mod p^3), as quoted in C. Levaillant, arXiv:2005.09434, Results 2 and 4.\n- J. Zhao, arXiv:math/0301252: (p, p-2n-1) is irregular iff H(p-1, 2n-1) ≡ 0 (mod p^3) for p ≥ 2n+3.\n- Kummer congruences, plus (37,32) being an irregular pair.\n- R. Meštrović, arXiv:1111.3057, eq. (22).\n- OEIS A007408 comment (Adamchuk 2006): 37^3 | numerator of H(36,3), i.e. the k=0 case.",
+   "date": "2026-10-19"
   },
   {
    "id": "OEIS-frontier/A175385",
@@ -1454,6 +1523,29 @@
    "summary": "Conjecture (OEIS A386538, Felix Huber): for every n ≥ 0, the largest area of a polygon with vertices on Z^2 inside the closed disk of radius n is the same whether the disk's center is a grid point or any point of the plane. In the frozen encoding: for all n : ℕ, ⨆_{c ∈ ℝ²} vol(conv(Z² ∩ B(c, n))) = vol(conv(Z² ∩ B(0, n))). We prove the negation. At n = 7 with center c0 = (5/12, 5/24), the convex hull of the lattice points in B(c0, 7) has area at least 277/2 = 138.5. The convex hull for the center 0 has area at most 3457/25 = 138.28; its true value is 138 = a(7).",
    "notes": "Conjecture as stated in OEIS: \"Conjecture: The maximum possible area of a polygon within the circle would be the same if only the vertices but not the center were fixed on grid points.\" (entry by _Felix Huber_, Aug 05 2025). The same conjecture appears for ellipses in A386539, which has T(n,n) = A386538(n).\n\nReferees: Sources checked:\n- Local OEIS mirror and raw.githubusercontent.com/oeis/oeisdata, A386538: #23, Aug 19 2025, no %E lines. A386539: #19, Aug 19 2025.\n- Entries that cite A386538/A386539: A398490, A396223, A391113. None addresses the conjecture.\n- Cross-references read: A066643, A123690, A125228, A288247, A322106, A322107, A357577, A108126. None resolves it. A123690 and A295344 concern lattice-point counts with an off-grid center, not polygon areas.\n- Web searches for the A386538 number, the entry's wording, Felix Huber plus counterexample, SeqFan, and MathOverflow/Math.SE on convex hulls of lattice points in a shifted disk.\n\nRelated but not resolving:\n- J. Zhao, \"The Largest Circle Enclosing n Lattice Points\", https://arxiv.org/abs/2505.06234, and its sequel https://arxiv.org/pdf/2609.16081\n- Bárány–Larman and Balog–Deshouillers on the integer convex hull of a disk (vertex counts, origin-centered only), e.g. https://www.renyi.hu/~barany/cikkek/73.pdf\n\nNo prior proof or counterexample found.",
    "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A392943",
+   "slug": "oeis-a392943",
+   "title": "No primitive Heronian triangle has integer circumradius",
+   "area": "Discrete geometry",
+   "source": "OEIS A392943",
+   "source_url": "https://oeis.org/A392943",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A392943.lean",
+    "decl": "Math0.Statements.A392943.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A392943.lean",
+   "our_decl": "Math0.Frontier.A392943.result",
+   "summary": "Let x, y, z be positive integers satisfying the strict triangle inequalities, with gcd(x, y, z) = 1, and let K be a natural number with 16K^2 = (x+y+z)(-x+y+z)(x-y+z)(x+y-z), i.e. K is the area. Then there is no natural number R with 4KR = xyz. In other words, no primitive Heronian triangle has integer circumradius. This is Felix Huber's conjecture in OEIS A392943.",
+   "notes": "Conjecture as stated in OEIS: \"Conjecture: There is no primitive Heronian triangle with integer circumradius.\" (entry by _Felix Huber_, Feb 04 2026)\n\nReferees: Ronald van Luijk, \"The diameter of the circumcircle of a Heron triangle\", Elemente der Mathematik 63 (2008), 118–121. The relevant parts are:\n- Theorem 2, (4)⇒(5): if gcd(a,b,c,d) = 1, every prime divisor of the circumdiameter d is ≡ 1 mod 4.\n- Corollary 5: for a prime p ≢ 1 mod 4, p^{v_p(d)} divides gcd(a,b,c).\n- Proof of Theorem 1: it states explicitly that a Heron triangle with integer circumradius has all sides even.\n\nEarlier related work:\n- A.-V. Kramer & F. Luca, \"Some remarks on Heron triangles\", Acta Acad. Paedagog. Agriensis Sect. Mat. (N.S.) 27 (2000) 25–38. Shows no power of 2 is the circumradius of a Heron triangle.\n- M. Aassila, \"Some results on Heron triangles\", Elem. Math. 56 (2001) 143–146.\n\nAlso related, with full text not checked: E. Read, \"Integer triangles with integer circumradii\", Math. Gazette 107 (2023) 241–248.\n\nOEIS A392943 (Huber, Feb 2026) cites none of these, and no proof has been added to the entry.",
+   "date": "2026-10-19"
   },
   {
    "id": "OEIS-frontier/A393794",
