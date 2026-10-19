@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: "Conjecture: no term is greater than 370. - _Harve
 
 Referees: OEIS A151543, "Smallest precursor of n-th cycle in the 'Recurring Digital Invariant Variant' problem" (N. J. A. Sloane, May 15 2009, based on an email from Eric Angelini, Feb 18 2009, with a cycle table by Hans Havermann). Its table entry "13 { 119, 1, {371}}" names 119 as the smallest number whose orbit under A101337 ends in the fixed point 371, so a(119) = 371. The same table has "19 { 407, 1, {407}}" and other cycles with minima above 370. Related pre-2022 OEIS entries: A151544 (2009) lists the cycle elements, including 371 and 407. A157714 (Havermann, Mar 2009) lists numbers in cycles of period greater than 1, such as 2929 and 18829. A005188 lists the narcissistic numbers 153, 370, 371, 407, 1634, ...; since 371 is a fixed point, a(371) = 371 > 370 trivially. Angelini's page "A Recurring Digital Invariant Variant" is at cetteadressecomportecinquantesignes.com/RecurDigit.htm, with a cached copy at oeis.org/A151543/a151543.pdf. The A115026 entry itself (revision #12, Jun 08 2022, unchanged upstream) still states the conjecture and has no correction or %E extension. Web searches found no explicit published retraction of Dale's comment. Sources: https://oeis.org/A115026, https://oeis.org/A151543, https://en.wikipedia.org/wiki/Narcissistic_number
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

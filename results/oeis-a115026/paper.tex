@@ -1,0 +1,351 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {¬}{{$\neg$}}1 {∧}{{$\wedge$}}1
+    {→}{{$\to$}}1 {≤}{{$\le$}}1 {∈}{{$\in$}}1 {·}{{$\cdot$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Cyc}{\Lambda}
+\newcommand{\Lm}[1]{\mathtt{#1}}
+
+\title[The digit-power iteration from 119 ends at 371 (OEIS A115026)]{The digit-power iteration started at $119$ ends at the fixed point $371$: a counterexample to the conjecture in OEIS A115026}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 18, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $F(m)$ be the sum of the $L$-th powers of the decimal digits of $m$, where $L$ is the number of digits of $m$ (OEIS A101337), and let $a(n)$ be the smallest element of the cycle that the orbit $n,F(n),F(F(n)),\dots$ eventually enters (OEIS A115026).
+In 2022 Harvey P.~Dale conjectured in the OEIS entry that no term $a(n)$, $n\ge1$, is greater than $370$.
+The conjecture is false: $119\mapsto731\mapsto371\mapsto371$, so $a(119)=371$.
+This counterexample is not new, since a 2009 table of cycles of the same iteration by Hans Havermann in OEIS A151543 already records that $119$ is the smallest number whose orbit ends at the fixed point $371$; we therefore classify this note as the first formal proof of a known result.
+The refutation is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, which was reviewed for fidelity and frozen before the proof attempt, and in which $a$ is a computable function proved to return the minimum of the limit cycle and checked by the kernel against all $65$ listed terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For an integer $m\ge1$ with $L$ decimal digits $d_{L-1}\cdots d_1d_0$, let
+\[
+  F(m)=\sum_{i=0}^{L-1} d_i^{\,L}.
+\]
+This is OEIS A101337 \cite{A101337} (Gordon Hamilton, 2004). For example, $F(89)=8^2+9^2=145$ and $F(145)=1^3+4^3+5^3=190$; note that the exponent is the number of digits of the current argument, so it can change along an orbit.
+The fixed points of $F$ are the positive narcissistic (Armstrong, pluperfect) numbers $1,\dots,9,153,370,371,407,1634,\dots$ of A005188 \cite{A005188}.
+Every orbit of $F$ is eventually periodic, because $F(m)<m$ as soon as $m$ has sufficiently many digits, so every orbit is bounded (Lemma~\ref{lem:bound} below).
+
+The OEIS entry A115026 \cite{A115026}, submitted by Sergio Pimentel on February~24, 2006, is the ``Limiting value of $n$ under iteration'' of $F$: the orbit of $n$ ends in a fixed point or in a cycle of length greater than one, and $a(n)$ is the fixed point, respectively the smallest element of the cycle.
+For instance $89\mapsto145\mapsto190\mapsto730\mapsto370\mapsto370$, so $a(89)=370$, and the orbit of $59$ ends in the $3$-cycle $(160,217,352)$, so $a(59)=160$.
+On June~8, 2022, Harvey P.~Dale added the comment ``Conjecture: no term is greater than 370'', together with a Mathematica program that computes $a(1),\dots,a(70)$, following each orbit for $20$ steps.
+The $65$ listed terms are all at most $370$.
+We record that the conjecture is false (Theorem~\ref{thm:main}):
+\[
+  F(119)=1^3+1^3+9^3=731,\qquad F(731)=7^3+3^3+1^3=371,\qquad F(371)=3^3+7^3+1^3=371,
+\]
+so the orbit of $119$ ends at the fixed point $371$, and $a(119)=371>370$.
+
+\subsection*{Prior work}
+The counterexample was in the OEIS thirteen years before the conjecture was stated.
+The same iteration was studied in 2009 under the name ``Recurring Digital Invariant Variant'' (A151543 \cite{A151543} attributes the name to Mensanator on the rec.puzzles site).
+The entry A151543, ``Smallest precursor of $n$-th cycle in the `Recurring Digital Invariant Variant' problem'', was created by N.~J.~A. Sloane on May~15, 2009, based on an email from Eric Angelini of February~18, 2009 (see also Angelini's web page \cite{Angelini}), and contains a table, computed by Hans Havermann, of the cycles of $F$ ordered by the smallest number whose orbit ends in them (Havermann's reply to the SeqFan mailing list of February~18, 2009, reproduced on Angelini's page, already gives the first $34$ rows of this table, including the row quoted next).
+Its entry ``13 \{ 119, 1, \{371\}\}'' states that $119$ is the smallest number whose orbit ends in the fixed point $371$; in the notation of A115026 this is $a(119)=371$.
+The table also lists the fixed points $407$, $1634$, $8208$, \dots{} and cycles of length greater than one with minima $2929$, $18829$, $58618$, \dots, all of which are values of $a$ greater than $370$.
+The table moreover implies that $119$ is the smallest counterexample: the cycles reached from some $n<119$ are the first twelve of the table, whose minima are $1,\dots,9$, $370$, $160$ and $153$.
+(We confirmed by a direct computation, which is not part of the formal proof, that $a(n)\le370$ for $1\le n\le118$.)
+The cycle elements are listed in A151544 \cite{A151544} (Sloane, 2009), and the elements of cycles of length greater than one in A157714 \cite{A157714} (Havermann, March~4, 2009).
+Even more directly, $371$ and $407$ are narcissistic numbers, listed in A005188 \cite{A005188} long before 2022; for a fixed point $m$ of $F$ one has $a(m)=m$, so $a(371)=371$ and $a(407)=407$ also contradict the conjecture.
+
+The entry A115026 (revision \#12 of June~8, 2022, the version we read) does not cross-reference A151543 or A005188, has no correction of Dale's comment, and still states the conjecture.
+The math0 referees found no published retraction of the comment, and the statement is not among the OEIS statements of the formal-conjectures repository \cite{FC}.
+The mathematics is elementary.
+What we add is a formal statement of the conjecture, with a definition of $a$ that is proved to agree with the OEIS definition, and a kernel-checked refutation.
+We classify the result as the first formal proof of a known result.
+
+\section{Statement}\label{sec:statement}
+
+\subsection*{The OEIS definition and conjecture}
+The name of A115026 and its first comment read, verbatim:
+\begin{quote}\raggedright\frenchspacing
+{\small\texttt{Limiting value of n under iteration of "sum of the digits raised to the power of the number of digits of n" (A101337).}}\\[3pt]
+{\small\texttt{Iterate A101337 starting at n until reaching a constant value (like 370) or a cycle (like 160, 217, 352, 160, ...). In the latter case, a(n) takes the smallest value in the cycle (e.g., a(59) = 160). Since k*9\textasciicircum{}k < 10\textasciicircum{}k for all k > 34, each number n is guaranteed to yield a smaller number a(n) if n > 10\textasciicircum{}34, so every number reaches a constant or a cycle under this sequence.}}
+\end{quote}
+(Its conclusion is correct, but the inequality quoted does not by itself give $F(n)<n$; for $n$ with $L$ digits the bound $F(n)\le L\cdot9^L$ gives $F(n)<n$ once $L\cdot9^L<10^{L-1}$, which holds for all $L\ge61$. We use the threshold $70$ in Lemma~\ref{lem:bound} below.)
+The offset is $1$. The second comment is the conjecture, verbatim:
+\begin{quote}\raggedright\frenchspacing
+{\small\texttt{Conjecture: no term is greater than 370. - \_Harvey P. Dale\_, Jun~08~2022}}
+\end{quote}
+
+\begin{definition}\label{def:main}
+Let $F\colon\N\to\N$ be as in the introduction, with $F(0)=0$. For $n\in\N$ let
+\[
+  \Cyc(n)=\{\,m\in\N:\ m=F^k(n)\text{ for some }k\ge0,\ \text{and}\ F^p(m)=m\text{ for some }p\ge1\,\},
+\]
+the set of periodic points of $F$ on the orbit of $n$, and let $a(n)=\min\Cyc(n)$.
+\end{definition}
+
+Call $m$ periodic with period $p\ge1$ if $F^p(m)=m$. If $F^i(n)$ has period $p$, then every $F^j(n)$ with $j\ge i$ is periodic and lies in the cycle $\{F^i(n),\dots,F^{i+p-1}(n)\}$. Conversely, if $m=F^j(n)$ has period $q$, choose $s\ge1$ with $qs\ge i$; then
+\[
+  m=F^{qs}(m)=F^{qs+j-i}\bigl(F^i(n)\bigr)
+\]
+lies in that cycle. So $\Cyc(n)$ is exactly the cycle in which the orbit of $n$ ends; a fixed point (``constant value'') is a cycle of length one. The set $\Cyc(n)$ is nonempty by Lemma~\ref{lem:bound} and Proposition~\ref{prop:spec} below.
+For $m\ge1$ the exponent $L$ is at least $1$, so a digit $0$ contributes $0^L=0$, and $F(m)\ge1$ because the leading digit is nonzero; hence the value $F(0)=0$ never occurs on the orbit of an $n\ge1$.
+
+\begin{theorem}\label{thm:main}
+$a(119)=371$. In particular, the conjecture $a(n)\le370$ for all $n\ge1$ is false.
+\end{theorem}
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in the file \path{lean/Math0/Statements/OEIS/A115026.lean}; it was reviewed for fidelity and frozen (SHA-256 \texttt{39ccb0d4\ldots 799b1}) before the proof attempt. The definitions read as follows (verbatim, except that the copyright header, the import, the module docstring, all docstrings, and the theorems stated between \decl{a} and \decl{statement} are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A115026
+def F (m : ℕ) : ℕ := ((Nat.digits 10 m).map (· ^ (Nat.digits 10 m).length)).sum
+def limitCycle (n : ℕ) : Set ℕ :=
+  {m | (∃ k, F^[k] n = m) ∧ ∃ p, 0 < p ∧ F^[p] m = m}
+def meet : ℕ → ℕ → ℕ → ℕ
+  | 0, x, _ => x
+  | fuel + 1, x, z => if x = z then x else meet fuel (F x) (F (F z))
+def cycleMin (y : ℕ) : ℕ → ℕ → ℕ → ℕ
+  | 0, _, m => m
+  | fuel + 1, cur, m => if cur = y then m else cycleMin y fuel (F cur) (min m cur)
+def C : ℕ := 70 * 9 ^ 70
+def fuel (n : ℕ) : ℕ := (max n C + 2) ^ 2
+def a (n : ℕ) : ℕ :=
+  let y := meet (fuel n) (F n) (F (F n))
+  cycleMin y (fuel n) (F y) y
+def statement : Prop :=
+  ∀ n : ℕ, 1 ≤ n → a n ≤ 370
+end Math0.Statements.A115026
+\end{lstlisting}
+Here \texttt{Nat.digits 10 m} is the list of decimal digits of $m$, least significant first (empty for $m=0$), so \decl{F} is $F$, and \decl{limitCycle} is $\Cyc$.
+The function \decl{a} is computable, so that the kernel can evaluate it: \decl{meet} is Floyd's tortoise-and-hare loop, which compares $F^k(n)$ with $F^{2k}(n)$ for $k=1,2,\dots$ and returns the first $F^k(n)$ with $F^k(n)=F^{2k}(n)$, and \decl{cycleMin} walks around the cycle of the returned point $y$ and keeps the minimum. Both loops carry an explicit fuel argument.
+Among other lemmas, the file proves the following (statements verbatim, proofs omitted):
+\begin{lstlisting}
+theorem a_data : (List.range 65).map (fun i => a (i + 1)) =
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 5, 1, 370, 370, 370, 370, 370, 1, 4, 5, 8, 1, 4, 370, 370,
+      370, 1, 370, 9, 1, 1, 370, 370, 370, 370, 370, 370, 370, 370, 370, 4, 370, 1, 370, 370,
+      370, 370, 1, 370, 370, 370, 370, 370, 370, 370, 370, 370, 160, 370, 370, 370, 370, 370,
+      370]
+theorem a_spec (n : ℕ) : a n ∈ limitCycle n ∧ ∀ m ∈ limitCycle n, a n ≤ m
+\end{lstlisting}
+The theorem \decl{a_data}, proved by \texttt{decide +kernel}, checks that $a(1),\dots,a(65)$ are the $65$ terms listed in the OEIS (the full \texttt{\%S}, \texttt{\%T}, \texttt{\%U} lines of the entry).
+The theorem \decl{a_spec} states that \decl{a} computes $\min\Cyc(n)$ for every $n$; so the Lean function \decl{a} is the sequence of Definition~\ref{def:main}, not a conjectured formula for it.
+Since the offset is $1$, ``no term is greater than $370$'' is $\forall n\ge1,\ a(n)\le370$, which is \decl{statement}; it adds no hypotheses.
+We sketch the proof of \decl{a_spec}, following the lemmas of the statement file.
+
+\begin{lemma}[\decl{F_le}, \decl{key_ineq}, \decl{F_le_max}, \decl{iterate_le}]\label{lem:bound}
+Let $C=70\cdot9^{70}$. For all $m,n\in\N$ and $k\ge0$ we have $F(m)\le\max(m,C)$ and $F^k(n)\le\max(n,C)$.
+\end{lemma}
+
+\begin{proof}
+If $m$ has $L$ digits, each at most $9$, then $F(m)\le L\cdot9^L$. If $L<70$ this is at most $C$. If $L\ge70$, then $10L\cdot9^L<10^L$ (by induction on $L$: it holds for $L=70$, and $10(L+1)9^{L+1}=9\cdot10(L+1)9^L\le10\cdot10L\cdot9^L<10^{L+1}$ since $9(L+1)\le10L$), and $10^L\le10m$ because $m\ge10^{L-1}$; hence $10F(m)<10m$. The bound for $F^k(n)$ follows by induction on $k$.
+\end{proof}
+
+\begin{proposition}[\decl{a_spec}]\label{prop:spec}
+For every $n\in\N$, $a(n)\in\Cyc(n)$ and $a(n)\le m$ for every $m\in\Cyc(n)$.
+\end{proposition}
+
+\begin{proof}[Sketch]
+Let $M=\max(n,C)$, so that \texttt{fuel n} is $(M+2)^2$. By Lemma~\ref{lem:bound} the $M+2$ values $F^0(n),\dots,F^{M+1}(n)$ lie in $\{0,\dots,M\}$, so by the pigeonhole principle $F^i(n)=F^j(n)$ for some $i<j\le M+1$ (\decl{exists_meet}). Then $F^i(n)$ has period $j-i$, and $K=(j-i)(i+1)$ satisfies $1\le K\le(M+2)^2$, $K\ge i$ and $F^K(n)=F^{2K}(n)$ (\decl{meet_of_repeat}). Hence Floyd's loop, which at its $k$-th step compares $F^k(n)$ with $F^{2k}(n)$, stops at some $k\le K$ before its fuel runs out and returns $y=F^k(n)$ with $F^k(y)=y$ (\decl{meet_spec}). The walk \decl{cycleMin} visits $F^1(y),F^2(y),\dots$ until it returns to $y$, which happens after $t\le k$ steps, and returns $\min\{F^s(y):0\le s<t\}$, which is the minimum of the whole orbit of $y$ because $F^s(y)=F^{s\bmod t}(y)$ (\decl{cycleMin_spec}). This value is $F^{s+k}(n)$ for some $s$ and is periodic, so it lies in $\Cyc(n)$. Conversely, if $m=F^i(n)$ satisfies $F^q(m)=m$ with $q\ge1$, then $m=F^{qk}(m)=F^{qk+i-k}(y)$ lies on the orbit of $y$, so $a(n)\le m$.
+\end{proof}
+
+\section{Proof}\label{sec:proof}
+
+The Lean proof evaluates the function \decl{a} of Section~\ref{sec:statement} at $119$ in the kernel. We give the corresponding computation by hand, and then check the result against Definition~\ref{def:main} directly.
+
+\begin{lemma}\label{lem:orbit}
+$F(119)=731$, $F(731)=371$ and $F(371)=371$. Hence $F^k(119)=371$ for all $k\ge2$.
+\end{lemma}
+
+\begin{proof}
+All three numbers have three digits, so the exponent is $3$: $1+1+729=731$, $343+27+1=371$ and $27+343+1=371$.
+\end{proof}
+
+\begin{lemma}[\decl{a_119}]\label{lem:a119}
+The function \decl{a} of Section~\ref{sec:statement} satisfies $a(119)=371$.
+\end{lemma}
+
+\begin{proof}
+Let $N=\Lm{fuel}(119)=(C+2)^2$, where $C=70\cdot9^{70}>119$; all that matters below is $N\ge2$. By definition, $a(119)=\Lm{cycleMin}(y,N,F(y),y)$ with $y=\Lm{meet}(N,F(119),F(F(119)))$. By Lemma~\ref{lem:orbit},
+\[
+  y=\Lm{meet}(N,731,371)=\Lm{meet}(N-1,F(731),F(F(371)))=\Lm{meet}(N-1,371,371)=371,
+\]
+where the first step uses $731\ne371$ and $N\ge1$, and the last uses $371=371$ and $N-1\ge1$. Then
+\[
+  a(119)=\Lm{cycleMin}(371,N,F(371),371)=\Lm{cycleMin}(371,N,371,371)=371,
+\]
+because $N\ge1$ and the current point $371$ equals $y$, so the loop returns its accumulator $371$ at once.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+By Lemma~\ref{lem:a119} and Proposition~\ref{prop:spec}, $a(119)=371$ for the sequence of Definition~\ref{def:main}. If $a(n)\le370$ held for all $n\ge1$, then in particular $371=a(119)\le370$, which is absurd. This is the Lean theorem \decl{result}: it applies the hypothesis at $n=119$, rewrites with $a(119)=371$, and derives a contradiction from the hypothesis $371\le370$ with \texttt{omega}.
+\end{proof}
+
+\begin{remark}[direct check]\label{rem:direct}
+The value $a(119)=371$ can also be read off from Definition~\ref{def:main} without the algorithm. By Lemma~\ref{lem:orbit} the orbit of $119$ is $\{119,731,371\}$. The point $371$ is periodic with period $1$. The point $119$ is not periodic, because $F^p(119)\in\{731,371\}$ for all $p\ge1$, and $731$ is not periodic, because $F^p(731)=371$ for all $p\ge1$. So $\Cyc(119)=\{371\}$ and $a(119)=371$. In the Lean development this argument is not needed, since Proposition~\ref{prop:spec} holds for every $n$.
+\end{remark}
+
+\begin{remark}[the certificate]\label{rem:kernel}
+The Lean proof of Lemma~\ref{lem:a119} is \texttt{decide +kernel}: the kernel reduces the decision procedure for the equality \texttt{a 119 = 371} on natural numbers to \texttt{true}, unfolding \decl{a}, \decl{fuel}, \decl{meet}, \decl{cycleMin}, \decl{F} and \texttt{Nat.digits}. Arithmetic on numerals, including $C\approx4.4\cdot10^{68}$ and $N\approx1.9\cdot10^{137}$, uses the kernel's built-in arbitrary-precision natural numbers, and only the two iterations of \decl{meet} and the single iteration of \decl{cycleMin} described in the proof of Lemma~\ref{lem:a119} are executed, so the size of the fuel is harmless. The theorem \decl{a_data} of the statement file is checked in the same way. Unlike \texttt{native\_decide}, this introduces no axiom and does not trust the compiler.
+\end{remark}
+
+\begin{remark}[further counterexamples; not formalized]
+By direct computation, the integers $n\le200$ with $a(n)>370$ begin $119,137,147,159,168,173,\dots$, with $a(137)=a(173)=371$, $a(147)=18829$ (the minimum of a cycle of length $14$) and $a(177)=58618$ (the minimum of a cycle of length $2$). Every narcissistic number $m\ge371$, such as $371$, $407$ or $1634$, satisfies $a(m)=m$. The Lean proof uses only $n=119$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A115026.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A115026.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A115026.result}, of type $\neg$\,\decl{Math0.Statements.A115026.statement}. The file reads, verbatim (the copyright header, imports, module docstring and docstrings omitted):
+\begin{lstlisting}
+namespace Math0.Frontier.A115026
+open Math0.Statements.A115026
+private theorem a_119 : a 119 = 371 := by
+  decide +kernel
+theorem result : ¬ statement := by
+  intro h
+  have h119 := h 119 (by norm_num)
+  rw [a_119] at h119
+  omega
+end Math0.Frontier.A115026
+#math0_settles Math0.Frontier.A115026.result Math0.Statements.A115026.statement
+\end{lstlisting}
+The file uses no \texttt{native\_decide}, \texttt{sorry}, \texttt{axiom} or \texttt{set\_option}. It does not use \decl{a_spec}: the theorem \decl{result} refutes \decl{statement} as stated, about the function \decl{a}, and \decl{a_spec} is what identifies that function with the OEIS sequence.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, the axiom \decl{Lean.ofReduceBool} introduced by \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically the statement or its negation, up to metadata annotations, with no unfolding. On this file it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A115026.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A115026.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A115026.result' refutes 'Math0.Statements.A115026.statement'
+\end{lstlisting}
+so \decl{result} proves the negation of the statement and depends only on the three standard axioms. The theorems \decl{a_data} and \decl{a_spec} of the statement file also depend only on these axioms.
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A115026.lean} in the directory \path{lean}; this takes about a minute or less on our machine, most of it spent loading Mathlib.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{Angelini}
+E.~Angelini, \emph{A Recurring Digital Invariant Variant}, web page, \url{http://www.cetteadressecomportecinquantesignes.com/RecurDigit.htm}; cached copy at \url{https://oeis.org/A151543/a151543.pdf}.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A005188}
+The OEIS Foundation Inc., \url{https://oeis.org/A005188} (Armstrong, or narcissistic, numbers), entry by N.~J.~A. Sloane and R.~G. Wilson~v.
+
+\bibitem{A101337}
+The OEIS Foundation Inc., \url{https://oeis.org/A101337}, entry by G.~Hamilton (Dec.~24, 2004).
+
+\bibitem{A115026}
+The OEIS Foundation Inc., \url{https://oeis.org/A115026}, entry by S.~Pimentel (Feb.~24, 2006); conjecture by H.~P. Dale (June~8, 2022); revision \#12, June~8, 2022.
+
+\bibitem{A151543}
+The OEIS Foundation Inc., \url{https://oeis.org/A151543}, entry by N.~J.~A. Sloane (May~15, 2009), based on an email from E.~Angelini (Feb.~18, 2009), with a table of cycles by H.~Havermann.
+
+\bibitem{A151544}
+The OEIS Foundation Inc., \url{https://oeis.org/A151544}, entry by N.~J.~A. Sloane (May~15, 2009), based on an email from E.~Angelini.
+
+\bibitem{A157714}
+The OEIS Foundation Inc., \url{https://oeis.org/A157714} (base-10 pseudo-altruistic numbers), entry by H.~Havermann (Mar.~4, 2009).
+
+\end{thebibliography}
+}
+
+\end{document}

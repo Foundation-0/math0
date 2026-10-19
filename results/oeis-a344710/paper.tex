@@ -140,7 +140,7 @@ Their Lemma~3.4.4 states
 and its proof says ``The lower bound for $S(D)$ is obvious.''
 Krachun \cite{Kr} defines the same $S(D)$ for every $D>0$ \cite[Definition~2.1]{Kr}, so that $a(n)=S(\sqrt n)$ for all $n\ge1$, and proves $S(D)=\frac{\sqrt3}{2}D^2+O(D^{4/5})$ \cite[Theorem~2]{Kr}. Thus $a(n)=\frac{\sqrt3}{2}n+O(n^{2/5})$, and the constant $\frac{\sqrt3}{2}$ in Theorem~\ref{thm:main} cannot be improved.
 Mazel, Stuhl and Suhov also solve the disk-packing problem on $\Z^2$ for disks of diameter $D$ (their Lemma~3.5 gives the maximal density $1/S(D)$); this is the packing problem behind the sequence $b(n)$ discussed in the comments of A344710, which we do not treat here.
-Neither paper is cited in A344710 or A344845, and both entries (revisions \#84 and \#52, February~16, 2022) still mark the inequality as conjectured. It is not among the statements of the formal-conjectures repository \cite{FC}.
+Neither paper is cited in A344710 or A344845, and both entries (revisions \#84 and \#52, February~16, 2022) still mark the inequality as conjectured. It is not among the statements of the formal-conjectures repository \cite{FC} at the commit pinned by math0 (\texttt{c77fdd4}).
 We therefore classify the result as the first formal proof, to our knowledge, of a known result.
 
 \subsection*{Method}
@@ -294,7 +294,7 @@ In particular $a(n)>0$, since otherwise $3n^2<0$. As $n\ge0$ we have $\sqrt{3/4}
 \end{proof}
 
 \begin{remark}[geometric form]\label{rem:geom}
-If $Z$ is the largest squared side, the angle $\gamma$ at $A$, between the sides of squared lengths $X$ and $Y$, is the largest angle, and $X+Y-Z=2\sqrt{XY}\cos\gamma$. The inequality $(X+Y-Z)^2\le XY$ in the proof of Lemma~\ref{lem:max} is $\cos^2\gamma\le\frac14$, that is, $\gamma\ge\pi/3$, which holds because $\gamma$ is the largest angle; the condition $X+Y-Z\ge0$ is $\gamma\le\pi/2$. Then $4D^2=4XY\sin^2\gamma\ge3XY$ is the classical bound $2\,\mathrm{area}=\sqrt{XY}\sin\gamma\ge\frac{\sqrt3}{2}\sqrt{XY}$. Equality in Theorem~\ref{thm:main} would need $X=Y=Z=n$ and $\gamma=\pi/3$, an equilateral lattice triangle.
+If $Z$ is the largest squared side, the angle $\gamma$ at $A$, between the sides of squared lengths $X$ and $Y$, is the largest angle, and $X+Y-Z=2\sqrt{XY}\cos\gamma$. The inequality $(X+Y-Z)^2\le XY$ in the proof of Lemma~\ref{lem:max} is $\cos^2\gamma\le\frac14$, that is, $\gamma\ge\pi/3$, which holds because $\gamma$ is the largest angle; the condition $X+Y-Z\ge0$ is $\gamma\le\pi/2$. Then $4D^2=4XY\sin^2\gamma\ge3XY$ is the classical bound $2\,\mathrm{area}=\sqrt{XY}\sin\gamma\ge\frac{\sqrt3}{2}\sqrt{XY}$. Equality in Lemma~\ref{lem:det} would need $X=Y=Z=n$ and $\gamma=\pi/3$, an equilateral lattice triangle.
 \end{remark}
 
 \begin{remark}[the angle condition is needed]
@@ -338,7 +338,7 @@ math0 statement check: 'Math0.Frontier.A344710.result' proves 'Math0.Statements.
 The data lemma \decl{aRegion_data} depends on no axioms.
 
 \subsection*{Toolchain and reproduction}
-We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A344710.lean} in the directory \path{lean}, once the statement module has been built; this took about $30$ seconds on our machine, most of it spent loading Mathlib. Building the statement module itself includes the kernel evaluation of \decl{aRegion_data}, about $23$ seconds of kernel time.
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A344710.lean} in the directory \path{lean}, once the statement module has been built; this takes well under a minute on our machine, most of it spent loading Mathlib. Building the statement module itself includes the kernel evaluation of \decl{aRegion_data}, about $23$ seconds of kernel time.
 
 {\small
 \begin{thebibliography}{99}
@@ -347,7 +347,7 @@ We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v
 M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
 
 \bibitem{Kr}
-D.~Krachun, \emph{Triangles on $\Z^2$ and sliding phenomenon}, arXiv:1912.07566, 2019; v2 (June 2020) is titled \emph{Extreme Gibbs measures for high-density hard-core model on $\Z^2$} in the PDF.
+D.~Krachun, \emph{Triangles on $\Z^2$ and sliding phenomenon}, arXiv:1912.07566, 2019; theorem numbers as in v2 (June 2020, PDF title \emph{Extreme Gibbs measures for high-density hard-core model on $\Z^2$}).
 
 \bibitem{Mathlib}
 The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.

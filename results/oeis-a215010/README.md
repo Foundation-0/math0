@@ -31,6 +31,10 @@ Referees: Prior refutations, all at least as old as or published soon after Garc
 
 A215010 itself (history checked through revision #43, Jan 23 2015) never cites any of these, and its conjecture remains uncorrected. I found no earlier formalization in Lean or any other proof assistant.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

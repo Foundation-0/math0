@@ -125,8 +125,8 @@ We prove the conjecture (Theorem~\ref{thm:main} and Corollary~\ref{cor:seq}).
 \subsection*{Prior work and status}
 The statement is classical, and we do not claim it as new.
 The necessity of the condition is the chessboard-colouring argument: each domino covers one cell of each colour, and a row of length $y_i$ contributes $\pm[y_i\text{ odd}]$ to the colour difference (Lemma~\ref{lem:row}).
-For sufficiency, in the language of cores, a partition's diagram is domino-tileable exactly when its $2$-core is empty: removing rim dominoes leads to the $2$-core, which is a staircase $(k,k-1,\dots,1)$, and a nonempty staircase has nonzero colour difference.
-The theory of $r$-cores and $r$-quotients goes back to Littlewood \cite{Lit51}; see James and Kerber \cite{JK81} and Macdonald \cite[Ch.~I, \S1, Ex.~8, pp.~12--15]{Mac95}, where the $r$-core is read off from the distribution of the beta-numbers of the partition modulo $r$, and is empty exactly when they are equidistributed.
+For sufficiency, in the language of cores, a partition's diagram is domino-tileable exactly when its $2$-core is empty: removing rim dominoes, which preserves the colour difference, leads to the $2$-core, which is a staircase $(k,k-1,\dots,1)$, and a nonempty staircase has nonzero colour difference.
+Littlewood's decomposition of a partition into its $r$-core and $r$-quotient \cite{Lit51} is classical; see James and Kerber \cite{JK81} and Macdonald \cite[Ch.~I, \S1, Ex.~8, pp.~12--15]{Mac95}, where the $r$-core is read off from the distribution of the beta-numbers of the partition modulo $r$; when the number of beta-numbers is a multiple of $r$, the $r$-core is empty exactly when they are equidistributed modulo $r$.
 For $r=2$ this is the parity condition in another form.
 Albion \cite[Lemma~2.1]{Alb24}, who takes domino-tileability as a definition of empty $2$-core, states for $\lambda$ with at most $2n$ parts that $\lambda$ has empty $2$-core if and only if $\{\lambda_i+2n-i: 1\le i\le 2n\}$ contains $n$ even and $n$ odd integers, noting that the equivalences ``easily follow by induction on $|\lambda|$''. Since $\lambda_i+2n-i\equiv\lambda_i+i\pmod 2$, counting the even and odd values position by position shows that this is exactly the condition of A300789.
 The black-equals-white criterion for Young diagrams is also the key fact behind the competitive-programming problem ``Domino for Young'' (Codeforces Round~\#609, December 2019, problems 1268B and 1269D \cite{CF}), whose answer, the maximum number of disjoint dominoes in a Young diagram, is the smaller of the two colour counts.
@@ -138,7 +138,7 @@ The entry (revision \#11, May~22, 2018) still describes the statement as a conje
 We therefore classify our result as the first formal proof, to our knowledge, of a known result.
 
 \subsection*{Method}
-We follow the standard argument: the chessboard imbalance vanishes exactly under the parity condition and for every tileable set (Lemmas~\ref{lem:balanced} and~\ref{lem:fwd}); conversely, a balanced diagram is tiled by removing rim dominoes, since a diagram without a removable rim domino is a staircase (Proposition~\ref{prop:bwd}).
+We follow the standard argument: the chessboard imbalance of a diagram vanishes exactly under the parity condition, and it vanishes for every tileable diagram (Lemmas~\ref{lem:balanced} and~\ref{lem:fwd}); conversely, a balanced diagram is tiled by removing rim dominoes, since a diagram without a removable rim domino is a staircase (Proposition~\ref{prop:bwd}).
 
 \section{Statement}\label{sec:statement}
 
@@ -270,7 +270,7 @@ In Lean, $Y'$ is the function \texttt{fun r => if r = i then Y r - 2 else Y r} (
 
 \begin{proof}[Proof of Theorem~\ref{thm:main}]
 Let $y$ be a partition with $m$ parts, so that $Y_y$ is weakly decreasing, vanishes from $m$ on, and \texttt{youngDiagram y} $=\sh(Y_y)$ (\decl{youngDiagram_eq}; the condition $i<m$ in \decl{youngDiagram} is implied by $j<Y_y(i)$). By Lemma~\ref{lem:balanced}, \eqref{eq:par} is equivalent to $\imb_m(Y_y)=0$.
-If the diagram is tileable, Lemma~\ref{lem:search} (with $l=\texttt{cellsList }y$) shows that \texttt{tileL} accepts \texttt{cellsList y}, and Lemma~\ref{lem:fwd} gives $\imb_m(Y_y)=0$.
+If the diagram is tileable, Lemma~\ref{lem:search} (with $l=\texttt{cellsList }y$ and $f$ its length) shows that \texttt{tileL} accepts \texttt{cellsList y}, and Lemma~\ref{lem:fwd} gives $\imb_m(Y_y)=0$.
 Conversely, if $\imb_m(Y_y)=0$, Proposition~\ref{prop:bwd} with $N=m$ shows that $\sh(Y_y)$ is tileable.
 \end{proof}
 

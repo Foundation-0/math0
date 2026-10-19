@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: We conjecture that Sum_{i=1..n} ((1/i)*C(2n-i-1,i-
 
 Referees: OEIS A175386 (cross-reference of A175385), comment by Ralf Stephan, May 25 2026: the conjecture was proved by an autonomous AI agent (AlphaProof Nexus). Lean file: https://github.com/google-deepmind/alphaproof-nexus-results/blob/main/APNOutputs/OEIS/oeis_175386_conjecture_0.lean (theorem target_theorem_0: for n > 1, the denominator of S(n) is not 1; checked, no sorry). Papers: G. Tsoukalas et al., "Advancing Mathematics Research with AI-Driven Formal Proof Search", arXiv:2605.22763 (May 2026); T. Adamczewski, "OEIS Open: How many conjectures can language models turn into theorems?", arXiv:2608.11941 (Aug 2026), cited by OEIS for the proof on p. 15, Appendix A. Classical implication: P. S. Bruckman, "Lucas Pseudoprimes Are Odd", Fibonacci Quarterly 32(2) (1994) 155-157 (https://www.mathstat.dal.ca/FQ/Scanned/32-2/bruckman2.pdf). No even composite N has N | L_N − 1, and with 2n·S(n) = L_{2n} − 1 this settles the conjecture. The A175385 entry itself (https://oeis.org/A175385, history up to #14, Mar 2023) records no proof.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

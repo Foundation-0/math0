@@ -1,0 +1,335 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8,
+  literate={∑}{{$\sum$}}1 {∈}{{$\in$}}1 {ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1
+    {ℚ}{{$\mathbb{Q}$}}1 {∀}{{$\forall$}}1 {≤}{{$\le$}}1 {→}{{$\to$}}1 {∣}{{$\mid$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\mue}{\mu^{(e)}}
+\newcommand{\ind}[1]{[\,#1\,]}
+
+\title[Positivity of the exponential Mertens function]{Positivity of the partial sums of the exponential M\"obius function (OEIS A209802)}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 18, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $\mue$ be the exponential M\"obius function, the multiplicative function with $\mue(p^e)=\mu(e)$ for every prime power $p^e$, and let $a(n)=\sum_{k=1}^{n}\mue(k)$ (OEIS A209802).
+We prove that $a(n)\ge n/36$, and in particular $a(n)>0$, for every $n\ge1$; this is the conjecture ``$a(n)>0$'' recorded by R.~Zumkeller in the OEIS entry in 2012.
+The result is not new mathematics: since $\mue(k)=1$ for squarefree $k$ and $|\mue(k)|\le1$ always, it follows at once from K.~Rogers' 1964 bound $Q(n)\ge 53n/88$ for the number $Q(n)$ of squarefree integers up to $n$, and our proof is a self-contained elementary version of that argument with a weaker constant.
+What is new is the first formal proof: positivity is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, reviewed for fidelity and frozen before the proof attempt, and whose definitions are checked by the Lean kernel against the listed OEIS terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Let $n=p_1^{e_1}\cdots p_r^{e_r}$ with distinct primes $p_i$ and $e_i\ge1$. A divisor $d$ of $n$ is an \emph{exponential divisor} if $d=p_1^{b_1}\cdots p_r^{b_r}$ with $b_i\mid e_i$ for all $i$. These divisors and the associated exponential convolution of arithmetic functions were introduced by M.~V.~Subbarao \cite{Sub}. The inverse of the constant function $1$ under this convolution is the \emph{exponential M\"obius function} $\mue$. It is multiplicative with $\mue(p^e)=\mu(e)$, where $\mu$ is the M\"obius function, so
+\[
+  \mue(1)=1,\qquad \mue(p_1^{e_1}\cdots p_r^{e_r})=\mu(e_1)\cdots\mu(e_r),
+\]
+and $\mue(n)\in\{-1,0,1\}$, with $\mue(p)=1$ and $\mue(p^2)=\mue(p^3)=-1$ for every prime $p$ \cite[\S2]{Toth}. The values of $\mue$ form OEIS A166234 \cite{A166234}.
+
+The partial sums $a(n)=\sum_{k\le n}\mue(k)$ form OEIS A209802 \cite{A209802}, contributed by Reinhard Zumkeller on March~13, 2012, with the comment ``Analog of Mertens's function, A002321; conjecture: $a(n)>0$.'' The analogy is with the Mertens function $M(n)=\sum_{k\le n}\mu(k)$ (A002321 \cite{A002321}), which does take negative values (already $M(3)=-1$). The first terms of $a$ are $1,2,3,2,3,4,5,4,3,4,\dots$, and C.~R.~Greathouse~IV recorded in the entry the values $a(10^m)=4,34,355,3610,36116,\dots$ for $m=1,2,3,\dots$.
+
+\subsection*{Prior work}
+L.~T\'oth \cite[Theorem~1]{Toth} proved that every multiplicative $f$ with $|f(n)|\le1$ and $f(p)=1$ for all primes $p$ satisfies $\sum_{n\le x}f(n)=m(f)\,x+O(x^{1/2}\log x)$, with mean value $m(f)=\prod_p\bigl(1+\sum_{a\ge2}(f(p^a)-f(p^{a-1}))p^{-a}\bigr)$, and he sharpened the error term for $f=\mue$ \cite[Theorem~2]{Toth}. For $\mue$ the mean value is $0.3609447238\ldots$ (as recorded in the OEIS entry \cite{A209802}), so $a(n)>0$ for all sufficiently large $n$; since the implied constant is not explicit, this alone does not settle the conjecture for every $n$.
+
+The conjecture is still listed as open in the current revision (\#29, May~30, 2025) of the entry. The math0 referees read the revision history of A209802 and the entries A166234 and A368405, and searched arXiv, MathOverflow and Mathematics Stack Exchange; they found no explicit resolution. However, the conjecture follows in two lines from a classical result. If $Q(n)$ denotes the number of squarefree integers in $[1,n]$, then $\mue(k)=1$ for squarefree $k$ and $\mue(k)\ge-1$ otherwise, so
+\[
+  a(n)\ \ge\ Q(n)-\bigl(n-Q(n)\bigr)\ =\ 2Q(n)-n .
+\]
+K.~Rogers \cite{Rogers} proved in 1964 that $Q(n)\ge \tfrac{53}{88}\,n$ for all $n\ge1$, with equality only at $n=176$; that is, the Schnirelmann density of the squarefree integers is $53/88$. (This is also recorded in a comment by M.~Marcus and C.~R.~Greathouse~IV in OEIS A013928 \cite{A013928}; see also Moser and MacLeod \cite{MM} on the error term $Q(x)-6x/\pi^2$.) Hence $a(n)\ge\tfrac{9}{44}n>0$ for all $n\ge1$. Even the weaker bound $Q(n)>n/2$ suffices. We therefore classify the result as \emph{a known result, formalized here for the first time}: the mathematics has been available since 1964, and the contribution of this note is a written resolution of the OEIS conjecture together with a kernel-checked proof.
+
+\subsection*{This note}
+The proof formalized here does not use Rogers' theorem. It bounds the number of non-squarefree $k\le n$ by a union bound over the squares $4$, $9$ and $(2j+5)^2$, and shows $a(n)\ge n/36$ (Theorem~\ref{thm:main}). The constant is far from optimal: the referees' computations, which are not part of the formal proof, show that $a(n)>0$ for all $n\le 2\cdot10^6$ and that the minimum of $a(n)/n$ over this range is $a(28)/28=1/4$.
+
+\section{Statement}\label{sec:statement}
+
+For $n\ge1$ and a prime $p$ let $v_p(n)$ denote the exponent of $p$ in $n$.
+
+\begin{definition}\label{def:main}
+For $n\ge1$ let $\mue(n)=\prod_{p\mid n}\mu(v_p(n))$, the product running over the primes dividing $n$ (so $\mue(1)=1$), and let $a(n)=\sum_{k=1}^{n}\mue(k)\in\Z$.
+\end{definition}
+
+The function $\mue$ is multiplicative and $\mue(p^e)=\mu(e)$ for $e\ge1$, which is the formula given in the entry A166234 \cite{A166234}:
+\begin{quote}\raggedright
+\texttt{Multiplicative, a(p\^{}e) = mu(e) for any prime power p\^{}e (e>=1), where mu is the M\"obius function A008683.}
+\end{quote}
+The sequence A209802 \cite{A209802} has the name ``Partial sums of exponential M\"obius function, A166234'' and offset $1$, so its $n$-th term is $a(n)$. Its COMMENTS section contains, verbatim, the following comment by Reinhard Zumkeller, the author of the entry (March~13, 2012):
+\begin{quote}\raggedright
+\texttt{Analog of Mertens's function, A002321; conjecture: a(n) > 0.}
+\end{quote}
+
+\begin{conjecture}[Zumkeller \cite{A209802}]\label{conj}
+$a(n)>0$ for every $n\ge1$.
+\end{conjecture}
+
+\begin{theorem}\label{thm:main}
+For every $n\ge1$,
+\[
+  a(n)\ \ge\ n-2\Bigl(\Bigl\lfloor\frac n4\Bigr\rfloor+\Bigl\lfloor\frac n9\Bigr\rfloor+\sum_{j=0}^{n-1}\Bigl\lfloor\frac{n}{(2j+5)^2}\Bigr\rfloor\Bigr)\ \ge\ \frac{n}{36}.
+\]
+In particular Conjecture~\ref{conj} holds.
+\end{theorem}
+
+The formal theorem is the final assertion $a(n)>0$; the Lean proof establishes the first inequality and the strict positivity of the middle expression, by the argument of Section~\ref{sec:proof}.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A209802.lean}, reviewed for fidelity and frozen (SHA-256 \texttt{4eed8d99\ldots 0abf0d}) before any proof attempt. It is not part of the formal-conjectures repository \cite{FC}. Its definitions and the statement are, verbatim except that docstrings, a kernel-friendly copy of the definitions and the data lemmas are omitted:
+\begin{lstlisting}
+namespace Math0.Statements.A209802
+open ArithmeticFunction Finset
+
+def muE (n : ℕ) : ℤ := n.factorization.prod fun _ e => moebius e
+
+def a (n : ℕ) : ℤ := ∑ k ∈ Icc 1 n, muE k
+
+def statement : Prop := ∀ n : ℕ, 1 ≤ n → 0 < a n
+end Math0.Statements.A209802
+\end{lstlisting}
+The encoding matches Definition~\ref{def:main}. In Mathlib, \decl{n.factorization} is the finitely supported function $p\mapsto v_p(n)$, whose support is the set of prime factors of $n$, and \decl{Finsupp.prod} multiplies $g(p,v_p(n))$ over that support; \decl{moebius} is the M\"obius function $\mu$ as an integer-valued arithmetic function. So \texttt{muE n} is $\prod_{p\mid n}\mu(v_p(n))$, and \texttt{muE 1} is the empty product $1$. Every exponent in the support is at least $1$, so the value $\mu(0)$ never enters. (The value \texttt{muE 0} is never used.) \texttt{a n} is the sum over $k\in\{1,\dots,n\}$; it takes values in $\Z$, so there is no truncated subtraction. Note that the entry carries the keyword \texttt{nonn} only because of the conjecture itself. The statement quantifies over every index $n\ge1$ of the sequence and excludes the empty sum $a(0)=0$.
+
+The file also checks the definitions against the OEIS data. The lemma \decl{muE_data} states that $\mue(1),\dots,\mue(91)$ are the $91$ listed terms of A166234, \decl{a_data} that $a(1),\dots,a(72)$ are the $72$ listed terms of A209802, and \decl{a_ten_hundred} that $a(10)=4$ and $a(100)=34$, as in Greathouse's comment. The Mathlib functions \decl{Nat.factorization} and \decl{moebius} do not reduce well in the kernel, so the file also defines trial-division copies \decl{muEC} and \decl{aC}: prime divisors are found by scanning $0,\dots,n$, exponents are computed with \decl{Nat.findGreatest}, and $\mu$ is computed from its values on prime powers. It proves \decl{muE_eq_muEC} and \decl{a_eq_aC} for all $n$, using the multiplicativity of $\mu$ and the characterization $p^j\mid n\iff j\le v_p(n)$. Each data lemma is proved by rewriting with these equalities and then running \texttt{decide +kernel}, so the Lean kernel itself evaluates the copies and compares them with the listed terms.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A209802.lean}; the corresponding declarations are listed in Section~\ref{sec:lean}. For a statement $P$ we write $\ind{P}=1$ if $P$ holds and $\ind{P}=0$ otherwise.
+
+\begin{lemma}\label{lem:values}
+Let $k\ge1$. If $k$ is squarefree, then $\mue(k)=1$. In general $|\mue(k)|\le1$; in particular $\mue(k)\ge-1$.
+\end{lemma}
+
+\begin{proof}
+If $k$ is squarefree, then $v_p(k)\le1$ for every prime $p$, and $v_p(k)\ne0$ for the primes in the product, so every factor is $\mu(1)=1$. In general $\mue(k)$ is a product of values of $\mu$, each of absolute value at most $1$.
+\end{proof}
+
+For $n,k\in\N$ put
+\[
+  S(n,k)=\ind{4\mid k}+\ind{9\mid k}+\sum_{j=0}^{n-1}\ind{(2j+5)^2\mid k}\ \in\Z_{\ge0}.
+\]
+
+\begin{lemma}\label{lem:pointwise}
+If $1\le k\le n$, then $\mue(k)\ge 1-2S(n,k)$.
+\end{lemma}
+
+\begin{proof}
+If $k$ is squarefree, then $\mue(k)=1\ge1-2S(n,k)$ by Lemma~\ref{lem:values} and $S(n,k)\ge0$. Otherwise there is a prime $p$ with $p^2\mid k$, and $p\le k\le n$ because $p\mid k$ and $k\ge1$. Since $\mue(k)\ge-1$ by Lemma~\ref{lem:values}, it suffices to show $S(n,k)\ge1$, which holds because one of its summands, all of which are nonnegative, equals $1$:
+if $p=2$, then $\ind{4\mid k}=1$; if $p=3$, then $\ind{9\mid k}=1$; otherwise $p$ is an odd prime with $p\ge5$, so $j=(p-5)/2$ is a natural number with $2j+5=p$ and $j<p\le n$, and the summand $\ind{(2j+5)^2\mid k}$ equals $1$.
+\end{proof}
+
+\begin{lemma}\label{lem:count}
+For all $n,d\in\N$, $\sum_{k=1}^{n}\ind{d\mid k}=\lfloor n/d\rfloor$ (with $\lfloor n/0\rfloor=0$).
+\end{lemma}
+
+\begin{proof}
+For $d\ge1$ the multiples of $d$ in $\{1,\dots,n\}$ are $d,2d,\dots,\lfloor n/d\rfloor d$. For $d=0$ no $k\ge1$ is divisible by $0$.
+\end{proof}
+
+\begin{lemma}\label{lem:tele}
+For every $N\in\N$,
+\[
+  \sum_{j=0}^{N-1}\frac{1}{(2j+5)^2}\ \le\ \frac18-\frac{1}{4N+8}.
+\]
+\end{lemma}
+
+\begin{proof}
+Induction on $N$. For $N=0$ both sides are $0$. For the step it suffices to show
+\[
+  \frac{1}{(2N+5)^2}\ \le\ \frac{1}{4N+8}-\frac{1}{4(N+1)+8}=\frac{1}{(2N+4)(2N+6)},
+\]
+which holds because $(2N+5)^2=(2N+4)(2N+6)+1$.
+\end{proof}
+
+\begin{corollary}\label{cor:tail}
+For every $n\in\N$, $\sum_{j=0}^{n-1}\lfloor n/(2j+5)^2\rfloor\le n/8$.
+\end{corollary}
+
+\begin{proof}
+By $\lfloor x\rfloor\le x$ and Lemma~\ref{lem:tele} with $N=n$, the sum is at most $n\sum_{j<n}(2j+5)^{-2}\le n(\tfrac18-\tfrac1{4n+8})\le n/8$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $n\ge1$. Summing Lemma~\ref{lem:pointwise} over $k=1,\dots,n$, exchanging the order of summation in the double sum over $k$ and $j$, and applying Lemma~\ref{lem:count} to each indicator gives
+\[
+  a(n)=\sum_{k=1}^{n}\mue(k)\ \ge\ \sum_{k=1}^{n}\bigl(1-2S(n,k)\bigr)
+  = n-2\Bigl(\Bigl\lfloor\frac n4\Bigr\rfloor+\Bigl\lfloor\frac n9\Bigr\rfloor+\sum_{j=0}^{n-1}\Bigl\lfloor\frac{n}{(2j+5)^2}\Bigr\rfloor\Bigr).
+\]
+By $\lfloor n/d\rfloor\le n/d$ and Corollary~\ref{cor:tail}, the expression in parentheses is at most $n(\tfrac14+\tfrac19+\tfrac18)=\tfrac{35}{72}n$. Hence $a(n)\ge n-\tfrac{35}{36}n=\tfrac{n}{36}>0$.
+\end{proof}
+
+In Lean the last step is carried out in $\Q$: the integer $2(\lfloor n/4\rfloor+\lfloor n/9\rfloor+\sum_j\lfloor n/(2j+5)^2\rfloor)$ is cast to $\Q$, bounded by $\tfrac{35}{36}n<n$ using $n\ge1$, and the strict inequality is transported back to $\Z$; together with the first inequality this gives $0<a(n)$.
+
+\begin{remark}\label{rem:density}
+Lemma~\ref{lem:pointwise} combines the bound $\mue(k)\ge 1-2\cdot\ind{k\text{ not squarefree}}$ from Lemma~\ref{lem:values} with $\ind{k\text{ not squarefree}}\le S(n,k)$ for $1\le k\le n$. So the argument shows that at most $\tfrac{35}{72}n$ of the integers in $[1,n]$ are not squarefree, i.e.\ $Q(n)\ge\tfrac{37}{72}n$, a weak form of Rogers' theorem \cite{Rogers}, and then uses $a(n)\ge 2Q(n)-n$ as in the introduction. The index range $j<n$ contains many superfluous terms (only $j\le(\sqrt n-5)/2$ can contribute); it is chosen so that the set of squares in $S(n,k)$ does not depend on the prime $p$ in Lemma~\ref{lem:pointwise}. Odd composite numbers $2j+5$ are included as well, which costs only a constant: $\sum_{j\ge0}(2j+5)^{-2}=\pi^2/8-1-1/9=0.1225\ldots$, against $1/8$ in Lemma~\ref{lem:tele}.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in \path{lean/Math0/Frontier/OEIS/A209802.lean} in the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A209802.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is
+\begin{lstlisting}
+theorem result : statement
+\end{lstlisting}
+in the namespace \decl{Math0.Frontier.A209802}, i.e.\ \decl{Math0.Frontier.A209802.result} has type exactly \decl{Math0.Statements.A209802.statement}. The auxiliary declarations, all private, are (signatures verbatim, proofs omitted):
+\begin{lstlisting}
+private theorem muE_of_squarefree {k : ℕ} (hk : Squarefree k) : muE k = 1
+private theorem abs_muE_le (k : ℕ) : |muE k| ≤ 1
+private def ind (d k : ℕ) : ℤ := if d ∣ k then 1 else 0
+private theorem ind_nonneg (d k : ℕ) : 0 ≤ ind d k
+private def S (n k : ℕ) : ℤ :=
+  ind 4 k + ind 9 k + ∑ j ∈ range n, ind ((2 * j + 5) ^ 2) k
+private theorem S_nonneg (n k : ℕ) : 0 ≤ S n k
+private theorem pointwise {n k : ℕ} (hk1 : 1 ≤ k) (hkn : k ≤ n) : 1 - 2 * S n k ≤ muE k
+private theorem sum_ind (n d : ℕ) : ∑ k ∈ Icc 1 n, ind d k = ((n / d : ℕ) : ℤ)
+private theorem tele (N : ℕ) :
+    ∑ j ∈ range N, (1 : ℚ) / ((2 * (j : ℚ) + 5) ^ 2) ≤ (1 : ℚ) / 8 - 1 / (4 * (N : ℚ) + 8)
+private theorem tail_le (n : ℕ) :
+    ∑ j ∈ range n, (((n / (2 * j + 5) ^ 2 : ℕ) : ℤ) : ℚ) ≤ (n : ℚ) / 8
+\end{lstlisting}
+They correspond to Lemma~\ref{lem:values} (\decl{muE_of_squarefree}, \decl{abs_muE_le}), Lemma~\ref{lem:pointwise} (\decl{pointwise}, using the nonnegativity facts \decl{ind_nonneg} and \decl{S_nonneg}), Lemma~\ref{lem:count} (\decl{sum_ind}, via Mathlib's \decl{Nat.Ioc_filter_dvd_card_eq_div}), Lemma~\ref{lem:tele} (\decl{tele}) and Corollary~\ref{cor:tail} (\decl{tail_le}); the proof of \decl{result} is the proof of Theorem~\ref{thm:main}. The non-squarefree case of \decl{pointwise} uses Mathlib's \decl{Nat.squarefree_iff_prime_squarefree} to obtain the prime $p$. The proof involves no computation beyond one call of \texttt{decide} that checks that $4$ is not prime (it supplies the hypothesis $p\ne4$ in the last case of Lemma~\ref{lem:pointwise}, where $p\ge5$ is derived); the kernel evaluations with \texttt{decide +kernel} occur only in the data lemmas of the statement file, which \decl{result} does not use. \texttt{native\_decide}, \texttt{sorry} and \texttt{set\_option} do not occur.
+
+\subsection*{Audit}
+The file ends with the command
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A209802.result Math0.Statements.A209802.statement
+\end{lstlisting}
+defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself. It fails unless (1) \decl{statement} is a definition of type \texttt{Prop} without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, the axiom \decl{Lean.ofReduceBool} introduced by \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically the statement or its negation, after removing metadata annotations, with no unfolding. On this file it reports
+\begin{lstlisting}
+math0 audit: 'Math0.Statements.A209802.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A209802.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A209802.result' proves 'Math0.Statements.A209802.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A209802.lean} in the directory \path{lean}; this takes about $20$ seconds on our machine once the statement module is built (the statement file itself, with its kernel data checks, compiles in about $45$ seconds).
+
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{MM}
+L.~Moser and R.~A. MacLeod, \emph{The error term for the squarefree integers}, Canad. Math. Bull. \textbf{9} (1966), no.~3, 303--306, \url{https://doi.org/10.4153/CMB-1966-039-4}.
+
+\bibitem{Rogers}
+K.~Rogers, \emph{The Schnirelmann density of the squarefree integers}, Proc. Amer. Math. Soc. \textbf{15} (1964), 515--516, \url{https://doi.org/10.1090/S0002-9939-1964-0163893-X}.
+
+\bibitem{Sub}
+M.~V. Subbarao, \emph{On some arithmetic convolutions}, in: A.~A. Gioia and D.~L. Goldsmith (eds.), The Theory of Arithmetic Functions, Lecture Notes in Math. \textbf{251}, Springer, 1972, 247--271.
+
+\bibitem{Toth}
+L.~T\'oth, \emph{On certain arithmetic functions involving exponential divisors, II}, Annales Univ. Sci. Budapest., Sect. Comp. \textbf{27} (2007), 155--166; arXiv:0708.3557.
+
+\bibitem{A002321}
+The OEIS Foundation Inc., \url{https://oeis.org/A002321} (Mertens's function).
+
+\bibitem{A013928}
+The OEIS Foundation Inc., \url{https://oeis.org/A013928} (number of squarefree numbers $<n$), comments by M.~Marcus (2012) and C.~R.~Greathouse~IV (2016).
+
+\bibitem{A166234}
+The OEIS Foundation Inc., \url{https://oeis.org/A166234}, entry by L.~T\'oth (2009).
+
+\bibitem{A209802}
+The OEIS Foundation Inc., \url{https://oeis.org/A209802}, entry by R.~Zumkeller (2012).
+
+\end{thebibliography}
+
+\end{document}

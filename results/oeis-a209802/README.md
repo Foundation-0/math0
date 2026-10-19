@@ -34,6 +34,10 @@ Also checked, with nothing relevant found:
 - Cao and Zhai, J. Integer Seq. 13 (2010)
 - Web, MathOverflow and Math StackExchange searches
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

@@ -34,6 +34,10 @@ Side note: the general conjecture of De Koninck and Mercier quoted in the A33460
 
 Sources: https://arxiv.org/abs/2507.01295 ; https://en.wikipedia.org/wiki/Repeating_decimal ; https://www.johndcook.com/blog/2021/09/28/reciprocals-of-prime-powers/ ; https://oeis.org/A045616 (read from the local mirror)
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

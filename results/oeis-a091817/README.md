@@ -27,6 +27,10 @@ Referees: - OEIS A091817 and its history (oeis.org/history?seq=A091817): the con
   - not among the OEIS Open benchmark statements (Adamczewski, arXiv:2608.11941);
   - no other formal proof turned up in searches.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

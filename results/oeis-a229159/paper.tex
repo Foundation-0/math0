@@ -132,7 +132,7 @@ For an odd prime $p$ the rule gives a right triangle with integer sides whose ar
 
 The rule, and the fact that every odd prime is a leg of a Pythagorean triangle, were recorded in the OEIS before Lagneau's entry.
 In A046079 \cite{A046079} (number of Pythagorean triangles with leg $n$), Ant King noted on January~29, 2011 that for $n>2$ the positions of the ones are the primes and their doubles, so each odd prime is a leg of exactly one Pythagorean triangle; and Richard R.~Forberg noted on May~31, 2013, with $L$ the length of the longest leg and $H$ the hypotenuse, that ``For odd $n$: $L=(n^2-1)/2$ and $H=L+1$''.
-In a related direction, A042965 \cite{A042965} records (in a comment by Sharon Sela, January~25, 2002) that its terms are the nonnegative integers that are differences of two squares, and N.~J.~A.~Sloane added on May~30, 2014 that the primes in the sequence are all the odd primes.
+In a related direction, A042965 \cite{A042965} records (in a comment by Sharon Sela, January~25, 2002) that its terms are the nonnegative integers that are differences of two squares, and N.~J.~A.~Sloane added on May~30, 2014, after Lagneau's entry, that the primes in the sequence are all the odd primes.
 
 The A229159 entry (revision \#18 of September~16, 2017, which is the version we read) still states the conjecture and does not mention this construction.
 The math0 referees found no source that addresses the conjecture of A229159 directly.
@@ -172,11 +172,12 @@ Thus $\T(x,y,z;A)$ holds exactly when $x,y,z$ are the side lengths of a non-dege
 
 \begin{theorem}\label{thm:main}
 For every prime $p>2$ there are $x,y,z,A\in\N$ with $\T(x,y,z;A)$ and $p\in\{x,y,z\}$.
-More precisely, if $p=2m+1$, then
+\end{theorem}
+
+The proof (Section~\ref{sec:proof}) gives an explicit witness: if $p=2m+1$, then
 \[
   \T\bigl(2m+1,\ 2m^2+2m,\ 2m^2+2m+1;\ m(m+1)(2m+1)\bigr).
 \]
-\end{theorem}
 
 \subsection*{Lean statement}
 The statement is the definition \decl{Math0.Statements.A229159.statement} in the frozen math0 statement file \path{lean/Math0/Statements/OEIS/A229159.lean}.
@@ -191,7 +192,7 @@ def statement : Prop :=
   ∀ p : ℕ, p.Prime → 2 < p →
     ∃ x y z A : ℕ, IsIntTriangle x y z A ∧ (x = p ∨ y = p ∨ z = p)
 \end{lstlisting}
-\texttt{IsIntTriangle x y z A} is $\T(x,y,z;A)$, and \decl{statement} is the first sentence of Theorem~\ref{thm:main}.
+\texttt{IsIntTriangle x y z A} is $\T(x,y,z;A)$, and \decl{statement} is Theorem~\ref{thm:main}.
 
 \subsection*{Encoding}
 An ``integer-sided triangle'' is a triple of natural numbers satisfying the strict triangle inequalities, so degenerate triangles are excluded and every side is at least~$1$.
@@ -199,7 +200,7 @@ Without this exclusion the statement would be trivial, since $(p,p,2p)$ would be
 ``Integer area'' means that the area given by Heron's formula is a natural number $A$; the formal statement uses Heron's formula as the definition of the area and does not refer to Euclidean geometry.
 The four factors are computed in $\Z$, so truncated subtraction in $\N$ plays no role.
 ``At least one side is of length $p$'' is the disjunction $x=p\lor y=p\lor z=p$.
-The entry's Maple program uses the same notion: for sides $a\le b\le c$ it computes $x=s(s-a)(s-b)(s-c)$ with $s=(a+b+c)/2$, requires $x>0$, and tests whether $\sqrt{x}$ is an integer; since $16x$ is the Heron product, this is the condition $\T(a,b,c;\sqrt{x})$.
+The entry's Maple program uses the same notion: for sides $a\le b\le c$ it computes $x=s(s-a)(s-b)(s-c)$ with $s=(a+b+c)/2$, takes $\sqrt{x}$ only when $x>0$, and tests whether it is an integer; since $16x$ is the Heron product, this is the condition $\T(a,b,c;\sqrt{x})$.
 
 \subsection*{Check against the OEIS data}
 The statement file also defines the sequence itself:
@@ -319,7 +320,7 @@ end Math0.Frontier.A229159
 \end{lstlisting}
 In Mathlib, \texttt{Odd p} unfolds to $\exists m,\ p=2m+1$, so the pattern \decl{rfl} replaces $p$ by $2m+1$.
 The proof file uses no \texttt{decide}, \texttt{native\_decide}, \texttt{sorry} or \texttt{set\_option}.
-The kernel evaluations described in Section~\ref{sec:statement} (\decl{a_data}, \decl{oeis_errata}) live in the statement file, use \texttt{decide +kernel} and add no axioms; \decl{result} does not depend on them.
+The kernel evaluations described in Section~\ref{sec:statement} (\decl{a_data}, \decl{oeis_errata}) live in the statement file, use \texttt{decide +kernel} (not \texttt{native\_decide}) and depend only on \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}; \decl{result} does not depend on them.
 
 \subsection*{Audit}
 The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, the axiom \decl{Lean.ofReduceBool} introduced by \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically the statement or its negation, up to metadata annotations, with no unfolding.
