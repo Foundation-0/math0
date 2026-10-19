@@ -1,9 +1,9 @@
 # Where Foundation0 can make progress in mathematics
 
 A survey made on 18 October 2026 by an AI research agent for Foundation0's
-[deep-fields scouting](https://github.com/Foundation-0/f0/tree/claude/sleepy-pasteur-k5knht/deep-fields). The full
+[deep-fields scouting](https://github.com/Foundation-0/f0/tree/main/deep-fields). The full
 report, with every source, is
-[deep-fields/scouting/mathematics.md](https://github.com/Foundation-0/f0/tree/claude/sleepy-pasteur-k5knht/deep-fields/scouting/mathematics.md).
+[deep-fields/scouting/mathematics.md](https://github.com/Foundation-0/f0/tree/main/deep-fields/scouting/mathematics.md).
 
 - The codetables.de counts were re-checked against the live tables the same day ([data](data/codetables/)).
 - Other figures are leads to re-check, not facts of record.
