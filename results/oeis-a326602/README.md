@@ -26,6 +26,10 @@ Closest prior work (same involution or parity method, different sequences):
 
 Neither arXiv paper mentions A326602, and A326602 is absent from google-deepmind/formal-conjectures, so it was not in the Tsoukalas et al. or OEIS Open benchmark sets.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

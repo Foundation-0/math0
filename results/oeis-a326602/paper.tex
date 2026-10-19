@@ -1,0 +1,385 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\hypersetup{pdftitle={Hanna's parity conjecture for OEIS A326602}, pdfauthor={math0}}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,noncomputable,scoped,rw,split_ifs},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {∑}{{$\sum$}}1 {∈}{{$\in$}}1
+    {∀}{{$\forall$}}1 {↔}{{$\leftrightarrow$}}1 {∧}{{$\wedge$}}1 {←}{{$\leftarrow$}}1
+    {·}{{$\cdot$}}1 {≤}{{$\le$}}1 {¬}{{$\neg$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}_2}
+\newcommand{\ZX}{\mathbb{Z}[[x]]}
+\newcommand{\co}[1]{[x^{#1}]}
+
+\title[Hanna's parity conjecture for OEIS A326602]{The coefficient of $x^{2n}$ in $\sum_{k\ge 0}(x^{2k-1}+1)^k x^k/(1+x^{2k+1})^{k+1}$ is odd if and only if $n$ is a perfect square}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 18, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $A(x)=\sum_{k\ge0}(x^{2k-1}+1)^k x^k/(1+x^{2k+1})^{k+1}$ in $\ZX$ and let $a(n)$ be the coefficient of $x^{2n}$ in $A(x)$; this is OEIS A326602.
+We prove the conjecture recorded by Paul D.~Hanna in 2019 that $a(n)$ is odd if and only if $n$ is a perfect square; the same argument also gives $A(x)\equiv\sum_{k\ge0}x^{2k^2}\pmod 2$ coefficientwise.
+The proof writes each coefficient modulo $2$ as a sum of trinomial coefficients over a finite set of triples, cancels these terms in pairs by an involution, and uses the evenness of central binomial coefficients; the same strategy was used earlier for the sibling sequences A323557 and A325046, and our result is an adaptation of it.
+To our knowledge the result is new: the entry still lists the statement as a conjecture, and we found no proof in the literature.
+The proof of the conjecture is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, in which $a(n)$ is proved equal to the coefficient of the $x$-adically convergent series and checked by the kernel against the $68$ listed terms; this statement is not part of the formal-conjectures repository.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+In 2019 Paul D.~Hanna contributed to the OEIS several power series, defined by sums such as $\sum_{n\ge0}x^n(1+x^n)^n/(1+x^{n+1})^{n+1}$ (A323557 \cite{A323557}), whose coefficients appear to be odd only on a sparse set of exponents: only at the pronic numbers $n(n+1)$ for A323557 and A325046 \cite{A325046}, and at squares or pronic numbers for the Gaussian-integer variants A323689, A323675 and A323690 \cite{A323689,A323675,A323690}.
+The sequence studied here, A326602 \cite{A326602}, contributed by Hanna on August~8, 2019, and listed as a variant of A323557, has the generating function
+\[
+  A(x)=\sum_{n\ge0}\frac{(x^{2n-1}+1)^n\,x^n}{(1+x^{2n+1})^{n+1}}=1+3x^2+2x^6+9x^8-12x^{10}+8x^{12}+\cdots,
+\]
+an even function according to the entry, and $a(n)$ is the coefficient of $x^{2n}$. The entry states ``a(n) is odd iff n is square (conjecture)''.
+
+\subsection*{Result}
+We prove the conjecture (Theorem~\ref{thm:main}); the same argument shows that $A(x)\equiv\sum_{k\ge0}x^{2k^2}\pmod 2$ coefficientwise (Corollary~\ref{cor:strong}).
+The coefficient of $x^N$ in $A(x)$ is a signed sum of products $\binom ni\binom{n+j}{j}$. Substituting $m=i+j$ turns it, modulo $2$, into a sum of trinomial coefficients $T(n,m,i)=(n+m-i)!/(i!\,(n-i)!\,(m-i)!)$ over the triples $(n,i,m)$ with $n+m+2nm=N+2i$. Both the weight and the condition are symmetric in $n$ and $m$, so the off-diagonal terms cancel in pairs; on the diagonal $T(n,n,i)$ is a multiple of the central binomial coefficient $\binom{2(n-i)}{n-i}$, hence even unless $i=n$, which forces $N=2n^2$.
+
+\subsection*{Prior work and status}
+For A323557, Ralf Stephan recorded in the entry on June~1, 2026, that the conjecture was proved by an autonomous AI agent, with a Lean file in the AlphaProof Nexus results repository \cite{APN}, by an involution on triples that preserves each term modulo~$2$ and whose fixed points contribute even terms except at positions $n(n+1)$; the entry also cites \cite[Appendix~A]{Ad} for the proof.
+For A325046, Sela Fried noted in the entry on December~17, 2025, that the conjecture is true, with a proof in \cite{Fr25}; see also \cite[Section~3.8, Theorem~50]{Fr} and \cite[Appendix~A]{Ad}. The repository \cite{APN} also has a Lean proof for A325046, by an involution whose fixed points carry the weights $\binom nk\binom{2n-k}{n-k}$, even for $k<n$; these are our diagonal weights (Lemma~\ref{lem:diag}).
+Our proof follows the same strategy: our involution $(n,i,j)\mapsto(i+j,i,n-i)$ has the shape of the map $(n,k,j)\mapsto(k+j,k,n-k)$ used for A323557 in \cite[Appendix~A]{Ad}. What is specific to A326602 is the parametrization $(n,i,m)$, $m=i+j$, in which the exponent condition and the weight are both symmetric in $n$ and $m$.
+
+The entry A326602 is still at revision~\#19 of August~11, 2019, and still labels the statement a conjecture.
+The math0 referees found that the full texts of \cite{Ad} and \cite{Fr} do not mention A326602, that it does not occur in the formal-conjectures repository \cite{FC} (at the pinned commit \texttt{c77fdd4}, which contains A323557 and A325046) or in the AlphaProof Nexus results repository, and that web searches return only the OEIS entry. They could not search the SeqFan mailing list or MathOverflow beyond web searches, so an unrecorded earlier proof cannot be ruled out completely.
+We therefore classify the result as \emph{new}, with the caveat that it is a fairly routine adaptation of the method already used for A323557 and A325046, which is the relevant prior art.
+The argument may also apply to the Gaussian siblings A323689, A323675 and A323690, whose parity patterns we confirmed numerically up to index $3000$ (for A323689, up to $400$); we have not proved them.
+
+\section{Statement}\label{sec:statement}
+
+Throughout, $\binom ab$ denotes the binomial coefficient for integers $0\le b\le a$, and $\co N F$ is the coefficient of $x^N$ in a power series $F$.
+
+\begin{definition}\label{def:main}
+For $n\ge0$ let
+\[
+  f_n(x)=\frac{(x^{2n-1}+1)^n\,x^n}{(1+x^{2n+1})^{n+1}}\in\ZX,
+\]
+where for $n=0$ the factor $(x^{-1}+1)^0$ is $1$, so that $f_0=1/(1+x)$; the denominators have constant term $1$ and are units of $\ZX$.
+Since $x^n$ divides $f_n$, the series $A=\sum_{n\ge0}f_n$ converges $x$-adically, and $\co NA=\sum_{n=0}^{N}\co Nf_n$. For $n\ge0$ let $a(n)=\co{2n}A$.
+\end{definition}
+
+This is the definition of A326602 (offset $0$) \cite{A326602}, whose NAME and FORMULA sections read, verbatim:
+\begin{quote}\scriptsize
+\verb|G.f.: Sum_{n>=0} (x^(2*n-1) + 1)^n * x^n / (1 + x^(2*n+1))^(n+1), an even function.|\\
+\verb|G.f. A(x) = Sum_{n>=0} a(n)*x^(2*n), where [...]|\\
+\verb|a(n) is odd iff n is square (conjecture).|
+\end{quote}
+The entry, including this conjecture, was contributed by \emph{Paul D.~Hanna}, Aug.~08, 2019.
+
+\begin{theorem}\label{thm:main}
+For every integer $n\ge0$, $a(n)$ is odd if and only if $n=k^2$ for some integer $k\ge0$.
+\end{theorem}
+
+Theorem~\ref{thm:main} is exactly the formal statement below and is what the Lean proof establishes; Corollary~\ref{cor:strong}, its extension to all coefficients of $A$, is proved on paper only.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A326602.lean}, reviewed for fidelity and frozen (SHA-256 \texttt{dcf51cfe\ldots 1459137}) before any proof attempt. Its main declarations are, verbatim except that docstrings, proofs and some auxiliary lemmas are omitted:
+\begin{lstlisting}
+namespace Math0.Statements.A326602
+open PowerSeries
+noncomputable def summand (n : ℕ) : PowerSeries ℤ :=
+  (X ^ (2 * n - 1) + 1) ^ n * X ^ n * invOfUnit ((1 + X ^ (2 * n + 1)) ^ (n + 1)) 1
+theorem summand_spec (n : ℕ) :
+    (1 + X ^ (2 * n + 1)) ^ (n + 1) * summand n = (X ^ (2 * n - 1) + 1) ^ n * X ^ n
+noncomputable def A : PowerSeries ℤ :=
+  mk fun N => ∑ n ∈ Finset.range (N + 1), coeff N (summand n)
+open scoped PowerSeries.WithPiTopology in
+theorem hasSum_summand : HasSum summand A
+def binom (n k : ℕ) : ℕ := n.descFactorial k / k.factorial
+def term (N m i : ℕ) : ℤ :=
+  if (2 * m - 1) * i + m ≤ N ∧ (N - ((2 * m - 1) * i + m)) % (2 * m + 1) = 0 then
+    (-1) ^ ((N - ((2 * m - 1) * i + m)) / (2 * m + 1)) *
+      ((binom m i * binom (m + (N - ((2 * m - 1) * i + m)) / (2 * m + 1))
+        ((N - ((2 * m - 1) * i + m)) / (2 * m + 1)) : ℕ) : ℤ)
+  else 0
+def iBound (N m : ℕ) : ℕ := min m ((N - m) / (2 * m - 1))
+def coeffA (N : ℕ) : ℤ :=
+  ∑ m ∈ Finset.range (N + 1), ∑ i ∈ Finset.range (iBound N m + 1), term N m i
+def a (n : ℕ) : ℤ := coeffA (2 * n)
+theorem a_eq_coeff (n : ℕ) : a n = coeff (2 * n) A
+def statement : Prop :=
+  ∀ n : ℕ, Odd (a n) ↔ IsSquare n
+end Math0.Statements.A326602
+\end{lstlisting}
+The encoding follows Definition~\ref{def:main}. \texttt{summand n} is $f_n$, with the inverse of $(1+X^{2n+1})^{n+1}$ given by Mathlib's \decl{invOfUnit}; \decl{summand_spec} proves that it really is the quotient. For $n=0$ the natural-number subtraction gives $2\cdot0-1=0$, which is harmless because the factor is raised to the power $0$. \decl{A} is defined coefficientwise as $\sum_{n\le N}\co Nf_n$; the lemma \decl{coeff_summand_of_lt} (not shown) proves $\co Nf_n=0$ for $N<n$, and \decl{hasSum_summand} proves that $A$ is the sum of the family $(f_n)$ in the coefficientwise topology of $\ZX$.
+The sequence \decl{a} is defined by an explicit, computable finite formula \decl{coeffA}, discussed in Lemma~\ref{lem:formula} below, and \decl{a_eq_coeff} proves $a(n)=\co{2n}A$; so \decl{a} is the OEIS definition itself, not a conjectured formula for it.
+The statement quantifies over all $n\in\N$ (offset $0$); \decl{Odd} is taken in $\Z$, as the terms are signed; and \texttt{IsSquare n} means $n=r\cdot r$ for some $r\in\N$, so $0$ counts as a square, consistent with $a(0)=1$.
+
+The file also contains two lemmas proved by \texttt{decide +kernel}, which compare the definitions with the OEIS data: \decl{a_data} checks all $68$ listed terms $a(0),\dots,a(67)$ (from $1,3,0,2,9,-12,\dots$ to $99128,-116668$), and \decl{coeffA_odd_data} checks that the coefficients of $x^1,x^3,\dots,x^{79}$ vanish, as ``an even function'' asserts.
+
+\section{Proof}\label{sec:proof}
+
+We follow the Lean proof. Congruences $u\equiv v$ between integers are modulo~$2$.
+
+\subsection{The explicit formula}
+The first lemma is proved in the statement file (\decl{coeff_summand}, \decl{coeff_A}, \decl{coeffA_eq}, \decl{a_eq_coeff}); our proof starts from it.
+For $0\le i\le n$ put $e(n,i)=(2n-1)i+n$; for $n=0$ only $i=0$ occurs and $e(0,0)=0$.
+
+\begin{lemma}\label{lem:formula}
+For $N\ge0$ and $0\le i\le n$ let $t(N,n,i)=(-1)^j\binom ni\binom{n+j}{j}$ if $N=e(n,i)+(2n+1)j$ for some integer $j\ge0$, and $t(N,n,i)=0$ otherwise. Then $\co Nf_n=\sum_{i=0}^{n}t(N,n,i)$, and
+\[
+  \co NA=\sum_{n=0}^{N}\sum_{i=0}^{n}t(N,n,i)=\texttt{coeffA}(N),\qquad a(K)=\texttt{coeffA}(2K).
+\]
+\end{lemma}
+
+\begin{proof}
+From $(1-y)^{-(n+1)}=\sum_{j\ge0}\binom{n+j}{j}y^j$ (Mathlib's \decl{mk_add_choose_mul_one_sub_pow_eq_one}), substituting $y\mapsto-y$ and then $y=x^{2n+1}$, we get $(1+x^{2n+1})^{-(n+1)}=\sum_{j\ge0}(-1)^j\binom{n+j}{j}x^{(2n+1)j}$. By the binomial theorem, $(x^{2n-1}+1)^nx^n=\sum_{i=0}^n\binom nix^{e(n,i)}$. Multiplying, $f_n=\sum_{i\le n}\sum_{j\ge0}(-1)^j\binom ni\binom{n+j}jx^{e(n,i)+(2n+1)j}$, and for fixed $i$ at most one $j$ contributes to $x^N$. The second formula follows from $\co NA=\sum_{n\le N}\co Nf_n$. In Lean, \texttt{term N n i} is $t(N,n,i)$ written with the quotient $j=(N-e(n,i))/(2n+1)$ and with binomial coefficients computed as \decl{binom}, proved equal to \decl{Nat.choose}; \decl{coeffA} further restricts $i$ to $i\le(N-n)/(2n-1)$, and \decl{coeffA_eq} proves that the omitted terms vanish.
+\end{proof}
+
+\subsection{Arithmetic identities}
+For $0\le i\le\min(n,m)$ define the trinomial coefficient
+\[
+  T(n,m,i)=\binom{n+m-i}{i}\binom{n+m-2i}{n-i}=\frac{(n+m-i)!}{i!\,(n-i)!\,(m-i)!}.
+\]
+
+\begin{lemma}\label{lem:arith}
+Let $n,i,j,m,m'\ge0$ with $i\le n$.
+\begin{enumerate}
+\item[(a)] $e(n,i)+(2n+1)j+2i=n+(i+j)+2n(i+j)$.
+\item[(b)] If $n+m+2nm=n+m'+2nm'$, then $m=m'$.
+\item[(c)] $\binom ni\binom{n+j}{j}=T(n,i+j,i)$.
+\item[(d)] If $i\le m$, then $T(n,m,i)=T(m,n,i)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) If $n=0$ then $i=0$ and both sides equal $j$. If $n\ge1$, the left side is $2ni-i+n+2nj+j+2i=n+(i+j)+2n(i+j)$.
+(b) $n+m+2nm=n+(2n+1)m$ and $2n+1>0$.
+(c) With $m=i+j$ we have $n+m-i=n+j$ and $n+m-2i=n+j-i$. By $\binom{a}{b}\binom{b}{c}=\binom ac\binom{a-c}{b-c}$ with $a=n+j$, $b=n$, $c=i$, and $\binom{n+j}{n}=\binom{n+j}{j}$, we get $\binom ni\binom{n+j}j=\binom{n+j}{i}\binom{n+j-i}{n-i}=T(n,i+j,i)$.
+(d) $\binom{n+m-2i}{n-i}=\binom{n+m-2i}{m-i}$, since $(n-i)+(m-i)=n+m-2i$.
+\end{proof}
+
+\subsection{Reduction modulo \texorpdfstring{$2$}{2} to a sum over triples}
+For $N\ge0$ let
+\[
+  S(N)=\bigl\{(n,i,m)\in\{0,\dots,N\}^3:\ i\le n,\ i\le m,\ n+m+2nm=N+2i\bigr\}.
+\]
+(The bound by $N$ is in fact implied by the other conditions; it makes the finiteness explicit.)
+
+\begin{lemma}\label{lem:termcast}
+Let $N\ge0$ and $0\le i\le n$. Then
+\[
+  t(N,n,i)\equiv\sum_{\substack{0\le m\le N\\ i\le m,\ n+m+2nm=N+2i}}T(n,m,i).
+\]
+\end{lemma}
+
+\begin{proof}
+Suppose $N=e(n,i)+(2n+1)j$ with $j\ge0$, and put $m=i+j$. By Lemma~\ref{lem:arith}(a), $n+m+2nm=N+2i$; clearly $i\le m$; and $m\le N$, because $i\le e(n,i)$ and $j\le(2n+1)j$. By Lemma~\ref{lem:arith}(b), $m$ is the only index satisfying the conditions of the sum, so the sum equals $T(n,i+j,i)=\binom ni\binom{n+j}{j}$ by Lemma~\ref{lem:arith}(c), and this is congruent to $t(N,n,i)=(-1)^j\binom ni\binom{n+j}j$.
+Otherwise $t(N,n,i)=0$, and the sum is empty: if some $m\ge i$ satisfied $n+m+2nm=N+2i$, then with $j=m-i$ Lemma~\ref{lem:arith}(a) would give $N=e(n,i)+(2n+1)j$.
+\end{proof}
+
+\begin{lemma}\label{lem:coeffcast}
+For every $N\ge0$, $\displaystyle \co NA=\texttt{coeffA}(N)\equiv\sum_{(n,i,m)\in S(N)}T(n,m,i)$.
+\end{lemma}
+
+\begin{proof}
+By Lemmas~\ref{lem:formula} and~\ref{lem:termcast}, $\co NA$ is congruent to the sum of $T(n,m,i)$ over $n\le N$, $i\le n$ and $m\le N$ with $i\le m$ and $n+m+2nm=N+2i$. Since $n\le N$, the range $i\le n$ may be replaced by $i\le N$ together with the condition $i\le n$; the result is the sum over $S(N)$.
+\end{proof}
+
+For example, $S(2)=\{(0,0,2),(2,0,0),(1,1,1)\}$, each with weight $T=1$; these triples account for the coefficient $1$ of $x^2$ in each of $f_0$, $f_2$ and $f_1$, and indeed $a(1)=3$.
+
+\subsection{The involution}
+\begin{lemma}\label{lem:involution}
+For every $N\ge0$,
+\[
+  \sum_{(n,i,m)\in S(N)}T(n,m,i)\equiv\sum_{\substack{(n,i,m)\in S(N)\\ n=m}}T(n,n,i).
+\]
+\end{lemma}
+
+\begin{proof}
+The conditions defining $S(N)$ are symmetric in $n$ and $m$, so $\sigma(n,i,m)=(m,i,n)$ is an involution of $S(N)$ that preserves the set $S'(N)$ of triples with $n\ne m$ and has no fixed points in it. By Lemma~\ref{lem:arith}(d), $T(\sigma(x))=T(x)$ for $x\in S(N)$, writing $T(x)=T(n,m,i)$ for $x=(n,i,m)$. Hence $S'(N)$ is partitioned into pairs $\{x,\sigma(x)\}$, each contributing $2T(x)\equiv0$, and the sum over $S'(N)$ is even.
+\end{proof}
+
+\subsection{The diagonal}
+\begin{lemma}\label{lem:diag}
+Let $N\ge0$ and $(n,i,n)\in S(N)$. If $i<n$, then $T(n,n,i)$ is even. If $i=n$, then $N=2n^2$ and $T(n,n,n)=1$.
+\end{lemma}
+
+\begin{proof}
+We have $T(n,n,i)=\binom{2n-i}{i}\binom{2(n-i)}{n-i}$. For $k\ge1$ the central binomial coefficient is even, since $\binom{2k}{k}=\binom{2k-1}{k-1}+\binom{2k-1}{k}=2\binom{2k-1}{k-1}$; this is Mathlib's \decl{Nat.two_dvd_centralBinom_of_one_le}. Taking $k=n-i\ge1$ proves the first claim. If $i=n$, the condition $n+n+2n^2=N+2i$ becomes $N=2n^2$, and $T(n,n,n)=\binom nn\binom00=1$.
+\end{proof}
+
+\subsection{Proof of the theorems}
+\begin{proposition}\label{prop:acast}
+For every $K\ge0$, $a(K)\equiv1$ if $K$ is a perfect square and $a(K)\equiv0$ otherwise.
+\end{proposition}
+
+\begin{proof}
+By Lemmas~\ref{lem:formula}, \ref{lem:coeffcast} and~\ref{lem:involution}, $a(K)=\co{2K}A$ is congruent to the sum of $T(n,n,i)$ over the diagonal triples $(n,i,n)\in S(2K)$. By Lemma~\ref{lem:diag}, each such term is even unless $i=n$ and $2K=2n^2$, that is, $K=n^2$.
+If $K=k^2$, the triple $(k,k,k)$ lies in $S(2K)$ (note $k\le 2k^2$ and $k+k+2k^2=2K+2k$), and it is the only diagonal triple with $i=n$, since $n^2=K=k^2$ forces $n=k$; its weight is $1$, so $a(K)\equiv1$. If $K$ is not a square, every term is even and $a(K)\equiv0$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+An integer is odd if and only if it is congruent to $1$ modulo $2$, so the claim is Proposition~\ref{prop:acast}.
+\end{proof}
+
+\begin{corollary}\label{cor:strong}
+For every $N\ge0$, $\co NA$ is odd if and only if $N=2k^2$ for some integer $k\ge0$. Equivalently, $A(x)\equiv\sum_{k\ge0}x^{2k^2}\pmod 2$ coefficientwise.
+\end{corollary}
+
+\begin{proof}
+Lemmas~\ref{lem:formula}--\ref{lem:diag} hold for every $N$ (and are formalized in that generality), so $\co NA$ is congruent to the sum of $T(n,n,i)$ over the diagonal triples $(n,i,n)\in S(N)$, each even unless $i=n$ and $N=2n^2$. If $N=2k^2$, the only such triple is $(k,k,k)$, of weight $1$, as in the proof of Proposition~\ref{prop:acast}.
+\end{proof}
+
+\begin{remark}\label{rem:odd}
+Corollary~\ref{cor:strong} is not itself a Lean theorem. For odd $N$ it only shows that $\co NA$ is even, not that it vanishes, as the entry asserts and the statement file checks for $x^1,\dots,x^{79}$.
+\end{remark}
+
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in \path{lean/Math0/Frontier/OEIS/A326602.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file of Section~\ref{sec:statement} and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A326602.result}, of type \decl{statement}; its proof rewrites \texttt{Odd (a n)} as \texttt{((a n : $\mathbb{Z}$) : ZMod 2) = 1} (Mathlib's \decl{ZMod.intCast_eq_one_iff_odd}) and applies \decl{a_cast}. The private auxiliary declarations correspond to Section~\ref{sec:proof} as follows: \decl{key_arith}, \decl{inj_aux}, \decl{T_eq} and \decl{T_symm} are Lemma~\ref{lem:arith}(a)--(d), with \decl{T} the weight $T(n,m,i)$; \decl{term_cast} is Lemma~\ref{lem:termcast}; \decl{summand_cast} and \decl{coeffA_cast} give Lemma~\ref{lem:coeffcast}, with \decl{S} the set $S(N)$; \decl{sum_S_eq_diag} is Lemma~\ref{lem:involution}, proved with Mathlib's \decl{Finset.sum_involution}; \decl{T_diag_even} and \decl{diag_cases} are Lemma~\ref{lem:diag}; and \decl{a_cast} is Proposition~\ref{prop:acast}. The proof uses no large kernel computation; its only \texttt{decide} proves $-1=1$ in \texttt{ZMod 2}.
+
+\subsection*{Audit}
+The file ends with the command \texttt{\#math0\_settles} applied to \decl{result} and \decl{Math0.Statements.A326602.statement}. This command, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a definition of type \texttt{Prop} without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, which rejects \decl{sorryAx}, the axiom \decl{Lean.ofReduceBool} introduced by \decl{native_decide}, and custom axioms; and (3) the type of \decl{result} is syntactically \decl{statement} or its negation, after removing metadata annotations and without unfolding. On this file it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A326602.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A326602.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A326602.result' proves 'Math0.Statements.A326602.statement'
+\end{lstlisting}The proof file contains no \texttt{sorry}, \texttt{native\_decide}, \texttt{set\_option} or new axioms.
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command) and checks that the pinned dependencies are unmodified. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A326602.lean} in the directory \path{lean}.
+
+\begin{small}
+\begin{thebibliography}{99}
+
+\bibitem{Ad}
+T.~Adamczewski, \emph{OEIS Open: How many conjectures can language models turn into theorems?}, arXiv:2608.11941 [cs.AI], 2026.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Fr25}
+S.~Fried, \emph{Proof of a conjecture stated in A325046}, 2025, \url{https://oeis.org/A325046/a325046.pdf}.
+
+\bibitem{Fr}
+S.~Fried, \emph{Further proofs of conjectures from the OEIS}, arXiv:2607.24832 [math.GM], 2026.
+
+\bibitem{APN}
+Google DeepMind, \emph{AlphaProof Nexus results}, Lean files \path{APNOutputs/OEIS/oeis_323557_conjecture_0.lean} and \path{APNOutputs/OEIS/a325046_odd_terms_at_k_times_k_plus_1.lean}, \url{https://github.com/google-deepmind/alphaproof-nexus-results}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A323557}
+The OEIS Foundation Inc., \url{https://oeis.org/A323557}, entry by P.~D. Hanna (Feb.~3, 2019); comment by R.~Stephan (Jun.~1, 2026).
+
+\bibitem{A323675}
+The OEIS Foundation Inc., \url{https://oeis.org/A323675}, entry by P.~D. Hanna (Feb.~10, 2019).
+
+\bibitem{A323689}
+The OEIS Foundation Inc., \url{https://oeis.org/A323689}, entry by P.~D. Hanna (Feb.~14, 2019).
+
+\bibitem{A323690}
+The OEIS Foundation Inc., \url{https://oeis.org/A323690}, entry by P.~D. Hanna (Feb.~13, 2019).
+
+\bibitem{A325046}
+The OEIS Foundation Inc., \url{https://oeis.org/A325046}, entry by P.~D. Hanna (Mar.~26, 2019); comment by S.~Fried (Dec.~17, 2025).
+
+\bibitem{A326602}
+The OEIS Foundation Inc., \url{https://oeis.org/A326602}, entry by P.~D. Hanna (Aug.~8, 2019); revision \#19, Aug.~11, 2019.
+
+\end{thebibliography}
+\end{small}
+
+\end{document}

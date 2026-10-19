@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: Conjecture: b(n) and c(n) are coprime for all n, s
 
 Referees: OEIS A262957 (local mirror, rev #80, Mar 2025): Robert Israel's comment of Dec 22 2015 states the conjecture, verified for n <= 10000, and it is still listed as open. Peter Bala, "A note on A262957 and A263295" (Dec 24 2015, linked from the OEIS entry): proves the simple continued fraction expansion [0;1,1,2,1,3,4,1,5,6,...] of the limit, but not Israel's recurrence or the coprimality. The cross-referenced entries A263295, A346590, A244279 and A244280 contain no proof. A262957 is absent from Tom Adamczewski, "OEIS Open: How many conjectures can language models turn into theorems?", arXiv:2608.11941 (2026), and from the epoch-research/LeanOpenProblems and LeanOpenProblems-results repositories. Web searches of arXiv, MathOverflow, Math StackExchange and SeqFan found no prior resolution. The proof uses the classical determinant identity for continued-fraction convergents (p_{k+1}q_k - p_k q_{k+1} = ±1).
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

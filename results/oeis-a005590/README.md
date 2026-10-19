@@ -27,6 +27,10 @@ Referees: I found no prior resolution.
 - Not in the OEIS Open / Tsoukalas et al. 492-conjecture set (arXiv:2608.11941, 2605.22763) and not in google-deepmind/formal-conjectures.
 - Not checked: B. Reznick, 'A new sequence with many properties', Abstracts AMS 5 (1984) 16. Its scan is on oeis.org, which is rate-limited here.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

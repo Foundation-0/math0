@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: Conjecture: a(n) = n-1 if and only if n is a long 
 
 Referees: OEIS A335012 (Sen-Peng Eu, May 19 2020): the current revision #31 (Mar 12 2026) still lists this as a conjecture, with no %E line recording a resolution. In the same entry, Robert Israel's comment (Jun 25 2020) gives a(n) = A084680(n), the order of 10 mod n, when gcd(n,30) = 1. That implicitly settles the coprime-to-30 case but not n divisible by 2, 3 or 5. Cross-references: A006883 (long period primes, including 2) and A084680; neither mentions a proof. Background only: https://en.wikipedia.org/wiki/Repunit (pigeonhole argument that some repunit is a multiple of n; R_k ≡ k mod 3), https://en.wikipedia.org/wiki/Full_reptend_prime, https://mathworld.wolfram.com/FullReptendPrime.html. Web searches of arXiv, MathOverflow, Math StackExchange, SeqFan and the Google index found no earlier proof or counterexample.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

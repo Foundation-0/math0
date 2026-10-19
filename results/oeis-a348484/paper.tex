@@ -1,0 +1,385 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw,split_ifs},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {∀}{{$\forall$}}1 {↔}{{$\leftrightarrow$}}1
+    {¬}{{$\neg$}}1 {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {→}{{$\to$}}1 {≤}{{$\le$}}1
+    {≥}{{$\ge$}}1 {≠}{{$\ne$}}1 {∈}{{$\in$}}1 {×}{{$\times$}}1 {⟨}{{$\langle$}}1
+    {⟩}{{$\rangle$}}1 {←}{{$\leftarrow$}}1 {²}{{$^2$}}1 {·}{{$\cdot$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Fix}{\operatorname{Fix}}
+\newcommand{\B}{B_n}
+
+\title[No two squares two steps apart in a row or column]{The maximum number of squares of an $n\times n$ board with no two exactly two steps apart in a row or column: Yang Hong's conjecture for OEIS A348484}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 18, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $a(n)$ be the largest number of squares of an $n\times n$ chessboard that can be chosen so that no two chosen squares lie in the same row at column distance exactly $2$, or in the same column at row distance exactly $2$ (OEIS A348484).
+We prove the formulas conjectured in that entry: $a(n)=n^2/2$ for $n\equiv0\pmod 4$, $a(n)=(n^2+1)/2$ for odd $n$, and $a(n)=n^2/2+2$ for $n\equiv2\pmod4$; equivalently $2a(n)=n^2+\varepsilon(n)$ with $\varepsilon(n)=0,1,4,1$ for $n\equiv0,1,2,3\pmod 4$.
+The matching lower bounds come from a $2\times2$-block checkerboard already described in the entry by R.~J. Mathar; the new part is the upper bound, obtained from an explicit involution of the board that pairs squares two steps apart and has exactly $\varepsilon(n)$ fixed points.
+To our knowledge this is a new result, although an elementary one: it also follows from the independence number of grid graphs, and the OEIS entry still lists the formulas as conjectures.
+The theorem is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, whose definitions are checked by the kernel against all ten listed terms; this statement is not part of the formal-conjectures repository.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+The OEIS sequence A348484 \cite{A348484}, contributed by Yang Hong on October~20, 2021, gives the maximum number $a(n)$ of squares of an $n\times n$ chessboard that can be chosen so that no two chosen squares are \emph{two steps apart}, that is, in the same row with columns differing by exactly $2$, or in the same column with rows differing by exactly $2$ (Definition~\ref{def:main}).
+Its listed terms are $1,4,5,8,13,20,25,32,41,52$ for $n=1,\dots,10$.
+The entry's FORMULA section records three conjectured formulas, one for each residue class of $n$ modulo $4$ with odd $n$ combined (Section~\ref{sec:statement}).
+We prove them for every $n\ge1$ (Theorem~\ref{thm:main}).
+
+\subsection*{Prior work}
+On December~3, 2022, R.~J. Mathar added a comment to the entry: the sequence with generating function
+\[
+  \frac{-x\,(1+2x-2x^2+2x^3+x^4)}{(1+x)(1+x^2)(x-1)^3}
+\]
+``is a lower bound for a(n) achieved by packing 2x2 squares with 1's and 2x2 squares with 0's in a checkerboard pattern into the chessboard.''
+Its coefficients are exactly the conjectured values (Mathar's configuration, with the corner block filled with $1$'s, is the set $S_0$ of Definition~\ref{def:colour}, whose size is computed in Proposition~\ref{prop:key} and Lemma~\ref{lem:A}).
+So the conjectured formulas were known to be lower bounds; the comment does not address an upper bound.
+The only cross-reference of the entry is A048716 \cite{A048716}, the numbers $k$ with $k \mathbin{\mathrm{AND}} 4k=0$: a single row, read as the binary number $k=\sum_{j\in\text{row}}2^j$, contains no two squares two steps apart exactly when $k$ belongs to A048716.
+In revision \#33 (December~6, 2022), which the referees found to be the current one, the formulas are still labelled ``Conjectures'', the keyword \texttt{more} is set, and no proof is recorded.
+The math0 referees found no proof of the upper bound on arXiv, MathOverflow, Mathematics Stack Exchange, the SeqFan mailing list, or in a general web search, and no other OEIS entry that cites A348484.
+The statement is not among the OEIS statements of the formal-conjectures repository \cite{FC}.
+
+We therefore classify the result as \emph{new}, with a caveat: it is elementary.
+The ``two steps apart'' graph on the board is a disjoint union of four grid graphs, and the result follows from the standard fact that the grid graph $P_r\mathbin{\square}P_s$ has independence number $\lceil rs/2\rceil$; see Remark~\ref{rem:grid}, where we also explain how our proof is this argument written without coordinates on the four grids.
+
+\section{Statement}\label{sec:statement}
+
+\begin{definition}\label{def:main}
+Let $n\ge0$, and let $\B=\{0,\dots,n-1\}^2$ be the set of squares of the $n\times n$ board, $(i,j)$ lying in row $i$ and column $j$. Squares $c=(i,j)$ and $d=(i',j')$ are \emph{two steps apart} if
+\[
+  \bigl(i=i'\ \text{and}\ |j-j'|=2\bigr)\quad\text{or}\quad\bigl(j=j'\ \text{and}\ |i-i'|=2\bigr).
+\]
+A set $S\subseteq\B$ is \emph{admissible} if no two of its squares are two steps apart, and $a(n)$ is the largest size of an admissible set (the empty set is admissible, so $a(n)$ is well defined; $a(0)=0$).
+\end{definition}
+
+The entry A348484 \cite{A348484}, authored by Yang Hong (October~20, 2021), has offset $1$ and name ``Maximum number of squares on an n X n chessboard such that no two are two steps apart horizontally or vertically.''
+Its FORMULA section (revision \#33, December~6, 2022) contains the following unsigned lines, verbatim:
+\begin{quote}
+{\small\texttt{Conjectures:}\\
+\texttt{a(n) = n\^{}2/2 for n == 0 (mod 4).}\\
+\texttt{a(n) = (n\^{}2 + 1)/2 for n == 1 or 3 (mod 4).}\\
+\texttt{a(n) = n\^{}2/2 + 2 for n == 2 (mod 4).}}
+\end{quote}
+
+\begin{theorem}\label{thm:main}
+For every $n\ge1$: $a(n)=n^2/2$ if $n\equiv0\pmod4$, $a(n)=(n^2+1)/2$ if $n\equiv1$ or $3\pmod4$, and $a(n)=n^2/2+2$ if $n\equiv2\pmod4$. Equivalently, for every $n\ge1$,
+\[
+  2a(n)=n^2+\varepsilon(n),\qquad \varepsilon(n)=\begin{cases}0,& n\equiv0\pmod 4,\\ 1,& n\equiv1\text{ or }3\pmod4,\\ 4,& n\equiv2\pmod4.\end{cases}
+\]
+\end{theorem}
+
+The identity $2a(n)=n^2+\varepsilon(n)$ also holds, trivially, for $n=0$, and the proof in Section~\ref{sec:proof} does not use $n\ge1$; the theorem, like the formal statement below, concerns $n\ge1$ only, matching the offset of the entry.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in the file \path{lean/Math0/Statements/OEIS/A348484.lean}, and was reviewed for fidelity and frozen (SHA-256 \texttt{6dc8c7d5\ldots 1a045c66}) before any proof attempt.
+Its definitions and the statement are, verbatim except that the file header (copyright notice and \texttt{import Mathlib}), docstrings, blank lines and the data-check definitions and lemmas discussed below are omitted:
+\begin{lstlisting}
+namespace Math0.Statements.A348484
+def TwoApart {n : ℕ} (c d : Fin n × Fin n) : Prop :=
+  (c.1 = d.1 ∧ (c.2.val + 2 = d.2.val ∨ d.2.val + 2 = c.2.val)) ∨
+    (c.2 = d.2 ∧ (c.1.val + 2 = d.1.val ∨ d.1.val + 2 = c.1.val))
+instance {n : ℕ} (c d : Fin n × Fin n) : Decidable (TwoApart c d) :=
+  inferInstanceAs (Decidable (_ ∨ _))
+def Admissible {n : ℕ} (S : Finset (Fin n × Fin n)) : Prop :=
+  ∀ c ∈ S, ∀ d ∈ S, ¬ TwoApart c d
+instance {n : ℕ} (S : Finset (Fin n × Fin n)) : Decidable (Admissible S) :=
+  inferInstanceAs (Decidable (∀ c ∈ S, ∀ d ∈ S, ¬ TwoApart c d))
+def a (n : ℕ) : ℕ :=
+  ((Finset.univ : Finset (Finset (Fin n × Fin n))).filter Admissible).sup Finset.card
+def statement : Prop :=
+  ∀ n : ℕ, 1 ≤ n →
+    (n % 4 = 0 → a n = n ^ 2 / 2) ∧
+    (n % 4 = 1 ∨ n % 4 = 3 → a n = (n ^ 2 + 1) / 2) ∧
+    (n % 4 = 2 → a n = n ^ 2 / 2 + 2)
+end Math0.Statements.A348484
+\end{lstlisting}
+A square is an element of \texttt{Fin n × Fin n} (row, column), and \decl{TwoApart} is Definition~\ref{def:main} with $|x-y|=2$ written as $x+2=y\lor y+2=x$.
+\texttt{a n} is the supremum of the cardinalities of all admissible subsets of the board, i.e.\ their maximum, since $\emptyset$ is admissible.
+The statement quantifies over all $n\ge1$, matching the offset.
+In it, \texttt{/} is division in $\N$, which is exact in each case ($n^2$ is even for even $n$, $n^2+1$ is even for odd $n$), so the three clauses mean the same as the entry's rational expressions; the three hypotheses cover every residue of $n$ modulo $4$.
+
+The reading of ``two steps apart horizontally or vertically'' is confirmed by the entry's examples: for $n=2$ all four squares are chosen, so diagonal neighbours are allowed; the $n=4$ example \texttt{1100/1100/0011/0011} contains squares two steps apart diagonally; and the $n=5$ example row \texttt{11001} contains squares three and four steps apart in a row.
+
+\subsection*{Data check}
+The definition of \decl{a} enumerates all $2^{n^2}$ subsets of the board, so the kernel can evaluate it directly only for very small $n$. The statement file proves
+\begin{lstlisting}
+theorem a_eq_of_cert {n v : ℕ} (S : Finset (Fin n × Fin n)) (hS : Admissible S)
+    (hcard : S.card = v) (lab : Fin n × Fin n → ℕ) (hlt : ∀ c, lab c < v)
+    (hfib : ∀ c d, lab c = lab d → c = d ∨ TwoApart c d) : a n = v
+theorem a_data : (List.range 10).map (fun i => a (i + 1)) =
+    [1, 4, 5, 8, 13, 20, 25, 32, 41, 52]
+\end{lstlisting}
+The lemma \decl{a_eq_of_cert} is a general certificate principle: an admissible set of $v$ squares gives $a(n)\ge v$, and a labelling of the squares by labels $<v$ in which two distinct squares with the same label are two steps apart gives $a(n)\le v$, because the labelling is injective on any admissible set.
+For each $1\le n\le10$ the file contains such a certificate, a witness given by row bitmasks and a label table, both found by computer from a maximum matching of the ``two steps apart'' graph, and its four side conditions are checked by \texttt{decide +kernel}, i.e.\ by evaluation in the Lean kernel.
+For $n=3$, for example, the witness and the labels are (column $0$ on the left)
+\[
+  \begin{matrix} 0&0&1\\ 0&1&1\\ 1&1&0\end{matrix}
+  \qquad\qquad
+  \begin{matrix} 0&1&3\\ 2&4&2\\ 0&1&3\end{matrix}
+\]
+so the five labels $0,\dots,4$ show $a(3)\le5$, and the five chosen squares show $a(3)\ge5$.
+The theorem \decl{a_data} assembles the ten values, which agree with all ten listed terms of A348484.
+Independently, \decl{a_small} evaluates $a(1),a(2),a(3)$ by brute force from the definition, also with \texttt{decide +kernel}.
+These lemmas validate the definitions only; the proof in Section~\ref{sec:proof} does not use them.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A348484.lean}; with each step we name the corresponding Lean declaration. Fix $n\ge0$.
+
+\begin{definition}[\decl{f}]\label{def:f}
+Let $f\colon\N\to\N$ be given by $f(j)=j+2$ if $j\bmod 4\in\{0,1\}$ and $f(j)=j-2$ if $j\bmod4\in\{2,3\}$.
+\end{definition}
+
+\begin{lemma}[\decl{f_f}, \decl{f_cases}]\label{lem:f}
+For every $j\in\N$, $f(f(j))=j$ and $|f(j)-j|=2$; in particular $f(j)\ne j$.
+\end{lemma}
+
+\begin{proof}
+If $j\bmod4\in\{0,1\}$ then $f(j)=j+2$ has residue $2$ or $3$, so $f(f(j))=j$. If $j\bmod4\in\{2,3\}$ then $j\ge2$, so $f(j)=j-2$ is a genuine difference in $\N$, and it has residue $0$ or $1$, so $f(f(j))=j$. In both cases $|f(j)-j|=2$.
+\end{proof}
+
+\begin{definition}[\decl{sig}]\label{def:sigma}
+Define $\sigma\colon\B\to\B$ by
+\[
+  \sigma(i,j)=\begin{cases}
+    (i,f(j)) & \text{if } f(j)<n,\\
+    (f(i),j) & \text{if } f(j)\ge n \text{ and } f(i)<n,\\
+    (i,j) & \text{if } f(j)\ge n \text{ and } f(i)\ge n.
+  \end{cases}
+\]
+Write $\Fix\sigma=\{c\in\B:\sigma(c)=c\}$.
+\end{definition}
+
+\begin{lemma}[\decl{sig_sig}, \decl{sig_eq_iff}, \decl{sig_adj}]\label{lem:sigma}
+Let $c=(i,j)\in\B$.
+\begin{enumerate}
+\item $\sigma(\sigma(c))=c$; in particular $\sigma$ is injective.
+\item $\sigma(c)=c$ if and only if $f(i)\ge n$ and $f(j)\ge n$.
+\item If $\sigma(c)\ne c$, then $c$ and $\sigma(c)$ are two steps apart.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+We go through the three cases of Definition~\ref{def:sigma}.
+If $f(j)<n$, then $\sigma(c)=(i,f(j))$, a square in the same row whose column differs from $j$ by exactly $2$ (Lemma~\ref{lem:f}); in particular $\sigma(c)\ne c$. Since $f(f(j))=j<n$, the first case applies to $\sigma(c)$ and gives $\sigma(\sigma(c))=(i,j)$.
+If $f(j)\ge n$ and $f(i)<n$, then $\sigma(c)=(f(i),j)$, a square in the same column whose row differs from $i$ by exactly $2$, so again $\sigma(c)\ne c$. The column of $\sigma(c)$ is still $j$, with $f(j)\ge n$, and $f(f(i))=i<n$, so the second case applies to $\sigma(c)$ and gives $\sigma(\sigma(c))=(i,j)$.
+In the third case $\sigma(c)=c$. This proves (1), shows that $\sigma(c)=c$ happens exactly in the third case, which is (2), and proves (3).
+\end{proof}
+
+\begin{definition}[\decl{P}]\label{def:colour}
+The \emph{colour} of $(i,j)\in\B$ is $\chi(i,j)=(\lfloor i/2\rfloor+\lfloor j/2\rfloor)\bmod 2$. Let $S_0=\{c\in\B:\chi(c)=0\}$ and $S_1=\B\setminus S_0$.
+\end{definition}
+
+Thus $S_0$ is the union of the $2\times2$ blocks $\{2p,2p+1\}\times\{2q,2q+1\}$ (cut off at the border) with $p+q$ even; this is Mathar's checkerboard of $2\times2$ blocks.
+
+\begin{lemma}[\decl{P_flip}, \decl{P_of_fix}]\label{lem:colour}
+\begin{enumerate}
+\item If $c,d\in\B$ are two steps apart, then $\chi(c)\ne\chi(d)$.
+\item If $\sigma(c)=c$, then $\chi(c)=0$; that is, $\Fix\sigma\subseteq S_0$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) If $c=(i,j)$ and $d=(i,j+2)$, then $\lfloor (j+2)/2\rfloor=\lfloor j/2\rfloor+1$, so the colours differ; the other cases are symmetric.
+(2) Let $c=(i,j)$. By Lemma~\ref{lem:sigma}(2), $f(i)\ge n>i$, so $f(i)=i+2$ and $i\bmod4\in\{0,1\}$; hence $\lfloor i/2\rfloor$ is even. Likewise $\lfloor j/2\rfloor$ is even, so $\chi(c)=0$.
+\end{proof}
+
+\begin{proposition}[\decl{key}]\label{prop:key}
+\begin{enumerate}
+\item Every admissible $T\subseteq\B$ satisfies $2|T|\le n^2+|\Fix\sigma|$.
+\item $S_0$ is admissible and $2|S_0|\ge n^2+|\Fix\sigma|$.
+\end{enumerate}
+Consequently $a(n)=|S_0|$ and $2a(n)=n^2+|\Fix\sigma|$.
+\end{proposition}
+
+\begin{proof}
+(1) Let $T$ be admissible and $\sigma(T)=\{\sigma(c):c\in T\}$; then $|\sigma(T)|=|T|$ by Lemma~\ref{lem:sigma}(1). We claim $T\cap\sigma(T)\subseteq\Fix\sigma$. Let $c\in T\cap\sigma(T)$, say $c=\sigma(d)$ with $d\in T$. If $\sigma(d)\ne d$, then $d$ and $\sigma(d)=c$ are two squares of $T$ that are two steps apart, by Lemma~\ref{lem:sigma}(3), contradicting admissibility. Hence $\sigma(d)=d$, so $c=d$ and $\sigma(c)=c$. By inclusion--exclusion,
+\[
+  2|T|=|T|+|\sigma(T)|=|T\cup\sigma(T)|+|T\cap\sigma(T)|\le n^2+|\Fix\sigma|.
+\]
+
+(2) Two squares of $S_0$ have the same colour, so by Lemma~\ref{lem:colour}(1) they are not two steps apart; thus $S_0$ is admissible.
+Let $c\in S_1$. Then $\sigma(c)\ne c$ by Lemma~\ref{lem:colour}(2), so $c$ and $\sigma(c)$ are two steps apart (Lemma~\ref{lem:sigma}(3)) and $\chi(\sigma(c))\ne\chi(c)=1$, i.e.\ $\sigma(c)\in S_0$. Moreover $\sigma(c)\notin\Fix\sigma$: otherwise $c=\sigma(\sigma(c))=\sigma(c)$ would be fixed, and fixed squares lie in $S_0$. Hence $\sigma(S_1)$ and $\Fix\sigma$ are disjoint subsets of $S_0$ (Lemma~\ref{lem:colour}(2)), and since $\sigma$ is injective,
+\[
+  n^2-|S_0|+|\Fix\sigma|=|S_1|+|\Fix\sigma|=|\sigma(S_1)|+|\Fix\sigma|\le|S_0|.
+\]
+
+For the consequence: $a(n)\ge|S_0|$ because $S_0$ is admissible, and every admissible $T$ satisfies $2|T|\le n^2+|\Fix\sigma|\le2|S_0|$ by (1) and (2), so $a(n)=|S_0|$. Applying (1) to $T=S_0$ and combining with (2) gives $2|S_0|=n^2+|\Fix\sigma|$.
+\end{proof}
+
+\begin{lemma}[\decl{card_fix}, \decl{card_A}]\label{lem:A}
+Let $A_n=\{j\in\{0,\dots,n-1\}: f(j)\ge n\}$. Then $\Fix\sigma=A_n\times A_n$, and
+\[
+  A_n=\emptyset,\quad \{n-1\},\quad\{n-2,n-1\},\quad\{n-2\}\qquad\text{for } n\equiv0,1,2,3\pmod4
+\]
+respectively. Hence $|A_n|=0,1,2,1$ and $|\Fix\sigma|=|A_n|^2=\varepsilon(n)$.
+\end{lemma}
+
+\begin{proof}
+The first claim is Lemma~\ref{lem:sigma}(2). Let $0\le j<n$. If $j\bmod4\in\{2,3\}$, then $f(j)=j-2<n$, so $j\notin A_n$. If $j\bmod4\in\{0,1\}$, then $f(j)=j+2$, and $j\in A_n$ if and only if $j\ge n-2$. So $A_n$ consists of those $j\in\{n-2,n-1\}$ with $0\le j$ and $j\bmod 4\in\{0,1\}$. The residues of $(n-2,n-1)$ modulo $4$ are $(2,3)$, $(3,0)$, $(0,1)$, $(1,2)$ for $n\equiv0,1,2,3$, which gives the four cases (for $n=1$ only $j=0=n-1$ occurs, as claimed).
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+By Proposition~\ref{prop:key} and Lemma~\ref{lem:A}, $2a(n)=n^2+|A_n|^2=n^2+\varepsilon(n)$ (\decl{two_a}). For $n\equiv0\pmod4$ this gives $a(n)=n^2/2$; for odd $n$, $a(n)=(n^2+1)/2$; for $n\equiv2\pmod4$, $a(n)=(n^2+4)/2=n^2/2+2$. In each case the division is exact, so these identities also hold with division in $\N$, as in the Lean statement (\decl{result}).
+\end{proof}
+
+\begin{remark}[relation to grid graphs]\label{rem:grid}
+Let $G_n$ be the graph on $\B$ whose edges join squares two steps apart. By Lemma~\ref{lem:colour}(1) it is bipartite with parts $S_0,S_1$, and the non-trivial orbits of $\sigma$ form a matching $M$ with $|M|=(n^2-\varepsilon(n))/2$. An independent set meets each edge of $M$ at most once, so $a(n)\le n^2-|M|$, and Proposition~\ref{prop:key} says that $S_0$ attains this; so $M$ is a maximum matching and $S_0$ a maximum independent set, as König's theorem predicts for a bipartite graph.
+
+Writing $i=2p+u$, $j=2q+v$ with $u,v\in\{0,1\}$, two squares are two steps apart exactly when they have the same $(u,v)$ and their block coordinates $(p,q)$ are adjacent in the grid. Hence $G_n$ is the disjoint union of four grid graphs $P_r\mathbin{\square}P_s$, $r,s\in\{\lceil n/2\rceil,\lfloor n/2\rfloor\}$. In block coordinates, $f$ acts as $q\mapsto q\oplus1$, so $\sigma$ tiles each grid by horizontal dominoes, vertical dominoes in the last column when $s$ is odd, and one monomino at a corner when $r$ and $s$ are both odd; and $\chi=(p+q)\bmod 2$ is the checkerboard colouring of each grid. Since $\alpha(P_r\mathbin{\square}P_s)=\lceil rs/2\rceil$ by exactly this domino-and-checkerboard argument, one can also obtain Theorem~\ref{thm:main} by summing $\lceil rs/2\rceil$ over the four grids: $4\lceil m^2/2\rceil$ for $n=2m$, which is $n^2/2$ or $n^2/2+2$ according as $m$ is even or odd, and $\lceil (m+1)^2/2\rceil+2\cdot\frac{m(m+1)}{2}+\lceil m^2/2\rceil=\frac{(2m+1)^2+1}{2}$ for $n=2m+1$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A348484.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A348484.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A348484.result}, of type \decl{Math0.Statements.A348484.statement}. The auxiliary declarations (all \texttt{private}) are those named in Section~\ref{sec:proof}. The definitions of $f$, $\sigma$, $\chi$ and the end of the file are, verbatim (docstrings, blank lines, a decidability instance and the lemmas omitted):
+\begin{lstlisting}
+private def f (j : ℕ) : ℕ := if j % 4 < 2 then j + 2 else j - 2
+private def sig {n : ℕ} (c : Fin n × Fin n) : Fin n × Fin n :=
+  if h : f c.2 < n then (c.1, ⟨f c.2, h⟩)
+  else if h' : f c.1 < n then (⟨f c.1, h'⟩, c.2) else c
+private def P {n : ℕ} (c : Fin n × Fin n) : Prop := (c.1.val / 2 + c.2.val / 2) % 2 = 0
+theorem result : statement := by
+  intro n _
+  have h := two_a n
+  have hsq : n ^ 2 = n * n := sq n
+  rw [← hsq] at h
+  refine ⟨fun h0 => ?_, fun h13 => ?_, fun h2 => ?_⟩
+  · rw [if_pos h0] at h; omega
+  · rw [if_neg (by omega), if_neg (by omega)] at h; omega
+  · rw [if_neg (by omega), if_pos h2] at h; omega
+end Math0.Frontier.A348484
+#math0_settles Math0.Frontier.A348484.result Math0.Statements.A348484.statement
+\end{lstlisting}
+The counting in \decl{key} uses the Mathlib lemmas \decl{Finset.card_image_of_injective}, \decl{Finset.card_union_add_card_inter} (inclusion--exclusion in part (1)), \decl{Finset.card_filter_add_card_filter_not} ($|S_0|+|S_1|=n^2$), \decl{Finset.card_union_of_disjoint} and \decl{Finset.card_le_card}; \decl{card_fix} uses \decl{Finset.card_product}, and \decl{card_A} uses \decl{Finset.card_eq_zero}, \decl{Finset.card_eq_one}, \decl{Finset.card_eq_two}. Arithmetic side goals, including those with $\bmod$ and division by constants, are closed by the decision procedure \texttt{omega}.
+The proof is uniform in $n$: it uses no \texttt{decide}, no \texttt{native\_decide}, no \texttt{set\_option}, and none of the data-check lemmas of the statement file.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, \decl{Lean.ofReduceBool} from \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically the constant \decl{statement} or its negation, up to metadata, with no unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A348484.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A348484.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A348484.result' proves 'Math0.Statements.A348484.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks.
+After \texttt{lake build Math0.Statements.OEIS.A348484}, the single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A348484.lean} in the directory \path{lean} (about $15$ seconds on our machine).
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A048716}
+The OEIS Foundation Inc., \emph{Entry A048716: Numbers $k$ such that ($k$ AND $4*k$) $=0$, where AND is bitwise-and} (A.~Karttunen, March~30, 1999), The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A048716}.
+
+\bibitem{A348484}
+The OEIS Foundation Inc., \emph{Entry A348484: Maximum number of squares on an $n\times n$ chessboard such that no two are two steps apart horizontally or vertically} (Yang Hong, October~20, 2021; revision \#33, December~6, 2022), The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A348484}.
+
+\end{thebibliography}
+}
+
+\end{document}

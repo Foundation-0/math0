@@ -31,6 +31,10 @@ Related prior results on sibling sequences:
 
 The proof here follows the same template as the A363102 proof.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex
