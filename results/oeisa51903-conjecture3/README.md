@@ -22,7 +22,8 @@ The Lean file [`lean/Math0/OEIS/OeisA51903_conjecture3.lean`](../../lean/Math0/O
   - It gives the same witness n0 = 9687963167864344937 = 7·631·881·3511²·201961, proves that n0 is minimal, and includes Lean 4 proofs of OeisA51903.conjecture2 (negative) and conjecture3 (positive) against the unmodified formal-conjectures file. The relevant files are lean/DMSolutions/OEIS_A051903/{Core,Solution,CheckAnswer}.lean and logs/lean_check.log.
 - F. G. Dorais and D. Klyve, "A Wieferich prime search up to 6.7×10^15", J. Integer Seq. 14 (2011). The minimality argument relies on this search.
 - T. Adamczewski, tadamcz/fc-review-results (entry OEIS/51903). The Zenodo README cites it as prior work: an earlier negative answer to (**), with (***) still regarded as open as of 2026-09-23.
-- Upstream formal-conjectures FormalConjectures/OEIS/51903.lean still tags conjecture3 "research open". Its last change was commit 7db2ea3 (2026-10-14), which removed `answer(...)`. OEIS A051903, comment by Thomas Ordowski (Dec 02 2019), problem (***), and the answer comment "Answer to (***): Yes. See Mishra and Senthilkumar (2026)" by 
+
+(Abridged.)
 
 ## Citation
 

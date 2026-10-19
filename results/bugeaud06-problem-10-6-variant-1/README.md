@@ -24,7 +24,12 @@ The Lean file [`lean/Math0/Books/Bugeaud06_problem_10_6_variant_1.lean`](../../l
   - Problem 10.6 is on p. 215, after the remarks on Furstenberg's 2^n 3^m and on Pollington and de Mathan.
   - §2.8 Notes, p. 45, states the Ajtai–Havas–Komlós theorem: for any ε_n → 0 there is an integer sequence with m_{n+1}/m_n > 1 + ε_n that is u.d. mod 1 for every irrational ξ ("see also [121]").
   - PDF used: https://staff.dc.uba.ar/becher/aa/Bugeaud2012.pdf
-- M. Ajtai, I. Havas, J. Komlós, "Every group 
+
+(Abridged; the manuscript discusses the literature in full.)
+
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
 
 ## Citation
 

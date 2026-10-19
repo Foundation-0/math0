@@ -27,8 +27,9 @@ The Lean file [`lean/Math0/ErdosProblems/Erdos367_erdos_367_variants_higher_full
 - Forum thread erdosproblems.com/forum/thread/367:
   - post-1766, Woett (van Doorn), 20 Nov 2025: proposes the ε=ε(r,k) reading.
   - post-6910, ScottHughes, 10 Jun 2026: claims an affirmative resolution for all r,k≥2 with any ε<(r+1)/r², via n=(t^r−1)^r (odd r) and n=(t^r+1)^r−1 (even r). These constructions trivially give ε<1/r.
-- github.com/scottdhughes/erdos367:
-  - 
+- Repository: https://github.com/scottdhughes/erdos367
+
+(Abridged.)
 
 ## Citation
 

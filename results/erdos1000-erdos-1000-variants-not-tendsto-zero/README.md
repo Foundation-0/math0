@@ -15,7 +15,7 @@ The Lean file [`lean/Math0/ErdosProblems/Erdos1000_erdos_1000_variants_not_tends
 
 ## Notes
 
-Erdős, Problems and results on diophantine approximations, Compositio Math. 1964 [Er64b], where Erdős proves that lim φ_A(k)/n_k ≠ 0 and that liminf = 0 forces limsup = 1. Cassels [Ca50b] introduced φ_A. Haight solved the main question. erdosproblems.com/1000 lists the problem as "proved (Lean)"; that formal proof (plby/lean-proofs src/v4.29.1/ErdosProblems/Erdos1000.lean) covers only Haight's main theorem. math0 had already committed a proof of upstream erdos_1000.variants.limsup_eq_one (lean/Math0/ErdosProblems/Erdos1000_erdos_1000_variants_limsup_eq_one.lean), and this result follows from it directly. Verified in /tmp/claude-0/-home-user-math0/e48cfc7c-53b7-512a-aa13-db31d47b5e5e/scratchpad/referee1000/Corollary.lean.
+Erdős, Problems and results on diophantine approximations, Compositio Math. 1964 [Er64b], where Erdős proves that lim φ_A(k)/n_k ≠ 0 and that liminf = 0 forces limsup = 1. Cassels [Ca50b] introduced φ_A. Haight solved the main question. erdosproblems.com/1000 lists the problem as "proved (Lean)"; that formal proof (plby/lean-proofs src/v4.29.1/ErdosProblems/Erdos1000.lean) covers only Haight's main theorem. math0 had already committed a proof of upstream erdos_1000.variants.limsup_eq_one (lean/Math0/ErdosProblems/Erdos1000_erdos_1000_variants_limsup_eq_one.lean), and this result follows from it directly.
 
 ## Citation
 

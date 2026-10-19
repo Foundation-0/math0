@@ -17,8 +17,12 @@ The Lean file [`lean/Math0/ErdosProblems/Erdos319_erdos_319.lean`](../../lean/Ma
 
 Erdős Problem 319 (erdosproblems.com/319). problems.yaml lists it as status open, last updated 2025-08-31, with formal_status "unformalized" and formalized "yes"; no Lean proof is recorded. By the upstream file's comments, c(N) = Θ(N): trivially c(N) ≤ N, and a lower bound c(N) ≥ (1 − 1/e + o(1))N, observed by Adenwalla, follows from Croot, "On unit fractions with denominators in short intervals", Acta Arith. 2001. The refutation here concerns only the defective constant-answer formalization and says nothing about the open problem. - Erdős Problem #319: https://www.erdosproblems.com/319. Status open. It cites [ErGr80], Erdős–Graham, Old and New Problems and Results in Combinatorial Number Theory (1980). Its only result is Adenwalla's lower bound c(N) ≥ (1−1/e+o(1))N, derived from E. S. Croot III, "On unit fractions with denominators in short intervals", Acta Arith. 99 (2001) 99–114.
 - Forum thread: https://www.erdosproblems.com/forum/thread/319. It has 0 comments and nothing about an upper bound or an exact value.
-- Upstream formalization: google-deepmind/formal-conjectures, FormalConjectures/ErdosProblems/319.lean, at https://raw.githubusercontent.com/google-deepmind/formal-conjectures/main/FormalConjectures/ErdosProblems/319.lean. It still contains `def erdos_319.answer : ℕ := sorry` with ∀ N, which is the defect exploited here. The same file has `variants.isTheta` (c = Θ(N)) and `variants.lb`, both marked solved and both left as sorry.
-- Local database: /tmp/claude-0/-home
+
+(Abridged; the manuscript discusses the literature in full.)
+
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
 
 ## Citation
 

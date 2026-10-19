@@ -18,7 +18,12 @@ The Lean file [`lean/Math0/ErdosProblems/Erdos1180_erdos_1180_variants_optimal.l
 Erdős and Graham, Old and new problems and results in combinatorial number theory (1980), the source of the question. Shparlinski, Arch. Math. (Basel) 2002, pp. 445–448: at most ε⁻³ summands for all p ≥ P(ε). Glibichuk, Mat. Zametki 2006, pp. 384–395: at most ε⁻² summands for all p ≥ P(ε); his covering lemma is the 8XY = F_p result for antisymmetric Y with |X||Y| > p. erdosproblems.com/1180 is marked proved, and its remark that "it may be that C_ε ≤ ε^{-1-o(1)}" is meant for large primes. The upstream formal-conjectures file 1180.lean already notes, in the docstring of variants.shparlinski, that no polynomial bound can hold for all primes. Upstream also links Lean proofs of the main statement and the shparlinski, glibichuk and lower_bound variants (plby/lean-proofs and linrock/math-proofs). The Glibichuk part of this file is adapted from plby/lean-proofs. The "optimal" variant has no prior formal resolution I know of. Its falsity as formalized follows from the small-prime obstruction that the upstream file itself states. - erdosproblems.com/1180. The ε^{-1-o(1)} question is listed there as still open. The page credits Shparlinski with ≪ε^{-3}, Glibichuk with ≪ε^{-2}, and Croot with (log p)^{3+o(1)}.
 - [Sh02] I. E. Shparlinski, "On a question of Erdős and Graham", Arch. Math. (Basel) 78 (2002), 445–448.
 - [Gl06] A. A. Glibichuk, Mat. Zametki 79 (2006), 384–395 (mathnet.ru mzm2708): N = 8([1/ε+1/2]+1)^2 summands for sufficiently large p.
-- Upstream formal-conjectures commit 377
+
+(Abridged; the manuscript discusses the literature in full.)
+
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
 
 ## Citation
 

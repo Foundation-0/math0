@@ -30,7 +30,12 @@ The order of magnitude of r_k is open for every k ≥ 3.
 The facts the refutation uses are trivial and belong to the formal library: r_1(N) = N (`Set.IsAPOfLengthFree.maxCard_one`), and r_2(N) ≤ 1 because any two points form a 2-term AP. I know of no previous Lean artifact reporting that `erdos_142.variants.isTheta` (or the sibling `erdos_142`) is false because its answer does not depend on k. - erdosproblems.com/142: open, $10000; it gives order of magnitude as the "more reasonable" goal and cites [Er80], [Va99]. Best known bounds: Kelley–Meka 2023 (k=3), Green–Tao 2017 (k=4), Leng–Sah–Sawhney 2024 (k≥5). Lower bounds: Behrend 1946 and Rankin 1961.
 - erdosproblems.com/forum/thread/142: a single comment by jleng01 (2026-08-09), unrelated to formalization.
 - google-deepmind/formal-conjectures PR #5446 (open, 2026-09-10): flags 142.lean:37,56 as answer slots that cannot depend on the required binder k.
-- PR #5
+
+(Abridged; the manuscript discusses the literature in full.)
+
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
 
 ## Citation
 

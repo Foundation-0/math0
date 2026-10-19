@@ -22,7 +22,8 @@ Sources:
 - #1202 forum thread (https://www.erdosproblems.com/forum/thread/1202): Z. Hunter and T. Bloom, 16-17 Apr 2026, on large-sieve bounds and refinements.
 - Justin Sun Prize catalog entry JSP-001007 (TheJustinSunPrize/awards, problems/catalog-1001-1022.md): "Solved, Price and GPT-5.4 Pro".
 - Existing Lean formalization: github.com/tester-lean/awards @ f26433803cfbd924569aebbdcc1c39321ecb9971, submissions/jsp-001007. Theorems JSP001007.green44_counterexample (every k ≥ 1, all large N, more than N/10 survivors, p^10 < N^9, |A_i| = (p-1)/2) and JSP001007.not_green44_conjecture. Submitted as https://github.com/TheJustinSunPrize/awards/issues/104 on 2026-09-16; pending and unreviewed. Its header cites formal-conjectures Green44.
-- Upstream formal-conjectures main: GreensOpenProblems/44.lean is still tagged "research open"; there is no ErdosProblems/1202.lean. - **Erdős's original:** Erdős, "A
+
+(Abridged.)
 
 ## Citation
 

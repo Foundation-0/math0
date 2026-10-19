@@ -1,0 +1,393 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\small, columns=fullflexible, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8}
+% Unicode inside listings (pdfLaTeX listings cannot read multibyte characters directly).
+\lstset{keepspaces=true, literate={α}{{$\alpha$}}1 {∞}{{$\infty$}}1 {•}{{$\bullet$}}1 {Θ}{{$\Theta$}}1
+  {ℕ}{{$\mathbb{N}$}}1 {ℝ}{{$\mathbb{R}$}}1 {→}{{$\to$}}1 {¬}{{$\neg$}}1 {∀}{{$\forall$}}1
+  {∃}{{$\exists$}}1 {∧}{{$\wedge$}}1 {⊆}{{$\subseteq$}}1 {≤}{{$\le$}}1 {⟨}{{$\langle$}}1
+  {⟩}{{$\rangle$}}1 {·}{{$\cdot$}}1 {↦}{{$\mapsto$}}1 {∈}{{$\in$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+\newunicodechar{Θ}{\ensuremath{\Theta}}
+\newunicodechar{•}{\ensuremath{\bullet}}
+\newunicodechar{≍}{\ensuremath{\asymp}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+
+\title[No $k$-independent order of magnitude for $r_k(N)$]{There is no $k$-independent order of magnitude for $r_k(N)$: a defect in a formal statement of Erd\H{o}s Problem \#142}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 17, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $r_k(N)$ be the largest size of a subset of $\{1,\dots,N\}$ that contains no non-trivial $k$-term arithmetic progression.
+Erd\H{o}s Problem \#142 asks, for each fixed $k$, for an asymptotic formula for $r_k(N)$, and in a weaker form for its order of magnitude; the formalization \decl{Erdos142.erdos_142.variants.isTheta} of the order-of-magnitude question in the formal-conjectures repository instead asks for a single function $f\colon\N\to\R$, not depending on $k$, with $r_k\asymp f$ for every $k\in\N$.
+We prove that no such function exists, because $r_1(N)=N$, $r_2(N)\le1$, and $\asymp$ is an equivalence relation.
+This is a misformalization report, not progress on the research problem: the argument uses only the degenerate cases $k=1,2$, the problem remains open for every $k\ge3$, and we propose a corrected statement in which the unknown depends on $k$.
+The refutation, valid for every value of the unknown, is verified in Lean~4 against the upstream formal-conjectures statement at commit \texttt{c77fdd4}.
+\end{abstract}
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+For $k\ge1$ and $N\ge0$ let $r_k(N)$ be the largest size of a subset of $\{1,\dots,N\}$ containing no non-trivial arithmetic progression of length $k$.
+Erd\H{o}s Problem~\#142 \cite{EP142} asks for an asymptotic formula for $r_k(N)$; the problem page records that Erd\H{o}s also asked for the order of magnitude of $r_k(N)$ \cite{Er80}, lists a prize of \$10000, and states that an asymptotic formula is out of reach even for $k=3$.
+The first values of $r_3,\dots,r_6$ are the OEIS sequences A003002--A003005 \cite{OEIS}.
+
+\subsection*{Known results}
+Szemer\'edi proved that $r_k(N)=o(N)$ for every fixed $k$ \cite{Sz75}, and Gowers gave the first reasonable quantitative bounds for general $k$, $r_k(N)\le N(\log\log N)^{-c_k}$ \cite{Go01}.
+Much stronger upper bounds are now known: $r_3(N)\le N\exp(-c(\log N)^{1/12})$ by Kelley and Meka \cite{KM23}, with the exponent improved to $1/9$ by Bloom and Sisask \cite{BS23} (a 2026 preprint of Raghavan \cite{Rag26} announces $r_3(N)\le N\exp(-c(\log N)^{1/6}(\log\log N)^{-1})$); $r_4(N)\le N(\log N)^{-c}$ by Green and Tao \cite{GT17}; and $r_k(N)\le N\exp(-(\log\log N)^{c_k})$ for $k\ge5$ by Leng, Sah and Sawhney \cite{LSS24}.
+In the other direction, Behrend's construction gives $r_3(N)\ge N\exp(-c\sqrt{\log N})$ \cite{Be46}, and Rankin generalized the construction to all $k$ \cite{Ra61}; in the explicit form given by O'Bryant \cite{OB11}, for $k\ge3$ and $n=\lceil\log_2k\rceil$ one has $r_k(N)\ge N\exp(-c_k(\log N)^{1/n})$ for large $N$.
+The order of magnitude of $r_k(N)$ is unknown for every $k\ge3$.
+
+\subsection*{The formal statement}
+The formal-conjectures repository \cite{FC} formalizes Problem~\#142 in \path{FormalConjectures/ErdosProblems/142.lean}.
+The docstring of \decl{erdos_142.variants.isTheta} reads ``find $f_k$ with $r_k(N)\asymp_k f_k(N)$'', so the intended unknown is a family of functions indexed by $k$.
+In the formal statement, however, the unknown is a top-level definition \decl{erdos_142.variants.isTheta.answer} of type $\N\to\R$, which cannot depend on $k$, while the theorem quantifies over all $k\in\N$, including $k=0,1,2$.
+The quantifier pattern $\forall k\,\exists f_k$ of the problem has become $\exists f\,\forall k$.
+
+\subsection*{Contribution and status}
+We prove that the formal statement is false whatever value is chosen for its unknown (Theorem~\ref{thm:main}) and verify this in Lean~4.
+The proof uses only $r_1(N)=N$ and $r_2(N)\le1$, so it says nothing about $r_k$ for $k\ge3$; we classify it as a \emph{misformalization report}.
+
+The difficulty has been noticed upstream but not fixed.
+When the hypothesis $1<k$ was added to \decl{erdos_142.variants.lower}, the description of pull request \#1187 \cite{PR1187} noted that $r_0(N)=r_1(N)=N$ and left the statements with an \texttt{answer(sorry)} slot unchanged.
+Pull request \#5446 \cite{PR5446}, opened on 10 September 2026 and still open, concerns the mode in which an answer is extracted as a closed definition, where ``a slot typed without that binder can never be filled in correctly''; it lists lines~37 and~56 of \path{142.lean} among further slots with this defect that it does not fix.
+At that time these lines held \decl{erdos_142}, then stated with \texttt{=Θ[atTop]} and hence of the same shape as the statement refuted here, and \decl{erdos_142.variants.upper}, stated with \texttt{=O[atTop]}.
+Two days later pull request \#5810 \cite{PR5810} changed \decl{erdos_142} to \texttt{\textasciitilde[atTop]} and replaced \decl{erdos_142.variants.upper} by the present $\Theta$-variant, keeping the type $\N\to\R$ of the unknown; pull request \#7327 \cite{PR7327} (14 October 2026) turned the \texttt{answer(sorry)} slot into the closed definition \decl{erdos_142.variants.isTheta.answer}.
+Before that change, under the default elaboration an \texttt{answer(sorry)} slot could be filled with a term mentioning the binder $k$ (the description of \#5810 notes that the tautological answer \texttt{r k} closes these statements); since \#7327 the unknown is a closed constant, and this is the statement refuted here.
+We found no earlier formal refutation of the statement.
+The same argument refutes \decl{erdos_142}, whose unknown is also independent of $k$; math0 records that refutation separately.
+
+\section{Statement}\label{sec:statement}
+
+\subsection{Definitions}
+Throughout, $\N=\{0,1,2,\dots\}$.
+Following the library of \cite{FC}, a set $P\subseteq\N$ is an \emph{arithmetic progression of length $l\in\N$} if there are $a,d\in\N$ with $P=\{a+nd : 0\le n<l\}$ and $|P|=l$.
+For $l\ge2$ the cardinality condition forces $d\ge1$, so these are exactly the non-trivial progressions.
+A set $A\subseteq\N$ is \emph{free of progressions of length $l$} if every arithmetic progression of length $l$ contained in $A$ satisfies $l\le1$.
+For $l\ge2$ this says that $A$ contains no arithmetic progression of length $l$; for $l\in\{0,1\}$ the condition is vacuous.
+For $k,N\in\N$ put
+\[
+  r_k(N)=\sup\bigl\{|S| : S\subseteq\{1,\dots,N\},\ S\text{ free of progressions of length }k\bigr\},
+\]
+the supremum being taken in $\N$; the set is non-empty (it contains $|\emptyset|=0$) and bounded by $N$.
+For $k\ge3$ this is the quantity of Problem~\#142.
+
+For $f,g\colon\N\to\R$ we write $f=O(g)$ if there are $C\in\R$ and $N_0\in\N$ with $|f(N)|\le C|g(N)|$ for all $N\ge N_0$, and $f\asymp g$ if $f=O(g)$ and $g=O(f)$.
+These are Mathlib's \decl{Asymptotics.IsBigO} and \decl{Asymptotics.IsTheta} along \decl{Filter.atTop}, written \texttt{=O[atTop]} and \texttt{=Θ[atTop]}.
+Since $O$ is reflexive and transitive, $\asymp$ is an equivalence relation.
+
+\subsection{The upstream statement}
+In \path{FormalConjecturesForMathlib/Combinatorics/AP/Basic.lean} at commit \texttt{c77fdd4} the definitions read as follows (docstrings omitted; $\alpha$ is a commutative additive monoid and \texttt{ℕ∞} is $\N\cup\{\infty\}$):
+\begin{lstlisting}
+def Set.IsAPOfLengthWith (s : Set α) (l : ℕ∞) (a d : α) : Prop :=
+  ENat.card s = l ∧ s = {a + n • d | (n : ℕ) (_ : n < l)}
+
+def Set.IsAPOfLength (s : Set α) (l : ℕ∞) : Prop :=
+  ∃ a d : α, s.IsAPOfLengthWith l a d
+
+def Set.IsAPOfLengthFree (s : Set α) (l : ℕ∞) : Prop :=
+  ∀ t ⊆ s, t.IsAPOfLength l → l ≤ 1
+
+noncomputable def Set.IsAPOfLengthFree.maxCard (k : ℕ) (N : ℕ) : ℕ :=
+  sSup {Finset.card S | (S) (_ : S ⊆ Finset.Icc 1 N) (_ : (S : Set ℕ).IsAPOfLengthFree k)}
+\end{lstlisting}
+The relevant declarations, copied verbatim from \path{FormalConjectures/ErdosProblems/142.lean} (inside \texttt{namespace Erdos142}, with \texttt{open Asymptotics Filter}; the other declarations of the file are omitted), are:
+\begin{lstlisting}
+noncomputable abbrev r := Set.IsAPOfLengthFree.maxCard
+
+def erdos_142.variants.isTheta.answer : ℕ → ℝ := sorry
+
+/--
+Determine the order of magnitude of $r_k(N)$, the largest possible size of a subset
+of $\{1, \dots, N\}$ that does not contain any non-trivial $k$-term arithmetic progression.
+That is, find $f_k$ with $r_k(N) \asymp_k f_k(N)$.
+-/
+@[category research open, question value, AMS 11]
+theorem erdos_142.variants.isTheta (k : ℕ) :
+    (fun N => (r k N : ℝ)) =Θ[atTop] erdos_142.variants.isTheta.answer := by
+  sorry
+\end{lstlisting}
+Writing $f$ for the value of the unknown, the statement asserts
+\begin{equation}\label{eq:P}
+  P(f):\qquad r_k\asymp f\quad\text{for every }k\in\N,
+\end{equation}
+where $r_k$ is the function $N\mapsto r_k(N)$, viewed as real-valued.
+
+\subsection{Main result}
+\begin{theorem}\label{thm:main}
+For every $f\colon\N\to\R$ the statement $P(f)$ is false. More precisely, there is no $f\colon\N\to\R$ with both $r_1\asymp f$ and $r_2\asymp f$.
+\end{theorem}
+
+In Lean, Theorem~\ref{thm:main} is the following declaration (in \texttt{namespace Math0.Erdos142}); its type is the negation of the upstream statement, universally quantified over the unknown.
+\begin{lstlisting}
+theorem not_isTheta : ∀ a : ℕ → ℝ,
+    ¬ ∀ k : ℕ, (fun N => (Erdos142.r k N : ℝ)) =Θ[atTop] a
+\end{lstlisting}
+
+\section{Proof}\label{sec:proof}
+
+\begin{lemma}\label{lem:r1}
+$r_1(N)=N$ for every $N\in\N$.
+\end{lemma}
+
+\begin{proof}
+Every set is free of progressions of length $1$, so the set in the definition of $r_1(N)$ is $\{|S| : S\subseteq\{1,\dots,N\}\}=\{0,1,\dots,N\}$, whose supremum is $N$, attained by $S=\{1,\dots,N\}$.
+\end{proof}
+
+In Lean this is the library lemma \decl{Set.IsAPOfLengthFree.maxCard_one} of \cite{FC}.
+
+\begin{lemma}\label{lem:pair}
+Let $S\subseteq\N$ be a finite set that is free of progressions of length $2$. Then $|S|\le1$.
+\end{lemma}
+
+\begin{proof}
+Suppose $S$ has two distinct elements, and call them $a<b$. With $d=b-a\ge1$ we have $\{a,b\}=\{a+nd : 0\le n<2\}$ and $|\{a,b\}|=2$, so $\{a,b\}$ is an arithmetic progression of length $2$ contained in $S$. Freeness gives $2\le1$, a contradiction. Hence any two elements of $S$ are equal, that is, $|S|\le1$.
+\end{proof}
+
+The Lean proof (\decl{isTheta_card_le_one_of_free}) rewrites the goal with \decl{Finset.card_le_one}, splits $a\ne b$ into the cases $a<b$ and $b<a$, and in each case applies the freeness hypothesis to the pair, using the library lemma \decl{Nat.isAPOfLength_pair}: if $a<b$ then $\{a,b\}$ is an arithmetic progression of length $2$.
+
+\begin{corollary}\label{cor:r2}
+$r_2(N)\le1$ for every $N\in\N$.
+\end{corollary}
+
+\begin{proof}
+By Lemma~\ref{lem:pair}, $1$ is an upper bound for the set in the definition of $r_2(N)$, so its supremum in $\N$ is at most $1$.
+\end{proof}
+
+In Lean (\decl{isTheta_r_two_le_one}) the last step is \decl{csSup_le'}, which bounds the supremum of a set of natural numbers by any upper bound of the set. (In fact $r_2(N)=\min(N,1)$, but only the upper bound is needed.)
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $f\colon\N\to\R$ and suppose that $r_1\asymp f$ and $r_2\asymp f$; this holds in particular if $P(f)$ holds.
+By symmetry and transitivity of $\asymp$ we get $r_1\asymp r_2$, and in particular $r_1=O(r_2)$.
+By Corollary~\ref{cor:r2}, $|r_2(N)|\le 1\cdot|1|$ for all $N$, so $r_2=O(1)$, where $1$ is the constant function.
+By transitivity of $O$, $r_1=O(1)$, which by Lemma~\ref{lem:r1} says that $N\mapsto N$ is $O(1)$: there are $C\in\R$ and $N_0\in\N$ with $N\le C$ for all $N\ge N_0$.
+This fails for any integer $N\ge\max(N_0,C+1)$, a contradiction.
+\end{proof}
+
+The Lean proof of \decl{not_isTheta} (reproduced in Section~\ref{sec:lean}) follows these steps.
+It obtains $r_1=O(r_2)$ as \texttt{((h 1).trans (h 2).symm).isBigO}, proves $r_2=O(1)$ with \decl{IsBigO.of_bound} and the constant $1$, composes the two, and rewrites $r_1$ with \decl{maxCard_one}.
+The lemma \decl{isBigO_one_iff} turns $N=O(1)$ into the statement that $N\mapsto\lVert N\rVert$ is eventually bounded above, and \decl{Filter.not_isBoundedUnder_of_tendsto_atTop} refutes this, since $\lVert N\rVert\to\infty$ by \decl{tendsto_norm_atTop_atTop} composed with \decl{tendsto_natCast_atTop_atTop}.
+
+\section{The defect and a corrected statement}\label{sec:defect}
+
+By Theorem~\ref{thm:main}, \decl{erdos_142.variants.isTheta} cannot be proved for any value of its unknown, and its negation is provable for every value.
+Its falsity comes from the degenerate cases $k\le2$ together with the fact that the unknown cannot depend on $k$: every set is free of progressions of length $0$ and $1$, and no set with two elements is free of progressions of length $2$.
+The intended problem, to find for each $k\ge3$ an explicit $f_k$ with $r_k\asymp f_k$, is not touched by this.
+Restricting the formal statement to $k\ge3$ while keeping a $k$-independent unknown would not make it satisfiable either.
+
+\begin{remark}\label{rem:k3}
+Let $k\ge513$, so that $n=\lceil\log_2k\rceil\ge10$. Rankin's bound in the form of \cite{OB11} gives $r_k(N)\ge N\exp(-c_k(\log N)^{1/10})$ for large $N$, while $r_3(N)\le N\exp(-c(\log N)^{1/9})$ \cite{BS23}. Hence $r_3(N)/r_k(N)\le\exp\bigl(c_k(\log N)^{1/10}-c(\log N)^{1/9}\bigr)\to0$, so $r_3\not\asymp r_k$, and no single $f$ satisfies $r_k\asymp f$ for all $k\ge3$. This uses the cited bounds and is not part of the formal verification. Whether $r_k(N)/r_{k+1}(N)\to0$ for some $k\ge3$ is a different question, which Erd\H{o}s noted as open in \cite{Er80} (see \cite{EP142}).
+\end{remark}
+
+We propose the following corrected statement, in which the unknown is indexed by $k$ and the degenerate cases are excluded:
+\begin{lstlisting}
+def erdos_142.variants.isTheta.answer : ℕ → ℕ → ℝ := sorry
+
+theorem erdos_142.variants.isTheta (k : ℕ) (hk : 3 ≤ k) :
+    (fun N => (r k N : ℝ)) =Θ[atTop] erdos_142.variants.isTheta.answer k := by
+  sorry
+\end{lstlisting}
+We checked that this elaborates against the pinned Lean, Mathlib and formal-conjectures versions of Section~\ref{sec:lean}.
+Once the unknown depends on $k$, the hypothesis $3\le k$ is no longer needed for satisfiability (for $k\le2$ the functions $r_k$ are known explicitly), but it matches the intended problem.
+The same change, giving \decl{erdos_142.answer} the type $\N\to\N\to\R$ and applying it to $k$, repairs the main statement \decl{erdos_142}.
+As the description of pull request \#5810 \cite{PR5810} notes for value questions of this shape, the tautological value $\texttt{answer}\ k = r_k$ satisfies such a statement; the repository's contribution guidelines treat this as out of scope, and it is not specific to Problem~\#142.
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is the file \path{lean/Math0/ErdosProblems/Erdos142_erdos_142_variants_isTheta.lean} of the math0 repository (\url{https://github.com/Foundation-0/math0}).
+It imports only the upstream file \path{FormalConjectures/ErdosProblems/142.lean} and the audit commands \path{lean/Math0/Audit.lean}.
+Its declarations, in the namespace \decl{Math0.Erdos142}, are \decl{isTheta_card_le_one_of_free} (Lemma~\ref{lem:pair}), \decl{isTheta_r_two_le_one} (Corollary~\ref{cor:r2}) and the main theorem \decl{not_isTheta} (Theorem~\ref{thm:main}).
+The file contains no \texttt{sorry}, no \decl{native_decide} and no new axioms.
+The main proof and the final audit command are:
+\begin{lstlisting}
+theorem not_isTheta : ∀ a : ℕ → ℝ,
+    ¬ ∀ k : ℕ, (fun N => (Erdos142.r k N : ℝ)) =Θ[atTop] a := by
+  intro a h
+  have h12 : (fun N => (Erdos142.r 1 N : ℝ)) =O[atTop] (fun N => (Erdos142.r 2 N : ℝ)) :=
+    ((h 1).trans (h 2).symm).isBigO
+  have h2b : (fun N => (Erdos142.r 2 N : ℝ)) =O[atTop] (fun _ => (1 : ℝ)) := by
+    apply Asymptotics.IsBigO.of_bound 1
+    filter_upwards with N
+    simp only [Real.norm_eq_abs, abs_one, mul_one, Nat.abs_cast]
+    exact_mod_cast isTheta_r_two_le_one N
+  have h3 := h12.trans h2b
+  simp only [Erdos142.r, Set.IsAPOfLengthFree.maxCard_one] at h3
+  rw [Asymptotics.isBigO_one_iff] at h3
+  exact Filter.not_isBoundedUnder_of_tendsto_atTop
+    (tendsto_norm_atTop_atTop.comp tendsto_natCast_atTop_atTop) h3
+
+#math0_refutes_every_answer Math0.Erdos142.not_isTheta Erdos142.erdos_142.variants.isTheta with Erdos142.erdos_142.variants.isTheta.answer
+\end{lstlisting}
+
+\subsection*{Audit}
+The command \decl{#math0_refutes_every_answer}, defined in \path{lean/Math0/Audit.lean}, is the math0 audit for misformalization reports on value questions. It fails unless:
+(1) our theorem has the same universe parameters as the upstream theorem, and the unknown is not universe-polymorphic;
+(2) the type of our theorem is syntactically identical, up to metadata annotations and with no unfolding or definitional-equality check, to $\forall a,\ \neg B[a]$, where $B[a]$ is the type of the upstream theorem with every occurrence of the constant \decl{Erdos142.erdos_142.variants.isTheta.answer} replaced by a bound variable $a$ of the same type $\N\to\R$;
+(3) our theorem depends on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, so \decl{sorryAx}, the axioms behind \decl{native_decide} and custom axioms are rejected.
+Condition (2) ensures that the theorem refutes the upstream statement as published, for every value of its unknown. On this file the command reports
+\begin{lstlisting}
+math0 audit: 'Math0.Erdos142.not_isTheta' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Erdos142.not_isTheta' refutes 'Erdos142.erdos_142.variants.isTheta' for every value of 'Erdos142.erdos_142.variants.isTheta.answer'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1}, Mathlib \cite{Mathlib} \texttt{v4.33.1} and formal-conjectures \cite{FC} at commit \texttt{c77fdd446d23539302aa73bcfae4a9fa962b8382}, all pinned in \path{lean/}.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks.
+The single file can also be checked with \texttt{lake env lean} from the \path{lean} directory.
+
+\begin{thebibliography}{99}
+\raggedright
+
+\bibitem{Be46}
+F.~A. Behrend, \emph{On sets of integers which contain no three terms in arithmetical progression}, Proc. Nat. Acad. Sci. U.S.A. \textbf{32} (1946), 331--332.
+
+\bibitem{BS23}
+T.~F. Bloom and O.~Sisask, \emph{An improvement to the Kelley--Meka bounds on three-term arithmetic progressions}, arXiv:2309.02353, 2023.
+
+\bibitem{EP142}
+T.~F. Bloom, \emph{Erd\H{o}s Problems}, Problem \#142, \url{https://www.erdosproblems.com/142}, accessed October 2026.
+
+\bibitem{Er80}
+P.~Erd\H{o}s, \emph{A survey of problems in combinatorial number theory}, Ann. Discrete Math. \textbf{6} (1980), 89--115.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{PR1187}
+formal-conjectures, pull request \#1187 (commit \texttt{bf0ea56}), \emph{fix: exclude 0 and 1 cases when using} \texttt{Set.IsAPOfLengthFree.maxCard}, 11 November 2025, \url{https://github.com/google-deepmind/formal-conjectures/pull/1187}.
+
+\bibitem{PR5446}
+formal-conjectures, pull request \#5446, \emph{fix: answer slots that cannot depend on the inputs they must depend on}, opened 10 September 2026, \url{https://github.com/google-deepmind/formal-conjectures/pull/5446}.
+
+\bibitem{PR5810}
+formal-conjectures, pull request \#5810 (commit \texttt{7f64240}), \emph{fix(Erdos/142): ask for asymptotic formula; order of magnitude variant}, 12 September 2026, \url{https://github.com/google-deepmind/formal-conjectures/pull/5810}.
+
+\bibitem{PR7327}
+formal-conjectures, pull request \#7327 (commit \texttt{2c24ebe}), \emph{feat(Util) replace \texttt{answer(sorry)} with \texttt{def answer}}, 14 October 2026, \url{https://github.com/google-deepmind/formal-conjectures/pull/7327}.
+
+\bibitem{Go01}
+W.~T. Gowers, \emph{A new proof of Szemer\'edi's theorem}, Geom. Funct. Anal. \textbf{11} (2001), 465--588.
+
+\bibitem{GT17}
+B.~Green and T.~Tao, \emph{New bounds for Szemer\'edi's theorem, III: a polylogarithmic bound for $r_4(N)$}, Mathematika \textbf{63} (2017), no.~3, 944--1040.
+
+\bibitem{KM23}
+Z.~Kelley and R.~Meka, \emph{Strong bounds for 3-progressions}, in: 2023 IEEE 64th Annual Symposium on Foundations of Computer Science (FOCS), IEEE, 2023, 933--973; arXiv:2302.05537.
+
+\bibitem{LSS24}
+J.~Leng, A.~Sah, and M.~Sawhney, \emph{Improved bounds for Szemer\'edi's theorem}, arXiv:2402.17995, 2024.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{OB11}
+K.~O'Bryant, \emph{Sets of integers that do not contain long arithmetic progressions}, Electron. J. Combin. \textbf{18} (2011), no.~1, Paper~59; arXiv:0811.3057.
+
+\bibitem{OEIS}
+The OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, sequences A003002, A003003, A003004, A003005, \url{https://oeis.org/A003002}.
+
+\bibitem{Ra61}
+R.~A. Rankin, \emph{Sets of integers containing not more than a given number of terms in arithmetical progression}, Proc. Roy. Soc. Edinburgh Sect. A \textbf{65} (1960/61), 332--344.
+
+\bibitem{Rag26}
+R.~Raghavan, \emph{Improved bounds for 3-progressions}, arXiv:2603.27045, 2026.
+
+\bibitem{Sz75}
+E.~Szemer\'edi, \emph{On sets of integers containing no $k$ elements in arithmetic progression}, Acta Arith. \textbf{27} (1975), 199--245.
+
+\end{thebibliography}
+
+\end{document}

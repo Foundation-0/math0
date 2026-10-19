@@ -29,7 +29,12 @@ No asymptotic formula r_k(N) ~ f_k(N) is known for any k ≥ 3. The Lean result 
 Upstream formal-conjectures history (google-deepmind/formal-conjectures):
 - Commit 2c24ebe7 (#7327, 2026-10-14, M. Firsching): introduced the k-independent top-level `def erdos_142.answer : ℕ → ℝ := sorry`.
 - Commit 7f64240c (#5810, 2026-09-12, S. Mercuri): changed Θ to ~ (fixes #5628 and #4922).
-- Commit bf0ea56f (#1187, 2025-11-11): noted maxCard 0/1 N = N and
+
+(Abridged; the manuscript discusses the literature in full.)
+
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
 
 ## Citation
 

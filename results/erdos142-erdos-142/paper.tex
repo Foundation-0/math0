@@ -1,0 +1,368 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    noncomputable,sorry},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  upquote=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℝ}{{$\mathbb{R}$}}1 {≤}{{$\le$}}1 {·}{{$\cdot$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1
+    {¬}{{$\neg$}}1 {→}{{$\to$}}1 {⊆}{{$\subseteq$}}1 {∅}{{$\emptyset$}}1
+    {∧}{{$\wedge$}}1 {•}{{$\bullet$}}1 {∞}{{$\infty$}}1 {α}{{$\alpha$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+\newunicodechar{•}{\ensuremath{\bullet}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Ninf}{\N\cup\{\infty\}}
+
+\title[No $k$-independent asymptotic formula for $r_k(N)$]{No single function is asymptotic to $r_k(N)$ for every $k$: a defect in the formal statement of Erd\H{o}s Problem \#142}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 17, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $r_k(N)$ be the largest size of a subset of $\{1,\dots,N\}$ that contains no non-trivial $k$-term arithmetic progression. Erd\H{o}s Problem \#142 asks for an asymptotic formula for $r_k(N)$ for each fixed $k$, and it is open. The formal-conjectures repository states it in Lean as the claim that $r_k\sim A$ for every $k\in\N$, where $A\colon\N\to\R$ is one unknown function that does not depend on $k$. We prove that this claim is false for every choice of $A$, because $r_1(N)=N$ while $r_2(N)\le 1$; the argument is elementary, so this is a misformalization report that says nothing about the open problem, and we propose a corrected statement. The proof is verified in Lean~4 against the upstream formal-conjectures statement, together with a check that our theorem is exactly that statement, negated and quantified over all values of the unknown.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For $k\ge 1$ and $N\ge 0$ let $r_k(N)$ be the largest size of a subset of $\{1,\dots,N\}$ that contains no non-trivial arithmetic progression of length $k$. The interesting range is $k\ge 3$. Roth \cite{Ro53} proved $r_3(N)=o(N)$ and Szemer\'edi \cite{Sz75} proved $r_k(N)=o(N)$ for every $k\ge 3$. Behrend \cite{Be46} (for $k=3$) and Rankin \cite{Ra61} (for general $k$) constructed large progression-free sets, giving lower bounds of the form $r_k(N)\ge N\exp(-c_k(\log N)^{\gamma_k})$ with $0<\gamma_k<1$. The upper bounds that \cite{EP142} lists as the best known are due to Kelley and Meka \cite{KM23} for $k=3$, namely $r_3(N)\le N\exp(-c(\log N)^{1/12})$, with the exponent improved to $1/9$ by Bloom and Sisask \cite{BS23} (a 2026 preprint of Raghavan \cite{Rag26} claims $r_3(N)\le N\exp(-c(\log N)^{1/6}(\log\log N)^{-1})$); to Green and Tao \cite{GT17} for $k=4$, namely $r_4(N)\le N(\log N)^{-c}$; and to Leng, Sah and Sawhney \cite{LSS24} for $k\ge 5$, namely $r_k(N)\le N\exp(-(\log\log N)^{c_k})$. The values of $r_3,\dots,r_6$ for small $N$ are the OEIS sequences A003002--A003005 \cite{OEIS}.
+
+Erd\H{o}s Problem \#142 \cite{EP142} asks to prove an asymptotic formula for $r_k(N)$, that is, to find $f_k$ with $r_k(N)/f_k(N)\to 1$ as $N\to\infty$. It goes back to Erd\H{o}s \cite{Er80,Er81,Er97}; in \cite{Er81} he offered \$10000 for it. The problem is open, and \cite{EP142} describes an asymptotic formula as ``still far out of reach, even for $k=3$''. The same page records that in \cite{Er80} Erd\H{o}s also asked for the order of magnitude of $r_k(N)$, and remarked that it was not even known whether $r_k(N)/r_{k+1}(N)\to 0$ for any $k\ge 3$.
+
+The formal-conjectures repository \cite{FC} contains a Lean statement \decl{Erdos142.erdos_142} of this problem. At the pinned commit \texttt{c77fdd4} its unknown is a single top-level definition \decl{erdos_142.answer} of type $\N\to\R$, and the theorem asserts $r_k\sim\texttt{erdos\_142.answer}$ for every $k\in\N$ (Section~\ref{sec:statement}). The answer therefore cannot depend on $k$, although the docstring asks for $f_k$, and $k$ ranges over all natural numbers, including the degenerate values $0,1,2$.
+
+\subsection*{Contribution and status}
+We prove (Theorem~\ref{thm:main}) that \decl{Erdos142.erdos_142} is false for every possible value of its unknown. The reason is elementary: $r_1(N)=N$ is unbounded and $r_2(N)\le 1$ is bounded, so they are not asymptotic to a common function. This is a \emph{misformalization report}. It gives no information about the problem for $k\ge 3$. That the statement has this defect had already been noted informally in an open pull request to \cite{FC} (see Section~\ref{sec:defect}); we found no previous formal proof that the statement is false, either in \cite{FC} or on the forum thread of \cite{EP142}. Section~\ref{sec:defect} proposes a corrected statement.
+
+\section{Statement}\label{sec:statement}
+
+\subsection{Definitions}
+Let $\N=\{0,1,2,\dots\}$, and let $|s|\in\Ninf$ denote the cardinality of a set $s\subseteq\N$. The following definitions are those of \cite{FC}, in the file \path{FormalConjecturesForMathlib/Combinatorics/AP/Basic.lean}.
+
+\begin{definition}\label{def:ap}
+Let $s\subseteq\N$ and $l\in\Ninf$.
+\begin{enumerate}
+\item $s$ is an \emph{arithmetic progression of length $l$} if there are $a,d\in\N$ with $|s|=l$ and $s=\{a+nd:\ n\in\N,\ n<l\}$.
+\item $s$ is \emph{free of $l$-term progressions} if every $t\subseteq s$ that is an arithmetic progression of length $l$ satisfies $l\le 1$.
+\end{enumerate}
+\end{definition}
+
+If $l\ge 2$, the condition $|t|=l$ forces $d\ge 1$, so (2) says that $s$ contains no $l$ distinct elements in arithmetic progression. If $l\le 1$, the conclusion $l\le 1$ holds automatically, so every set is free of $0$-term and of $1$-term progressions. This matches the convention that progressions of length at most $1$ are trivial.
+
+\begin{definition}\label{def:r}
+For $k,N\in\N$ let
+\[
+C_k(N)=\bigl\{\,|S| \;:\; S\subseteq\{1,\dots,N\},\ S \text{ free of $k$-term progressions}\,\bigr\}\subseteq\N,
+\qquad r_k(N)=\sup C_k(N).
+\]
+\end{definition}
+
+The supremum is Lean's \decl{sSup} on $\N$. The empty set is free of $k$-term progressions for every $k$ (its only subset is $\emptyset$, and $\emptyset$ is an arithmetic progression of length $l$ only for $l=0$), and $C_k(N)\subseteq\{0,\dots,N\}$; hence $C_k(N)$ is nonempty and bounded, and $r_k(N)=\max C_k(N)$.
+
+\begin{definition}\label{def:equiv}
+For $f,g\colon\N\to\R$ we write $f\sim g$ if for every $\varepsilon>0$ there is $N_0$ with $|f(N)-g(N)|\le\varepsilon|g(N)|$ for all $N\ge N_0$.
+\end{definition}
+
+This is Mathlib's \texttt{Asymptotics.IsEquivalent atTop f g}, written \texttt{f \textasciitilde[atTop] g} and defined as $f-g=o(g)$. When $g(N)\ne 0$ for all large $N$, it is equivalent to $f(N)/g(N)\to 1$.
+
+\subsection{The upstream statement}
+The relevant upstream definitions are, verbatim (docstrings omitted; $\alpha$ is an additive commutative monoid, here $\N$, and $k$ is coerced to $\Ninf$):
+\begin{lstlisting}
+def Set.IsAPOfLengthWith (s : Set α) (l : ℕ∞) (a d : α) : Prop :=
+  ENat.card s = l ∧ s = {a + n • d | (n : ℕ) (_ : n < l)}
+
+def Set.IsAPOfLength (s : Set α) (l : ℕ∞) : Prop :=
+  ∃ a d : α, s.IsAPOfLengthWith l a d
+
+def Set.IsAPOfLengthFree (s : Set α) (l : ℕ∞) : Prop :=
+  ∀ t ⊆ s, t.IsAPOfLength l → l ≤ 1
+
+noncomputable def Set.IsAPOfLengthFree.maxCard (k : ℕ) (N : ℕ) : ℕ :=
+  sSup {Finset.card S | (S) (_ : S ⊆ Finset.Icc 1 N) (_ : (S : Set ℕ).IsAPOfLengthFree k)}
+\end{lstlisting}
+The statement, copied verbatim from \path{FormalConjectures/ErdosProblems/142.lean} (lines 32--43, namespace \decl{Erdos142}, with \texttt{open Asymptotics Filter}) at commit \texttt{c77fdd4}, is:
+\begin{lstlisting}
+noncomputable abbrev r := Set.IsAPOfLengthFree.maxCard
+
+def erdos_142.answer : ℕ → ℝ := sorry
+
+/--
+Prove an asymptotic formula for $r_k(N)$, the largest possible size of a subset
+of $\{1, \dots, N\}$ that does not contain any non-trivial $k$-term arithmetic progression.
+That is, find $f_k$ with $r_k(N) / f_k(N) \to 1$ as $N \to \infty$.
+-/
+@[category research open, question value, AMS 11]
+theorem erdos_142 (k : ℕ) : (fun N => (r k N : ℝ)) ~[atTop] erdos_142.answer := by
+  sorry
+\end{lstlisting}
+In the notation above, it asserts that the function $A=\texttt{erdos\_142.answer}\colon\N\to\R$ satisfies
+\begin{equation}\label{eq:upstream}
+r_k\sim A\qquad\text{for every } k\in\N .
+\end{equation}
+
+\subsection{Main result}
+
+\begin{theorem}\label{thm:main}
+There is no function $A\colon\N\to\R$ satisfying \eqref{eq:upstream}. More precisely, for every $A\colon\N\to\R$, the relations $r_1\sim A$ and $r_2\sim A$ do not both hold.
+\end{theorem}
+
+In Lean (namespace \decl{Math0.Erdos142}):
+\begin{lstlisting}
+theorem erdos_142_refuted :
+    ∀ a : ℕ → ℝ, ¬ ∀ k : ℕ, (fun N => (Erdos142.r k N : ℝ)) ~[atTop] a
+\end{lstlisting}
+This type is the type of \decl{Erdos142.erdos_142} with the constant \decl{erdos_142.answer} replaced by a bound variable \texttt{a}, negated and quantified over \texttt{a}. So it refutes the upstream statement for every way of filling in the unknown; Section~\ref{sec:lean} describes the check.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file. Lemmas~\ref{lem:free2} and~\ref{lem:r2} are its two auxiliary theorems, Lemma~\ref{lem:r1} is an upstream lemma and Lemma~\ref{lem:equiv} collects Mathlib lemmas.
+
+\begin{lemma}[upstream \decl{Set.IsAPOfLengthFree.maxCard_one}]\label{lem:r1}
+$r_1(N)=N$ for every $N\in\N$.
+\end{lemma}
+
+\begin{proof}
+Every set is free of $1$-term progressions, since the required conclusion $1\le 1$ holds. So $C_1(N)$ is the set of cardinalities of all subsets of $\{1,\dots,N\}$, whose maximum is $N$, attained by $\{1,\dots,N\}$.
+\end{proof}
+
+\begin{lemma}[\decl{card_le_one_of_free_two}]\label{lem:free2}
+Let $S\subseteq\N$ be finite and free of $2$-term progressions. Then $|S|\le 1$.
+\end{lemma}
+
+\begin{proof}
+Suppose $|S|\ge 2$, and pick distinct $a,b\in S$; by symmetry $a<b$ (the Lean proof handles the two orders as two identical cases). The set $t=\{a,b\}$ is an arithmetic progression of length $2$ with first term $a$ and difference $d=b-a$, since $|t|=2$ and $\{a+nd: n<2\}=\{a,b\}$; this is the upstream lemma \decl{Nat.isAPOfLength_pair}. As $t\subseteq S$ and $S$ is free of $2$-term progressions, $2\le 1$, a contradiction.
+\end{proof}
+
+\begin{lemma}[\decl{r_two_le_one}]\label{lem:r2}
+$r_2(N)\le 1$ for every $N\in\N$.
+\end{lemma}
+
+\begin{proof}
+First, $0\in C_2(N)$, witnessed by $S=\emptyset$: the only subset of $\emptyset$ is $\emptyset$, which is not an arithmetic progression of length $2$ because its cardinality is $0\ne 2$ (upstream lemma \decl{Set.not_isAPOfLength_empty}). Second, every element of $C_2(N)$ is at most $1$ by Lemma~\ref{lem:free2}. A nonempty set of natural numbers bounded by $1$ has supremum at most $1$ (Mathlib's \decl{csSup_le}).
+\end{proof}
+
+In fact $r_2(N)=\min(N,1)$, but only the upper bound is used.
+
+\begin{lemma}[Mathlib]\label{lem:equiv}
+Let $f,g,h\colon\N\to\R$.
+\begin{enumerate}
+\item If $f\sim g$, then $g\sim f$. \hfill\textup{(\decl{IsEquivalent.symm})}
+\item If $f\sim g$ and $g\sim h$, then $f\sim h$. \hfill\textup{(\decl{IsEquivalent.trans})}
+\item If $f\sim g$ and $f(N)\to+\infty$, then $g(N)\to+\infty$. \hfill\textup{(\decl{IsEquivalent.tendsto_atTop})}
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+In (1) and (2) it suffices to treat $0<\varepsilon\le 1$, since the condition of Definition~\ref{def:equiv} for $\varepsilon$ implies it for all larger $\varepsilon$. All inequalities below hold for all sufficiently large $N$, and we suppress the argument $N$.
+
+(1) Let $\delta=\varepsilon/2$. From $|f-g|\le\delta|g|$ we get $|g|\le|f|+\delta|g|$, so $|g|\le|f|/(1-\delta)\le 2|f|$, and then $|g-f|\le\delta|g|\le 2\delta|f|=\varepsilon|f|$.
+
+(2) Let $\delta=\varepsilon/3$. Then $|f-g|\le\delta|g|$ and $|g-h|\le\delta|h|$. The second gives $|g|\le(1+\delta)|h|\le 2|h|$, so $|f-h|\le|f-g|+|g-h|\le 2\delta|h|+\delta|h|=\varepsilon|h|$.
+
+(3) Let $M>0$. Eventually $|f-g|\le\frac12|g|$ and $f>2M$. If $g\le 0$, then $f\le g+\frac12|g|=\frac12 g\le 0$, which is impossible. Hence $g>0$, $f\le\frac32 g$, and $g\ge\frac23 f>\frac43 M>M$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $A\colon\N\to\R$ and suppose that $r_k\sim A$ for every $k\in\N$, where $r_k$ is viewed as the real-valued function $N\mapsto r_k(N)$. Taking $k=1$ and $k=2$ gives $r_1\sim A$ and $r_2\sim A$. By Lemma~\ref{lem:equiv}(1) $A\sim r_2$, and by Lemma~\ref{lem:equiv}(2) $r_1\sim r_2$. By Lemma~\ref{lem:r1}, $r_1(N)=N\to+\infty$, so $r_2(N)\to+\infty$ by Lemma~\ref{lem:equiv}(3). In particular $r_2(N)>1$ for some $N$, contradicting Lemma~\ref{lem:r2}.
+\end{proof}
+
+\begin{remark}
+Only $k=1$ and $k=2$ are used. Since $r_0(N)=N$ as well (upstream lemma \decl{Set.IsAPOfLengthFree.maxCard_zero}), $k=0$ could replace $k=1$. None of these values lies in the range $k\ge 3$ that Erd\H{o}s Problem \#142 is about.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is the file \path{lean/Math0/ErdosProblems/Erdos142_erdos_142.lean} of the math0 repository (\url{https://github.com/Foundation-0/math0}). It imports the upstream file \path{FormalConjectures/ErdosProblems/142.lean} and the math0 audit commands (\path{lean/Math0/Audit.lean}). It declares \decl{Math0.Erdos142.card_le_one_of_free_two} (Lemma~\ref{lem:free2}, for a \texttt{Finset ℕ}), \decl{Math0.Erdos142.r_two_le_one} (Lemma~\ref{lem:r2}) and the main theorem \decl{Math0.Erdos142.erdos_142_refuted} (Theorem~\ref{thm:main}), and uses the upstream and Mathlib lemmas named in Lemmas~\ref{lem:r1}--\ref{lem:equiv} and their proofs, together with \decl{tendsto_natCast_atTop_atTop}. It contains no \texttt{sorry}, \texttt{native\_decide}, \texttt{set\_option} or \texttt{axiom}. The tactic proof of the main theorem follows the proof of Theorem~\ref{thm:main} step by step: \texttt{h1.trans h2.symm} gives $r_1\sim r_2$; \decl{Set.IsAPOfLengthFree.maxCard_one} gives $r_1(N)=N\to\infty$; \texttt{h12.tendsto\_atTop} transfers this to $r_2$; \texttt{eventually\_gt\_atTop 1} produces an $N$ with $r_2(N)>1$; and \decl{r_two_le_one}, cast to $\R$, gives the contradiction by \texttt{linarith}. The file ends, after the namespace, with the audit command
+\begin{lstlisting}
+#math0_refutes_every_answer Math0.Erdos142.erdos_142_refuted Erdos142.erdos_142 with Erdos142.erdos_142.answer
+\end{lstlisting}
+
+\subsection*{Audit}
+The command \texttt{\#math0\_refutes\_every\_answer} is defined in \path{lean/Math0/Audit.lean}. Given our theorem, the upstream theorem \decl{Erdos142.erdos_142} and its unknown \decl{Erdos142.erdos_142.answer} of type $T$, it fails the build unless:
+\begin{enumerate}
+\item the two theorems have the same universe parameters and the unknown is not universe-polymorphic;
+\item the type of our theorem is syntactically identical, after removing metadata annotations and with no unfolding or definitional-equality check, to $\forall\, a : T,\ \neg P[a]$, where $P[a]$ is the type of the upstream theorem with every occurrence of the constant \decl{Erdos142.erdos_142.answer} replaced by the bound variable $a$;
+\item our theorem depends on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}; in particular not on \decl{sorryAx}, on \decl{Lean.ofReduceBool} (used by \texttt{native\_decide}) or on a custom axiom.
+\end{enumerate}
+The quantification over $a$ is needed because the body of the upstream definition is \texttt{sorry}. Applying our theorem to the constant itself yields a term of type \texttt{¬ Erdos142.erdos\_142}, but its axiom closure contains \decl{sorryAx}, reached through the body of the placeholder. The quantified form avoids this and also refutes every future version in which the definition is filled in and the theorem is left unchanged. On this file the command prints:
+\begin{lstlisting}
+math0 audit: 'Math0.Erdos142.erdos_142_refuted' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Erdos142.erdos_142_refuted' refutes 'Erdos142.erdos_142' for every value of 'Erdos142.erdos_142.answer'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1}, Mathlib \cite{Mathlib} \texttt{v4.33.1} and formal-conjectures \cite{FC} at commit \texttt{c77fdd4} (\texttt{c77fdd446d23539302aa73bcfae4a9fa962b8382}), all pinned in the \path{lean} directory (files \path{lakefile.toml} and \path{lean-toolchain}). To reproduce, run \path{scripts/verify.sh} from the repository root. It downloads the Mathlib build cache, builds all math0 results with \texttt{lake build} (which re-runs every audit command), checks that the \texttt{formal\_conjectures} and \texttt{mathlib} checkouts have no local modifications, and reports the number of passed statement checks. The single file can be checked with \texttt{lake env lean Math0/ErdosProblems/Erdos142\_erdos\_142.lean} from the \path{lean} directory, which takes about 9 seconds on our machine once the dependencies are built.
+
+\section{The defect and a corrected statement}\label{sec:defect}
+
+\subsection*{The defect}
+Erd\H{o}s Problem \#142 asks, for each fixed $k$, for a function $f_k$ with $r_k(N)\sim f_k(N)$, and the upstream docstring also asks to ``find $f_k$''; the problem is non-trivial only for $k\ge 3$. The Lean statement differs in two ways. First, \decl{erdos_142.answer} is declared once, outside the scope of the binder $k$, so it cannot depend on $k$. Second, $k$ ranges over all of $\N$, including the degenerate values $k=0,1,2$, for which $r_0(N)=r_1(N)=N$ and $r_2(N)=\min(N,1)$. Together these make the statement false for the elementary reason of Theorem~\ref{thm:main}.
+
+The history of the file in \cite{FC} explains how this happened. Commit \texttt{bf0ea56f} (pull request \#1187, November 2025) observed that $\texttt{maxCard}\ k\ N=N$ for $k=0,1$ and added the hypothesis $1<k$ to \decl{erdos_142.variants.lower}; its commit message says that the statements with \texttt{answer(sorry)} ``can be left as is''. At that time the unknown of \decl{erdos_142} was written inline as \texttt{(answer(sorry) : ℕ → ℝ)} inside the theorem, after the binder $k$. Commit \texttt{2c24ebe7} (pull request \#7327, October 14, 2026) replaced the inline \texttt{answer(sorry)} placeholders of value questions by top-level definitions \texttt{<theorem>.answer}; for this file that produced the $k$-independent definition shown in Section~\ref{sec:statement}. Pull request \#5446 \cite{PR5446}, opened on September 10, 2026 and still open in October 2026, lists this statement among answer slots that cannot depend on the inputs they must depend on, and leaves it unchanged.
+
+\subsection*{A corrected statement}
+The repository's contribution guidelines say that if the type of the unknown depends on parameters of the theorem, these become parameters of the definition, and some files already use answer definitions with parameters (for example \decl{erdos_506.variants.large_n.answer}, which takes $n$). Here the type $\N\to\R$ does not depend on $k$ but the value must, and the same device applies. We propose to make $k$ an argument of the unknown and to exclude the degenerate cases:
+\begin{lstlisting}
+def erdos_142.answer : ℕ → ℕ → ℝ := sorry
+
+@[category research open, question value, AMS 11]
+theorem erdos_142 (k : ℕ) (hk : 3 ≤ k) :
+    (fun N => (r k N : ℝ)) ~[atTop] erdos_142.answer k := by
+  sorry
+\end{lstlisting}
+We checked that this compiles against the pinned formal-conjectures checkout (with the upstream docstring, which we omit here). The essential change is that the answer depends on $k$; the hypothesis $3\le k$ removes the degenerate cases, whose answers $N$, $N$ and $\min(N,1)$ are trivial. As for every value question in \cite{FC}, the corrected statement can be closed by the tautological filling in which \decl{erdos_142.answer} $k$ is $r_k$; the contribution guidelines state that deciding whether a filled-in answer is a mathematically meaningful solution is outside the scope of the repository.
+
+The sibling statement \decl{erdos_142.variants.isTheta} has the same defect, since $r_1(N)=N=\Theta(f)$ and $r_2(N)=\Theta(f)$ would force $N=O(1)$; math0 treats it in a separate report. The statement \decl{erdos_142.variants.three}, which fixes $k=3$, and \decl{erdos_142.variants.lower}, which assumes $1<k$ and has no unknown, are not affected.
+
+We do not know whether a $k$-independent answer could be refuted using only $k\ge 3$. By transitivity it would force $r_k(N)\sim r_{k+1}(N)$ for every $k\ge 3$, and we are not aware of a result ruling this out (compare the remark of Erd\H{o}s from \cite{Er80} recorded in \cite{EP142}).
+
+\begin{thebibliography}{99}
+
+\bibitem{Be46}
+F.~A. Behrend, \emph{On sets of integers which contain no three terms in arithmetical progression}, Proc. Nat. Acad. Sci. U.S.A. \textbf{32} (1946), 331--332.
+
+\bibitem{BS23}
+T.~F. Bloom and O.~Sisask, \emph{An improvement to the Kelley--Meka bounds on three-term arithmetic progressions}, arXiv:2309.02353, 2023.
+
+\bibitem{EP142}
+T.~F. Bloom, \emph{Erd\H{o}s Problem \#142}, \url{https://www.erdosproblems.com/142}, accessed October 2026.
+
+\bibitem{Er80}
+P.~Erd\H{o}s, \emph{A survey of problems in combinatorial number theory}, Ann. Discrete Math. \textbf{6} (1980), 89--115.
+
+\bibitem{Er81}
+P.~Erd\H{o}s, \emph{On the combinatorial problems which I would most like to see solved}, Combinatorica \textbf{1} (1981), 25--42.
+
+\bibitem{Er97}
+P.~Erd\H{o}s, \emph{Some of my favorite problems and results}, in: The Mathematics of Paul Erd\H{o}s, I, Springer, 1997, 47--67.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{GT17}
+B.~Green and T.~Tao, \emph{New bounds for Szemer\'edi's theorem, III: a polylogarithmic bound for $r_4(N)$}, Mathematika \textbf{63} (2017), no.~3, 944--1040.
+
+\bibitem{KM23}
+Z.~Kelley and R.~Meka, \emph{Strong bounds for 3-progressions}, in: 2023 IEEE 64th Annual Symposium on Foundations of Computer Science (FOCS), IEEE, 2023, 933--973. arXiv:2302.05537.
+
+\bibitem{LSS24}
+J.~Leng, A.~Sah and M.~Sawhney, \emph{Improved bounds for Szemer\'edi's theorem}, arXiv:2402.17995, 2024.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{OEIS}
+The OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, sequences A003002, A003003, A003004 and A003005, \url{https://oeis.org/A003002}.
+
+\bibitem{PR5446}
+formal-conjectures, pull request \#5446, \emph{fix: answer slots that cannot depend on the inputs they must depend on}, opened September 10, 2026, \url{https://github.com/google-deepmind/formal-conjectures/pull/5446}.
+
+\bibitem{Rag26}
+R.~Raghavan, \emph{Improved bounds for 3-progressions}, arXiv:2603.27045, 2026.
+
+\bibitem{Ra61}
+R.~A. Rankin, \emph{Sets of integers containing not more than a given number of terms in arithmetical progression}, Proc. Roy. Soc. Edinburgh Sect. A \textbf{65} (1960/61), 332--344.
+
+\bibitem{Ro53}
+K.~F. Roth, \emph{On certain sets of integers}, J. London Math. Soc. \textbf{28} (1953), 104--109.
+
+\bibitem{Sz75}
+E.~Szemer\'edi, \emph{On sets of integers containing no $k$ elements in arithmetic progression}, Acta Arith. \textbf{27} (1975), 199--245.
+
+\end{thebibliography}
+
+\end{document}
