@@ -38,7 +38,7 @@ New results (open problems settled; each checked by the Lean kernel and judged n
 * [A326602: a(n) is odd iff n is a square](results/oeis-a326602/README.md) ([paper](results/oeis-a326602/paper.pdf))
 * [Lang's conjecture a(n) = A250400(n+1)/(n+1) for A294512 fails at n = 164](results/oeis-a294512/README.md) ([paper](results/oeis-a294512/paper.pdf))
 * [Odd terms of A323695 occur only at n = k(k+2)](results/oeis-a323695/README.md) ([paper](results/oeis-a323695/paper.pdf))
-* [The 1089-trick map has two 9-digit fixed points (A393794 uniqueness conjecture is false)](results/oeis-a393794/README.md)
+* [The 1089-trick map has two 9-digit fixed points (A393794 uniqueness conjecture is false)](results/oeis-a393794/README.md) ([paper](results/oeis-a393794/paper.pdf))
 <!-- HIGHLIGHTS:END -->
 
 ## Two tracks

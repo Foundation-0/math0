@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: "a(n) is the unique fixed point of the 1089-trick 
 
 Referees: OEIS A393794 (Havenaar, Feb 27 2026; #19, Mar 10 2026, no correction as of GitHub oeisdata mirror). OEIS A001232 (numbers k with 9k = rev k; includes non-primitive 10891089; structure theorem by D. W. Wilson 1997 and M. F. Hasler 2022), from which 10*A001232 ⊂ Fix(T) follows trivially. R. Havenaar, SYNTRIAD/digit-dynamics GitHub repo (initial commit 2026-03-09): papers/paper_A.tex still states the uniqueness conjecture, while data/results_export.json experiment id 10 (truc_1089, 7-digit domain, 2026-02-25) lists 108910890 among T's fixed points without remark. Neither source states the contradiction. Y. Almirantis and W. Li, arXiv:2408.02527 and arXiv:2410.11784 study related reversal maps but not this T. No published refutation found.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

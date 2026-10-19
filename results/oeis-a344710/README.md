@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: Formula: "a(n) > sqrt(3/4)*n (conjectured)." Comme
 
 Referees: A. Mazel, I. Stuhl, Y. Suhov, "High-density hard-core model on Z^2 and norm equations in ring Z[...]", arXiv:1909.11648 (v1 25 Sep 2019; v3 22 Jun 2023). Lemma 3.4.4, eq. (3.1): sqrt(3)D^2/2 < S(D) < sqrt(3)D^2/2 + sqrt(2)D. S(D) is twice the minimal area of non-obtuse Z^2-triangles with sides >= D, so A344710(n) = S(sqrt n). The paper calls the lower bound "obvious". D. Krachun, "Triangles on Z^2 and sliding phenomenon" / "Extreme Gibbs measures for high-density hard-core model on Z^2", arXiv:1912.07566 (Dec 2019 / Jun 2020). Definition 2.1 gives the same S(D) for all D > 0, and Theorem 2 gives S(D) = (sqrt3/2)D^2 + O(D^{4/5}). The underlying inequality is the classical one: a non-obtuse triangle with all sides >= D has area >= (sqrt3/4)D^2, since area = (1/2)ab sin C with the largest angle C in [60,90] degrees. Equality would need an equilateral lattice triangle, and Z^2 has none. OEIS A344710 and A344845 (local mirror and GitHub, revisions #84/#52 of Feb 2022) still list the inequality as conjectured.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

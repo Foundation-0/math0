@@ -24,6 +24,10 @@ Referees: Already known, so the Lean proof is a first formalization, not a new r
 - OEIS. A304710 (A. P. Heinz, May 2018) states the equivalence as fact: "number of partitions of 2n where the number of odd parts in even positions differs from the number of odd parts in odd positions". A000712 has Meeussen's 2013 comment and Karlsson's Dec 2025 comment. Heinz's Maple program and b-file for A300789 use the criterion.
 - The A300789 entry itself (rev #11, May 22 2018, local mirror = GitHub) still says "conjectured" and has no %E updates.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex
