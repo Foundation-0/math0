@@ -20,7 +20,7 @@ quietly prove an easier statement than the one the problem's curators wrote down
 ## Highlights
 
 <!-- HIGHLIGHTS:START -->
-**76 verified results.** 21 new results, 32 first formal proofs of known results, 17 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
+**82 verified results.** 24 new results, 35 first formal proofs of known results, 17 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
 
 New results (open problems settled; each checked by the Lean kernel and judged new by an independent novelty referee):
 
@@ -28,8 +28,10 @@ New results (open problems settled; each checked by the Lean kernel and judged n
 * [A332010: the average first letter of one-descent derangements has denominator 2^(n-2)](results/oeis-a332010/README.md)
 * [A338885: the smallest number in row 655 is 104, not A228286(655) = 115](results/oeis-a338885/README.md) ([paper](results/oeis-a338885/paper.pdf))
 * [A348484: no two squares two steps apart; the conjectured formula holds](results/oeis-a348484/README.md) ([paper](results/oeis-a348484/paper.pdf))
+* [A355339: the central even run of the knight-move triangle has length 1 iff n = 2^m - 2](results/oeis-a355339/README.md)
 * [A363609: a(k^3) = 6k(k+2), the cube is the optimal polycube of k^3 dice](results/oeis-a363609/README.md)
 * [A386538: moving the circle's center off the grid enlarges the max lattice polygon (counterexample at n = 7)](results/oeis-a386538/README.md) ([paper](results/oeis-a386538/paper.pdf))
+* [Domino towers of height 2 and of height n-1, n-2, n-3 (A333650): all four Kagey/Luschny conjectures](results/oeis-a333650/README.md)
 * [Internal n-gons in a regular n-gon: triple points occur only for n = 3, 4, 6, and otherwise there are n k^2 + 1 regions (Shannon's A357216 conjecture)](results/oeis-a357216/README.md) ([paper](results/oeis-a357216/paper.pdf))
 * [Prime-Minesweeper on the A060734 array: a(n) < 6, and a(n) = 5 only at n = 6](results/oeis-a326407/README.md) ([paper](results/oeis-a326407/paper.pdf))
 * [A116184: Adamchuk's conjectures on 37^3 dividing the numerator of sum_{k=1}^{36} 1/k^n](results/oeis-a116184/README.md)
@@ -45,6 +47,7 @@ New results (open problems settled; each checked by the Lean kernel and judged n
 * [Odd terms of A323695 occur only at n = k(k+2)](results/oeis-a323695/README.md) ([paper](results/oeis-a323695/paper.pdf))
 * [The 1089-trick map has two 9-digit fixed points (A393794 uniqueness conjecture is false)](results/oeis-a393794/README.md) ([paper](results/oeis-a393794/paper.pdf))
 * [The only fixed points of reverse(x) - maxdigit(x) are 0 and 89](results/oeis-a097154/README.md)
+* [There are no 5-Rotation Cycle Primes (A086004, Conjecture 2)](results/oeis-a086004/README.md)
 <!-- HIGHLIGHTS:END -->
 
 ## Two tracks
