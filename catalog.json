@@ -973,6 +973,29 @@
    "date": "2026-10-18"
   },
   {
+   "id": "OEIS-frontier/A097154",
+   "slug": "oeis-a097154",
+   "title": "The only fixed points of reverse(x) - maxdigit(x) are 0 and 89",
+   "area": "Sequences and series",
+   "source": "OEIS A097154",
+   "source_url": "https://oeis.org/A097154",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A097154.lean",
+    "decl": "Math0.Statements.A097154.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A097154.lean",
+   "our_decl": "Math0.Frontier.A097154.result",
+   "summary": "For a natural number x, let rev(x) be its decimal reversal (rev 0 = 0, trailing zeros are dropped) and maxdig(x) its largest decimal digit (maxdig 0 = 0). Let f(x) = rev(x) - maxdig(x). Then f(x) = x if and only if x = 0 or x = 89.",
+   "notes": "Conjecture as stated in OEIS: \"a(89)=-1 because 89 is the first number that will not reach zero: 98-9=89. It is conjectured that 0 and 89 are the only fixed points of f.\" (A097154, entry by _Jason Earls_, Aug 01 2004. The same sentence appears in A097155 and A097157.)\n\nReferees: **OEIS (local mirror, cross-checked against the current raw GitHub oeisdata files).**\n- A097154 (#4, Dec 15 2017), A097155 (#11, last edited Aug 29 2025) and A097157 (#3) all still say \"It is conjectured that 0 and 89 are the only fixed points of f\".\n- None has an %E line, comment, formula or link recording a proof or counterexample. A097155's only %E is a 2011 data correction by Harvey P. Dale.\n- The cross-referenced entries A097153, A097156 and A097158 (Earls, Aug 2004; extensions by Robert G. Wilson v and Klaus Brockhaus) are purely computational.\n- A grep of the whole local oeisdata mirror finds no other entry that references A097153 through A097158.\n\n**Web searches.** Queries covered the exact map text, \"reversal minus largest digit\", SeqFan 2004, Math StackExchange/MathOverflow-style phrasing, and an extended search. None found a proof.\n- Hits were only the OEIS pages themselves.\n- Unrelated digit-reversal work also came up: arXiv 2410.11784 (1089 attractor), arXiv 2404.06656 (reverse divisors), arXiv math/0511366, and OEIS A393794 (fixed points of the 1089-trick map, Havenaar 2026, a different map).\n- A GMAT forum problem covers only the two-digit equation reverse(n) = n + 9, which has eight solutions (12, ..., 89). That is a different condition and does not address this conjecture.\n\nNo prior resolution was found, so this appears to be the first written proof, and it is Lean-verified.",
+   "date": "2026-10-19"
+  },
+  {
    "id": "OEIS-frontier/A106505",
    "slug": "oeis-a106505",
    "title": "A106505: common sides of A/2A primitive triangles are periodic mod 8, so a(n+5) = a(n) + 8",
@@ -1272,6 +1295,29 @@
    "date": "2026-10-18"
   },
   {
+   "id": "OEIS-frontier/A332010",
+   "slug": "oeis-a332010",
+   "title": "A332010: the average first letter of one-descent derangements has denominator 2^(n-2)",
+   "area": "Discrete geometry",
+   "source": "OEIS A332010",
+   "source_url": "https://oeis.org/A332010",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A332010.lean",
+    "decl": "Math0.Statements.A332010.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A332010.lean",
+   "our_decl": "Math0.Frontier.A332010.result : Math0.Statements.A332010.statement",
+   "summary": "For every n ≥ 2, take the derangements of {1, ..., n} (in one-line notation) that have exactly one descent. The average of their first letters, written in lowest terms, has denominator 2^(n-2). This is Kagey's conjecture T(n,1) = 2^(n-2) in OEIS A332010.",
+   "notes": "Conjecture as stated in OEIS: \"Conjecture: T(n, 1) = 2^(n-2).\" (A332010, entry by Peter Kagey, Feb 04 2020)\n\nReferees: No prior resolution found.\n- OEIS A332010 and A332009 (Peter Kagey, Feb 04 2020; last edits Mar 30 2024) still state \"Conjecture: T(n,1) = 2^(n-2)\" and \"Conjecture: T(n,1) = A083329(n-1)\", with no proof recorded in comments or %E lines. I checked both the local mirror and raw.githubusercontent oeisdata.\n- Related known facts:\n  - A219836 (Callan 2012; links to Fu–Lin–Zeng arXiv:1507.05184 and Alexandersson arXiv:2609.07325) gives a recurrence implying there are 2^(n-2) derangements with one descent. That is only the unreduced denominator.\n  - M. Conger, arXiv math/0508112, proves E[π(1) | des = k] = k+1 over all permutations; this is the analogue for all permutations that the A332010 comment cites.\n  - Kagey, arXiv:2112.05281, treats expected π(1) given k-cycles and does not address derangements by descents.\n  - Eriksen–Freij–Wästlund, arXiv:0811.1925 / EJC 16 (2009) R32, and Han–Xin (2007) cover derangements with prescribed descent sets, with no first-letter averages.\n- Searches of Math StackExchange, arXiv and SeqFan found nothing. MathOverflow was not reachable through the search tool.",
+   "date": "2026-10-19"
+  },
+  {
    "id": "OEIS-frontier/A334603",
    "slug": "oeis-a334603",
    "title": "The period of 1/11^n is 2 * 11^(n-1)",
@@ -1477,6 +1523,29 @@
    "summary": "For n >= 3 let t_n = -5 and t_k = k - (k+1)/t_{k+1} for k = n-1, ..., 2. Let a(n) be the denominator, in lowest terms, of 1/t_2 = 1/(2-3/(3-4/(...(n-1)-n/(-5)))). Then for every n >= 3, either a(n) = 49, or a(n) = 1, or a(n) is prime. This is Bouras' conjecture (2023). The value 49 occurs only at n = 6.",
    "notes": "Conjecture as stated in OEIS: Conjecture: Except for 49, every term of this sequence is either a prime or 1. (Mohammed Bouras, Jun 04 2023; 'The conjecture holds through n=10000' - Bill McEachen, Jul 08 2025)\n\nReferees: No prior resolution of A363482 found. Sources checked:\n- OEIS A363482 (local mirror, identical to upstream oeisdata #29, Jul 13 2025): conjecture plus a numerical check to n = 10000 (McEachen), no proof.\n- Bouras, \"A New Primes-Generating Sequence\", arXiv:2509.09745 (2025): lists A363482 as the k=5 case of n^2+(k-2)n-k, with observations only.\n- Epoch OEIS Open benchmark (github.com/epoch-research/LeanOpenProblems-results, metadata/oeis/conjectures.json): A363482 is absent.\n- google-deepmind/formal-conjectures: no A363482 file.\n- google-deepmind/alphaproof-nexus-results: no A363482 file.\n\nRelated prior results on sibling sequences:\n- A363102 (endpoint -2) proved: T. Adamczewski, \"OEIS Open: How many conjectures can language models turn into theorems?\", arXiv:2608.11941 (2026), Appendix A; also AlphaProof Nexus oeis_a363102_conjecture_1.lean.\n- A356247 (endpoint -1) proved: B. Cloitre, \"On the sequence A356247\" (2025, OEIS-hosted PDF a356247_1.pdf; not readable here).\n- A363347 (endpoint -4) conjectures 1-2 proved: AlphaProof Nexus oeis_363347_conjecture_2.lean; Adamczewski, arXiv:2608.11941.\n\nThe proof here follows the same template as the A363102 proof.",
    "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A363609",
+   "slug": "oeis-a363609",
+   "title": "A363609: a(k^3) = 6k(k+2), the cube is the optimal polycube of k^3 dice",
+   "area": "Discrete geometry",
+   "source": "OEIS A363609",
+   "source_url": "https://oeis.org/A363609",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A363609.lean",
+    "decl": "def statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A363609.lean",
+   "our_decl": "Math0.Frontier.A363609.result",
+   "summary": "Each standard die has opposite faces summing to 7, all dice have the same chirality, and each die may take any of its 24 rotations. Build a face-connected polycube from n dice. A face is visible when the neighbouring cell is empty; faces underneath and faces facing an internal cavity also count. a(n) is the least possible number of visible pips. Claim: for every k > 1, a(k^3) = 6(k+2)k.",
+   "notes": "Conjecture as stated in OEIS: %F A363609 Conjecture: a(k^3) = 6*(k+2)*k for k > 1.  (Unattributed formula line. Entry by _Matt Donahoe_, Jun 11 2023; last edit #45, Sep 03 2023.)\n\nReferees: I found no prior resolution.\n- OEIS A363609, by Matt Donahoe, Jun 11 2023 (revision #45, Sep 03 2023): the local mirror is identical to oeis/oeisdata main on GitHub, and it still states the formula as \"Conjecture: a(k^3) = 6*(k+2)*k for k > 1\".\n- Michael S. Branicky's formulas in the same entry, Jun 11 and Jun 15 2023: these give only upper bounds and loose bounds.\n- Donahoe's program, https://github.com/mdonahoe/oeis/blob/main/A363609/dice.py, with its out.txt: a heuristic search over box-plus-slab layouts, with no optimality proof.\n- OEIS A193416, minimum surface area of polycubes: the unweighted analogue, a(n^3) = 6n^2.\n- AMC 10A 2002 Problem 18 (https://artofproblemsolving.com/wiki/index.php/2002_AMC_10A_Problems/Problem_18): computes the minimum for the 3x3x3 cube alone, 90. It does not show that the cube is optimal among all polycubes.\n- Loomis and Whitney, Bull. AMS 55 (1949) 961-962: the classical inequality behind the projection step.\n- Searches of arXiv, MathOverflow, Math StackExchange, Puzzling and SeqFan turned up no proof and no counterexample.",
+   "date": "2026-10-19"
   },
   {
    "id": "OEIS-frontier/A375522",

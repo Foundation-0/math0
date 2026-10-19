@@ -45,6 +45,7 @@ import Math0.ErdosProblems.Erdos835_johnsonGraph_18_9_chromaticNumber
 import Math0.Frontier.OEIS.A005590
 import Math0.Frontier.OEIS.A062887
 import Math0.Frontier.OEIS.A091817
+import Math0.Frontier.OEIS.A097154
 import Math0.Frontier.OEIS.A106505
 import Math0.Frontier.OEIS.A115026
 import Math0.Frontier.OEIS.A116184
@@ -58,6 +59,7 @@ import Math0.Frontier.OEIS.A300789
 import Math0.Frontier.OEIS.A323695
 import Math0.Frontier.OEIS.A326407
 import Math0.Frontier.OEIS.A326602
+import Math0.Frontier.OEIS.A332010
 import Math0.Frontier.OEIS.A334603
 import Math0.Frontier.OEIS.A335012
 import Math0.Frontier.OEIS.A338885
@@ -67,6 +69,7 @@ import Math0.Frontier.OEIS.A355076
 import Math0.Frontier.OEIS.A357216
 import Math0.Frontier.OEIS.A362086
 import Math0.Frontier.OEIS.A363482
+import Math0.Frontier.OEIS.A363609
 import Math0.Frontier.OEIS.A375522
 import Math0.Frontier.OEIS.A386538
 import Math0.Frontier.OEIS.A392943
