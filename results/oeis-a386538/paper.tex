@@ -1,0 +1,401 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+\usepackage{booktabs}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,noncomputable,unfold,rw,at},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {ℝ}{{$\mathbb{R}$}}1
+    {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {∧}{{$\wedge$}}1 {≤}{{$\le$}}1
+    {⨆}{{$\bigsqcup$}}1 {×}{{$\times$}}1 {¬}{{$\neg$}}1 {⊆}{{$\subseteq$}}1
+    {∈}{{$\in$}}1 {→}{{$\to$}}1 {←}{{$\leftarrow$}}1 {²}{{$^2$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+\newunicodechar{⨆}{\ensuremath{\bigsqcup}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\DeclareMathOperator{\conv}{conv}
+\newcommand{\vol}{\lambda}
+
+\title[A non-lattice center enlarges the largest lattice polygon in a disk]{Moving the center off the lattice enlarges the largest lattice polygon in a disk of radius $7$: a counterexample to a conjecture in OEIS A386538}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 18, 2026}
+
+\begin{document}
+\begin{abstract}
+For $n\ge0$ let $a(n)$ (OEIS A386538) be the largest area of a polygon whose vertices are points of $\Z^2$ and which lies in a closed disk of radius $n$ centered at a point of $\Z^2$; it equals the area of the convex hull of the lattice points in that disk.
+In 2025 F.~Huber conjectured that this maximum does not increase when the center of the disk is allowed to be an arbitrary point of the plane.
+We show that the conjecture fails at $n=7$: for the center $(5/12,5/24)$ the convex hull of the lattice points in the disk of radius $7$ has area $281/2$, whereas $a(7)=138$; the formal proof establishes the lower bound $277/2$ for the former area and the upper bound $3457/25$ for the latter, which suffices.
+To our knowledge this is a new, if elementary, result: the conjecture is still stated as open in the OEIS, and we found no earlier counterexample.
+The refutation is verified in Lean~4 against a frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry; this statement is not part of the formal-conjectures repository.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For $c\in\R^2$ and $r\ge0$ let $L(c,r)=\{(x,y)\in\Z^2:(x-c_1)^2+(y-c_2)^2\le r^2\}$ be the set of lattice points in the closed disk of radius $r$ around $c$, and let $\vol$ denote Lebesgue measure on $\R^2$.
+The OEIS sequence A386538, contributed by Felix Huber on August~5, 2025 \cite{A386538}, is defined as the maximum possible area of a polygon within a circle of radius $n$ whose center and vertices lie on points of the unit square grid.
+Every polygon with vertices in the finite set $L(0,n)$ lies in its convex hull, and the hull is itself such a polygon (it lies in the disk because the disk is convex), so
+\[
+  a(n)=\vol\bigl(\conv L(0,n)\bigr),\qquad (a(n))_{n\ge0}=0,2,8,24,42,74,104,138,186,\dots
+\]
+The entry conjectures that the maximum would be the same if only the vertices, but not the center, were required to be grid points; that is, $\vol(\conv L(c,n))\le a(n)$ for every $c\in\R^2$.
+The companion entry A386539 \cite{A386539}, by the same author, states the same conjecture for axis-parallel ellipses with integer semi-axes $n\ge k$; its diagonal $T(n,n)$ is A386538.
+
+\subsection*{Result}
+The conjecture is false. At $n=7$ and $c_0=(5/12,5/24)$ the hull of $L(c_0,7)$ is a $15$-gon of area $281/2$, while $a(7)=138$ (Remark~\ref{rem:exact}). The formal proof (Theorem~\ref{thm:main}) shows $\vol(\conv L(0,7))\le 3457/25=138.28$ and $\vol(\conv L(c_0,7))\ge 277/2=138.5$. A finite search over centers finds further counterexamples at $n=8,12,14$ (Remark~\ref{rem:more}).
+
+\subsection*{Prior work and status}
+It is known that moving the center off the lattice can increase the \emph{number} of lattice points covered by a disk of given radius; see A123690 and A295344 \cite{A123690,A295344}. This makes the counterexample unsurprising, but the conjecture concerns the area of the hull, a different quantity. The integer convex hull $\conv(\Z^d\cap rB^d)$ of an origin-centered ball has been studied for its numbers of vertices and faces by Balog and B\'ar\'any \cite{BB} and Balog and Deshouillers \cite{BD} in the plane and by B\'ar\'any and Larman \cite{BL} in all dimensions; these works do not compare different centers. Zhao \cite{Zhao1,Zhao2} studies the largest circles enclosing exactly $n$ interior lattice points, again a counting question.
+The entry A386538 (revision~\#23, August~19, 2025) still states the conjecture without comment, and so does A386539 (revision~\#19). The math0 referees also read the OEIS entries citing these two sequences (A391113, A396223, A398490) and the cross-referenced entries, and searched the web, SeqFan, MathOverflow and Mathematics Stack Exchange; they found no counterexample or discussion of the conjecture. It is not among the OEIS statements of the formal-conjectures repository \cite{FC}.
+We therefore classify the result as new. It is elementary: the counterexample is an explicit center, and the proof compares two explicit polygons.
+
+\section{Statement}\label{sec:statement}
+
+The conjecture is stated in the COMMENTS section of A386538 (F.~Huber, Aug.~05, 2025), verbatim:
+\begin{quote}
+\texttt{Conjecture: The maximum possible area of a polygon within the circle would be the same if only the vertices but not the center were fixed on grid points.}
+\end{quote}
+
+\begin{conjecture}[Huber \cite{A386538}]\label{conj}
+For every $n\in\N$, $\sup_{c\in\R^2}\vol(\conv L(c,n))=\vol(\conv L(0,n))$.
+\end{conjecture}
+
+Since $c=0$ is allowed, this is equivalent to $\vol(\conv L(c,n))\le\vol(\conv L(0,n))$ for all $c$ and $n$. A lattice-point center may be taken to be the origin because translations by lattice vectors preserve $\Z^2$ and areas.
+
+\begin{theorem}\label{thm:main}
+Let $c_0=(5/12,5/24)$. Then
+$\vol(\conv L(0,7))\le\frac{3457}{25}<\frac{277}{2}\le\vol(\conv L(c_0,7))$.
+Consequently $\sup_{c}\vol(\conv L(c,7))>\vol(\conv L(0,7))$, and Conjecture~\ref{conj} is false.
+\end{theorem}
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A386538.lean}, reviewed for fidelity, and frozen (SHA-256 \texttt{9fb23f8d\ldots b1ef2f1}) before any proof attempt. The definitions it uses are, verbatim except that docstrings are omitted:
+\begin{lstlisting}
+namespace Math0.Statements.A386538
+open MeasureTheory
+
+def latticeDisk (c : ℝ × ℝ) (r : ℝ) : Set (ℝ × ℝ) :=
+  {p | ∃ x y : ℤ, p = ((x : ℝ), (y : ℝ)) ∧ ((x : ℝ) - c.1) ^ 2 + ((y : ℝ) - c.2) ^ 2 ≤ r ^ 2}
+
+noncomputable def maxArea (c : ℝ × ℝ) (r : ℝ) : ENNReal :=
+  volume (convexHull ℝ (latticeDisk c r))
+
+def statement : Prop :=
+  ∀ n : ℕ, (⨆ c : ℝ × ℝ, maxArea c n) = maxArea 0 n
+
+end Math0.Statements.A386538
+\end{lstlisting}
+Here \texttt{latticeDisk c r} is $L(c,r)\subseteq\R\times\R$, with the boundary of the disk included, as $a(1)=2$ requires (the square with vertices $(\pm1,0),(0,\pm1)$). \texttt{maxArea c r} is $\vol(\conv L(c,r))\in[0,\infty]$, for the Lebesgue (product) measure on $\R\times\R$; degenerate hulls have measure $0$, as $a(0)=0$ requires. The radius $n\in\N$ is cast to $\R$, and $\bigsqcup$ is the supremum in $[0,\infty]$. So \decl{statement} is Conjecture~\ref{conj}, for all $n\ge0$ (the entry's offset).
+
+\subsection*{Check against the OEIS data}
+The statement uses no computable function, but the statement file also defines a computable \texttt{a~:~ℕ~→~ℕ}: it lists the points of $L(0,n)$ in lexicographic order, computes their convex hull by Andrew's monotone chain algorithm, and halves the shoelace sum. Three lemmas, each proved by \texttt{decide +kernel} (the kernel itself evaluates \decl{a}), check it against the entry: \decl{a_data} checks the listed terms $a(0),\dots,a(12)=0,2,8,24,42,74,104,138,186,240,304,362,424$; \decl{a_data_more} checks the listed $a(n)$ for $n=14,15,16,19,20,21,24,25$; and \decl{a_13} checks $a(13)=516$. That \texttt{a n} equals \texttt{maxArea 0 n} is not proved in Lean; the refutation uses only \decl{maxArea}.
+
+\begin{remark}[The listed terms from $a(13)$ on]\label{rem:data}
+The entry lists $a(13)=512$, but the convex $20$-gon with vertices $(\pm13,0)$, $(\pm12,\pm5)$, $(\pm10,\pm8)$, $(\pm8,\pm10)$, $(\pm5,\pm12)$, $(0,\pm13)$ lies in the closed disk of radius $13$ (all its vertices except $(\pm10,\pm8)$ and $(\pm8,\pm10)$, where $x^2+y^2=164$, lie on the boundary circle); it is the convex hull of $L(0,13)$ and has area $516$. The listed data come from the formula $4n+4\sum_{x=1}^n y_x-2\,\#\{y_1,\dots,y_n\}$, $y_x=\lfloor\sqrt{n^2-x^2}\rfloor$, in the entry's programs; for $13\le n\le48$ they equal the true maximum only for $n=14,15,16,19,20,21,24,25$ and are smaller otherwise (math0 computations). At $n=7$ all readings give $138$.
+\end{remark}
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file. Both bounds compare the hulls with finite unions of trapezoids whose areas are computed by Fubini's theorem. The Lean names of the auxiliary (private) declarations are given in brackets.
+
+\subsection{Trapezoids}
+For reals $a<b$ and $p,q,r,t$ put $f(x)=px+q$, $g(x)=rx+t$, and let
+$T_{[a,b]}(f,g)=\{(x,y):a\le x\le b,\ f(x)<y<g(x)\}$ and $T_{(a,b)}(f,g)=\{(x,y):a<x<b,\ f(x)<y<g(x)\}$.
+In Lean these are \texttt{upSlab a b p q r t} and \texttt{lowSlab a b p q r t}, defined through Mathlib's \decl{regionBetween}, which is open in the vertical direction.
+
+\begin{lemma}[\decl{vol_up}, \decl{vol_low}]\label{lem:area}
+If $a<b$, $f(a)\le g(a)$ and $f(b)\le g(b)$, then $T_{[a,b]}(f,g)$ and $T_{(a,b)}(f,g)$ both have measure
+\[
+  \frac{(r-p)(b^2-a^2)}{2}+(t-q)(b-a)=\frac{b-a}{2}\Bigl(\bigl(g(a)-f(a)\bigr)+\bigl(g(b)-f(b)\bigr)\Bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+Since $g-f$ is affine and nonnegative at $a$ and $b$, it is nonnegative on $[a,b]$. By Fubini's theorem (Mathlib's \decl{volume_regionBetween_eq_integral}), the region strictly between integrable functions $f\le g$ over a measurable set $I$ has measure $\int_I(g-f)$. For $I=[a,b]$ or $(a,b)$ this is $\int_a^b((r-p)x+(t-q))\,dx$, which gives the formula.
+\end{proof}
+
+\begin{lemma}[\decl{lowSlab_subset}]\label{lem:inside}
+Let $K\subseteq\R^2$ be convex and $a<b$. If the corners $(a,f(a))$, $(b,f(b))$, $(a,g(a))$, $(b,g(b))$ lie in $K$, then $T_{(a,b)}(f,g)\subseteq K$.
+\end{lemma}
+
+\begin{proof}
+Let $(x,y)\in T_{(a,b)}(f,g)$ and $\theta=(x-a)/(b-a)\in(0,1)$. Since $f$ is affine, $(x,f(x))=(1-\theta)(a,f(a))+\theta(b,f(b))\in K$, and likewise $(x,g(x))\in K$. As $f(x)<y<g(x)$, the number $s=(y-f(x))/(g(x)-f(x))$ lies in $(0,1)$, and $(x,y)=(1-s)(x,f(x))+s(x,g(x))\in K$.
+\end{proof}
+
+\subsection{The upper bound for the lattice center}
+Let $P_0\subseteq\R^2$ be the set of $(x,y)$ satisfying the twelve inequalities
+\begin{equation}\label{eq:H0}
+  \pm3x\pm y\le21,\qquad \pm x\pm y\le 9,\qquad \pm x\pm3y\le21
+\end{equation}
+(all sign combinations), the $12$-gon with vertices $(\pm7,0)$, $(\pm6,\pm3)$, $(\pm3,\pm6)$, $(0,\pm7)$. In Lean it is \texttt{HP H0}, where \decl{H0} lists the twelve triples $(\alpha,\beta,\gamma)$ of the inequalities $\alpha x+\beta y\le\gamma$. As an intersection of half-planes, $P_0$ is convex [\decl{convex_HP}].
+
+\begin{lemma}[\decl{check0}, \decl{int_check0}, \decl{disk0_subset}]\label{lem:check0}
+$L(0,7)\subseteq P_0$.
+\end{lemma}
+
+\begin{proof}
+Let $(x,y)\in\Z^2$ with $x^2+y^2\le49$. Then $|x|,|y|\le7$, so $(x+7,y+7)\in\{0,\dots,14\}^2$, and the claim reduces to checking $15\cdot15$ candidate points against twelve inequalities. In Lean this finite statement is \decl{check0}, proved by \texttt{decide +kernel} (Section~\ref{sec:lean}).
+By hand: the disk and the system \eqref{eq:H0} are invariant under $(x,y)\mapsto(\pm x,\pm y)$ and $(x,y)\mapsto(y,x)$, so we may assume $0\le y\le x$. Then the left side of each inequality in \eqref{eq:H0} is at most $3x+y$, $x+y$ or $x+3y\le3x+y$, respectively, so it suffices that $3x+y\le21$ and $x+y\le9$. This holds since $y=0$ if $x=7$, $y\le3$ if $x=6$, $y\le4$ if $x=5$, and $y\le x\le4$ otherwise.
+\end{proof}
+
+Put $\delta=1/100$ and let $U_0$ [\decl{U0}] be the union of the six trapezoids $T_{[a,b]}(f-\delta,g+\delta)$ of Table~\ref{tab:upper}, where $f$ and $g$ are the lower and upper edges of $P_0$ over $[a,b]$. The thickening by $\delta$ is needed because the trapezoids are open in the vertical direction, while $P_0$ contains its boundary.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{cccc}
+\toprule
+$[a,b]$ & $f(x)$ & $g(x)$ & $\vol\bigl(T_{[a,b]}(f-\delta,g+\delta)\bigr)$\\
+\midrule
+$[-7,-6]$ & $-3x-21$ & $3x+21$ & $3+2\delta=151/50$\\
+$[-6,-3]$ & $-x-9$ & $x+9$ & $27+6\delta=1353/50$\\
+$[-3,0]$ & $-x/3-7$ & $x/3+7$ & $39+6\delta=1953/50$\\
+$[0,3]$ & $x/3-7$ & $-x/3+7$ & $39+6\delta=1953/50$\\
+$[3,6]$ & $x-9$ & $-x+9$ & $27+6\delta=1353/50$\\
+$[6,7]$ & $3x-21$ & $-3x+21$ & $3+2\delta=151/50$\\
+\bottomrule
+\end{tabular}
+\caption{The six thickened trapezoids covering $P_0$; total area $138+28\delta=3457/25$.}\label{tab:upper}
+\end{table}
+
+\begin{lemma}[\decl{HP_subset_U0}, \decl{vol_U0}]\label{lem:U0}
+$P_0\subseteq U_0$ and $\vol(U_0)\le 3457/25$.
+\end{lemma}
+
+\begin{proof}
+Let $(x,y)\in P_0$. Adding $-3x-y\le21$ and $-3x+y\le21$ gives $x\ge-7$; similarly $x\le7$. If $x\le-6$, the same two inequalities give $-3x-21\le y\le 3x+21$, so $(x,y)$ lies in the first trapezoid; the inequalities become strict after the thickening. Likewise, if $-6<x\le-3$ use $-x\mp y\le9$; if $-3<x\le0$, $-x\mp3y\le21$; if $0<x\le3$, $x\mp3y\le21$; if $3<x\le6$, $x\mp y\le9$; and if $6<x$, $3x\mp y\le21$ and $x\le7$.
+The areas in Table~\ref{tab:upper} follow from Lemma~\ref{lem:area}; for instance, over $[-6,-3]$ the vertical widths are $6+2\delta$ and $12+2\delta$ at the ends, so the area is $\tfrac32(18+4\delta)=27+6\delta$. Subadditivity of $\vol$ gives $\vol(U_0)\le 2(3+27+39)+28\delta=3457/25$.
+\end{proof}
+
+\begin{proposition}[\decl{hull0_subset}]\label{prop:upper}
+$\vol(\conv L(0,7))\le 3457/25$.
+\end{proposition}
+
+\begin{proof}
+$P_0$ is convex and contains $L(0,7)$ (Lemma~\ref{lem:check0}), so $\conv L(0,7)\subseteq P_0\subseteq U_0$. Apply monotonicity of $\vol$ and Lemma~\ref{lem:U0}.
+\end{proof}
+
+\subsection{The lower bound for the center $c_0=(5/12,5/24)$}
+For $x\in X=\{-6,\dots,-1\}\cup\{2,\dots,7\}$ let $\ell(x)$ and $h(x)$ be the lowest and highest $y$ with $(x,y)\in L(c_0,7)$:
+\[
+\setlength{\arraycolsep}{4pt}
+\begin{array}{c|cccccccccccc}
+x & -6 & -5 & -4 & -3 & -2 & -1 & 2 & 3 & 4 & 5 & 6 & 7\\\hline
+\ell(x) & -2 & -4 & -5 & -5 & -6 & -6 & -6 & -6 & -5 & -5 & -4 & -2\\
+h(x) & 3 & 4 & 5 & 6 & 6 & 7 & 7 & 6 & 6 & 5 & 4 & 2
+\end{array}
+\]
+(The columns $x=0,1$ are omitted because $\ell=-6$ and $h=7$ on all of $\{-1,0,1,2\}$.)
+
+\begin{lemma}[\decl{mem_hull_c0}]\label{lem:points}
+The $24$ points $(x,\ell(x))$, $(x,h(x))$, $x\in X$, lie in $L(c_0,7)$.
+\end{lemma}
+
+\begin{proof}
+For $(x,y)\in\Z^2$, $576\bigl((x-\tfrac5{12})^2+(y-\tfrac5{24})^2\bigr)=4(12x-5)^2+(24y-5)^2$, and the condition is that this integer is at most $576\cdot49=28224$. For the $24$ points its values range from $22349$ (at $(-3,-5)$) to $28205$ (at $(-6,3)$). In Lean each membership is proved by \decl{norm_num}.
+\end{proof}
+
+Let $L_0$ [\decl{L0}] be the union of the eleven open trapezoids $T_{(a,b)}(f,g)$ of Table~\ref{tab:lower}, one for each pair $a<b$ of consecutive elements of $X$, where $f$ and $g$ are the affine interpolations of $\ell$ and $h$ between $a$ and $b$.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{cccc@{\qquad}cccc}
+\toprule
+$(a,b)$ & $f(x)$ & $g(x)$ & area & $(a,b)$ & $f(x)$ & $g(x)$ & area\\
+\midrule
+$(-6,-5)$ & $-2x-14$ & $x+9$ & $13/2$ & $(2,3)$ & $-6$ & $-x+9$ & $25/2$\\
+$(-5,-4)$ & $-x-9$ & $x+9$ & $9$ & $(3,4)$ & $x-9$ & $6$ & $23/2$\\
+$(-4,-3)$ & $-5$ & $x+9$ & $21/2$ & $(4,5)$ & $-5$ & $-x+10$ & $21/2$\\
+$(-3,-2)$ & $-x-8$ & $6$ & $23/2$ & $(5,6)$ & $x-10$ & $-x+10$ & $9$\\
+$(-2,-1)$ & $-6$ & $x+8$ & $25/2$ & $(6,7)$ & $2x-16$ & $-2x+16$ & $6$\\
+$(-1,2)$ & $-6$ & $7$ & $39$ & & & & \\
+\bottomrule
+\end{tabular}
+\caption{The eleven open trapezoids, with corners at the points of Lemma~\ref{lem:points}; total area $277/2$.}\label{tab:lower}
+\end{table}
+
+\begin{proposition}[\decl{L0_subset}, \decl{vol_L0}]\label{prop:lower}
+$L_0\subseteq\conv L(c_0,7)$ and $\vol(L_0)=277/2$. Hence $\vol(\conv L(c_0,7))\ge277/2$.
+\end{proposition}
+
+\begin{proof}
+The convex set $\conv L(c_0,7)$ contains the four corners of each trapezoid by Lemma~\ref{lem:points}, hence each trapezoid by Lemma~\ref{lem:inside}.
+The trapezoids are measurable and pairwise disjoint, since their $x$-ranges are disjoint open intervals [\decl{vol_union_lowSlab}, applied ten times: the trapezoid over $(a,b)$ lies in $\{x<b\}$, the later ones in $\{x\ge b\}$]. By additivity and Lemma~\ref{lem:area}, $\vol(L_0)$ is the sum of the areas in Table~\ref{tab:lower}, namely $\tfrac{13+21+23+25+25+23+21}{2}+9+39+9+6=\tfrac{277}{2}$.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:main}}\label{sec:final}
+This is the Lean proof of \decl{result}. By Propositions~\ref{prop:upper} and~\ref{prop:lower},
+\[
+  \vol(\conv L(0,7))\le\tfrac{3457}{25}<\tfrac{277}{2}=\vol(L_0)\le\vol(\conv L(c_0,7))\le\sup\nolimits_{c\in\R^2}\vol(\conv L(c,7)),
+\]
+as $6914<6925$. If Conjecture~\ref{conj} held, the case $n=7$ would give $\sup_c\vol(\conv L(c,7))=\vol(\conv L(0,7))$, a contradiction.\qed
+
+\begin{remark}[Exact values; not formalized]\label{rem:exact}
+The vertices of $P_0$ lie in $L(0,7)$, so $\conv L(0,7)=P_0$, of area $138=a(7)$. The convex hull of the $157$ points of $L(c_0,7)$ is the $15$-gon with vertices
+$(-6,-2)$, $(-5,-4)$, $(-4,-5)$, $(-2,-6)$, $(3,-6)$, $(5,-5)$, $(6,-4)$, $(7,-2)$, $(7,2)$, $(6,4)$, $(4,6)$, $(2,7)$, $(-1,7)$, $(-3,6)$, $(-6,3)$,
+of area $281/2$. It exceeds $L_0$ by four triangles of area $1/2$, at the non-vertex points $(-3,-5)$, $(-2,6)$, $(3,6)$, $(4,-5)$ of Lemma~\ref{lem:points}. All points of $L(c_0,7)$ lie strictly inside the circle (the least value of $28224-576\,d^2$ is $19$), so the example also works for the open disk, and it persists for all centers near $c_0$, which keep the $15$ vertices in the disk.
+\end{remark}
+
+\begin{remark}[Other radii; not formalized]\label{rem:more}
+By symmetry, centers with $0\le c_2\le c_1\le 1/2$ suffice. An exact search by math0 over such centers with coordinates in $\frac1{48}\Z$, for $n\le14$, finds larger hulls for $n=8$ (area $189>186$ at $(7/16,7/16)$), $n=12$ ($431>424$ at $(7/16,3/8)$) and $n=14$ ($1191/2>594$ at $(23/48,11/48)$), besides $n=7$; for $n\le6$ and $n=9,10,11,13$ none was found on this grid, which is not a proof that none exists. Since $T(7,7)=a(7)$, the same example refutes the conjecture of A386539 for $n=k=7$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in \path{lean/Math0/Frontier/OEIS/A386538.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main theorem is \decl{Math0.Frontier.A386538.result} of type \texttt{¬ Math0.Statements.A386538.statement}; its proof is a \texttt{calc} chain following the display in Section~\ref{sec:final}, combined with \decl{le_iSup} at $c_0$ and the case $n=7$ of the hypothesis. The auxiliary declarations are private and named in Section~\ref{sec:proof}.
+
+\subsection*{Kernel computation}
+The only finite computation is the lemma behind Lemma~\ref{lem:check0}:
+\begin{lstlisting}
+private lemma check0 : ∀ i : ℕ, i < 15 → ∀ j : ℕ, j < 15 →
+    ((i : ℤ) - 7) ^ 2 + ((j : ℤ) - 7) ^ 2 ≤ 49 →
+      ∀ h ∈ H0, h.1 * ((i : ℤ) - 7) + h.2.1 * ((j : ℤ) - 7) ≤ h.2.2 := by
+  decide +kernel
+\end{lstlisting}
+With \texttt{decide +kernel} the Lean kernel itself evaluates the decision procedure for this bounded statement to \decl{true}; no compiled code is trusted, and \decl{native_decide} (which would add the axiom \decl{Lean.ofReduceBool}) is not used. All other steps, including the $24$ disk memberships and the trapezoid areas, are proved by ordinary tactics and Mathlib lemmas. The file sets no options and compiles in under a minute, much of it spent loading Mathlib.
+
+\subsection*{Audit}
+The file ends with \texttt{\#math0\_settles result statement} (fully qualified names). This command (\path{lean/Math0/Audit.lean}) fails unless (1) \decl{statement} is a universe-monomorphic definition of type \texttt{Prop}; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (rejecting \decl{sorryAx}, \decl{Lean.ofReduceBool} and custom axioms); and (3) the type of \decl{result} is syntactically the statement or its negation, with no unfolding. It reports
+\begin{lstlisting}
+math0 audit: 'Math0.Statements.A386538.statement' depends on axioms
+  [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A386538.result' depends on axioms
+  [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A386538.result' refutes
+  'Math0.Statements.A386538.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it builds all math0 results with \texttt{lake build}, re-running every audit command, and checks that the pinned dependencies are unmodified. The single file is checked by \texttt{lake env lean Math0/Frontier/OEIS/A386538.lean} in the directory \path{lean}.
+
+\begin{thebibliography}{99}
+\small
+
+\bibitem{BB}
+A.~Balog and I.~B\'ar\'any, \emph{On the convex hull of the integer points in a disc}, in: Discrete and Computational Geometry (J.~E. Goodman, R.~Pollack, W.~Steiger, eds.), DIMACS Ser. Discrete Math. Theoret. Comput. Sci. \textbf{6}, Amer. Math. Soc., Providence, RI, 1991, 39--44.
+
+\bibitem{BD}
+A.~Balog and J.-M.~Deshouillers, \emph{On some convex lattice polytopes}, in: Number Theory in Progress, Vol.~2 (K.~Gy\H{o}ry, H.~Iwaniec, J.~Urbanowicz, eds.), de Gruyter, Berlin, 1999, 591--606.
+
+\bibitem{BL}
+I.~B\'ar\'any and D.~G.~Larman, \emph{The convex hull of the integer points in a large ball}, Math. Ann. \textbf{312} (1998), 167--181.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A123690}
+The OEIS Foundation Inc., \url{https://oeis.org/A123690}, entry by H.~Pfoertner (2006).
+
+\bibitem{A295344}
+The OEIS Foundation Inc., \url{https://oeis.org/A295344}, entry by A.~Weso\l owski (2017).
+
+\bibitem{A386538}
+The OEIS Foundation Inc., \url{https://oeis.org/A386538}, entry by F.~Huber (2025).
+
+\bibitem{A386539}
+The OEIS Foundation Inc., \url{https://oeis.org/A386539}, entry by F.~Huber (2025).
+
+\bibitem{Zhao1}
+J.~Zhao, \emph{The largest circle enclosing $n$ lattice points}, arXiv:2505.06234, 2025.
+
+\bibitem{Zhao2}
+J.~Zhao, \emph{Largest circle enclosing exactly $n$ interior lattice points.~II}, arXiv:2609.16081, 2026.
+
+\end{thebibliography}
+
+\end{document}

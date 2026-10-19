@@ -29,6 +29,10 @@ Related but not resolving:
 
 No prior proof or counterexample found.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

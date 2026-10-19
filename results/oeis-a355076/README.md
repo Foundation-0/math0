@@ -22,6 +22,10 @@ Referees: - **Row-sum theorem (the key ingredient):** K. Siddharth Choudary and 
 - **Classical facts:** OEIS A002487 records a(2^k) = 1 and a(2^k − 1) = k (Adamchuk comment), and that a(n)/a(n+1) enumerates the rationals (Stern; N. Calkin and H. Wilf, "Recounting the rationals", Amer. Math. Monthly 107 (2000)).
 - **The conjecture itself:** OEIS A355076 (R. Sigrist, Jun 18 2022, rev. #11) is still listed as a conjecture with no %E edits. A355075 is the matching numerators entry. I found no explicit resolution anywhere; the result follows immediately from the Choudary–Reddy row sum plus the classical facts above.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

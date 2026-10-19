@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: %C a(n) < 6 (conjectured). %C a(n) = 5 for n={6} (
 
 Referees: OEIS A326407 (Tatkiewicz, Oct 2019; last edit #27, Mar 20 2020) still lists "a(n) < 6" and "a(n) = 5 for n={6}" as conjectured, with no %E edits or proof links. OEIS A327893 (hexagonal spiral, De Vlieger 2019) records Tatkiewicz's parity argument bounding its terms by 4. That is the same technique applied to a different grid, not a proof for A326407. OEIS A326408 and A326409 state "a(n) < 5" without "(conjectured)" but give no proof. A326405, A326406, A326410, A060734, A136626 and A136627 contain nothing relevant. Web searches (arXiv, MathOverflow/Math StackExchange, SeqFan, general) found no prior proof or counterexample for A326407.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

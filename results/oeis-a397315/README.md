@@ -25,6 +25,10 @@ Referees: The refutation is in Arjun Pemmasani's GitHub repository "Kagey-Proble
 
 The source problem is Peter Kagey's Open Problem Collection, Problem 001 (https://peterkagey.com/problems/001/); his page lists no values. The companion entry A399580 has nothing on 5 x 8. Neither OEIS entry, in the local mirror or on GitHub (#38 and #24), has been updated with the refutation yet.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex
