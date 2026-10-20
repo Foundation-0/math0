@@ -1,0 +1,343 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    noncomputable,private},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8, upquote=true,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1
+    {↔}{{$\leftrightarrow$}}1 {→}{{$\to$}}1 {←}{{$\leftarrow$}}1 {∧}{{$\wedge$}}1
+    {∨}{{$\vee$}}1 {≤}{{$\le$}}1 {²}{{$^2$}}1 {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1
+    {×}{{$\times$}}1 {∈}{{$\in$}}1 {≥}{{$\ge$}}1 {·}{{$\cdot$}}1 {…}{{$\dots$}}1
+    {^}{{\textasciicircum}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Per}{\mathcal{P}}
+\newcommand{\Leg}{\mathcal{L}}
+\newcommand{\LegOK}{\mathrm{LegOK}}
+\DeclareMathOperator{\cnt}{count}
+\DeclareMathOperator{\nth}{nth}
+
+\title[Perimeters of primitive Heronian isosceles triangles]{Perimeters of primitive Heronian isosceles triangles: a formal proof that $\mathrm{A308222}(n)=2\cdot\mathrm{A096033}(n+2)$}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 19, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $a(n)$ be the $n$-th smallest perimeter of a primitive Heronian isosceles triangle (OEIS A308222), and let $\mathrm{A096033}(n)$ be the $n$-th smallest difference between a leg and the hypotenuse of a primitive Pythagorean triangle. We prove that $a(n)=2\cdot\mathrm{A096033}(n+2)$ for every $n\ge1$, an identity that P.~Kagey recorded as a conjecture in 2019 and that the entry still marks as conjectured. The identity is a short consequence of the classical description of primitive isosceles Heronian triangles as two copies of a primitive Pythagorean triangle glued along a leg (Carlson 1970, corrected by Singmaster 1973), and a Mathematics Stack Exchange answer linked from the entry derives the relevant semiperimeters; we therefore classify our result as the first formal proof of a known result. Our proof shows directly that $2m$ is a perimeter if and only if $m\ge3$ is an odd square or twice a square, and transfers this to the two sequences by a counting argument. It is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, reviewed for fidelity, and frozen before the proof attempt.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+A triangle is \emph{Heronian} if its side lengths and its area are integers, and \emph{primitive} if its three side lengths have no common divisor greater than $1$. The OEIS entry A308222 \cite{A308222}, contributed by Peter Kagey on May~16, 2019, is ``Numbers that are the perimeter of a primitive Heronian isosceles triangle'': $16,18,36,50,64,98,100,144,\dots$, starting with the triangles $(5,5,6)$ and $(5,5,8)$. Its FORMULA section relates it to A096033 \cite{A096033}, ``Difference between leg and hypotenuse in primitive Pythagorean triangles'': $1,2,8,9,18,25,32,49,50,\dots$ (Beedassy, 2004). The conjecture is that the perimeters are twice the leg--hypotenuse differences, with an index shift of two; Theorem~\ref{thm:main} proves it.
+
+\subsection*{Prior work}
+The structure behind the identity is classical. Carlson \cite{Carlson} proved that every Heronian triangle is, up to scaling, two Pythagorean triangles joined along a common side. His Lemma~2 states that a primitive Heronian triangle is isosceles if and only if its sides are given by his general formulas with the two Pythagorean triangles taken equal, that is, $(u^2+v^2,\,u^2+v^2,\,2(u^2-v^2))$ or $(u^2+v^2,\,u^2+v^2,\,4uv)$, or a reduction of one of these; in other words, the triangle is two copies of one Pythagorean triangle. Singmaster \cite{Singmaster} pointed out errors in Carlson's paper (notably the use of the form $u^2+v^2,u^2-v^2,2uv$ for all Pythagorean triangles), remarked that Lemma~2 is unclearly stated, and gave a corrected form of it: the isosceles Heronian triangles are exactly $a(u^2+v^2),a(u^2+v^2),4auv$ and $a(u^2+v^2),a(u^2+v^2),2a(u^2-v^2)$, and such a triangle is primitive if and only if $a=1$, $\gcd(u,v)=1$ and $u\not\equiv v\pmod 2$. The same parametrization appears in the Wikipedia article \cite{Wiki}, which the entry links. On May~17, 2019, the day after creating the entry, Kagey asked on Mathematics Stack Exchange \cite{MSEq} for a characterization of the semiperimeters of (not necessarily primitive) isosceles Heronian triangles. An answer by the user ``George'' \cite{MSEa}, linked from A308222, quotes Carlson's lemma and concludes that the semiperimeters of the primitive ones are $2u^2$ and $(u+v)^2$. The answer states only this necessity direction; it does not state that every such value occurs, nor the identity with A096033. That A096033 consists of the odd squares and the numbers $2j^2$ is a comment in that entry (A.~Weimholt, 2010).
+
+From Singmaster's form of Lemma~2 the conjecture follows in a few lines (Remark~\ref{rem:lit}). Accordingly we classify our result as the \emph{first formal proof of a known result}. The math0 referees found no explicit statement and proof of the identity itself in the literature or in the cross-referenced OEIS entries, and no prior formalization; the current revision of A308222 (\#20, August~12, 2022) still marks it ``(conjectured)''. Our proof (Section~\ref{sec:proof}) works with the perimeter directly: it reduces the area condition to ``$m(2s-m)$ is a square'' and handles the two parities of $m$ by coprimality arguments, with explicit legs and B\'ezout certificates for the converse.
+
+\section{Statement}\label{sec:statement}
+
+\begin{definition}\label{def:main}
+For $x,y,z\in\N$ let $H(x,y,z)=(x+y+z)(-x+y+z)(x-y+z)(x+y-z)\in\Z$. By Heron's formula, $H(x,y,z)=16\cdot\mathrm{area}^2$ for a triangle with sides $x,y,z$.
+\begin{enumerate}
+\item $\Per$ is the set of $P\in\N$ for which there are $x,y,z\in\N$ with $x+y+z=P$ such that: $x<y+z$, $y<x+z$, $z<x+y$; $16A^2=H(x,y,z)$ for some $A\in\N$; $\gcd(x,y,z)=1$; and two of $x,y,z$ are equal.
+\item $\Leg$ is the set of $d\in\N$ for which there are $x,y,z\in\N$ with $x,y\ge1$, $x^2+y^2=z^2$, $\gcd(x,y)=1$ and $z=x+d$.
+\item $a(n)$ and $\mathrm{A096033}(n)$, for $n\ge1$, are the $n$-th smallest elements of $\Per$ and of $\Leg$.
+\end{enumerate}
+\end{definition}
+
+Both sets are infinite (Lemma~\ref{lem:L} and Theorem~\ref{thm:set} below), so $a(n)$ and $\mathrm{A096033}(n)$ are defined for every $n\ge1$.
+
+\begin{theorem}[Kagey's conjecture]\label{thm:main}
+For every $n\ge1$, $a(n)=2\cdot\mathrm{A096033}(n+2)$.
+\end{theorem}
+
+For example $a(1)=16=2\cdot8$ and $a(2)=18=2\cdot9$. For $n=0$ the shifted formula would read $a(0)=2\cdot\mathrm{A096033}(2)=4$, but $4\notin\Per$; the conjecture is stated for $n\ge1$, the range of the entry. The proof also gives the set of perimeters explicitly:
+
+\begin{theorem}\label{thm:set}
+$\Per=\{2d: d\in\Leg,\ d\ge3\}=\{2k^2: k\ge3 \text{ odd}\}\cup\{4j^2: j\ge2\}$.
+\end{theorem}
+
+\subsection*{The conjecture in the OEIS}
+The FORMULA line of A308222 \cite{A308222} was added by Kagey on May~17, 2019 (revision \#9 of the entry), a few hours after the Stack Exchange answer \cite{MSEa} appeared and before the entry was first approved on May~23, 2019. It reads verbatim:
+\begin{quote}
+\verb|a(n) = 2*A096033(n+2) (conjectured).|
+\end{quote}
+The entry's comment line reads: ``A primitive Heronian triangle is a triangle with integer sides and area, where the side lengths do not share a common divisor.'' Both entries have offset~$1$.
+
+\subsection*{The Lean statement}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A308222.lean}, reviewed for fidelity against the OEIS entries, and frozen (SHA-256 \texttt{99173e00\ldots b7c8}) before any proof attempt. Its definitions (without their docstrings) and the statement (with its docstring) are, verbatim, in the namespace \decl{Math0.Statements.A308222}:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+def heron (x y z : ℤ) : ℤ := (x + y + z) * (-x + y + z) * (x - y + z) * (x + y - z)
+def IsHeronian (x y z : ℕ) : Prop :=
+  x < y + z ∧ y < x + z ∧ z < x + y ∧ ∃ A : ℕ, 16 * (A : ℤ) ^ 2 = heron x y z
+def IsPrimitive (x y z : ℕ) : Prop := Nat.gcd (Nat.gcd x y) z = 1
+def IsIsosceles (x y z : ℕ) : Prop := x = y ∨ y = z ∨ x = z
+def IsPerimeter (P : ℕ) : Prop :=
+  ∃ x y z : ℕ, IsHeronian x y z ∧ IsPrimitive x y z ∧ IsIsosceles x y z ∧ x + y + z = P
+noncomputable def a (n : ℕ) : ℕ := Nat.nth IsPerimeter (n - 1)
+
+def IsLegHypDiff (d : ℕ) : Prop :=
+  ∃ x y z : ℕ, 0 < x ∧ 0 < y ∧ x ^ 2 + y ^ 2 = z ^ 2 ∧ Nat.gcd x y = 1 ∧ z = x + d
+noncomputable def A096033 (n : ℕ) : ℕ := Nat.nth IsLegHypDiff (n - 1)
+
+/-- Conjecture (Kagey, A308222): for every `n ≥ 1`, the `n`-th smallest perimeter of a primitive
+Heronian isosceles triangle is twice the `(n + 2)`-th smallest difference between a leg and the
+hypotenuse of a primitive Pythagorean triangle: `a(n) = 2 · A096033(n + 2)`. -/
+def statement : Prop := ∀ n : ℕ, 1 ≤ n → a n = 2 * A096033 (n + 2)
+\end{lstlisting}
+
+\subsection*{How the Lean definitions encode the entries}
+\code{IsPerimeter} is the set $\Per$ and \code{IsLegHypDiff} is the set $\Leg$ of Definition~\ref{def:main}. Both are defined from the names of the entries, not from any formula. Heron's product is computed in $\Z$, and the strict triangle inequalities exclude degenerate triangles. Mathlib's \code{Nat.nth p k} is the $k$-th smallest element of $\{x: p\,x\}$ (counting from $0$) when this set is infinite, so \code{a n} and \code{A096033 n} are the $n$-th smallest elements for $n\ge1$, matching offset~$1$. Each perimeter is listed once, as in the entry: $50$ comes from both $(13,13,24)$ and $(16,17,17)$. The statement is the FORMULA line for all $n\ge1$, with no further hypotheses.
+
+The statement file checks the definitions against the data. Since \decl{Nat.nth} is not computable, it makes both predicates decidable through bounded searches that are proved equivalent to them: \decl{perimB_iff} rests on the reduction of Lemma~\ref{lem:legok} below, with a certified integer square root, and \decl{legHypB_iff} on the characterization of $\Leg$ in Lemma~\ref{lem:L}. With these, \decl{a_data} proves by \texttt{decide +kernel} that $a(1),\dots,a(46)$ are the $46$ listed terms $16,\dots,3136$. The search below $3137$ is split into seven kernel checks (\decl{chunk_1}, \dots, \decl{chunk_7}) to bound memory. \decl{A096033_data} proves the $52$ listed terms of A096033, $1,\dots,1849$, in the same way. These checks are part of the frozen statement file and were done before the proof attempt.
+
+\section{Proof}\label{sec:proof}
+
+For a predicate $p$ on $\N$ write $\cnt_p(N)=\#\{k<N: p(k)\}$ and $\nth_p(k)$ for the $k$-th smallest element of $\{x:p(x)\}$, counting from $0$ (Mathlib's \decl{Nat.count} and \decl{Nat.nth}). Then $a(n)=\nth_\Per(n-1)$ and $\mathrm{A096033}(n)=\nth_\Leg(n-1)$. The first two lemmas are proved in the statement file, where they serve to decide the predicates; the rest of the section is the proof file.
+
+\begin{definition}\label{def:legok}
+For $m,s\in\N$, $\LegOK(m,s)$ means: $m<2s$, $s<m$, $s$ is odd, $\gcd(s,m)=1$, and $m(2s-m)$ is a perfect square.
+\end{definition}
+
+\begin{lemma}[\decl{isPerimeter_iff_legOK}]\label{lem:legok}
+$P\in\Per$ if and only if $P=2m$ is even and $\LegOK(m,s)$ holds for some $s$. In that case $(s,s,2(m-s))$ is a primitive Heronian triangle with perimeter $P$.
+\end{lemma}
+
+\begin{proof}
+Since $H$ is symmetric in its arguments, every primitive Heronian isosceles triangle can be written with legs $s,s$ and base $b$ (\decl{isPerimeter_iff}). The triangle inequalities become $0<b<2s$, primitivity becomes $\gcd(s,b)=1$, and $H(s,s,b)=(2s+b)\,b^2\,(2s-b)$ (\decl{heron_iso}). If $b$ were odd, all three factors would be odd, while $H=16A^2$ is even; so $b=2x$ is even (\decl{IsoOK.base_even}), and then $s$ is odd because $\gcd(s,b)=1$ (\decl{IsoOK.leg_odd}). Put $m=s+x$, so that $P=2s+2x=2m$ and $s-x=2s-m$. Then
+\[
+  H(s,s,2x)=(2s+2x)(2x)^2(2s-2x)=16\,x^2\,m\,(2s-m),
+\]
+so the area condition is $A^2=x^2\cdot m(2s-m)$. As $x\ge1$, this equation has a solution $A\in\N$ if and only if $m(2s-m)$ is a square: if $A^2=x^2K$ then $x^2\mid A^2$, so $x\mid A$ and $K=(A/x)^2$; conversely $A=xh$ works if $K=h^2$ (\decl{exists_sq_mul_iff}). Moreover $0<b$ iff $s<m$, $b<2s$ iff $m<2s$, and, for odd $s$, $\gcd(s,2x)=1$ iff $\gcd(s,x)=1$ iff $\gcd(s,s+x)=\gcd(s,m)=1$ (\decl{isoOK_iff_legOK}). Reading these equivalences backwards gives the converse.
+\end{proof}
+
+\begin{lemma}[\decl{isLegHypDiff_iff}]\label{lem:L}
+$d\in\Leg$ if and only if $d$ is an odd square or $d=2j^2$ with $j\ge1$.
+\end{lemma}
+
+\begin{proof}
+Let $x^2+y^2=z^2$ with $x,y\ge1$, $\gcd(x,y)=1$ and $z=x+d$. By the classification of primitive Pythagorean triples (Mathlib's \decl{PythagoreanTriple.coprime_classification'}), exactly one leg is even, and there are coprime integers $p,q$ of opposite parity with $z=p^2+q^2$ and either $x=2pq$, $y=p^2-q^2$, or $x=p^2-q^2$, $y=2pq$. In the first case $d=(p-q)^2$ with $p-q$ odd. In the second case $d=2q^2$, and $q\ne0$ because $y>0$. Conversely, for odd $k$ the triple $(x,y,z)=(2k+2,\,k^2+2k,\,k^2+2k+2)$ satisfies $x^2+y^2=z^2$ and $z-x=k^2$; with $k=2t+1$, the identity $(t+1)x-y=1$ shows $\gcd(x,y)=1$. For $j\ge1$ the triple $(2j+1,\,2j^2+2j,\,2j^2+2j+1)$ satisfies $x^2+y^2=z^2$ and $z-x=2j^2$, and $(2j+1)x-2y=1$.
+\end{proof}
+
+Consequently $\Leg\cap[0,3)=\{1,2\}$, and $\Leg$ is infinite because it contains $2(N+1)^2$ for every $N$ (\decl{infinite_L}, in the proof file).
+
+\begin{lemma}[\decl{sq_of_coprime_mul}]\label{lem:coprime}
+If $a,b\in\N$ are coprime and $ab=c^2$, then $a$ is a perfect square.
+\end{lemma}
+
+\begin{proof}
+This is Mathlib's \decl{exists_eq_pow_of_mul_eq_pow}, applied in $\N$, where the only unit is $1$.
+\end{proof}
+
+\begin{lemma}[\decl{isLegHypDiff_of_legOK}]\label{lem:nec}
+If $\LegOK(m,s)$ holds for some $s$, then $m\in\Leg$.
+\end{lemma}
+
+\begin{proof}
+Write $2s=m+e$ with $e\ge1$, and let $h^2=me$.
+
+\emph{$m$ odd.} Then $\gcd(m,2)=1$ and $\gcd(m,s)=1$, so $\gcd(m,2s)=1$, and $\gcd(m,e)=\gcd(m,m+e)=\gcd(m,2s)=1$. By Lemma~\ref{lem:coprime}, $m$ is a square, and it is odd.
+
+\emph{$m=2m'$ even.} Since $2s=2m'+e$, $e=2f$ is even and $s=m'+f$. As $m'\mid m$ and $\gcd(s,m)=1$, $\gcd(m',s)=1$, hence $\gcd(m',f)=\gcd(m',m'+f)=1$. Now $h^2=4m'f$ is even, so $h=2r$ and $r^2=m'f$. By Lemma~\ref{lem:coprime}, $m'=k^2$, so $m=2k^2$; and $k\ge1$ because $m>s\ge1$.
+
+In both cases $m\in\Leg$ by Lemma~\ref{lem:L}.
+\end{proof}
+
+\begin{lemma}[\decl{legOK_of_isLegHypDiff}]\label{lem:suff}
+If $m\in\Leg$ and $m\ge3$, then $\LegOK(m,s)$ holds for some $s$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:L} there are two cases.
+
+\emph{$m$ an odd square.} Since $m\ge3$, $m=(2u+3)^2$ with $u\ge0$. Take $s=4(u+1)^2+1$, which is odd. Then
+\[
+  2s-m=8u^2+16u+10-(4u^2+12u+9)=(2u+1)^2>0,\qquad m-s=4u+4>0,
+\]
+so $m<2s$, $s<m$, and $m(2s-m)=\bigl((2u+3)(2u+1)\bigr)^2$. Finally $(u+2)s-(u+1)m=1$, as both $(u+2)(4u^2+8u+5)$ and $(u+1)(4u^2+12u+9)+1$ equal $4u^3+16u^2+21u+10$; hence $\gcd(s,m)=1$.
+
+\emph{$m=2j^2$, $j\ge1$.} Since $m\ge3$, $j=v+2$ with $v\ge0$. Take $s=(v+2)^2+(v+1)^2$, which is odd as a sum of squares of consecutive integers. Then $2s-m=2(v+1)^2>0$ and $m-s=(v+2)^2-(v+1)^2=2v+3>0$, so $m<2s$, $s<m$, and $m(2s-m)=\bigl(2(v+1)(v+2)\bigr)^2$. Finally $(2v+5)s-(2v+3)m=1$, as both $(2v+5)(2v^2+6v+5)$ and $(2v+3)(2v^2+8v+8)+1$ equal $4v^3+22v^2+40v+25$; hence $\gcd(s,m)=1$.
+\end{proof}
+
+By Lemma~\ref{lem:legok}, the legs of Lemma~\ref{lem:suff} give the triangles $(p^2+1,\,p^2+1,\,4p)$ with $p=2u+2$ and $(q^2+(q-1)^2,\,q^2+(q-1)^2,\,2(2q-1))$ with $q=v+2$; for $u=v=0$ these are $(5,5,8)$ and $(5,5,6)$.
+
+\begin{corollary}[\decl{isPerimeter_two_mul}, \decl{not_isPerimeter_odd}]\label{cor:per}
+No odd number lies in $\Per$, and for $n\ge3$, $2n\in\Per$ if and only if $n\in\Leg$.
+\end{corollary}
+
+\begin{proof}
+The first claim is part of Lemma~\ref{lem:legok}. For $n\ge3$, Lemma~\ref{lem:legok} says $2n\in\Per$ iff $\LegOK(n,s)$ for some $s$, and Lemmas~\ref{lem:nec} and~\ref{lem:suff} show that this holds iff $n\in\Leg$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:set}]
+By Lemma~\ref{lem:legok}, $\Per$ consists of even numbers $2m$ with some $s$ satisfying $m/2<s<m$ and $s$ odd, which is impossible for $m\le2$. Corollary~\ref{cor:per} handles $m\ge3$, and Lemma~\ref{lem:L} describes $\Leg$.
+\end{proof}
+
+The proof of Theorem~\ref{thm:main} in Lean does not use Theorem~\ref{thm:set} as a set equality; it uses Corollary~\ref{cor:per} and a counting identity.
+
+\begin{lemma}[\decl{count_rel}]\label{lem:count}
+For every $n\ge3$, $\cnt_\Per(2n)+2=\cnt_\Leg(n)$.
+\end{lemma}
+
+\begin{proof}
+Induction on $n\ge3$. For $n=3$: $\Per\cap[0,6)=\emptyset$ and $\Leg\cap[0,3)=\{1,2\}$, so $0+2=2$. In Lean this case is checked by \code{decide}, which evaluates both counts with the certified decision procedures of the statement file. For the step from $n$ to $n+1$,
+\[
+  \cnt_\Per(2n+2)=\cnt_\Per(2n)+[2n\in\Per]+[2n+1\in\Per]=\cnt_\Per(2n)+[n\in\Leg]
+\]
+by Corollary~\ref{cor:per}, while $\cnt_\Leg(n+1)=\cnt_\Leg(n)+[n\in\Leg]$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $n\ge1$ and $k=n-1$, so that $a(n)=\nth_\Per(k)$ and $\mathrm{A096033}(n+2)=\nth_\Leg(k+2)=:d$. Since $\Leg$ is infinite (Lemma~\ref{lem:L}), $d\in\Leg$ and $\cnt_\Leg(d)=k+2$ (\decl{Nat.nth_mem_of_infinite}, \decl{Nat.count_nth_of_infinite}). If $d\le2$, then $\cnt_\Leg(d)\le\cnt_\Leg(2)=1<k+2$ (the value $\cnt_\Leg(2)=1$ is checked by \code{decide}); hence $d\ge3$. By Corollary~\ref{cor:per}, $2d\in\Per$, and by Lemma~\ref{lem:count}, $\cnt_\Per(2d)=k$. An element $x$ of a set with exactly $k$ elements of the set below $x$ is its $k$-th smallest element (\decl{Nat.nth_count}), so $\nth_\Per(k)=2d$, that is, $a(n)=2\cdot\mathrm{A096033}(n+2)$.
+\end{proof}
+
+\begin{remark}[derivation from the literature; not formalized]\label{rem:lit}
+By Singmaster's form of Carlson's Lemma~2 \cite{Singmaster}, the primitive isosceles Heronian triangles are $(u^2+v^2,u^2+v^2,4uv)$ and $(u^2+v^2,u^2+v^2,2(u^2-v^2))$ with $u>v\ge1$, $\gcd(u,v)=1$ and $u\not\equiv v\pmod2$. Their semiperimeters are $(u+v)^2$ and $2u^2$, as in \cite{MSEa}. Here $u+v$ is odd and at least $3$, and every odd $k\ge3$ occurs, with $(u,v)=((k+1)/2,(k-1)/2)$; and $u\ge2$, where every $u\ge2$ occurs, with $v=u-1$. So the semiperimeters are the odd squares $\ge9$ and the numbers $2u^2$ with $u\ge2$, that is, by the characterization of A096033, the elements of $\Leg$ other than $1$ and $2$. This is Theorem~\ref{thm:set}, and Theorem~\ref{thm:main} follows by counting, as above.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in \path{lean/Math0/Frontier/OEIS/A308222.lean} ($172$ lines) of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A308222.lean} without modifying it, proves \code{theorem result : statement} in the namespace \decl{Math0.Frontier.A308222}, and ends with
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A308222.result Math0.Statements.A308222.statement
+\end{lstlisting}
+Lemmas~\ref{lem:legok} and~\ref{lem:L} are in the statement file. Lemmas~\ref{lem:coprime}, \ref{lem:nec}, \ref{lem:suff} and~\ref{lem:count}, Corollary~\ref{cor:per} and \decl{infinite_L} are private declarations of the proof file, named in Section~\ref{sec:proof}. The proof file contains two small evaluations by \code{decide} (the base case of Lemma~\ref{lem:count} and $\cnt_\Leg(2)=1$). The proof term that \code{decide} produces is checked by the kernel, which reduces the decidability instances; these instances are defined through \decl{decidable_of_iff} from Boolean searches proved equivalent to the predicates (\decl{perimB_iff}, \decl{legHypB_iff}). The kernel data checks of the statement file use \texttt{decide +kernel}. Neither file uses \texttt{native\_decide}, \texttt{sorry}, \texttt{set\_option}, or a declared axiom.
+
+\subsection*{Audit}
+\texttt{\#math0\_settles} (in \path{lean/Math0/Audit.lean}) fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, which excludes \decl{sorryAx}, the axioms behind \texttt{native\_decide}, and custom axioms; and (3) the type of \decl{result} is syntactically \decl{statement} or its negation, up to metadata, with no unfolding. Running \texttt{lake env lean Math0/Frontier/OEIS/A308222.lean} in \path{lean/} (about $10$--$20$ seconds) reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A308222.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A308222.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A308222.result' proves 'Math0.Statements.A308222.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}. The repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}; this conjecture is not in that collection, so math0 formalized it. To reproduce, run \path{scripts/verify.sh} from the repository root: it builds all math0 results with \texttt{lake build}, which re-runs every audit command, and checks that the pinned dependencies are unmodified. Building the statement file alone (\texttt{lake build Math0.Statements.OEIS.A308222}) takes about two minutes, almost all of it in the kernel data checks. Independently of the formal proof, the referees checked numerically that the perimeters up to $8000$ are $74$ numbers, of which the first $46$ are the listed terms, and that they satisfy $a(n)=2\cdot\mathrm{A096033}(n+2)$ for all $74$ indices.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{Carlson}
+J.~R. Carlson, \emph{Determination of Heronian triangles}, Fibonacci Quart.\ \textbf{8} (1970), no.~5, 499--506, 551.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{MSEa}
+George (Mathematics Stack Exchange user), answer to \emph{Semiperimeter of isosceles Heronian triangles}, Mathematics Stack Exchange, May~17, 2019, \url{https://math.stackexchange.com/a/3230072}.
+
+\bibitem{MSEq}
+P.~Kagey, \emph{Semiperimeter of isosceles Heronian triangles}, Mathematics Stack Exchange, question~3230019, May~17, 2019, \url{https://math.stackexchange.com/q/3230019}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput.\ Sci.\ \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A096033}
+The OEIS Foundation Inc., \emph{Difference between leg and hypotenuse in primitive Pythagorean triangles}, \url{https://oeis.org/A096033}, entry by L.~Beedassy (Jun.~16, 2004).
+
+\bibitem{A308222}
+The OEIS Foundation Inc., \emph{Numbers that are the perimeter of a primitive Heronian isosceles triangle}, \url{https://oeis.org/A308222}, entry by P.~Kagey (May~16, 2019), conjecture added May~17, 2019; revision \#20, Aug.~12, 2022.
+
+\bibitem{Singmaster}
+D.~Singmaster, \emph{Some corrections to Carlson's ``Determination of Heronian triangles''}, Fibonacci Quart.\ \textbf{11} (1973), no.~2, 157--158.
+
+\bibitem{Wiki}
+Wikipedia, \emph{Integer triangle}, section ``Isosceles Heronian triangles'', \url{https://en.wikipedia.org/wiki/Integer_triangle}, accessed October~2026.
+
+\end{thebibliography}
+}
+\end{document}

@@ -23,6 +23,10 @@ Referees: - USAMO 2008 Problem 3 (proposed by Gabriel Carroll): S_n = {(x,y) in 
 - OEIS A075855 (Jon Perry, 2002; edited by Dean Hickerson) still states the even case as a conjecture. OEIS A249333 (Richard Stanley) cross-references it as "conjecturally the same as b(n+1) for A075855", which this result also settles.
 - I found no explicit statement anywhere of the A075855 to USAMO 2008/3 link. The classification rests on this one-line reduction to a known theorem, not on a direct citation.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

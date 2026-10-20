@@ -23,6 +23,10 @@ Also: Wikipedia, "Integer triangle", section "Isosceles Heronian triangles" (the
 
 No prior formalization found. OEIS A308222 (local mirror, #20, Aug 12 2022) still marks the formula "(conjectured)".
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

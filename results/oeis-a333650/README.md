@@ -23,6 +23,10 @@ Conjecture as stated in OEIS: %C A333650 Conjecture: For n > 1, T(n,2) = A000071
 
 Referees: OEIS A333650 (Kagey, Mar 2020; conjectures by Kagey Nov 21 2020 and Luschny Nov 29 / Dec 1 2020; still marked Conjecture as of revision #68, Aug 12 2022). A339494 (Luschny, Dec 2020): unproved remark that towers of height <=2 by base size form the binomial triangle C(k,n-k) (A030528), whose row sums are Fibonacci numbers, which is essentially the height-2 argument. A339495 assumes the height-2 formula. A339252, A339254, A339029: closed forms of the target sequences only. Definition of domino towers: A264746, A320314; Bona, Handbook of Enumerative Combinatorics, pp. 25-27; Gouyou-Beauchamps & Viennot 1988; Bétréma & Penaud 1993; Zeilberger arXiv:1208.2258. Related papers with no height enumeration: Ekhad & Zeilberger arXiv:1212.4105; T. M. Brown, Convex Domino Towers (JIS 2017, arXiv:1608.01562) and k-omino towers (arXiv:1608.01563); A. Haupt, S-omino towers (JIS 2021, arXiv:1810.10428); Ardila arXiv:1409.2562. Math StackExchange 2949131 and 3659431 (Kagey): symmetric towers and the 4^(n-1) variant only. No prior proof or counterexample of any of the four conjectures found.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

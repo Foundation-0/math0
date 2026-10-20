@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: "Conjecture 2: There are no 5-Rotation Cycle Prime
 
 Referees: I found no prior resolution. OEIS A086004 (Seggelin 2003, last edited Jun 2025) still lists Conjecture 2 as open. OEIS A261458 (Chai Wah Wu, Aug 2015) proves the weaker statement that no chain of 6 steps exists, using a leading-digit/carry argument, and gives 4-step examples such as 10010905789. Mathar's 2009 comment on A086004 proves Conjecture 1 (even digit counts) only. Web searches (OEIS-indexed pages, arXiv, StackExchange-style queries, primepuzzles) found nothing on the 5-step case. The SeqFan archive could not be reached from here, so it was not checked.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

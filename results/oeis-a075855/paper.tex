@@ -1,0 +1,345 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,bif,rw,apply,ring},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {∈}{{$\in$}}1 {∉}{{$\notin$}}1
+    {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {¬}{{$\neg$}}1 {→}{{$\to$}}1 {←}{{$\leftarrow$}}1
+    {↔}{{$\leftrightarrow$}}1 {≤}{{$\le$}}1 {≥}{{$\ge$}}1 {≠}{{$\ne$}}1 {×}{{$\times$}}1
+    {ˢ}{{$^{\mathrm{s}}$}}1 {α}{{$\alpha$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {·}{{$\cdot$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\Ib}[1]{[\,#1\,]}
+\newcommand{\cM}{\mathcal{M}}
+\newcommand{\cU}{\mathcal{U}}
+
+\title[Longest black-square paths on even chessboards (OEIS A075855)]{The longest path through diagonally adjacent black squares of a $2m\times 2m$ chessboard has $2m^2-m+1$ squares: the conjecture in OEIS A075855}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 19, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $a(n)$ be the largest number of black squares of an $n\times n$ chessboard with a black corner that a single path through adjacent black squares can cover; this is the sequence A075855 of the OEIS, contributed by Jon Perry in 2002, and the entry conjectures that $a(n)=(n^2-n+2)/2$ for even $n$. We give a complete proof: for $n=2m$ a weighting of the black squares shows that every path misses at least $m-1$ of the $2m^2$ black squares, and an explicit snake misses exactly $m-1$.
+The upper bound is a direct consequence of Problem~3 of the 2008 USA Mathematical Olympiad (G.~Carroll), whose official solution uses the same weighting, so we classify the result as the first formal proof of a known result, although we found no source that states the connection with A075855.
+The theorem is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, reviewed for fidelity and frozen before the proof attempt; in it $a(n)$ is computed by an exhaustive search that is proved to return the maximum, and is checked by the kernel against the first six listed terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Colour an $n\times n$ chessboard so that a corner is black. Two black squares never share a side, so a path ``traveling only to adjacent black squares'' moves diagonally, one step at a time. The sequence A075855 of the OEIS \cite{A075855}, contributed by Jon Perry in 2002, lists the largest number $a(n)$ of black squares covered by such a path without repetition: $a(1),\dots,a(9)=1,2,3,7,9,16,19,29,33$. Its formula section states $a(n)=(n-1)^2/2+1$ for odd $n$ and conjectures $a(n)=(n^2-n+2)/2$ for even $n$, noting that this is easily seen to be a lower bound; an empirical generating function added by Colin Barker (2012) encodes the same two formulas. We prove the conjecture: $a(2m)=2m^2-m+1$ for $m\ge1$ (Theorem~\ref{thm:main}). The odd case is not considered here.
+
+\emph{Method.} Let $n=2m$, number rows $i$ and columns $j$ from $0$ and give the black square $(i,j)$ weight $-1$ if $i+j<n$ and $i$ is odd, or $i+j\ge n$ and $i$ is even, and weight $+1$ otherwise. Consecutive squares of a path lie in rows of different parity, so two adjacent squares of weight $+1$ must lie on opposite sides of the anti-diagonal, and there are only $m$ such pairs. Along a path, two consecutive squares of weight $+1$ therefore occur at most $m$ times, so a path has at most $m+1$ more squares of weight $+1$ than of weight $-1$; as only $m(m-1)$ squares have weight $-1$, it has at most $2m(m-1)+m+1$ squares. A snake through pairs of rows attains this bound.
+
+\emph{Prior work and status.} Problem~3 of the 2008 USA Mathematical Olympiad, proposed by Gabriel Carroll \cite{ChenUSAMO}, asks to show that the set $S_n$ of integer points $(x,y)$ with $|x|+|y+\frac12|<n$ cannot be partitioned into fewer than $n$ paths, where a path is a sequence of distinct points of $S_n$, each at distance $1$ from the previous one. The map $(i,j)\mapsto\bigl(\frac{i-j}{2},\frac{i+j}{2}-m\bigr)$ is an isomorphism from the graph of black squares of the $2m\times2m$ board, with diagonal adjacency, onto $S_m$ with unit-distance adjacency (Remark~\ref{rem:usamo}). A path with $L$ squares, together with the $2m^2-L$ squares it misses as one-point paths, partitions $S_m$ into $2m^2-L+1$ paths, so the olympiad problem gives $2m^2-L+1\ge m$: this is the upper bound of Theorem~\ref{thm:main}. The ``global'' official solution in Evan Chen's notes \cite{ChenUSAMO} colours $S_n$ with $2n$ more blue than red points, the only adjacent blue points being $n$ pairs across the axis; under the isomorphism, the blue points are our squares of weight $+1$. Chen's notes also record that the problem had appeared earlier, in N.~Beluhov, \emph{Nyakolko zadachi po shahmatna kombinatorika} (Matematika Plyus, 2006, no.~4, 61--64; its first section reprinted with revisions as \emph{Dolgii put' korolya}, Kvant, 2010, no.~4, 39--41), in connection with a question of I.~Akulich (\emph{Progulki korolya}, Kvant, 2000, no.~3, 47--48) on the longest closed king tour of an $n\times n$ board with $n$ even; we have not consulted these articles. Chen uses the same bound for the ``blue zigzags'' in his solution of Iberoamerican 2019/5 \cite{ChenIbero}. The olympiad problem is formalized in Lean in Compfiles \cite{Compfiles} (\decl{usa2008_p3}); that file does not treat the chessboard, the lower bound or the OEIS sequence, and is not used here.
+
+In the copy of the OEIS database used by math0 (October~17, 2026), the latest revision of A075855 (\#11, August~20, 2025) still calls the even case a conjecture. The entry A249333 \cite{A249333} (Richard Stanley, 2014; regions formed by extending the sides of a regular $n$-gon) says that its terms are conjecturally $a(n+1)$; for odd $n\ge3$, Theorem~\ref{thm:main} gives $a(n+1)=(n^2+n+2)/2$, the formula stated there for odd $n$, while for even $n$ the identification depends on the odd case of A075855. The math0 referees found no source that connects A075855 with the olympiad problem, and no other proof or counterexample. Since the upper bound follows in one line from a known theorem and the lower bound is the construction the entry calls easy, we classify the result as the first formal proof of a known result, not as a new theorem.
+
+\section{Statement}\label{sec:statement}
+
+\begin{definition}\label{def:board}
+Let $n\ge1$. A \emph{square} of the $n\times n$ board is a pair $(i,j)$ of integers with $0\le i,j<n$ (row $i$, column $j$); it is \emph{black} if $i+j$ is even. Two squares are \emph{adjacent} if they are distinct and each coordinate differs by at most $1$; for black squares this means that both coordinates differ by exactly $1$. A \emph{path} is a finite sequence of pairwise distinct black squares in which consecutive squares are adjacent; its \emph{length} is its number of squares. Let $a(n)$ be the largest length of a path.
+\end{definition}
+
+The name of A075855 \cite{A075855} and its first formula line, which is unsigned (the entry is by Jon Perry, October~15, 2002, edited by Dean Hickerson, October~25, 2002), read, verbatim:
+\begin{quote}
+{\small\raggedright\texttt{Maximum number of black squares on an n X n chessboard (with a black square in at least one corner) that can be covered by a single path, traveling only to adjacent black squares.}\par
+\texttt{For n odd, a(n)=(n-1)\^{}2/2+1. For n even, it is conjectured that a(n)=(n\^{}2-n+2)/2 (it is easy to show this is a lower bound).}\par}
+\end{quote}
+Definition~\ref{def:board} makes the corner $(0,0)$ black; for even $n$ the other colouring is the mirror image of this one. Squares may not be revisited: otherwise all $5$ black squares could be covered for $n=3$, while the entry lists $a(3)=3$.
+
+\begin{theorem}\label{thm:main}
+For every even $n\ge2$, $a(n)=(n^2-n+2)/2$. Equivalently, $a(2m)=2m^2-m+1$ for every $m\ge1$.
+\end{theorem}
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A075855.lean}, reviewed for fidelity and frozen (SHA-256 \texttt{2740c3ce\ldots a45c}) before any proof attempt. It reads, verbatim (omitted: the import, comments, docstrings, blank lines, all proofs except that of \decl{a_data}, the auxiliary lemmas for \decl{a_spec}, and the definitions of \decl{nmax}, \decl{lmax}, \decl{idx}, \decl{nbrs}):
+\begin{lstlisting}
+namespace Math0.Statements.A075855
+def IsBlack (n : ℕ) (c : ℕ × ℕ) : Prop := c.1 < n ∧ c.2 < n ∧ (c.1 + c.2) % 2 = 0
+def Adj (c d : ℕ × ℕ) : Prop :=
+  c ≠ d ∧ c.1 ≤ d.1 + 1 ∧ d.1 ≤ c.1 + 1 ∧ c.2 ≤ d.2 + 1 ∧ d.2 ≤ c.2 + 1
+def IsBoardPath (n : ℕ) (l : List (ℕ × ℕ)) : Prop :=
+  (∀ c ∈ l, IsBlack n c) ∧ l.Nodup ∧ l.IsChain Adj
+theorem adj_iff_of_isBlack {n : ℕ} {c d : ℕ × ℕ} (hc : IsBlack n c) (hd : IsBlack n d) :
+    Adj c d ↔ (c.1 + 1 = d.1 ∨ d.1 + 1 = c.1) ∧ (c.2 + 1 = d.2 ∨ d.2 + 1 = c.2)
+def dfs (n : ℕ) (fuel : ℕ) : ℕ × ℕ → ℕ → ℕ :=
+  Nat.rec (motive := fun _ => ℕ × ℕ → ℕ → ℕ) (fun _ _ => 0)
+    (fun _ ih d mask => lmax ((nbrs n d).filter fun c => !mask.testBit (idx n c))
+      fun c => ih c (mask ||| 1 <<< idx n c) + 1) fuel
+def cells (n : ℕ) : List (ℕ × ℕ) :=
+  (List.range n ×ˢ List.range n).filter fun c => (c.1 + c.2) % 2 == 0
+def a (n : ℕ) : ℕ := lmax (cells n) fun c => dfs n (n * n) c (1 <<< idx n c) + 1
+theorem a_data : (List.range 6).map (fun i => a (i + 1)) = [1, 2, 3, 7, 9, 16] := by
+  decide +kernel
+theorem a_spec (n : ℕ) : IsGreatest {k | ∃ l, IsBoardPath n l ∧ l.length = k} (a n)
+theorem a_data_lower : 19 ≤ a 7 ∧ 29 ≤ a 8 ∧ 33 ≤ a 9
+def statement : Prop :=
+  ∀ n : ℕ, 1 ≤ n → Even n → a n = (n ^ 2 - n + 2) / 2
+end Math0.Statements.A075855
+\end{lstlisting}
+Here \texttt{c.1} is the row and \texttt{c.2} the column; \decl{IsBlack}, \decl{Adj} and \decl{IsBoardPath} are the notions of Definition~\ref{def:board} (\texttt{Nodup}: no square repeated; \texttt{IsChain Adj}: consecutive squares adjacent). The function \decl{a} is an exhaustive depth-first search (\texttt{lmax l f} is the maximum of \texttt{f} over \texttt{l}, \texttt{nbrs n d} lists the diagonal neighbours of \texttt{d}, and the visited squares are the set bits of \texttt{mask}, square $(i,j)$ having bit $in+j$). Rather than relying on this program, the file proves \decl{a_spec}: \texttt{IsGreatest S x} means that $x\in S$ and $x$ is an upper bound of $S$, so \texttt{a n} is $a(n)$. In \decl{a_data} the kernel runs the search and reproduces the listed terms $a(1),\dots,a(6)$; for $n\ge7$ the number of paths is too large (already $17932$ directed paths for $n=6$), and \decl{a_data_lower} checks explicit paths of $19$, $29$ and $33$ squares for $n=7,8,9$. In \decl{statement}, $n^2-n+2=n(n-1)+2$ is even and $n\le n^2$, so the truncated subtraction and floor division of $\mathbb N$ agree with the rational formula, and $1\le n$ is the offset of the entry. Thus \decl{statement} is Theorem~\ref{thm:main}.
+
+\section{Proof}\label{sec:proof}
+
+We follow \path{lean/Math0/Frontier/OEIS/A075855.lean}, naming the corresponding declarations. Throughout, $n=2m$ with $m\ge1$, $\Ib{P}$ is $1$ if the statement $P$ holds and $0$ otherwise, and $c^+=(i+1,j+1)$ for a square $c=(i,j)$.
+
+\emph{Reduction.} Since $(2m)^2-2m+2=2(2m^2-m+1)$, Theorem~\ref{thm:main} says $a(2m)=2m^2-m+1$. By \decl{a_spec}, $a(2m)$ is the length of some path and bounds the length of every path, so it suffices to show that every path has length $L$ with $L+m\le 2m^2+1$ (Proposition~\ref{prop:upper}) and that some path has length $L$ with $L+m=2m^2+1$ (Lemma~\ref{lem:lower}). The proof of \decl{result} (Section~\ref{sec:lean}) is this reduction; the search \decl{a} is used only through \decl{a_spec} and is never evaluated.
+
+\subsection{Upper bound}
+Let $\cM$ (\decl{mi}, the squares of weight $-1$) be the set of squares $(i,j)$ with $i+j<n$ and $i$ odd, or $i+j\ge n$ and $i$ even, and let $\cU$ (\decl{us}, the \emph{useful} squares) be the set of squares $(i,j)$ with $i+j=n-2$ and $i$ even. Figure~\ref{fig:eight} shows both sets for $n=8$.
+
+\begin{lemma}[\decl{plus_plus}]\label{lem:pp}
+Let $c,d$ be adjacent black squares, neither in $\cM$. Then either $c\in\cU$ and $d=c^+$, or $d\in\cU$ and $c=d^+$.
+\end{lemma}
+
+\begin{proof}
+Write $c=(i,j)$ and $d=(i',j')$; then $|i-i'|=|j-j'|=1$, so $i,i'$ have opposite parity and $(i'+j')-(i+j)\in\{-2,0,2\}$. Suppose $i$ is even. As $c\notin\cM$, $i+j<n$; as $i'$ is odd and $d\notin\cM$, $i'+j'\ge n$. Hence $i'+j'=i+j+2$, which forces $d=c^+$; and $i+j$ is even with $i+j<n\le i+j+2$, so $i+j=n-2$ and $c\in\cU$. If $i$ is odd, exchange $c$ and $d$. (In Lean: \decl{adj_iff_of_isBlack}, then \texttt{omega}.)
+\end{proof}
+
+For a path $P$ let $\#_\cM P$ and $\#_\cU P$ be the numbers of its squares in $\cM$ and in $\cU$ (\texttt{countP}).
+
+\begin{lemma}[\decl{key}]\label{lem:key}
+Let $P=(h,c_2,\dots,c_L)$ be a path with first square $h$ and tail $T=(c_2,\dots,c_L)$. Then
+\begin{equation}\label{eq:key}
+  L+\Ib{h\in\cU\text{ and }h^+\notin T}\;\le\;2\,\#_\cM P+\#_\cU P+\Ib{h\notin\cM}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+By induction on $L$, for all $h$. For $L=1$ the left side is $1+\Ib{h\in\cU}$ and the right side is $2\Ib{h\in\cM}+\Ib{h\in\cU}+\Ib{h\notin\cM}\ge1+\Ib{h\in\cU}$.
+For $L\ge2$ let $d=c_2$, so $T=(d,c_3,\dots)$ is a path with tail $T'=(c_3,\dots)$, $h$ is adjacent to $d$, and $h\notin T$. Subtracting \eqref{eq:key} for $T$ (inductive hypothesis), and using $\#_\cM P=\#_\cM T+\Ib{h\in\cM}$ and $\#_\cU P=\#_\cU T+\Ib{h\in\cU}$, it suffices to show
+\begin{equation}\label{eq:step}
+  1+\Ib{h\in\cU,\ h^+\notin T}+\Ib{d\notin\cM}\;\le\;2\Ib{h\in\cM}+\Ib{h\in\cU}+\Ib{h\notin\cM}+\Ib{d\in\cU,\ d^+\notin T'}.
+\end{equation}
+Always $\Ib{h\in\cU,\ h^+\notin T}\le\Ib{h\in\cU}$. If $h\in\cM$, the right side is at least $2+\Ib{h\in\cU}$, which bounds the left side. If $h\notin\cM$ and $d\in\cM$, the left side is at most $1+\Ib{h\in\cU}$ and the right side is at least $1+\Ib{h\in\cU}$. If $h,d\notin\cM$, \eqref{eq:step} reads $1+\Ib{h\in\cU,\ h^+\notin T}\le\Ib{h\in\cU}+\Ib{d\in\cU,\ d^+\notin T'}$, and we use Lemma~\ref{lem:pp}. If $h\in\cU$ and $d=h^+$, then $h^+\in T$, so the left side is $1=\Ib{h\in\cU}$. If $d\in\cU$ and $h=d^+$, then $d^+=h\notin T'$, so the last indicator is $1$, and again $\Ib{h\in\cU,\ h^+\notin T}\le\Ib{h\in\cU}$. (In Lean: the auxiliary inequality \texttt{e3}, then four cases closed by \texttt{omega}.)
+\end{proof}
+
+\begin{lemma}[\decl{count_us}, \decl{count_mi}]\label{lem:count}
+For every path $P$ on the board of side $2m$, $\#_\cU P\le m$ and $\#_\cM P\le m(m-1)$.
+\end{lemma}
+
+\begin{proof}
+A list without repetitions that is mapped injectively into a finite set $S$ has length at most $|S|$ (\decl{len_le_of_inj}); we apply this to the squares of $P$ in $\cU$, respectively in $\cM$.
+The map $(i,j)\mapsto i/2$ is injective on $\cU$, because $i$ is even and $j=n-2-i$, and takes values in $\{0,\dots,m-1\}$. Hence $\#_\cU P\le m$.
+On black squares of $\cM$ use $(i,j)\mapsto(t,k)$ with $t=\lfloor i/2\rfloor\le m-1$, and $k=\lfloor j/2\rfloor$ if $i$ is odd, $k=j/2-1$ if $i$ is even. If $i=2t+1$, then $j$ is odd and $i+j\le n-2$, so $j\le 2m-3-2t$ and $k\le m-2-t$. If $i=2t$, then $j$ is even and $2m-2t\le j\le 2m-2$, so $m-1-t\le k\le m-2$. So $(t,k)\in\{0,\dots,m-1\}\times\{0,\dots,m-2\}$, and the map is injective: squares with the same image lie in rows $2t$ or $2t+1$, not in different ones as the ranges of $k$ are disjoint, and within a row $k$ determines $j$. Hence $\#_\cM P\le m(m-1)$.
+\end{proof}
+
+\begin{proposition}[\decl{upper}]\label{prop:upper}
+Every path on the board of side $2m$ has length $L$ with $L+m\le 2m^2+1$.
+\end{proposition}
+
+\begin{proof}
+For the empty path, $m\le m^2$. Otherwise, by \eqref{eq:key} and Lemma~\ref{lem:count}, $L\le 2\,\#_\cM P+\#_\cU P+1\le 2m(m-1)+m+1=2m^2-m+1$.
+\end{proof}
+
+\begin{figure}[t]
+\footnotesize\setlength{\arraycolsep}{4pt}\setlength{\fboxsep}{0.5pt}\renewcommand{\arraystretch}{1.05}
+\[
+\begin{array}{cccccccc}
++ & \cdot & + & \cdot & + & \cdot & \fbox{$+$} & \cdot \\
+\cdot & - & \cdot & - & \cdot & - & \cdot & + \\
++ & \cdot & + & \cdot & \fbox{$+$} & \cdot & - & \cdot \\
+\cdot & - & \cdot & - & \cdot & + & \cdot & + \\
++ & \cdot & \fbox{$+$} & \cdot & - & \cdot & - & \cdot \\
+\cdot & - & \cdot & + & \cdot & + & \cdot & + \\
+\fbox{$+$} & \cdot & - & \cdot & - & \cdot & - & \cdot \\
+\cdot & + & \cdot & + & \cdot & + & \cdot & +
+\end{array}
+\qquad\qquad
+\begin{array}{cccccccc}
+1 & \cdot & 3 & \cdot & 5 & \cdot & 7 & \cdot \\
+\cdot & 2 & \cdot & 4 & \cdot & 6 & \cdot & 8 \\
+\times & \cdot & 13 & \cdot & 11 & \cdot & 9 & \cdot \\
+\cdot & 14 & \cdot & 12 & \cdot & 10 & \cdot & \times \\
+15 & \cdot & 17 & \cdot & 19 & \cdot & 21 & \cdot \\
+\cdot & 16 & \cdot & 18 & \cdot & 20 & \cdot & 22 \\
+29 & \cdot & 27 & \cdot & 25 & \cdot & 23 & \cdot \\
+\cdot & 28 & \cdot & 26 & \cdot & 24 & \cdot & \times
+\end{array}
+\]
+\caption{The board of side $n=8$ ($m=4$), row $0$ at the top, column $0$ at the left; dots are white squares. Left: the $m(m-1)=12$ squares of $\cM$ ($-$) and the $m=4$ squares of $\cU$ (boxed). Right: the path of Lemma~\ref{lem:lower} (blocks $B_0,B_1$, then the corner $(6,0)$), with $29=2m^2-m+1$ squares, missing the $m-1=3$ squares marked $\times$; it is the path checked in \texttt{a\_data\_lower} for $n=8$.}\label{fig:eight}
+\end{figure}
+
+\subsection{Lower bound}
+If two paths have no common square and the last square of the first is adjacent to the first square of the second, their concatenation is a path (\decl{isBoardPath_append}). For $4k+4\le 2m$ the \emph{block} $B_k$ (\decl{blk}) is the sequence $(b_t)_{0\le t<4m-2}$ with
+\[
+  b_t=(4k+(t\bmod 2),\ t)\ \ (t<2m),\qquad b_t=(4k+2+(t\bmod 2),\ 4m-2-t)\ \ (t\ge 2m).
+\]
+It zigzags through rows $4k,4k+1$ from $(4k,0)$ to $(4k+1,2m-1)$, steps to $(4k+2,2m-2)$, and zigzags back through rows $4k+2,4k+3$ to $(4k+3,1)$.
+
+\begin{lemma}[\decl{blk_props}, \decl{blks_props}]\label{lem:blk}
+Let $4k+4\le 2m$. Then $B_k$ is a path of length $4m-2$ from $(4k,0)$ to $(4k+3,1)$ in rows $4k,\dots,4k+3$, whose only square in column $0$ is $(4k,0)$. If $4q\le 2m$, the concatenation $C_q=B_0\cdots B_{q-1}$ (\decl{blks}) is a path of length $q(4m-2)$ in rows below $4q$, whose squares in column $0$ lie in rows divisible by $4$, and which ends at $(4q-1,1)$ if $q\ge1$.
+\end{lemma}
+
+\begin{proof}
+Each $b_t$ has even coordinate sum and coordinates below $2m$; $t\mapsto b_t$ is injective (the column determines $t$ in each half, and the halves use different rows); and consecutive squares differ by $1$ in both coordinates, including $b_{2m-1}=(4k+1,2m-1)$, $b_{2m}=(4k+2,2m-2)$. The claims on $C_q$ follow by induction on $q$: $C_q$ and $B_q$ use disjoint rows, and the last square $(4q-1,1)$ of $C_q$ is adjacent to the first square $(4q,0)$ of $B_q$.
+\end{proof}
+
+\begin{lemma}[\decl{lower}]\label{lem:lower}
+For every $m\ge1$ there is a path on the board of side $2m$ of length $L$ with $L+m=2m^2+1$.
+\end{lemma}
+
+\begin{proof}
+If $m=2q'+2$, take $C_{q'+1}$ followed by the corner $(4q'+2,0)=(n-2,0)$: it is black, not on $C_{q'+1}$ (its row is not divisible by $4$), and adjacent to the last square $(4q'+3,1)$; the length is $(q'+1)(4m-2)+1=8q'^2+14q'+7=2m^2-m+1$.
+If $m=2q+1$, take $C_q$ followed by the zigzag $\bigl((4q+(t\bmod2),\,t)\bigr)_{0\le t<2m}$ through the last two rows (\decl{strip}); it is a path in rows $4q,4q+1$, disjoint from $C_q$, and for $q\ge1$ its first square $(4q,0)$ is adjacent to $(4q-1,1)$. The length is $q(4m-2)+2m=8q^2+6q+2=2m^2-m+1$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+By \decl{a_spec} there is a path of length $a(2m)$, so $a(2m)+m\le 2m^2+1$ by Proposition~\ref{prop:upper}, and the path of Lemma~\ref{lem:lower} gives $2m^2-m+1\le a(2m)$.
+\end{proof}
+
+\begin{remark}[USAMO 2008/3; not formalized]\label{rem:usamo}
+The map $\varphi(i,j)=\bigl(\frac{i-j}{2},\frac{i+j}{2}-m\bigr)$ has inverse $(x,y)\mapsto(x+y+m,\,y-x+m)$, and it maps black squares to integer points and integer points back to black squares; the conditions $0\le x+y+m\le 2m-1$ and $0\le y-x+m\le 2m-1$ say $|x\pm(y+\frac12)|\le m-\frac12$, that is, $|x|+|y+\frac12|\le m-\frac12$, or equivalently $|x|+|y+\frac12|<m$ (the left side lies in $\mathbb Z+\frac12$); and a diagonal step changes exactly one of $\frac{i-j}{2},\frac{i+j}{2}$ by $\pm1$. So $\varphi$ is a graph isomorphism onto $S_m$. In the official solution \cite{ChenUSAMO} the half $y\ge0$ of $S_m$ is coloured like a checkerboard in which $(m-1,0)$, and hence also the top point $(0,m-1)$, is blue, and the half $y<0$ is its mirror image in the line $y=-\frac12$, so $(x,y)$ with $y<0$ has the colour of $(x,-1-y)$. For $i+j\ge n$ (i.e.\ $y\ge0$) blue means $x+y=i-m\equiv m-1\pmod 2$, i.e.\ $i$ odd; for $i+j<n$ it means $x-1-y=m-1-j\equiv m-1\pmod 2$, i.e.\ $j$ even, i.e.\ $i$ even. So the blue points are the squares of weight $+1$, and the $m$ blue vertical pairs across the axis are the pairs $\{c,c^+\}$, $c\in\cU$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+The proof is the file \path{lean/Math0/Frontier/OEIS/A075855.lean} of the math0 repository (\url{https://github.com/Foundation-0/math0}). It imports the frozen statement file and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A075855.result}, of type \decl{Math0.Statements.A075855.statement}; the auxiliary declarations of this file named in Section~\ref{sec:proof} are private (\decl{a_spec} and \decl{adj_iff_of_isBlack} belong to the statement file). The main lemmas, the main theorem and the audit command read, verbatim (docstrings, proofs and blank lines omitted; the $20$-line proof of \decl{result} is the argument given above under ``Reduction'' and in the proof of Theorem~\ref{thm:main}):
+\begin{lstlisting}
+namespace Math0.Frontier.A075855
+open Math0.Statements.A075855
+private def mi (n : ℕ) (c : ℕ × ℕ) : Bool :=
+  decide ((c.1 + c.2 < n ∧ c.1 % 2 = 1) ∨ (n ≤ c.1 + c.2 ∧ c.1 % 2 = 0))
+private def us (n : ℕ) (c : ℕ × ℕ) : Bool := decide (c.1 + c.2 + 2 = n ∧ c.1 % 2 = 0)
+private lemma key (n : ℕ) (hn : n % 2 = 0) : ∀ (l : List (ℕ × ℕ)) (h : ℕ × ℕ),
+    IsBoardPath n (h :: l) →
+    (h :: l).length + (if us n h = true ∧ (h.1 + 1, h.2 + 1) ∉ l then 1 else 0) ≤
+      2 * (h :: l).countP (mi n) + (h :: l).countP (us n) + (if mi n h = true then 0 else 1)
+private lemma upper (m : ℕ) (l : List (ℕ × ℕ)) (hl : IsBoardPath (2 * m) l) :
+    l.length + m ≤ 2 * (m * m) + 1
+private lemma lower (m : ℕ) (hm : 1 ≤ m) :
+    ∃ l, IsBoardPath (2 * m) l ∧ l.length + m = 2 * (m * m) + 1
+theorem result : statement
+end Math0.Frontier.A075855
+#math0_settles Math0.Frontier.A075855.result Math0.Statements.A075855.statement
+\end{lstlisting}
+In \decl{key}, \texttt{l} is the tail $T$ of Lemma~\ref{lem:key}. The proof file uses no \texttt{sorry}, \texttt{native\_decide}, \texttt{set\_option} or \texttt{decide} tactic (\texttt{decide} in \decl{mi}, \decl{us} is the Boolean decision function); the data checks in the statement file use \texttt{decide +kernel}, which adds no axioms.
+
+\emph{Audit.} The command \texttt{\#math0\_settles} (\path{lean/Math0/Audit.lean}) fails unless \decl{statement} is a \texttt{Prop}-valued definition without universe parameters, \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (rejecting \decl{sorryAx}, \decl{Lean.ofReduceBool} from \texttt{native\_decide}, and custom axioms), and the type of \decl{result} is syntactically \decl{statement} or its negation, without unfolding. It reports:
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+math0 audit: 'Math0.Statements.A075855.statement' depends on axioms [propext]
+math0 audit: 'Math0.Frontier.A075855.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A075855.result' proves 'Math0.Statements.A075855.statement'
+\end{lstlisting}
+
+\emph{Toolchain and reproduction.} We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use (the statement is not part of formal-conjectures). Running \path{scripts/verify.sh} from the repository root fetches the Mathlib cache, builds all math0 results with \texttt{lake build} (re-running every audit), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the passed statement checks. The proof file alone checks in under a minute with \texttt{lake env lean}; the kernel check of \decl{a_data} takes about a minute.
+
+{\footnotesize\raggedright
+\begin{thebibliography}{99}
+
+\bibitem{ChenIbero}
+E.~Chen, \emph{Iberoamerican 2019/5}, Twitch Solves ISL, Episode~109, \url{https://web.evanchen.cc/twitch/Ep109-Iberoamerican-2019-5-Solution.pdf}.
+
+\bibitem{ChenUSAMO}
+E.~Chen, \emph{USAMO 2008 Solution Notes}, \S1.3, ``USAMO 2008/3, proposed by Gabriel Carroll'', \url{https://web.evanchen.cc/exams/USAMO-2008-notes.pdf} (version of September~27, 2026).
+
+\bibitem{Compfiles}
+\emph{Compfiles: Catalog Of Math Problems Formalized In Lean, Elegantly Solved}, \url{https://github.com/dwrensha/compfiles}, file \path{Compfiles/Usa2008P3.lean}.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171 [cs.AI], 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A075855}
+The OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, sequence A075855, \url{https://oeis.org/A075855}, entry by J.~Perry (October~15, 2002), edited by D.~Hickerson (October~25, 2002); empirical g.f.\ by C.~Barker (April~12, 2012); revision \#11.
+
+\bibitem{A249333}
+The OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, sequence A249333, \url{https://oeis.org/A249333}, entry by R.~Stanley (December~3, 2014); revision \#25.
+
+\end{thebibliography}
+}
+
+\end{document}

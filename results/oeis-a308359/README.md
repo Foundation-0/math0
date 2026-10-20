@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: %F A308359 Conjecture: T(n,n-2) = 8*n^2 - 51*n + 8
 
 Referees: A. Goupil, H. Cloutier, F. Nouboud, "Enumeration of inscribed polyominos", FPSAC 2010, DMTCS proc. AN (2010) 737-748 (https://dmtcs.episciences.org/2808; hal-01186234; cited in OEIS A196593). Theorem 1 gives pmin(b,k) = 2k+2b-3bk-8+8*C(b+k-2,b-1), so pmin(w,3) = 4w^2-3w-2. Theorem 3 (k=2, b>2) gives pmin+1(b,2) = 4b^2-16b+18. Since T(n,n-2) = pmin(n-2,3) + pmin+1(n-2,2) = 8(n-2)^2-19(n-2)+16 = 8n^2-51n+86, Mathar's 2019 conjecture follows directly. The OEIS A308359 entry (last edited Oct 2022) still says "Conjecture" and has no proof note. Related but not resolving: L. Marin, "Counting Polyominoes in a Rectangle b x h", arXiv:2406.16413 (EPTCS 403, 2024), which covers fixed width and any height. I found no MathOverflow, Math StackExchange or SeqFan discussion explicitly proving the A308359 formula.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

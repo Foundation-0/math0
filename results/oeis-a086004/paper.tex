@@ -1,0 +1,324 @@
+% math0 manuscript template. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,noncomputable},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8, keepspaces=true,
+  literate={ℕ}{{$\mathbb{N}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {→}{{$\to$}}1
+    {≤}{{$\le$}}1 {¬}{{$\neg$}}1 {∧}{{$\wedge$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\DeclareMathOperator{\rot}{rot}
+\newcommand{\nd}{D}
+
+\title[No prime survives five rotate-and-add steps]{No prime survives five rotate-and-add steps: a proof of Seggelin's Conjecture~2 in OEIS A086004}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 19, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $\rot(n)$ be the decimal rotation of OEIS A086002, which exchanges the first and the last $\lfloor d/2\rfloor$ digits of a $d$-digit number $n$ and keeps the centre digit in place when $d$ is odd, and let $f(n)=n+\rot(n)$.
+We prove that there is no prime $p$ for which $f(p),f^2(p),f^3(p),f^4(p),f^5(p)$ are all prime; this is Conjecture~2 of Chuck Seggelin (2003) in OEIS A086004, and since primes with four prime iterates exist (A261458), five is the least length with this property.
+The proof is elementary: besides R.~J. Mathar's factorization for even digit counts, it uses that while the number of digits stays the same the centre digit $M$ of $n$ becomes the centre digit $2M\bmod 10$ of $f(n)$, and that if moreover $M\le4$, then $f(n)$ is a fixed point of $\rot$, so that the following iterate $f(f(n))=2f(n)$ is not prime.
+To our knowledge the result is new; C.~W. Wu had proved in 2015 that no prime has six consecutive prime iterates.
+The proof is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, whose definitions are checked by the kernel against the listed terms below $10^8$ and which was reviewed for fidelity and frozen before the proof attempt.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For a positive integer $n$ with $d$ decimal digits, the \emph{rotation} $\rot(n)$ of OEIS A086002 \cite{A086002} exchanges the block of the first $\lfloor d/2\rfloor$ digits with the block of the last $\lfloor d/2\rfloor$ digits; if $d$ is odd, the centre digit stays where it is. For example $\rot(1234)=3412$ and $\rot(12345)=45312$. Let $f(n)=n+\rot(n)$ (\emph{rotate-and-add}) and let $f^j$ be its $j$-th iterate. On July~7, 2003, Chuck Seggelin contributed A086002, A086003 \cite{A086003} and A086004 \cite{A086004}, the primes $p$ such that $f^j(p)$ is prime for all $1\le j\le k$, with $k=1$, $2$ and $3$ respectively; for instance $12917\mapsto30829\mapsto60659\mapsto120319$ are all prime.
+
+The entry A086004 records two conjectures of Seggelin. Conjecture~1, that a prime with an even number of digits added to its rotation is never prime, was proved by R.~J. Mathar in a comment of September~17, 2009: if $n=10^ka+b$ with $0\le b<10^k$ has $2k$ digits, then $\rot(n)=10^kb+a$ and $f(n)=(10^k+1)(a+b)$. Conjecture~2 says that there are no \emph{5-Rotation Cycle Primes}, where a $k$-Rotation Cycle Prime is a prime that remains prime after each of the first $k$ applications of $f$ (Section~\ref{sec:statement} explains this reading). On August~20, 2015, Chai Wah Wu added that 4-Rotation Cycle Primes exist; they are listed in A261458 \cite{A261458}, whose first term $10010905789$ has the prime iterates $15800815799$, $31600631599$, $63200263199$, $126399526399$, while the fifth iterate $652798652798$ is even.
+
+\subsection*{Prior work}
+In a comment in A261458 dated August~21, 2015, Wu proved that there are no 6-Rotation Cycle Primes. By Mathar's factorization, all members of such a chain except the last have the same odd number $2m+1$ of digits. Wu follows the first and the $(m+2)$-th digit: without a carry both are at least the sum of the previous pair, so from at least $(1,0)$ one reaches at least $(1,1),(2,2),(4,4),(8,8)$, and a carry, which adds a digit, is forced by the fifth application. This rules out chains of six applications but not of five, for which only the first four applications must keep the number of digits. Wu also observed in A086002 (August~19, 2015) that a $(2m+1)$-digit term of A086002 has an even $m$-th digit, since otherwise $f(p)$ is even.
+
+The math0 referees found no earlier resolution of Conjecture~2. The entry A086004 (revision \#20, June~8, 2025) still lists it as a conjecture, and searches of OEIS-indexed pages, arXiv, question-and-answer sites and the Prime Puzzles site found nothing on the five-step case; the archive of the SeqFan mailing list could not be reached and was not checked. The conjecture is not among the statements of the formal-conjectures repository \cite{FC} (checked at commit \texttt{c77fdd4}). With this caveat, we believe the result is new.
+
+We prove Conjecture~2 (Theorem~\ref{thm:main}); as 4-Rotation Cycle Primes exist, $5$ is the least $k$ for which there are no $k$-Rotation Cycle Primes. The argument tracks the centre digit. While the number of digits stays $2m+1$, the centre digit $M$ of $n$ becomes $2M\bmod10$ in $f(n)$, and if $M\le4$, then $f(n)$ is fixed by $\rot$, so $f(f(n))=2f(n)$ is twice a prime. Together with Mathar's factorization this forces the centre digits along a chain of primes to be $9,8,6,2$, which leaves room for at most four prime iterates.
+
+\section{Statement}\label{sec:statement}
+
+The entry A086004 \cite{A086004}, by Chuck Seggelin, July~7, 2003, condensed by R.~J. Mathar, September~17, 2009, reads in part (verbatim):
+\begin{quote}\raggedright
+\textsc{Name}: Primes which remain prime after one and after two and after three applications of the rotate-and-add operation of A086002.\\[2pt]
+\textsc{Comments}: [\dots] Note: Have not yet found any 4-Rotation Cycle Primes.\\
+Conjecture 1: Rotation and addition of primes with even numbers of digits never yields a prime.\\
+Conjecture 2: There are no 5-Rotation Cycle Primes.\\
+{[}Conjecture 1 is true because rotation for even numbers of the form 10\^{}k*a+b yields 10\^{}k*b+a, so rotation-and-add yields (10\^{}k+1)*(a+b), which obviously contains a divisor A000533. RJM, Sep 17 2009{]}\\
+4-Rotation Cycle Primes exist and are listed in A261458. - Chai Wah Wu, Aug 20 2015
+\end{quote}
+The rotation is defined in A086002 \cite{A086002} (verbatim): ``Let rotation rot(k) of a number k be defined by swapping the blocks of the first [d/2] and of the last [d/2] digits of k, where d=A055642(k). If the number of digits in k is odd, the center digit remains untouched during rotation.'' Here A055642 \cite{A055642} is the number of decimal digits.
+
+\begin{definition}\label{def:rot}
+For $n\in\N$ let $\nd(n)$ be the number of decimal digits of $n$, so that $10^{\nd(n)-1}\le n<10^{\nd(n)}$ for $n\ge1$, and $\nd(0)=0$. Put $l=\lfloor \nd(n)/2\rfloor$, $h=\nd(n)-l=\lceil \nd(n)/2\rceil$ and
+\[
+  \rot(n)=(n\bmod 10^{l})\cdot10^{h}+\bigl(\lfloor n/10^{l}\rfloor\bmod 10^{h-l}\bigr)\cdot10^{l}+\lfloor n/10^{h}\rfloor .
+\]
+Let $f(n)=n+\rot(n)$, and let $f^j$ be the $j$-th iterate of $f$ ($f^0=\mathrm{id}$, $f^{j+1}=f\circ f^j$). For $k\in\N$, a \emph{$k$-Rotation Cycle Prime} is a prime $p$ such that $f^j(p)$ is prime for every $j$ with $1\le j\le k$.
+\end{definition}
+
+If $\nd(n)=2k$, then $l=h=k$, the middle term vanishes (any number modulo $10^0=1$ is $0$), and $\rot(n)=(n\bmod10^k)10^k+\lfloor n/10^k\rfloor$: the last $k$ digits followed by the first $k$ digits. If $\nd(n)=2m+1$, then $l=m$, $h=m+1$, and the middle term is $(\lfloor n/10^m\rfloor\bmod10)\cdot10^m$, the centre digit kept in place. A moved block may start with zeros, which are then dropped, as in the Mathematica program of the entries: $\rot(10203)=3210$. The formula is R.~J. Mathar's Maple program in A086002, and it gives $\rot(0)=0$ although A055642 assigns one digit to $0$; the value at $0$ plays no role here.
+
+The reading of ``$k$-Rotation'' is fixed by the entries themselves: A086004 lists the primes that survive three applications of $f$, and its note ``Have not yet found any 4-Rotation Cycle Primes'' refers to a fourth application; Wu identifies the 4-Rotation Cycle Primes with A261458, the ``Primes which remain prime after one, two, three and four applications of the rotate-and-add operation of A086002''. So $k$ counts applications of $f$. (Counting the primes in the chain instead would make the conjecture false, since 4-Rotation Cycle Primes give chains of five primes.)
+
+\begin{theorem}[Seggelin's Conjecture~2]\label{thm:main}
+There are no 5-Rotation Cycle Primes: there is no prime $p$ such that $f(p)$, $f^2(p)$, $f^3(p)$, $f^4(p)$ and $f^5(p)$ are all prime.
+\end{theorem}
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A086004.lean}, reviewed for fidelity, and frozen before the proof attempt (SHA-256 \texttt{adb8cf05\dots73eb5d}). Its definitions, data checks and statement are, verbatim except that docstrings, the proof of \decl{a_data}, two further data checks (described below) and the helpers and lemmas used only in these checks are omitted:
+\begin{lstlisting}
+namespace Math0.Statements.A086004
+
+def rot (n : ℕ) : ℕ :=
+  let d := (Nat.digits 10 n).length
+  let l := d / 2
+  let h := d - l
+  n % 10 ^ l * 10 ^ h + n / 10 ^ l % 10 ^ (h - l) * 10 ^ l + n / 10 ^ h
+
+def rotAdd (n : ℕ) : ℕ := n + rot n
+
+def IsRotationCyclePrime (k p : ℕ) : Prop :=
+  p.Prime ∧ ∀ j, 1 ≤ j → j ≤ k → (rotAdd^[j] p).Prime
+
+noncomputable def a (n : ℕ) : ℕ := Nat.nth (IsRotationCyclePrime 3) (n - 1)
+
+theorem a_data : (List.range 13).map (fun i => a (i + 1)) =
+    [12917, 12919, 18911, 18913, 22907, 24907, 26903, 28901, 1088063, 1288043, 1408031,
+      1428029, 1528019] := by
+  -- (kernel scans, omitted; see the text)
+
+def statement : Prop :=
+  ∀ p : ℕ, ¬ IsRotationCyclePrime 5 p
+
+end Math0.Statements.A086004
+\end{lstlisting}
+
+\emph{Encoding.} Mathlib's \texttt{Nat.digits 10 n} is the list of decimal digits of $n$, least significant first, and is empty for $n=0$; its length is $\nd(n)$. The natural-number operations \texttt{/} and \texttt{\%} are the floor quotient and the remainder, and \texttt{d - l}, \texttt{h - l} are exact because $l\le h\le d$. Hence \decl{rot} is $\rot$ of Definition~\ref{def:rot}, \decl{rotAdd} is $f$, and \texttt{rotAdd\^{}[j]} is $f^j$. \decl{IsRotationCyclePrime}~$k$~$p$ says that $p$ is a $k$-Rotation Cycle Prime, and \decl{statement} is Theorem~\ref{thm:main}. There is no degenerate case: $p\ge2$, and the iterates are at least $p$. The sequence A086004 itself, with offset~$1$, is \texttt{a n}, the $(n-1)$-th element (counted from $0$) of the increasing enumeration of the 3-Rotation Cycle Primes.
+
+\emph{Checks against the OEIS.} All checks are proved in the kernel with \texttt{decide +kernel}. The theorem \decl{rot_examples} checks the examples of A086002 and the chains of the A086004 and A261458 examples; \decl{rot_eq_rotDigits_data} checks that $\rot$ agrees, for all $n<2000$ and on the numbers of the examples, with \decl{rotDigits}, a direct transcription of the A086002 definition on the digit list. \decl{a_data} checks that the definitions reproduce the first $13$ listed terms, which are all listed terms below $10^8$. Its proof shows that below $1530000$ the 3-Rotation Cycle Primes are exactly these $13$ numbers, by kernel scans over about $127{,}000$ candidates with helper functions written with recursors and primitive arithmetic, each proved equal to or sound for the definitions; the scan is shortened by three facts proved in the same file (the last digit of a prime $\ge10$; Mathar's factorization for $4$- and $6$-digit numbers; Wu's parity observation for $5$- and $7$-digit numbers). Independently, the fidelity reviewer compared \decl{rot} in Python with the Mathematica \texttt{rot} of the entries on all $n<200000$ and on $200000$ random numbers of up to $30$ digits, and recomputed all $24$ listed terms of A086004 from the formal definitions.
+
+\section{Proof}\label{sec:proof}
+
+We follow the Lean proof; each lemma below carries the name of the corresponding declaration. Throughout, $m\in\N$, $P=10^m$, and for $10^{2m}\le n<10^{2m+1}$ (that is, $\nd(n)=2m+1$) we write
+\[
+  X(n)=\lfloor n/10P\rfloor,\qquad M(n)=\lfloor n/P\rfloor\bmod10,\qquad Y(n)=n\bmod P,\qquad S(n)=X(n)+Y(n).
+\]
+Thus $X(n)$ is formed by the first $m$ digits, $M(n)$ is the centre digit and $Y(n)$ is formed by the last $m$ digits of $n$. For $10^k\le n<10^{k+1}$ we have $\nd(n)=k+1$ (the lemma \decl{length_digits_eq} of the statement file).
+
+\begin{lemma}[\decl{rotAdd_even}; Mathar]\label{lem:even}
+If $\nd(n)=2k$, then $f(n)=\bigl(\lfloor n/10^k\rfloor+(n\bmod10^k)\bigr)(10^k+1)$.
+\end{lemma}
+
+\begin{proof}
+Here $l=h=k$ and the middle term of $\rot(n)$ is $(\lfloor n/10^k\rfloor\bmod1)\cdot10^k=0$. Writing $a=\lfloor n/10^k\rfloor$ and $b=n\bmod10^k$, we have $n=10^ka+b$ and $f(n)=10^ka+b+10^kb+a=(a+b)(10^k+1)$.
+\end{proof}
+
+\begin{lemma}[\decl{odd_range}]\label{lem:odd}
+If $n$ and $f(n)$ are prime, then $10^{2m}\le n<10^{2m+1}$ for some $m\in\N$.
+\end{lemma}
+
+\begin{proof}
+Since $n\ne0$, $\nd(n)\ge1$. If $\nd(n)=2m+1$ is odd, then $10^{2m}\le n<10^{2m+1}$. Suppose $\nd(n)=2k$ is even; then $k\ge1$ and $n\ge10^{2k-1}\ge10^k$. By Lemma~\ref{lem:even}, $f(n)=(a+b)(10^k+1)$ with $a=\lfloor n/10^k\rfloor$, $b=n\bmod10^k$. A product of two natural numbers is prime only if one factor is $1$ and the other is prime. The factor $10^k+1$ is not $1$, so $a+b=1$. Since $n\ge10^k$ we have $a\ge1$, hence $a=1$ and $b=0$. Then $10^k\mid n$, so $2\mid n$, and as $n$ is prime, $n=2$. This contradicts $n\ge10^k\ge10$.
+\end{proof}
+
+\begin{lemma}[\decl{decomp}, \decl{rot_odd}, \decl{rotAdd_odd}, \decl{rot_lt}]\label{lem:shape}
+Let $10^{2m}\le n<10^{2m+1}$, and write $X,M,Y,S$ for $X(n),M(n),Y(n),S(n)$. Then
+\begin{enumerate}
+\item[(a)] $n=10P\,X+P\,M+Y$;
+\item[(b)] $\rot(n)=10P\,Y+P\,M+X$;
+\item[(c)] $f(n)=10P\,S+2P\,M+S$;
+\item[(d)] $\rot(n)<10^{2m+1}$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) Divide $n$ by $P$ and then $\lfloor n/P\rfloor$ by $10$: $n=P\lfloor n/P\rfloor+Y$ and $\lfloor n/P\rfloor=10\lfloor\lfloor n/P\rfloor/10\rfloor+M=10X+M$, using $\lfloor\lfloor n/P\rfloor/10\rfloor=\lfloor n/10P\rfloor$.
+(b) Since $\nd(n)=2m+1$, we have $l=m$, $h=m+1$, $h-l=1$, so the definition gives $\rot(n)=Y\cdot10P+M\cdot P+X$.
+(c) Add (a) and (b).
+(d) We have $Y\le P-1$, $M\le9$, and $X\le P-1$ because $n<10P\cdot P$. Hence $\rot(n)\le10P(P-1)+9P+(P-1)=10P^2-1<10^{2m+1}$.
+\end{proof}
+
+\begin{lemma}[\decl{stay}]\label{lem:stay}
+If $10^{2m}\le n<10^{2m+1}$ and $f(n)$ and $f(f(n))$ are prime, then $f(n)<10^{2m+1}$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:odd} applied to $f(n)$, there is $m'$ with $10^{2m'}\le f(n)<10^{2m'+1}$. By Lemma~\ref{lem:shape}(d), $f(n)=n+\rot(n)<2\cdot10^{2m+1}<10^{2m+2}$. If $m'>m$, then $10^{2m+2}\le10^{2m'}\le f(n)$, a contradiction. So $m'\le m$ and $f(n)<10^{2m'+1}\le10^{2m+1}$.
+\end{proof}
+
+\begin{lemma}[\decl{mid}, \decl{blocks}]\label{lem:mid}
+Let $10^{2m}\le n<10^{2m+1}$ and $f(n)<10^{2m+1}$, and let $M=M(n)$. Then
+\begin{enumerate}
+\item[(a)] $M(f(n))=2M\bmod10$;
+\item[(b)] if $M<5$, then $f(f(n))=2f(n)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Let $S=S(n)$. By Lemma~\ref{lem:shape}(c), $f(n)=10P\,S+2M\,P+S$. Since $10P\,S\le f(n)<10^{2m+1}=10P\cdot P$, we get $S<P$. As $f(n)=S+P(10S+2M)$ with $S<P$, we have $f(n)\bmod P=S$ and $\lfloor f(n)/P\rfloor=10S+2M$ (this is \decl{blocks}). Hence $M(f(n))=(10S+2M)\bmod10=2M\bmod10$, which is (a).
+
+For (b), note that $10^{2m}\le n\le f(n)<10^{2m+1}$, so Lemma~\ref{lem:shape}(b) applies to $f(n)$:
+\[
+  \rot(f(n))=10P\cdot\bigl(f(n)\bmod P\bigr)+P\cdot M(f(n))+\lfloor f(n)/10P\rfloor .
+\]
+If $M<5$, then $2M<10$, so $M(f(n))=2M$ and $\lfloor f(n)/10P\rfloor=\lfloor(10S+2M)/10\rfloor=S$. Therefore $\rot(f(n))=10P\,S+2M\,P+S=f(n)$, and $f(f(n))=f(n)+\rot(f(n))=2f(n)$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Suppose $p$ is prime and $n_j=f^j(p)$ is prime for $1\le j\le5$; put $n_0=p$, so $n_{j+1}=f(n_j)$. By Lemma~\ref{lem:odd} applied to $n_0$ and $n_1$, there is $m$ with $10^{2m}\le n_0<10^{2m+1}$. Since $f(n)\ge n$, all $n_j$ are at least $10^{2m}$. Applying Lemma~\ref{lem:stay} successively to $n_0,n_1,n_2,n_3$, with the primes $(n_1,n_2)$, $(n_2,n_3)$, $(n_3,n_4)$, $(n_4,n_5)$, we obtain
+\[
+  10^{2m}\le n_j<10^{2m+1}\qquad(0\le j\le4).
+\]
+Let $M_j=M(n_j)$ for $0\le j\le3$. Lemma~\ref{lem:mid} applies to each pair $(n_j,n_{j+1})$ with $0\le j\le3$. If $M_j<5$ for some $j\le3$, then by Lemma~\ref{lem:mid}(b) $n_{j+2}=2n_{j+1}$ with $n_{j+1}$ prime, so $n_{j+2}$ is not prime (twice a prime is not prime, \decl{not_prime_two_mul}), although $j+2\le5$. Hence
+\[
+  M_0,\ M_1,\ M_2,\ M_3\ \ge5,\qquad\text{and}\qquad M_{j+1}=2M_j\bmod10\quad(0\le j\le2)
+\]
+by Lemma~\ref{lem:mid}(a). Now $M_0\in\{5,\dots,9\}$, and $M\mapsto2M\bmod10$ maps $5,6,7,8,9$ to $0,2,4,6,8$. So $M_1\ge5$ forces $M_0\in\{8,9\}$ and $M_1\in\{6,8\}$; then $M_2\ge5$ forces $M_1=8$, $M_2=6$, and finally $M_3=2\cdot6\bmod10=2<5$, a contradiction.
+\end{proof}
+
+In Lean, the last step generalizes $M_0,\dots,M_3$ to variables and closes the five cases $M_0=5,\dots,9$ by linear arithmetic (\texttt{interval\_cases} followed by \texttt{omega}).
+
+\begin{remark}\label{rem:sharp}
+The bound is sharp, since 4-Rotation Cycle Primes exist \cite{A261458}. The same lemmas say more about the chains that do exist (this is not formalized): for a 3-Rotation Cycle Prime $p$, Lemma~\ref{lem:stay} gives $n_1,n_2<10^{2m+1}$ and Lemma~\ref{lem:mid} forces $M_0\ge5$ and $M_1=2M_0-10\ge5$, so the centre digit of $p$ is $8$ or $9$; for a 4-Rotation Cycle Prime the centre digits of $p,\dots,f^3(p)$ are $9,8,6,2$. This agrees with the data: all $24$ listed terms of A086004 have centre digit $8$ or $9$, and along the chain of $10010905789$ the centre digits are $9,8,6,2$, after which $f^4(p)$ has $12$ digits. A referee checked in Python that all $542$ terms of the b-file of A261458 behave in the same way. Compared with Wu's six-step argument, the centre digit gives one more step because a centre digit $M\le4$ kills the chain without waiting for a carry.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A086004.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A086004.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. It contains the private lemmas \decl{rotAdd_even}, \decl{odd_range}, \decl{decomp}, \decl{rot_odd}, \decl{rotAdd_odd}, \decl{rot_lt}, \decl{stay}, \decl{blocks}, \decl{mid} and \decl{not_prime_two_mul}, which are the lemmas of Section~\ref{sec:proof} under the names given there, and ends with
+\begin{lstlisting}
+theorem result : statement  -- proof omitted
+
+#math0_settles Math0.Frontier.A086004.result Math0.Statements.A086004.statement
+\end{lstlisting}
+in the namespace \decl{Math0.Frontier.A086004}; the main declaration is \decl{Math0.Frontier.A086004.result}, of type \decl{Math0.Statements.A086004.statement}. The proof uses one lemma of the statement file, \decl{length_digits_eq}, standard Mathlib facts on \texttt{Nat.digits}, division and primality (such as \decl{Nat.prime_mul_iff}), and tactics such as \texttt{omega}, \texttt{ring}, \texttt{nlinarith}, \texttt{norm\_num} and \texttt{interval\_cases}. The proof involves no computer search: it uses no \texttt{decide}, no \texttt{native\_decide}, no \texttt{sorry} and no \texttt{maxHeartbeats} option. The kernel scans of the statement file serve only the data check \decl{a_data} and are not used by the proof.
+
+\subsection*{Audit}
+The file ends with \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself. It fails unless (1) \decl{statement} is a definition of type \texttt{Prop} without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, which rejects \decl{sorryAx}, the axioms \decl{Lean.ofReduceBool} and \decl{Lean.trustCompiler} introduced by \texttt{native\_decide}, and custom axioms; and (3) the type of \decl{result} is syntactically the statement or its negation, after removing metadata annotations, with no unfolding. On this file it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A086004.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A086004.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A086004.result' proves 'Math0.Statements.A086004.statement'
+\end{lstlisting}
+The data checks \decl{a_data}, \decl{rot_examples} and \decl{rot_eq_rotDigits_data} of the statement file also depend only on these three axioms.
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A086004.lean} in the directory \path{lean}, after \texttt{lake build Math0.Statements.OEIS.A086004}; on our machine the statement module, with its kernel scans, built in about a minute with a peak memory use of about $1.6$\,GB.
+
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171 [cs.AI], 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A055642}
+The OEIS Foundation Inc., \url{https://oeis.org/A055642} (number of digits in the decimal expansion of $n$).
+
+\bibitem{A086002}
+The OEIS Foundation Inc., \url{https://oeis.org/A086002}, entry by C.~Seggelin (July 7, 2003), edited by R.~J. Mathar (May 27, 2009); comment by C.~W. Wu (Aug.~19, 2015).
+
+\bibitem{A086003}
+The OEIS Foundation Inc., \url{https://oeis.org/A086003}, entry by C.~Seggelin (July 7, 2003).
+
+\bibitem{A086004}
+The OEIS Foundation Inc., \url{https://oeis.org/A086004}, entry by C.~Seggelin (July 7, 2003), with comments by R.~J. Mathar (Sept.~17, 2009) and C.~W. Wu (Aug.~20, 2015); revision \#20, June 8, 2025.
+
+\bibitem{A261458}
+The OEIS Foundation Inc., \url{https://oeis.org/A261458}, entry by C.~W. Wu (Aug.~20, 2015), with his proof that there are no 6-Rotation Cycle Primes (Aug.~21, 2015).
+
+\end{thebibliography}
+
+\end{document}
