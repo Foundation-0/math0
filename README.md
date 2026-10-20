@@ -20,7 +20,7 @@ quietly prove an easier statement than the one the problem's curators wrote down
 ## Highlights
 
 <!-- HIGHLIGHTS:START -->
-**93 verified results.** 31 new results, 39 first formal proofs of known results, 17 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
+**94 verified results.** 32 new results, 39 first formal proofs of known results, 17 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
 
 New results (open problems settled; each checked by the Lean kernel and judged new by an independent novelty referee):
 
@@ -35,6 +35,7 @@ New results (open problems settled; each checked by the Lean kernel and judged n
 * [A386538: moving the circle's center off the grid enlarges the max lattice polygon (counterexample at n = 7)](results/oeis-a386538/README.md) ([paper](results/oeis-a386538/paper.pdf))
 * [Bar tilings of the smallest-perimeter rectangle: a(n+1) = 4 a(n) for odd n >= 3 (A394981)](results/oeis-a394981/README.md)
 * [Domino towers of height 2 and of height n-1, n-2, n-3 (A333650): all four Kagey/Luschny conjectures](results/oeis-a333650/README.md)
+* [Even and odd legs with odd prime factors ≡ 3 (mod 4): a(n)/n → π (A354571, A354570)](results/oeis-a354571/README.md)
 * [Internal n-gons in a regular n-gon: triple points occur only for n = 3, 4, 6, and otherwise there are n k^2 + 1 regions (Shannon's A357216 conjecture)](results/oeis-a357216/README.md) ([paper](results/oeis-a357216/paper.pdf))
 * [Prime-Minesweeper on the A060734 array: a(n) < 6, and a(n) = 5 only at n = 6](results/oeis-a326407/README.md) ([paper](results/oeis-a326407/paper.pdf))
 * [The Golomb-row triangle A113676 and Levine's sequence A014644](results/oeis-a113676/README.md)

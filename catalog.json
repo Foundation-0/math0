@@ -1709,6 +1709,29 @@
    "date": "2026-10-18"
   },
   {
+   "id": "OEIS-frontier/A354571",
+   "slug": "oeis-a354571",
+   "title": "Even and odd legs with odd prime factors ≡ 3 (mod 4): a(n)/n → π (A354571, A354570)",
+   "area": "Discrete geometry",
+   "source": "OEIS A354571",
+   "source_url": "https://oeis.org/A354571",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A354571.lean",
+    "decl": "Math0.Statements.A354571.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A354571.lean",
+   "our_decl": "Math0.Frontier.A354571.result",
+   "summary": "A354571 lists the even legs k of primitive Pythagorean triangles in increasing order, each repeated once per triangle. A leg is included when every odd prime factor of k is ≡ 3 (mod 4) and k has at least one odd prime factor. A354570 lists the odd legs k in the same way, for k whose prime factors are all ≡ 3 (mod 4). Selle's conjecture says that a(n)/n → π for A354571 and A354570(n)/n → π. The formal `statement` is the conjunction of these two limits, with each sequence read as the n-th term of the list where k appears #legTriangles(k) times.",
+   "notes": "Conjecture as stated in OEIS: \"Conjecture: lim_{n->oo} a(n)/n = Pi. Also, lim_{n->oo} A354570(n)/n = Pi.\" (Lothar Selle, Jun 04 2022; same text in A354570)\n\nReferees: No prior resolution found.\n- OEIS A354571 and A354570 (Lothar Selle, Jun 2022; last edited Aug 2022) still state lim a(n)/n = Pi as a conjecture. Checked in the local mirror and in upstream raw.githubusercontent.com/oeis/oeisdata.\n- Selle, \"Kleines Handbuch Pythagoreische Zahlentripel\" (BoD 2022), ch. 2.3.10, is cited only for the equality of the two limits; I could not access the book.\n- Related unproved Selle conjectures appear in A120427, A120890 and A354569.\n- Web searches (arXiv, MathOverflow, Math.SE, SeqFan) found no proof or counterexample.\n- The underlying asymptotic is a standard consequence of Wiener–Ikehara/Delange applied to (1-2^-s)zeta(s)/L(s,chi4), using L(1,chi4) = pi/4. D. N. Lehmer (Amer. J. Math. 22, 1900) treats similar Pythagorean counting asymptotics, but not this restricted case.",
+   "date": "2026-10-20"
+  },
+  {
    "id": "OEIS-frontier/A355076",
    "slug": "oeis-a355076",
    "title": "Integer partial sums of the Calkin-Wilf ratios fusc(k)/fusc(k+1) at n = 2*4^k-1 and 2*4^k-2 (A355076)",
