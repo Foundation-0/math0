@@ -76,6 +76,7 @@ import Math0.Frontier.OEIS.A357216
 import Math0.Frontier.OEIS.A362086
 import Math0.Frontier.OEIS.A363482
 import Math0.Frontier.OEIS.A363609
+import Math0.Frontier.OEIS.A369366
 import Math0.Frontier.OEIS.A375522
 import Math0.Frontier.OEIS.A386538
 import Math0.Frontier.OEIS.A392943

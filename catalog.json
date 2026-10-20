@@ -1686,6 +1686,29 @@
    "date": "2026-10-19"
   },
   {
+   "id": "OEIS-frontier/A369366",
+   "slug": "oeis-a369366",
+   "title": "The least number of inequivalent cells of a (6k+5)-iamond is 3(k+1)",
+   "area": "Discrete geometry",
+   "source": "OEIS A369366",
+   "source_url": "https://oeis.org/A369366",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A369366.lean",
+    "decl": "def statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A369366.lean",
+   "our_decl": "Math0.Frontier.A369366.result",
+   "summary": "For every k >= 0, the least number of inequivalent cells over all polyiamonds with n = 6k+5 cells is 3(k+1). Two cells of P are equivalent when a symmetry of the triangular grid maps P onto itself and one cell to the other. This is Exley's conjecture in OEIS A369366, a(6k+5) = 3(k+1).",
+   "notes": "Conjecture as stated in OEIS: %C A369366 Conjecture: a(6k+5) = 3(k+1) for all k >= 0. Observed for k = 0, 1, 2 (n = 5, 11, 17). The next test case is a(23), predicted to be 12.  (From _Peter Exley_, Apr 07 2026)\n\nReferees: OEIS A369366 (local mirror revision #14, Apr 14 2026, identical to oeisdata main): Exley's comment of Apr 07 2026 states the conjecture and already proves the lower bound a(6k+5) >= 3(k+1) (no rotations are possible when n = 6k+5, so |G_max| = 2). No upper-bound construction or full proof appears in the entry or its %E history. Cross-references checked: A369365, A369367, A369363, A369364, A367758, A367759, A373637, A376798, A376799. The only related proof is Mason and von Brömssen's formula proof for the polyomino analog A367758 (square lattice, a different problem). Exley's linked GitHub repo github.com/pexley-math/oeis-A369366 and the account page return 404 and could not be inspected. Web searches (arXiv, general web) found no prior resolution.",
+   "date": "2026-10-20"
+  },
+  {
    "id": "OEIS-frontier/A375522",
    "slug": "oeis-a375522",
    "title": "A375522: S2(n) - S1(n) = 1 fails at n = 42 (the difference is 5)",
