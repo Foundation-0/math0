@@ -25,6 +25,10 @@ Referees: - OEIS A355339 (Rémy Sigrist, Jun 29 2022): the conjecture is in %F a
 - Web searches of arXiv, MathOverflow/MSE, SeqFan and general sources found no prior proof or counterexample.
 - No formalization in google-deepmind formal-conjectures.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

@@ -30,7 +30,7 @@ New results (open problems settled; each checked by the Lean kernel and judged n
 * [A332010: the average first letter of one-descent derangements has denominator 2^(n-2)](results/oeis-a332010/README.md) ([paper](results/oeis-a332010/paper.pdf))
 * [A338885: the smallest number in row 655 is 104, not A228286(655) = 115](results/oeis-a338885/README.md) ([paper](results/oeis-a338885/paper.pdf))
 * [A348484: no two squares two steps apart; the conjectured formula holds](results/oeis-a348484/README.md) ([paper](results/oeis-a348484/paper.pdf))
-* [A355339: the central even run of the knight-move triangle has length 1 iff n = 2^m - 2](results/oeis-a355339/README.md)
+* [A355339: the central even run of the knight-move triangle has length 1 iff n = 2^m - 2](results/oeis-a355339/README.md) ([paper](results/oeis-a355339/paper.pdf))
 * [A363609: a(k^3) = 6k(k+2), the cube is the optimal polycube of k^3 dice](results/oeis-a363609/README.md) ([paper](results/oeis-a363609/paper.pdf))
 * [A386538: moving the circle's center off the grid enlarges the max lattice polygon (counterexample at n = 7)](results/oeis-a386538/README.md) ([paper](results/oeis-a386538/paper.pdf))
 * [Bar tilings of the smallest-perimeter rectangle: a(n+1) = 4 a(n) for odd n >= 3 (A394981)](results/oeis-a394981/README.md)
