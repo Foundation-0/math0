@@ -26,6 +26,10 @@ Referees: No prior resolution found.
   - Eriksen–Freij–Wästlund, arXiv:0811.1925 / EJC 16 (2009) R32, and Han–Xin (2007) cover derangements with prescribed descent sets, with no first-letter averages.
 - Searches of Math StackExchange, arXiv and SeqFan found nothing. MathOverflow was not reachable through the search tool.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

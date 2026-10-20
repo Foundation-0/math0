@@ -25,6 +25,10 @@ Referees: No explicit prior resolution of the A116184 conjecture found. OEIS A11
 - R. Meštrović, arXiv:1111.3057, eq. (22).
 - OEIS A007408 comment (Adamchuk 2006): 37^3 | numerator of H(36,3), i.e. the k=0 case.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

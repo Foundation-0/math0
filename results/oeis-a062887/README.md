@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: "Conjecture: The only numbers n for which a(n)=0 a
 
 Referees: OEIS A062887 (Amarnath Murthy, 2001; conjecture added by Sean A. Irvine, Apr 14 2023; entry unchanged as of revision #12, checked in the local mirror dated 2026-10-17 and upstream oeisdata). Related: OEIS A062886 (Nathaniel Johnston, May 2011: zeros match 25 | 2n+1 for n ≤ 500, observed but not proved); OEIS A062885 (even-digit analogue: John W. Layman's argument for a(25) = −1, plus a Don Reble analysis file a062885.txt that I could not retrieve). Web searches (OEIS, MSE/MO-style queries, phrases about repeated 31975/97531 blocks and divisibility by 125) found no prior proof or counterexample.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

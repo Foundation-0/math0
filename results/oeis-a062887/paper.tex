@@ -1,0 +1,363 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,noncomputable,rw,constructor,by_contra},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {∈}{{$\in$}}1
+    {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {¬}{{$\neg$}}1 {→}{{$\to$}}1 {←}{{$\leftarrow$}}1
+    {↔}{{$\leftrightarrow$}}1 {≤}{{$\le$}}1 {≡}{{$\equiv$}}1 {∣}{{$\mid$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {·}{{$\cdot$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\cD}{\mathcal{D}}
+
+\title[Irvine's conjecture for OEIS A062887]{An odd number has a multiple whose decimal digits are odd and decrease by two modulo $10$ if and only if it is not divisible by $125$: Irvine's conjecture for OEIS A062887}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 19, 2026}
+
+\begin{document}
+\begin{abstract}
+For $n\ge0$ let $a(n)$ be the smallest positive multiple of $2n+1$ whose decimal digits are odd and, read from left to right, each two less modulo $10$ than the preceding one, or $0$ if there is no such multiple; this is the sequence A062887 of the OEIS, contributed by Amarnath Murthy in 2001.
+We prove the conjecture recorded in the entry by Sean A.~Irvine in 2023 that $a(n)=0$ if and only if $125$ divides $2n+1$: the last three digits of such a number are never divisible by $125$, and otherwise a suitable number of repetitions of the block $31975$, chosen with Euler's theorem, is a multiple of $2n+1$.
+To our knowledge this is the first proof of the conjecture; the argument is elementary.
+The theorem is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, reviewed for fidelity and frozen before the proof attempt, whose definitions are checked by the kernel against all $26$ listed terms; this statement is not part of the formal-conjectures repository.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Call a positive integer \emph{admissible} if its decimal digits are odd and, read from left to right, each digit is two less modulo $10$ than the previous one. Reading from the left, the digits of an admissible number run cyclically through $\dots,9,7,5,3,1,9,7,\dots$; examples are $1$, $75$, $319$, $975$ and $9753197$.
+The sequence A062887 of the OEIS \cite{A062887}, contributed by Amarnath Murthy on June~28, 2001, with offset $0$, is
+\[
+  a(n)=\text{the smallest admissible multiple of }2n+1,\ \text{or }0\text{ if there is none}.
+\]
+The entry lists $a(0),\dots,a(25)$, with more terms by Sascha Kurz (2002); for example $a(5)=319$ and $a(10)=197531975319$, and the largest listed term, $a(25)=753197531975319753$, has $18$ digits.
+On April~14, 2023, Sean A.~Irvine added the conjecture that $a(n)=0$ exactly when $125\mid 2n+1$. We prove it (Theorem~\ref{thm:main}).
+
+\subsection*{Method}
+Since $125\mid1000$, an admissible number is congruent modulo $125$ to its last three digits, and these are never divisible by $125$. Conversely, if $125\nmid m=2n+1$ and $m'$ is the largest divisor of $m$ coprime to $5$, the admissible number formed by $q=\varphi(99999\,m')$ copies of the block $31975$ is divisible by $25m'$, hence by $m$, by Euler's theorem.
+
+\subsection*{Related sequences}
+A062887 cross-references A062885 \cite{A062885}, also due to Murthy: the smallest multiple of $n$ whose digits are even and each two less (mod $10$) than the previous one, or $-1$ if there is none. For it, John W.~Layman showed in 2001 that the value at $n=25$ is $-1$, and the entry links an analysis by Don Reble.
+In the sibling sequence A062886 \cite{A062886} the digits are odd and each is two \emph{more} (mod $10$) than the previous one. Nathaniel Johnston observed in 2011 that, for $n\le500$, its zeros are exactly the $n$ with $25\mid 2n+1$, and the entry's example for $a(12)=0$ gives the reason why $25\mid 2n+1$ forces a zero (a multiple of $25$ ends in $00$, $25$, $50$ or $75$). The argument of this note proves Johnston's observation for all $n$ (Remark~\ref{rem:886}).
+
+\subsection*{Status and prior work}
+The statement is still marked ``Conjecture'' in A062887; the current revision (\#12, April~14, 2023) dates from the day the conjecture was added. We read the entry in the copy of the OEIS database used by math0, dated October~17, 2026, and no other entry in that copy refers to A062887.
+The math0 referees' web searches (including queries aimed at the OEIS, MathOverflow and Mathematics Stack Exchange, and searches for the repeated blocks $31975$ and $97531$ together with divisibility by $125$) found no proof or counterexample.
+The statement has no file in the formal-conjectures repository \cite{FC} at the commit pinned by math0, and none among the AlphaProof Nexus outputs \cite{APN}.
+We could not read Reble's analysis of A062885 (our copy of the database contains only a Git LFS pointer to it); it concerns the even-digit sequence.
+We therefore classify the result as new, with the caveat that the argument is elementary, and that the direction ``$125\mid 2n+1\Rightarrow a(n)=0$'' is the same kind of last-digits argument that the entry A062886 gives for the modulus $25$.
+
+\section{Statement}\label{sec:statement}
+
+Every $N\ge1$ has a unique decimal expansion $N=\sum_{i=0}^{L-1}d_i10^i$ with $d_i\in\{0,\dots,9\}$ and $d_{L-1}\ne0$; we call $(d_0,\dots,d_{L-1})$ its (little-endian) \emph{digit list} and $L$ its number of digits. Read from left to right the digits are $d_{L-1},d_{L-2},\dots,d_0$.
+
+\begin{definition}\label{def:adm}
+A positive integer $N$ with digit list $(d_0,\dots,d_{L-1})$ is \emph{admissible} if every $d_i$ is odd and $d_i+2\equiv d_{i+1}\pmod{10}$ for $0\le i<L-1$. Let $\cD$ be the set of admissible numbers, and for $n\ge0$ let $a(n)=\min\{N\in\cD: 2n+1\mid N\}$ if this set is nonempty and $a(n)=0$ otherwise.
+\end{definition}
+
+The name of A062887 \cite{A062887} reads, verbatim:
+\begin{quote}
+{\small\texttt{Smallest multiple of 2n+1 with the property that its digits are odd and each digit is two less (mod 10) than the previous digit, or 0 if no such number exists.}}
+\end{quote}
+and the COMMENTS section contains, verbatim:
+\begin{quote}
+{\small\texttt{Conjecture: The only numbers n for which a(n)=0 are those for which 2*n+1 is divisible by 125. - \_Sean A. Irvine\_, Apr 14 2023}}
+\end{quote}
+Definition~\ref{def:adm} is the name with ``the previous digit'' taken in the left-to-right reading: $d_i$ is two less than $d_{i+1}$ modulo $10$. This agrees with the entry's Maple program, whose candidates have digits $(2j+1-2h)\bmod 10$ for $h=1,2,\dots$ from the left, and with the listed data.\footnote{The entry's example line reads ``\texttt{a(7) = 975 = 13*75}''. With offset $0$, the listed data give $a(6)=975$ (and $2\cdot6+1=13$) and $a(7)=75$.}
+
+\begin{theorem}\label{thm:main}
+For every $n\ge0$, $a(n)=0$ if and only if $125\mid 2n+1$. Equivalently, an odd positive integer $m$ has an admissible multiple if and only if $125\nmid m$.
+\end{theorem}
+
+Irvine's sentence asserts that $a(n)=0$ implies $125\mid 2n+1$; Theorem~\ref{thm:main} also contains the converse, which is the easy direction (Lemma~\ref{lem:125}).
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A062887.lean}, reviewed for fidelity and frozen (SHA-256 \texttt{544c69cd\ldots a828}) before any proof attempt. Its definitions of the sequence and the statement read, verbatim (the import, comments and docstrings, blank lines, the decidability instance, the auxiliary definitions \decl{gen}, \decl{cands} and \decl{aSearch} used for the data check, and all theorems are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A062887
+def IsDesc2 (N : ℕ) : Prop :=
+  0 < N ∧ (∀ d ∈ Nat.digits 10 N, Odd d) ∧
+    (Nat.digits 10 N).reverse.IsChain (fun prev next => next + 2 ≡ prev [MOD 10])
+open Classical in
+noncomputable def a (n : ℕ) : ℕ :=
+  if h : ∃ N, IsDesc2 N ∧ 2 * n + 1 ∣ N then Nat.find h else 0
+def statement : Prop := ∀ n : ℕ, a n = 0 ↔ 125 ∣ 2 * n + 1
+end Math0.Statements.A062887
+\end{lstlisting}
+Here \texttt{Nat.digits 10 N} is the digit list $(d_0,\dots,d_{L-1})$ defined above (empty for $N=0$), so its reverse lists the digits from left to right, and \texttt{IsChain R} requires $R$ between each pair of consecutive entries. Thus \texttt{IsDesc2 N} says that $N\in\cD$; the condition $0<N$ excludes $N=0$, whose empty digit list would satisfy the other two conditions vacuously. \texttt{Nat.find h} is the least $N$ with \texttt{IsDesc2 N} and $2n+1\mid N$, so \decl{a} is the function $a$ of Definition~\ref{def:adm}. The statement quantifies over all $n\ge0$ without further hypotheses.
+
+To compare \decl{a} with the OEIS data, the statement file describes $\cD$ explicitly and proves the following (statements shown, proofs omitted except for \decl{a_data}):
+\begin{lstlisting}
+def gen : ℕ → ℕ → List ℕ
+  | _, 0 => []
+  | x, L + 1 => x :: gen ((x + 2) % 10) L
+theorem isDesc2_ofDigits_gen (x L : ℕ) (hx : x < 10) (hodd : Odd x) (hL : 1 ≤ L) :
+    IsDesc2 (Nat.ofDigits 10 (gen x L))
+theorem exists_gen_of_isDesc2 {N : ℕ} (h : IsDesc2 N) :
+    ∃ x L, x < 10 ∧ Odd x ∧ 1 ≤ L ∧ Nat.digits 10 N = gen x L
+theorem a_eq_of_aSearch {n B v : ℕ} (h : aSearch n B = some v) : a n = v
+theorem a_data : (List.range 26).map (fun i => a (i + 0)) =
+    [1, 3, 5, 7, 9, 319, 975, 75, 7531, 19, 197531975319, 3197, 75, 5319, 319, 31,
+      3197531975319, 53197531975, 1975319, 975, 531975, 1975319753197, 19753197531975,
+      75319753197531, 319753197531975319, 753197531975319753] := by
+  simp only [Nat.add_zero]
+  exact map_a_eq_of_aSearch (B := 18) (by decide +kernel)
+\end{lstlisting}
+The list \texttt{gen x L} is $\bigl(x,(x+2)\bmod10,(x+4)\bmod10,\dots\bigr)$ of length $L$, and the first two theorems say that $\cD$ consists exactly of the numbers with digit list \texttt{gen x L}, $x$ an odd digit and $L\ge1$ (Lemma~\ref{lem:gen} below). The computable function \texttt{aSearch n B} (defined in the file through a list \decl{cands} of candidates) returns the least multiple of $2n+1$ among the $5B$ admissible numbers \texttt{Nat.ofDigits 10 (gen x L)} with $x\in\{1,3,5,7,9\}$ and $1\le L\le B$, if there is one. By \decl{a_eq_of_aSearch}, a value \texttt{some v} determines \texttt{a n = v}: an admissible $k<v$ has at most as many digits as $v$, hence lies in the search range, so $k$ is not a multiple of $2n+1$. In \decl{a_data} the kernel evaluates \texttt{aSearch i 18} for $i=0,\dots,25$ and compares the results with the $26$ listed terms; the lemma \decl{map_a_eq_of_aSearch} applies \decl{a_eq_of_aSearch} termwise. The file also checks the example $975=13\cdot75$.
+
+\section{Proof}\label{sec:proof}
+
+We follow the Lean file \path{lean/Math0/Frontier/OEIS/A062887.lean}; each step names the corresponding declaration. For an odd digit $x\in\{1,3,5,7,9\}$ and $L\ge0$ put
+\[
+  \gamma(x,L)=\bigl((x+2i)\bmod 10\bigr)_{0\le i<L},\qquad G(x,L)=\sum_{i=0}^{L-1}\bigl((x+2i)\bmod 10\bigr)\,10^i ,
+\]
+so $\gamma(x,L)$ is \texttt{gen x L} and $G(x,L)$ is \texttt{Nat.ofDigits 10 (gen x L)}. Since $(x+2)\bmod10$ is again an odd digit,
+\begin{equation}\label{eq:rec}
+  \gamma(x,L+1)=\bigl(x,\gamma((x+2)\bmod 10,L)\bigr),\qquad G(x,L+1)=x+10\,G\bigl((x+2)\bmod 10,L\bigr).
+\end{equation}
+
+\begin{lemma}[\decl{isDesc2_ofDigits_gen}, \decl{exists_gen_of_isDesc2}]\label{lem:gen}
+A positive integer $N$ is admissible if and only if $N=G(x,L)$ for some $x\in\{1,3,5,7,9\}$ and $L\ge1$. In that case $\gamma(x,L)$ is the digit list of $N$.
+\end{lemma}
+
+\begin{proof}
+All entries of $\gamma(x,L)$ are odd digits; in particular the last one is nonzero, so $\gamma(x,L)$ is the digit list of $G(x,L)$ (Mathlib's \decl{Nat.digits_ofDigits}). Consecutive entries satisfy $d_{i+1}=(d_i+2)\bmod 10\equiv d_i+2$, and $G(x,L)\ge x\ge1$ for $L\ge1$; so $G(x,L)$ is admissible.
+Conversely, let $N$ be admissible with digit list $(d_0,\dots,d_{L-1})$; then $L\ge1$ because $N>0$. For each $i$, $d_{i+1}\equiv d_i+2\pmod{10}$ and $0\le d_{i+1}<10$ give $d_{i+1}=(d_i+2)\bmod 10$, so by induction along the list $(d_0,\dots,d_{L-1})=\gamma(d_0,L)$, and $d_0$ is an odd digit. (In Lean, \decl{List.isChain_reverse} turns the condition on the reversed list for $(\mathit{prev},\mathit{next})\mapsto \mathit{next}+2\equiv \mathit{prev}$ into the condition on the list itself for $(p,q)\mapsto p+2\equiv q$, and the induction is \decl{gen_of_chain}.)
+\end{proof}
+
+\begin{lemma}[\decl{a_eq_zero_iff}]\label{lem:zero}
+For every $n\ge0$, $a(n)=0$ if and only if no admissible number is divisible by $2n+1$.
+\end{lemma}
+
+\begin{proof}
+If some admissible number is divisible by $2n+1$, then $a(n)$ is the least such number; it is admissible, hence positive. Otherwise $a(n)=0$ by definition.
+\end{proof}
+
+\begin{lemma}[\decl{not_dvd_125}]\label{lem:125}
+No admissible number is divisible by $125$.
+\end{lemma}
+
+\begin{proof}
+Let $N$ be admissible. By Lemma~\ref{lem:gen}, $N=G(x,L)$ with $x\in\{1,3,5,7,9\}$ and $L\ge1$. Applying \eqref{eq:rec} up to three times gives the following values, where $K=G\bigl((x+6)\bmod 10,L-3\bigr)\ge0$ for $L\ge3$:
+\[
+\begin{array}{c|ccccc}
+ x & 1 & 3 & 5 & 7 & 9\\\hline
+ N\ (L=1) & 1 & 3 & 5 & 7 & 9\\
+ N\ (L=2) & 31 & 53 & 75 & 97 & 19\\
+ N-1000K\ (L\ge3) & 531 & 753 & 975 & 197 & 319\\
+ (N-1000K)\bmod 125 & 31 & 3 & 100 & 72 & 69
+\end{array}
+\]
+If $L\le2$, then $0<N<125$. If $L\ge3$, then $N\equiv N-1000K\not\equiv0\pmod{125}$, because $125\mid1000$. In either case $125\nmid N$.
+In Lean the proof splits into the cases $L=1$, $L=2$, $L\ge3$ and the five values of $x$; in each of the $15$ cases \decl{simp} unfolds \eqref{eq:rec}, leaving a linear equation for $N$, and \decl{omega}, a decision procedure for linear integer arithmetic with divisibility by numerals, refutes $125\mid N$.
+\end{proof}
+
+For $q\ge0$ let
+\[
+  S_q=G(5,5q),
+\]
+which is \texttt{S q} in Lean. Its digit list is $\gamma(5,5q)=(5,7,9,1,3,5,7,9,1,3,\dots)$, so $S_q$ is the block $31975$ written $q$ times ($S_0=0$, $S_1=31975$, $S_2=3197531975$).
+
+\begin{lemma}[\decl{S_succ}, \decl{dvd_S_25}, \decl{S_geom}]\label{lem:S}
+For every $q\ge0$:
+\begin{enumerate}
+\item $S_{q+1}=31975+10^5S_q$;
+\item $25\mid S_q$;
+\item $99999\,S_q+31975=31975\cdot100000^q$.
+\end{enumerate}
+Moreover $S_q$ is admissible for $q\ge1$.
+\end{lemma}
+
+\begin{proof}
+(1) Since $(3+2)\bmod10=5$, applying \eqref{eq:rec} five times gives $\gamma(5,5q+5)=(5,7,9,1,3,\gamma(5,5q))$ and $S_{q+1}=5+70+900+1000+30000+10^5S_q=31975+10^5S_q$.
+(2) By induction on $q$: $S_0=0$, and $31975=25\cdot1279$, so $25\mid S_q$ implies $25\mid S_{q+1}$ by (1).
+(3) By induction on $q$: for $q=0$ both sides equal $31975$. If (3) holds for $q$, then by (1)
+\[
+  99999\,S_{q+1}+31975=10^5\bigl(31975+99999\,S_q\bigr)=10^5\cdot31975\cdot100000^q=31975\cdot100000^{q+1}.
+\]
+Finally, $S_q=G(5,5q)$ with $5q\ge1$ is admissible by Lemma~\ref{lem:gen}.
+\end{proof}
+
+\begin{lemma}[\decl{exists_dvd_S}]\label{lem:euler}
+Let $m'\ge1$ be coprime to $10$ and $q=\varphi(99999\,m')$, where $\varphi$ is Euler's totient function. Then $q\ge1$ and $25m'\mid S_q$.
+\end{lemma}
+
+\begin{proof}
+Put $M=99999\,m'$. Since $99999=3^2\cdot41\cdot271$ and $m'$ are coprime to $10$, so is $M$; also $M\ge1$, so $q=\varphi(M)\ge1$. By Euler's theorem (\decl{Nat.ModEq.pow_totient}), $10^{q}\equiv1\pmod M$, hence $100000^q=(10^q)^5\equiv1\pmod M$. By Lemma~\ref{lem:S}(3),
+\[
+  99999\,S_q+31975=31975\cdot100000^q\equiv31975\pmod M,
+\]
+so $M\mid 99999\,S_q$, that is, $99999\,m'\mid99999\,S_q$, and therefore $m'\mid S_q$. Since $\gcd(25,m')=1$ and $25\mid S_q$ (Lemma~\ref{lem:S}(2)), we get $25m'\mid S_q$ (\decl{Nat.Coprime.mul_dvd_of_dvd_of_dvd}).
+\end{proof}
+
+In Lean, ``coprime to $10$'' is expressed by the two hypotheses \texttt{Nat.Coprime m' 2} and \texttt{Nat.Coprime m' 5}.
+
+\begin{lemma}[\decl{exists_cofactor}]\label{lem:cof}
+Let $m$ be odd with $125\nmid m$. Then there is an integer $m'$ coprime to $10$ with $m\mid 25m'$.
+\end{lemma}
+
+\begin{proof}
+If $25\mid m$, write $m=25k$; then $k$ is odd, and $5\nmid k$ since otherwise $125\mid m$; take $m'=k$. If $5\mid m$ but $25\nmid m$, write $m=5k$; then $k$ is odd and $5\nmid k$, and $m\mid 25k$; take $m'=k$. Otherwise $m$ is coprime to $10$ and $m\mid 25m$; take $m'=m$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $n\ge0$ and $m=2n+1$. By Lemma~\ref{lem:zero} we must show that no admissible number is divisible by $m$ if and only if $125\mid m$.
+If $125\mid m$ and $N$ is admissible with $m\mid N$, then $125\mid N$, contradicting Lemma~\ref{lem:125}.
+If $125\nmid m$, then, as $m$ is odd, Lemma~\ref{lem:cof} gives $m'$ coprime to $10$ with $m\mid 25m'$, and Lemma~\ref{lem:euler} gives $q\ge1$ with $25m'\mid S_q$. Hence $m\mid S_q$, and $S_q$ is admissible by Lemma~\ref{lem:S}.
+\end{proof}
+
+\begin{remark}[A062886; not formalized]\label{rem:886}
+The same argument proves Johnston's observation on A062886 \cite{A062886} for all $n$. There the digits are odd and each is two \emph{more} (mod $10$) than the previous one; as in Lemma~\ref{lem:gen}, the digit lists are $\bigl((x-2i)\bmod10\bigr)_{0\le i<L}$ with $x$ an odd digit and $L\ge1$. Such a number is either a digit or congruent modulo $100$ to its last two digits $13$, $35$, $57$, $79$ or $91$, so it is not divisible by $25$. Conversely, if $m=2n+1$ and $25\nmid m$, then $m\mid 5m'$ with $m'$ coprime to $10$, and the number $T_q$ formed by $q$ copies of the block $79135$ has the digit property, is divisible by $5$, and satisfies $99999\,T_q=79135\,(10^{5q}-1)$; as in Lemma~\ref{lem:euler}, $q=\varphi(99999\,m')$ gives $5m'\mid T_q$. Hence the zeros of A062886 are exactly the $n$ with $25\mid 2n+1$.
+This remark is not part of the Lean development. We checked it, and Theorem~\ref{thm:main}, numerically for all $n<5000$ by a search over pairs (residue modulo $2n+1$, last digit).
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A062887.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A062887.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A062887.result}, of type \decl{Math0.Statements.A062887.statement}; the auxiliary declarations of Lemmas~\ref{lem:zero}--\ref{lem:cof} are private. The main theorem and the end of the file read, verbatim (docstring and blank lines omitted):
+\begin{lstlisting}
+theorem result : statement := by
+  intro n
+  rw [a_eq_zero_iff]
+  constructor
+  · intro hne
+    by_contra h125
+    obtain ⟨m', h2, h5, hdvd⟩ := exists_cofactor (m := 2 * n + 1) (by omega) h125
+    obtain ⟨q, hq, hS⟩ := exists_dvd_S h2 h5
+    exact hne ⟨S q, isDesc2_ofDigits_gen 5 (5 * q) (by norm_num) (by decide) (by omega),
+      dvd_trans hdvd hS⟩
+  · rintro h125 ⟨N, hN, hdvd⟩
+    exact not_dvd_125 hN (dvd_trans h125 hdvd)
+end Math0.Frontier.A062887
+#math0_settles Math0.Frontier.A062887.result Math0.Statements.A062887.statement
+\end{lstlisting}
+The proof file uses no \texttt{native\_decide}, \texttt{sorry} or \texttt{set\_option}; its only uses of \texttt{decide} check that $5$ is odd and that the odd numbers below $10$ are $1,3,5,7,9$. The data check \decl{a_data} in the statement file uses \texttt{decide +kernel}, which evaluates in the kernel and adds no axioms.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, \decl{Lean.ofReduceBool} from \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically the statement or its negation, up to metadata annotations and without unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+math0 audit: 'Math0.Statements.A062887.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A062887.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A062887.result' proves 'Math0.Statements.A062887.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. Each of the two files can also be checked with \texttt{lake env lean} in the directory \path{lean}, in well under a minute on our machine.
+
+{\small\raggedright
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171 [cs.AI], 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{APN}
+Google DeepMind, \emph{AlphaProof Nexus results}, \url{https://github.com/google-deepmind/alphaproof-nexus-results}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A062885}
+The OEIS Foundation Inc., \url{https://oeis.org/A062885}, entry by A.~Murthy (2001); argument for $n=25$ by J.~W. Layman (2001); analysis file by D.~Reble.
+
+\bibitem{A062886}
+The OEIS Foundation Inc., \url{https://oeis.org/A062886}, entry by A.~Murthy (2001); comment and terms by N.~Johnston (May~19, 2011).
+
+\bibitem{A062887}
+The OEIS Foundation Inc., \url{https://oeis.org/A062887}, entry by A.~Murthy (June~28, 2001); more terms by S.~Kurz (2002); conjecture by S.~A. Irvine (April~14, 2023); revision \#12.
+
+\end{thebibliography}
+}
+
+\end{document}

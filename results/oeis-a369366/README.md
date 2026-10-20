@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: %C A369366 Conjecture: a(6k+5) = 3(k+1) for all k 
 
 Referees: OEIS A369366 (local mirror revision #14, Apr 14 2026, identical to oeisdata main): Exley's comment of Apr 07 2026 states the conjecture and already proves the lower bound a(6k+5) >= 3(k+1) (no rotations are possible when n = 6k+5, so |G_max| = 2). No upper-bound construction or full proof appears in the entry or its %E history. Cross-references checked: A369365, A369367, A369363, A369364, A367758, A367759, A373637, A376798, A376799. The only related proof is Mason and von Brömssen's formula proof for the polyomino analog A367758 (square lattice, a different problem). Exley's linked GitHub repo github.com/pexley-math/oeis-A369366 and the account page return 404 and could not be inspected. Web searches (arXiv, general web) found no prior resolution.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

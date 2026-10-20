@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: "Conjecture: for n>2, a(n+5) = a(n) + 8. - _Ralf S
 
 Referees: No earlier proof found. OEIS A106505 (GitHub oeisdata main, rev #21, Apr 23 2021) still states it as a conjecture (Ralf Stephan, Nov 16 2010), with an empirical g.f. by Colin Barker (2013). OEIS A321499 (M. F. Hasler, Nov 2018; rev #24, Feb 2025) proves that {d²(2m+d)} = odd numbers > 1 together with multiples of 8 > 8, and records a(n+5) = a(n) + 8 for A321499 (D. A. Corneth). It still says "Cf. A106505 (conjectured to be the sequence without the 3)". The closely related A321501 complement analysis (Hasler) is also there. Related OEIS entries: A343063 and A343064 (B. Schott, 2021), which give the parametrization a = m² − k², b = mk, c = k² with gcd(m,k) = 1 and k < m < 2k, but no set characterization; and A229849, which says A106505 "seems" to give those values. Parametrization background: M. N. Deshpande, Math. Gazette (2002); K. Zelator, arXiv 1208.0497; R. S. Luthar (1984). None of these addresses the conjecture. Not covered in S. Fried, arXiv 2410.07237 or arXiv 2607.24832, nor in Adamczewski's OEIS Open benchmark (arXiv 2608.11941), which uses the Tsoukalas et al. dataset in epoch-research/LeanOpenProblems; also absent from google-deepmind/formal-conjectures.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

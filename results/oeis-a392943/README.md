@@ -30,6 +30,10 @@ Also related, with full text not checked: E. Read, "Integer triangles with integ
 
 OEIS A392943 (Huber, Feb 2026) cites none of these, and no proof has been added to the entry.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

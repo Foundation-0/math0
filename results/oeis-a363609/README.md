@@ -26,6 +26,10 @@ Referees: I found no prior resolution.
 - Loomis and Whitney, Bull. AMS 55 (1949) 961-962: the classical inequality behind the projection step.
 - Searches of arXiv, MathOverflow, Math StackExchange, Puzzling and SeqFan turned up no proof and no counterexample.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

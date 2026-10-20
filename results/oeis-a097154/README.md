@@ -30,6 +30,10 @@ Referees: **OEIS (local mirror, cross-checked against the current raw GitHub oei
 
 No prior resolution was found, so this appears to be the first written proof, and it is Lean-verified.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

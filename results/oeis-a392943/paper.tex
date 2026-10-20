@@ -1,0 +1,325 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw,ring,linear_combination,by_contra},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1
+    {→}{{$\to$}}1 {←}{{$\leftarrow$}}1 {≠}{{$\ne$}}1 {∧}{{$\wedge$}}1 {∣}{{$\mid$}}1
+    {≤}{{$\le$}}1 {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {₀}{{$_0$}}1 {·}{{$\cdot$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+
+\title[Heronian triangles with integer circumradius]{No primitive Heronian triangle has an integer circumradius (OEIS A392943)}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 19, 2026}
+
+\begin{document}
+\begin{abstract}
+We prove that no primitive Heronian triangle (integer sides with greatest common divisor $1$ and integer area) has an integer circumradius, which is the conjecture recorded by Felix Huber in OEIS A392943 in February 2026; more precisely, every triangle with integer sides and integer circumradius has three even sides.
+The result is not new: it follows from R.~van Luijk's 2008 characterization of the circumdiameters of Heron triangles, whose proof states explicitly that a Heron triangle with integer circumradius has even sides. Our proof is a short self-contained argument modulo $4$, and we classify this note as the first formal proof of a known result.
+The conjecture, in the form with integer area as in the OEIS entry, is verified in Lean~4 against a statement that math0 formalized from the entry, reviewed for fidelity and frozen before the proof attempt; the definitions of the entry's sequence built on the same notions are checked by the Lean kernel against the first $30$ listed terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+A \emph{Heronian} (or Heron) triangle is a triangle whose side lengths $a,b,c$ and whose area $K$ are integers; it is \emph{primitive} if $\gcd(a,b,c)=1$. Heron's formula
+\begin{equation}\label{eq:heron}
+  16K^2=P(a,b,c)\coloneqq(a+b+c)(-a+b+c)(a-b+c)(a+b-c)
+\end{equation}
+expresses the area through the sides, and the circumradius is
+\begin{equation}\label{eq:circ}
+  R=\frac{abc}{4K}.
+\end{equation}
+For example, the triangle $(3,4,5)$ is Heronian with $K=6$ and $R=5/2$, while its double $(6,8,10)$ has $K=24$ and $R=5$.
+
+The OEIS sequence A392942 \cite{A392942} lists the semiperimeters of the triangles with integer sides, integer area and integer circumradius ($12,24,30,36,40,\dots$), and A392943 \cite{A392943} counts, for the $n$-th such semiperimeter, the triangles (up to congruence) with that semiperimeter. Both entries were contributed by Felix Huber on February~4, 2026. The entry A392943 contains the comment ``Conjecture: There is no primitive Heronian triangle with integer circumradius.'' All triangles given as examples in the two entries, namely $(30,30,48)$, $(24,70,74)$, $(28,60,80)$, $(42,56,70)$ and $(14,30,40)$, have three even sides. The entries contain no proof and no reference for the conjecture.
+
+\subsection*{Prior work}
+The conjecture is a consequence of published results. A.-V.~Kramer and F.~Luca \cite[Proposition~6]{KL} proved that the set of positive integers $k$ that are the circumradius of a Heron triangle has asymptotic density $1$, and that no Heron triangle has a circumradius that is a power of $2$ or a power of a prime $p\equiv 11\pmod{12}$. The case of primes $p\equiv11\pmod{12}$ was also stated as a conjecture by M.~Aassila \cite{Aa}, as recorded in \cite{vL}; Aassila's paper appeared in 2001, after \cite{KL}, and was later marked as retracted by Elemente der Mathematik, whose editorial board noted its strong similarity to \cite{KL}.
+
+R.~van Luijk \cite{vL} proved that a positive integer $k$ is the circumradius of a Heron triangle if and only if it is the circumdiameter of a Heron triangle, if and only if $k$ has a prime divisor $p\equiv1\pmod 4$ \cite[Theorem~1]{vL}. The key step is the implication (4)$\Rightarrow$(5) of his Theorem~2: if a triangle has integer sides $a,b,c$ and integer circumdiameter $d$ with $\gcd(a,b,c,d)=1$, then $d>1$ and every prime divisor of $d$ is $\equiv1\pmod4$. Its Corollary~5 states that if an integer $d$ is the circumdiameter of a triangle with integer sides $a,b,c$ and $p\not\equiv1\pmod 4$ is prime, then $p^{v_p(d)}$ divides $\gcd(a,b,c)$. The proof of the implication (1)$\Rightarrow$(2) of Theorem~1 in \cite{vL} begins: ``let $a$, $b$, and $c$ be the sides of a Heron triangle with circumradius $k$. Then the circumdiameter $2k$ is even and by Corollary~5, so are $a$, $b$, and $c$.'' This is exactly the statement that no primitive Heronian triangle has an integer circumradius. Van Luijk's argument rests on the identity $(4K)^2+(a^2+b^2-c^2)^2=4a^2b^2$ and on the fact that $p^{2m}\mid s^2+t^2$ forces $p^m\mid s$ and $p^m\mid t$ for primes $p\not\equiv1\pmod4$ \cite[Lemma~4]{vL}. He also shows that a triangle with integer sides and rational area is Heronian \cite[Lemma~3]{vL}; by \eqref{eq:circ}, a triangle with integer sides and integer circumradius therefore has integer area automatically. E.~Read \cite{Read} has more recently studied integer triangles with integer circumradii; the publicly available extract of that article notes that integer area is necessary for an integer circumradius, and we have not consulted its full text.
+
+Neither OEIS entry cites these works, the conjecture is not among the OEIS statements of the formal-conjectures repository \cite{FC} (checked at commit \texttt{c77fdd4}), and we are not aware of an earlier formal proof.
+
+\subsection*{This note}
+We give a self-contained proof that integer circumradius forces all sides to be even (Lemma~\ref{lem:key} and Remark~\ref{rem:general}). It is a weak form of the case $p=2$ of van Luijk's Corollary~5 (we obtain $2\mid\gcd(a,b,c)$ rather than $2^{v_2(2R)}\mid\gcd(a,b,c)$), proved directly from Heron's formula by an argument modulo $4$. We classify the result as \emph{a known result, formalized here for the first time}: the mathematics has been available since 2008, and the contribution of this note is a written resolution of the OEIS conjecture that is linked to the literature, together with a kernel-checked proof of a frozen formal statement.
+
+\section{Statement}\label{sec:statement}
+
+The name of A392943 \cite{A392943} is, verbatim, ``a(n) is the number of integer-sided triangles whose area and circumradius are integers, and whose semiperimeter equals A392942(n).'' The entry is authored by Felix Huber and dated February~4, 2026, and its COMMENTS section contains, verbatim, the following comment:
+\begin{quote}\raggedright
+\texttt{Conjecture: There is no primitive Heronian triangle with integer circumradius.}
+\end{quote}
+
+\begin{conjecture}[Huber \cite{A392943}]\label{conj}
+If a triangle has integer sides $a,b,c$ with $\gcd(a,b,c)=1$ and integer area, then its circumradius is not an integer.
+\end{conjecture}
+
+\begin{theorem}\label{thm:main}
+Let $x,y,z$ be positive integers with $x<y+z$, $y<x+z$, $z<x+y$ and $\gcd(x,y,z)=1$, and let $K\in\N$ satisfy $16K^2=P(x,y,z)$, where $\N=\{0,1,2,\dots\}$. Then there is no $R\in\N$ with $4KR=xyz$. In particular, Conjecture~\ref{conj} holds.
+\end{theorem}
+
+Theorem~\ref{thm:main} is the formal statement below, written in standard notation. The gcd hypothesis cannot be dropped: $(6,8,10)$ with $K=24$ and $R=5$ satisfies all other hypotheses and $4KR=xyz$.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A392943.lean}, reviewed for fidelity and frozen (SHA-256 \texttt{efec1ccc\ldots 893a3a4a}) before any proof attempt. The definitions it uses and the statement are, verbatim except that docstrings are omitted:
+\begin{lstlisting}
+namespace Math0.Statements.A392943
+
+def IsTriangle (x y z : ℕ) : Prop :=
+  0 < x ∧ 0 < y ∧ 0 < z ∧ x < y + z ∧ y < x + z ∧ z < x + y
+
+def heron16 (x y z : ℕ) : ℤ :=
+  ((x : ℤ) + y + z) * (-x + y + z) * (x - y + z) * (x + y - z)
+
+def HasArea (x y z K : ℕ) : Prop :=
+  16 * (K : ℤ) ^ 2 = heron16 x y z
+
+def statement : Prop :=
+  ∀ x y z K R : ℕ, IsTriangle x y z → HasArea x y z K → Nat.gcd x (Nat.gcd y z) = 1 →
+    4 * K * R ≠ x * y * z
+
+end Math0.Statements.A392943
+\end{lstlisting}
+\decl{IsTriangle} says that $x,y,z$ are the sides of a nondegenerate triangle. \decl{heron16} is $P(x,y,z)$, computed in $\Z$: the coercion of $x$ to $\Z$ forces every leaf of the expression to be coerced, so there is no truncated subtraction of natural numbers. \texttt{HasArea x y z K} says $16K^2=P(x,y,z)$, i.e.\ by \eqref{eq:heron} that the area is the natural number $K$; for a nondegenerate triangle $P(x,y,z)>0$, so $K>0$. Since $K>0$, the circumradius $xyz/(4K)$ is an integer if and only if $4KR=xyz$ for some integer $R$, and such an $R$ is positive, so quantifying over $R\in\N$ loses nothing. Primitivity is $\gcd(x,\gcd(y,z))=1$. No hypotheses are added, and the hypotheses are satisfiable (by $(3,4,5)$ with $K=6$), so the statement is not vacuous.
+
+The statement file also defines the two sequences from the same notions and checks them against the OEIS data. The predicate \texttt{IsGood x y z} is \texttt{IsTriangle x y z} together with the existence of $K,R\in\N$ with \texttt{HasArea x y z K} and $4KR=xyz$, matching the name of the entry and the Maple test of the entry (\texttt{issqr(f)} and $xyz\equiv0\pmod{4\sqrt f}$, with $f=P/16$). The function \texttt{count s} counts the triangles $x\le y\le z$ with $x+y+z=2s$ satisfying \decl{IsGood}, using the loop bounds of the Maple program, and \decl{count_eq_card} proves that it equals the cardinality of the corresponding finite set of triples. The lemma \decl{even_perimeter} shows that a triangle with integer sides and integer area has even perimeter, so no triangle is lost by taking the semiperimeter $s$ to be a natural number. The term \texttt{A392942 n} is computed by a search over $s\le 12n$ (every positive multiple of $12$ is a semiperimeter, by the triangles $(6m,8m,10m)$), and \decl{A392942_eq_nth} proves that for $n\ge1$ it is the $n$-th smallest semiperimeter, \texttt{Nat.nth IsSemiperimeter (n - 1)}, matching offset $1$. Finally
+\begin{lstlisting}
+def a (n : ℕ) : ℕ := count (A392942 n)
+
+theorem a_data : (List.range 30).map (fun i => a (i + 1)) =
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 3, 2, 1, 1, 2, 1, 1, 4, 2, 2, 3, 2, 3, 1, 2,
+      2] := by
+  decide +kernel
+\end{lstlisting}
+so the Lean kernel itself evaluates $a(1),\dots,a(30)$ and compares them with the first $30$ of the $88$ listed terms of A392943 (these involve the semiperimeters up to $A392942(30)=156$). For speed, the kernel evaluates a Boolean test \decl{goodB}, which combines a quadratic-residue sieve with \decl{Nat.sqrt}; the file proves \decl{goodB_iff}, i.e.\ that \texttt{goodB x y z = true} if and only if \texttt{IsGood x y z}. An independent Python computation by the math0 reviewers, which is not part of the formal verification, reproduced all $88$ listed terms of A392943 and all $56$ listed terms of A392942 from the same definition. The sequence definitions do not enter \decl{statement}; they tie the notions \decl{IsTriangle}, \decl{heron16} and \decl{HasArea} used by \decl{statement} to the OEIS data.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A392943.lean}. It consists of one lemma, \decl{two_dvd_of_heron} (Lemma~\ref{lem:key}), and the main theorem \decl{result}. We write $P(a,b,c)$ for the polynomial in \eqref{eq:heron}, now with $a,b,c$ in $\Z$.
+
+\begin{lemma}\label{lem:identity}
+For all integers $a,b,c$, with $D=b^2+c^2-a^2$,
+\[
+  P(a,b,c)=4b^2c^2-D^2 .
+\]
+Moreover $P$ is symmetric: $P(a,b,c)=P(b,a,c)=P(c,a,b)$.
+\end{lemma}
+
+\begin{proof}
+Grouping the factors, $P(a,b,c)=\bigl((b+c)^2-a^2\bigr)\bigl(a^2-(b-c)^2\bigr)=\bigl(2bc+D\bigr)\bigl(2bc-D\bigr)$. The second claim holds because the four factors of $P(b,a,c)$ and of $P(c,a,b)$ are a permutation of the four factors of $P(a,b,c)$.
+\end{proof}
+
+\begin{lemma}\label{lem:sq}
+Let $u,v\in\Z$. If $u^2\mid v^2$, then $u\mid v$.
+\end{lemma}
+
+\begin{proof}
+If $u=0$, then $v^2=0$ and $v=0$. Otherwise let $g=\gcd(u,v)>0$ and write $u=gu'$, $v=gv'$ with $\gcd(u',v')=1$. Then $u'^2\mid v'^2$, and $u'^2$ is coprime to $v'^2$, so $u'^2=1$ and $u=\pm g$ divides $v$.
+\end{proof}
+
+\begin{lemma}\label{lem:key}
+Let $a,b,c,R\in\Z$ with $b\ne0$, $c\ne0$ and
+\begin{equation}\label{eq:hyp}
+  P(a,b,c)\,R^2=(abc)^2 .
+\end{equation}
+Then $a$ is even.
+\end{lemma}
+
+\begin{proof}
+Let $D=b^2+c^2-a^2$. By Lemma~\ref{lem:identity} and \eqref{eq:hyp},
+\[
+  (bc)^2(4R^2-a^2)-(RD)^2=R^2\bigl(4b^2c^2-D^2\bigr)-(abc)^2=R^2P(a,b,c)-(abc)^2=0,
+\]
+so
+\begin{equation}\label{eq:h1}
+  (bc)^2(4R^2-a^2)=(RD)^2 .
+\end{equation}
+Hence $(bc)^2\mid(RD)^2$, and by Lemma~\ref{lem:sq} there is $m\in\Z$ with $RD=bc\,m$. Substituting into \eqref{eq:h1} gives $(bc)^2(4R^2-a^2)=(bc)^2m^2$. Since $bc\ne0$, we may cancel $(bc)^2$ and obtain
+\begin{equation}\label{eq:h3}
+  a^2+m^2=4R^2 .
+\end{equation}
+Suppose that $a$ is odd. Then $a^2\equiv1\pmod4$. If $m=2j$ is even, then $m^2=4j^2$ and $a^2+m^2\equiv1\pmod4$; if $m$ is odd, then $m^2\equiv1\pmod 4$ and $a^2+m^2\equiv2\pmod4$. Both contradict \eqref{eq:h3}, whose right-hand side is divisible by $4$. Hence $a$ is even.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $x,y,z,K,R\in\N$ satisfy the hypotheses, and suppose $4KR=xyz$. Of the hypothesis \decl{IsTriangle} only $x,y,z>0$ is used. In $\Z$ we have
+\[
+  P(x,y,z)\,R^2=16K^2R^2=(4KR)^2=(xyz)^2 .
+\]
+The integers $x,y,z$ are nonzero, so Lemma~\ref{lem:key} applies to $(a,b,c)=(x,y,z)$ and gives $2\mid x$. By the symmetry in Lemma~\ref{lem:identity}, $P(y,x,z)R^2=(yxz)^2$ and $P(z,x,y)R^2=(zxy)^2$, so Lemma~\ref{lem:key} applied to $(y,x,z)$ and to $(z,x,y)$ gives $2\mid y$ and $2\mid z$. Therefore $2$ divides $\gcd(x,\gcd(y,z))=1$, a contradiction.
+\end{proof}
+
+\begin{remark}\label{rem:general}
+The proof does not use the triangle inequalities, and it uses the integrality of the area only through the identity $P(x,y,z)R^2=(xyz)^2$. For any triangle with integer sides $a,b,c$ and integer circumradius $R$, the (real) area $K>0$ satisfies \eqref{eq:heron} and \eqref{eq:circ}, so $P(a,b,c)R^2=16K^2R^2=(abc)^2$, and Lemma~\ref{lem:key}, applied three times as above, shows that $a$, $b$ and $c$ are all even. Lemma~\ref{lem:key} is formalized in this generality (for arbitrary integers $a,b,c,R$ with $b,c\neq 0$); only the final theorem is stated with $K\in\N$, as in the OEIS conjecture. Geometrically, if $A$ is the angle opposite the side $a$, then $a=2R\sin A$ by the law of sines and $D=2bc\cos A$ by the law of cosines, so $m=RD/(bc)=2R\cos A$ and \eqref{eq:h3} is $\sin^2A+\cos^2A=1$ multiplied by $4R^2$. Van Luijk's Corollary~5 \cite{vL} gives the stronger conclusion that $2^{v_2(2R)}$ divides $\gcd(a,b,c)$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in \path{lean/Math0/Frontier/OEIS/A392943.lean} in the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A392943.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A392943.result}, whose type is exactly \decl{Math0.Statements.A392943.statement}. The only auxiliary declaration is Lemma~\ref{lem:key}; its statement and proof are, verbatim:
+\begin{lstlisting}
+private theorem two_dvd_of_heron (a b c R : ℤ) (hb : b ≠ 0) (hc : c ≠ 0)
+    (h : (a + b + c) * (-a + b + c) * (a - b + c) * (a + b - c) * R ^ 2 = (a * b * c) ^ 2) :
+    2 ∣ a := by
+  have h1 : (b * c) ^ 2 * (4 * R ^ 2 - a ^ 2) = (R * (b ^ 2 + c ^ 2 - a ^ 2)) ^ 2 := by
+    linear_combination h
+  have hdvd : (b * c) ^ 2 ∣ (R * (b ^ 2 + c ^ 2 - a ^ 2)) ^ 2 := ⟨_, h1.symm⟩
+  obtain ⟨m, hm⟩ := (Int.pow_dvd_pow_iff (by norm_num)).1 hdvd
+  have hbc : (b * c) ^ 2 ≠ 0 := pow_ne_zero _ (mul_ne_zero hb hc)
+  have h2 : (b * c) ^ 2 * (4 * R ^ 2 - a ^ 2) = (b * c) ^ 2 * m ^ 2 := by
+    rw [h1, hm]; ring
+  have h3 : a ^ 2 + m ^ 2 = 4 * R ^ 2 := by
+    have := mul_left_cancel₀ hbc h2
+    linear_combination -this
+  by_contra hodd
+  have ha : Odd a := Int.not_even_iff_odd.1 (fun he => hodd (even_iff_two_dvd.1 he))
+  have ha2 : a ^ 2 % 4 = 1 := Int.sq_mod_four_eq_one_of_odd ha
+  have h4 : (a ^ 2 + m ^ 2) % 4 = 0 := by rw [h3]; simp
+  rcases Int.even_or_odd m with ⟨j, rfl⟩ | hm'
+  · have hm2 : (j + j) ^ 2 = 4 * (j ^ 2) := by ring
+    rw [hm2] at h4
+    omega
+  · have hm2 : m ^ 2 % 4 = 1 := Int.sq_mod_four_eq_one_of_odd hm'
+    omega
+\end{lstlisting}
+The steps correspond to the proof of Lemma~\ref{lem:key}: \texttt{h1} is \eqref{eq:h1}, obtained by \texttt{linear\_combination}, which checks with \texttt{ring} that the difference of the two sides of \texttt{h1} equals the difference of the two sides of \texttt{h} (this is Lemma~\ref{lem:identity}); Lemma~\ref{lem:sq} is the core Lean lemma \decl{Int.pow_dvd_pow_iff}; \texttt{h3} is \eqref{eq:h3}, obtained by cancelling with \texttt{mul\_left\_cancel}$_0$; and the final case analysis modulo $4$ uses Mathlib's \decl{Int.sq_mod_four_eq_one_of_odd} and the decision procedure \texttt{omega}. The proof of \decl{result} follows the proof of Theorem~\ref{thm:main}: it casts $4KR=xyz$ to $\Z$, derives $P(x,y,z)R^2=(xyz)^2$ by rewriting with \decl{HasArea} and \texttt{ring}, obtains the two permuted hypotheses by \texttt{linear\_combination}, applies \decl{two_dvd_of_heron} three times, casts the three divisibilities back to $\N$, and concludes with \decl{Nat.dvd_gcd} and \texttt{omega}. The proof performs no large computation; \texttt{native\_decide}, \texttt{sorry} and \texttt{set\_option} do not occur. The kernel evaluation with \texttt{decide +kernel} occurs only in the data lemma \decl{a_data} of the statement file, which \decl{result} does not use.
+
+\subsection*{Audit}
+The file ends with the command
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A392943.result Math0.Statements.A392943.statement
+\end{lstlisting}
+defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself. It fails unless (1) \decl{statement} is a definition of type \texttt{Prop} without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, the axiom \decl{Lean.ofReduceBool} introduced by \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically the statement or its negation, after removing metadata annotations, with no unfolding. On this file it reports
+\begin{lstlisting}
+math0 audit: 'Math0.Statements.A392943.statement' depends on axioms [propext]
+math0 audit: 'Math0.Frontier.A392943.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A392943.result' proves 'Math0.Statements.A392943.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A392943.lean} in the directory \path{lean}; once the statement module is built, this needs well under a minute of CPU time, most of it spent loading the imported Mathlib modules (between about $6$ and $15$ seconds of user time in our runs). Building the statement module itself is dominated by the kernel check of \decl{a_data}, which takes well under a minute.
+
+\begin{thebibliography}{99}
+
+\bibitem{Aa}
+M.~Aassila, \emph{Some results on Heron triangles}, Elem. Math. \textbf{56} (2001), no.~4, 143--146, \url{https://doi.org/10.1007/PL00000549}. Retracted by the editorial board of Elemente der Mathematik.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{KL}
+A.-V.~Kramer and F.~Luca, \emph{Some remarks on Heron triangles}, Acta Acad. Paedagog. Agriensis Sect. Mat. (N.S.) \textbf{27} (2000), 25--38.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Read}
+E.~Read, \emph{Integer triangles with integer circumradii}, Math. Gaz. \textbf{107} (2023), no.~569, 241--248, \url{https://doi.org/10.1017/mag.2023.55}.
+
+\bibitem{vL}
+R.~van Luijk, \emph{The diameter of the circumcircle of a Heron triangle}, Elem. Math. \textbf{63} (2008), no.~3, 118--121, \url{https://doi.org/10.4171/EM/96}.
+
+\bibitem{A392942}
+The OEIS Foundation Inc., \url{https://oeis.org/A392942}, entry by F.~Huber (2026).
+
+\bibitem{A392943}
+The OEIS Foundation Inc., \url{https://oeis.org/A392943}, entry by F.~Huber (2026).
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,375 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    noncomputable,private},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {∀}{{$\forall$}}1
+    {∃}{{$\exists$}}1 {→}{{$\to$}}1 {∧}{{$\wedge$}}1 {∑}{{$\sum$}}1 {∈}{{$\in$}}1
+    {∣}{{$\mid$}}1 {≥}{{$\ge$}}1 {≤}{{$\le$}}1 {≠}{{$\ne$}}1 {…}{{$\dots$}}1 {·}{{$\cdot$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\emergencystretch=3em
+
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Term}{\mathcal{T}}
+\newcommand{\Zm}{\Z/37^3\Z}
+\DeclareMathOperator{\num}{num}
+
+\title[Adamchuk's conjectures for OEIS A116184]{Divisibility of the numerators of $\sum_{k=1}^{36}k^{-n}$ by $37^3$: a proof of Adamchuk's conjectures on OEIS A116184}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 19, 2026}
+\hypersetup{pdftitle={Divisibility of the numerators of sum 1/k\textasciicircum n (k=1..36) by 37\textasciicircum 3: a proof of Adamchuk's conjectures on OEIS A116184},pdfauthor={math0}}
+
+\begin{document}
+\begin{abstract}
+OEIS A116184 lists the integers $n\ge1$ for which $37^3$ divides the numerator of $H(n)=\sum_{k=1}^{36}k^{-n}$, and records two conjectures of Alexander Adamchuk (2007): every $n=3+36k$ with $k\ge0$ is a term, and every prime term $p>37$ is of the form $37k-1$. We prove both conjectures. The proof reduces the condition to the vanishing modulo $37^3$ of a sum of $n$-th powers of $36$ explicit residues, uses a binomial expansion truncated modulo $37^3$ to show that it depends only on $n\bmod 36$ and $\lfloor n/36\rfloor\bmod 37^2$, and finishes with a finite computation. We found no earlier proof and classify the result as new, with the caveat that it is close to classical theory: the case $k=0$ is a known consequence of $37$ dividing the numerator of $B_{32}$, and the whole statement can also be derived from congruences of Sun, von Staudt--Clausen and Kummer (Remark~\ref{rem:classical}). The theorem is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, reviewed for fidelity and frozen before the proof attempt, whose definitions are checked by the kernel against all $53$ listed terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For an integer $n\ge0$ put
+\[
+  H(n)=\sum_{k=1}^{36}\frac1{k^n}\in\Q ,
+\]
+the generalized harmonic number written $H(36,n)$ in the OEIS, and let $\num H(n)$ be its numerator in lowest terms. The sequence A116184 of the OEIS \cite{A116184}, contributed by Alexander Adamchuk on April~8, 2007, is
+\begin{quote}
+``Numbers n such that 37\^{}3 divides the numerator of generalized harmonic number H(36,n) = Sum[ 1/k\^{}n, \{k,1,36\} ].''
+\end{quote}
+It has offset $1$ and lists $53$ terms, $3,37,39,73,75,111,147,148,\dots,961,975$. In the COMMENTS section Adamchuk wrote:
+\begin{quote}
+``Conjecture: All terms of the arithmetic progression 3+36k belong to a(n). Prime terms in a(n) are \{3, 37, 73, 443, 739, 887, 1109, ...\}. It appears that all primes in a(n) that are greater than 37 are of the form 37k-1.'' (Alexander Adamchuk, Apr~08 2007)
+\end{quote}
+We prove both conjectural claims (Theorem~\ref{thm:main}).
+
+\subsection*{Background}
+The prime $37$ is the smallest irregular prime: it divides the numerator of the Bernoulli number $B_{32}=-7709321041217/510$ and of no other $B_e$ with $e\in\{2,4,\dots,34\}$, so $(37,32)$ is its only irregular pair (see \cite{Wa} for irregular primes and Kummer's congruences). Wolstenholme-type congruences relate $H(p-1,m)=\sum_{k=1}^{p-1}k^{-m}$ modulo powers of $p$ to Bernoulli numbers; see the survey of Me\v{s}trovi\'c \cite{Me}. For odd $m$ with $1\le m\le p-4$, a congruence going back to Glaisher \cite{Gl} and given in this form by Sun \cite[Thm.~5.1(a)]{Su} (see also \cite[Result~4]{Le}) states
+\[
+  H(p-1,m)\equiv\frac{m(m+1)}{2}\cdot\frac{B_{p-2-m}}{p-2-m}\,p^2\pmod{p^3},
+\]
+and Zhao \cite[Thm.~2.8]{Zh} shows that, for $p\ge 2n+3$, $p\mid B_{p-2n-1}$ if and only if $H(p-1,2n-1)\equiv0\pmod{p^3}$. With $p=37$ and $m=3$ this gives $37^3\mid\num H(3)$, the case $k=0$ of the first conjecture; Adamchuk recorded this divisibility in OEIS A007408 \cite{A007408} in 2006. Zhao \cite[\S2.1]{Zh} also studies the $p$-adic valuation of $H(p-1,s)$ for general $s$, via power sums and Kummer's congruences; he determines it for regular $p$ and bounds it for irregular $p$ under extra hypotheses, noting $p=37$, $s=1048$ as the first case where the bound fails without them \cite[Rem.~2.6]{Zh}. These results do not address the progression $3+36k$ or the prime terms.
+
+\subsection*{Status}
+In the current revision of A116184 (\#6, February~16, 2025) both statements are still conjectures, and the entry has no later comment on them. The math0 referees found no proof in the OEIS entries related to A116184 (A007408, A119722, A017533 and other entries by Adamchuk) or by web searches. We therefore classify Theorem~\ref{thm:main} as a \emph{new result}, with a caveat: it is elementary. Our proof is a periodicity argument plus a finite computation, and Remark~\ref{rem:classical} sketches an alternative derivation from classical congruences that a specialist could carry out in a few lines; we did not find that derivation written down.
+
+\section{Statement}\label{sec:statement}
+
+Let $\Term=\{n\in\N:\ 37^3\mid\num H(n)\}$. Since $H(0)=36$, $0\notin\Term$, so $\Term$ is the set of terms of A116184.
+
+\begin{theorem}\label{thm:main}
+\leavevmode
+\begin{enumerate}
+\item[(a)] For every integer $k\ge0$, $37^3$ divides the numerator of $H(3+36k)$.
+\item[(b)] If $p>37$ is a prime and $37^3$ divides the numerator of $H(p)$, then $p=37k-1$ for some integer $k\ge1$, that is, $p\equiv-1\pmod{37}$.
+\end{enumerate}
+\end{theorem}
+
+\subsection*{The Lean statement}
+The statement was formalized by math0 in the file \path{lean/Math0/Statements/OEIS/A116184.lean}, reviewed for fidelity against the OEIS entry, and frozen (SHA-256 \texttt{a38dde38\ldots f163f9}) before any proof attempt. The definitions used by the statement, the sequence \code{a}, and the statement itself are, verbatim:
+\begin{lstlisting}
+/-- The generalized harmonic number `H(36, n) = ∑_{k=1}^{36} 1/k^n`, computed exactly in `ℚ`. -/
+def H (n : ℕ) : ℚ := ∑ k ∈ Finset.Icc (1 : ℕ) 36, 1 / ((k : ℚ) ^ n)
+
+/-- `n` is a term of A116184: `37^3` divides the numerator of `H(36, n)`. -/
+def IsTerm (n : ℕ) : Prop := (37 ^ 3 : ℤ) ∣ (H n).num
+
+/-- A116184: the `n`-th smallest (offset `1`) number `m` such that `37^3` divides the numerator
+of `H(36, m) = ∑_{k=1}^{36} 1/k^m`. -/
+noncomputable def a (n : ℕ) : ℕ := Nat.nth IsTerm (n - 1)
+
+/-- Conjecture (Adamchuk, A116184): (a) every term `3 + 36k` (`k ≥ 0`) of the arithmetic
+progression belongs to the sequence, and (b) every prime term greater than `37` is of the form
+`37k - 1`. -/
+def statement : Prop :=
+  (∀ k : ℕ, IsTerm (3 + 36 * k)) ∧
+    (∀ p : ℕ, p.Prime → 37 < p → IsTerm p → ∃ k : ℕ, p = 37 * k - 1)
+\end{lstlisting}
+All declarations are in the namespace \decl{Math0.Statements.A116184}.
+
+\subsection*{How the Lean definitions encode the entry}
+\code{H n} is $H(n)$, computed exactly in $\Q$, and \code{(H n).num} is Mathlib's \decl{Rat.num}, the numerator in lowest terms. So \code{IsTerm n} is $n\in\Term$, the defining property of the entry, and \code{a n = Nat.nth IsTerm (n - 1)} is the $n$-th smallest term with offset $1$. The statement file proves that $0$ is not a term (\decl{not_isTerm_zero}) and that a positive integer $x$ equals $a(m)$ for some $m\ge1$ if and only if \code{IsTerm x} (\decl{exists_a_eq_iff}); therefore ``belongs to a(n)'' and ``primes in a(n)'' are expressed through \code{IsTerm}. Part (a) of \code{statement} quantifies over $k\ge0$; the progression starts at the listed term $3$. In part (b), $37k-1$ is truncated subtraction in $\N$; it is harmless, because $k=0$ gives $0\ne p$, and for $k\ge1$ it is ordinary subtraction. The list of prime terms quoted in the comment is example data, not a claim, and is not formalized.
+
+The statement file also gives a decision procedure for \code{IsTerm} (Lemma~\ref{lem:reduce} below; \decl{isTerm_iff_check}) and a \decl{DecidablePred} instance built from it. With it, the theorem \decl{a_data} checks that $a(1),\dots,a(53)$ are the $53$ terms listed in the entry: the kernel evaluates a \decl{List.filter} over $\{0,\dots,975\}$ (by \texttt{decide +kernel}), and a general lemma, \decl{map_nth_eq_of_filter}, identifies the filtered list with the values \code{Nat.nth IsTerm i} for $i<53$. (The entry's program scans $n\le1000$; the next term, $999=27\cdot37$, is not in the listed data and is not used.)
+
+\section{Proof}\label{sec:proof}
+
+Throughout, $M=37^3=50653$ and congruences without modulus are in $\Zm$. Let $\iota=25327$; then $2\iota=M+1$, so $\iota$ is the inverse of $2$ in $\Zm$.
+
+\subsection{Reduction to a sum of residues}
+Let $F=36!$ and, for $1\le k\le36$, let $c_k\in\{0,\dots,M-1\}$ be the residue of $F/k$ modulo $M$. The list $C=(c_1,\dots,c_{36})=(23531,37092,24728,\dots,18945)$ is written out in the statement file as \code{coeffs}, and \decl{coeffs_eq} checks it by kernel evaluation. For $n\in\N$ let
+\[
+  \Sigma(n)=\sum_{k=1}^{36}c_k^{\,n}\in\Zm.
+\]
+
+\begin{lemma}[\decl{H_eq}, \decl{dvd_num_iff}, \decl{isTerm_iff_check}, \decl{check_iff}]\label{lem:reduce}
+For every $n\in\N$, $n\in\Term$ if and only if $\Sigma(n)=0$ in $\Zm$.
+\end{lemma}
+
+\begin{proof}
+Since $k\mid F$ for $1\le k\le 36$, $H(n)=s/F^n$ with $s=\sum_{k=1}^{36}(F/k)^n\in\N$. As $37$ is prime and $37>36$, $\gcd(M,F^n)=1$. We claim that if $q=s/b$ with $b\ne0$ and $\gcd(M,b)=1$, then $M\mid\num q$ if and only if $M\mid s$. Indeed, writing $q=\num q/\operatorname{den}q$ in lowest terms, we have $\num q\cdot b=s\cdot\operatorname{den}q$ and $\operatorname{den}q\mid b$, so $\operatorname{den}q$ is prime to $M$ as well. If $M\mid\num q$, then $M\mid s\operatorname{den}q$ and hence $M\mid s$; if $M\mid s$, then $M\mid \num q\cdot b$ and hence $M\mid\num q$. Finally $s\equiv\sum_k c_k^n\pmod M$.
+\end{proof}
+
+In the statement file this is \decl{isTerm_iff_check}, with the Boolean test \code{check n}: $\bigl(\sum_{c\in C}(c^n\bmod M)\bigr)\bmod M=0$; the proof file restates it in $\Zm$ (Mathlib's \code{ZMod 50653}) as \decl{check_iff}.
+
+\subsection{A truncated binomial expansion}
+For $c\in C$ put $a_c=\bigl((c^{36}\bmod M)-1\bigr)/37$ (integer division).
+
+\begin{lemma}[\decl{A_spec}]\label{lem:fermat}
+For every $c\in C$, $c^{36}\bmod M=1+37a_c$. In particular $c^{36}=1+37a_c$ in $\Zm$, and $0\le a_c<37^2$.
+\end{lemma}
+
+\begin{proof}
+Since $37\nmid c$, $c^{36}\equiv1\pmod{37}$ by Fermat's little theorem, so $c^{36}\bmod M-1$ is divisible by $37$. In Lean the $36$ instances are checked directly by kernel evaluation (\texttt{decide +kernel}); the values $a_c$ lie between $7$ and $1336$.
+\end{proof}
+
+\begin{lemma}[\decl{key_pow}]\label{lem:binom}
+Let $x,a\in\Zm$ with $x^{36}=1+37a$. Then for all $r,t\in\N$,
+\[
+  x^{r+36t}=x^r\bigl(1+37\,a\,t+37^2\iota\,a^2\,t(t-1)\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+As $x^{r+36t}=x^r(1+37a)^t$, it suffices to show $(1+37a)^t=Q(t)$, where $Q(t)=1+37at+37^2\iota a^2t(t-1)$. For $t=0$ both sides are $1$. For the induction step, a direct expansion gives
+\[
+  Q(t)(1+37a)-Q(t+1)=37^2a^2t\,(1-2\iota)+37^3\iota a^3t(t-1)=M\bigl(-37^2a^2t+\iota a^3t(t-1)\bigr),
+\]
+using $1-2\iota=-M$. This is $0$ in $\Zm$, so $(1+37a)^{t+1}=Q(t)(1+37a)=Q(t+1)$.
+\end{proof}
+
+For $j\in\{0,1,2\}$ and $r\in\N$ define the natural numbers
+\[
+  S_j(r)=\sum_{c\in C}c^r a_c^{\,j}.
+\]
+
+\begin{lemma}[\decl{sum_pow}]\label{lem:sum}
+For all $r,t\in\N$, in $\Zm$,
+\[
+  \Sigma(r+36t)=S_0(r)+37\,t\,S_1(r)+37^2\iota\,t(t-1)\,S_2(r).
+\]
+\end{lemma}
+
+\begin{proof}
+Apply Lemma~\ref{lem:binom} to each $c\in C$, which is allowed by Lemma~\ref{lem:fermat}, and sum over $C$.
+\end{proof}
+
+\subsection{Part (a)}
+By kernel evaluation, $M$ divides $S_0(3)$, $37\,S_1(3)$ and $37^2S_2(3)$; in fact $S_0(3)\equiv0$, $S_1(3)\equiv10952=8\cdot37^2$ and $S_2(3)\equiv7215=195\cdot37\pmod M$. Hence, by Lemma~\ref{lem:sum} with $r=3$ and $t=k$,
+\[
+  \Sigma(3+36k)=S_0(3)+k\cdot\bigl(37S_1(3)\bigr)+\iota k(k-1)\cdot\bigl(37^2S_2(3)\bigr)=0
+\]
+for every $k\in\N$, and $3+36k\in\Term$ by Lemma~\ref{lem:reduce}. This is \decl{part_a}. \qed
+
+\subsection{Part (b)}
+For $a_0,a_1,a_2\in\Zm$ and $t\in\N$ let $E(t)=a_0+37ta_1+37^2\iota\,t(t-1)a_2$.
+
+\begin{lemma}[\decl{reduce_t}]\label{lem:period}
+$E(t)=E(t\bmod 37^2)$ for every $t\in\N$.
+\end{lemma}
+
+\begin{proof}
+Write $t=u+37^2q$ with $u=t\bmod37^2$. Then $37t=37u+Mq$, and
+\[
+  t(t-1)=u(u-1)+37^2q\,(2u-1+37^2q),
+\]
+so $37^2\iota\,t(t-1)-37^2\iota\,u(u-1)=37\cdot M\iota q(2u-1+37^2q)$. Both differences vanish in $\Zm$.
+\end{proof}
+
+Thus, for fixed $r$, $\Sigma(r+36t)$ depends only on $t\bmod 37^2$. The values $T_j(r)=S_j(r)\bmod M$ for $r<36$ and $j=0,1,2$ are written out as three lists of $36$ numbers in the proof file (\code{T0}, \code{T1}, \code{T2}), and the kernel checks that they are correct (\decl{T0_spec}, \decl{T1_spec}, \decl{T2_spec}). Let
+\[
+  R=\{r<36:\ r\text{ odd},\ 3\nmid r\}=\{1,5,7,11,13,17,19,23,25,29,31,35\}.
+\]
+
+\begin{lemma}[\decl{finite_b_aux}, \decl{finite_b}]\label{lem:finite}
+Let $r\in R$ and $0\le u<37^2$, and suppose $r+36u\not\equiv0\pmod{37}$ and
+\[
+  T_0(r)+37\,u\,T_1(r)+37^2\iota\,u\,(u+M-1)\,T_2(r)\equiv0\pmod M.
+\]
+Then $r+36u\equiv36\pmod{37}$.
+\end{lemma}
+
+\begin{proof}
+This is a finite check of $12\cdot1369=16428$ pairs $(r,u)$. In Lean, the test for one pair is the Boolean function
+\begin{lstlisting}
+private def okU (r a0 a1 a2 u : ℕ) : Bool :=
+  (r + 36 * u) % 37 == 0 ||
+    (a0 + 37 * u * a1 + 1369 * 25327 * u * (u + 50652) * a2) % 50653 != 0 ||
+    (r + 36 * u) % 37 == 36
+\end{lstlisting}
+and \decl{finite_b_aux} states that \code{okU r (T0.getD r 0) (T1.getD r 0) (T2.getD r 0) u = true} for all $r<36$ with $r\bmod 2=1$, $r\bmod 3\ne0$, and all $u<1369$. It is proved by \texttt{decide +kernel}: the kernel evaluates the bounded quantifiers and the test, using its built-in arithmetic on natural number literals. The factor $u+M-1$ is used in place of $u-1$ to avoid truncated subtraction; it is congruent to $u-1$ modulo $M$. (Exactly $407$ pairs satisfy both hypotheses.)
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}(b)]
+Let $p>37$ be a prime with $p\in\Term$. Then $p$ is divisible by none of $2$, $3$, $37$. Write $p=r+36t$ with $r=p\bmod36$ and $t=\lfloor p/36\rfloor$, and let $u=t\bmod37^2$. Since $2\mid36$ and $3\mid36$, $r$ is odd and $3\nmid r$, so $r\in R$. By Lemmas~\ref{lem:reduce}, \ref{lem:sum} and \ref{lem:period},
+\[
+  0=\Sigma(p)=S_0(r)+37\,u\,S_1(r)+37^2\iota\,u(u-1)\,S_2(r),
+\]
+and reducing $S_j(r)$ modulo $M$ gives the congruence in Lemma~\ref{lem:finite}. Moreover $p=r+36u+36\cdot37^2\lfloor t/37^2\rfloor\equiv r+36u\pmod{37}$, so $r+36u\not\equiv0\pmod{37}$. Lemma~\ref{lem:finite} gives $r+36u\equiv36\pmod{37}$, hence $p\equiv36\pmod{37}$ and $p=37\bigl(\lfloor p/37\rfloor+1\bigr)-1$. This is \decl{part_b}.
+\end{proof}
+
+Theorem~\ref{thm:main} is \code{result : statement}, proved as the pair of \decl{part_a} and \decl{part_b}.
+
+\begin{remark}[periodicity]
+By Lemmas~\ref{lem:reduce}, \ref{lem:sum} and~\ref{lem:period}, membership in $\Term$ depends only on $n\bmod \varphi(37^3)=36\cdot37^2=49284$. The proof organizes the check of one period so that part~(a) needs three divisibilities and part~(b) needs $16428$ evaluations of a quadratic polynomial.
+\end{remark}
+
+\begin{remark}[a derivation from classical congruences; not formalized]\label{rem:classical}
+Theorem~\ref{thm:main} also follows from classical results. Let $p=37$, let $n$ be odd, and choose $N$, a multiple of $49284$, with $N>n+4$. Then $H(n)\equiv\sum_{k=1}^{36}k^{N-n}\pmod{p^3}$ in $\Z_{(p)}$, and $m=N-n$ is odd with $m\ge5$, so $B_m=B_{m-2}=0$, and Sun's congruence for power sums \cite{Su} (see \cite[Result~2]{Le}),
+\[
+  \sum_{k=1}^{p-1}k^m\equiv pB_m+\tfrac{p^2}{2}mB_{m-1}+\tfrac{p^3}{6}m(m-1)B_{m-2}\pmod{p^3},
+\]
+gives $H(n)\equiv\tfrac{p^2}{2}mB_{m-1}\pmod{p^3}$. Note $m\equiv-n\pmod{p^2}$, since $p^2\mid N$, and $m-1\equiv-(n+1)$ modulo $p$ and modulo $p-1=36$.
+If $n\not\equiv35\pmod{36}$, then $p-1\nmid m-1$, so $B_{m-1}/(m-1)$ is $p$-integral, and by Kummer's congruences it is congruent modulo $p$ to $B_e/e$, where $e\in\{2,\dots,34\}$ and $e\equiv-(n+1)\pmod{36}$. Since $32$ is the only such index with $p\mid B_e$, and since $p\mid m\iff37\mid n$ and $p\mid m-1\iff37\mid n+1$, one obtains: $n\in\Term$ if and only if $37\mid n$, or $37\mid n+1$, or $n\equiv3\pmod{36}$.
+If $n\equiv35\pmod{36}$, then $pB_{m-1}\equiv-1\pmod p$ by the von Staudt--Clausen theorem, so $v_p(H(n))=1+v_p(n)$ when $v_p(n)\le1$, and $n\in\Term$ if and only if $37^2\mid n$.
+Part~(a) is the case $n\equiv3\pmod{36}$. For part~(b), let $p'>37$ be a prime in $\Term$. Then $p'$ is odd and $37^2\nmid p'$, so $p'\not\equiv35\pmod{36}$ by the second case; and $37\nmid p'$ and $p'\not\equiv3\pmod{36}$ (as $3\nmid p'$), so $37\mid p'+1$ by the first case. We checked this characterization of the odd elements of $\Term$ numerically over a full period $1\le n\le49284$; it is not part of the formal proof.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A116184.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file (Section~\ref{sec:statement}) and \path{Math0/Audit.lean}. The main declaration is \code{theorem result : statement} in the namespace \decl{Math0.Frontier.A116184}; the file ends with the command
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A116184.result Math0.Statements.A116184.statement
+\end{lstlisting}
+Of the declarations named in Section~\ref{sec:proof}, \decl{coeffs_eq}, \decl{H_eq}, \decl{dvd_num_iff} and \decl{isTerm_iff_check} are in the statement file; the others, except \code{result}, are private lemmas of the proof file. The algebra in $\Zm$ is done in \code{ZMod 50653}. Lemmas~\ref{lem:binom} and~\ref{lem:period} are proved with \texttt{linear\_combination}, using the fact \code{(50653 : ZMod 50653) = 0}; the coefficients of these linear combinations are the multipliers of $M$ displayed in the proofs above. Lemma~\ref{lem:sum} follows from Lemma~\ref{lem:binom} by \texttt{ring} and a list lemma, \code{sum\_expand}, that distributes the sum.
+
+\subsection*{The certificate}
+All finite facts are proved by \texttt{decide +kernel}, so they are checked by the Lean kernel, which evaluates arithmetic on natural number literals with its built-in big-number operations. They are: the residue table \decl{coeffs_eq}, the data check \decl{a_data} and \decl{not_isTerm_zero} (statement file); \decl{A_spec} ($36$ instances); the tables \decl{T0_spec}, \decl{T1_spec}, \decl{T2_spec} ($3\times36$ entries, involving $c^r$ for $r\le35$); the three divisibilities for $r=3$ in \decl{part_a}; and \decl{finite_b_aux} ($16428$ evaluations of \code{okU}). Neither file uses \texttt{native\_decide}, \texttt{sorry}, \texttt{set\_option} or new axioms. Checking the proof file with \texttt{lake env lean} takes about one minute.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles} (in \path{lean/Math0/Audit.lean}) is used for statements that math0 formalizes itself. It fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (so no \decl{sorryAx}, no \texttt{native\_decide}, and no custom axioms); and (3) the type of \decl{result} is syntactically the constant \decl{statement} or its negation, up to metadata, with no unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A116184.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A116184.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A116184.result' proves 'Math0.Statements.A116184.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use (A116184 is not in formal-conjectures). To reproduce, run \path{scripts/verify.sh} from the repository root; it builds all math0 results with \texttt{lake build}, re-running every audit command, and checks that the pinned dependencies are unmodified. The single file is checked by \texttt{lake env lean Math0/Frontier/OEIS/A116184.lean} in \path{lean/}.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching et al., \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026; \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Gl}
+J.~W.~L. Glaisher, \emph{On the residues of the sums of products of the first $p-1$ numbers, and their powers, to modulus $p^2$ or $p^3$}, Quart.\ J. Math.\ \textbf{31} (1900), 321--353.
+
+\bibitem{Le}
+C.~I. Levaillant, \emph{Congruences related to Miki's identity}, arXiv:2005.09434, 2020.
+
+\bibitem{Me}
+R.~Me\v{s}trovi\'c, \emph{Wolstenholme's theorem: its generalizations and extensions in the last hundred and fifty years (1862--2012)}, arXiv:1111.3057, 2011.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput.\ Sci.\ \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Su}
+Z.-H. Sun, \emph{Congruences concerning Bernoulli numbers and Bernoulli polynomials}, Discrete Appl.\ Math.\ \textbf{105} (2000), 193--223.
+
+\bibitem{Wa}
+L.~C. Washington, \emph{Introduction to Cyclotomic Fields}, 2nd ed., Graduate Texts in Mathematics \textbf{83}, Springer, 1997.
+
+\bibitem{Zh}
+J.~Zhao, \emph{Multiple harmonic sums I: generalizations of Wolstenholme's theorem}, arXiv:math/0301252 (v6, 2006; numbering cited from this version); published as \emph{Wolstenholme type theorem for multiple harmonic sums}, Int.\ J. Number Theory \textbf{4} (2008), 73--106.
+
+\bibitem{A007408}
+The OEIS Foundation Inc., \url{https://oeis.org/A007408}, Wolstenholme numbers: numerator of $\sum_{k=1}^{n}1/k^3$; comment by A.~Adamchuk (Nov.~7, 2006).
+
+\bibitem{A116184}
+The OEIS Foundation Inc., \url{https://oeis.org/A116184}, entry by A.~Adamchuk (Apr.~8, 2007); revision \#6, Feb.~16, 2025.
+
+\end{thebibliography}
+}
+\end{document}
