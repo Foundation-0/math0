@@ -950,6 +950,29 @@
    "date": "2026-10-19"
   },
   {
+   "id": "OEIS-frontier/A071685",
+   "slug": "oeis-a071685",
+   "title": "Reverse-divisor numbers are 1, 12, 78 or 89 mod 100 (A071685, Dale's conjecture)",
+   "area": "Sequences and series",
+   "source": "OEIS A071685",
+   "source_url": "https://oeis.org/A071685",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A071685.lean",
+    "decl": "def statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A071685.lean",
+   "our_decl": "Math0.Frontier.A071685.result",
+   "summary": "Let R(n) be the decimal digit reversal of n, with leading zeros dropped. Suppose n is not a palindrome (R(n) ≠ n), 10 does not divide n, and either n | R(n) or R(n) | n. Then n mod 100 is 1, 12, 78 or 89.",
+   "notes": "Conjecture as stated in OEIS: \"Conjecture: every term mod 100 is equal to 1, 12, 78, or 89. - _Harvey P. Dale_, Dec 13 2017\"\n\nReferees: D. J. Hoey, \"Palintiples\", rec.puzzles archive (arithmetic/digits/palintiples.s), May 1992 (https://djm.cc/rpa-output/arithmetic/digits/palintiples.s): a finite-state classification of every base-10 N = C·R(N) with C > 1. C is 4 or 9, and N is 87…12 or 98…01. OEIS A031877 comment (Hasler 2014, annotated by Sloane Oct 19 2014): \"All terms are of the form 87...12 = 4*21...78 or 98...01 = 9*10...89. [This was proved by Hoey, 1992.]\" L. F. Klosinski and D. C. Smolarski, \"On the Reversing of Digits\", Math. Mag. 42 (1969) 208-210: k ∈ {1, 4, 9}. D. W. Wilson's theorem (1997) in A001232/A008918: terms are 99·m and 198·m with m a 0/1 palindrome with no singleton digits, so they are ≡ 89 and ≡ 78 (mod 100). N. J. A. Sloane, \"2178 And All That\", arXiv:1307.0453, Fib. Quart. 52 (2014) 99-120. L. H. Kendrick, \"Young Graphs: 1089 et al.\", J. Integer Seq. 18 (2015) 15.9.7. B. V. Holt, INTEGERS 14 (2014) A42. Webster and Williams, Math. Spectrum 45 (2012/13) 96-102. M. F. Hasler, A001232 comment (Oct 2022): terms begin and end with 109*89. Dale's conjecture (Dec 2017) came after all of these. The OEIS entry was not updated to mark it resolved, and I found no prior Lean formalization.",
+   "date": "2026-10-20"
+  },
+  {
    "id": "OEIS-frontier/A075855",
    "slug": "oeis-a075855",
    "title": "The longest path on the black squares of an even chessboard has (n^2-n+2)/2 squares (A075855)",
@@ -994,6 +1017,29 @@
    "summary": "Let rot be the rotation of A086002. For a number n with d decimal digits, rot(n) swaps the block of the first floor(d/2) digits with the block of the last floor(d/2) digits; when d is odd, the centre digit stays where it is. Let f(n) = n + rot(n). Then no prime p has f(p), f^2(p), f^3(p), f^4(p) and f^5(p) all prime.",
    "notes": "Conjecture as stated in OEIS: \"Conjecture 2: There are no 5-Rotation Cycle Primes.\" (A086004, entry by _Chuck Seggelin_, Jul 07 2003. Conjecture 1 was settled by R. J. Mathar in 2009. Chai Wah Wu added on Aug 20 2015 that 4-rotation cycle primes exist (A261458), and in A261458 he proved there are none surviving 6 applications.)\n\nReferees: I found no prior resolution. OEIS A086004 (Seggelin 2003, last edited Jun 2025) still lists Conjecture 2 as open. OEIS A261458 (Chai Wah Wu, Aug 2015) proves the weaker statement that no chain of 6 steps exists, using a leading-digit/carry argument, and gives 4-step examples such as 10010905789. Mathar's 2009 comment on A086004 proves Conjecture 1 (even digit counts) only. Web searches (OEIS-indexed pages, arXiv, StackExchange-style queries, primepuzzles) found nothing on the 5-step case. The SeqFan archive could not be reached from here, so it was not checked.",
    "date": "2026-10-19"
+  },
+  {
+   "id": "OEIS-frontier/A090905",
+   "slug": "oeis-a090905",
+   "title": "A090905: every row ends at twice the largest prime of the previous row (Murthy's conjecture proved)",
+   "area": "Discrete geometry",
+   "source": "OEIS A090905",
+   "source_url": "https://oeis.org/A090905",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A090905.lean",
+    "decl": "Math0.Statements.A090905.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A090905.lean",
+   "our_decl": "Math0.Frontier.A090905.result",
+   "summary": "Split 1, 2, 3, ... into consecutive groups. Group 1 is (1). Group n+1 starts right after group n. Its length is the least k ≥ len(n) such that the product of group n divides the product of group n+1. Let B_k be the Bertrand primes A006992: B_1 = 2, and B_{k+1} is the largest prime below 2B_k.\n\nClaim: for every n > 4,\n- group n-1 has a largest prime p,\n- the last term of group n is 2p,\n- p = B_{n-1}.",
+   "notes": "Conjecture as stated in OEIS: %C Conjecture: For n > 4 the last term of the n-th group is 2p where p is the largest prime in the (n-1)th group. And these are the Bertrand primes. (Amarnath Murthy, Dec 13 2003)\n\nReferees: I found no prior proof or refutation.\n- OEIS A090904, A090905, A090906 and A090907 (Murthy, Dec 2003; last edited Dec 2016) state the claim only as a conjecture. A090907 adds \"verified for 4<n<21\".\n- A090906 has an unproved %F by M. Bouayoun (Mar 2004) giving the row lengths as 2*(A006992(n)-A006992(n-1)). It is off by one index.\n- A381901 (A. Niedermaier, Mar 2025) defines the same triangle with no bound on row length and asserts a(n) = 2*A006992(n-1) for n >= 5, without proof.\n- Related: A113117 and A113118 (L. Quet, 2006), A093911 (Murthy's variant), and A006992 (Bertrand primes).\n- The key analytic input is Nagura's theorem (J. Nagura, Proc. Japan Acad. 28 (1952) 177-181: for x >= 25 there is a prime between x and 6x/5). The Lean development reproves the form it needs (a prime in (5x/3, 2x) for x >= 83) from scratch.\n- Searches of arXiv, MathOverflow/MSE, SeqFan-style queries and the formal-conjectures repository found no prior resolution and no prior formalization.",
+   "date": "2026-10-20"
   },
   {
    "id": "OEIS-frontier/A091817",

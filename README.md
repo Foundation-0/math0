@@ -20,11 +20,12 @@ quietly prove an easier statement than the one the problem's curators wrote down
 ## Highlights
 
 <!-- HIGHLIGHTS:START -->
-**91 verified results.** 30 new results, 38 first formal proofs of known results, 17 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
+**93 verified results.** 31 new results, 39 first formal proofs of known results, 17 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
 
 New results (open problems settled; each checked by the Lean kernel and judged new by an independent novelty referee):
 
 * [3 × 3 lower triangles with neighbours differing by at most two: a(n) = 1047 n - 1459 for n > 2 (A195249)](results/oeis-a195249/README.md)
+* [A090905: every row ends at twice the largest prime of the previous row (Murthy's conjecture proved)](results/oeis-a090905/README.md)
 * [A106505: common sides of A/2A primitive triangles are periodic mod 8, so a(n+5) = a(n) + 8](results/oeis-a106505/README.md) ([paper](results/oeis-a106505/paper.pdf))
 * [A332010: the average first letter of one-descent derangements has denominator 2^(n-2)](results/oeis-a332010/README.md) ([paper](results/oeis-a332010/paper.pdf))
 * [A338885: the smallest number in row 655 is 104, not A228286(655) = 115](results/oeis-a338885/README.md) ([paper](results/oeis-a338885/paper.pdf))

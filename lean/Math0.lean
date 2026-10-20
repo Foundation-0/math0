@@ -44,8 +44,10 @@ import Math0.ErdosProblems.Erdos834_erdos_834_parts_ii
 import Math0.ErdosProblems.Erdos835_johnsonGraph_18_9_chromaticNumber
 import Math0.Frontier.OEIS.A005590
 import Math0.Frontier.OEIS.A062887
+import Math0.Frontier.OEIS.A071685
 import Math0.Frontier.OEIS.A075855
 import Math0.Frontier.OEIS.A086004
+import Math0.Frontier.OEIS.A090905
 import Math0.Frontier.OEIS.A091817
 import Math0.Frontier.OEIS.A097154
 import Math0.Frontier.OEIS.A106505
