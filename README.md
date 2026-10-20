@@ -20,7 +20,7 @@ quietly prove an easier statement than the one the problem's curators wrote down
 ## Highlights
 
 <!-- HIGHLIGHTS:START -->
-**94 verified results.** 32 new results, 39 first formal proofs of known results, 17 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
+**97 verified results.** 34 new results, 40 first formal proofs of known results, 17 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
 
 New results (open problems settled; each checked by the Lean kernel and judged new by an independent novelty referee):
 
@@ -49,6 +49,7 @@ New results (open problems settled; each checked by the Lean kernel and judged n
 * [Repunit residues: a(n) = n - 1 exactly for long period primes](results/oeis-a335012/README.md) ([paper](results/oeis-a335012/paper.pdf))
 * [Zeros of a(3n) for the signed Stern sequence A005590 are exactly the fibbinary numbers](results/oeis-a005590/README.md) ([paper](results/oeis-a005590/paper.pdf))
 * [A326602: a(n) is odd iff n is a square](results/oeis-a326602/README.md) ([paper](results/oeis-a326602/paper.pdf))
+* [A351743: from n = 139 the sequence is affine in 42-blocks, which proves Sycamore's, Sigrist's and the A355149 conjectures](results/oeis-a351743/README.md)
 * [Every n not divisible by 5 has a multiple with only prime digits (A342992)](results/oeis-a342992/README.md)
 * [Lang's conjecture a(n) = A250400(n+1)/(n+1) for A294512 fails at n = 164](results/oeis-a294512/README.md) ([paper](results/oeis-a294512/paper.pdf))
 * [Odd descending-by-2 multiples exist exactly when 125 does not divide 2n+1 (A062887)](results/oeis-a062887/README.md) ([paper](results/oeis-a062887/paper.pdf))
@@ -56,6 +57,7 @@ New results (open problems settled; each checked by the Lean kernel and judged n
 * [The 1089-trick map has two 9-digit fixed points (A393794 uniqueness conjecture is false)](results/oeis-a393794/README.md) ([paper](results/oeis-a393794/paper.pdf))
 * [The only fixed points of reverse(x) - maxdigit(x) are 0 and 89](results/oeis-a097154/README.md) ([paper](results/oeis-a097154/paper.pdf))
 * [There are no 5-Rotation Cycle Primes (A086004, Conjecture 2)](results/oeis-a086004/README.md) ([paper](results/oeis-a086004/paper.pdf))
+* [Yanev's identity for A073642 (sum of the positions of the 1-bits)](results/oeis-a073642/README.md)
 <!-- HIGHLIGHTS:END -->
 
 ## Two tracks
