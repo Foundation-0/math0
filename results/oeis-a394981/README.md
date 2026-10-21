@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: %F A394981 Conjecture: If n is odd, then a(n+1) = 
 
 Referees: The OEIS A394981 entry (Gary Yane, Apr 08 2026; a(1)-a(2) corrected by Pontus von Brömssen, May 13 2026; revision #42, May 16 2026, the same in the local mirror and upstream oeisdata) still states the identity as a conjecture, with keyword "more" and no proof reference. No other OEIS entry cites it. Cross-references A254414/A254458/A254607/A329279 are unrelated counts. Searches found no proof or counterexample on arXiv, MathOverflow, Math StackExchange, SeqFan or the general web. Nearest work, all on a different problem: arXiv:2606.05439, Blanco, Dougherty-Bliss, Ter-Saakov and Zeilberger, "In How Many Ways can a Rectangle be Rectangled?" (tilings by bars of any length); arXiv:2607.29369, Martinez (L-tetromino tilings).
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

@@ -24,6 +24,10 @@ Referees: No prior proof found.
 - J. Claes and R. Miyamoto, "Golombic and Levine sequences", arXiv:2602.10992 [math.CO] (Feb 2026), p. 3, eqs. (3)–(4). It observes that Γ maps the first n Golomb terms to the first A001463(n) terms (so the A014643 rows are Golomb prefixes), and that |a| = #Γa and #a = (Γa)(|a|). These are the key ingredients, but the paper does not mention A113676 or prove its conjectures.
 - Cross-checked entries: A014644, A014643, A011784, A012257, A001463, A113722, A113724, A113730 and A304679. None records a resolution.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

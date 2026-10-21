@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: "Conjecture: every term mod 100 is equal to 1, 12,
 
 Referees: D. J. Hoey, "Palintiples", rec.puzzles archive (arithmetic/digits/palintiples.s), May 1992 (https://djm.cc/rpa-output/arithmetic/digits/palintiples.s): a finite-state classification of every base-10 N = C·R(N) with C > 1. C is 4 or 9, and N is 87…12 or 98…01. OEIS A031877 comment (Hasler 2014, annotated by Sloane Oct 19 2014): "All terms are of the form 87...12 = 4*21...78 or 98...01 = 9*10...89. [This was proved by Hoey, 1992.]" L. F. Klosinski and D. C. Smolarski, "On the Reversing of Digits", Math. Mag. 42 (1969) 208-210: k ∈ {1, 4, 9}. D. W. Wilson's theorem (1997) in A001232/A008918: terms are 99·m and 198·m with m a 0/1 palindrome with no singleton digits, so they are ≡ 89 and ≡ 78 (mod 100). N. J. A. Sloane, "2178 And All That", arXiv:1307.0453, Fib. Quart. 52 (2014) 99-120. L. H. Kendrick, "Young Graphs: 1089 et al.", J. Integer Seq. 18 (2015) 15.9.7. B. V. Holt, INTEGERS 14 (2014) A42. Webster and Williams, Math. Spectrum 45 (2012/13) 96-102. M. F. Hasler, A001232 comment (Oct 2022): terms begin and end with 109*89. Dale's conjecture (Dec 2017) came after all of these. The OEIS entry was not updated to mark it resolved, and I found no prior Lean formalization.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

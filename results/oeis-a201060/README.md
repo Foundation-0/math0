@@ -26,6 +26,10 @@ Both results are restated in O. Kihel and F. Luca, "Perfect Powers With All Equa
 
 The OEIS entry A201060 (local mirror, revision #11, 2012) still labels the statement as a conjecture, and I found no web or arXiv discussion that names A201060.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

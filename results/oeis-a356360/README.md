@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: A356360: "Conjecture: The sequence contains only 1
 
 Referees: OEIS A356360 (mirror 2026-10-17, rev #31 Aug 2024): still marked "Conjecture". It has an unproved comment "Same as A128059(n), A145737(n-1), A097302(n-2) for n>5", and its formula "a(n)=2n-1 if prime else 1 (n != 5)" is labeled "From the conjecture". M. Bouras, "The Distribution Of Prime Numbers And The Continued Fractions", Zenodo doi:10.5281/zenodo.7212512 (2022; also viXra 2209.0101): proves only the closed form (Thm 1.1) and states Conjecture 3.1, verified to n=10000. M. Bouras, "A New Primes-Generating Sequence", arXiv:2509.09745 (2025), Table 2 (k=1 row = A356360): observation only, no proof. Bouras slides, Zenodo 10992128: "Conjecture 2", no proof. AlphaProof Nexus results / formal-conjectures auto_oeis THEOREM_MAPPING and T. Adamczewski, "OEIS Open", arXiv:2608.11941: A356360 is not included; only the sibling A372761 Conj. 2 was resolved. Related but distinct: A356247 conjectures proved by B. Cloitre (2025, OEIS attachment). No prior proof or counterexample found.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

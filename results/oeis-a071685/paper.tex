@@ -1,0 +1,371 @@
+% math0 manuscript template. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,noncomputable,apply,unfold,infer_instance},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8, keepspaces=true,
+  literate={ℕ}{{$\mathbb{N}$}}1 {∀}{{$\forall$}}1 {→}{{$\to$}}1 {≤}{{$\le$}}1
+    {¬}{{$\neg$}}1 {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {≠}{{$\ne$}}1 {∣}{{$\mid$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {·}{{$\cdot$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\sw}{\sigma}
+\newcommand{\len}{\ell}
+
+\title[Reverse divisors modulo 100]{Non-palindromic numbers not divisible by $10$ that divide or are divided by their digit reversal are congruent to $1$, $12$, $78$ or $89$ modulo $100$}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 20, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $R(n)$ be the decimal digit reversal of $n$. OEIS A071685 lists the non-palindromic numbers $n$, not divisible by $10$, such that $n\mid R(n)$ or $R(n)\mid n$, and in 2017 H.~P. Dale conjectured there that every term is congruent to $1$, $12$, $78$ or $89$ modulo $100$.
+We give a proof that uses only the two leading and two trailing digits of $n$: if $R(n)=kn$, they reduce the problem to a finite check over $k<10$ and $n\bmod100$, whose only solutions are $(k,n\bmod100)=(4,78)$ and $(9,89)$, and the case $n=k\,R(n)$ follows by applying this to $R(n)$.
+The statement is a known result: it follows at once from the classification of base-$10$ reverse multiples due to Hoey (1992) and Wilson (1997), which was recorded in the OEIS before the conjecture was posed, so our contribution is the first formal proof of a known result.
+The proof is verified in Lean~4 against a statement that math0 formalized from the OEIS entry; its definitions are checked by the kernel against the $16$ listed terms below $10^7$, and it was reviewed for fidelity and frozen before the proof attempt.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For $n\in\N$ let $R(n)$ be the number obtained by writing the decimal digits of $n$ in reverse order, leading zeros being dropped (OEIS A004086 \cite{A004086}); thus $R(1089)=9801$ and $R(120)=21$. The two smallest numbers that are proper divisors of their reversal, $1089$ and $2178$, with $9\cdot1089=9801$ and $4\cdot2178=8712$, are classical \cite{Sloane}. The OEIS entry A071685 \cite{A071685}, contributed by Labos Elemer in 2002, lists the \emph{non-palindromic numbers $n$, not divisible by $10$, such that $n\mid R(n)$ or $R(n)\mid n$}:
+\[
+  1089,\ 2178,\ 8712,\ 9801,\ 10989,\ 21978,\ 87912,\ 98901,\ 109989,\ 219978,\ \dots
+\]
+On December~13, 2017, Harvey P. Dale added to the entry the conjecture that every term is congruent to $1$, $12$, $78$ or $89$ modulo $100$. We prove this conjecture (Theorem~\ref{thm:main}).
+
+\subsection*{Prior work}
+Numbers $n$ with $R(n)=kn$, $k\ge2$, are called \emph{reverse multiples}, and the multiples $N=k\,R(N)$ \emph{palintiples}. Their systematic study in arbitrary bases began with Sutcliffe \cite{Sutcliffe}; see Sloane \cite{Sloane} for a history. In base $10$, Klosinski and Smolarski \cite{KS} showed that $R(n)=kn$ forces $k\in\{1,4,9\}$ (as recorded by D.~W. Wilson in A008919 \cite{A008919}). D.~J. Hoey \cite{Hoey}, in a rec.puzzles article of May 1992, described all base-$10$ solutions of $N=C\cdot R(N)$ with $C>1$ by finite-state machines: only $C\in\{4,9\}$ occurs, and $N$ has the shape $87\cdots12$ or $98\cdots01$. Accordingly the OEIS entry A031877 \cite{A031877} states (M.~F. Hasler, August~18, 2014) that ``All terms are of the form 87...12 = 4*21...78 or 98...01 = 9*10...89'', annotated ``This was proved by Hoey, 1992'' by N.~J.~A. Sloane (October~19, 2014). D.~W. Wilson stated in A001232 \cite{A001232} (December~15, 1997) that the positive solutions of $9n=R(n)$ have the form $99m$ with $m$ a palindrome with digits in $\{0,1\}$ and no isolated digit, and in A008918 \cite{A008918} that the positive solutions of $4n=R(n)$ are their doubles. Young \cite{Young,Young2} introduced trees for $k$-reverse multiples, Sloane \cite{Sloane} turned them into ``Young graphs'' and enumerated the solutions, and Kendrick \cite{Kendrick}, Holt \cite{Holt} and Webster and Williams \cite{WW} gave further accounts and generalizations.
+
+Dale's conjecture is an immediate consequence of Hoey's or Wilson's description. By its own comments, A071685 is the union of A008919 (the $n$ with $R(n)=kn$, $k\ge2$) and A031877 (their reversals). In Wilson's description $m$ begins and therefore ends with the block $11$, so the solutions of $R(n)=9n$ and $R(n)=4n$ are $\equiv99\cdot11\equiv89$ and $\equiv198\cdot11\equiv78\pmod{100}$, and their reversals $9n$ and $4n$ are $\equiv1$ and $\equiv12$. The entry A071685 (revision \#39 of November~5, 2025) still lists the statement as a conjecture, and the math0 referees found no publication that addresses Dale's comment explicitly. Thus the result is known; to our knowledge the present proof is its first formalization: the referees found no earlier Lean or Mathlib formalization, and the statement is not in the formal-conjectures repository \cite{FC} (checked at commit \texttt{c77fdd4}).
+
+Our proof does not use the classification. If $n$ has $d\ge2$ digits and $10\nmid n$, the two leading digits of $R(n)$ are the two trailing digits of $n$ exchanged, and vice versa. If $R(n)=kn$, comparing both sides at the scale $10^{d-2}$ gives inequalities and a congruence between $k$, the two leading digits of $n$ and $n\bmod100$, and a finite check leaves only $(k,n\bmod100)=(4,78)$ and $(9,89)$. This is the familiar analysis of the outer digits of a reverse multiple, carried to two digits; we claim no novelty for it.
+
+\section{Statement}\label{sec:statement}
+
+The entry A071685 \cite{A071685} reads in part (verbatim):
+\begin{quote}\raggedright
+\textsc{Name}: Non-palindromic numbers n, not divisible by 10, such that either n divides R(n) or R(n) divides n, where R(n) is the digit-reversal of n.\\[2pt]
+\textsc{Comments}: The quotient R(n)/n or n/R(n) is always 4 or 9. [\dots]\\
+Conjecture: every term mod 100 is equal to 1, 12, 78, or 89. - \emph{Harvey P. Dale}, Dec 13 2017
+\end{quote}
+Here R is A004086 \cite{A004086}, ``Read n backwards'', with the comment ``Leading zeros (after the reversal has taken place) are omitted''; and by a comment in A002113 \cite{A002113} (Palindromes in base 10), ``n is a palindrome [\dots] if and only if n = A004086(n)''.
+
+\begin{definition}\label{def:R}
+For $n\in\N$ let $\len(n)$ be the number of decimal digits of $n$, with $\len(0)=0$, and let $d_0,\dots,d_{\len(n)-1}$ be these digits, least significant first, so that $n=\sum_i d_i10^i$. Put $R(n)=\sum_{i}d_{\len(n)-1-i}10^i$. Call $n$ a \emph{term} if $R(n)\ne n$, $10\nmid n$, and $n\mid R(n)$ or $R(n)\mid n$.
+\end{definition}
+
+\begin{theorem}[Dale's conjecture]\label{thm:main}
+Every term $n$ satisfies $n\bmod100\in\{1,12,78,89\}$.
+\end{theorem}
+
+All four residues occur: $9801\equiv1$, $8712\equiv12$, $2178\equiv78$ and $1089\equiv89$.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A071685.lean}, reviewed for fidelity, and frozen before the proof attempt (SHA-256 \texttt{0a3757cb\dots 40c95}). Its definitions, main data check and statement are, verbatim except that docstrings, comments, the proof of \decl{a_data} and all other declarations are omitted (the latter are \decl{R_examples}, and the lemmas and kernel-evaluation helpers that serve the data check; five of these lemmas are reused in Section~\ref{sec:proof}):
+\begin{lstlisting}
+namespace Math0.Statements.A071685
+
+def R (n : ℕ) : ℕ := Nat.ofDigits 10 (Nat.digits 10 n).reverse
+
+def IsTerm (n : ℕ) : Prop := R n ≠ n ∧ ¬ 10 ∣ n ∧ (n ∣ R n ∨ R n ∣ n)
+
+instance : DecidablePred IsTerm := fun n => by unfold IsTerm; infer_instance
+
+noncomputable def a (n : ℕ) : ℕ := Nat.nth IsTerm (n - 1)
+
+theorem a_data : (List.range 16).map (fun i => a (i + 1)) =
+    [1089, 2178, 8712, 9801, 10989, 21978, 87912, 98901, 109989, 219978, 879912, 989901,
+      1099989, 2199978, 8799912, 9899901] := by
+  -- (kernel scans, omitted; see the text)
+
+def statement : Prop :=
+  ∀ n : ℕ, IsTerm n → n % 100 = 1 ∨ n % 100 = 12 ∨ n % 100 = 78 ∨ n % 100 = 89
+
+end Math0.Statements.A071685
+\end{lstlisting}
+
+\emph{Encoding.} Mathlib's \texttt{Nat.digits 10 n} is the list $[d_0,\dots,d_{\len(n)-1}]$ of decimal digits of $n$, least significant first (empty for $n=0$), and \texttt{Nat.ofDigits 10 L} evaluates a list $L$ in the same order, $\sum_i L_i10^i$. So \decl{R} is $R$ of Definition~\ref{def:R}. Trailing zeros of $n$ become top entries of the reversed list and contribute nothing, as A004086 prescribes ($R(8380)=838$). Non-palindromic is \texttt{R n ≠ n}, following A002113, and divisibility on $\N$ is $a\mid b\iff\exists c,\ b=ac$. \decl{IsTerm} is the entry's name clause by clause, and \decl{statement} is Theorem~\ref{thm:main}, quantified over all terms. There is no degenerate case: $n=0$ is excluded by $10\mid0$, and $R(n)=0$ only for $n=0$. The sequence itself (offset~$1$) is \decl{a}; the statement does not use it.
+
+\emph{Checks against the OEIS.} \decl{R_examples} checks $R(1089)=9801$, $R(8712)=2178$, $R(12021)=12021$, $R(8380)=838$, $R(120)=21$ and $R(0)=0$; here $12021$ and $8380$ are the palindrome and the multiple of $10$ that the entry's example names as excluded. \decl{a_data} checks that the definitions reproduce the first $16$ listed terms, which are all listed terms below $10^7$. It rests on the lemma \decl{term_iff}: below $10^7$ the terms are exactly these $16$ numbers. It is proved by kernel evaluation (\texttt{decide +kernel}) of helper functions written with recursors and primitive arithmetic, each proved sound for \decl{R} and \decl{IsTerm}: all $n<1000$ are scanned, and for $4$ to $7$ digits about $150{,}000$ candidates on arithmetic progressions, selected by one-digit facts on the leading and last digits and by $R(n)\equiv n\pmod9$, all proved in the same file. In Python, the fidelity reviewer recomputed the terms below $10^7$, and a referee checked that the $10{,}000$ terms of the OEIS b-file are terms and satisfy the congruence.
+
+\section{Proof}\label{sec:proof}
+
+We follow the Lean proof; each statement carries the names of the corresponding declarations. Besides $\len$ and $R$ we use
+\[
+  \sw(x)=10\,(x\bmod10)+\lfloor x/10\rfloor\qquad(x\in\N),
+\]
+which exchanges the two digits of a number $x<100$ (\decl{rev2}), and for $n\ge10$ the scale $P_n=10^{\len(\lfloor n/100\rfloor)}$; by Lemma~\ref{lem:len} below, $P_n=10^{\len(n)-2}$.
+
+\begin{lemma}[\decl{R_cons}, \decl{len_cons}, \decl{R_lt}, \decl{R_R}, \decl{len_R}; statement file]\label{lem:basic}
+\begin{enumerate}
+\item[(a)] If $n\ge1$, then $\len(n)=\len(\lfloor n/10\rfloor)+1$ and $R(n)=R(\lfloor n/10\rfloor)+10^{\len(\lfloor n/10\rfloor)}\,(n\bmod10)$.
+\item[(b)] $R(n)<10^{\len(n)}$ for all $n$.
+\item[(c)] If $10\nmid n$, then $\len(R(n))=\len(n)$ and $R(R(n))=n$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) For $n\ge1$ the digit list of $n$ is $(n\bmod10)$ followed by the digit list of $\lfloor n/10\rfloor$. Reversing puts $n\bmod10$ at the end, at position $\len(\lfloor n/10\rfloor)$, after the reversed digit list of $\lfloor n/10\rfloor$, whose value is $R(\lfloor n/10\rfloor)$.
+(b) $R(n)$ is the value of a list of $\len(n)$ entries, each at most $9$.
+(c) Since $10\nmid n$, we have $n\ge1$ and $d_0\ne0$. So the reversed list consists of digits and its most significant entry $d_0$ is nonzero, hence it is the digit list of its value $R(n)$. Thus the digit list of $R(n)$ is the reverse of that of $n$, which gives $\len(R(n))=\len(n)$, and reversing once more gives $R(R(n))=n$.
+\end{proof}
+
+\begin{lemma}[\decl{len_two}, \decl{P_le}]\label{lem:len}
+Let $n\ge10$ and $P=P_n$. Then $\len(n)=\len(\lfloor n/100\rfloor)+2$ and $10P\le n$.
+\end{lemma}
+
+\begin{proof}
+The first claim is Lemma~\ref{lem:basic}(a) applied to $n$ and to $\lfloor n/10\rfloor\ge1$, since $\lfloor\lfloor n/10\rfloor/10\rfloor=\lfloor n/100\rfloor$. Let $q=\lfloor n/100\rfloor$. If $q=0$, then $P=1$ and $10P\le n$. If $q\ge1$, then $10^{\len(q)}\le10q$, as $q$ has $\len(q)$ digits, so $10P\le100q\le n$.
+\end{proof}
+
+\begin{lemma}[\decl{R_div_P}]\label{lem:Rlead}
+Let $n\ge10$ and $P=P_n$. Then $\lfloor R(n)/P\rfloor=\sw(n\bmod100)$: the two leading digits of $R(n)$ are the two trailing digits of $n$, exchanged.
+\end{lemma}
+
+\begin{proof}
+Let $q=\lfloor n/100\rfloor$, $u=n\bmod10$ and $t=\lfloor n/10\rfloor\bmod10$. Lemma~\ref{lem:basic}(a) for $\lfloor n/10\rfloor$ gives $\len(\lfloor n/10\rfloor)=\len(q)+1$ and $R(\lfloor n/10\rfloor)=R(q)+P\,t$, and then for $n$ it gives
+\[
+  R(n)=R(q)+P\,t+10P\,u=R(q)+P\,(10u+t).
+\]
+By Lemma~\ref{lem:basic}(b), $0\le R(q)<10^{\len(q)}=P$. Hence $\lfloor R(n)/P\rfloor=10u+t$, and $10u+t=\sw(n\bmod100)$ because $(n\bmod100)\bmod10=u$ and $\lfloor(n\bmod100)/10\rfloor=t$.
+\end{proof}
+
+\begin{lemma}[\decl{R_ge}, \decl{div_P}]\label{lem:nlead}
+Let $n\ge10$ with $10\nmid n$, and $P=P_n$. Then $R(n)\ge10$ and $\lfloor n/P\rfloor=\sw(R(n)\bmod100)$.
+\end{lemma}
+
+\begin{proof}
+By Lemmas~\ref{lem:basic}(c) and~\ref{lem:len}, $\len(R(n))=\len(n)\ge2$, so $R(n)\ge10$. Lemma~\ref{lem:len} for $n$ and for $R(n)$ gives $\len(\lfloor R(n)/100\rfloor)=\len(R(n))-2=\len(n)-2=\len(\lfloor n/100\rfloor)$, so $P_{R(n)}=P$. Lemma~\ref{lem:Rlead} applied to $R(n)$, together with $R(R(n))=n$, gives the claim.
+\end{proof}
+
+The finite step concerns the multiplier $k$ and the residue $B=n\bmod100$. For $k,B\in\N$ let $A(k,B)=\sw(kB\bmod100)$, and let $\mathrm{Ok}(k,B)$ be the conjunction of
+\[
+  \text{(i) } B\bmod10\ne0,\quad
+  \text{(ii) } k\ne1,\quad
+  \text{(iii) } A(k,B)\ge10,\quad
+  \text{(iv) } k\,A(k,B)\le\sw(B)<k\,(A(k,B)+1).
+\]
+
+\begin{lemma}[\decl{Ok}, \decl{check}]\label{lem:check}
+If $k<10$, $B<100$ and $\mathrm{Ok}(k,B)$, then $(k,B)=(4,78)$ or $(k,B)=(9,89)$.
+\end{lemma}
+
+In Lean this is the single computational step of the proof:
+\begin{lstlisting}
+private def Ok (k B : ℕ) : Prop := B % 10 ≠ 0 ∧ k ≠ 1 ∧ 10 ≤ rev2 (B * k % 100) ∧
+    k * rev2 (B * k % 100) ≤ rev2 B ∧ rev2 B < k * (rev2 (B * k % 100) + 1)
+
+private instance : DecidableRel Ok := fun k B => by unfold Ok; infer_instance
+
+private theorem check :
+    ∀ k < 10, ∀ B < 100, Ok k B → (k = 4 ∧ B = 78) ∨ (k = 9 ∧ B = 89) := by
+  decide +kernel
+\end{lstlisting}
+The certificate is the decision procedure itself: the \texttt{Decidable} instance for the bounded quantifiers $\forall k<10$, $\forall B<100$ and for \decl{Ok} yields a Boolean, and \texttt{decide +kernel} asks the kernel to confirm by definitional unfolding (with its built-in arithmetic on numerals) that it evaluates to \texttt{true} on all $1000$ pairs. No compiled code is trusted and no axiom is added (unlike \texttt{native\_decide}, which adds \decl{Lean.ofReduceBool}). For the reader we also verify the lemma by hand.
+
+\begin{proof}[Proof of Lemma~\ref{lem:check} by hand]
+Write $B=10\beta+b$ with digits $\beta,b$, so $\sw(B)=10b+\beta$ and $b\ge1$ by (i). Write $A=A(k,B)=10a+a'$ with $a=kb\bmod10$ and $a'=\lfloor kB/10\rfloor\bmod10$. By (iii), $a\ge1$, so $k\ne0$. By (iv), $10ka\le kA\le\sw(B)\le10b+9$, hence $ka\le b$.
+
+\emph{Last digit and leading digit.} We have $2\le k\le ka\le b\le9$ and $kb\equiv a\pmod{10}$ with $a\ge1$. If $k\ge5$, then $a=1$ and $kb\equiv1\pmod{10}$, so $k\in\{7,9\}$ with $b=3$ or $b=9$ respectively, and $k\le b$ leaves $(k,a,b)=(9,1,9)$. If $k=4$, then $a\le2$ and $a$ is even, so $a=2$, $4b\equiv2$ gives $b\in\{3,8\}$, and $b\ge8$ leaves $(4,2,8)$. If $k=3$, then $a\le3$, and $3b\equiv a$ gives $(a,b)\in\{(1,7),(2,4),(3,1)\}$, of which only $(1,7)$ satisfies $3a\le b$. If $k=2$, then $a\le4$ is even, so $a\in\{2,4\}$; $a=2$ gives $b\in\{1,6\}$, and $b\ge4$ leaves $b=6$, while $a=4$ gives $b\in\{2,7\}$, both $<8$. So
+\[
+  (k,a,b)\in\{(2,2,6),\ (3,1,7),\ (4,2,8),\ (9,1,9)\}.
+\]
+
+\emph{Second digits.} Condition (iv) reads $10ka+ka'\le10b+\beta<10ka+ka'+k$, with $a',\beta\le9$.
+For $(2,2,6)$ it requires $60+\beta<42+2a'\le60$, which is impossible; for $(3,1,7)$ it requires $70+\beta<33+3a'\le60$, also impossible.
+For $(4,2,8)$ it says $4a'\le\beta<4a'+4$, that is $a'=\lfloor\beta/4\rfloor$, while $4B=40\beta+32$ gives $a'=(4\beta+3)\bmod10$. For $\beta=0,\dots,9$ the first expression takes the values $0,0,0,0,1,1,1,1,2,2$ and the second $3,7,1,5,9,3,7,1,5,9$; they agree only for $\beta=7$. So $B=78$, and indeed $4\cdot78=312$, $A=\sw(12)=21$, $84\le87<88$.
+For $(9,1,9)$ it says $9a'\le\beta<9a'+9$, that is $a'=\lfloor\beta/9\rfloor$, while $9B=90\beta+81$ gives $a'=(9\beta+8)\bmod10$. The first expression is $0$ for $\beta\le8$ and $1$ for $\beta=9$; the second is $8-\beta$ for $\beta\le8$ and $9$ for $\beta=9$. They agree only for $\beta=8$. So $B=89$, and indeed $9\cdot89=801$, $A=\sw(1)=10$, $90\le98<99$.
+\end{proof}
+
+\begin{proposition}[\decl{fwd}]\label{prop:fwd}
+Let $n,k\in\N$ with $10\nmid n$, $R(n)=nk$ and $R(n)\ne n$. Then $(k,\,n\bmod100)$ is $(4,78)$ or $(9,89)$.
+\end{proposition}
+
+\begin{proof}
+First, $n\ge10$. Indeed $n\ne0$ since $10\mid0$, and if $1\le n\le9$, Lemma~\ref{lem:basic}(a) gives $R(n)=R(0)+10^{0}\,n=n$, contrary to $R(n)\ne n$.
+
+Let $P=P_n$, $A=\lfloor n/P\rfloor$ and $B=n\bmod100$. By Lemma~\ref{lem:nlead}, $A=\sw(R(n)\bmod100)=\sw(nk\bmod100)=\sw(Bk\bmod100)=A(k,B)$. By Lemma~\ref{lem:Rlead}, $\lfloor nk/P\rfloor=\lfloor R(n)/P\rfloor=\sw(B)$. By Lemma~\ref{lem:len}, $A\ge10$, which is (iii). Since $nk=R(n)\ge10$ by Lemma~\ref{lem:nlead}, $k\ge1$, and $k\ne1$ because $R(n)\ne n$, which is (ii). Division with remainder gives
+\[
+  AP\le n<(A+1)P,\qquad \sw(B)\,P\le nk<(\sw(B)+1)P .
+\]
+Hence $kAP\le kn<(\sw(B)+1)P$, so $kA\le\sw(B)$; and $\sw(B)P\le kn<k(A+1)P$ (using $k\ge1$), so $\sw(B)<k(A+1)$. This is (iv). Moreover $10k\le kA\le\sw(B)\le99$, so $k<10$, and $B\bmod10=n\bmod10\ne0$, which is (i). Since $B<100$, Lemma~\ref{lem:check} applies.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main} (\decl{result})]
+Let $n$ be a term; then $n\bmod10\ne0$.
+
+\emph{Case $n\mid R(n)$}, say $R(n)=nk$. By Proposition~\ref{prop:fwd}, $n\bmod100\in\{78,89\}$.
+
+\emph{Case $R(n)\mid n$}, say $n=R(n)\,k$. Let $m=R(n)$. If $10\mid m$, then $10\mid mk=n$, which is false; so $10\nmid m$. By Lemma~\ref{lem:basic}(c), $R(m)=R(R(n))=n=mk$, and $R(m)=n\ne R(n)=m$. Proposition~\ref{prop:fwd} applied to $m$ gives $(k,m\bmod100)=(4,78)$ or $(9,89)$. Then $n\bmod100=(m\bmod100)\,k\bmod100$ is $312\bmod100=12$ or $801\bmod100=1$.
+\end{proof}
+
+\begin{remark}\label{rem:byproduct}
+Proposition~\ref{prop:fwd} (\decl{fwd}) contains the base-$10$ multiplier theorem: if $R(n)=kn$, $R(n)\ne n$ and $10\nmid n$, then $k\in\{4,9\}$ \cite{KS,Hoey}. Its proof also shows that the two leading digits $\lfloor n/P_n\rfloor=A(k,n\bmod100)$ of $n$ are then $A(4,78)=21$ or $A(9,89)=10$, as in $2178$ and $1089$; this consequence is not stated in Lean. The full classification of the terms is not formalized here.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A071685.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A071685.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. In the namespace \decl{Math0.Frontier.A071685} it contains the private definitions \decl{rev2} and \decl{Ok}, a private \texttt{DecidableRel} instance for \decl{Ok}, and the private lemmas \decl{len_two}, \decl{R_div_P}, \decl{R_ge}, \decl{div_P}, \decl{P_le}, \decl{check} and \decl{fwd}, which are the objects of Section~\ref{sec:proof} under the names given there. It also uses the five lemmas of Lemma~\ref{lem:basic}, which are theorems of the statement file, not assumptions. The main declaration is \decl{Math0.Frontier.A071685.result}, of type \decl{Math0.Statements.A071685.statement}; its proof is the two cases of the proof of Theorem~\ref{thm:main}, and the file ends with \texttt{\#math0\_settles} applied to these two names. The proof also uses Mathlib facts on \texttt{Nat.digits} and division and the tactics \texttt{omega}, \texttt{ring}, \texttt{positivity}, \texttt{norm\_num} and \texttt{simp}. The only computation is \texttt{decide +kernel} in \decl{check} (Lemma~\ref{lem:check}). The file uses no \texttt{native\_decide}, no \texttt{sorry} and no \texttt{set\_option}.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, which rejects \decl{sorryAx}, \decl{Lean.ofReduceBool} and custom axioms; and (3) the type of \decl{result} is syntactically the statement or its negation, up to metadata, with no unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A071685.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A071685.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A071685.result' proves 'Math0.Statements.A071685.statement'
+\end{lstlisting}
+The data checks \decl{a_data}, \decl{term_iff} and \decl{R_examples} use only these axioms too.
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. Running \path{scripts/verify.sh} from the repository root fetches the Mathlib cache, rebuilds all math0 results with \texttt{lake build} (re-running every audit), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. For this result alone, run \texttt{lake build Math0.Statements.OEIS.A071685} (about $90$ seconds on our machine, for the kernel scans of the data check) and then \texttt{lake env lean Math0/Frontier/OEIS/A071685.lean} (about $15$ seconds) in \path{lean}.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Hoey}
+D.~J. Hoey, \emph{Palintiples}, rec.puzzles archive, May 1992, \url{https://djm.cc/rpa-output/arithmetic/digits/palintiples.s}.
+
+\bibitem{Holt}
+B.~V. Holt, \emph{Some general results and open questions on palintiple numbers}, Integers \textbf{14} (2014), Paper A42.
+
+\bibitem{Kendrick}
+L.~H. Kendrick, \emph{Young graphs: 1089 et al.}, J. Integer Seq.\ \textbf{18} (2015), Article 15.9.7; arXiv:1410.0106.
+
+\bibitem{KS}
+L.~F. Klosinski and D.~C. Smolarski, \emph{On the reversing of digits}, Math.\ Mag.\ \textbf{42} (1969), 208--210.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: CADE 28, Lecture Notes in Comput.\ Sci.\ \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proc.\ 9th ACM SIGPLAN Int.\ Conf.\ Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Sloane}
+N.~J.~A. Sloane, \emph{2178 and all that}, Fibonacci Quart.\ \textbf{52} (2014), 99--120; arXiv:1307.0453.
+
+\bibitem{Sutcliffe}
+A.~Sutcliffe, \emph{Integers that are multiplied when their digits are reversed}, Math.\ Mag.\ \textbf{39} (1966), 282--287.
+
+\bibitem{WW}
+R.~Webster and G.~Williams, \emph{On the trail of reverse divisors: 1089 and all that follow}, Math.\ Spectrum \textbf{45} (2012/13), 96--102.
+
+\bibitem{Young}
+A.~L. Young, \emph{$k$-reverse multiples}, Fibonacci Quart.\ \textbf{30} (1992), 126--132.
+
+\bibitem{Young2}
+A.~L. Young, \emph{Trees for $k$-reverse multiples}, Fibonacci Quart.\ \textbf{30} (1992), 166--174.
+
+\bibitem{A001232}
+The OEIS Foundation Inc., \url{https://oeis.org/A001232}; theorem of D.~W. Wilson (Dec.~15, 1997).
+
+\bibitem{A002113}
+The OEIS Foundation Inc., \url{https://oeis.org/A002113}.
+
+\bibitem{A004086}
+The OEIS Foundation Inc., \url{https://oeis.org/A004086}.
+
+\bibitem{A008918}
+The OEIS Foundation Inc., \url{https://oeis.org/A008918}; theorem of D.~W. Wilson.
+
+\bibitem{A008919}
+The OEIS Foundation Inc., \url{https://oeis.org/A008919}; formula entry of D.~W. Wilson.
+
+\bibitem{A031877}
+The OEIS Foundation Inc., \url{https://oeis.org/A031877}; comment of M.~F. Hasler (Aug.~18, 2014).
+
+\bibitem{A071685}
+The OEIS Foundation Inc., \url{https://oeis.org/A071685}; conjecture of H.~P. Dale (Dec.~13, 2017).
+
+\end{thebibliography}
+}
+
+\end{document}

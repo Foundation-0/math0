@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: %F Empirical: a(n) = 1047*n - 1459 for n>2. (R. H.
 
 Referees: I found no prior proof of A195249 or of row 3 of A195248. The local OEIS mirror entries for A195249, A195248 and A195214 have no %E lines and still mark the formulas 'Empirical'. The closest prior work is Robert Israel's comment (Nov 21 2017) on the sibling sequence OEIS A195232 ('one or less' variant), which proves the analogous linearity in k with the same span argument; this is a direct template for the current proof. Israel's Ehrhart-polynomial comment on A195220 (Oct 06 2019) is related. Hardin's own 'Generalizing' note on A195248 gives no proof. Searches I checked that turned up nothing relevant: Dougherty-Bliss & Kauers, 'Hardinian Arrays', Electron. J. Combin. 31(2) P9 (arXiv:2309.00487), which treats a different Hardin family; Ekhad-Yang-Zeilberger arXiv:1707.04654, which treats Mathar's conjectures; and web, arXiv and MathOverflow searches for the formula, the A-numbers and the entry's name text.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

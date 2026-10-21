@@ -1,0 +1,371 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    noncomputable,private,rw,apply,interval_cases},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {∈}{{$\in$}}1 {→}{{$\to$}}1
+    {↔}{{$\leftrightarrow$}}1 {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {≤}{{$\le$}}1 {≥}{{$\ge$}}1
+    {¬}{{$\neg$}}1 {·}{{$\cdot$}}1 {←}{{$\leftarrow$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\rep}{\operatorname{rep}}
+\newcommand{\dprod}{\operatorname{p}}
+
+\title[Repdigits with repdigit digital product (OEIS A201060)]{A repdigit with at least four digits whose digital product is a repdigit is a repunit: the conjecture in OEIS A201060}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 20, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $a(1)<a(2)<\cdots$ be the natural numbers $m$ such that $m$ and the product of the decimal digits of $m$ are both repdigits; this is OEIS A201060, which begins $0,1,\dots,9,11,22,33,111,222,1111,11111,\dots$.
+We prove the conjecture recorded in the entry by J.~Krizek (2011) that $a(n)$ is a repunit for every $n\ge16$; equivalently, $d^k$ is not a repdigit when $2\le d\le9$ and $k\ge4$.
+The result is not new in substance: it follows at once from Obl\'ath's theorem (1956) on perfect powers with all digits equal to some $a\ne1$, together with the result of Bugeaud and Mignotte (1999) that no decimal repunit with at least two digits is a perfect power; the OEIS entry nevertheless still lists it as a conjecture.
+We give a short elementary proof, using divisibility by $16$ for even $d$ and residues modulo $100$ for odd $d$, and, to our knowledge, the first formal proof: it is verified in Lean~4 with Mathlib against a statement that math0 formalized from the OEIS entry, reviewed for fidelity and frozen before any proof attempt, whose definitions are checked by the kernel against all $31$ listed terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+A \emph{repdigit} is a natural number whose decimal digits are all equal, such as $7$, $44$ or $333$; following A010785 \cite{A010785}, $0$ is a repdigit. The \emph{repunits} are the repdigits $R_k=(10^k-1)/9$ whose digits are all $1$ (A002275 \cite{A002275}), and the \emph{digital product} $\dprod(m)$ of $m$ is the product of its decimal digits (A007954 \cite{A007954}).
+The OEIS entry A201060 \cite{A201060}, created by Jaroslav Krizek on November~26, 2011, lists the repdigits with repdigit digital product:
+\[
+0,1,2,3,4,5,6,7,8,9,11,22,33,111,222,1111,11111,111111,\dots,1111111111111111111
+\]
+(offset $1$, $31$ listed terms). Its comment section contains the conjecture that $a(n)$ is a repunit for $n\ge16$ (quoted in Section~\ref{sec:statement}). We prove it (Theorem~\ref{thm:main}).
+
+A repdigit with $k\ge1$ digits all equal to $d\in\{1,\dots,9\}$ has digital product $d^k$. Every repunit is therefore a term, and since $a(16)=1111$, the conjecture says that no repdigit with $k\ge4$ digits all equal to some $d\in\{2,\dots,9\}$ is a term, that is,
+\begin{equation}\label{eq:reform}
+  d^k \text{ is not a repdigit whenever } 2\le d\le 9 \text{ and } k\ge 4 .
+\end{equation}
+
+\subsection*{Prior work and status}
+Statement~\eqref{eq:reform} is a special case of classical results on perfect powers with identical digits, and we do not claim it as new.
+Obl\'ath \cite{Obl56} proved that the only perfect powers all of whose decimal digits are equal to some fixed digit $a\ne1$ are $4$, $8$ and $9$; we rely on the restatement of this result by Kihel and Luca \cite[Introduction]{KL05} (see also Gica and Panaitopol \cite{GP03}, who describe Obl\'ath's work as almost entirely solving the problem of finding all perfect powers with equal digits).
+The remaining case, of repunits, is covered by the work of Bugeaud and Mignotte \cite{BM99}: as Kihel and Luca note \cite[Introduction]{KL05}, thanks to their results the only solutions of $(x^n-1)/(x-1)=y^q$ in integers $n\ge3$, $y\ge2$, $q\ge2$ with base $2\le x\le10$ are $(3^5-1)/2=11^2$ and $(7^4-1)/6=20^2$ (the list in \cite{KL05} also contains $(18^3-1)/17=7^3$, whose base lies outside this range). None of them has $x=10$, so no decimal repunit $R_n$ with $n\ge3$ is a perfect power; $R_2=11$ is not one either.
+Together, these results say that no repdigit $N\ge10$ is a perfect power. For $2\le d\le9$ and $k\ge4$ the number $d^k\ge16$ is a perfect power, and \eqref{eq:reform} follows.
+The OEIS entry, in revision \#11 of March~30, 2012, still records the statement as a conjecture, and neither it nor the two entries it cross-references (A201061 and A201064, also by Krizek) mention a proof. The math0 referees found no source that discusses A201060 by name, and the statement is not among those of the formal-conjectures repository \cite{FC}.
+We therefore classify our result as the first formal proof, to our knowledge, of a known result.
+
+\subsection*{Method}
+Because the base $d$ of the power in \eqref{eq:reform} is a single digit, the deep results above are not needed, and our proof uses only congruences. A positive repdigit is $eR_j$ with $1\le e\le9$ and $R_j$ odd, so it is never divisible by $16$; this excludes even $d$. A repdigit $N\ge10$ ends in the two digits $ee$, so $N\bmod 100=11e$ is a multiple of $11$, whereas the powers of $3$, $5$, $7$ and $9$ modulo $100$ never are; this excludes odd $d$.
+The Lean proof follows exactly this route (Section~\ref{sec:proof}).
+
+\section{Statement}\label{sec:statement}
+
+\begin{definition}\label{def:main}
+For $m\in\N$ let $\delta(m)$ be the (possibly empty) sequence of decimal digits of $m$; thus $\delta(0)$ is empty. Call $m$ a \emph{repdigit} if all entries of $\delta(m)$ are equal, and a \emph{repunit} if all entries of $\delta(m)$ equal $1$. Let $\dprod(0)=0$ and, for $m\ge1$, let $\dprod(m)$ be the product of the entries of $\delta(m)$. Let $S=\{m\in\N: m \text{ and } \dprod(m) \text{ are repdigits}\}$, and let $a(1)<a(2)<\cdots$ be the elements of $S$ in increasing order.
+\end{definition}
+
+The set $S$ is infinite, since it contains every repunit $R_k$ ($k\ge1$), whose digital product is $1$; so $a(n)$ is defined for every $n\ge1$.
+The comment section of A201060 \cite{A201060} contains, verbatim:
+\begin{quote}
+{\small\texttt{Conjecture: a(n) is repunit for n >= 16.}}
+\end{quote}
+The entry gives no date for this comment; the entry itself is credited to Jaroslav Krizek, November~26, 2011.
+
+\begin{theorem}\label{thm:main}
+For every $n\ge16$, $a(n)$ is a repunit.
+\end{theorem}
+
+\begin{remark}\label{rem:closed}
+Combined with the listed data, Theorem~\ref{thm:main} determines the sequence: the terms below $1111$ are $a(1),\dots,a(15)=0,1,\dots,9,11,22,33,111,222$, and every repunit $R_k$ with $k\ge4$ is a term, so $a(n)=R_{n-12}=(10^{n-12}-1)/9$ for all $n\ge16$. This closed form is not stated as a separate Lean declaration; its ingredients are Theorem~\ref{thm:main}, Lemma~\ref{lem:seq} and the fact that every repunit is a term.
+\end{remark}
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in the file \path{lean/Math0/Statements/OEIS/A201060.lean}, and was reviewed for fidelity and frozen (SHA-256 \texttt{902fc983\ldots 2af72b}) before any proof attempt. Its definitions and the statement read as follows (verbatim; the copyright header, the import, the module docstring, section headers, docstrings, blank lines, the two decidability instances, the auxiliary definitions \decl{rep}, \decl{repList} and \decl{listed}, and all theorems are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A201060
+def IsRepdigit (m : ℕ) : Prop := ∀ x ∈ Nat.digits 10 m, ∀ y ∈ Nat.digits 10 m, x = y
+def digitProd (m : ℕ) : ℕ := if m = 0 then 0 else (Nat.digits 10 m).prod
+def IsTerm (m : ℕ) : Prop := IsRepdigit m ∧ IsRepdigit (digitProd m)
+noncomputable def a (n : ℕ) : ℕ := Nat.nth IsTerm (n - 1)
+def IsRepunit (m : ℕ) : Prop := ∀ d ∈ Nat.digits 10 m, d = 1
+def statement : Prop := ∀ n : ℕ, 16 ≤ n → IsRepunit (a n)
+end Math0.Statements.A201060
+\end{lstlisting}
+Here \texttt{Nat.digits 10 m} is the list $\delta(m)$ of decimal digits of $m$, least significant first, with \texttt{Nat.digits 10 0 = []}; so \decl{IsRepdigit}, \decl{IsRepunit} and \decl{digitProd} are the notions of Definition~\ref{def:main}, and $0$ is a repdigit, as in A010785 and in the entry ($a(1)=0$). The convention $\dprod(0)=0$ follows A007954; the empty product $1$ would give the same sequence, since $0$ and $1$ are both repdigits. \decl{IsRepunit} also holds for $0$ (as A002275 includes $R_0=0$), which is irrelevant here because $a(n)\ge a(16)=1111$ for $n\ge16$.
+\texttt{Nat.nth p k} is the $k$-th element, counting from $0$, of $\{m: p(m)\}$ in increasing order, so \decl{a} is the sequence of Definition~\ref{def:main} with the entry's offset $1$. When the set is infinite, \texttt{Nat.nth p} is strictly increasing and enumerates the whole set; the statement file proves that $S$ is infinite. The statement keeps the entry's range $n\ge16$ and adds no hypotheses.
+
+To compare the definitions with the OEIS data, the statement file introduces $\rep(d,k)=\sum_{i<k}d\cdot10^i$ (in Lean \texttt{rep d k = Nat.ofDigits 10 (List.replicate k d)}), the number with $k$ digits all equal to $d$, and proves, among others, the following lemmas (statements shown verbatim, docstrings and proofs omitted):
+\begin{lstlisting}
+theorem digits_rep {d : ℕ} (hd1 : 1 ≤ d) (hd9 : d ≤ 9) (k : ℕ) :
+    Nat.digits 10 (rep d k) = List.replicate k d
+theorem isRepdigit_iff_mem_repList {L m : ℕ} (hm : m < 10 ^ L) :
+    IsRepdigit m ↔ m ∈ repList L
+theorem infinite_isTerm : (Set.ofPred IsTerm).Infinite
+theorem a_data : (List.range 31).map (fun i => a (i + 1)) =
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 22, 33, 111, 222, 1111, 11111, 111111, 1111111, 11111111,
+      111111111, 1111111111, 11111111111, 111111111111, 1111111111111, 11111111111111,
+      111111111111111, 1111111111111111, 11111111111111111, 111111111111111111,
+      1111111111111111111]
+\end{lstlisting}
+Here \texttt{repList L} is the explicit list consisting of $0$ and the numbers $\rep(d,k)$ with $1\le d\le9$, $1\le k\le L$; so \decl{isRepdigit_iff_mem_repList} says that the repdigits below $10^L$ are exactly $0$ and these numbers.
+The theorem \decl{a_data} checks all $31$ listed terms. Its proof does not enumerate the numbers below $10^{19}$. Instead, the kernel filters the $1+9\cdot19=172$ elements of \texttt{repList 19} by the condition ``$\dprod(m)$ is a repdigit'' and checks that the result is the list of the $31$ listed terms, that every element of \texttt{repList 19} is below $10^{19}$, and that the listed terms are strictly increasing (three proofs by \texttt{decide +kernel}). By \decl{isRepdigit_iff_mem_repList} with $L=19$, the terms below $10^{19}$ and the listed terms then have the same elements; both lists are strictly increasing, so they are equal, and a general lemma (\decl{map_nth_eq_of_filter}) converts the statement about the sorted list of terms below $10^{19}$ into the values \texttt{Nat.nth IsTerm i} for $i<31$.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A201060.lean}; the name of the corresponding Lean declaration is given with each step. We write $\rep(e,j)$ as above and $R_j=\rep(1,j)$.
+
+\begin{lemma}[\decl{digits_rep}, \decl{rep_succ}, \decl{rep_eq_mul}, \decl{odd_rep_one}]\label{lem:rep}
+For all $e,j\in\N$:
+\begin{enumerate}
+\item if $1\le e\le9$, the decimal digits of $\rep(e,j)$ are $j$ copies of $e$;
+\item $\rep(e,j+1)=e+10\,\rep(e,j)$;
+\item $\rep(e,j)=e\,R_j$;
+\item $R_{j+1}$ is odd.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) holds because the digit list $(e,\dots,e)$ consists of digits less than $10$ and has a nonzero last (leading) entry, so it is the digit list of the number it represents. (2) is the definition of $\rep$ via \texttt{Nat.ofDigits}. (3) follows from (2) by induction on $j$, with $\rep(e,0)=0$. By (2), $R_{j+1}=1+10R_j=2\cdot5R_j+1$, which gives (4).
+\end{proof}
+
+\begin{lemma}[\decl{isRepdigit_iff_mem_repList}, \decl{repdigit_eq}]\label{lem:shape}
+Every repdigit $N\ge1$ equals $\rep(e,j)$ for some $1\le e\le9$ and $j\ge1$.
+\end{lemma}
+
+\begin{proof}
+Since $N\ge1$, its digit list is nonempty; let $e$ be its first entry and $j\ge1$ its length. All entries equal $e$, so $N=\rep(e,j)$. Moreover $e\le9$ because $e$ is a digit, and $e\ge1$ because the last (leading) digit of a positive number is nonzero. In Lean this is the forward direction of \decl{isRepdigit_iff_mem_repList}, applied with $L=N$ (using $N<10^N$).
+\end{proof}
+
+\begin{lemma}[\decl{repdigit_not_dvd_sixteen}]\label{lem:16}
+No repdigit $N\ge1$ is divisible by $16$.
+\end{lemma}
+
+\begin{proof}
+By Lemmas~\ref{lem:shape} and~\ref{lem:rep}(3), $N=e\,R_j$ with $1\le e\le9$ and $j\ge1$. By Lemma~\ref{lem:rep}(4), $R_j$ is odd, so it is coprime to $2$ and hence to $16=2^4$. If $16\mid eR_j$, then $16\mid e$, which forces $16\le e$ since $e\ge1$; this contradicts $e\le9$.
+\end{proof}
+
+\begin{lemma}[\decl{repdigit_mod_hundred}]\label{lem:100}
+If $N\ge10$ is a repdigit, then $N\bmod 100$ is divisible by $11$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:shape}, $N=\rep(e,j)$ with $1\le e\le9$ and $j\ge1$. If $j=1$ then $N=e\le9$, which is excluded; so $j=i+2$ for some $i\ge0$, and Lemma~\ref{lem:rep}(2), applied twice, gives
+\[
+  N=e+10\bigl(e+10\,\rep(e,i)\bigr)=11e+100\,\rep(e,i).
+\]
+Since $11e\le99$, we get $N\bmod100=11e$, which is divisible by $11$.
+\end{proof}
+
+\begin{lemma}[\decl{pow_mod_mem}]\label{lem:orbit}
+Let $D\in\N$ and let $T$ be a finite set of natural numbers with $1\in T$ and $(tD)\bmod100\in T$ for every $t\in T$. Then $D^K\bmod 100\in T$ for every $K\ge0$.
+\end{lemma}
+
+\begin{proof}
+Induction on $K$: $D^0\bmod100=1\in T$, and $D^{K+1}\bmod100=\bigl((D^K\bmod100)\cdot D\bigr)\bmod100$, which lies in $T$ by the hypothesis applied to $t=D^K\bmod100\in T$.
+\end{proof}
+
+The two residue sets used are
+\begin{align*}
+T_3&=\{1,3,9,27,81,43,29,87,61,83,49,47,41,23,69,7,21,63,89,67\},\\
+T_5&=\{1,5,25\}.
+\end{align*}
+$T_3$ is the set of the $20$ residues of $3^0,\dots,3^{19}$ modulo $100$, listed in this order; it is the subgroup of $(\mathbb{Z}/100\mathbb{Z})^\times$ generated by $3$, which contains $7\equiv3^{15}$ and $9=3^2$. In Lean, $T_3$ and $T_5$ are the lists \decl{T3} and \decl{T5}, and the facts needed about them are finite checks:
+
+\begin{lemma}[finite checks, \texttt{decide}]\label{lem:tables}
+The following hold.
+\begin{enumerate}
+\item $1\in T_3$, and $(3t)\bmod100$, $(7t)\bmod100$ and $(9t)\bmod100$ lie in $T_3$ for every $t\in T_3$.
+\item $1\in T_5$, and $(5t)\bmod100\in T_5$ for every $t\in T_5$.
+\item No element of $T_3\cup T_5$ is divisible by $11$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Direct computation. For (3), the residues modulo $11$ of the elements of $T_3$ lie in $\{1,3,4,\dots,10\}$, and $1,5,25\equiv1,5,3\pmod{11}$. In Lean each of the twelve membership and divisibility claims (three for each of $D=3,5,7,9$) is closed by \texttt{decide}, which evaluates the corresponding decision procedure on these explicit lists in the kernel.
+\end{proof}
+
+\begin{lemma}[\decl{not_repdigit_even}, \decl{not_repdigit_odd}, \decl{not_repdigit_pow}]\label{lem:pow}
+If $2\le D\le9$ and $K\ge4$, then $D^K$ is not a repdigit.
+\end{lemma}
+
+\begin{proof}
+First, $D^K\ge2^K\ge2^4=16\ge10$. The proof splits into the eight values of $D$ (\texttt{interval\_cases}).
+
+\emph{$D\in\{2,4,6,8\}$.} Since $2\mid D$ and $K\ge4$, we have $16=2^4\mid 2^K\mid D^K$. As $D^K\ge1$, Lemma~\ref{lem:16} shows that $D^K$ is not a repdigit.
+
+\emph{$D\in\{3,5,7,9\}$.} Let $T=T_5$ if $D=5$ and $T=T_3$ otherwise. By Lemmas~\ref{lem:tables}(1),(2) and~\ref{lem:orbit}, $D^K\bmod100\in T$, so by Lemma~\ref{lem:tables}(3), $D^K\bmod100$ is not divisible by $11$. Since $D^K\ge10$, Lemma~\ref{lem:100} shows that $D^K$ is not a repdigit.
+\end{proof}
+
+\begin{remark}
+The congruence modulo $100$ alone does not suffice for even $D$: for instance $2^{18}=262144\equiv44$ and $2^{19}=524288\equiv88\pmod{100}$, so the last two digits of a power of $2$ can agree. This is why the even case uses divisibility by $16$ instead.
+\end{remark}
+
+\begin{lemma}[\decl{isRepunit_of_isTerm}]\label{lem:term}
+Every $m\in S$ with $m\ge1111$ is a repunit.
+\end{lemma}
+
+\begin{proof}
+Since $m$ is a repdigit and $m\ge1$, Lemma~\ref{lem:shape} gives $m=\rep(e,j)$ with $1\le e\le9$ and $j\ge1$. By Lemma~\ref{lem:rep}(1), $m$ has exactly $j$ digits, so $m<10^j$; as $m\ge1111\ge10^3$, this forces $j\ge4$. If $e=1$, all digits of $m$ equal $1$ and $m$ is a repunit. Otherwise $2\le e\le9$, and by Lemma~\ref{lem:rep}(1) the digital product of $m$ is $e^j$, which is a repdigit because $m\in S$. This contradicts Lemma~\ref{lem:pow} with $D=e$, $K=j\ge4$.
+\end{proof}
+
+\begin{lemma}[\decl{infinite_isTerm}, \decl{a_data}, \decl{a_sixteen}]\label{lem:seq}
+The set $S$ is infinite, and $a(16)=1111$.
+\end{lemma}
+
+\begin{proof}
+For every $B$, the repunit $R_{B+1}$ lies in $S$ (its digital product is $1$) and satisfies $R_{B+1}\ge10^B>B$; so $S$ is unbounded, hence infinite. The value $a(16)=1111$ is the sixteenth entry of \decl{a_data} (Section~\ref{sec:statement}).
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $n\ge16$. Since $S$ is infinite (Lemma~\ref{lem:seq}), $a(n)$, the element of $S$ with index $n-1$ counting from $0$, lies in $S$ (\texttt{Nat.nth\_mem\_of\_infinite}); and \texttt{Nat.nth} is monotone for an infinite set (\texttt{Nat.nth\_monotone}), so $a(n)\ge a(16)=1111$ because $n-1\ge15$. By Lemma~\ref{lem:term}, $a(n)$ is a repunit.
+\end{proof}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is the file \path{lean/Math0/Frontier/OEIS/A201060.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A201060.lean} (Section~\ref{sec:statement}) and the audit commands of \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A201060.result}, of type \decl{Math0.Statements.A201060.statement}; the auxiliary declarations named in Section~\ref{sec:proof} are private to the proof file, except \decl{digits_rep}, \decl{isRepdigit_iff_mem_repList}, \decl{infinite_isTerm} and \decl{a_data}, which come from the statement file (together with \decl{mem_repList}). The residue tables and the end of the proof file read, verbatim (docstrings, blank lines and all other declarations omitted):
+\begin{lstlisting}
+private def T3 : List ℕ :=
+  [1, 3, 9, 27, 81, 43, 29, 87, 61, 83, 49, 47, 41, 23, 69, 7, 21, 63, 89, 67]
+private def T5 : List ℕ := [1, 5, 25]
+theorem result : statement := by
+  intro n hn
+  have hterm : IsTerm (a n) := Nat.nth_mem_of_infinite infinite_isTerm (n - 1)
+  have hge : 1111 ≤ a n := by
+    rw [← a_sixteen]
+    exact Nat.nth_monotone infinite_isTerm (by omega)
+  exact isRepunit_of_isTerm hterm hge
+end Math0.Frontier.A201060
+#math0_settles Math0.Frontier.A201060.result Math0.Statements.A201060.statement
+\end{lstlisting}
+The proof file contains no \texttt{sorry}, \texttt{native\_decide}, \texttt{axiom} or \texttt{set\_option}; its finite checks (Lemma~\ref{lem:tables}) use \texttt{decide}, and the data lemmas of the statement file use \texttt{decide +kernel}. Both evaluate decision procedures in the Lean kernel and add no axioms.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (rejecting \decl{sorryAx}, the axioms introduced by \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically the constant \decl{statement} or its negation, up to metadata, with no unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A201060.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A201060.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A201060.result' proves 'Math0.Statements.A201060.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. With the dependencies built, the single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A201060.lean} in the directory \path{lean}; this prints the three audit lines above.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{BM99}
+Y.~Bugeaud and M.~Mignotte, \emph{On integers with identical digits}, Mathematika \textbf{46} (1999), 411--417.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{GP03}
+A.~Gica and L.~Panaitopol, \emph{On Obl\'ath's problem}, J. Integer Seq.\ \textbf{6} (2003), Article~03.3.5.
+
+\bibitem{KL05}
+O.~Kihel and F.~Luca, \emph{Perfect powers with all equal digits but one}, J. Integer Seq.\ \textbf{8} (2005), Article~05.5.7, \url{https://cs.uwaterloo.ca/journals/JIS/VOL8/Kihel/kihel7.html}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput.\ Sci.\ \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Obl56}
+R.~Obl\'ath, \emph{Une propri\'et\'e des puissances parfaites}, Mathesis \textbf{65} (1956), 356--364.
+
+\bibitem{A002275}
+The OEIS Foundation Inc., \url{https://oeis.org/A002275}, \emph{Repunits: $(10^n-1)/9$}, entry by N.~J.~A. Sloane.
+
+\bibitem{A007954}
+The OEIS Foundation Inc., \url{https://oeis.org/A007954}, \emph{Product of decimal digits of $n$}, entry by R.~Muller.
+
+\bibitem{A010785}
+The OEIS Foundation Inc., \url{https://oeis.org/A010785}, \emph{Repdigit numbers, or numbers whose digits are all equal}, entry by N.~J.~A. Sloane.
+
+\bibitem{A201060}
+The OEIS Foundation Inc., \url{https://oeis.org/A201060}, \emph{Repdigit numbers with repdigit digital product}, entry by J.~Krizek (Nov.~26, 2011); revision \#11, Mar.~30, 2012.
+
+\end{thebibliography}
+}
+\end{document}

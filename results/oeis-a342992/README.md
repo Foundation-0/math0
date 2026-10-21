@@ -28,6 +28,10 @@ Closest prior material:
 
 The result is elementary and folklore-adjacent, but no source states or proves it for prime digits or for digits {2,3}.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

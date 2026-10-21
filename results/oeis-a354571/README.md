@@ -24,6 +24,10 @@ Referees: No prior resolution found.
 - Web searches (arXiv, MathOverflow, Math.SE, SeqFan) found no proof or counterexample.
 - The underlying asymptotic is a standard consequence of Wiener–Ikehara/Delange applied to (1-2^-s)zeta(s)/L(s,chi4), using L(1,chi4) = pi/4. D. N. Lehmer (Amer. J. Math. 22, 1900) treats similar Pythagorean counting asymptotics, but not this restricted case.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

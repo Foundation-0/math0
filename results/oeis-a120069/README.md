@@ -37,6 +37,10 @@ Web pages:
 - https://oeis.org/A119951
 - arXiv:0906.4290, "Asymptotics of partial sums of central binomial coefficients and Catalan numbers". Found in search; related, but I did not read it.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

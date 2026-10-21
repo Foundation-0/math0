@@ -29,6 +29,10 @@ Referees: OEIS sources (read from the local mirror and checked against GitHub oe
 
 Web searches (arXiv, Math StackExchange, general) found no paper or post that explicitly proves the A367119 or A367118 conjecture. The general method is the classical Euler-formula and crossing-count argument for chord arrangements (Moser's circle problem; Poonen–Rubinstein, arXiv math/9508209).
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

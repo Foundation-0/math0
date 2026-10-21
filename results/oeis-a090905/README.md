@@ -30,6 +30,10 @@ Referees: I found no prior proof or refutation.
 - The key analytic input is Nagura's theorem (J. Nagura, Proc. Japan Acad. 28 (1952) 177-181: for x >= 25 there is a prime between x and 6x/5). The Lean development reproves the form it needs (a prime in (5x/3, 2x) for x >= 83) from scratch.
 - Searches of arXiv, MathOverflow/MSE, SeqFan-style queries and the formal-conjectures repository found no prior resolution and no prior formalization.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

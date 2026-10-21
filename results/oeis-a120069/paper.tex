@@ -1,0 +1,372 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    noncomputable,private,set,rw,rwa,only},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8, upquote=true,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {ℝ}{{$\mathbb{R}$}}1
+    {∀}{{$\forall$}}1 {∃}{{$\exists$}}1
+    {↔}{{$\leftrightarrow$}}1 {→}{{$\to$}}1 {←}{{$\leftarrow$}}1 {∧}{{$\wedge$}}1
+    {∨}{{$\vee$}}1 {≤}{{$\le$}}1 {≥}{{$\ge$}}1 {²}{{$^2$}}1 {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1
+    {∑}{{$\sum$}}1 {∏}{{$\prod$}}1 {∈}{{$\in$}}1 {⋯}{{$\cdots$}}1
+    {π}{{$\pi$}}1 {·}{{$\cdot$}}1 {…}{{$\dots$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+\newunicodechar{⋯}{\ensuremath{\cdots}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\DeclareMathOperator{\den}{den}
+\newcommand{\E}{\mathrm{E}}
+
+\title[Denominators of partial sums of $C_k/4^{k-1}$]{The denominators of $\sum_{k=1}^{n} C_k/4^{k-1}$: a formally verified proof of the conjectures of Groux and Staunton for OEIS A120069}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 20, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $C_k$ be the Catalan numbers and let $a(n)$ be the denominator, in lowest terms, of $r(n)=\sum_{k=1}^{n}C_k/4^{k-1}$ (OEIS A120069). We prove, for every $n\ge1$, the two formulas recorded as conjectures in the entry: $a(n)=\den\bigl(C_n/4^{n-1}\bigr)$ (Groux, 2010) and $a(n)=2^{\E(n)-2}$, where $\E(n)$ is the minimal-exponent sequence A283208 associated with Vietoris' numbers (Staunton, 2026). The proof is elementary: it combines the closed form $r(n)=4-(2n+1)C_n/4^{n-1}$ with the bound $C_n\le4^{n-1}$, and shows that both sides equal $2^{2n-2-v}$, where $2^v$ is the exact power of $2$ dividing $C_n$. Both formulas also follow quickly from identities already recorded in other OEIS entries (A119951, A120777, A120778, A283208), so we classify the result as a known result receiving its first formal proof, not a new theorem. The proof is verified in Lean~4 with Mathlib against a statement that math0 formalized from the OEIS entry, reviewed for fidelity and frozen before the proof attempt; its definitions are checked by the kernel against all listed terms of A120069 and A283208.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+The sequence A120069 of the OEIS \cite{A120069}, contributed by Wolfdieter Lang on July~20, 2006, lists the denominators of the partial sums
+\[
+  r(n)=\sum_{k=1}^{n}\frac{C_k}{2^{2(k-1)}},\qquad C_k=\frac{1}{k+1}\binom{2k}{k}\ \text{(A000108)},
+\]
+written in lowest terms; the numerators form A119951 \cite{A119951}. The series converges to $4$, and the sequence, with offset $1$, begins
+\[
+  1,\ 2,\ 16,\ 32,\ 128,\ 256,\ 4096,\ 8192,\ 32768,\ 65536,\ \dots;
+\]
+for instance $r(3)=1+\tfrac{2}{4}+\tfrac{5}{16}=\tfrac{29}{16}$. The FORMULA section of the entry contains two conjectures:
+\begin{quote}
+``Conjecture: a(n) = denominator(Catalan(n)/4\textasciicircum{}(n-1)). -{}~Groux Roland, Dec 11 2010''\\
+``Conjecture: a(n) = 2\textasciicircum{}(A283208(n)-2). -{}~Alexander Staunton, Feb 28 2026''
+\end{quote}
+Here A283208 \cite{A283208}, due to I.~Cação, M.~I.~Falcão and H.~Malonek (2017), is defined from Vietoris' numbers $c(2n)=c(2n-1)=(1/2)_n/n!$ \cite{Vie,CFM}: its $n$-th term is the least $e\ge0$ such that $2^{e}\,\frac{2n+1}{n+1}\,c(2n)$ is a nonnegative integer. The current revision of A120069 (\#30, March~10, 2026) still labels both statements as conjectures. We prove both, for every $n\ge1$ (Theorem~\ref{thm:main}).
+
+\subsection*{Prior work and status}
+Neither conjecture is resolved by name in the literature that the math0 referees found (OEIS, arXiv, Mathematics Stack Exchange and MathOverflow, the SeqFan list, general web searches). However, both follow in a few lines from formulas already recorded in related OEIS entries:
+\begin{itemize}
+\item In A120778 \cite{A120778}, Groux himself recorded on January~4, 2011 the closed form $\sum_{k=0}^{n}C_k/4^k=2\bigl(1-\binom{2n+2}{n+1}/4^{n+1}\bigr)$.
+\item In A119951 \cite{A119951}, Pieter Mostert recorded on October~12, 2012 the equivalent closed form $r(n)=4-\binom{2n+2}{n+1}/2^{2n-1}$ for the partial sums of A120069.
+\item The entry A120777 \cite{A120777}, named $a(n)=2^{2n-\nu_2(C_n)}$ since April~16, 2024 (P.~Luschny), records that its terms coincide with the denominators of $\sum_{k=0}^{n}C_k/4^k$, the formula $a(n)=\den\bigl(\binom{2n+2}{n+1}/2^{2n+1}\bigr)$ (J.~W.~Meijer, July~6, 2009), and the formula $a(n)=2^{2n-\mathrm{A048881}(n)}=2^{\mathrm{A283208}(n)}$ (A.~Eldar, April~18, 2024).
+\item A283208 \cite{A283208} itself records that $2^{\mathrm{A283208}(n)}$ is the denominator of $\binom{2n+1}{n+1}/4^{n}$, and the formula $\mathrm{A283208}(n)=\mathrm{A005187}(n+1)-1$ (A.~Zabolotskii, 2021).
+\end{itemize}
+Since $r(n)=4\sum_{k=0}^{n}C_k/4^k-4$, these give $a(n)=\mathrm{A120777}(n)/4=2^{2n-2-\nu_2(C_n)}=2^{\mathrm{A283208}(n)-2}$ for $n\ge1$, which contains both conjectures. The conjecture labels in A120069 are therefore stale, and we do not claim a new theorem: the contribution is a self-contained proof that settles both statements explicitly, and its formal verification in Lean~4, which to our knowledge is the first. The formal-conjectures repository \cite{FC} does not contain these statements; the Lean statement used here was written by math0.
+
+\subsection*{Method}
+The proof follows the Lean proof. The closed form $r(n)=4-(2n+1)C_n/4^{n-1}$ (Lemma~\ref{lem:closed}) reduces both conjectures to the $2$-adic structure of $C_n/4^{n-1}$. Writing $C_n=2^vu$ with $u$ odd, the elementary bound $C_n\le 4^{n-1}$ (Lemma~\ref{lem:bound}) gives $v\le 2n-2$, and this is all that is needed: both sides of each conjecture equal $2^{2n-2-v}$, whatever the value of $v$. In particular Kummer's or Legendre's formula for $\nu_2(C_n)$ is not used (see Remark~\ref{rem:legendre}).
+
+\section{Statement}\label{sec:statement}
+
+Throughout, $C_k=\binom{2k}{k}/(k+1)$, and every rational number is written in lowest terms with positive denominator; $\den q$ denotes that denominator. For $n\ge0$ put
+\[
+  r(n)=\sum_{k=1}^{n}\frac{C_k}{2^{2(k-1)}}\in\Q,\qquad a(n)=\den r(n).
+\]
+For $n\ge1$, $a(n)$ is the $n$-th term of A120069. Let $(x)_n=x(x+1)\cdots(x+n-1)$ be the rising factorial, and put
+\[
+  c(2n)=\frac{(1/2)_n}{n!},\qquad w(n)=\frac{2n+1}{n+1}\,c(2n)\in\Q .
+\]
+Say that $e\in\N$ is \emph{admissible} for $n$ if $2^{e}w(n)\in\N$, and let $\E(n)$ be the least admissible $e$; it exists because $e=2n$ is admissible (Lemma~\ref{lem:vietoris}). Then $\E(n)$ is the $n$-th term of A283208 (offset $0$).
+
+\begin{theorem}\label{thm:main}
+For every integer $n\ge1$,
+\[
+  \text{(Groux)}\quad a(n)=\den\Bigl(\frac{C_n}{4^{\,n-1}}\Bigr)
+  \qquad\text{and}\qquad
+  \text{(Staunton)}\quad a(n)=2^{\E(n)-2},
+\]
+where in Staunton's formula the exponent $\E(n)-2$ is taken in $\Z$ and the power is computed in $\Q$.
+\end{theorem}
+
+Theorem~\ref{thm:main} is exactly the formal statement displayed below. Its proof (Section~\ref{sec:proof}) establishes a little more along the way: if $C_n=2^{v}u$ with $u$ odd, then $v\le 2n-2$, $a(n)=\den(C_n/4^{n-1})=2^{2n-2-v}$ and $\E(n)=2n-v$; in particular $\E(n)-2\ge0$ for $n\ge1$. These intermediate facts are proved inside the Lean proof but are not part of the formal statement. For example, $C_3=5$ gives $v=0$, $a(3)=2^4=16$ and $\E(3)=6$; $C_2=2$ gives $v=1$, $a(2)=2$ and $\E(2)=3$.
+
+\subsection*{The Lean statement}
+The statement was formalized by math0 in the file \path{lean/Math0/Statements/OEIS/A120069.lean}, reviewed for fidelity against the OEIS entries, and frozen (SHA-256 \texttt{9c2a2c60\ldots26485}) before any proof attempt. The definitions entering the statement, and the statement itself, read verbatim as follows (the auxiliary lemmas \decl{exists_natCast_iff} and \decl{isNatExp_two_mul} that they use, and the other lemmas and data checks of the file, are omitted):
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+/-- The partial sum `r(n) = ∑_{k=1}^{n} C(k)/2^(2(k-1))`, `C(k)` the Catalan numbers (A000108),
+computed exactly in `ℚ`. -/
+def r (n : ℕ) : ℚ := ∑ k ∈ Finset.Icc 1 n, (catalan k : ℚ) / 2 ^ (2 * (k - 1))
+
+/-- A120069 (offset `1`): `a(n)` is the denominator of `r(n) = ∑_{k=1}^{n} C(k)/2^(2(k-1))`
+(in lowest terms). -/
+def a (n : ℕ) : ℕ := (r n).den
+
+/-- The rising factorial (Pochhammer symbol) `(x)_n = x (x+1) ⋯ (x+n-1)`. -/
+def pochhammer (x : ℚ) (n : ℕ) : ℚ := ∏ i ∈ Finset.range n, (x + i)
+
+/-- Vietoris' number `c(2n) = c(2n-1) = Pochhammer(1/2, n)/n!`. -/
+def vietoris (n : ℕ) : ℚ := pochhammer (1 / 2) n / (n.factorial : ℚ)
+
+/-- `(2n+1)/(n+1) · c(2n)`. -/
+def w (n : ℕ) : ℚ := (2 * n + 1) / (n + 1) * vietoris n
+
+/-- `2^e · (2n+1)/(n+1) · c(2n)` is a nonnegative integer. -/
+def IsNatExp (n e : ℕ) : Prop := ∃ m : ℕ, (2 : ℚ) ^ e * w n = m
+
+instance (n : ℕ) : DecidablePred (IsNatExp n) := fun e =>
+  decidable_of_iff _ (exists_natCast_iff ((2 : ℚ) ^ e * w n)).symm
+
+/-- A283208 (offset `0`): the least nonnegative integer `e` such that `2^e (2n+1)/(n+1) c(2n)`
+is a nonnegative integer, `c(2n) = Pochhammer(1/2, n)/n!`. -/
+def A283208 (n : ℕ) : ℕ := Nat.find ⟨2 * n, isNatExp_two_mul n⟩
+
+/-- Conjectures (Groux 2010, Staunton 2026, A120069): for every `n ≥ 1`,
+`a(n) = denominator(Catalan(n)/4^(n-1))` and `a(n) = 2^(A283208(n) - 2)`. -/
+def statement : Prop :=
+  ∀ n : ℕ, 1 ≤ n →
+    a n = ((catalan n : ℚ) / 4 ^ (n - 1)).den ∧
+      (a n : ℚ) = (2 : ℚ) ^ ((A283208 n : ℤ) - 2)
+\end{lstlisting}
+All declarations are in the namespace \decl{Math0.Statements.A120069}.
+
+\subsection*{How the Lean definitions encode the entries}
+\code{catalan} is Mathlib's Catalan sequence. \code{r n} is $r(n)$, computed in $\Q$; since $k\ge1$ in the sum, the natural subtraction $k-1$ is exact. Mathlib's rationals are normalized (coprime numerator and denominator, positive denominator), so \code{a n = (r n).den} is ``the denominator of $r(n)$ in lowest terms''; the value \code{a 0} $=1$ is not a term of the sequence and is not used. \code{pochhammer x n} is $(x)_n$, and the file proves it equal to Mathlib's \decl{ascPochhammer} (\decl{pochhammer_eq_ascPochhammer}). \code{vietoris n} is $c(2n)$ and \code{w n} is $w(n)$, with division in $\Q$. \code{IsNatExp n e} says literally that $2^e w(n)$ equals a natural number; it is decided through the equivalence $(\exists m\in\N,\ q=m)\iff \den q=1\wedge q\ge0$ (\decl{exists_natCast_iff}). \code{A283208 n} is the least such $e$ (\decl{Nat.find}), the witness $e=2n$ being \decl{isNatExp_two_mul}. This follows the definition of A283208 in its COMMENTS section, not one of its formulas. Finally, \code{statement} is the conjunction of the two conjectures for all $n\ge1$; in Groux's formula $n-1$ is exact because $n\ge1$, and Staunton's formula is stated in $\Q$ with the integer exponent $(\E(n):\Z)-2$ (\code{zpow}), so no truncated subtraction occurs.
+
+The file checks the definitions against the data of the entries, by kernel evaluation (\texttt{decide +kernel}, no \texttt{native\_decide}):
+\begin{itemize}
+\item \decl{a_data}: $a(1),\dots,a(27)$ are the $27$ terms listed in A120069, from $1$ to $1125899906842624$. For the evaluation, \code{catalan} is replaced by \code{catFast}, defined by $\mathrm{catFast}(0)=1$ and $\mathrm{catFast}(k+1)=\lfloor \mathrm{catFast}(k)\cdot2(2k+1)/(k+2)\rfloor$, which is proved equal to \code{catalan} (\decl{catFast_eq}) using the recursion of Lemma~\ref{lem:rec} below, where the division is exact.
+\item \decl{A283208_data}: $\E(0),\dots,\E(62)$ are the $63$ terms listed in A283208, from $0$ to $119$. Each value $v$ is certified by the Boolean check that $v$ is admissible and that $v=0$ or $v-1$ is not admissible; since admissibility is upward closed (Lemma~\ref{lem:admissible}), this certifies that $v$ is the least admissible exponent (\decl{A283208_eq_of_check}).
+\end{itemize}
+
+\section{Proof}\label{sec:proof}
+
+We follow the Lean proof. Lemmas~\ref{lem:rec} and~\ref{lem:admissible}, and Lemma~\ref{lem:vietoris} except for the formula for $w(n)$, are proved in the statement file; the remaining statements are private lemmas of the proof file. We use two facts from Mathlib: $(n+1)C_n=\binom{2n}{n}$ (\decl{succ_mul_catalan_eq_centralBinom}) and $(n+1)\binom{2n+2}{n+1}=2(2n+1)\binom{2n}{n}$ (\decl{Nat.succ_mul_centralBinom_succ}). In particular $C_n>0$ for all $n$, since $\binom{2n}{n}>0$ (the private lemma \decl{catalan_ne_zero'}, from Mathlib's \decl{Nat.centralBinom_pos}).
+
+\begin{lemma}[\decl{succ_succ_mul_catalan}]\label{lem:rec}
+For all $k\ge0$, $(k+2)\,C_{k+1}=2(2k+1)\,C_k$.
+\end{lemma}
+
+\begin{proof}
+Multiplying by $k+1$ and using the two facts above,
+$(k+1)(k+2)C_{k+1}=(k+1)\binom{2k+2}{k+1}=2(2k+1)\binom{2k}{k}=(k+1)\cdot2(2k+1)C_k$; cancel $k+1$.
+\end{proof}
+
+\begin{lemma}[\decl{four_pow_mul_vietoris}, \decl{w_eq}, \decl{isNatExp_two_mul}]\label{lem:vietoris}
+For all $n\ge0$, $4^n c(2n)=\binom{2n}{n}$ and $w(n)=(2n+1)\,C_n/4^n$. In particular $4^n w(n)=(2n+1)C_n\in\N$, so $e=2n$ is admissible for $n$.
+\end{lemma}
+
+\begin{proof}
+Induction on $n$; for $n=0$ both sides equal $1$. Since $(1/2)_{n+1}=(1/2)_n\,(n+\tfrac12)$,
+\[
+  4^{n+1}c(2n+2)=4\cdot4^n c(2n)\cdot\frac{n+\frac12}{n+1}=\frac{2(2n+1)}{n+1}\binom{2n}{n}=\binom{2n+2}{n+1}.
+\]
+Then $w(n)=\frac{2n+1}{n+1}\binom{2n}{n}4^{-n}=(2n+1)C_n/4^n$. (In the statement file the witness for $e=2n$ is written $(2n+1)\cdot\bigl(\binom{2n}{n}/(n+1)\bigr)$, using $(n+1)\mid\binom{2n}{n}$.)
+\end{proof}
+
+\begin{lemma}[\decl{isNatExp_mono}, \decl{A283208_eq_of}]\label{lem:admissible}
+If $e$ is admissible for $n$, so is every $f\ge e$. Consequently, if $v$ is admissible for $n$ and either $v=0$ or $v-1$ is not admissible, then $\E(n)=v$.
+\end{lemma}
+
+\begin{proof}
+If $2^{e}w(n)=m\in\N$ then $2^{e+1}w(n)=2m\in\N$; induct. For the second claim, $\E(n)\le v$ by minimality. If $\E(n)<v$, then $v\ge1$ and $\E(n)\le v-1$, so $v-1$ would be admissible by the first claim.
+\end{proof}
+
+\begin{lemma}[closed form; \decl{r_succ_closed}]\label{lem:closed}
+For all $m\ge0$,
+\[
+  r(m+1)=4-\frac{(2m+3)\,C_{m+1}}{4^{m}} .
+\]
+Equivalently, $r(n)=4-(2n+1)C_n/4^{n-1}$ for $n\ge1$.
+\end{lemma}
+
+\begin{proof}
+Induction on $m$. For $m=0$, $r(1)=C_1=1=4-3$. Assume the formula for $m$. Since $2^{2(m+1)}=4^{m+1}$,
+\[
+  r(m+2)=r(m+1)+\frac{C_{m+2}}{4^{m+1}}=4-\frac{4(2m+3)C_{m+1}-C_{m+2}}{4^{m+1}},
+\]
+and we must show that the last numerator equals $(2m+5)C_{m+2}$, that is, $4(2m+3)C_{m+1}=2(m+3)C_{m+2}$. This is twice Lemma~\ref{lem:rec} with $k=m+1$.
+\end{proof}
+
+\begin{lemma}[\decl{catalan_succ_le}]\label{lem:bound}
+For all $m\ge0$, $C_{m+1}\le 4^{m}$.
+\end{lemma}
+
+\begin{proof}
+Induction on $m$; $C_1=1$. If $C_{m+1}\le4^m$, then by Lemma~\ref{lem:rec},
+$(m+3)C_{m+2}=2(2m+3)C_{m+1}\le(4m+6)\,4^m\le(4m+12)\,4^m=(m+3)\,4^{m+1}$; divide by $m+3$.
+\end{proof}
+
+\begin{lemma}[\decl{den_odd_div_two_pow}]\label{lem:den}
+If $u\in\N$ is odd and $k\in\N$, then $\den(u/2^{k})=2^{k}$.
+\end{lemma}
+
+\begin{proof}
+$u$ and $2^k$ are coprime and $2^k>0$, so $u/2^k$ is already in lowest terms (Mathlib's \decl{Rat.den_div_eq_of_coprime}).
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main} (\code{result})]
+Let $n\ge1$ and write $n=m+1$. Since $C_{m+1}\ne0$, write $C_{m+1}=2^{v}u$ with $u$ odd (Mathlib's \decl{Nat.exists_eq_two_pow_mul_odd}).
+
+\emph{The exponent.} By Lemma~\ref{lem:bound}, $2^{v}\le 2^vu=C_{m+1}\le 4^m=2^{2m}$, so $v\le 2m$. Hence $4^m=2^{2m-v}\,2^{v}$ and
+\begin{equation}\label{eq:key}
+  \frac{C_{m+1}}{4^{m}}=\frac{u}{2^{\,2m-v}} .
+\end{equation}
+
+\emph{The denominator $a(n)$.} The number $N=(2m+3)u$ is odd. By Lemma~\ref{lem:closed} and \eqref{eq:key},
+\[
+  r(m+1)=4-\frac{N}{2^{\,2m-v}} .
+\]
+Subtracting a rational number from an integer does not change its denominator (Mathlib's \decl{Rat.ofNat_sub_den}), so by Lemma~\ref{lem:den}, $a(m+1)=\den\bigl(N/2^{2m-v}\bigr)=2^{2m-v}$.
+
+\emph{Groux's formula.} By \eqref{eq:key} and Lemma~\ref{lem:den}, $\den\bigl(C_n/4^{n-1}\bigr)=\den\bigl(u/2^{2m-v}\bigr)=2^{2m-v}=a(n)$.
+
+\emph{The value of $\E(n)$.} By Lemma~\ref{lem:vietoris} and $4^{m+1}=2^{2m-v+2}\,2^{v}$,
+\[
+  w(m+1)=\frac{(2m+3)\,C_{m+1}}{4^{m+1}}=\frac{N}{2^{\,2m-v+2}} .
+\]
+The exponent $e=2m+2-v=(2m-v)+2$ is admissible, because $2^{e}w(m+1)=N\in\N$. The exponent $e-1=(2m-v)+1$ is not: if $2^{e-1}w(m+1)=N/2$ were equal to some $k\in\N$, then $N=2k$ would be even. By Lemma~\ref{lem:admissible}, $\E(m+1)=2m+2-v$.
+
+\emph{Staunton's formula.} In $\Z$, $\E(n)-2=2m-v\ge0$, so $2^{\E(n)-2}=2^{2m-v}=a(n)$ in $\Q$.
+
+With $m=n-1$, the exponents are $2m-v=2n-2-v$ and $\E(n)=2n-v$, as stated after Theorem~\ref{thm:main}.
+\end{proof}
+
+\begin{remark}[not formalized]\label{rem:legendre}
+The proof never determines $v=\nu_2(C_n)$: both conjectures only need $v\le 2n-2$. If one adds Legendre's formula, then $\nu_2\binom{2n}{n}=s_2(n)$ and $s_2(n+1)=s_2(n)+1-\nu_2(n+1)$, where $s_2$ is the binary digit sum, give $\nu_2(C_n)=s_2(n+1)-1$. The identities $a(n)=2^{2n-2-v}$ and $\E(n)=2n-v$ established in the proof of Theorem~\ref{thm:main} then yield $a(n)=2^{2n-1-s_2(n+1)}$ and $\E(n)=2n+1-s_2(n+1)$; the latter agrees with Zabolotskii's formula $\E(n)=\mathrm{A005187}(n+1)-1$ recorded in A283208, since $\mathrm{A005187}(m)=2m-s_2(m)$. Independently of Legendre's formula, the identity $a(n)=2^{2n-2-v}$, together with Luschny's name $\mathrm{A120777}(n)=2^{2n-v}$, gives $a(n)=\mathrm{A120777}(n)/4$ for $n\ge1$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A120069.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file of Section~\ref{sec:statement} and the audit commands. The main declaration is \code{theorem result : statement} in the namespace \decl{Math0.Frontier.A120069}; its proof follows Section~\ref{sec:proof} step by step. The private lemmas are \decl{r_succ_closed} (Lemma~\ref{lem:closed}), \decl{catalan_succ_le} (Lemma~\ref{lem:bound}), \decl{catalan_ne_zero'}, \decl{den_odd_div_two_pow} (Lemma~\ref{lem:den}) and \decl{w_eq} (the formula for $w(n)$ in Lemma~\ref{lem:vietoris}); the other declarations named in Lemmas~\ref{lem:rec}--\ref{lem:admissible} are in the statement file. The main Mathlib lemmas used are \decl{succ_mul_catalan_eq_centralBinom}, \decl{Nat.succ_mul_centralBinom_succ}, \decl{Nat.exists_eq_two_pow_mul_odd}, \decl{Rat.den_div_eq_of_coprime} and \decl{Rat.ofNat_sub_den}. The proof file contains no computation by kernel evaluation; the only kernel evaluations are the data checks \decl{a_data} and \decl{A283208_data} of the statement file, which are not used by the proof. Neither file uses \texttt{sorry}, \texttt{native\_decide}, custom axioms or \texttt{set\_option}. The file ends with the command
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A120069.result Math0.Statements.A120069.statement
+\end{lstlisting}
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles} (in \path{lean/Math0/Audit.lean}) is the audit for statements formalized by math0 itself. It fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (so no \decl{sorryAx}, no axioms introduced by \texttt{native\_decide}, and no custom axioms); and (3) the type of \decl{result} is syntactically the constant \decl{statement} or its negation, up to metadata, with no unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A120069.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A120069.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A120069.result' proves 'Math0.Statements.A120069.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root; it builds all math0 results with \texttt{lake build}, which re-runs every audit command, and checks that the pinned dependencies are unmodified. The single file is checked by \texttt{lake env lean Math0/Frontier/OEIS/A120069.lean} in \path{lean/}.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{CFM}
+I.~Cação, M.~I.~Falcão and H.~R.~Malonek, \emph{Hypercomplex polynomials, Vietoris' rational numbers and a related integer numbers sequence}, Complex Anal.\ Oper.\ Theory \textbf{11} (2017), no.~5, 1059--1076, \url{https://doi.org/10.1007/s11785-017-0649-5}.
+
+\bibitem{FC}
+M.~Firsching et al., \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026; \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput.\ Sci.\ \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Vie}
+L.~Vietoris, \emph{Über das Vorzeichen gewisser trigonometrischer Summen}, Sitzungsber.\ Österr.\ Akad.\ Wiss.\ \textbf{167} (1958), 125--135.
+
+\bibitem{A120069}
+The OEIS Foundation Inc., \url{https://oeis.org/A120069}, entry by W.~Lang (July~20, 2006); conjectures by R.~Groux (Dec.~11, 2010) and A.~Staunton (Feb.~28, 2026); revision \#30, Mar.~10, 2026.
+
+\bibitem{A119951}
+The OEIS Foundation Inc., \url{https://oeis.org/A119951}, entry by W.~Lang (July~20, 2006); comment by P.~Mostert (Oct.~12, 2012).
+
+\bibitem{A120777}
+The OEIS Foundation Inc., \url{https://oeis.org/A120777}, entry by W.~Lang (July~20, 2006); formulas by J.~W.~Meijer (July~6, 2009) and A.~Eldar (Apr.~18, 2024); name by P.~Luschny (Apr.~16, 2024).
+
+\bibitem{A120778}
+The OEIS Foundation Inc., \url{https://oeis.org/A120778}, entry by W.~Lang (July~20, 2006); formula by R.~Groux (Jan.~4, 2011).
+
+\bibitem{A283208}
+The OEIS Foundation Inc., \url{https://oeis.org/A283208}, entry by I.~Cação, M.~I.~Falcão and H.~Malonek (Mar.~8, 2017); formula by A.~Zabolotskii (Mar.~26, 2021).
+
+\end{thebibliography}
+}
+\end{document}
