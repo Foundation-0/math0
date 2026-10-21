@@ -1,0 +1,44 @@
+# Stephan's conjectured g.f. for A242396 is false (first failure at n = 97)
+
+**Classification:** New result (open problem settled)  
+**Area:** Discrete geometry  
+**Source problem:** OEIS A242396  
+**Date:** 2026-10-21
+
+## Result
+
+Let a(n) be the number of rows (closed horizontal strips j*sqrt(3)/2 <= y <= (j+1)*sqrt(3)/2) of the unit equilateral-triangle tiling that meet the circle of radius n. Stephan's conjecture says that sum_{n>=1} a(n) x^n * (x^14 - x^13 - x + 1) = -2x^14 + 4x^13 + 2x^12 + 2x^11 + 2x^10 + 2x^9 + 2x^8 + 4x^7 + 2x^6 + 2x^5 + 2x^4 + 2x^3 + 2x^2 + 4x in Z[[x]]. We prove that this identity is false.
+
+## Verification
+
+The statement was formalized by math0 from the conjecture in [OEIS A242396](https://oeis.org/A242396) as [`Math0.Statements.A242396.statement`](../../lean/Math0/Statements/OEIS/A242396.lean). Its definitions are checked by the kernel against the OEIS data, and it was reviewed for fidelity and frozen before any proof attempt. The Lean file [`lean/Math0/Frontier/OEIS/A242396.lean`](../../lean/Math0/Frontier/OEIS/A242396.lean) refutes (proves the negation of) it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
+
+## Notes
+
+Conjecture as stated in OEIS: G.f., conjectured: (-2*x^14 + 4*x^13 + 2*x^12 + 2*x^11 + 2*x^10 + 2*x^9 + 2*x^8 + 4*x^7 + 2*x^6 + 2*x^5 + 2*x^4 + 2*x^3 + 2*x^2 + 4*x)/(x^14 - x^13 - x + 1). - _Ralf Stephan_, May 18 2014  (also: Asymptotics from g.f.: a(n) ~ 30/13 * n. - _Ralf Stephan_, May 18 2014)
+
+Referees: Sources checked:
+- The OEIS A242396 entry, from the local mirror and https://raw.githubusercontent.com/oeis/oeisdata/main/seq/A242/A242396.seq. Both show revision #18 (May 31, 2014), and the g.f. is still marked "conjectured" with no correction.
+- The cross-referenced entries A242394 and A242395.
+- A mirror search for the sequences ⌊2n/√3⌋ and 2⌊2n/√3⌋+2. The only match was A242396 itself.
+- Ralf Stephan's conjecture list at ark.in-berlin.de/conj.txt, which covers only the 2004–2005 list.
+- Four papers on proving OEIS conjectures, none of which mention A242396:
+  - arXiv:2607.24832, "Further proofs of conjectures from the OEIS"
+  - arXiv:2410.07237
+  - S. Fried, JIS vol. 28 (fried15)
+  - S. Fried, JIS vol. 29 (fried21)
+- General web searches (arXiv, MathOverflow/Math StackExchange, SeqFan). These found no counterexample or refutation of Stephan's g.f. for A242396.
+
+No prior resolution was found.
+
+## Citation
+
+```bibtex
+@misc{math0:oeis-a242396,
+  author       = {{math0}},
+  title        = {{Stephan's conjectured g.f. for A242396 is false (first failure at n = 97)}},
+  howpublished = {\url{https://github.com/Foundation-0/math0/tree/main/results/oeis-a242396}},
+  note         = {Produced by Claude (Anthropic); Lean-verified},
+  year         = {2026}
+}
+```
