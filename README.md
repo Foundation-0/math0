@@ -20,7 +20,7 @@ quietly prove an easier statement than the one the problem's curators wrote down
 ## Highlights
 
 <!-- HIGHLIGHTS:START -->
-**102 verified results.** 37 new results, 41 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
+**103 verified results.** 37 new results, 42 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
 
 New results (open problems settled; each checked by the Lean kernel and judged new by an independent novelty referee):
 
