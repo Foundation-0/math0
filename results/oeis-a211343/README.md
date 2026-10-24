@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: %C Conjecture 1: T(n,k) is the smallest part of th
 
 Referees: OEIS (local mirror): A261699 comment by Peter Munn, Jul 30 2017 ("A211343(n,k) = abs(n/d - d/2) + 1/2, smallest part"; one-to-one link between odd divisors and partitions into k consecutive parts). A286013 comment by Peter Munn, Jun 18 2017 (trapezoid proof of the largest-part companion conjecture, which carries over directly to smallest parts). A285898 comment by David A. Corneth, Apr 28 2017 (n has a partition into k consecutive parts iff (n - C(k,2))/k is a positive integer). A196020 formula by Max Alekseyev, Nov 18 2013 (T(n,k) = 2n/k - k on the support), combined with the A211343 formula T = floor((1+A196020)/2). A237048 property by Hartmut F. W. Hoft, Oct 2014. A286000 "Theorem" (Pol). A379632 (Pol, Dec 2024: "Positive terms of A211343", "Right border gives A118235"). A118235 (smallest part of partitions into consecutive parts). A109814 (Jaap Spies / David W. Wilson: 2n = k(2m+k-1)). The classical background is Sylvester's enumeration of partitions into consecutive parts. Not retrievable (web.archive.org unreachable): Joerg Arndt, SeqFan, Jun 3 2017, proof of the A285914/A204217 conjectures. Web searches found no counterexample and no paper on A211343 specifically.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

@@ -30,6 +30,10 @@ Related sources:
 - **Same-batch siblings, still labelled conjectures:** A081199, A081200, A081201, A178294, A178296-A178299.
 - **Checked, no relevant result:** arXiv:2609.25133 (Kudriashov, Sep 2026), arXiv:2404.02369, arXiv:1107.0327.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

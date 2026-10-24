@@ -1,0 +1,356 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw,at,subst,constructor,unfold},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {↔}{{$\leftrightarrow$}}1
+    {→}{{$\to$}}1 {←}{{$\leftarrow$}}1 {∧}{{$\wedge$}}1 {≤}{{$\le$}}1 {∈}{{$\in$}}1
+    {∑}{{$\sum$}}1 {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {·}{{$\cdot$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+
+\title[Smallest parts of partitions into consecutive parts (OEIS A211343)]{The triangle OEIS A211343: its positive entries are the smallest parts of partitions into consecutive parts, and the last one in row $n$ lies in column A109814$(n)$}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 24, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $T(n,k)$ be the triangle OEIS A211343, in which column $k$ lists the positive integers interleaved with $k-1$ zeros, starting in row $k(k+1)/2$.
+We prove the two conjectures recorded in the entry by Omar E. Pol in April 2017: if $T(n,k)>0$, then $T(n,k)$ is the smallest part of the partition of $n$ into $k$ consecutive parts; and the last positive entry of row $n$ lies in column A109814$(n)$, the largest $k$ such that $n$ is a sum of $k$ consecutive positive integers.
+Both follow from the identity $m+(m+1)+\dots+(m+k-1)=km+k(k-1)/2$, and the key facts are already recorded, partly with proofs, in neighbouring OEIS entries (D.~A. Corneth, P.~Munn, M.~Alekseyev); we therefore classify the result as the first formal proof of a known result, not as a new result.
+The proof is verified in Lean~4 against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry, whose definitions are checked by the kernel against the $94$ listed terms of A211343 and the first $40$ terms of A109814.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For $k\ge1$ write $\Delta_k=k(k+1)/2$ for the $k$-th triangular number. The OEIS entry A211343 \cite{A211343}, contributed by Omar E. Pol on February~5, 2013, is the irregular triangle $T(n,k)$ ($n\ge1$, $1\le k$, $\Delta_k\le n$) in which column $k$ begins in row $\Delta_k$ and reads, going down,
+\[
+  1,\ \underbrace{0,\dots,0}_{k-1},\ 2,\ \underbrace{0,\dots,0}_{k-1},\ 3,\ \dots
+\]
+Row $n$ thus has length A003056$(n)$, the largest $k$ with $\Delta_k\le n$. Rows $15$ to $18$ are $[15,7,4,0,1]$, $[16,0,0,0,0]$, $[17,8,0,0,0]$, $[18,0,5,3,0]$.
+On April~30, 2017 Pol added two conjectures to the entry (quoted verbatim in Section~\ref{sec:statement}): a positive entry $T(n,k)$ is the smallest part of the partition of $n$ into $k$ consecutive parts, and the last positive entry of row $n$ is in column A109814$(n)$ \cite{A109814}, the largest $k$ for which $n$ is a sum of $k$ consecutive positive integers. For example, the partitions of $15$ into consecutive parts are $15$, $8+7$, $6+5+4$ and $5+4+3+2+1$, with smallest parts $15,7,4,1$ in columns $1,2,3,5$, and A109814$(15)=5$. Both lines are still labelled ``Conjecture'' in the revision of the entry we used (\#54, March~12, 2021). We prove both conjectures (Theorem~\ref{thm:main}). The key fact (Proposition~\ref{prop:support}) is that for $n\ge1$ the entry $T(n,k)$ is positive exactly when $n=m+(m+1)+\dots+(m+k-1)$ for some $m\ge1$, and then $T(n,k)=m$.
+
+\subsection*{Prior work and status}
+The substance of the result is already in the literature and in the OEIS.
+\begin{itemize}
+\item Writing $n=m+(m+1)+\dots+(m+k-1)$ as $2n=k(2m+k-1)$, in which exactly one factor is odd, shows that the partitions of $n$ into consecutive parts correspond to the odd divisors of $n$. This classical enumeration is the one-run case of Sylvester's refinement of Euler's partition theorem \cite{Sylvester}; it is called Sylvester's enumeration in A001227 \cite{A001227}; see also Apostol \cite{Apostol}. In A109814 \cite{A109814}, J.~Spies (August~16, 2005, after D.~W. Wilson) uses $2n=k(2m+k-1)$ to compute A109814.
+\item In A285898 \cite{A285898}, D.~A. Corneth noted on April~28, 2017 that $n$ has a partition into exactly $k$ consecutive parts if and only if $(n-\binom k2)/k$ is a positive integer, which is the starting part $m$. In the same entry S.~Cadot remarked (January~22, 2023) that there is at most one such partition.
+\item For the companion triangle A196020 \cite{A196020} (odd numbers in place of the positive integers), M.~Alekseyev gave on November~18, 2013 the closed form $2n/k-k$ on its support. Combined with the relation $T(n,k)=\lfloor(1+\text{A196020}(n,k))/2\rfloor$ in A211343, this yields $T(n,k)=n/k-(k-1)/2$ on the support, which is the smallest part $m$ above. H.~F.~W. Hoft (A237048 \cite{A237048}, October~23, 2014) described the support of these triangles via the odd divisors of $n$.
+\item For the companion triangle A286013 \cite{A286013} (column $k$ lists $k,k+1,\dots$ interleaved with zeros), whose positive entries are $T(n,k)+k-1$, P.~Munn gave on June~18, 2017 a proof, by trapezoidal dot patterns, of the analogous conjecture for largest parts: the positive entries of column $k$ correspond one-to-one to the partitions of $n$ into $k$ consecutive parts. The same argument proves Conjecture~1. In A261699 \cite{A261699} (July~30, 2017) Munn states explicitly that A211343$(n,k)=|n/d-d/2|+1/2$ is the smallest part of the partition of $n$ attached to the odd divisor $d$ (with some steps left as ``it can be shown'').
+\item Other entries by Pol state both conjectures as facts. A379632 \cite{A379632} (December~31, 2024), the smallest parts of the partitions of $n$ into consecutive parts, is cross-referenced as ``Positive terms of A211343'' with ``Right border gives A118235'', where A118235 \cite{A118235} (R.~Zumkeller, 2006) is the smallest part of the longest such partition. The cross-references of A286013, which has the same support as A211343, include ``The last positive term in row $n$ is in column A109814$(n)$''.
+\end{itemize}
+The math0 referees found no paper addressing A211343 by name. Since the conjectures follow from these identities in a few lines, we classify our result as the \emph{first formal proof of a known result}.
+
+\section{Statement}\label{sec:statement}
+
+\subsection*{The OEIS conjectures}
+The name of A211343 \cite{A211343} (Omar E. Pol, February~5, 2013; offset $1$) is, verbatim,
+\begin{quote}\small
+Triangle read by rows: T(n,k), n \textgreater{}= 1, k \textgreater{}= 1, in which column k lists the positive integers interleaved with k-1 zeros, and the first element of column k is in row k(k+1)/2.
+\end{quote}
+Its COMMENTS section contains, verbatim, under the heading ``From \emph{Omar E. Pol}, Apr 30 2017'':
+\begin{quote}\small
+Conjecture 1: T(n,k) is the smallest part of the partition of n into k consecutive parts, if T(n,k) \textgreater{} 0.\\
+Conjecture 2: the last positive integer in the row n is in the column A109814(n).
+\end{quote}
+The sequence A109814 \cite{A109814} (David W. Wilson) is ``a(n) is the largest k such that n can be written as sum of k consecutive positive integers.''
+
+\subsection*{The theorem}
+For $k\ge1$ and $j\ge0$ let $c_k(j)=j/k+1$ if $k\mid j$ and $c_k(j)=0$ otherwise; this is column $k$ read from its first row. Row $n$ consists of the columns $k$ with $1\le k$ and $\Delta_k\le n$, and for these $T(n,k)=c_k(n-\Delta_k)$. A \emph{partition of $n$ into $k$ consecutive parts} is a multiset of positive integers with sum $n$ of the form $\{m,m+1,\dots,m+k-1\}$.
+
+\begin{theorem}\label{thm:main}
+Let $n\ge1$.
+\begin{enumerate}
+\item If $1\le k$, $\Delta_k\le n$ and $T(n,k)>0$, then $n$ has a partition into $k$ consecutive parts, and $T(n,k)$ is the smallest part of every such partition.
+\item Let $A(n)$ be the largest $k$ such that $n$ is a sum of $k$ consecutive positive integers. Then $A(n)$ is the largest $k$ with $1\le k$, $\Delta_k\le n$ and $T(n,k)>0$.
+\end{enumerate}
+\end{theorem}
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A211343.lean}, reviewed for fidelity, and frozen (SHA-256 \texttt{bc8da2da\ldots 897e}) before any proof attempt. The definitions and the statement read as follows (verbatim; the copyright header, the import, the module docstring and all docstrings are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A211343
+open Finset
+def column (k j : ℕ) : ℕ := if j % k = 0 then j / k + 1 else 0
+def InRow (n k : ℕ) : Prop := 1 ≤ k ∧ k * (k + 1) / 2 ≤ n
+instance (n k : ℕ) : Decidable (InRow n k) := by unfold InRow; infer_instance
+def T (n k : ℕ) : ℕ := if InRow n k then column k (n - k * (k + 1) / 2) else 0
+def row (n : ℕ) : List ℕ := ((List.range (n + 1)).filter (fun k => decide (InRow n k))).map (T n)
+def a (i : ℕ) : ℕ := ((List.range i).flatMap (fun j => row (j + 1))).getD (i - 1) 0
+def HasConsecutiveParts {n : ℕ} (k : ℕ) (p : n.Partition) : Prop :=
+  ∃ m, p.parts = (Multiset.range k).map (fun i => m + i)
+def IsConsecSum (n k : ℕ) : Prop := ∃ m, 0 < m ∧ ∑ i ∈ range k, (m + i) = n
+def IsConsecSumBdd (n k : ℕ) : Prop := ∃ m ∈ Finset.Icc 1 n, ∑ i ∈ Finset.range k, (m + i) = n
+instance (n : ℕ) : DecidablePred (IsConsecSumBdd n) := fun k => by
+  unfold IsConsecSumBdd; infer_instance
+def A109814 (n : ℕ) : ℕ := Nat.findGreatest (IsConsecSumBdd n) n
+def statement : Prop :=
+  (∀ n k : ℕ, 1 ≤ n → InRow n k → 0 < T n k →
+    (∃ p : n.Partition, HasConsecutiveParts k p) ∧
+    ∀ p : n.Partition, HasConsecutiveParts k p → IsLeast {x | x ∈ p.parts} (T n k)) ∧
+  (∀ n : ℕ, 1 ≤ n → IsGreatest {k | InRow n k ∧ 0 < T n k} (A109814 n))
+end Math0.Statements.A211343
+\end{lstlisting}
+The file also proves the following (statements shown, proofs omitted; the lists of $94$ terms, $24$ rows and $40$ terms on the right-hand sides of the data checks are elided):
+\begin{lstlisting}
+theorem le_of_inRow {n k : ℕ} (h : InRow n k) : k ≤ n
+theorem a_data : (List.range 94).map (fun i => a (i + 1)) =
+    [1, 2, 3, 1, 4, 0, 5, 2, 6, 0, 1, 7, 3, 0, 8, 0, 0, 9, 4, 2, ..., 24, 0, 7, 0, 0, 0]
+theorem row_data : (List.range 24).map (fun n => row (n + 1)) = [[1], [2], [3, 1], ...]
+theorem A109814_isGreatest {n : ℕ} (hn : 1 ≤ n) :
+    IsGreatest {k | IsConsecSum n k} (A109814 n)
+theorem A109814_data : (List.range 40).map (fun i => A109814 (i + 1)) =
+    [1, 1, 2, 1, 2, 3, 2, 1, 3, 4, 2, 3, 2, 4, 5, 1, 2, 4, 2, 5, ..., 8, 2, 4, 6, 5]
+\end{lstlisting}
+
+\subsection*{How the definitions encode the OEIS entry}
+\emph{The triangle} follows the name of the entry, not any conjectured formula. \texttt{column k j} is $c_k(j)$: for $k\ge1$, \texttt{j \% k = 0} means $k\mid j$. \texttt{InRow n k} says that $(n,k)$ is a position of the triangle; \texttt{k * (k + 1) / 2} is exactly $\Delta_k$, and under \texttt{InRow} the truncated subtraction \texttt{n - k * (k + 1) / 2} is the true difference. Outside the triangle \texttt{T n k} is $0$, a junk value that \decl{statement} never uses, since both conjuncts assume \texttt{InRow n k}. \texttt{row n} lists $T(n,1),\dots,T(n,\text{A003056}(n))$ (by \decl{le_of_inRow}, no column exceeds $n$), and \texttt{a} is the triangle read by rows with offset $1$.
+
+\emph{Data checks.} \decl{a_data} states that $a(1),\dots,a(94)$ are the $94$ terms in the DATA section of A211343 (rows $1$ to $24$), \decl{row_data} that rows $1$ to $24$ agree with the first $24$ rows displayed in the EXAMPLE section (which shows rows $1$ to $28$), and \decl{A109814_data} that \texttt{A109814} reproduces the first $40$ listed terms of A109814. All three are proved by \texttt{decide +kernel}: the kernel evaluates both sides and checks that they are equal. This anchors the definitions to the entry independently of the conjectures.
+
+\emph{Partitions.} A partition of $n$ is Mathlib's \texttt{Nat.Partition n}, a multiset \texttt{parts} of positive integers with sum $n$. \texttt{HasConsecutiveParts k p} says that \texttt{p.parts} is $\{m+i: 0\le i<k\}$ for some $m$. ``$T(n,k)$ is the smallest part of the partition'' is read as: such a partition exists, and $T(n,k)$ is the least part of every such partition (\texttt{IsLeast}). Only the stated direction is claimed; the partition is in fact unique (Remark~\ref{rem:converse}). The hypotheses $1\le n$ and \texttt{InRow n k} follow from $T(n,k)>0$.
+
+\emph{A109814.} \texttt{IsConsecSum n k} says that $n=\sum_{i<k}(m+i)$ for some $m\ge1$, with no bounds; this is the OEIS definition. For decidability, \texttt{A109814 n} is computed with \texttt{Nat.findGreatest}, which returns the largest $k\le n$ satisfying the bounded predicate \texttt{IsConsecSumBdd n} (start $m\in[1,n]$), or $0$ if there is none; by Lemma~\ref{lem:a109814} (\decl{A109814_isGreatest}, proved in the statement file) the bounds change nothing for $n\ge1$. \emph{Conjecture~2} is encoded as: \texttt{A109814 n} is the greatest column $k$ of row $n$ with $T(n,k)>0$; this set contains $k=1$, as $T(n,1)=n$.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A211343.lean}; the Lean names of the lemmas are given in brackets. Throughout, $S_k=0+1+\dots+(k-1)=k(k-1)/2$.
+
+\begin{lemma}[\decl{tri_eq}, \decl{consec_sum}, \decl{multiset_consec_sum}]\label{lem:sums}
+For all $k,m\ge0$: $\Delta_k=S_k+k$, and both $\sum_{i<k}(m+i)$ and the sum of the multiset $\{m+i:0\le i<k\}$ equal $km+S_k$.
+\end{lemma}
+
+\begin{proof}
+By Gauss' formula (\texttt{Finset.sum\_range\_id}), $S_{k+1}=(k+1)k/2=\Delta_k$, and $S_{k+1}=S_k+k$. The second identity is linearity of the sum. The multiset sum is the same sum, since \texttt{Finset.range k} has underlying multiset \texttt{Multiset.range k}.
+\end{proof}
+
+\begin{lemma}[\decl{eq_of_T_pos}]\label{lem:fwd}
+If $1\le k$, $\Delta_k\le n$ and $T(n,k)>0$, then $n=k\,T(n,k)+S_k$.
+\end{lemma}
+
+\begin{proof}
+Let $j=n-\Delta_k\ge0$. By definition $T(n,k)=c_k(j)$, and $c_k(j)>0$ rules out the branch $c_k(j)=0$; so $k\mid j$ and $T(n,k)=j/k+1$. Hence, using Lemma~\ref{lem:sums},
+\[
+  k\,T(n,k)+S_k=k\cdot\frac jk+k+S_k=j+\Delta_k=n. \qedhere
+\]
+\end{proof}
+
+\begin{lemma}[\decl{T_of_eq}]\label{lem:bwd}
+If $k\ge1$, $m\ge1$ and $n=km+S_k$, then $1\le k$, $\Delta_k\le n$ and $T(n,k)=m$.
+\end{lemma}
+
+\begin{proof}
+Since $km\ge k$, we have $\Delta_k=S_k+k\le S_k+km=n$. Moreover $j=n-\Delta_k=km-k=k(m-1)$, so $k\mid j$ and $T(n,k)=c_k(j)=(m-1)+1=m$.
+\end{proof}
+
+\begin{proposition}[\decl{inRow_T_pos_iff}]\label{prop:support}
+Let $n\ge1$ and $k\ge0$. Then
+\[
+  \bigl(1\le k,\ \Delta_k\le n\ \text{and}\ T(n,k)>0\bigr)\iff \exists\,m\ge1:\ \sum_{i<k}(m+i)=n ,
+\]
+and in this case $m=T(n,k)$.
+\end{proposition}
+
+\begin{proof}
+If the left side holds, take $m=T(n,k)\ge1$; then $\sum_{i<k}(m+i)=km+S_k=n$ by Lemmas~\ref{lem:sums} and~\ref{lem:fwd}. Conversely, let $m\ge1$ with $\sum_{i<k}(m+i)=n$, i.e.\ $km+S_k=n$. If $k=0$ the sum is empty and $n=0$, contradicting $n\ge1$; so $k\ge1$, and Lemma~\ref{lem:bwd} gives the left side and $T(n,k)=m$. Given $k\ge1$, the value of $m$ is determined by $km+S_k=n$.
+\end{proof}
+
+\begin{lemma}[\decl{A109814_isGreatest}, in the statement file]\label{lem:a109814}
+For $n\ge1$, \texttt{A109814 n} is the greatest $k$ such that $n=\sum_{i<k}(m+i)$ for some $m\ge1$. In particular it equals $A(n)$ of Theorem~\ref{thm:main}.
+\end{lemma}
+
+\begin{proof}
+Write $P(k)$ for the bounded predicate: $\sum_{i<k}(m+i)=n$ for some $m\in[1,n]$. Since $P(1)$ holds with $m=n$ and $1\le n$, \texttt{Nat.findGreatest P n} is the largest $k\le n$ with $P(k)$, and it satisfies $P$, hence the unbounded property. Conversely, if $\sum_{i<k}(m+i)=n$ with $m\ge1$, then $k\le n$ because each of the $k$ summands is at least $1$; $k\ge1$ because $n\ge1$; and $m\le n$ because $m$ is the summand $i=0$. So $P(k)$ holds with $k\le n$, and $k\le$ \texttt{A109814 n} (\texttt{Nat.le\_findGreatest}).
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+(1) Let $m=T(n,k)\ge1$. By Lemma~\ref{lem:fwd}, $n=km+S_k$.
+
+\emph{Existence.} The multiset $P=\{m+i:0\le i<k\}$ has positive elements, since $m\ge1$, and its sum is $km+S_k=n$ by Lemma~\ref{lem:sums}. So $P$ is a partition of $n$, and it has $k$ consecutive parts starting at $m$.
+
+\emph{Smallest part.} Let $p$ be any partition of $n$ whose parts are $\{m'+i:0\le i<k\}$. Summing its parts and using Lemma~\ref{lem:sums}, $km'+S_k=n=km+S_k$, so $km'=km$ and $m'=m$ because $k\ge1$. Since $0<k$, the part $m+0=m$ occurs in $p$, and every part $m+i$ of $p$ is at least $m$. Hence $m$ is the least part of $p$.
+
+(2) By Proposition~\ref{prop:support}, for $n\ge1$ the set of columns $k$ of row $n$ with $T(n,k)>0$ equals the set of $k$ such that $n$ is a sum of $k$ consecutive positive integers. By Lemma~\ref{lem:a109814}, A109814$(n)$ is the greatest element of the latter set, hence of the former.
+\end{proof}
+
+\begin{remark}\label{rem:converse}
+Proposition~\ref{prop:support}, whose ingredients are formalized (\decl{inRow_T_pos_iff} and \decl{T_of_eq}), also gives the converse of Conjecture~1: every partition of $n$ into $k$ consecutive parts, $k\ge1$, starts at $m=T(n,k)>0$. This converse is not part of \decl{statement} and is not stated as a separate Lean theorem. Thus the positive entries of row $n$ are exactly the smallest parts of the partitions of $n$ into consecutive parts, one for each number of parts, and each such partition is unique. On the support, $T(n,k)=n/k-(k-1)/2$, in agreement with Alekseyev's formula (Section~1). That the number of positive entries of row $n$ is the number of odd divisors of $n$, as stated in A211343 \cite{A211343}, then follows from the classical enumeration recalled in Section~1; this count is not formalized here.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in \path{lean/Math0/Frontier/OEIS/A211343.lean} in the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A211343.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A211343.result}, of type \decl{Math0.Statements.A211343.statement}. The six auxiliary lemmas are private. Their statements read verbatim as follows (all proofs, the header, the imports and the docstrings omitted; the $33$-line proof of \decl{result} carries out the proof of Theorem~\ref{thm:main} in the order given in Section~\ref{sec:proof}):
+\begin{lstlisting}
+namespace Math0.Frontier.A211343
+open Math0.Statements.A211343
+open Finset
+private lemma tri_eq (k : ℕ) : k * (k + 1) / 2 = (∑ i ∈ range k, i) + k
+private lemma consec_sum (m k : ℕ) :
+    ∑ i ∈ range k, (m + i) = k * m + ∑ i ∈ range k, i
+private lemma multiset_consec_sum (m k : ℕ) :
+    ((Multiset.range k).map (fun i => m + i)).sum = k * m + ∑ i ∈ range k, i
+private lemma eq_of_T_pos {n k : ℕ} (h : InRow n k) (hT : 0 < T n k) :
+    n = k * T n k + ∑ i ∈ range k, i
+private lemma T_of_eq {n k m : ℕ} (hk : 1 ≤ k) (hm : 1 ≤ m)
+    (hn : n = k * m + ∑ i ∈ range k, i) : InRow n k ∧ T n k = m
+private lemma inRow_T_pos_iff {n k : ℕ} (hn : 1 ≤ n) :
+    (InRow n k ∧ 0 < T n k) ↔ IsConsecSum n k
+theorem result : statement
+end Math0.Frontier.A211343
+#math0_settles Math0.Frontier.A211343.result Math0.Statements.A211343.statement
+\end{lstlisting}
+The arithmetic is closed by \texttt{omega}, with the sums $S_k$ and products such as $k\,T(n,k)$ as atoms. No computation is involved in the proof; the only kernel evaluations are the data checks of the statement file. Neither file uses \texttt{sorry}, \texttt{native\_decide}, custom axioms or \texttt{set\_option}.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles} (\path{lean/Math0/Audit.lean}), used for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, \decl{Lean.ofReduceBool} from \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically \decl{statement} or $\neg$\,\decl{statement}, up to metadata annotations, with no unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A211343.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A211343.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A211343.result' proves 'Math0.Statements.A211343.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use, since the statement is a math0 formalization of an OEIS conjecture and not part of formal-conjectures.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A211343.lean} in the directory \path{lean} after \texttt{lake build Math0.Statements.OEIS.A211343}; on our machine the former took well under a minute, and the latter, which includes the kernel data checks, about $5.5$ minutes of wall time under heavy load (less than a minute of CPU time for the data checks).
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{Apostol}
+T.~M. Apostol, \emph{Sums of consecutive positive integers}, Math. Gazette \textbf{87} (2003), no.~508, 98--101.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171 [cs.AI], 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Sylvester}
+J.~J. Sylvester, \emph{A constructive theory of partitions, arranged in three acts, an interact and an exodion}, Amer. J. Math. \textbf{5} (1882), 251--330.
+
+\bibitem{A001227}
+The OEIS Foundation Inc., OEIS entry A001227, \url{https://oeis.org/A001227}.
+
+\bibitem{A109814}
+The OEIS Foundation Inc., OEIS entry A109814 (D.~W. Wilson), \url{https://oeis.org/A109814}.
+
+\bibitem{A118235}
+The OEIS Foundation Inc., OEIS entry A118235 (R.~Zumkeller, 2006), \url{https://oeis.org/A118235}.
+
+\bibitem{A196020}
+The OEIS Foundation Inc., OEIS entry A196020 (O.~E. Pol, 2013), \url{https://oeis.org/A196020}.
+
+\bibitem{A211343}
+The OEIS Foundation Inc., OEIS entry A211343 (O.~E. Pol, 2013), \url{https://oeis.org/A211343}, revision \#54.
+
+\bibitem{A237048}
+The OEIS Foundation Inc., OEIS entry A237048 (O.~E. Pol, 2014), \url{https://oeis.org/A237048}.
+
+\bibitem{A261699}
+The OEIS Foundation Inc., OEIS entry A261699 (O.~E. Pol, 2015), \url{https://oeis.org/A261699}.
+
+\bibitem{A285898}
+The OEIS Foundation Inc., OEIS entry A285898 (O.~E. Pol and N.~J.~A. Sloane, 2017), \url{https://oeis.org/A285898}.
+
+\bibitem{A286013}
+The OEIS Foundation Inc., OEIS entry A286013 (O.~E. Pol, 2017), \url{https://oeis.org/A286013}.
+
+\bibitem{A379632}
+The OEIS Foundation Inc., OEIS entry A379632 (O.~E. Pol, 2024), \url{https://oeis.org/A379632}.
+
+\end{thebibliography}
+}
+
+\end{document}

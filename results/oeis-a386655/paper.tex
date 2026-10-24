@@ -1,0 +1,439 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+\usepackage{booktabs}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,unfold,rw,at,generalize,interval_cases,push_cast},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {∀}{{$\forall$}}1 {∑}{{$\sum$}}1
+    {∈}{{$\in$}}1 {≤}{{$\le$}}1 {→}{{$\to$}}1 {⊢}{{$\vdash$}}1 {←}{{$\leftarrow$}}1
+    {∧}{{$\wedge$}}1 {·}{{$\cdot$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+\newunicodechar{⊢}{\ensuremath{\vdash}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+\raggedbottom
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+
+\title[Hanna's mod-6 conjecture for OEIS A386655]{The coefficients of $\sum_{m\ge0}(2^mx+W(x))^m/m!$ modulo $6$: a proof of Hanna's conjecture for OEIS A386655}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 24, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $a(n)$ be the sequence OEIS A386655, whose exponential generating function is $\sum_{m\ge0}(2^mx+W(x))^m/m!$, where $W$ is the Lambert $W$ series; equivalently $a(n)=\sum_{k=0}^{n}\binom nk2^{k(k+1)}(2^k-(n-k))^{n-k-1}$.
+We prove Paul D.~Hanna's conjecture from that entry: for $n\ge6$, the residues of $a(n)$ modulo $6$ are $1,0,3,0,3,2$ repeating with period $6$, starting at $n=6$.
+The proof is elementary: modulo $2$ only one summand survives, and modulo $3$ Fermat's little theorem makes each summand with $n-k\ge2$, apart from the binomial factor, depend only on $(n-k)\bmod6$ and the parity of $n$, after which a binomial-transform identity gives $a(n)\equiv1-n^2$ ($n$ even) and $a(n)\equiv n^2-n$ ($n$ odd) modulo $3$ for $n\ge3$.
+To our knowledge this is a new result: the OEIS entry still lists the statement as a conjecture, and we found no recorded proof.
+The proof is verified in Lean~4 with Mathlib against a frozen statement that math0 formalized from the OEIS entry and reviewed for fidelity before the proof attempt; its definition is checked by the kernel against the listed terms and against a direct evaluation of the generating function.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Let $W(x)=\sum_{k\ge1}(-1)^{k-1}k^{k-1}x^k/k!$ be the Lambert $W$ series \cite{CGHJK}, the unique formal power series with $W(0)=0$ and $W(x)e^{W(x)}=x$.
+The OEIS entry A386655 \cite{A386655}, contributed by Paul D.~Hanna on August~23, 2025, is the sequence $a(n)$, $n\ge0$, defined by
+\begin{equation}\label{eq:egf}
+  \sum_{n\ge0}a(n)\frac{x^n}{n!}=\sum_{m\ge0}\frac{(2^mx+W(x))^m}{m!}.
+\end{equation}
+Since $2^mx+W(x)$ has zero constant term, the $m$-th summand is $O(x^m)$ and the right-hand side is a well-defined formal power series.
+The entry lists $a(0),\dots,a(12)=1,3,23,708,82677,39043808,\dots$ and the explicit formula
+\begin{equation}\label{eq:formula}
+  a(n)=\sum_{k=0}^{n}\binom nk\,2^{k(k+1)}\,\bigl(2^k-(n-k)\bigr)^{n-k-1},
+\end{equation}
+in which the summand $k=n$, whose exponent is $-1$, equals $2^{n^2}$ (Section~\ref{sec:encoding}).
+Its comments contain the following conjecture, which we prove.
+
+\begin{theorem}\label{thm:main}
+For every $n\ge6$,
+\[
+  a(n)\bmod 6=\begin{cases}1,&n\equiv0\pmod 6,\\0,&n\equiv1,3\pmod6,\\3,&n\equiv2,4\pmod6,\\2,&n\equiv5\pmod6.\end{cases}
+\]
+\end{theorem}
+
+Since $6\equiv0\pmod6$, the period that starts at $n=6$ has the same phase as $n\bmod6$, so this is the conjecture ``$[1,0,3,0,3,2]$ repeating from $n=6$''.
+We prove it modulo $2$ and modulo $3$ separately (Section~\ref{sec:proof}); modulo $3$, each summand of \eqref{eq:formula} is $\binom nk$ times a combination of $\binom{n-k}{j}$ and $(-1)^{n-k}\binom{n-k}{j}$, $j\le2$ (with one correction for odd $n$), and the sum is evaluated with the identity $\sum_m\binom nm\binom mj x^m=\binom njx^j(1+x)^{n-j}$.
+
+\subsection*{Status and prior work}
+The current revision of A386655 (\#14, August~24, 2025) still states the claim as a conjecture of Hanna and contains no note of a proof.
+On the same day Hanna contributed the entries A386656, A386657 and A386658 \cite{A386656,A386657,A386658}, in which $2^m$ in \eqref{eq:egf} is replaced by $3^m$, $4^m$ and $5^m$; each states an analogous conjecture for $n\ge6$, with the repeating residues $[4,3,2,1,0,1]$, $[1,2,3,2,3,4]$ and $[4,3,0,3,0,5]$ respectively.
+The earlier entry A386648 \cite{A386648} (Hanna, August~12, 2025), cross-referenced from all four, has a similar conjecture modulo $6$; none of these entries records a proof.
+The web searches of the math0 literature referees turned up only the OEIS pages themselves, and no paper, arXiv preprint, MathOverflow or Mathematics Stack Exchange post, or SeqFan message proving or refuting the conjecture for A386655; the conjecture is also not in the formal-conjectures repository \cite{FC} at the commit pinned by math0.
+We therefore classify Theorem~\ref{thm:main} as a new result, with the caveat that the argument is elementary and may have been found without being recorded.
+We do not treat the conjectures of A386648 and A386656--A386658; we expect the method to apply to the last three but have not carried this out.
+
+\section{Statement}\label{sec:statement}
+
+\subsection*{The OEIS conjecture}
+The COMMENTS section of A386655 contains, verbatim,
+\begin{quote}
+\footnotesize\texttt{Conjecture: for n >= 6, a(n) (mod 6) equals [1, 0, 3, 0, 3, 2] repeating.}
+\end{quote}
+The comment carries no separate attribution; according to the revision history it was part of the entry as first submitted by Paul D.~Hanna on August~23, 2025.
+The entry has offset $0$.
+
+\subsection*{Lean statement}
+The statement is the definition \decl{Math0.Statements.A386655.statement} in the math0 statement file \path{lean/Math0/Statements/OEIS/A386655.lean}, which was reviewed for fidelity and frozen (SHA-256 \texttt{282e8203\ldots7c5019}) before any proof attempt.
+The definitions it uses, and the statement itself, read verbatim (docstrings omitted; namespace \decl{Math0.Statements.A386655}):
+\begin{lstlisting}
+def binom (n k : ℕ) : ℕ := n.descFactorial k / k.factorial
+
+def term (n k : ℕ) : ℤ :=
+  if k = n then 2 ^ (n * n)
+  else (binom n k : ℤ) * 2 ^ (k * (k + 1)) * ((2 : ℤ) ^ k - ((n - k : ℕ) : ℤ)) ^ (n - k - 1)
+
+def a (n : ℕ) : ℤ := ∑ k ∈ Finset.range (n + 1), term n k
+
+def statement : Prop :=
+  ∀ n : ℕ, 6 ≤ n → a n % 6 = ([1, 0, 3, 0, 3, 2] : List ℤ).getD ((n - 6) % 6) 0
+\end{lstlisting}
+Here \texttt{binom} is the binomial coefficient, written via the descending factorial so that the kernel evaluates it quickly, and the file proves \texttt{binom n k = n.choose k} (\decl{binom_eq_choose}).
+The values are integers because the bases $2^k-(n-k)$ can be negative; \texttt{\%} on $\Z$ is \texttt{Int.emod}, so \texttt{a n \% 6} lies in $\{0,\dots,5\}$, and $a(n)\ge0$ in any case.
+For $n\ge6$ the subtraction $n-6$ does not truncate, $(n-6)\bmod6=n\bmod6<6$, and so the default value $0$ of \texttt{getD} is never used.
+Thus \decl{statement} is Theorem~\ref{thm:main}, with $a$ given by \eqref{eq:formula}.
+
+\subsection*{Encoding and checks against the OEIS data}\label{sec:encoding}
+The definition \eqref{eq:egf} involves the series $W$, which Mathlib does not provide, so the statement file defines $a$ by the explicit formula \eqref{eq:formula}, which the entry lists (it is also the entry's first PARI program).
+The formula follows from \eqref{eq:egf}; we recall the derivation.
+Expanding binomially and putting $m=j+i$,
+\[
+  \sum_{m\ge0}\frac{(2^mx+W)^m}{m!}=\sum_{j,i\ge0}\frac{(2^{j+i}x)^j}{j!}\,\frac{W^i}{i!}
+  =\sum_{j\ge0}2^{j^2}\frac{x^j}{j!}\,e^{2^jW(x)},
+\]
+which is formula (2) of the entry.
+By the Lagrange inversion formula, applied to $W=x\,e^{-W}$, for every constant $c$ and $k\ge1$,
+\[
+  k!\,[x^k]\,e^{cW(x)}=(k-1)!\,[w^{k-1}]\,c\,e^{cw}e^{-kw}=c\,(c-k)^{k-1},
+\]
+and the constant term of $e^{cW}$ is $1$; the entry states this expansion in its example section.
+Taking $c=2^j$ and collecting the coefficient of $x^n/n!$ gives \eqref{eq:formula}, where the summand with $k=j<n$ is $\binom nk2^{k^2}\cdot2^k(2^k-(n-k))^{n-k-1}$ and the summand $k=n$ is $2^{n^2}$, the constant term contribution.
+This is \texttt{term n n}, and also the value PARI gives to $2^{n(n+1)}(2^n)^{-1}$.
+For $n=1$, $k=0$ the formula contains $0^0$, which must be read as $1$ (the coefficient of $x$ in $e^{W}$ is $1$); Lean's convention \texttt{0 \^{} 0 = 1} agrees.
+
+The file does not prove in Lean that \eqref{eq:formula} agrees with \eqref{eq:egf}, since this would need the $W$ series and Lagrange inversion.
+Instead it checks the definition by kernel computation (\texttt{decide +kernel}) in four theorems:
+\begin{itemize}
+\item \decl{a_data}: $a(0),\dots,a(12)$ are the $13$ terms listed in the entry.
+\item \decl{lambertW_spec}: a truncated series for $W$, computed by iterating $W\mapsto x\,e^{-W}$ from $W=0$ with exact integer arithmetic on e.g.f.\ coefficient lists, satisfies $We^W=x$ up to $x^{16}$, and its first coefficients are $0,1,-2,9,-64,625,-7776,117649$.
+\item \decl{a_eq_egf}: $a(0),\dots,a(16)$ equal the coefficients of the right-hand side of \eqref{eq:egf}, evaluated directly from this truncated $W$ (only $m\le16$ contributes); this goes beyond the listed data.
+\item \decl{statement_data}: the residue pattern in \decl{statement} agrees with the listed terms for $n=6,\dots,12$.
+\end{itemize}
+The proof below does not use these checks.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the declarations of the Lean file, whose names we give in parentheses; all auxiliary declarations are private.
+For an integer $z$ we write $z$ also for its image in $\F_3=\Z/3\Z$ (Lean: \texttt{ZMod 3}) or in $\F_2$.
+For $c=(c_0,c_1,c_2)\in\F_3^3$ and $m\in\N$ put (\decl{lin})
+\[
+  L_c(m)=c_0+c_1m+c_2\binom m2\in\F_3 .
+\]
+
+\subsection*{Three tools}
+
+\begin{lemma}[\decl{pow3}, \decl{pow_red}]\label{lem:fermat}
+For $x\in\F_3$ and $e\in\N$ we have $x^3=x$ and $x^{e+1}=x^{(e\bmod 2)+1}$.
+\end{lemma}
+
+\begin{proof}
+The first identity is checked on the three elements (\texttt{decide}); it is Fermat's little theorem.
+The second follows by induction on $e$ in steps of $2$, since $x^{e+3}=x^{e}x^3=x^{e+1}$.
+\end{proof}
+
+\begin{lemma}[\decl{choose2}]\label{lem:choose2}
+$\binom m2\equiv m-m^2\pmod3$ for all $m\in\N$.
+\end{lemma}
+
+\begin{proof}
+Induction on $m$: the case $m=0$ is clear, and $\binom{m+1}2=\binom m2+m\equiv m-m^2+m$, while $(m+1)-(m+1)^2=(m-m^2)+m-3m$.
+\end{proof}
+
+\begin{lemma}[\decl{sum_choose_choose'}]\label{lem:binom}
+In every commutative ring, for $j\le n$,
+\[
+  \sum_{m=0}^{n}\binom nm\binom mj x^m=\binom njx^j(1+x)^{n-j}.
+\]
+\end{lemma}
+
+\begin{proof}
+Write $n=j+p$. The terms with $m<j$ vanish. For $m=j+i$ we have $\binom nm\binom mj=\binom nj\binom{p}{i}$ (Mathlib's \decl{Nat.choose_mul}), and the binomial theorem gives $\sum_{i=0}^p\binom pix^{j+i}=x^j(1+x)^p$.
+\end{proof}
+
+\begin{corollary}[\decl{sum_lin}]\label{cor:sumlin}
+For $n\ge3$ and $c,d\in\F_3^3$,
+\[
+  \sum_{m=0}^{n}\binom nm\bigl(L_c(m)+(-1)^mL_d(m)\bigr)=c_0\,2^n+c_1\,n\,2^{n-1}+c_2\binom n2 2^{n-2}\quad\text{in }\F_3.
+\]
+\end{corollary}
+
+\begin{proof}
+Since $1=\binom m0$ and $m=\binom m1$, the left-hand side is a combination of the six sums of Lemma~\ref{lem:binom} with $j\in\{0,1,2\}$ and $x=\pm1$.
+For $x=-1$ they contain the factor $0^{n-j}=0$, as $n-j\ge1$; for $x=1$ they equal $\binom nj2^{n-j}$.
+\end{proof}
+
+\subsection*{The case modulo 3}
+
+\begin{lemma}[\decl{a_reflect}, \decl{term_cast}, \decl{term_cast_self}]\label{lem:reindex}
+Let $s=(-1)^n\in\F_3$. In $\F_3$,
+\[
+  a(n)=s+\sum_{m=1}^{n}\binom nm\bigl(s(-1)^m-m\bigr)^{m-1}.
+\]
+\end{lemma}
+
+\begin{proof}
+Reindex \eqref{eq:formula} by $m=n-k$.
+The summand $m=0$ is $2^{n^2}=(-1)^{n^2}=(-1)^n$, since $2=-1$ in $\F_3$ and $n^2\equiv n\pmod2$.
+For $1\le m\le n$ the summand is $\binom n{n-m}2^{k(k+1)}(2^k-m)^{m-1}$ with $k=n-m$.
+Here $\binom n{n-m}=\binom nm$; $k(k+1)$ is even and $2^2=1$, so $2^{k(k+1)}=1$; and $2^k=(-1)^{n-m}=(-1)^n(-1)^m$.
+\end{proof}
+
+\begin{lemma}[\decl{coreE}, \decl{coreO}]\label{lem:core}
+For $m\ge2$, in $\F_3$,
+\begin{align*}
+  \bigl((-1)^m-m\bigr)^{m-1}&=L_{(1,1,1)}(m)+(-1)^m L_{(0,1,-1)}(m),\\
+  \bigl(-(-1)^m-m\bigr)^{m-1}&=L_{(0,-1,1)}(m)+(-1)^m L_{(-1,0,-1)}(m).
+\end{align*}
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:fermat} with $e=m-2$, the exponent $m-1$ may be replaced by $(m\bmod2)+1$.
+By Lemma~\ref{lem:choose2}, $\binom m2$ depends only on $m\bmod3$ in $\F_3$, and so does $m$; and $(-1)^m$ depends on $m\bmod2$.
+Hence both sides of both identities depend only on $r=m\bmod6$, and it suffices to check $r=0,\dots,5$, which Lean does by \texttt{interval\_cases} and \texttt{decide}.
+Table~\ref{tab:core} lists the values, written in $\{0,1,2\}$.
+\end{proof}
+
+\begin{table}[b]
+\centering\footnotesize\setlength{\tabcolsep}{4.5pt}
+\begin{tabular}{c|cccc|ccc|ccc}
+\toprule
+$r$ & $(-1)^m$ & $m$ & $\binom m2$ & $e$ & $((-1)^m-m)^e$ & $L_{(1,1,1)}$ & $L_{(0,1,-1)}$ & $(-(-1)^m-m)^e$ & $L_{(0,-1,1)}$ & $L_{(-1,0,-1)}$\\
+\midrule
+$0$ & $1$ & $0$ & $0$ & $1$ & $1$ & $1$ & $0$ & $2$ & $0$ & $2$\\
+$1$ & $2$ & $1$ & $0$ & $2$ & $1$ & $2$ & $1$ & $0$ & $2$ & $2$\\
+$2$ & $1$ & $2$ & $1$ & $1$ & $2$ & $1$ & $1$ & $0$ & $2$ & $1$\\
+$3$ & $2$ & $0$ & $0$ & $2$ & $1$ & $1$ & $0$ & $1$ & $0$ & $2$\\
+$4$ & $1$ & $1$ & $0$ & $1$ & $0$ & $2$ & $1$ & $1$ & $2$ & $2$\\
+$5$ & $2$ & $2$ & $1$ & $2$ & $0$ & $1$ & $1$ & $1$ & $2$ & $1$\\
+\bottomrule
+\end{tabular}
+\caption{The identities of Lemma~\ref{lem:core} in $\F_3$, for $m\equiv r\pmod 6$ and $e=(m\bmod 2)+1$. In each row, the left value equals $L_c+(-1)^mL_d$; e.g.\ for $r=1$ in the even case, $2+2\cdot1=1$.}
+\label{tab:core}
+\end{table}
+
+\begin{proposition}[\decl{a_mod3_even}, \decl{a_mod3_odd}]\label{prop:closed}
+Let $n\ge3$. In $\F_3$,
+\[
+  a(n)=\begin{cases}
+  2^n+n\,2^{n-1}+\binom n2 2^{n-2}, & n\text{ even},\\[2pt]
+  -n\,2^{n-1}+\binom n22^{n-2}+n, & n\text{ odd}.
+  \end{cases}
+\]
+\end{proposition}
+
+\begin{proof}
+Let $n$ be even, so $s=1$ in Lemma~\ref{lem:reindex}. We claim that every summand of $a(n)$, including the term $s$ for $m=0$, equals $\binom nm\bigl(L_{(1,1,1)}(m)+(-1)^mL_{(0,1,-1)}(m)\bigr)$.
+For $m\ge2$ this is Lemma~\ref{lem:core}.
+For $m=0$ both sides are $1$, and for $m=1$ the summand is $\binom n1(-2)^0=n$, while $L_{(1,1,1)}(1)-L_{(0,1,-1)}(1)=2-1=1$.
+Summing over $m$ and applying Corollary~\ref{cor:sumlin} with $c=(1,1,1)$ and $d=(0,1,-1)$ gives the stated formula.
+
+Let $n$ be odd, so $s=-1$, and compare with $\binom nm\bigl(L_{(0,-1,1)}(m)+(-1)^mL_{(-1,0,-1)}(m)\bigr)$.
+For $m\ge2$ they agree by Lemma~\ref{lem:core}, and for $m=0$ both are $-1$.
+For $m=1$ the summand is $\binom n1\cdot1=n$, but $L_{(0,-1,1)}(1)-L_{(-1,0,-1)}(1)=-1+1=0$; so $a(n)$ is the sum of Corollary~\ref{cor:sumlin} with $c=(0,-1,1)$ and $d=(-1,0,-1)$ plus the correction $\binom n1=n$.
+\end{proof}
+
+\begin{proposition}[\decl{a_mod3}]\label{prop:mod3}
+For $n\ge6$, $a(n)\bmod3$ equals $1,0,0,0,0,2$ according as $n\equiv0,1,2,3,4,5\pmod6$.
+\end{proposition}
+
+\begin{proof}
+In $\F_3$ we have $2^2=1$, so $2^e$ depends only on $e\bmod2$, and $\binom n2=n-n^2$ by Lemma~\ref{lem:choose2}.
+For even $n$, Proposition~\ref{prop:closed} becomes $1+2n+(n-n^2)=1-n^2$, and for odd $n$ it becomes $-n+2(n-n^2)+n=n^2-n$.
+Since $n\bmod6$ determines both the parity of $n$ and $n\bmod3$, evaluating these at $n\bmod3$ gives the six values; in Lean, after the same reductions, the six residues $r=n\bmod6$ are checked by \texttt{interval\_cases} and \texttt{decide}.
+\end{proof}
+
+\subsection*{The case modulo 2 and the conclusion}
+
+\begin{lemma}[\decl{pow_zmod2}, \decl{a_mod2}]\label{lem:mod2}
+For $n\ge2$, $a(n)\equiv n+1\pmod2$.
+\end{lemma}
+
+\begin{proof}
+In $\F_2$, $x^{e+1}=x$ for all $x$ and $e$.
+The summand $k=0$ of \eqref{eq:formula} is $(1-n)^{n-1}$ with $n-1\ge1$, hence equals $1-n=1+n$ in $\F_2$.
+Every summand with $1\le k<n$ contains the factor $2^{k(k+1)}$ with $k(k+1)\ge2$, and the summand $k=n$ is $2^{n^2}$ with $n^2\ge1$, so all of them vanish in $\F_2$ (Mathlib's \decl{Finset.sum_eq_single}).
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main} (\decl{result})]
+Let $n\ge6$ and $r=n\bmod 6$.
+Proposition~\ref{prop:mod3} and Lemma~\ref{lem:mod2} give $a(n)\bmod3$ and $a(n)\bmod2$; Lean converts the equalities in \texttt{ZMod 3} and \texttt{ZMod 2} into equalities of remainders (\decl{ZMod.intCast_eq_intCast_iff'}).
+For $r=0,\dots,5$ the pair $(a(n)\bmod2,\ a(n)\bmod3)$ is $(1,1),(0,0),(1,0),(0,0),(1,0),(0,2)$, so by the Chinese remainder theorem $a(n)\bmod6=1,0,3,0,3,2$. Finally $(n-6)\bmod6=r$.
+In Lean, after case analysis on $r$, each case is closed by \texttt{omega}, which performs this CRT step on the integer $a(n)$.
+\end{proof}
+
+\begin{remark}\label{rem:n3}
+The argument uses only $n\ge3$, so the pattern holds for all $n\ge3$ (e.g.\ $a(3),a(4),a(5)\equiv0,3,2\pmod6$), but not for $n=2$, since $a(2)=23\equiv5$. The Lean theorem states only the range $n\ge6$ of the conjecture.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A386655.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}, which imports the frozen statement file (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}.
+The main theorem \decl{Math0.Frontier.A386655.result} and the final audit command read, verbatim (the private auxiliary declarations are named in Section~\ref{sec:proof}):
+\begin{lstlisting}
+theorem result : statement := by
+  intro n hn
+  have h3 := a_mod3 n hn
+  have h2 := a_mod2 n (by omega)
+  rw [ZMod.intCast_eq_intCast_iff'] at h3 h2
+  push_cast at h3 h2
+  rw [show (n - 6) % 6 = n % 6 by omega]
+  have h6 : n % 6 < 6 := Nat.mod_lt _ (by norm_num)
+  generalize hr : n % 6 = r at h3 h6 ⊢
+  interval_cases r <;> simp only [List.getD_cons_zero, List.getD_cons_succ] at h3 ⊢ <;> omega
+
+end Math0.Frontier.A386655
+
+#math0_settles Math0.Frontier.A386655.result Math0.Statements.A386655.statement
+\end{lstlisting}
+Here \decl{a_mod3} and \decl{a_mod2} are Proposition~\ref{prop:mod3} and Lemma~\ref{lem:mod2}, stated in \texttt{ZMod 3} and \texttt{ZMod 2}.
+The argument is formalized for general $n$; the only computations are the finitely many identities in $\F_3$ and $\F_2$ above, closed by \texttt{decide} and evaluated by the kernel.
+The file uses no \texttt{sorry}, \texttt{native\_decide}, \texttt{set\_option} or custom axioms, and compiles in under a minute of CPU time.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles} (\path{lean/Math0/Audit.lean}) fails unless (1) \decl{statement} is a definition of type \texttt{Prop} without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, the axiom \decl{Lean.ofReduceBool} of \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically the statement or its negation, up to metadata, with no unfolding.
+Running \texttt{lake env lean Math0/Frontier/OEIS/A386655.lean} in the directory \path{lean} prints\par\nobreak\noindent
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A386655.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A386655.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A386655.result' proves 'Math0.Statements.A386655.statement'
+\end{lstlisting}
+\end{minipage}
+so \decl{result} proves the statement using only the three standard axioms.
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib cache, builds all math0 results with \texttt{lake build} (re-running every audit), and checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified.
+To check this result alone, run \texttt{lake build Math0.Statements.OEIS.A386655} (about two minutes, mostly kernel data checks) and then the command above, in the directory \path{lean}.
+
+{\footnotesize
+\begin{thebibliography}{99}
+
+\bibitem{CGHJK}
+R.~M. Corless, G.~H. Gonnet, D.~E.~G. Hare, D.~J. Jeffrey, and D.~E. Knuth, \emph{On the Lambert $W$ function}, Adv. Comput. Math. \textbf{5} (1996), no.~4, 329--359.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A386648}
+The OEIS Foundation Inc., \url{https://oeis.org/A386648}, entry by P.~D. Hanna, Aug.~12, 2025.
+
+\bibitem{A386655}
+The OEIS Foundation Inc., \url{https://oeis.org/A386655} (e.g.f.\ $\sum_{n\ge0}(2^nx+\mathrm{LambertW}(x))^n/n!$), entry by P.~D. Hanna, Aug.~23, 2025; revision \#14, Aug.~24, 2025.
+
+\bibitem{A386656}
+The OEIS Foundation Inc., \url{https://oeis.org/A386656} (the case $3^n$), entry by P.~D. Hanna, Aug.~23, 2025.
+
+\bibitem{A386657}
+The OEIS Foundation Inc., \url{https://oeis.org/A386657} (the case $4^n$), entry by P.~D. Hanna, Aug.~23, 2025.
+
+\bibitem{A386658}
+The OEIS Foundation Inc., \url{https://oeis.org/A386658} (the case $5^n$), entry by P.~D. Hanna, Aug.~23, 2025.
+
+\end{thebibliography}
+}
+
+\end{document}

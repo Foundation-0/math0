@@ -30,6 +30,10 @@ Referees: I found no published proof of this recurrence. Sources checked:
 
 Note: the order-6 recurrence would follow routinely from Deutsch's first-order recurrence in the same entry (holonomic closure). That recurrence is stated in the entry without proof.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

@@ -35,6 +35,10 @@ Checked and not relevant (they concern a different Hardin family):
 
 Web searches (arXiv, MathOverflow/MSE, general) found no explicit prior proof of the A223395 recurrence, g.f. or closed form.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

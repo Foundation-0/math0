@@ -7,7 +7,7 @@
 
 ## Result
 
-Let a(n) = sum_{k=0..n} C(n,k) 2^(k(k+1)) (2^k - (n-k))^(n-k-1), where the k = n term is read as 2^(n^2) and 0^0 = 1. Then for every n >= 6, a(n) mod 6 equals the entry with index (n-6) mod 6 of [1, 0, 3, 0, 3, 2]. Equivalently, a(n) mod 6 = 1, 2, 0, 3, 0, 3 for n ≡ 0, 1, 2, 3, 4, 5 (mod 6). (Paul D. Hanna's conjecture, OEIS A386655.)
+Let a(n) = sum_{k=0..n} C(n,k) 2^(k(k+1)) (2^k - (n-k))^(n-k-1), where the k = n term is read as 2^(n^2) and 0^0 = 1. Then for every n >= 6, a(n) mod 6 equals the entry with index (n-6) mod 6 of [1, 0, 3, 0, 3, 2]. Equivalently, a(n) mod 6 = 1, 0, 3, 0, 3, 2 for n ≡ 0, 1, 2, 3, 4, 5 (mod 6). (Paul D. Hanna's conjecture, OEIS A386655.)
 
 ## Verification
 
@@ -22,6 +22,10 @@ Referees: I found no earlier resolution.
 - The cross-referenced sister entries A386656, A386657 and A386658 (q = 3, 4, 5) state analogous mod-6 conjectures, none marked proved. The related entry A386648 also has an open mod-6 conjecture.
 - Web searches turned up only OEIS pages (e.g. https://oeis.org/A386648, https://oeis.org/A136524) and no paper, arXiv preprint, MathOverflow/Math StackExchange post or SeqFan message proving or refuting the A386655 conjecture.
 - The classical tool used is the expansion e^(cW(x)) = Sum_k c(c-k)^(k-1) x^k/k! (the tree-function/Lambert W identity), together with Fermat's little theorem and the binomial-transform identity Sum_m C(n,m)C(m,j)x^m = C(n,j)x^j(1+x)^(n-j).
+
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
 
 ## Citation
 
