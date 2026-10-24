@@ -25,6 +25,10 @@ Referees: - OEIS A160848 (local mirror, revision #13 of Dec 25 2017): Barker's g
 
 No prior proof or counterexample of Barker's A160848 recurrence was found.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

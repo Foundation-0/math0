@@ -1,0 +1,412 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+\usepackage{booktabs}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    noncomputable,private},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℝ}{{$\mathbb{R}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {∑}{{$\sum$}}1
+    {∈}{{$\in$}}1 {√}{{$\surd$}}1 {π}{{$\pi$}}1 {≤}{{$\le$}}1 {∧}{{$\wedge$}}1
+    {∨}{{$\vee$}}1 {→}{{$\to$}}1 {∀}{{$\forall$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+\raggedbottom
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+
+\title[Turns of the spiral of Theodorus]{The numbers of complete triangles in consecutive turns of the spiral of Theodorus differ by 18, 19, 20 or 21}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 24, 2026}
+
+\begin{document}
+\begin{abstract}
+In the spiral of Theodorus the $i$-th right triangle has legs $\sqrt i$ and $1$ and angle $\arctan(1/\sqrt i)$ at the centre; let $c(n)$ be the number of triangles that lie entirely in the $n$-th turn.
+We prove that $c(n)-c(n-1)\in\{18,19,20,21\}$ for every $n\ge2$, which is the conjecture stated by S\'ebastien Dumortier in 2010 in the OEIS entry A172164.
+Two elementary one-step inequalities give $|c(n)-c(n-1)-2\pi^2|<2.13$ for $n\ge71$, and a rigorous interval computation covers $n\le70$.
+We found no earlier proof and classify the result as new, with the caveat that the argument is an effective form of Hlawka's classical asymptotics.
+The proof is verified in Lean~4 with Mathlib against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry, whose definitions are checked by the kernel against all $69$ listed terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+The spiral of Theodorus (\emph{Pythagoras's snail} in the OEIS) is made of right triangles around a common vertex: the first has legs $1,1$, and each next one has as legs the previous hypotenuse and a segment of length $1$.
+So triangle $i\ge1$ has legs $\sqrt i$ and $1$ and angle $\arctan(1/\sqrt i)$ at the centre, and the first $k$ triangles fill the angle
+\[
+  S(k)=\sum_{i=1}^{k}\arctan\frac1{\sqrt i}\qquad(S(0)=0).
+\]
+Triangle $i$ occupies the angular sector $[S(i-1),S(i)]$, and the $n$-th turn is the range of angles $[2\pi(n-1),2\pi n]$.
+
+A072895 \cite{A072895} (R.~G.~Wilson~v, 2002) lists the least $k$ with $S(k)>2\pi n$, and A137515 \cite{A137515} (S.~Dumortier, 2008) lists the number $K_n=\text{A072895}(n)-1$ of triangles in the first $n$ turns: $16,53,109,185,\dots$
+A comment in A137515 says that ``from one term to the next one, the number added grows by 18, 19, 20 or 21 (tested up to 5000 terms)'' (restated by H.~P.~Dale, 2019).
+Finally A172164 \cite{A172164} (S.~Dumortier, 2010) lists $a(n)=c(n)-c(n-1)$, where $c(n)$ is the number of triangles entirely contained in turn $n$, and conjectures that $a(n)\in\{18,19,20,21\}$ for all $n\ge2$ (Conjecture~\ref{conj}).
+R.~G.~Wilson~v and H.~Kociemba added frequency counts of the four values over the first $10^5$ and $10^7$ turns (2013).
+
+The conjecture is explained by the asymptotics of $S$.
+Hlawka \cite{Hl80} showed that $S(k)=2\sqrt k+\kappa+o(1)$, where $\kappa=-2.1577829966\ldots$ is Hlawka's \emph{Schneckenkonstante} (denoted $K$ in A105459 \cite{A105459}); see Davis \cite[pp.~157--167]{Da93} for an English account and Brink \cite{Br12} for the relation of the spiral to zeta values at the half-integers.
+Hence $K_n\approx(\pi n-\kappa/2)^2$; Kociemba observed numerically (A072895) that $\lfloor(\pi n-\kappa/2)^2-1/6\rfloor=\text{A072895}(n)$ for $n<10^9$.
+Since the second difference $\Delta^2$ of $(\pi n+\text{const})^2$ is $2\pi^2=19.739\ldots$ and $|\Delta^2\lfloor y_n\rfloor-\Delta^2y_n|<2$ for real sequences, this suggests exactly the values $18,\dots,21$.
+A proof needs explicit error terms: an error of $1$ in $K_n$ would allow errors of up to $4$ in $a(n)$.
+
+We prove the conjecture (Theorem~\ref{thm:main}) without using Hlawka's constant or any limit.
+Two one-step inequalities (Lemmas~\ref{lem:up} and~\ref{lem:low}) show that $E(k)=S(k)-2\sqrt k$ is nonincreasing and $E(k)-2/\sqrt k$ is nondecreasing; on a window of three consecutive turns this gives $|a(n)-2\pi^2|<2.13$ once $n\ge71$ (Proposition~\ref{prop:core}).
+The terms with $n\le70$ come from an interval computation evaluated by the Lean kernel.
+
+\subsection*{Status and prior work}
+The math0 literature referees found no prior proof and no counterexample.
+A172164 still states the conjecture at its current revision (\#25, August~11, 2026), the comments in A137515 and A072895 are numerical, and W.~Lang's related entries (A296179, A296181, A295338, A295339) do not address the bound.
+Searches of arXiv, MathOverflow, Mathematics Stack Exchange, the SeqFan list and the literature on the spiral \cite{Hl80,Da93,Br12} found no statement of the bound; Kociemba's web page on the spiral, linked from A072895, could only be seen through search snippets, which mention no proof.
+The conjecture is not among the statements of the formal-conjectures repository \cite{FC} at the commit pinned by math0 (\texttt{c77fdd4}).
+We therefore classify Theorem~\ref{thm:main} as a new result. The mathematics is modest, an effective version of Hlawka's formula (Remark~\ref{rem:hlawka}), and the bound may be known to experts without having been written down.
+
+\section{Statement}\label{sec:statement}
+
+Let $S$ be as above. For $n\ge1$ let
+\[
+  T(n)=\{\,i\ge1:\ 2\pi(n-1)\le S(i-1)\ \text{and}\ S(i)\le2\pi n\,\},\qquad c(n)=\#T(n),
+\]
+the set and number of triangles lying entirely in the $n$-th turn, and for $n\ge2$ let $a(n)=c(n)-c(n-1)$.
+
+\begin{theorem}\label{thm:main}
+For every integer $n\ge2$, $a(n)\in\{18,19,20,21\}$.
+\end{theorem}
+
+All four values occur: $a(2)=20$, $a(3)=19$, $a(7)=21$ and $a(8)=18$.
+
+\subsection*{The OEIS conjecture}
+The entry A172164 \cite{A172164} is named ``Differences between numbers of triangles entirely contained in two consecutive turns of Pythagoras's snail (Theodorus spiral).'' It has offset $2$, lists $69$ terms $a(2),\dots,a(70)$, and gives the example ``In the first turn, 16 triangles are complete. In the 2nd turn, there are 36 triangles completely included. The difference is 20.''
+Its COMMENTS section contains, verbatim, the following conjecture by S\'ebastien Dumortier, dated January~27, 2010:
+\begin{quote}\small
+\texttt{Conjecture : The terms are only 18,19,20,21 (From the first thousand turns, there are 2,3\% of 18, 36,5\% of 19, 46,2\% of 20 and 15\% of 21). No period found. Probably due to Pi transcendence.}
+\end{quote}
+
+\begin{conjecture}[Dumortier]\label{conj}
+Every term $a(n)$, $n\ge2$, of A172164 is one of $18,19,20,21$.
+\end{conjecture}
+
+The percentages and the last two sentences are observations, not part of the formalized claim.
+
+\subsection*{Lean statement}
+The statement is the definition \decl{Math0.Statements.A172164.statement} in the math0 statement file \path{lean/Math0/Statements/OEIS/A172164.lean}, which was reviewed for fidelity and frozen (SHA-256 \texttt{948ca46a\dots b30be5f4}) before any proof attempt.
+The definitions and the statement read verbatim (docstrings, blank lines, the auxiliary lemmas and the data checks omitted):\par\nobreak\noindent
+\begin{minipage}{\linewidth}
+\begin{lstlisting}
+namespace Math0.Statements.A172164
+open Real Finset Filter Topology
+noncomputable def S (k : ℕ) : ℝ := ∑ i ∈ range k, arctan (1 / √((i : ℝ) + 1))
+def turnTriangles (n : ℕ) : Set ℕ :=
+  {i | 1 ≤ i ∧ 2 * π * ((n : ℝ) - 1) ≤ S (i - 1) ∧ S i ≤ 2 * π * n}
+noncomputable def c (n : ℕ) : ℕ := (turnTriangles n).ncard
+noncomputable def a (n : ℕ) : ℤ := (c n : ℤ) - c (n - 1)
+def statement : Prop := ∀ n : ℕ, 2 ≤ n → a n = 18 ∨ a n = 19 ∨ a n = 20 ∨ a n = 21
+\end{lstlisting}
+\end{minipage}
+
+\emph{Encoding.} \texttt{S k} is $\sum_{i=0}^{k-1}\arctan(1/\sqrt{i+1})=S(k)$, and \texttt{turnTriangles n} is $T(n)$: \texttt{i - 1} is guarded by $1\le i$, and $n-1$ in the turn bound is computed in $\mathbb R$.
+\texttt{Set.ncard} returns $0$ on infinite sets, but \decl{turnTriangles_finite} shows that $T(n)\subseteq[0,81n^2+2)$, using $S(k)\ge\frac56\sqrt k$ for $k\ge2$ (\decl{S_ge}), so \texttt{c n} is the true count.
+\texttt{a n} is computed in $\mathbb Z$, and for $n\ge2$ the index $n-1\ge1$ is the previous turn.
+The turn bounds are closed, the natural reading of ``entirely contained''; with open bounds triangle $1$, which starts at $S(0)=0$, would not count for turn $1$, contradicting the example $c(1)=16$. Otherwise the readings differ only if $S(k)\in2\pi\mathbb Z$ for some $k\ge1$. This does not happen for $k\le K_{70}$ (Proposition~\ref{prop:crossing}); we do not know whether it can happen at all, and Section~\ref{sec:proof} does not assume that it cannot.
+
+\emph{Checks against the OEIS data.} The statement file proves, against the real-number definitions, that $c(1)=16$ and $c(2)=36$, as in the example (\decl{c_one_two}), and that $a(2),\dots,a(70)$ are the $69$ listed terms (\decl{a_data}).
+Along the way it certifies the turn boundaries $K_1,\dots,K_{70}$, the first $42$ of which are the $42$ listed terms of A137515 (\decl{Kseq_A137515}).
+These checks rest on the interval computation of Section~\ref{sec:small}, and the case $n\le70$ of Theorem~\ref{thm:main} uses them.
+
+\section{Proof}\label{sec:proof}
+
+Write $f(j)=\arctan(1/\sqrt j)$ and $E(k)=S(k)-2\sqrt k$.
+Each lemma names its Lean declaration: unmarked names are private lemmas of the proof file, names marked (St) are in the statement file.
+For $0\le x<1$ the terms of $\arctan x=\sum_{i\ge0}(-1)^ix^{2i+1}/(2i+1)$ decrease, so partial sums with an even (odd) number of terms are lower (upper) bounds (\decl{arctan_alt_bounds}, St); in particular $x-x^3/3\le\arctan x\le x$.
+
+\subsection{Two one-step inequalities}
+
+\begin{lemma}[\decl{step_upper}]\label{lem:up}
+For every $k\ge0$, $f(k+1)\le2(\sqrt{k+1}-\sqrt k)$.
+\end{lemma}
+
+\begin{proof}
+Let $p=\sqrt k$ and $q=\sqrt{k+1}\ge1$, so $q^2=p^2+1$.
+If $q=1$ then $f(1)=\pi/4<1=1/q$; if $q>1$ then $\arctan(1/q)\le1/q$ by the alternating-series bound.
+Finally $2q(q-p)-1=q^2+(q^2-1)-2pq=(q-p)^2\ge0$, so $1/q\le2(q-p)$.
+\end{proof}
+
+\begin{lemma}[\decl{step_lower}]\label{lem:low}
+For every $k\ge1$, $f(k+1)\ge2(\sqrt{k+1}-\sqrt k)+2/\sqrt{k+1}-2/\sqrt k$.
+\end{lemma}
+
+\begin{proof}
+Let $p=\sqrt k$, $q=\sqrt{k+1}$, so $0<p<q$ and $p^2=q^2-1$, and $x=1/q<1$.
+By the alternating-series bound $f(k+1)\ge x-x^3/3$, and a direct computation gives
+\[
+  x-\frac{x^3}3-\Bigl(2(q-p)+\frac2q-\frac2p\Bigr)=\frac{N}{3pq^3},\qquad N=6q^3-3pq^2-p-6pq^3(q-p).
+\]
+Using $p^2=q^2-1$ one checks the identity $(q+p)N=3q^3(q-p)+q(2q-p)+1$, whose right-hand side is positive. Hence $N>0$.
+\end{proof}
+
+\begin{corollary}[\decl{E_anti}, \decl{E_mono}]\label{cor:E}
+\textup{(a)} If $k\le m$ then $E(m)\le E(k)$; in particular $E(k)\le E(0)=0$ for all $k$.
+\textup{(b)} If $1\le k\le m$ then $E(k)-2/\sqrt k\le E(m)-2/\sqrt m$.
+\end{corollary}
+
+\begin{proof}
+Since $S(k+1)=S(k)+f(k+1)$ (\decl{S_succ}, St), Lemma~\ref{lem:up} says $E(k+1)\le E(k)$ and Lemma~\ref{lem:low} says $E(k)-2/\sqrt k\le E(k+1)-2/\sqrt{k+1}$ for $k\ge1$. Induct on $m$.
+\end{proof}
+
+\begin{remark}\label{rem:hlawka}
+Corollary~\ref{cor:E} implies that $E(k)$ converges to a limit, Hlawka's constant $\kappa$ \cite{Hl80}, with $0\le E(k)-\kappa\le2/\sqrt k$ for $k\ge1$. This is not used below and not formalized.
+\end{remark}
+
+\subsection{Counting the triangles of a turn}
+$S$ is strictly increasing with $S(0)=0$ (\decl{S_strictMono}, \decl{S_zero}, St), unbounded because $S(k)\ge\frac56\sqrt k$ (\decl{S_unbounded}), and $S(k+1)<S(k)+\pi/2$ because $\arctan<\pi/2$ (\decl{S_lt_succ_of_le}).
+
+\begin{lemma}[\decl{exists_KL}]\label{lem:KL}
+For every real $\theta\ge0$ there are $K,L\in\N$ such that $S(K)\le\theta<S(K+1)$; for all $j$, $\theta\le S(j)$ if and only if $L\le j$; and either $L=K$ and $S(K)=\theta$, or $L=K+1$.
+\end{lemma}
+
+\begin{proof}
+Let $K+1$ be the least index with $\theta<S(K+1)$; it exists because $S$ is unbounded, and it is positive because $S(0)=0\le\theta$. Then $S(K)\le\theta$. Put $L=K$ if $S(K)=\theta$ and $L=K+1$ otherwise; the equivalence follows from strict monotonicity.
+\end{proof}
+
+\begin{lemma}[\decl{c_formula}]\label{lem:count}
+If $S(K)\le2\pi m<S(K+1)$, $L\le K$, and $2\pi(m-1)\le S(j)\Leftrightarrow L\le j$ for all $j$, then $c(m)=K-L$.
+\end{lemma}
+
+\begin{proof}
+For $i\ge1$: $2\pi(m-1)\le S(i-1)$ if and only if $i\ge L+1$, and $S(i)\le2\pi m$ if and only if $i\le K$. So $T(m)=\{L+1,\dots,K\}$, which has $K-L$ elements (\decl{ncard_Icc_nat}, St).
+\end{proof}
+
+\subsection{The squeeze on three consecutive turns}
+
+\begin{lemma}[\decl{bound_X}]\label{lem:X}
+Let $0<\pi'<3.1416$ and let $P,Q,V,T_0$ be reals with $200\le P\le Q$, $0\le V\le1/100$, $VP^2\le2(Q-P)$, $2P\le T_0<2P+1/P$ and $2Q\le T_0+4\pi'+V$. Then $X:=V(T_0+2\pi')+V^2/2\le0.13$.
+\end{lemma}
+
+\begin{proof}
+From the hypotheses, $Q-P\le\frac12(T_0+4\pi'+V)-P<\frac1{2P}+2\pi'+\frac V2\le2\pi'+\frac3{400}$, and $T_1:=T_0+2\pi'<2P+2\pi'+\frac1{200}$. Hence
+\[
+  VT_1P^2\le2(Q-P)T_1\le2\Bigl(2\pi'+\tfrac3{400}\Bigr)\Bigl(2P+2\pi'+\tfrac1{200}\Bigr)\le2\cdot6.291\,(2P+6.291)\le0.129\,P^2,
+\]
+the last step because $0.129P^2-25.164P-79.16>0$ for $P\ge200$. So $VT_1\le0.129$, and $V^2/2\le0.001$.
+\end{proof}
+
+\begin{lemma}[\decl{final_bound}]\label{lem:final}
+Let $3.14<\pi'<3.1416$, let $T_0,V,K_1,K_2,L_0,L_1$ be reals with $X=V(T_0+2\pi')+V^2/2\le0.13$, and put $T_1=T_0+2\pi'$, $T_2=T_0+4\pi'$. If
+\begin{align*}
+  &\text{(F1)}\ 4K_2\le(T_2+V)^2, &&\text{(F2)}\ T_2^2<4(K_2+1), &&\text{(F3)}\ 4L_0\le(T_0+V)^2+4,\\
+  &\text{(F4)}\ T_0^2\le4L_0, &&\text{(F5)}\ T_1^2-2<2(K_1+L_1), &&\text{(F6)}\ 2(K_1+L_1)\le(T_1+V)^2+2,
+\end{align*}
+then $A=(K_2-L_1)-(K_1-L_0)$ satisfies $17<A<22$.
+\end{lemma}
+
+\begin{proof}
+We have $4A=4K_2+4L_0-2\cdot2(K_1+L_1)$ and the identities
+\[
+  (T_2+V)^2+(T_0+V)^2-2T_1^2=8\pi'^2+4VT_1+2V^2,\qquad T_2^2+T_0^2-2(T_1+V)^2=8\pi'^2-4VT_1-2V^2 .
+\]
+By (F1), (F3), (F5), $4A<8\pi'^2+4X+8$; by (F2), (F4), (F6), $4A>8\pi'^2-4X-8$. So $|A-2\pi'^2|<2+X\le2.13$, and $9.85<\pi'^2<9.87$ gives $17<A<22$.
+\end{proof}
+
+\begin{proposition}[\decl{core}]\label{prop:core}
+Let $r\ge69$ be real and $\theta_i=2\pi(r+i)$ for $i=0,1,2$. Let $K_0,K_1,K_2\in\N$ satisfy $S(K_i)\le\theta_i<S(K_i+1)$, and let $L_0,L_1\in\N$ satisfy, for $i=0,1$: either $L_i=K_i$ and $S(K_i)=\theta_i$, or $L_i=K_i+1$. Then $17<(K_2-L_1)-(K_1-L_0)<22$.
+\end{proposition}
+
+\begin{proof}
+Since $S(K_0)\le\theta_0<\theta_1<S(K_1+1)$ and $S$ is increasing, $K_0\le K_1$; likewise $K_1\le K_2$.
+Let $e=E(K_0)$, so $e\le0$ by Corollary~\ref{cor:E}(a), and put $T_i=\theta_i-e$; thus $T_1=T_0+2\pi$, $T_2=T_0+4\pi$.
+By Corollary~\ref{cor:E}(a), $E(k)\le e$ for $k\ge K_0$, so:
+(i) if $K\ge K_0$ and $\theta<S(K+1)$, then $\theta-e<2\sqrt{K+1}$; and (ii) if $K\ge K_0$ and $S(K)=\theta$, then $\theta-e\le2\sqrt K$.
+By (i) with $K=K_0$ and $e\le0$, $2\sqrt{K_0+1}>2\pi r\ge2\cdot3.14\cdot69$, so $\sqrt{K_0+1}>216$ and $K_0\ge40000$.
+Put $P=\sqrt{K_0}\ge200$, $Q=\sqrt{K_2}\ge P$ and $V=2/P-2/Q$. Then $V\ge0$, $V\le2/P\le1/100$, and $VPQ=2(Q-P)$ gives $VP^2\le2(Q-P)$.
+For $K_0\le k\le K_2$, Corollary~\ref{cor:E}(b) (applicable as $K_0\ge1$) gives $E(k)\ge e-2/P+2/\sqrt k\ge e-V$, so:
+(iii) if $K_0\le K\le K_2$ and $S(K)\le\theta$, then $2\sqrt K\le\theta-e+V$.
+Next, $T_0=\theta_0-S(K_0)+2P\ge2P$; and since $(P+\frac1{2P})^2\ge K_0+1$, (i) gives $T_0<2\sqrt{K_0+1}\le2P+1/P$. By (iii) with $K=K_2$, $2Q\le T_2+V=T_0+4\pi+V$.
+With $3.14<\pi<3.1416$ (Mathlib's \decl{Real.pi_gt_d2}, \decl{Real.pi_lt_d4}), Lemma~\ref{lem:X} gives $X\le0.13$.
+It remains to verify (F1)--(F6) of Lemma~\ref{lem:final}; each follows by squaring inequalities between nonnegative numbers.
+(F1) is (iii) at $K_2$, and (F2) is (i) at $K_2$.
+For (F3), $L_0\le K_0+1$ and $4K_0=4P^2\le T_0^2\le(T_0+V)^2$.
+For (F4): if $L_0=K_0$ and $S(K_0)=\theta_0$, then (ii) gives $T_0\le2\sqrt{K_0}$, so $T_0^2\le4L_0$; if $L_0=K_0+1$, (i) at $K_0$ gives $T_0^2<4L_0$.
+For (F5): if $L_1=K_1$ and $S(K_1)=\theta_1$, (ii) gives $T_1^2\le4K_1=2(K_1+L_1)$; if $L_1=K_1+1$, (i) gives $T_1^2<4(K_1+1)=2(K_1+L_1)+2$.
+For (F6), $L_1\le K_1+1$ and (iii) at $K_1$ gives $4K_1\le(T_1+V)^2$.
+Lemma~\ref{lem:final} with $\pi'=\pi$ completes the proof.
+\end{proof}
+
+\subsection{The turns \texorpdfstring{$n\le70$}{n <= 70}}\label{sec:small}
+All declarations named in this subsection are in the statement file.
+Let $K_1,\dots,K_{70}$ be the numbers $16,53,109,\dots,47456,48835$ of the list \decl{Kseq}.
+
+\begin{proposition}[\decl{crossing}, St]\label{prop:crossing}
+For $1\le n\le70$, $S(K_n)<2\pi n<S(K_n+1)$.
+\end{proposition}
+
+\begin{proof}[The certificate]
+Write $S(k+1)=\pi/4+R(k)$ with $R(k)=\sum_{j=2}^{k+1}f(j)$ (\decl{S_succ_eq_R}).
+For $j\ge2$ and $x=1/\sqrt j<1$ we have $x^2=1/j$, and the alternating-series bounds with $2r$ and $2r+1$ terms read $x(A_r-B_r)\le f(j)\le x(A_{r+1}-B_r)$, where $A_r=\sum_{i<r}j^{-2i}/(4i+1)$ and $B_r=\sum_{i<r}j^{-2i-1}/(4i+3)$ (\decl{alt_sum_even}, \decl{alt_sum_odd}).
+Let $D=2^{50}$. If $q_{\rm lo},q_{\rm hi}\in\N$ satisfy $q_{\rm lo}^2j\le2^{100}\le q_{\rm hi}^2j$, then $q_{\rm lo}\le Dx\le q_{\rm hi}$, and rounding every term down to an integer loses less than $1$ per term (\decl{term_lower}, \decl{term_upper}):
+\begin{align*}
+  \textstyle\sum_{i<r}\bigl\lfloor\frac{q_{\rm lo}}{(4i+1)j^{2i}}\bigr\rfloor-\sum_{i<r}\bigl\lfloor\frac{q_{\rm lo}}{(4i+3)j^{2i+1}}\bigr\rfloor-r
+  &\le D\,f(j)\\
+  &\le\textstyle\sum_{i\le r}\bigl\lfloor\frac{q_{\rm hi}}{(4i+1)j^{2i}}\bigr\rfloor+r+1-\sum_{i<r}\bigl\lfloor\frac{q_{\rm hi}}{(4i+3)j^{2i+1}}\bigr\rfloor .
+\end{align*}
+A program written with recursors and primitive operations on natural numbers (\decl{walkK}) adds these bounds for $j=2,3,\dots$ into running sums $a,b,c,d$ with the invariant $a-b\le D\,R(k)\le c-d$, proved for every input (\decl{walkK_spec}).
+It finds $q_{\rm lo},q_{\rm hi}$ by a Newton iteration and checks $q_{\rm lo}^2j\le2^{100}\le q_{\rm hi}^2j$, falling back to the valid bounds $0$ and $D$ if a check fails; the number $r$ of terms affects only the precision.
+At each target $(n,K_n)$ the program \decl{checkK} tests, in integer arithmetic, that $(c-d)/D<\pi_{\rm lo}(8n-1)/4$ for $k=K_n-1$ and $(a-b)/D>\pi_{\rm hi}(8n-1)/4$ for $k=K_n$, where $\pi_{\rm lo}=3.14159265358979323846<\pi<\pi_{\rm hi}=\pi_{\rm lo}+10^{-20}$ (Mathlib's \decl{Real.pi_gt_d20}, \decl{Real.pi_lt_d20}).
+As $2\pi n-\pi/4=\pi(8n-1)/4$, the tests give $S(K_n)<2\pi n<S(K_n+1)$, and \decl{checkK_sound} states that a run returning \texttt{true} certifies all targets.
+The theorem \decl{check_targets}, that the run on the $70$ targets returns \texttt{true}, is proved by \texttt{decide +kernel}: the Lean kernel evaluates the program over $j=2,\dots,48836$ with its built-in arbitrary-precision arithmetic on natural number literals.
+The accumulated enclosure width is about $1.4\cdot10^{-7}$, while the smallest of the gaps $2\pi n-S(K_n)$ and $S(K_n+1)-2\pi n$ is about $2.1\cdot10^{-5}$ (at $n=53$).
+\end{proof}
+
+By Proposition~\ref{prop:crossing} and strict monotonicity, $T(1)=\{1,\dots,K_1\}$ and $T(n)=\{K_{n-1}+2,\dots,K_n\}$ for $2\le n\le70$ (\decl{turnTriangles_one}, \decl{turnTriangles_eq}), so $c(1)=K_1$ and $c(n)=K_n-K_{n-1}-1$ (\decl{c_eq}), in accordance with the entry's formula ``second forward difference of A072895''. Hence \decl{a_data}: $a(2),\dots,a(70)$ are the $69$ listed terms, all in $\{18,19,20,21\}$.
+
+\subsection{Proof of Theorem~\ref{thm:main} (\texorpdfstring{\texttt{result}}{result})}
+Let $n\ge2$. If $n\le70$, $a(n)$ occurs in the list of \decl{a_data}, and every entry of that list is $18$, $19$, $20$ or $21$ (checked by \texttt{decide}).
+Let $n\ge71$ and $r=n-2\ge69$. Apply Lemma~\ref{lem:KL} to $\theta_i=2\pi(r+i)$, $i=0,1,2$, to get $K_i,L_i$.
+Since $S(K_0+1)<\theta_0+\pi/2<\theta_1<S(K_1+1)$, we have $L_0\le K_0+1\le K_1$, and likewise $L_1\le K_2$.
+Turn $n$ is $[\theta_1,\theta_2]$ and turn $n-1$ is $[\theta_0,\theta_1]$, so Lemma~\ref{lem:count} gives $c(n)=K_2-L_1$ and $c(n-1)=K_1-L_0$.
+By Proposition~\ref{prop:core}, the integer $a(n)=(K_2-L_1)-(K_1-L_0)$ satisfies $17<a(n)<22$. \qed
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files}
+The proof is in \path{lean/Math0/Frontier/OEIS/A172164.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}; it imports the frozen statement file and the audit commands of \path{lean/Math0/Audit.lean}.
+The main theorem is \decl{Math0.Frontier.A172164.result}, of type \decl{statement}, preceded by the private lemmas named in Section~\ref{sec:proof}; the case $n\le70$ uses \decl{a_data} of the statement file.
+Neither file uses \texttt{sorry}, \texttt{native\_decide}, \texttt{set\_option}, custom axioms or custom syntax.
+
+\subsection*{Audit}
+The file ends with the command \texttt{\#math0\_settles} applied to \decl{result} and \decl{statement}.
+This command (\path{lean/Math0/Audit.lean}) fails unless \decl{statement} is a \texttt{Prop}-valued definition, \decl{result} has syntactically the type \decl{statement} (or its negation), and both depend on no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}; this rejects \decl{sorryAx}, the axiom \decl{Lean.ofReduceBool} behind \texttt{native\_decide}, and custom axioms.
+Since \decl{result} depends on \decl{a_data} and hence on \decl{check_targets}, the axiom check also covers the interval computation.
+Running \texttt{lake env lean Math0/Frontier/OEIS/A172164.lean} in the directory \path{lean} prints\par\nobreak\noindent
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A172164.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A172164.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A172164.result' proves 'Math0.Statements.A172164.statement'
+\end{lstlisting}
+\end{minipage}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results (re-running every audit command) and checks that the pinned dependencies are unmodified.
+To check this result alone, run \texttt{lake build Math0.Statements.OEIS.A172164} (about a minute, half of it the kernel evaluation of \decl{check_targets}) and then \texttt{lake env lean Math0/Frontier/OEIS/A172164.lean} (about half a minute) in the directory \path{lean}.
+
+{\footnotesize
+\begin{thebibliography}{99}
+
+\bibitem{Br12}
+D.~Brink, \emph{The spiral of Theodorus and sums of zeta-values at the half-integers}, Amer. Math. Monthly \textbf{119} (2012), no.~9, 779--786.
+
+\bibitem{Da93}
+P.~J.~Davis, \emph{Spirals: From Theodorus to Chaos}, A K Peters, Wellesley, MA, 1993.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Hl80}
+E.~Hlawka, \emph{Gleichverteilung und Quadratwurzelschnecke}, Monatsh. Math. \textbf{89} (1980), 19--44.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{A072895}
+The OEIS Foundation Inc., \url{https://oeis.org/A072895} (least $k$ for the Theodorus spiral to complete $n$ revolutions), entry by R.~G.~Wilson~v, Jul.~29, 2002.
+
+\bibitem{A105459}
+The OEIS Foundation Inc., \url{https://oeis.org/A105459} (decimal expansion of Hlawka's Schneckenkonstante), entry by D.~Brink, Jun.~13, 2011.
+
+\bibitem{A137515}
+The OEIS Foundation Inc., \url{https://oeis.org/A137515} (maximal number of right triangles in $n$ turns of Pythagoras's snail), entry by S.~Dumortier, Apr.~23, 2008.
+
+\bibitem{A172164}
+The OEIS Foundation Inc., \url{https://oeis.org/A172164} (differences between numbers of triangles entirely contained in two consecutive turns of Pythagoras's snail), entry by S.~Dumortier, Jan.~27, 2010; revision \#25, Aug.~11, 2026.
+
+\end{thebibliography}
+}
+
+\end{document}

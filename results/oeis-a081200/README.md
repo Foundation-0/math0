@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: %C A081200 Conjecture (verified up to a(9)): Numbe
 
 Referees: P. Erdős and J. L. Selfridge, "On a combinatorial game", J. Combin. Theory Ser. A 14 (1973) 298-301 (states that the n-dimensional hypercube of side k has ((k+2)^n - k^n)/2 winning lines; k=5 gives (7^n-5^n)/2 = A081200); S. W. Golomb and A. W. Hales, "Hypercube Tic-Tac-Toe", More Games of No Chance, MSRI Publ. 42 (2002), 167-182, Theorem 1 (same count, same word encoding and 2-to-1 reversal proof; work dates to before 1972); the border-shell proof is credited to Leo Moser in R. Honsberger, Mathematical Morsels (cut-the-knot.org/proofs/tictactoe.shtml); O. Patashnik, "Qubic: 4x4x4 Tic-Tac-Toe", Math. Mag. 53 (1980) (k^n game has ((k+2)^n - k^n)/2 lines); OEIS A005059 (k=3 analogue stated without a conjecture label, D. W. Wilson c. 1999). Related open Hardin comments that the same argument settles: A081199 (k=4) and A081201 (k=6).
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

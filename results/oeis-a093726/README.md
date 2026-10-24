@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: Conjecture: a(n)/A093727(n) = A317974(n+1)/A138573
 
 Referees: OEIS A093726 rev #13 (Jun 20 2026): the formula is still marked "Conjecture: a(n)/A093727(n) = A317974(n+1)/A138573(n). - Zhuorui He, Jun 16 2026"; there is no later %E edit recording a proof. Related prior work: Peter Bala's 2014 formula in OEIS A138573 that A138573(n) = |U(n)|^2 for the Gaussian Lucas sequence U(n) = (1+i)U(n-1) + U(n-2), which covers the denominator part only. A317974 (rev #35, Jun 30 2026) has no relevant formula. Not covered by S. Fried, "Further proofs of conjectures from the OEIS", arXiv:2607.24832 (Jul 2026); I checked its full text for the A-numbers. Fried's earlier papers (arXiv:2410.07237; JIS 2025 and 2026) predate the conjecture. No MathOverflow, Math StackExchange, SeqFan or arXiv resolution found. Sources: https://raw.githubusercontent.com/oeis/oeisdata/main/seq/A093/A093726.seq, https://arxiv.org/abs/2607.24832
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

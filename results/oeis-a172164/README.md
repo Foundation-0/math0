@@ -37,6 +37,10 @@ Unrelated papers checked: arXiv 2403.20207 (Stouten, about hypotenuses on a comm
 
 The result follows from effective versions of the Hlawka/Davis asymptotics, but no source I found writes the bound down.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

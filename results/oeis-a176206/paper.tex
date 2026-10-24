@@ -1,0 +1,398 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+\usepackage{booktabs}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,unfold,rw,at,rfl},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {∀}{{$\forall$}}1 {→}{{$\to$}}1 {←}{{$\leftarrow$}}1
+    {≤}{{$\le$}}1 {∑}{{$\sum$}}1 {∈}{{$\in$}}1 {π}{{$\pi$}}1 {·}{{$\cdot$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+\raggedbottom
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Div}{\operatorname{Div}}
+\newcommand{\parts}{\operatorname{parts}}
+
+\title[Divisors of the rows of OEIS A176206 and parts of partitions]{The divisors of the terms of row $n$ of OEIS A176206 are, with multiplicity, the parts of all partitions of $n$}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 24, 2026}
+
+\begin{document}
+\begin{abstract}
+Row $n$ of the OEIS triangle A176206 lists $n-k$ repeated $p(k)$ times for $k=0,\dots,n-1$, where $p$ is the partition function, and in November 2020 Omar E. Pol conjectured in this entry that all divisors of all terms of row $n$ are also all parts of all partitions of $n$.
+We prove the conjecture in its intended form, as an identity of multisets: for every $n\ge1$, the divisors of the terms of row $n$, counted with multiplicity, are the parts of all partitions of $n$, counted with multiplicity; the proof compares the multiplicity of each $d$ on both sides through the recursion obtained by removing one part equal to $d$.
+The result is not new in substance: it is equivalent to the classical formula $\sum_{j\ge1}p(n-jd)$ for the number of parts equal to $d$ in all partitions of $n$, recorded in OEIS A066633 in 2002 and proved by Ghosh Dastidar and Sen Gupta in 2010, and to a 2023 theorem of Merca, so our contribution is the first formal proof of a known result.
+The proof is verified in Lean~4 with Mathlib against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry, whose definition of the triangle is checked by the kernel against all $94$ listed terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Let $p(k)$ be the number of partitions of $k$ (OEIS A000041 \cite{A000041}), so that $p(0),p(1),p(2),\dots=1,1,2,3,5,7,11,\dots$.
+The OEIS entry A176206 \cite{A176206} is the irregular triangle whose row $n\ge1$ is the nonincreasing list $R_n$ in which $n-k$ is repeated $p(k)$ times, for $k=0,1,\dots,n-1$:
+\[
+  R_1=(1),\quad R_2=(2,1),\quad R_3=(3,2,1,1),\quad R_4=(4,3,2,2,1,1,1),\quad\dots
+\]
+Row $n$ has length $\sum_{k<n}p(k)$, which is A000070$(n-1)$ \cite{A000070}.
+The entry was submitted by Alford Arnold on April~11, 2010.
+On November~22, 2020 Omar E. Pol gave it its current name, ``row n has length A000070(n-1) and every column k gives the positive integers'', and on November~23, 2020 he added the conjecture that ``all divisors of all terms in row n are also all parts of all partitions of n''.
+
+The worked example in the entry shows what is meant. The divisors of the twelve terms of $R_5=(5,4,3,3,2,2,2,1,1,1,1,1)$ are twelve $1$'s, four $2$'s, two $3$'s, one $4$ and one $5$, and these are exactly the parts of the seven partitions $5$, $4+1$, $3+2$, $3+1+1$, $2+2+1$, $2+1+1+1$, $1+1+1+1+1$ of $5$.
+So the conjecture compares multiplicities.
+For a positive integer $t$ let $\Div(t)$ be the set of its positive divisors, and for a partition $\lambda$ let $\parts(\lambda)$ be the multiset of its parts and $m_d(\lambda)$ the number of parts of $\lambda$ equal to $d$.
+Sums of multisets add multiplicities, and $c\cdot M$ is the sum of $c$ copies of $M$.
+We consider the multisets
+\[
+  \Delta_n=\sum_{k=0}^{n-1}p(k)\cdot\Div(n-k)\qquad\text{and}\qquad \Pi_n=\sum_{\lambda\vdash n}\parts(\lambda),
+\]
+that is, $\Delta_n$ is the multiset of all divisors of all terms of $R_n$ and $\Pi_n$ is the multiset of all parts of all partitions of $n$.
+
+\begin{theorem}\label{thm:main}
+For every $n\ge1$ we have $\Delta_n=\Pi_n$. Equivalently, for all integers $n,d\ge1$,
+\begin{equation}\label{eq:count}
+  \sum_{\substack{0\le k<n\\ d\,\mid\, n-k}}p(k)\;=\;\sum_{\lambda\vdash n}m_d(\lambda).
+\end{equation}
+\end{theorem}
+
+The left side of \eqref{eq:count} is the multiplicity of $d$ in $\Delta_n$, since $d\in\Div(n-k)$ if and only if $d\mid n-k$, and the right side is the multiplicity of $d$ in $\Pi_n$.
+Writing $n-k=jd$, the left side of \eqref{eq:count} equals $\sum_{1\le j\le n/d}p(n-jd)$.
+
+\subsection*{Prior work and status}
+Identity \eqref{eq:count} is classical. We credit the sources found by the math0 literature referees.
+\begin{itemize}
+\item The OEIS triangle A066633 \cite{A066633} (Naohiro Nomoto, January~9, 2002) gives the number $T(n,k)$ of parts equal to $k$ in all partitions of $n$, the right side of \eqref{eq:count}.
+Its formula section contains the generating function $\frac{x^k}{1-x^k}\prod_{m\ge1}\frac{1}{1-x^m}$ of column $k$ (Vladeta Jovovic, January~15, 2002), whose coefficients are the sums $\sum_{j\ge1}p(n-jk)$, and the formula $T(n,k)=\sum_{j<n,\ j\equiv n\ (\mathrm{mod}\ k)}p(j)$ (Jos\'e Luis Arregui, April~5, 2002), which is \eqref{eq:count}.
+It also records Pol's recursion $T(n+k,k)=T(n,k)+p(n)$ (2012), noted by George Beck (2019) to be Lemma~1 of \cite{DS11}, and a comment of Pol (February~5, 2021) that $T(n,k)$ is the number of $k$'s among the divisors of the terms of the list whose $m$-th block consists of $p(n-m)$ copies of $m$, $1\le m\le n$. This list is row $n$ of A340061 \cite{A340061}, the mirror image of $R_n$, so the comment states the multiplicity form of Pol's conjecture as a fact.
+\item Ghosh Dastidar and Sen Gupta \cite{DS10} showed that adding a part $k$ maps the partitions of $n$ bijectively onto the partitions of $n+k$ that contain $k$ (their Lemma~2). They deduced $Q_k(n+k)=Q_k(n)+p(n)$ for the number $Q_k(n)$ of parts $k$ in all partitions of $n$ (Lemmas~1 and~2), and iterated it to $Q_k(n)=\sum_{j>0}p(n-jk)=\sum_{0\le i<n,\ i\equiv n\ (\mathrm{mod}\ k)}p(i)$ (their Result~2), which is \eqref{eq:count}.
+The recursion is Lemma~1 of their follow-up paper \cite{DS11}, which attributes the closed form to A066633, and Hazra \cite[Lemma~1.2]{Haz16} derives the closed form by counting the partitions with exactly $j$ parts equal to $k$. These papers use the formula to generalize the theorems of Stanley and Elder on partitions.
+\item Merca \cite[Theorem~1]{Mer23} proved with generating functions that $\sum_{k=1}^{n}f(k)S_{n,k}=\sum_{k=1}^{n}g(k)\,p(n-k)$ for every arithmetic function $f$ and every $n\ge1$, where $S_{n,k}$ is the number of $k$'s in all partitions of $n$ and $g(k)=\sum_{d\mid k}f(d)$.
+The two sides are the sums of $f$ over $\Pi_n$ and over $\Delta_n$ (the value $t$ occurs $p(n-t)$ times in $R_n$), so Merca's theorem for all $f$ is equivalent to Theorem~\ref{thm:main}; take for $f$ the indicator function of $\{d\}$.
+\item In the OEIS, the triangle A338156 \cite{A338156} (Pol, October~14, 2020), whose row $n$ lists the divisors of the terms of $R_n$, states ``The terms in row n are also all parts of all partitions of n'' without calling it a conjecture, and A336811 \cite{A336811} contains a related unlabelled statement (Pol, June~19, 2021). The conjecture also appears, labelled as such, in A340061 \cite{A340061} (Pol, December~28, 2020).
+In A176206 itself (revision \#107, June~4, 2022) it is still labelled a conjecture, and the referees found no publication that names it as proved.
+\end{itemize}
+Since \eqref{eq:count} follows at once from formulas recorded in 2002 and proved in 2010, Theorem~\ref{thm:main} is a known result, and we classify our contribution as its \emph{first formal proof}.
+We know of no earlier formalization. Mathlib \cite{Mathlib} contains the bijection of \cite{DS10} (as \decl{Nat.Partition.partitionWithPartEquiv}), which we use, but not identity \eqref{eq:count}, and the conjecture is not among the statements of the formal-conjectures repository \cite{FC} at the commit \texttt{c77fdd4} pinned by math0.
+Our proof is the argument of \cite{DS10}, arranged as a strong induction that compares the two sides of \eqref{eq:count} directly.
+The Lean proof establishes Theorem~\ref{thm:main}, as the equality of multisets $\Delta_n=\Pi_n$, for every $n\ge1$; Remarks~\ref{rem:closed} and~\ref{rem:merca} are proved on paper only.
+
+\section{Statement}\label{sec:statement}
+
+\subsection*{The OEIS conjecture}
+The COMMENTS section of A176206 contains, in a block headed ``From Omar E. Pol, Nov 23 2020'', the following sentence, verbatim:
+\begin{quote}
+\texttt{Conjecture: all divisors of all terms in row n are also all parts of all partitions of n.}
+\end{quote}
+
+\begin{conjecture}[Pol, 2020]\label{conj}
+For every $n\ge1$, the divisors of all terms of row $n$ of A176206, counted with multiplicity, are the parts of all partitions of $n$, counted with multiplicity; that is, $\Delta_n=\Pi_n$.
+\end{conjecture}
+
+We read both sides as multisets, as the worked example for $n=5$ does when it counts ``twelve 1's, four 2's, two 3's, one 4 and one 5'' on each side.
+Read as sets, the statement would be trivial: both sides are $\{1,\dots,n\}$, because every $t\in\{1,\dots,n\}$ occurs in $R_n$ and is a part of the partition $t+1+\dots+1$ of $n$.
+
+\subsection*{Lean statement}
+The statement is the definition \decl{Math0.Statements.A176206.statement} in the math0 statement file \path{lean/Math0/Statements/OEIS/A176206.lean}, which was reviewed for fidelity and frozen (SHA-256 \texttt{4f45cfdc\ldots ddd5c8e}) before any proof attempt.
+The definitions it uses and the statement read verbatim (docstrings omitted; namespace \decl{Math0.Statements.A176206}):
+\begin{lstlisting}
+def p (k : ℕ) : ℕ := Fintype.card (Nat.Partition k)
+
+def rowOf (f : ℕ → ℕ) (n : ℕ) : List ℕ :=
+  (List.range n).flatMap fun k => List.replicate (f k) (n - k)
+
+def row (n : ℕ) : List ℕ := rowOf p n
+
+def statement : Prop :=
+  ∀ n : ℕ, 1 ≤ n →
+    (row n : Multiset ℕ).bind (fun t => t.divisors.val) =
+      (Finset.univ : Finset n.Partition).val.bind (fun π => π.parts)
+\end{lstlisting}
+In Mathlib, \texttt{Nat.Partition n} is the finite type of partitions of $n$, each given by a multiset \texttt{parts} of positive integers with sum $n$. So \texttt{p k} is $p(k)$, and \texttt{row n} is $R_n$: the concatenation over $k<n$ of \texttt{p k} copies of $n-k$ (as $k<n$, the subtraction in $\N$ is not truncated and every entry is positive).
+The cast to \texttt{Multiset ℕ} forgets the order, \texttt{s.bind f} is the multiset sum $\sum_{t\in s}f(t)$, and \texttt{t.divisors.val} is the multiset of positive divisors of $t$, each once; so the left side is $\Delta_n$.
+On the right, \texttt{Finset.univ.val} is the multiset of all partitions of $n$, each once, so the right side is $\Pi_n$.
+Thus \decl{statement} is Conjecture~\ref{conj} for every $n\ge1$, with no extra hypotheses.
+
+\subsection*{Encoding and check against the OEIS data}
+The name of the entry defines the triangle by two properties, and the statement file proves both:
+\begin{lstlisting}
+theorem length_row (n : ℕ) : (row n).length = ∑ k ∈ Finset.range n, p k
+theorem row_succ (n : ℕ) : row (n + 1) = (row n).map (· + 1) ++ List.replicate (p n) 1
+\end{lstlisting}
+The first gives the row length A000070$(n-1)$. The second says that row $n+1$ is row $n$ with $1$ added to every entry, followed by $p(n)$ ones; with \texttt{row 0 = []} it determines every row, and it says that every column reads $1,2,3,\dots$ downwards.
+The definition is also literally the comment ``Row n contains a decreasing sequence where n-k is repeated A000041(k) times, k = 0..n-1'' and Paolo Xausa's Mathematica program in the entry.
+
+The file defines the flattened sequence \texttt{a} with the OEIS offset $1$ and proves two kernel-checked data theorems: \decl{a_data} states that $a(1),\dots,a(94)$ are the $94$ listed terms (rows $1$ to $7$ and the first $19$ terms of row $8$), and \decl{row_five_divisors} states that the multiset of divisors of the terms of row $5$ consists of twelve $1$'s, four $2$'s, two $3$'s, one $4$ and one $5$, the left side of the worked example.
+Since \texttt{Fintype.card (Nat.Partition k)} does not reduce efficiently in the kernel, these checks use a structurally recursive count $\mathrm{pb}(n,m)$ of the partitions of $n$ into parts at most $m$, given by $\mathrm{pb}(n,0)=[n=0]$ and $\mathrm{pb}(n,m+1)=\sum_{0\le j\le n/(m+1)}\mathrm{pb}(n-j(m+1),m)$, and the theorem \decl{p_eq_pb}: \texttt{p k = pb k k}.
+Its proof identifies $\mathrm{pb}(n,m)$ with the number of partitions of $n$ into parts at most $m$, using the bijection \decl{partitionWithPartEquiv} of Lemma~\ref{lem:Fge} below.
+After \texttt{row} is rewritten as \texttt{rowOf (fun k => pb k k)}, both data theorems are proved by \texttt{decide +kernel}: the kernel evaluates the terms and compares them with the listed values.
+The right side $\Pi_n$ is not evaluated in the kernel (enumerating \texttt{Nat.Partition n} is too slow), and the proof below does not use these checks.
+
+\section{Proof}\label{sec:proof}
+
+We follow the declarations of the Lean file (namespace \decl{Math0.Frontier.A176206}).
+For $d,t\in\N$ let $c(d,t)$ be the multiplicity of $d$ in the multiset of divisors of $t$ (\texttt{c d t := t.divisors.val.count d}), and for $d,n\in\N$ let
+\[
+  F(d,n)=\sum_{\pi\vdash n}m_d(\pi),\qquad H(d,n)=\sum_{k=0}^{n-1}p(k)\,c(d,n-k).
+\]
+
+\begin{lemma}[\decl{c_eq}]\label{lem:c}
+$c(d,t)=1$ if $d\mid t$ and $t\neq0$, and $c(d,t)=0$ otherwise.
+\end{lemma}
+
+\begin{proof}
+By \decl{Nat.mem_divisors}, $d$ lies in the finset of divisors of $t$ exactly when $d\mid t$ and $t\ne0$, and the multiset underlying a finset has no repeated elements.
+\end{proof}
+
+\begin{lemma}[\decl{lhs_count}]\label{lem:lhs}
+For all $d,n\in\N$, the multiplicity of $d$ in $\Delta_n$ is $H(d,n)$, and the multiplicity of $d$ in $\Pi_n$ is $F(d,n)$.
+\end{lemma}
+
+\begin{proof}
+The multiplicity of $d$ in $\sum_{t\in s}f(t)$ is $\sum_{t\in s}(\text{multiplicity of $d$ in } f(t))$ (\decl{Multiset.count_bind}).
+For $\Pi_n$ this is $\sum_{\pi\vdash n}m_d(\pi)=F(d,n)$, which in Lean holds by definition.
+For $\Delta_n$ it is the sum of $c(d,t)$ over the entries $t$ of the list $R_n$. The list $R_n$ is the concatenation of blocks, the $k$-th block consisting of $p(k)$ copies of $n-k$, which contributes $p(k)\,c(d,n-k)$; summing over $k<n$ gives $H(d,n)$.
+\end{proof}
+
+\begin{lemma}[\decl{F_zero}, \decl{H_zero}]\label{lem:zero}
+$F(0,n)=H(0,n)=0$ for all $n$.
+\end{lemma}
+
+\begin{proof}
+Parts of partitions are positive, so none equals $0$. If $0\mid t$ then $t=0$, so $c(0,t)=0$ for all $t$ by Lemma~\ref{lem:c}.
+\end{proof}
+
+\begin{lemma}[\decl{F_lt}, \decl{H_lt}]\label{lem:lt}
+If $n<d$, then $F(d,n)=H(d,n)=0$.
+\end{lemma}
+
+\begin{proof}
+Every part of a partition of $n$ is at most the sum $n$ of the parts (\decl{part_le}), so no part equals $d$.
+For $k<n$ the integer $n-k$ satisfies $1\le n-k\le n<d$; if $d\mid n-k$ then $d\le n-k$ (\decl{Nat.le_of_dvd}), which is impossible. Hence $c(d,n-k)=0$.
+\end{proof}
+
+\begin{lemma}[\decl{F_ge}]\label{lem:Fge}
+If $1\le d\le n$, then $F(d,n)=F(d,n-d)+p(n-d)$.
+\end{lemma}
+
+\begin{proof}
+Partitions without a part $d$ contribute $0$, so $F(d,n)$ is the sum of $m_d(\pi)$ over the partitions $\pi$ of $n$ that contain $d$ (\decl{Finset.sum_filter_of_ne}, \decl{Finset.sum_subtype}).
+Removing one part $d$ is a bijection from these partitions onto the partitions of $n-d$, whose inverse adds a part $d$: this is Mathlib's \decl{Nat.Partition.partitionWithPartEquiv}, which requires $1\le d\le n$.
+Reindexing the sum along the inverse bijection (\decl{Fintype.sum_equiv}) and using $m_d(\sigma\cup\{d\})=m_d(\sigma)+1$, where $\sigma\cup\{d\}$ denotes $\sigma$ with one more part $d$, we get
+\[
+  F(d,n)=\sum_{\sigma\vdash n-d}\bigl(m_d(\sigma)+1\bigr)=F(d,n-d)+\#\{\sigma\vdash n-d\}=F(d,n-d)+p(n-d).\qedhere
+\]
+\end{proof}
+
+\begin{lemma}[\decl{H_ge}]\label{lem:Hge}
+If $1\le d\le n$, then $H(d,n)=H(d,n-d)+p(n-d)$.
+\end{lemma}
+
+\begin{proof}
+Write $n=r+d$. Splitting the range $0\le k<r+d$ into $k<r$ and $k=r+x$ with $0\le x<d$ (\decl{Finset.sum_range_add}) gives
+\[
+  H(d,r+d)=\sum_{k=0}^{r-1}p(k)\,c(d,r+d-k)+\sum_{x=0}^{d-1}p(r+x)\,c(d,d-x).
+\]
+For $k<r$ we have $r+d-k=(r-k)+d$, so $d\mid r+d-k$ if and only if $d\mid r-k$ (\decl{Nat.dvd_add_self_right}), and both numbers are nonzero; by Lemma~\ref{lem:c}, $c(d,r+d-k)=c(d,r-k)$, and the first sum is $H(d,r)$.
+In the second sum $1\le d-x\le d$, and $d\mid d-x$ forces $d\le d-x$, that is, $x=0$. So only the term $x=0$ survives (\decl{Finset.sum_eq_single}), and it equals $p(r)\,c(d,d)=p(r)$.
+Hence $H(d,n)=H(d,r)+p(r)$ with $r=n-d$.
+\end{proof}
+
+\begin{proposition}[\decl{F_eq_H}]\label{prop:FH}
+$F(d,n)=H(d,n)$ for all $d,n\in\N$.
+\end{proposition}
+
+\begin{proof}
+For $d=0$ this is Lemma~\ref{lem:zero}. Let $d\ge1$; we use strong induction on $n$.
+If $n<d$, both sides vanish by Lemma~\ref{lem:lt}.
+If $n\ge d$, Lemmas~\ref{lem:Fge} and~\ref{lem:Hge} give $F(d,n)=F(d,n-d)+p(n-d)$ and $H(d,n)=H(d,n-d)+p(n-d)$, and $F(d,n-d)=H(d,n-d)$ by the induction hypothesis, since $n-d<n$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main} (\decl{result})]
+Let $n\ge1$ (the hypothesis is not used).
+Two multisets are equal if every $d$ has the same multiplicity in both (\decl{Multiset.ext'}).
+By Lemma~\ref{lem:lhs} and Proposition~\ref{prop:FH}, the multiplicity of $d$ in $\Delta_n$ is $H(d,n)=F(d,n)$, which is its multiplicity in $\Pi_n$.
+\end{proof}
+
+\begin{remark}[Closed form]\label{rem:closed}
+For $d\ge1$, iterating Lemma~\ref{lem:Fge} and ending with Lemma~\ref{lem:lt} gives $F(d,n)=\sum_{j=1}^{\lfloor n/d\rfloor}p(n-jd)$, the formula of Arregui in A066633 \cite{A066633} and of \cite[Result~2]{DS10}. It is not formalized.
+\end{remark}
+
+\begin{remark}[A340061 and Merca's identity]\label{rem:merca}
+Row $n$ of A340061 \cite{A340061} lists $m$ repeated $p(n-m)$ times for $m=1,\dots,n$, that is, the entries of $R_n$ in reverse order, so Theorem~\ref{thm:main} also proves the conjecture as recorded there.
+Summing a function $f$ over both sides of $\Delta_n=\Pi_n$ gives Merca's identity \cite[Theorem~1]{Mer23}.
+Neither deduction is formalized.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A176206.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}.
+It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A176206.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}.
+The main declaration is \decl{Math0.Frontier.A176206.result}, of type \decl{Math0.Statements.A176206.statement}. The auxiliary definitions \decl{c}, \decl{F}, \decl{H} and lemmas are private; each lemma of Section~\ref{sec:proof} carries the name of its Lean declaration.
+
+The main theorem and the final audit command read verbatim:\par\nobreak\vspace{4pt}\nobreak\noindent
+\begin{minipage}{\linewidth}
+\begin{lstlisting}
+theorem result : statement := by
+  intro n _
+  refine Multiset.ext' fun d => ?_
+  rw [Multiset.count_bind, Multiset.count_bind, lhs_count, ← F_eq_H]
+  rfl
+
+#math0_settles Math0.Frontier.A176206.result Math0.Statements.A176206.statement
+\end{lstlisting}
+\end{minipage}
+The file contains no \texttt{sorry}, \texttt{native\_decide}, \texttt{set\_option} or macros, and, unlike the data checks of the statement file (which it does not use), the proof does not use \texttt{decide}.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, which rejects \decl{sorryAx}, the axiom \decl{Lean.ofReduceBool} of \texttt{native\_decide}, and custom axioms; and (3) the type of \decl{result} is syntactically the statement or its negation, up to metadata, with no unfolding.
+Running \texttt{lake env lean Math0/Frontier/OEIS/A176206.lean} in the directory \path{lean} prints\par\nobreak\vspace{4pt}\nobreak\noindent
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A176206.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A176206.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A176206.result' proves 'Math0.Statements.A176206.statement'
+\end{lstlisting}
+\end{minipage}
+so \decl{result} proves the statement and depends only on the three permitted axioms.
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root; it fetches the Mathlib build cache, rebuilds all math0 results (re-running every audit command), checks that the pinned dependencies are unmodified, and reports the number of passed statement checks.
+For this result alone, run the \texttt{lake env lean} command above in \path{lean/} after building its imports with \texttt{lake build Math0.Statements.OEIS.A176206 Math0.Audit}.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{DS10}
+M.~Ghosh Dastidar and S.~Sen Gupta, \emph{Extension of Stanley's theorem for partitions}, arXiv:1007.3459, 2010.
+
+\bibitem{DS11}
+M.~Ghosh Dastidar and S.~Sen Gupta, \emph{Generalization of a few results in integer partitions}, arXiv:1111.0094, 2011.
+
+\bibitem{Haz16}
+S.~Hazra, \emph{On Stanley's theorem and its generalizations}, arXiv:1610.01863, 2016.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Mer23}
+M.~Merca, \emph{A note on a classical connection between partitions and divisors}, Ann. Acad. Rom. Sci. Ser. Math. Appl. \textbf{15} (2023), no.~1--2, 163--174, \url{https://doi.org/10.56082/annalsarscimath.2023.1-2.163}.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A000041}
+The OEIS Foundation Inc., \url{https://oeis.org/A000041} (partition numbers), entry by N.~J.~A. Sloane.
+
+\bibitem{A000070}
+The OEIS Foundation Inc., \url{https://oeis.org/A000070} (partial sums of A000041), entry by N.~J.~A. Sloane.
+
+\bibitem{A066633}
+The OEIS Foundation Inc., \url{https://oeis.org/A066633} (number of $k$'s in all partitions of $n$), entry by N.~Nomoto, Jan.~9, 2002.
+
+\bibitem{A176206}
+The OEIS Foundation Inc., \url{https://oeis.org/A176206}, entry by A.~Arnold, Apr.~11, 2010; name and conjecture by O.~E. Pol, Nov.~22--23, 2020; revision \#107, Jun.~4, 2022.
+
+\bibitem{A336811}
+The OEIS Foundation Inc., \url{https://oeis.org/A336811}, entry by O.~E. Pol, Nov.~20, 2020.
+
+\bibitem{A338156}
+The OEIS Foundation Inc., \url{https://oeis.org/A338156}, entry by O.~E. Pol, Oct.~14, 2020.
+
+\bibitem{A340061}
+The OEIS Foundation Inc., \url{https://oeis.org/A340061}, entry by O.~E. Pol, Dec.~28, 2020.
+
+\end{thebibliography}
+}
+
+\end{document}

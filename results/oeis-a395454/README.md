@@ -27,6 +27,10 @@ Referees: No earlier resolution found. Closest related work:
 
 OEIS A395454 (#30, Oct 14 2026; Luschny's entry, Alexandersson's conjecture of Jun 27 2026) still lists the formula as a conjecture, with no proof recorded in any comment, %E line or link. Read with the entry's offset-0 numbering the formula is false; read with rows counted from 1 it holds.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

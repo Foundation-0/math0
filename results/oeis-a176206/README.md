@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: %C Conjecture: all divisors of all terms in row n 
 
 Referees: OEIS A066633 (number of k's in all partitions of n): g.f. x^k/(1-x^k)*Prod 1/(1-x^m) by V. Jovovic (Jan 2002); T(n,k) = Sum_{j<n, j==n mod k} P(j) by J. L. Arregui (Apr 2002); T(n+k,k) = T(n,k) + A000041(n), proved in M. Ghosh Dastidar and S. Sen Gupta, "Generalization of a few results in Integer Partitions", arXiv:1111.0094, Lemma 1. A related classical bijection appears in arXiv:1610.01863 ("On Stanley's theorem and its generalizations") and arXiv:1007.3459. M. Merca, "A note on a classical connection between partitions and divisors" (aos.ro), also counts the k's in all partitions of n. OEIS A338156 states the A176206 divisor/partition correspondence as fact. Sources: https://oeis.org/A066633 (read from local mirror), https://arxiv.org/abs/1111.0094, https://arxiv.org/pdf/1610.01863, https://arxiv.org/pdf/1007.3459, https://aos.ro/?p=14363
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

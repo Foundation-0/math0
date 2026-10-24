@@ -1,0 +1,338 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw,at},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {∀}{{$\forall$}}1 {↔}{{$\leftrightarrow$}}1
+    {¬}{{$\neg$}}1 {→}{{$\to$}}1 {≤}{{$\le$}}1 {≠}{{$\ne$}}1 {∧}{{$\wedge$}}1
+    {×}{{$\times$}}1 {ˢ}{{$^{\mathrm{s}}$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{ˢ}{\ensuremath{^{\mathrm{s}}}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Gb}{G^{\flat}}
+\newcommand{\ind}[1]{[\,#1\,]}
+
+\title[Barker's recurrence for lines through an $8\times n$ grid]{Lines through at least two points of an $8\times n$ grid: a proof of Barker's order-$20$ recurrence (OEIS A160848)}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 24, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $a(n)$ be the number of lines in the plane that pass through at least two points of the $8\times n$ grid of lattice points (OEIS A160848).
+We prove the conjecture of Colin Barker (2017) that $a$ satisfies, for all $n>21$, the linear recurrence of order $20$ with characteristic polynomial $(1-x)^3\Phi_2\Phi_3\Phi_4\Phi_5\Phi_6\Phi_7$, namely $a(n)=-a(n-2)+a(n-5)+\dots+a(n-18)+a(n-20)$.
+The proof shows that the second difference $a(n+1)-2a(n)+a(n-1)$ is, for $n\ge3$, an integer combination of gcd indicators with periods at most $7$; this is a rigorous form, for eight rows, of a recursion that S.~Mustonen found experimentally in 2009 and supported by a heuristic argument.
+We found no earlier proof of Barker's recurrence and classify the result as new, though elementary.
+The proof is verified in Lean~4 against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry, whose definition of $a$ is checked by the kernel against all $41$ listed terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For $n\ge0$ let $\Gamma_n=\{0,\dots,n-1\}\times\{0,\dots,7\}\subset\Z^2$, and let $a(n)$ be the number of lines in $\mathbb R^2$ containing at least two points of $\Gamma_n$. This is A160848 of the OEIS \cite{A160848}, ``Number of lines through at least 2 points of an 8 X n grid of points'', contributed by Seppo Mustonen on May~28, 2009, with offset $0$ and first terms $0,1,66,131,238,361,534,\dots$; it is column $8$ of the array A295707 \cite{A295707}. On December~25, 2017, Colin Barker added to the entry a conjectured rational generating function and the corresponding linear recurrence of order $20$ (quoted in Section~\ref{sec:statement}). In revision \#13 (December~25, 2017), which is still the current revision of the entry in October~2026, both are labelled ``Conjectures''. We prove the recurrence (Theorem~\ref{thm:main}), and with it the generating function (Corollary~\ref{cor:gf}).
+
+\subsection*{Prior work}
+\begin{itemize}
+\item Mustonen \cite{Mustonen} proves a closed formula $L(m,n)=\tfrac12\bigl(f(m,n,1)-f(m,n,2)\bigr)$ for the number $L(m,n)$ of lines through at least two points of an $m\times n$ grid, by summing over slopes (his Section~3); it is the formula quoted in A160848. In his Appendix~2 he observes experimentally that for fixed $m$ the residual $L(m,n)-2L(m,n-1)+L(m,n-2)$ is periodic in $n$, and gives it explicitly in his formula~(38), supported by an explanation in terms of the first two grid points of a line (his ``bearing points'') and by numerical checks. The Mathematica program in A160848 implements (38).
+\item Haukkanen and Merikoski \cite{HM}, Remark~2, write that for rectangular grids with unequal sides ``the question about recursive formulas is more difficult. Mustonen [5] conjectured a recursive formula for $l_{\ge2}(n_1,n_2)$'', where $l_{\ge2}(n_1,n_2)$ is the number of lines through at least two points of an $n_1\times n_2$ grid.
+\item Ernvall-Hytönen, Matomäki, Haukkanen and Merikoski \cite{EMHM} prove Mustonen's conjectured recursive formulas for the $n\times n$ and $(n-1)\times n$ grids; they do not treat grids with a fixed number of rows.
+\end{itemize}
+The math0 referees found no proof or refutation of Barker's recurrence for A160848; the analogous formulas in the sibling entries A160845--A160847, A160849 and A160850 are likewise still labelled conjectural or empirical. Our Proposition~\ref{prop:second} is Mustonen's formula (38) for $m=8$ (Remark~\ref{rem:mustonen}); once it is proved, the recurrence follows from the periodicity of the residual by a routine cyclotomic argument. We therefore regard the result as new but elementary: a first rigorous proof of a consequence of a formula that was previously supported only heuristically.
+
+\section{Statement}\label{sec:statement}
+
+\begin{theorem}\label{thm:main}
+For every integer $n>21$,
+\[
+\begin{aligned}
+a(n)={}&-a(n-2)+a(n-5)+a(n-6)+2a(n-7)+a(n-8)+a(n-9)\\
+&-a(n-11)-a(n-12)-2a(n-13)-a(n-14)-a(n-15)+a(n-18)+a(n-20).
+\end{aligned}
+\]
+Equivalently, $\sum_{k=0}^{20}p_k\,a(n-k)=0$ for $n\ge22$, where
+\[
+P(x)=\sum_{k=0}^{20}p_kx^k=1+x^2-x^5-x^6-2x^7-x^8-x^9+x^{11}+x^{12}+2x^{13}+x^{14}+x^{15}-x^{18}-x^{20}.
+\]
+\end{theorem}
+
+Expanding shows $P(x)=(1-x)^3(1+x)(1-x+x^2)(1+x^2)(1+x+x^2)(1+\dots+x^4)(1+\dots+x^6)=(1-x)^3\prod_{d=2}^{7}\Phi_d(x)$, which is Barker's denominator. The recurrence fails for $n=20$ and $n=21$ (the left side minus the right side is $8$ in both cases), so the range $n>21$ is sharp.
+
+\begin{corollary}[not formalized]\label{cor:gf}
+$\sum_{n\ge0}a(n)x^n=xN(x)/P(x)$, where $xN(x)$ is the numerator in Barker's generating function below.
+\end{corollary}
+
+\begin{proof}
+The coefficient of $x^n$ in $P(x)\sum_n a(n)x^n$ is $\sum_{k\le\min(n,20)}p_k a(n-k)$. For $n\ge22$ it vanishes by Theorem~\ref{thm:main}, as does the coefficient of $x^n$ in $xN(x)$, which has degree $21$. For $n\le21$ the two coefficients agree by a direct computation from $a(0),\dots,a(21)$, which are among the kernel-checked terms (\decl{a_data} below).
+\end{proof}
+
+\subsection*{The OEIS conjecture}
+The FORMULA section of A160848 \cite{A160848} contains, verbatim:
+\begin{lstlisting}[language={},keywordstyle={},frame=none,basicstyle=\ttfamily\scriptsize]
+Conjectures from _Colin Barker_, Dec 25 2017: (Start)
+G.f.: x*(1 + 66*x + 132*x^2 + 304*x^3 + 492*x^4 + 771*x^5 + 1003*x^6 + 1273*x^7 + 1390*x^8 + 1480*x^9 + 1374*x^10 + 1241*x^11 + 971*x^12 + 739*x^13 + 476*x^14 + 296*x^15 + 140*x^16 + 74*x^17 + 17*x^18 + 8*x^19 + 8*x^20) / ((1 - x)^3*(1 + x)*(1 - x + x^2)*(1 + x^2)*(1 + x + x^2)*(1 + x + x^2 + x^3 + x^4)*(1 + x + x^2 + x^3 + x^4 + x^5 + x^6)).
+a(n) = -a(n-2) + a(n-5) + a(n-6) + 2*a(n-7) + a(n-8) + a(n-9) - a(n-11) - a(n-12) - 2*a(n-13) - a(n-14) - a(n-15) + a(n-18) + a(n-20) for n>21.
+(End)
+\end{lstlisting}
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A160848.lean}, reviewed for fidelity and frozen (SHA-256 \texttt{8883f318\ldots 633f3}) before any proof attempt. The definitions on which the statement depends, and the statement itself, read as follows (verbatim and in order; the header, import, docstrings, the definitions used only for fast evaluation and the data check, the theorems, the \texttt{Decidable} instance for \decl{Recurrence} and the unproved variant \decl{statement_gf} are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A160848
+def pt (i : ℕ) : ℤ × ℤ := (((i / 8 : ℕ) : ℤ), ((i % 8 : ℕ) : ℤ))
+def Collinear3 (p q r : ℤ × ℤ) : Prop :=
+  (q.1 - p.1) * (r.2 - p.2) = (q.2 - p.2) * (r.1 - p.1)
+instance (p q r : ℤ × ℤ) : Decidable (Collinear3 p q r) :=
+  inferInstanceAs (Decidable (_ = _))
+def lineThrough (n i j : ℕ) : Finset ℕ :=
+  (Finset.range (8 * n)).filter fun k => Collinear3 (pt i) (pt j) (pt k)
+def a (n : ℕ) : ℕ :=
+  (((Finset.range (8 * n) ×ˢ Finset.range (8 * n)).filter fun ij => ij.1 ≠ ij.2).image
+    fun ij => lineThrough n ij.1 ij.2).card
+def Recurrence (f : ℕ → ℤ) (n : ℕ) : Prop :=
+  f n = -f (n - 2) + f (n - 5) + f (n - 6) + 2 * f (n - 7) + f (n - 8) + f (n - 9)
+    - f (n - 11) - f (n - 12) - 2 * f (n - 13) - f (n - 14) - f (n - 15) + f (n - 18) + f (n - 20)
+def statement : Prop :=
+  ∀ n : ℕ, 21 < n → Recurrence (fun m => (a m : ℤ)) n
+end Math0.Statements.A160848
+\end{lstlisting}
+The point with number $i<8n$ is $\mathrm{pt}(i)=(\lfloor i/8\rfloor,\,i\bmod 8)$, so $i\mapsto\mathrm{pt}(i)$ is a bijection from $\{0,\dots,8n-1\}$ onto $\Gamma_n$ and the number of $(x,y)$ is $\nu(x,y)=8x+y$. (OEIS writes ``$8\times n$''; $\Gamma_n$ and its transpose are congruent, so they have the same number of lines.) For $p\ne q$, \decl{Collinear3}$(p,q,r)$ says that $r$ lies on the line $pq$. Thus \decl{lineThrough}$(n,i,j)$ is the set of grid points on the line through $\mathrm{pt}(i)\ne\mathrm{pt}(j)$, and \decl{a}$(n)$ is the number of distinct such sets. A line through two grid points is determined by its set of grid points, and two distinct lines share at most one point, so \decl{a}$(n)$ is exactly the number of lines through at least two points of $\Gamma_n$. The values are cast to $\Z$ because of the negative coefficients; for $n>21$ every index $n-k$ ($k\le20$) is at least $2$, so the truncated subtractions in $\N$ are exact. The statement file also proves the following (statements shown, proofs omitted); \decl{IsFirst}, \decl{goodF} and \decl{aFast} are explained in Lemma~\ref{lem:first}:
+\begin{lstlisting}
+theorem isFirst_iff {i j : ℕ} (hij : i < j) : IsFirst i j ↔ goodF i j = true
+theorem a_eq_aFast (n : ℕ) : a n = aFast n
+theorem a_data : (List.range 41).map a =
+    [0, 1, 66, 131, 238, 361, 534, 709, 938, 1183, 1470, 1759, 2104, 2459, 2870, 3287, 3740, 4209,
+      4734, 5261, 5844, 6437, 7070, 7711, 8408, 9115, 9872, 10637, 11444, 12265, 13142, 14015,
+      14944, 15889, 16876, 17871, 18914, 19967, 21076, 22193, 23352]
+\end{lstlisting}
+The list in \decl{a_data} is the full DATA section of the entry, $a(0),\dots,a(40)$; it is proved by \texttt{decide +kernel} after rewriting with \decl{a_eq_aFast}. This anchors the definition to the entry independently of the conjecture. The file also checks that these terms satisfy the recurrence for $22\le n\le40$ (\decl{recurrence_data}), a check of the transcription only.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows \path{lean/Math0/Frontier/OEIS/A160848.lean}; bracketed names are the corresponding Lean declarations. Write $\ind{A}$ for the indicator of a statement $A$ and $u(a,b)=\ind{\gcd(a,b)=1}$ for $a,b\in\N$; note $u(a,0)=\ind{a=1}$.
+
+\subsection{Counting each line once (statement file)}
+Call a pair $i<j<8n$ \emph{first} (\decl{IsFirst}) if no $k<j$ with $k\ne i$ has $\mathrm{pt}(k)$ on the line through $\mathrm{pt}(i)$ and $\mathrm{pt}(j)$, that is, if $i,j$ are the two smallest elements of \decl{lineThrough}$(n,i,j)$.
+
+\begin{lemma}[\decl{a_eq_card_firstPairs}, \decl{isFirst_iff}, \decl{a_eq_aFast}]\label{lem:first}
+$a(n)$ is the number of first pairs. For $i<j$ write $\mathrm{pt}(i)=(x,y)$, $\mathrm{pt}(j)=(x',y')$ and $d=(x'-x,\,y'-y)$. Then $(i,j)$ is first if and only if $\gcd(x'-x,|y'-y|)=1$ and the point $\mathrm{pt}(i)-d=(2x-x',2y-y')$ does not lie in $\N\times\{0,\dots,7\}$, i.e.\ not ($x'\le2x$ and $y'\le 2y<8+y'$). This is the test \decl{goodF}$(i,j)$, and \decl{aFast}$(n)$, the number of pairs $i<j<8n$ passing it, equals $a(n)$.
+\end{lemma}
+
+\begin{proof}
+If $\mathrm{pt}(i)\ne\mathrm{pt}(j)$ both lie on the line through $p\ne q$, then $r$ lies on the line $\mathrm{pt}(i)\mathrm{pt}(j)$ iff it lies on $pq$ (\decl{collinear_iff}, a polynomial identity). Hence sending a set $S=$ \decl{lineThrough}$(n,p,q)$ to its two smallest elements is inverse to $(i,j)\mapsto$ \decl{lineThrough}$(n,i,j)$ on first pairs, which proves the first claim.
+
+The numbering is additive: $\nu(P+w)=\nu(P)+8w_1+w_2$. Put $P=\mathrm{pt}(i)$, so $j-i=8d_1+d_2>0$ and $d_1\ge0$. If $g=\gcd(d_1,|d_2|)\ge2$, the point $P+d/g$ lies in $\Gamma_n$ (its coordinates lie between those of $\mathrm{pt}(i)$ and $\mathrm{pt}(j)$), on the line, with number $i+(j-i)/g\in(i,j)$. If $P-d\in\N\times\{0,\dots,7\}$, then also $x-d_1\le x<n$, so $P-d\in\Gamma_n$, on the line, with number $2i-j<i$. Either way $(i,j)$ is not first. Conversely, let $\gcd(d_1,|d_2|)=1$, $P-d\notin\N\times\{0,\dots,7\}$, and suppose $\mathrm{pt}(k)=P+e$ is on the line with $k<j$, $k\ne i$, i.e.\ $d_1e_2=d_2e_1$. With $\alpha d_1+\beta d_2=1$ (B\'ezout) and $t=\alpha e_1+\beta e_2\in\Z$ we get $e=td$, hence $k-i=t(j-i)$, and $k<j$, $k\ne i$ force $t\le-1$. Since $-1$ lies between $t$ and $0$, the point $P-d$ lies on the segment from $P+td$ to $P$, both of which are in the convex set $[0,\infty)\times[0,7]$; as $P-d\in\Z^2$, it follows that $P-d\in\N\times\{0,\dots,7\}$ (in Lean: coordinatewise inequalities), a contradiction.
+\end{proof}
+
+\subsection{Adding a column}
+Put $D(n)=a(n+1)-a(n)$, the number of good pairs $(i,j)$ (good meaning \decl{goodF}$(i,j)$) with $\mathrm{pt}(j)$ in column $n$ [\decl{aFast_succ}]. For $x<n$ let $C(n,x)$ be the number of good pairs with $\mathrm{pt}(i)$ in column $x$ and $\mathrm{pt}(j)$ in column $n$. With $\mathrm{pt}(i)=(x,y)$, $\mathrm{pt}(j)=(n,t)$ and $x\le n$, Lemma~\ref{lem:first} says that the pair is good iff
+\begin{equation}\label{eq:good}
+\gcd(n-x,|t-y|)=1\quad\text{and not}\quad\bigl(n\le2x\ \text{and}\ t\le2y<8+t\bigr)
+\end{equation}
+[\decl{goodF_eq}]. Define
+\[
+G(a)=8u(a,0)+\sum_{b=1}^{7}2(8-b)\,u(a,b),\qquad \Gb(a)=8u(a,0)+12u(a,1)+8u(a,2)+4u(a,3).
+\]
+
+\begin{lemma}[\decl{diag_part}, \decl{D_eq}, \decl{C_eq}]\label{lem:column}
+$D(n)=1+\sum_{x<n}C(n,x)$ and $C(n,x)=G(n-x)-\ind{n\le2x}\,\Gb(n-x)$ for $x<n$.
+\end{lemma}
+
+\begin{proof}
+Inside column $n$ ($x=n$), \eqref{eq:good} requires $|t-y|=1$, so $t=y+1$, and then excludes every $y\ge1$; the only good pair is $(8n,8n+1)$, which gives the vertical line $x=n$. For $x<n$, group the $64$ row pairs $(y,t)$ by $b=|t-y|$. There are $8$ pairs with $b=0$ and $2(8-b)$ with $1\le b\le7$; this gives $G$. The rows $t$, $y$, $2y-t$ form an arithmetic progression with difference $\pm b$ and middle term $y$, so the number of pairs with $|t-y|=b$ and $0\le2y-t<8$ is $8,12,8,4$ for $b=0,1,2,3$ and $0$ for $b\ge4$; this gives $\Gb$. (In Lean the $64$ terms are expanded and collected by \texttt{simp} and \texttt{ring}.)
+\end{proof}
+
+\subsection{The second difference}
+Let $h(m)=G(m)-\ind{m\ \text{even},\ m\ge2}\,\Gb(m/2)$ [\decl{hcl}].
+
+\begin{proposition}[\decl{C_succ_sub}, \decl{sum_odd}, \decl{D_succ}, \decl{second_diff}]\label{prop:second}
+For every $m\ge0$, $a(m+2)-2a(m+1)+a(m)=h(m+1)$.
+\end{proposition}
+
+\begin{proof}
+By Lemma~\ref{lem:column}, $D(n+1)-D(n)=C(n+1,0)+\sum_{x<n}\bigl(C(n+1,x+1)-C(n,x)\bigr)$, and $C(n+1,0)=G(n+1)$. Shifting both columns by one keeps $n-x$ fixed, and $\ind{n+1\le2x+2}-\ind{n\le2x}=\ind{n=2x+1}$, so $C(n+1,x+1)-C(n,x)=-\ind{n=2x+1}\Gb(n-x)$. The only candidate is $x=(n-1)/2$ for odd $n$, where $n-x=(n+1)/2$. Hence $D(n+1)-D(n)=h(n+1)$, and $a(m+2)-2a(m+1)+a(m)=D(m+1)-D(m)$.
+\end{proof}
+
+\begin{remark}[Mustonen's formula (38)]\label{rem:mustonen}
+In \cite{Mustonen}, $\psi_1(m,n)=\sum_{1\le y<m,\,(y,n-1)=1}(m-y)$ and, for odd $n$, $\psi_4(m,n)=\sum_{1\le y<m,\,((n-1)/2,y)=1}\psi_3(m,n,\tfrac{n-1}2,y)$, where $\psi_3$ is the second difference in $n$ of $(n-x)(m-y)-(n-2x)^+(m-2y)^+$; $\psi_4=0$ for even $n$. For $m=8$, $2\psi_1(8,n)=G(n-1)-8u(n-1,0)$, and for odd $n=2k+1$ one finds $\psi_3(8,n,k,y)=-(8-2y)^+$, so $2\psi_4(8,n)=-(\Gb(k)-8u(k,0))$. For $n\ge4$ the terms with $u(\cdot,0)$ vanish, so Proposition~\ref{prop:second}, with $n-2$ in place of $m$, is (38) for eight rows, where $L(8,n)=a(n)$. Lemma~\ref{lem:first} makes rigorous the role of Mustonen's ``bearing points''.
+\end{remark}
+
+\subsection{Periodicity}
+\begin{lemma}[\decl{u_zero}, \decl{G_period}, \decl{Gb_period}, \decl{hcl_period}]\label{lem:period}
+For $m\ge3$,
+\begin{equation}\label{eq:hexplicit}
+h(m)=\sum_{b=1}^{7}2(8-b)\,u(m,b)-\ind{2\mid m}\bigl(12+8\,u(m/2,2)+4\,u(m/2,3)\bigr),
+\end{equation}
+and $h(m)=h(m\bmod 420+420)$.
+\end{lemma}
+
+\begin{proof}
+For $m\ge2$, $u(m,0)=\ind{m=1}=0$, and for even $m\ge3$, $m/2\ge2$ and $u(m/2,0)=0$; this gives \eqref{eq:hexplicit}. Every $b\in\{1,\dots,7\}$ divides $420$, so $u(m\bmod420+420,b)=u(m,b)$, because $\gcd(a,b)$ depends only on $a\bmod b$. For even $m$, $(m\bmod420+420)/2=(m/2)\bmod210+210$, and $2,3$ divide $210$.
+\end{proof}
+
+\subsection{The kernel certificate}
+Let $\hat h(m)=h(m\bmod420+420)$ for $m\in\N$ [\decl{hp}], and let
+\[
+\begin{aligned}
+R(x)=\sum_{j=0}^{18}r_jx^j={}&1+2x+4x^2+6x^3+8x^4+9x^5+9x^6+7x^7+4x^8\\
+&-4x^{10}-7x^{11}-9x^{12}-9x^{13}-8x^{14}-6x^{15}-4x^{16}-2x^{17}-x^{18}.
+\end{aligned}
+\]
+Expanding, $P(x)=(1-x)^2R(x)$ and $R(x)=(1-x)\prod_{d=2}^{7}\Phi_d(x)$.
+
+\begin{lemma}[\decl{key}]\label{lem:key}
+For every $s\in\{0,\dots,419\}$, $\sum_{j=0}^{18}r_j\,\hat h(s+21-j)=0$.
+\end{lemma}
+
+\begin{proof}[Kernel proof]
+The Lean statement, $\forall s<420,\ \hat h(s+21)+2\hat h(s+20)+\dots-\hat h(s+3)=0$ in $\Z$, is decidable, and \texttt{decide +kernel} has the kernel itself reduce the decision procedure to \texttt{true}: it evaluates $420\cdot18$ values of $\hat h$, each a few $\gcd$s of numbers below $840$ with numbers $b\le7$, using the kernel's built-in arithmetic on natural-number literals. No compiled code is trusted and no axiom is added; the certificate is the evaluation itself.
+\end{proof}
+
+\begin{proof}[Conceptual proof]
+By Lemma~\ref{lem:period}, \eqref{eq:hexplicit} holds for $\hat h$ at every $m\in\N$, since $m\bmod420+420\ge3$ is congruent to $m$ modulo $420$. Hence $\hat h$ is a $\Z$-linear combination of the sequences $u(m,b)$ ($1\le b\le7$; period $b$), $\ind{2\mid m}$ (period $2$), $\ind{m\equiv2\bmod4}=\ind{2\mid m}u(m/2,2)$ (period $4$) and $\ind{m\equiv2,4\bmod6}=\ind{2\mid m}u(m/2,3)$ (period $6$). For $q\le7$, $1-x^q=(1-x)\prod_{1<d\mid q}\Phi_d(x)$ divides $R$, say $R=(1-x^q)S_q$. For a $q$-periodic $f$, $\sum_jr_jf(M-j)=\sum_i s_{q,i}\bigl(f(M-i)-f(M-i-q)\bigr)=0$ whenever $M\ge18$. Take $M=s+21$.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:main}}
+Let $n=N+22$, $s=N\bmod420$, and $\Delta^2a(m)=a(m+2)-2a(m+1)+a(m)$. Since $P(x)=(1-x)^2R(x)=\sum_jr_j(x^j-2x^{j+1}+x^{j+2})$,
+\[
+\sum_{k=0}^{20}p_k\,a(n-k)=\sum_{j=0}^{18}r_j\,\Delta^2a(N+20-j).
+\]
+By Proposition~\ref{prop:second}, $\Delta^2a(N+20-j)=h(N+21-j)$, and since $N+21-j\ge3$, Lemma~\ref{lem:period} gives $h(N+21-j)=\hat h(s+21-j)$ [\decl{hcl_eq}]. The right-hand side is therefore $\sum_jr_j\hat h(s+21-j)=0$ by Lemma~\ref{lem:key}. In Lean, \decl{result} rewrites the indices $N+22-k$, instantiates Proposition~\ref{prop:second} at the $18$ indices with $r_j\ne0$, and closes the goal by \texttt{linear\_combination} with coefficients $r_j$ and Lemma~\ref{lem:key} at $s$. \qed
+
+\begin{remark}[other numbers of rows; not formalized]
+For $m$ rows the same steps give, for $k\ge3$, $h_m(k)=\sum_{1\le b<m}2(m-b)\,u(k,b)-\ind{2\mid k}\sum_{1\le b<m/2}2(m-2b)\,u(k/2,b)$, a combination of sequences of periods at most $m-1$, and the number of lines satisfies the recurrence with characteristic polynomial $(1-x)^3\prod_{d=2}^{m-1}\Phi_d(x)$, of degree $2+\sum_{d<m}\varphi(d)$, for $n\ge4+\sum_{d<m}\varphi(d)$. We checked this numerically for $2\le m\le9$; we have not compared it with the sibling entries.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is \path{lean/Math0/Frontier/OEIS/A160848.lean} in the math0 repository, \url{https://github.com/Foundation-0/math0} (299 lines). It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A160848.lean} and the audit commands \path{lean/Math0/Audit.lean}. The only public declaration is \decl{Math0.Frontier.A160848.result : Math0.Statements.A160848.statement}; the auxiliary lemmas of this file named in Section~\ref{sec:proof} are private. The kernel certificate is the private lemma \decl{key} (Lemma~\ref{lem:key}; its statement lists the $18$ nonzero coefficients $r_j$ explicitly and its proof is \texttt{decide +kernel}), and the file ends with the audit command
+\texttt{\#math0\_settles Math0.Frontier.A160848.result Math0.Statements.A160848.statement}.
+Neither file contains \texttt{sorry}, \texttt{native\_decide}, custom axioms or \texttt{maxHeartbeats}; the only option is \texttt{maxRecDepth} on \decl{key} (and on \decl{a_data} in the statement file).
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, \decl{Lean.ofReduceBool} from \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically \decl{statement} or $\neg$\,\decl{statement}, up to metadata, with no unfolding. Here it reports that \decl{statement} and \decl{result} each depend on the axioms \texttt{[Classical.choice, Quot.sound, propext]}, and ends with
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 statement check: 'Math0.Frontier.A160848.result' proves 'Math0.Statements.A160848.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use, since the statement is a math0 formalization of an OEIS conjecture. To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib cache, runs \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The single file is checked by \texttt{lake env lean Math0/Frontier/OEIS/A160848.lean} in \path{lean}, in under two minutes on our machine (about one minute of CPU time), including the kernel evaluation of Lemma~\ref{lem:key}; it prints the two audit lines and the statement check quoted above.
+
+{\footnotesize
+\begin{thebibliography}{99}
+
+\bibitem{EMHM}
+A.-M. Ernvall-Hytönen, K.~Matomäki, P.~Haukkanen and J.~K. Merikoski, \emph{Formulas for the number of gridlines}, Monatsh. Math. \textbf{164} (2011), 157--170, \href{https://doi.org/10.1007/s00605-010-0236-6}{doi:10.1007/s00605-010-0236-6}.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171 [cs.AI], 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{HM}
+P.~Haukkanen and J.~K. Merikoski, \emph{Some formulas for numbers of line segments and lines in a rectangular grid}, arXiv:1108.1041 [math.CO], 2011.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Mustonen}
+S.~Mustonen, \emph{On lines and their intersection points in a rectangular grid of points}, manuscript dated April~16, 2009, with later appendices, \url{http://www.survo.fi/papers/PointsInGrid.pdf}.
+
+\bibitem{A160848}
+The OEIS Foundation Inc., \emph{Number of lines through at least 2 points of an 8 X n grid of points}, entry A160848 (S.~Mustonen, 2009) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A160848}; revision \#13, December~25, 2017.
+
+\bibitem{A295707}
+The OEIS Foundation Inc., \emph{Square array $A(n,k)$, $n\ge1$, $k\ge1$, read by antidiagonals, where $A(n,k)$ is the number of lines through at least 2 points of an $n$ X $k$ grid of points}, entry A295707 (S.~Manyama, 2017) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A295707}.
+
+\end{thebibliography}
+}
+
+\end{document}
