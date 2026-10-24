@@ -1755,6 +1755,29 @@
    "date": "2026-10-18"
   },
   {
+   "id": "OEIS-frontier/A278212",
+   "slug": "oeis-a278212",
+   "title": "Kagey's conjecture for A278212: a(n) = floor(A275815(n)/2), via exact bishop and queen maxima from flow (LP-dual) certificates",
+   "area": "Discrete geometry",
+   "source": "OEIS A278212",
+   "source_url": "https://oeis.org/A278212",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A278212.lean",
+    "decl": "Math0.Statements.A278212.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A278212.lean",
+   "our_decl": "Math0.Frontier.A278212.result",
+   "summary": "For every n >= 1, let a(n) be the largest total number of moves that same-colored bishops can make on an n x n board, and queenMax(n) the same for queens. A piece can only move to an empty square, and every square it passes must be empty. Then a(n) = floor(queenMax(n)/2). More precisely, the proof shows the following. For bishops, a(4) = 20, a(5) = 38 and a(n) = 4(n-2)^2 for n >= 6. For queens, queenMax(4) is 40 or 41, queenMax(5) is 76 or 77, queenMax(6) is 128 or 129, and queenMax(n) = 8(n-2)^2 for n >= 7. That last formula also settles Alec Jones's conjecture on A275815 for n >= 7. The cases n <= 3 come from the listed values.",
+   "notes": "Conjecture as stated in OEIS: \"Conjecture: a(n) = floor(A275815(n)/2). - _Peter Kagey_, Nov 24 2016\" (also A275815: \"Conjecture: a(n) = 8(n-2)^2 for n >= 6. - _Alec Jones_, Nov 16 2016\")\n\nReferees: I found no prior resolution, only computation and partial bounds:\n- OEIS A278212 (#36, Nov 19 2023): Kagey's 2016 conjecture is still listed as open. It records Chai Wah Wu's bounds 4(n-2)² ≤ a(n) ≤ 4n² (Nov 2016), Andrew Howroyd's a(n) ≤ 4(n-2)²+4 (Oct 2023), and terms a(7)–a(50) computed by Christian Sievers with an ILP (PuLP), after M. S. Branicky's a(6).\n- OEIS A275815 (#43, Jul 2021): Alec Jones's conjecture a(n)=8(n-2)² for n≥6 is still a conjecture, with keyword \"more\". It records Wu's bounds 8(n-2)² ≤ a(n) ≤ 8n² and terms a(7)–a(32) computed by Jim Randell with MiniZinc.\n- Jim Randell, Enigma 69 \"Maximum queen moves\" (enigmaticcode.wordpress.com, 2013, comments through 2025): the 6×6 case is verified by computer and the border formula is called \"presumed\". There is no general proof.\n- Related entries A278211, A278213 and A278214 contain no proof.\n- Searches of arXiv, MathOverflow, Math StackExchange, Puzzling, SeqFan and Google Scholar-style queries found no general proof or counterexample.",
+   "date": "2026-10-24"
+  },
+  {
    "id": "OEIS-frontier/A294512",
    "slug": "oeis-a294512",
    "title": "Lang's conjecture a(n) = A250400(n+1)/(n+1) for A294512 fails at n = 164",
@@ -2417,7 +2440,7 @@
    "classification": "new-result",
    "lean_file": "lean/Math0/Frontier/OEIS/A386655.lean",
    "our_decl": "Math0.Frontier.A386655.result",
-   "summary": "Let a(n) = sum_{k=0..n} C(n,k) 2^(k(k+1)) (2^k - (n-k))^(n-k-1), where the k = n term is read as 2^(n^2) and 0^0 = 1. Then for every n >= 6, a(n) mod 6 equals the entry with index (n-6) mod 6 of [1, 0, 3, 0, 3, 2]. Equivalently, a(n) mod 6 = 1, 2, 0, 3, 0, 3 for n ≡ 0, 1, 2, 3, 4, 5 (mod 6). (Paul D. Hanna's conjecture, OEIS A386655.)",
+   "summary": "Let a(n) = sum_{k=0..n} C(n,k) 2^(k(k+1)) (2^k - (n-k))^(n-k-1), where the k = n term is read as 2^(n^2) and 0^0 = 1. Then for every n >= 6, a(n) mod 6 equals the entry with index (n-6) mod 6 of [1, 0, 3, 0, 3, 2]. Equivalently, a(n) mod 6 = 1, 0, 3, 0, 3, 2 for n ≡ 0, 1, 2, 3, 4, 5 (mod 6). (Paul D. Hanna's conjecture, OEIS A386655.)",
    "notes": "Conjecture as stated in OEIS: A386655 (E.g.f.: Sum_{n>=0} (2^n*x + LambertW(x))^n / n!): \"Conjecture: for n >= 6, a(n) (mod 6) equals [1, 0, 3, 0, 3, 2] repeating.\" (_Paul D. Hanna_, Aug 23 2025). Analogues: A386656 (q=3) [4,3,2,1,0,1], A386657 (q=4) [1,2,3,2,3,4], A386658 (q=5) [4,3,0,3,0,5].\n\nReferees: I found no earlier resolution.\n- OEIS A386655 (local mirror and current GitHub oeisdata, revision #14, Aug 24 2025) still states the mod-6 claim as a conjecture by Paul D. Hanna, with no %E edit or proof note.\n- The cross-referenced sister entries A386656, A386657 and A386658 (q = 3, 4, 5) state analogous mod-6 conjectures, none marked proved. The related entry A386648 also has an open mod-6 conjecture.\n- Web searches turned up only OEIS pages (e.g. https://oeis.org/A386648, https://oeis.org/A136524) and no paper, arXiv preprint, MathOverflow/Math StackExchange post or SeqFan message proving or refuting the A386655 conjecture.\n- The classical tool used is the expansion e^(cW(x)) = Sum_k c(c-k)^(k-1) x^k/k! (the tree-function/Lambert W identity), together with Fermat's little theorem and the binomial-transform identity Sum_m C(n,m)C(m,j)x^m = C(n,j)x^j(1+x)^(n-j).",
    "date": "2026-10-24"
   },
