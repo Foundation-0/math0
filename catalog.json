@@ -1341,6 +1341,29 @@
    "date": "2026-10-19"
   },
   {
+   "id": "OEIS-frontier/A119936",
+   "slug": "oeis-a119936",
+   "title": "The row-LCM of denominators of the cube of the mean matrix is n · lcm(1..n)²",
+   "area": "Discrete geometry",
+   "source": "OEIS A119936",
+   "source_url": "https://oeis.org/A119936",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A119936.lean",
+    "decl": "Math0.Statements.A119936.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A119936.lean",
+   "our_decl": "Math0.Frontier.A119936.result",
+   "summary": "Let A be the lower-triangular matrix with A(i,j) = 1/i for j ≤ i and 0 otherwise. Its cube has entries r(n,m) = (1/n) Σ_{m ≤ l ≤ k ≤ n} 1/(k l) for 1 ≤ m ≤ n. Let a(n) be the lcm, over m = 1..n, of the reduced denominators of r(n,m). Then for every n ≥ 1, a(n)/n³ = A002944(n)² = (lcm(1..n)/n)². Equivalently, a(n) = n · lcm(1,…,n)². This is the equation that OEIS A119936 (Wolfdieter Lang, 2006) labels a conjecture.",
+   "notes": "Conjecture as stated in OEIS: %F A119936 a(n)/n^3 = A027451(n) = A002944(n)^2 (the second equation is a conjecture). (Wolfdieter Lang, Jul 20 2006)\n\nReferees: I found no prior proof or counterexample.\n- OEIS A119936 (Lang 2006, edit #22 Nov 2019) still calls a(n)/n^3 = A002944(n)^2 a conjecture.\n- A027451 states (lcm(1..n)/n)^2 as a formula (Meijer, 2009) without proof. Detlefs' comment there begins \"It appears\".\n- A120078 and A120079 say \"conjectured to be A027451\".\n- Crowley, arXiv:1207.1126, says only that a denominator \"appears to be\" A119936.\n- Fried's OEIS-conjecture series does not mention A119936 or the related sequences: arXiv:2410.07237 / JIS 25.4.3, JIS 26.1.8, arXiv:2606.09913, arXiv:2607.24832.\n- Sloane, math/0409509: no mention.\n- Web, MSE/MO and SeqFan searches turned up nothing.",
+   "date": "2026-10-24"
+  },
+  {
    "id": "OEIS-frontier/A120069",
    "slug": "oeis-a120069",
    "title": "Denominators of Sum C(k)/4^(k-1): Groux's and Staunton's conjectures (A120069)",
@@ -1408,6 +1431,29 @@
    "summary": "For all n >= 0 and 0 <= k <= floor(n/2): the number A124418(n,k) of set partitions of {1,...,n} with exactly k blocks containing both an odd and an even entry equals k! * A049020(floor(n/2),k) * A049020(floor((n+1)/2),k), where A049020(m,k) = sum_{i=0}^{m} S2(m,i) * C(i,k) and S2 is the Stirling number of the second kind. (The proof does not need the bound k <= floor(n/2); the identity holds for every k.)",
    "notes": "Conjecture as stated in OEIS: A124526: \"A124418(n,k) = k!*T(n,k) (conjecture).\"; A124418 %F: \"Conjecture: T(n,k) = k!*A049020([n/2],k)*A049020([(n+1)/2],k) ... - _Paul D. Hanna_, Nov 08 2006\"\n\nReferees: OEIS entries read from the local mirror: A124526, A124418 (Hanna's 2006 conjecture in %F; Heinz's 2013 alternative Maple program uses the equivalent product formula), A049020 (cites East–Gray and Halverson–Jacobson), A244489, A124419 (k=0 column: Bell(floor(n/2))·Bell(ceil(n/2))), A124529, A362495.\n\nPrior proofs, stated in partition-monoid and partition-category language:\n- J. East and R. D. Gray, \"Diagram monoids and Graham–Houghton graphs: Idempotents and generating sets of ideals\", J. Combin. Theory Ser. A 146 (2017) 63–128, doi:10.1016/j.jcta.2016.09.001, arXiv:1404.2359. Proof of Theorem 7.5 and Remark 7.7: |J_r(P_n)| = ρ_{nr}^2·r!, with ρ_{nr} = Σ_j S(n,j)C(j,r). This is the even-n case.\n- T. Halverson and T. N. Jacobson, \"Set-partition tableaux and representations of diagram algebras\", arXiv:1808.08118 (Algebraic Combinatorics 2020), Remark 3.23: the rank-m diagrams in P_k number |W^m_k|^2·m!, where |W^m_k| = A049020(k,m).\n- I. Đurđev, I. Dolinka and J. East, \"Sandwich semigroups in diagram categories\", arXiv:1910.10286 (Internat. J. Algebra Comput. 2021), Proposition 4.11 and Remark 4.12: for the partition category P_{mn}, |D_r| = r!·[Σ_q C(q,r)S(m,q)]·[Σ_q C(q,r)S(n,q)]. Taking m = ⌈n/2⌉ and n = ⌊n/2⌋ gives the full conjecture.\n\nChecked and not relevant: Yaqubi–Mirzavaziri arXiv:2608.30097; Ehrenborg–Hedmark–Hettle (JIS 2017, odd/even block sizes); Shattuck arXiv:1401.6588.",
    "date": "2026-10-21"
+  },
+  {
+   "id": "OEIS-frontier/A127767",
+   "slug": "oeis-a127767",
+   "title": "The inverse of the 1/Catalan band triangle (A127767) has integer entries",
+   "area": "Discrete geometry",
+   "source": "OEIS A127767",
+   "source_url": "https://oeis.org/A127767",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A127767.lean",
+    "decl": "Math0.Statements.A127767.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A127767.lean",
+   "our_decl": "Math0.Frontier.A127767.result",
+   "summary": "Let C(n) be the Catalan numbers. Let A be the infinite lower-triangular matrix with A(n,k) = 1/C(n) if k ≤ n ≤ 2k and A(n,k) = 0 otherwise. Let T be its inverse, which is also lower triangular. Then every entry T(n,k) with 0 ≤ k ≤ n is an integer. In the frozen statement, T is defined by forward substitution: T(n,k) = C(n)·([n=k] − Σ_{j<n} A(n,j)·T(j,k)) for k ≤ n, and T(n,k) = 0 for k > n.",
+   "notes": "Conjecture as stated in OEIS: %C It is conjectured that all elements of the triangle are integers. (Paul Barry, Jan 28 2007)\n\nReferees: - OEIS A127767 (P. Barry, Jan 28 2007). Local mirror and current GitHub oeisdata, #11 Sep 30 2018: the conjecture is still marked as conjectured, with no proof or formula. Cross-references: A127768, A127769, A127770, A000108.\n- OEIS A101688: the 0/1 triangle [k<=n<=2k].\n- OEIS A111967: inverse of A101688. It is an integer triangle because A101688 is unitriangular. T(n,k) = A000108(k)·A111967(n,k) is the identity that settles A127767.\n- OEIS A127749, R. J. Mathar, Apr 21 2021: T(n,k) = (2k+1)·A111967(n,k). This is the same factorisation applied to a sibling triangle. It is the closest prior use of the method, but it does not resolve A127767.\n- OEIS A127793: the integrality conjecture for the 1/floor((n+2)/2) sibling was proved by FUNG Cheok Yin (Sep 2022) and by S. Fried, \"On the inverse of a certain triangular matrix and its connection to the largest odd divisor\", Notes Num. Theor. Disc. Math. 32(2) (2026) 255-262, doi:10.7546/nntdm.2026.32.2.255-262 (https://nntdm.net/papers/nntdm-32/NNTDM-32-2-255-262.pdf). This covers A127793 only; there is no general remark that would cover A127767.\n- Siblings with the same still-open integrality conjecture, all settled by the same argument: A127710, A127711, A127755, A127771.\n- No relevant hits on arXiv, MathOverflow/MSE or SeqFan for A127767.",
+   "date": "2026-10-24"
   },
   {
    "id": "OEIS-frontier/A141412",
@@ -1755,6 +1801,29 @@
    "date": "2026-10-18"
   },
   {
+   "id": "OEIS-frontier/A265210",
+   "slug": "oeis-a265210",
+   "title": "Ternary digits of 2^n: column k has least period 2*3^(k-1) and balanced digits for k ≥ 2",
+   "area": "Discrete geometry",
+   "source": "OEIS A265210",
+   "source_url": "https://oeis.org/A265210",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A265210.lean",
+    "decl": "Math0.Statements.A265210.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A265210.lean",
+   "our_decl": "Math0.Frontier.A265210.result",
+   "summary": "Let T(n,k) be the k-th base-3 digit (from the least significant end) of 2^n, i.e. the digit at the place 3^(k-1). Column k consists of the rows n with 3^(k-1) ≤ 2^n. Then for every k ≥ 1: (i) p(k) = 2*3^(k-1) is a period of column k (T(n+p(k),k) = T(n,k) for every row n in the column), and no q with 0 < q < p(k) is a period; (ii) for k ≥ 2, in every block of p(k) consecutive rows m, ..., m+p(k)-1 (m in the column) the digits 0, 1 and 2 occur equally often (in fact exactly 2*3^(k-2) times each). This is Conjecture 1 of OEIS A265210 (L. Edson Jeffery, 2015).",
+   "notes": "Conjecture as stated in OEIS: Conjecture 1: The sequence in column k is periodic, with period p(k) = 2*3^(k-1) = A008776(k-1), k >= 1, and in which the numbers 0,1,2 appear with equal frequency, for each k>1. (_L. Edson Jeffery_, Dec 04 2015)\n\nReferees: E. de Faria and C. Tresser, \"On Sloane's persistence problem\", arXiv:1307.1188 (2013), Section 3.1, Lemma 3 and the paragraph after it. It shows 2^n mod 3^k has minimum period 2*3^(k-1) and that every allowable length-k ternary tail appears exactly once per period. This predates the Dec 2015 OEIS conjecture.\nJ. C. Lagarias, \"Ternary expansions of powers of 2\", J. London Math. Soc. 79 (2009) 562-588, arXiv:math/0512006, proof of Thm 1.4, eq. (3.3): 2 is a primitive root mod 3^k, so 2^n runs over all units mod 3^k.\nY. N. Aliyev, \"Digits of powers of 2 in ternary numeral system\", Notes Number Theory Discrete Math. 29(3) (2023) 474-485, Lemmas 3.2-3.3 and Observation I. It gives ord_{3^(n+1)} 2 = 2*3^n and shows the last-k-digit tails are periodic with period 2*3^(k-1) and run through all endings that don't end in 0.\nAlso standard textbook material (2 is a primitive root mod 3^k; e.g. LeVeque, Rosen) and the A008776 comment (J. Song, 2021).\nOEIS A265210 itself (rev. #18, Dec 2015) still lists the statement as a conjecture and has no proof note. The single-column least-period refinement is not stated explicitly in these sources, but it is a short elementary consequence of the same facts.",
+   "date": "2026-10-24"
+  },
+  {
    "id": "OEIS-frontier/A278212",
    "slug": "oeis-a278212",
    "title": "Kagey's conjecture for A278212: a(n) = floor(A275815(n)/2), via exact bishop and queen maxima from flow (LP-dual) certificates",
@@ -1822,6 +1891,29 @@
    "summary": "For every integer partition y = (y_1 >= y_2 >= ... >= y_m), the Young diagram of y can be tiled by dominoes if and only if the number of odd parts in even positions equals the number of odd parts in odd positions. So the Heinz numbers of domino-tileable partitions (A300789) are exactly the Heinz numbers of partitions whose odd parts appear as often in even as in odd positions. Equivalently, a(n) = b(n) for all n >= 1, where a(n) and b(n) are the n-th smallest Heinz numbers of the two classes.",
    "notes": "Conjecture as stated in OEIS: %C A300789 This sequence is conjectured to be the Heinz numbers of integer partitions in which the odd parts appear as many times in even as in odd positions.  (_Gus Wiseman_, Mar 12 2018)\n\nReferees: Already known, so the Lean proof is a first formalization, not a new result:\n- Classical 2-core / beta-number theory. I.G. Macdonald, Symmetric Functions and Hall Polynomials (2nd ed. 1995), Ch. I §1 Ex. 8, pp. 12-15: the r-core is empty iff the beta-numbers are equidistributed mod r. D.E. Littlewood, Modular representations of symmetric groups, Proc. Roy. Soc. A 209 (1951) 333-353.\n- Explicit statement of the parity form. S.P. Albion, \"Proof of some Littlewood identities conjectured by Lee, Rains and Warnaar\", arXiv:2108.12766, Lemma 2.1: empty 2-core (i.e. domino-tileable) iff {lambda_i + 2n - i} has n even and n odd elements, which is equivalent to the A300789 parity condition.\n- Black = white criterion for Young diagrams. Codeforces Round 609 editorial, problem 1268B/1269D \"Domino for Young\" (Dec 2019, codeforces.com/blog/entry/72358).\n- OEIS. A304710 (A. P. Heinz, May 2018) states the equivalence as fact: \"number of partitions of 2n where the number of odd parts in even positions differs from the number of odd parts in odd positions\". A000712 has Meeussen's 2013 comment and Karlsson's Dec 2025 comment. Heinz's Maple program and b-file for A300789 use the criterion.\n- The A300789 entry itself (rev #11, May 22 2018, local mirror = GitHub) still says \"conjectured\" and has no %E updates.",
    "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A308107",
+   "slug": "oeis-a308107",
+   "title": "A308107: Barker's rational generating function and order-15 recurrence for the sum of smallest sides of scalene integer triangles",
+   "area": "Discrete geometry",
+   "source": "OEIS A308107",
+   "source_url": "https://oeis.org/A308107",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A308107.lean",
+    "decl": "Math0.Statements.A308107.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A308107.lean",
+   "our_decl": "Math0.Frontier.A308107.result",
+   "summary": "Let a(n) be the sum of the smallest side k over all integer triples k < i < j with j < k + i and k + i + j = n, i.e. over all scalene integer triangles of perimeter n. Then (1) sum_{n>=0} a(n) x^n = x^9 (2 + 2x + 2x^2 + x^3) / ((1-x)^4 (1+x)^3 (1+x^2)^2 (1+x+x^2)^2) as formal power series over Q, and (2) for every n > 15, a(n) = -a(n-1) + 2a(n-3) + 4a(n-4) + 2a(n-5) - a(n-6) - 5a(n-7) - 5a(n-8) - a(n-9) + 2a(n-10) + 4a(n-11) + 2a(n-12) - a(n-14) - a(n-15).",
+   "notes": "Conjecture as stated in OEIS: %F A308107 Conjectures from Colin Barker, May 13 2019: (Start) G.f.: x^9*(2 + 2*x + 2*x^2 + x^3) / ((1 - x)^4*(1 + x)^3*(1 + x^2)^2*(1 + x + x^2)^2). a(n) = -a(n-1) + 2*a(n-3) + ... - a(n-15) for n>15. (End)\n\nReferees: The OEIS entry A308107 (local mirror and current GitHub oeisdata, version #14 of Sep 12 2021) still marks Barker's May 13 2019 g.f. and recurrence as conjectures, with no proof note or %E edit. Its cross-reference A307686 and the related entries A308108, A308109 and A308158 also leave their Barker conjectures unproved. A005044 has Roger Cuculière's comment that scalene triangles of perimeter n+6 correspond to all triangles of perimeter n; this gives a reduction, not a proof. Sela Fried's proofs of OEIS conjectures (arXiv:2410.07237; JIS 28, 2025, Art. 25.4.3; JIS 29, 2026, Art. 26.1.8; arXiv:2607.24832) do not cover A308107 or any triangle sequence near it. Andrews–Paule–Riese (MacMahon's Partition Analysis IX, k-gon partitions), Hirschhorn on k-gon partitions, and arXiv:2308.01912 on Alcuin's sequence treat only the unweighted triangle count. I found no prior proof or counterexample.",
+   "date": "2026-10-24"
   },
   {
    "id": "OEIS-frontier/A308222",
@@ -1985,6 +2077,29 @@
    "date": "2026-10-19"
   },
   {
+   "id": "OEIS-frontier/A334595",
+   "slug": "oeis-a334595",
+   "title": "A334595: a(n) = 1 iff n is a power of two, and the records occur exactly at 1 and 2^k + 1",
+   "area": "Discrete geometry",
+   "source": "OEIS A334595",
+   "source_url": "https://oeis.org/A334595",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A334595.lean",
+    "decl": "Math0.Statements.A334595.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A334595.lean",
+   "our_decl": "Math0.Frontier.A334595.result",
+   "summary": "Let a(n) be the number obtained as follows. Write n in binary, most significant bit first. Build the XOR-triangle whose first row is that bit string; each later row is the pairwise XOR of adjacent entries of the row above. Read the right side of the triangle from the top-right corner downward, and interpret it as a binary numeral with the first entry as the most significant bit. Then:\n(1) For n >= 1, a(n) = 1 if and only if n is a power of two.\n(2) The record positions are exactly {1} together with {2^k + 1 : k >= 1}. Here n >= 1 is a record position when a(n) > a(m) for every 1 <= m < n.",
+   "notes": "Conjecture as stated in OEIS: Conjecture: Records occur at 1 and at 2^n + 1.  /  Conjecture: a(n) = 1 if and only if n is a power of two. (_Peter Kagey_, May 07 2020)\n\nReferees: I found no earlier proof or counterexample for either A334595 conjecture.\n- OEIS A334595 (Peter Kagey, May 2020): unchanged since revision #18 (May 09 2020), with both statements still labeled \"Conjecture\".\n- MathOverflow 359138, \"Number triangle\" (user DSM, with answers by YCor and Ilya Bogdanov): treats the boundary operator φ_k with φ_k^3 = 1 and counts rotationally symmetric triangles (A334556/A334596). It does not address records or a(n) = 1.\n- OEIS A334727 (Rémy Sigrist, 2020): states that the left-diagonal map is a self-inverse permutation.\n- Paul D. Hanna's XOR binomial transform entries (OEIS A099884, A099900, A099902): note that the transform is self-inverse.\nThese are the known ingredients that make the result elementary. Web searches of SeqFan, arXiv, MathOverflow and Math StackExchange found no resolution.",
+   "date": "2026-10-24"
+  },
+  {
    "id": "OEIS-frontier/A334603",
    "slug": "oeis-a334603",
    "title": "The period of 1/11^n is 2 * 11^(n-1)",
@@ -2121,6 +2236,29 @@
    "summary": "For every n >= 1, let a(n) be the largest number of squares you can choose on an n x n board so that no two chosen squares are exactly two steps apart in the same row or in the same column. Then a(n) = n^2/2 if n ≡ 0 (mod 4), a(n) = (n^2+1)/2 if n is odd, and a(n) = n^2/2 + 2 if n ≡ 2 (mod 4). (This is Yang Hong's conjecture in OEIS A348484.)",
    "notes": "Conjecture as stated in OEIS: %F A348484 Conjectures: a(n) = n^2/2 for n == 0 (mod 4). a(n) = (n^2 + 1)/2 for n == 1 or 3 (mod 4). a(n) = n^2/2 + 2 for n == 2 (mod 4).  (Entry by _Yang Hong_, Oct 20 2021; last edit #33, Dec 06 2022.)\n\nReferees: OEIS A348484 (Yang Hong, Oct 20 2021; latest revision #33, Dec 06 2022) still marks the formulas as \"Conjectures\". R. J. Mathar's Dec 2022 comment gives a 2×2-block checkerboard construction. Its g.f. -x(1+2x-2x^2+2x^3+x^4)/((1+x)(1+x^2)(x-1)^3) matches the conjectured values, but he states it only as a lower bound. Cross-reference: A048716 (the 1-D row condition, k AND 4k = 0). I found no published or online proof of the upper bound on arXiv, Math StackExchange, MathOverflow, SeqFan or general web search. The result does follow directly from the standard fact that a grid graph P_a□P_b has independence number ⌈ab/2⌉, because the \"two apart\" graph is a disjoint union of four such grids.",
    "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A350900",
+   "slug": "oeis-a350900",
+   "title": "OEIS A350900: Schulte's gcd-ratio double sum is a Dirichlet convolution",
+   "area": "Discrete geometry",
+   "source": "OEIS A350900",
+   "source_url": "https://oeis.org/A350900",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A350900.lean",
+    "decl": "Math0.Statements.A350900.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A350900.lean",
+   "our_decl": "Math0.Frontier.A350900.result",
+   "summary": "Let a(f; n) = Sum_{i=1..n} Sum_{k=1..n} f(gcd(i,n)/gcd(gcd(i,k),n)). Then: (1) for every complex arithmetic function f and every n > 0, a(f; n) = ((f·φ) * A057660)(n), where f·φ is the pointwise product with Euler's totient, * is Dirichlet convolution, and A057660(m) = Sum_{k=1..m} m/gcd(m,k). (2) If f is multiplicative, so is a(f; ·). (3) For n > 0, the row sum Sum_{k=1..n} T(n,k) of the A350900 triangle T(n,k) = Sum_{i=1..n} gcd(i,n)/gcd(gcd(i,k),n) equals a(id; n). (4) For n > 0, that row sum equals (A002618 * A057660)(n), where A002618(n) = n·φ(n).",
+   "notes": "Conjecture as stated in OEIS: Conjecture: Let f be an arbitrary arithmetic function. Define for n > 0 the sequence a(f; n) = Sum_{i=1..n, k=1..n} f(gcd(i,n)/gcd(gcd(i,k),n)); a(f; n) equals Dirichlet convolution of f(n)*A000010(n) and A057660(n); if f is multiplicative, then a(f; n) is multiplicative; row sums of this triangle use f(n) = n (see formula section). Also %F: Conjecture: Row sums equal Dirichlet convolution of A002618 and A057660. (Werner Schulte, Jan 21 2022)\n\nReferees: I did not query oeis.org; OEIS entries were read from the local mirror dated 2026-10-17.\n- A350900 (Werner Schulte, Jan 21 2022; last edit #13, May 24 2024): both claims are still labeled \"Conjecture\", and no %E line records a proof.\n- A373059 (Seiichi Manyama, May 21 2024; \"Row sums of A350900\"): states a(n) = Sum_{d|n} phi(n/d)(n/d) sigma_2(d^2)/sigma(d^2) = (A002618*A057660)(n) without proof or conjecture label. Amiram Eldar (May 27 2024) added the multiplicative formula and the Dirichlet g.f. zeta(s)zeta(s-2)^2/zeta(s-1)^2. This is a prior unproved assertion of part 4.\n- Related OEIS identities, also without proof: A350156 (Schulte, the analogous claim for f(n/gcd(i,k,n))); A371492, A371628, A373060, A373061, A372962, A372964, A372968 (Manyama, May 2024; sums of gcd(x_1,n)/gcd(x_1,...,x_k,n)).\n- A057660 (= Sum_{d|n} d*phi(d)).\n- Classical background: Cesaro's identity; L. Toth, \"A survey of gcd-sum functions\", JIS 13 (2010) 10.8.1; O. Bordelles, \"A Multidimensional Cesaro Type Identity and Applications\", JIS 18 (2015) 15.3.7; P. Bala, \"GCD sum theorems. Two Multivariable Cesaro Type Identities\" (A368743 attachment; I could not retrieve its text).\n- Checked and not relevant: S. Fried, \"Further proofs of conjectures from the OEIS\", arXiv:2607.24832 (A350900 is not among its sequences); D. Himane, NNTDM 31 (2025) (a different Schulte conjecture, about A006472).\nNo prior proof or counterexample of the A350900 conjecture was found.",
+   "date": "2026-10-24"
   },
   {
    "id": "OEIS-frontier/A351743",
