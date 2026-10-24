@@ -25,6 +25,10 @@ Referees: I found no prior resolution.
 - **Formalization datasets.** A073642 is not in google-deepmind/formal-conjectures, in Epoch's OEIS Open / LeanOpenProblems (arXiv:2608.11941), or in alphaproof-nexus-results.
 - **Ingredients of the proof.** These are classical: Legendre's formula v2(n!) = n - s2(n), and Sum_{k<=n} f(v2(k)) = Sum_j (f(j)-f(j-1)) floor(n/2^j). The identity also follows from Gutkovskiy's 2019 g.f. in the entry.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

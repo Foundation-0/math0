@@ -1,0 +1,381 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\small, columns=fullflexible, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8}
+% Multi-byte characters inside listings.
+\lstset{keepspaces=true, literate={ℕ}{{$\mathbb{N}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {ℤ}{{$\mathbb{Z}$}}1
+  {→}{{$\to$}}1 {∀}{{$\forall$}}1 {≤}{{$\le$}}1 {∧}{{$\wedge$}}1 {∑}{{$\sum$}}1 {∈}{{$\in$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+
+
+\title[{Numerator plus denominator of the convergents of $[1;1/2,\dots,1/n]$}]{Numerator plus denominator of the convergents of $[1;\,1/2,\,1/3,\dots,1/n]$ is $2^{v_2(n!)+v_2((n+1)!)}$: a proof of the conjectured formula in OEIS A092054}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 21, 2026}
+
+\begin{document}
+\begin{abstract}
+For $n\ge1$ let $p_n/q_n$ be the continued fraction $[1;1/2,1/3,\dots,1/n]$ in lowest terms.
+We prove that $p_n+q_n=2^{a(n)}$ with $a(n)=v_2(n!)+v_2((n+1)!)=2n+1-s_2(n)-s_2(n+1)=\sum_{k=1}^{n}\rho(\lfloor(k+1)/2\rfloor)$, where $s_2$ is the binary digit sum and $\rho$ the ruler function; this is the formula conjectured by Franklin T. Adams-Watters in 2006 in OEIS A092054, together with the entry's assertion that $p_n+q_n$ is a power of $2$.
+The proof uses closed forms for scaled convergents, the integrality of $\binom{2m}{m}$, and Legendre's formula.
+We found no earlier proof and classify the result as new, though it is a short consequence of classical facts and the case of even $n$ is effectively recorded in OEIS A056982.
+The proof is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, whose definitions are checked by the kernel against the listed terms and which was reviewed for fidelity and frozen before the proof attempt.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+On February~19, 2004, Paul D. Hanna contributed to the OEIS the sequences A092053 \cite{A092053} and A092054 \cite{A092054}. They list the denominator of $c_n=[1;1/2,1/3,\dots,1/n]=1+1/(1/2+1/(1/3+\dots+1/(1/n)))$, $n\ge1$, and the base-$2$ logarithm of numerator plus denominator of $c_n$. Hanna observed that the numerators are the terms of A001902 \cite{A001901}, the reduced denominators of the partial Wallis products for $\pi/2$, and that numerator plus denominator is a power of $2$; for example $c_4=45/19$ and $45+19=2^6$. On February~2, 2006, Franklin T. Adams-Watters added the formula, marked ``It appears'', that the exponent is
+\[
+  a(n)=\sum_{k=1}^{n}\rho\bigl(\lfloor (k+1)/2\rfloor\bigr)=2n+1-s_2(n)-s_2(n+1)=A011371(n)+A011371(n+1),
+\]
+where $\rho=$ A001511 \cite{OEIS} is the ruler function, $s_2=$ A000120 \cite{OEIS} is the binary digit sum, and $A011371(m)=m-s_2(m)$ \cite{OEIS}. In the current revision (\#43, August~9, 2026) the formula is still marked ``It appears''.
+
+We prove the formula, together with the claim that $p_n+q_n$ is a power of $2$ (Theorem~\ref{thm:main}). Since $A011371(m)=v_2(m!)$ by Legendre's formula, the exponent is $a(n)=v_2(n!\,(n+1)!)$. The key point is that the odd part of $m!$ divides $1\cdot3\cdots(2m-1)$, because $\binom{2m}{m}$ is an integer; this makes the odd part of numerator plus denominator of the unreduced convergent equal to their $\gcd$.
+
+\subsection*{Prior work}
+The math0 referees found no earlier proof of the formula. Related results are as follows.
+
+\emph{Heap construction.} M.~A. Suchenek \cite{Suchenek} analyzed the worst-case number of comparisons of Floyd's heap-construction program. In 2014 he added to A092054 the comment that $a(n-1)$ is this number for an $n$-element heap, and the formula $a(n-1)=2n-2s_2(n)-v_2(n)$, ``see Suchenek link for a proof''. Since $s_2(n-1)=s_2(n)-1+v_2(n)$, this is Adams-Watters's expression at $n-1$. But the identification of $a(n-1)$ with the comparison count is only asserted in the entry, and the abstract of \cite{Suchenek} (the referees could not obtain the full text) shows no continued-fraction content; as far as we can tell, \cite{Suchenek} proves the closed form for the heap count, not for $a(n)$.
+
+\emph{Wallis products.} The reduced partial Wallis products have numerators A001901 and denominators A001902 \cite{A001901}; the OEIS lists A001901 as a subsequence of the powers of $2$. In 2024 T.~Ordowski noted that A001901$(n)$/A001902$(n)$ is $[1;1,1/2,\dots,1/n]=1+1/c_n$, so that $p_n+q_n=$ A001901$(n)$. N.~A. Draim \cite{Draim} observed that the partial Wallis products are the convergents of a continued fraction with partial numerators $(n-1)n$.
+
+\emph{Even indices.} E.~W. Weisstein's entry A056982 \cite{A056982} records that the reduced denominator of $\prod_{k=1}^{m}(1-1/(4k^2))$ is $4^{A005187(m)}$, where $A005187(m)=2m-s_2(m)$ \cite{OEIS}. Since this product is the reciprocal of the partial Wallis product $W(2m)=1+1/c_{2m}$ of Remark~\ref{rem:wallis}, this is the case $a(2m)=4m-2s_2(m)$ of the formula, which also follows from Kummer's theorem $v_2\binom{2m}{m}=s_2(m)$.
+
+Searching arXiv, MathOverflow, Mathematics Stack Exchange, MathWorld, the SeqFan archives and the web, the referees found no treatment of odd $n$ and no proof of the formula. The formula is not among the statements of the formal-conjectures repository \cite{FC}. With these caveats we regard the result as new, though modest: an elementary consequence of the Wallis connection, the integrality of $\binom{2m}{m}$ and Legendre's formula.
+
+\section{Statement}\label{sec:statement}
+
+The entry A092054 \cite{A092054}, by Paul D. Hanna, February~19, 2004, reads in part (verbatim):
+\begin{quote}\raggedright\small
+\textsc{Name}: Base-2 logarithm of the sum of numerator and denominator of the convergents of the continued fraction expansion [1; 1/2, 1/3, 1/4, ..., 1/n, ...].\\[2pt]
+\textsc{Comments}: [\dots] The sum of the numerators and the denominators equals a power of 2: A001902(n) + A092053(n) = 2\^{}a(n).\\[2pt]
+\textsc{Formula}: [\dots] It appears that a(n) = Sum\_\{k=1..n\} A001511(floor((k+1)/2)). Equivalently, a(n) = 2n + 1 - A000120(n) - A000120(n+1) = A011371(n) + A011371(n+1). - \emph{Franklin T. Adams-Watters}, Feb 02 2006
+\end{quote}
+The offset is $1$. Let $v_2$ be the $2$-adic valuation, $s_2(m)$ the binary digit sum, and $\rho(m)=v_2(2m)$ ($m\ge1$).
+
+\begin{theorem}[Adams-Watters's formula]\label{thm:main}
+For $n\ge1$ write $[1;1/2,\dots,1/n]=p_n/q_n$ with $p_n,q_n$ coprime positive integers. Then $p_n+q_n=2^{a(n)}$, where
+\begin{align*}
+  a(n)&=v_2(n!)+v_2((n+1)!)=\textstyle\sum_{k=1}^{n}\rho\bigl(\lfloor (k+1)/2\rfloor\bigr)\\
+  &=2n+1-s_2(n)-s_2(n+1)=A011371(n)+A011371(n+1).
+\end{align*}
+\end{theorem}
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A092054.lean}, reviewed for fidelity, and frozen before the proof attempt (SHA-256 \texttt{adfff33f\dots76b2b3}). Its definitions and statement are as follows, verbatim except that the license header, the line \texttt{import Mathlib}, the docstrings, blank lines and the data checks other than \decl{conv_four} are omitted:
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize]
+namespace Math0.Statements.A092054
+def cfEval : List ℚ → ℚ
+  | [] => 0
+  | [x] => x
+  | x :: y :: ys => x + 1 / cfEval (y :: ys)
+def conv (n : ℕ) : ℚ := cfEval ((List.range n).map fun k => 1 / ((k : ℚ) + 1))
+def num (n : ℕ) : ℕ := (conv n).num.natAbs
+def den (n : ℕ) : ℕ := (conv n).den
+def a (n : ℕ) : ℕ := Nat.log 2 (num n + den n)
+theorem conv_four : conv 4 = 45 / 19 := by decide +kernel
+def ruler (m : ℕ) : ℕ := padicValNat 2 (2 * m)
+def binWeight (m : ℕ) : ℕ := (Nat.digits 2 m).sum
+def A011371 (m : ℕ) : ℕ := m - binWeight m
+def statement : Prop :=
+  ∀ n : ℕ, 1 ≤ n →
+    2 ^ a n = num n + den n ∧
+    a n = ∑ k ∈ Finset.Icc 1 n, ruler ((k + 1) / 2) ∧
+    (a n : ℤ) = 2 * (n : ℤ) + 1 - (binWeight n : ℤ) - (binWeight (n + 1) : ℤ) ∧
+    a n = A011371 n + A011371 (n + 1)
+end Math0.Statements.A092054
+\end{lstlisting}
+
+\emph{Encoding.} \decl{cfEval} evaluates $[x_0;x_1,\dots,x_k]=x_0+1/(x_1+1/(\dots+1/x_k))$ over $\Q$ and \texttt{conv n} is $[1;1/2,\dots,1/n]$; all tails are positive, so the Lean convention $1/0=0$ never applies. \decl{num} and \decl{den} are $p_n$ and $q_n$, since rationals are stored in lowest terms, and \texttt{a n} is $\lfloor\log_2(p_n+q_n)\rfloor$. The OEIS $a(n)$ is the real logarithm, so the conjectured ``$a(n)=f(n)$'' means $p_n+q_n=2^{f(n)}$. The statement says exactly this through the conjuncts $2^{a(n)}=p_n+q_n$ (also the entry's power-of-$2$ claim) and $a(n)=f(n)$. \decl{ruler}, \decl{binWeight}, \decl{A011371} follow the OEIS names of A001511, A000120, A011371; the subtraction in \decl{A011371} never truncates, and the middle form is evaluated in $\Z$. Adams-Watters's three forms are equal by Lemmas~\ref{lem:legendre} and~\ref{lem:ruler}, so stating all three adds nothing.
+
+\emph{Checks against the OEIS.} The statement file proves the following by evaluation in the kernel (\texttt{decide +kernel}): the example $c_4=45/19$; all $67$ listed terms of A092054 (\decl{a_data}); the numerators $p_1,\dots,p_{24}$, which are the listed terms A001902$(1..24)$; all $25$ listed terms of A092053 as $q_1,\dots,q_{25}$; and the first listed terms of A001511, A000120 and A011371. A reviewer also checked every conjunct in exact arithmetic for $n<300$.
+
+\section{Proof}\label{sec:proof}
+
+We follow the Lean proof; lemmas carry the names of the corresponding declarations. Let $x_k=1/(k+1)$ for $k\ge0$, so that $c_n$ is the continued fraction of the list $(x_0,\dots,x_{n-1})$.
+
+\subsection{Convergents}\label{sec:cf}
+For a list $\ell$ of rationals let $E(\ell)$ be its value under \decl{cfEval}: $E(())=0$, $E((x))=x$, $E((x,y,\dots))=x+1/E((y,\dots))$. For a list $\ell$ and a rational tail $t$ let $F((),t)=t$ and $F((x)\frown\ell,t)=x+1/F(\ell,t)$, where $\frown$ is concatenation. Thus $F((y_0,\dots,y_r),t)=[y_0;y_1,\dots,y_r,t]$; this is \decl{tailEval}.
+
+\begin{lemma}[\decl{cfEval_append_singleton}, \decl{tailEval_append}]\label{lem:tail}
+For every list $\ell$ and $x,y,t\in\Q$: (a) $E(\ell\frown(y))=F(\ell,y)$; (b) $F(\ell\frown(x),t)=F(\ell,x+1/t)$.
+\end{lemma}
+
+\begin{proof}
+Induction on $\ell$. For (a): $E((y))=y=F((),y)$, $E((x,y))=x+1/y=F((x),y)$, and if $\ell=(x)\frown\ell'$ with $\ell'\ne()$, then $E(\ell\frown(y))=x+1/E(\ell'\frown(y))=x+1/F(\ell',y)=F(\ell,y)$. Part (b) follows by the same induction.
+\end{proof}
+
+Define integer sequences by $P(0)=P(1)=1$, $Q(0)=0$, $Q(1)=1$ and, for $X\in\{P,Q\}$,
+\[
+  X(n+2)=X(n+1)+(n+1)(n+2)\,X(n).
+\]
+The sum $T=P+Q$ satisfies the same recurrence (\decl{T_succ_succ}). For instance $c_5=225/159=75/53$.
+
+\begin{lemma}[\decl{Q_pos}]\label{lem:qpos}
+$Q(n)\ge1$ for all $n\ge1$, since $Q(1)=1$ and $Q(n+2)\ge Q(n+1)$.
+\end{lemma}
+
+\begin{lemma}[\decl{tailEval_range}]\label{lem:moebius}
+For every $m\ge0$ and every rational $t>0$,
+\[
+  F\bigl((x_0,\dots,x_m),\,t\bigr)=\frac{P(m+1)\,t+(m+1)P(m)}{Q(m+1)\,t+(m+1)Q(m)},
+\]
+and the denominator on the right is positive.
+\end{lemma}
+
+\begin{proof}
+Induction on $m$. For $m=0$ both sides are $1+1/t=(t+1)/t$. For the step, Lemma~\ref{lem:tail}(b) gives $F((x_0,\dots,x_{m+1}),t)=F((x_0,\dots,x_m),s)$ with $s=1/(m+2)+1/t>0$. By the induction hypothesis at $s$, this equals $\bigl(P(m+1)s+(m+1)P(m)\bigr)/\bigl(Q(m+1)s+(m+1)Q(m)\bigr)$, whose denominator is positive by Lemma~\ref{lem:qpos}. Now multiply numerator and denominator by $(m+2)t>0$. The numerator becomes
+\[
+  P(m+1)(t+m+2)+(m+1)(m+2)\,t\,P(m)=P(m+2)\,t+(m+2)P(m+1)
+\]
+by the recurrence, and likewise the denominator becomes $Q(m+2)t+(m+2)Q(m+1)>0$.
+\end{proof}
+
+\begin{corollary}[\decl{conv_eq}]\label{cor:conv}
+$c_n=P(n)/Q(n)$ for every $n\ge1$.
+\end{corollary}
+
+\begin{proof}
+$c_1=E((1))=1=P(1)/Q(1)$. For $n=m+2$, Lemma~\ref{lem:tail}(a) gives $c_{m+2}=F((x_0,\dots,x_m),1/(m+2))$. Lemma~\ref{lem:moebius} with $t=1/(m+2)$ then gives
+\[
+  c_{m+2}=\frac{P(m+1)+(m+1)(m+2)P(m)}{Q(m+1)+(m+1)(m+2)Q(m)}=\frac{P(m+2)}{Q(m+2)},
+\]
+after multiplying numerator and denominator by $m+2$.
+\end{proof}
+
+\subsection{Closed forms}
+Let $D(0)=1$ and $D(m+1)=(2m+1)D(m)$, so $D(m)=1\cdot3\cdots(2m-1)$.
+
+\begin{lemma}[\decl{D_odd}, \decl{D_dvd_succ}, \decl{factorial_two_mul}]\label{lem:D}
+$D(m)$ is odd, $D(m)\mid D(m+1)$, and $(2m)!=2^m\,m!\,D(m)$.
+\end{lemma}
+
+\begin{proof}
+The first two claims are clear. For the third, use induction: $(2m+2)!=2(m+1)(2m+1)(2m)!=2^{m+1}(m+1)!\,D(m+1)$.
+\end{proof}
+
+\begin{lemma}[\decl{P_closed}, \decl{T_closed}, \decl{P_odd}]\label{lem:closed}
+For every $m\ge0$,
+\begin{gather*}
+  P(2m)=D(m)^2(2m+1),\qquad P(2m+1)=D(m+1)^2,\\
+  T(2m)=4^m(m!)^2,\qquad T(2m+1)=2^{2m+1}m!\,(m+1)!.
+\end{gather*}
+In particular $P(n)$ is odd for every $n$.
+\end{lemma}
+
+\begin{proof}
+For $m=0$ these read $P(0)=P(1)=1$, $T(0)=1$, $T(1)=2$. Assume them for $m$. Using $D(m+1)=(2m+1)D(m)$ and the recurrences,
+\begin{align*}
+  P(2m+2)&=D(m+1)^2+(2m+1)(2m+2)D(m)^2(2m+1)=D(m+1)^2(2m+3),\\
+  P(2m+3)&=D(m+1)^2(2m+3)\bigl(1+(2m+2)\bigr)=D(m+2)^2,\\
+  T(2m+2)&=2^{2m+1}m!\,(m+1)!\bigl(1+(2m+1)\bigr)=4^{m+1}((m+1)!)^2,\\
+  T(2m+3)&=2^{2m+2}((m+1)!)^2\bigl(1+(2m+3)\bigr)=2^{2m+3}(m+1)!\,(m+2)!.
+\end{align*}
+Here $(2m+2)4^m(m!)^2=2^{2m+1}m!\,(m+1)!$ and $(2m+2)2^{2m+1}m!\,(m+1)!=2^{2m+2}((m+1)!)^2$. Oddness of $P(n)$ follows from Lemma~\ref{lem:D}.
+\end{proof}
+
+\subsection{Two-adic valuations}
+Let $V(k)=v_2(k!)$.
+
+\begin{lemma}[\decl{odd_part}]\label{lem:oddpart}
+If $m!=2^v w$ with $w$ odd, then $w\mid D(m)$.
+\end{lemma}
+
+\begin{proof}
+Since $\binom{2m}{m}\in\N$, $m!\,m!$ divides $(2m)!=2^m\,m!\,D(m)$, so $m!\mid 2^mD(m)$. Hence $w\mid 2^mD(m)$, and since $w$ is odd, $w\mid D(m)$.
+\end{proof}
+
+\begin{lemma}[\decl{V_two_mul}, \decl{V_two_mul_add_one}]\label{lem:V}
+If $m!=2^vw$ with $w$ odd, then $V(2m)=m+v$. Also $V(2m+1)=V(2m)$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:D}, $(2m)!=2^{m+v}\,(w\,D(m))$ with $w\,D(m)$ odd, and $(2m+1)!=(2m+1)(2m)!$.
+\end{proof}
+
+\begin{lemma}[\decl{key}]\label{lem:key}
+For every $n\ge0$ there are $e,u\in\N$ with $T(n)=2^e u$, $u\mid P(n)$ and $e=V(n)+V(n+1)$.
+\end{lemma}
+
+\begin{proof}
+If $n=2m$, write $m!=2^vw$ with $w$ odd, and take $u=w^2$ and $e=2m+2v$. Then $T(2m)=4^m(2^vw)^2=2^eu$. By Lemma~\ref{lem:oddpart}, $w^2\mid D(m)^2\mid P(2m)$. By Lemma~\ref{lem:V}, $V(2m)+V(2m+1)=2(m+v)=e$.
+
+If $n=2m+1$, write $m!=2^vw$ and $(m+1)!=2^{v'}w'$ with $w,w'$ odd, and take $u=ww'$ and $e=2m+1+v+v'$. Then $T(2m+1)=2^eu$. By Lemmas~\ref{lem:oddpart} and~\ref{lem:D}, $ww'\mid D(m)D(m+1)\mid D(m+1)^2=P(2m+1)$. By Lemma~\ref{lem:V}, $V(2m+1)+V(2m+2)=(m+v)+(m+1+v')=e$.
+\end{proof}
+
+\begin{lemma}[\decl{num_add_den_eq}]\label{lem:lowest}
+Let $A,B,e,u\in\N$ with $B>0$, $A$ odd, $A+B=2^eu$ and $u\mid A$. If $A/B=r/s$ in lowest terms, with $r\in\Z$, $s\ge1$ and $\gcd(|r|,s)=1$, then $|r|+s=2^e$.
+\end{lemma}
+
+\begin{proof}
+Let $g=\gcd(A,B)=\gcd(A,A+B)=\gcd(A,2^eu)$. Since $g\mid A$, $g$ is odd; as $g\mid 2^eu$, it follows that $g\mid u$. Conversely $u\mid A$ and $u\mid 2^eu$, so $u\mid g$. Hence $g=u$, and $u>0$. Write $A=uA'$ and $B=uB'$. Then $\gcd(A',B')=1$, $B'>0$ and $A/B=A'/B'$, so $r=A'$ and $s=B'$. Finally, $u(A'+B')=A+B=2^eu$ gives $A'+B'=2^e$.
+\end{proof}
+
+\subsection{The other forms of the exponent}
+
+\begin{lemma}[\decl{V_eq}, \decl{V_add_binWeight}; Legendre]\label{lem:legendre}
+$V(m)=m-s_2(m)=A011371(m)$ and $V(m)+s_2(m)=m$ for every $m\ge0$.
+\end{lemma}
+
+\begin{proof}
+This is Legendre's formula $(p-1)\,v_p(m!)=m-s_p(m)$ for $p=2$, which is \decl{sub_one_mul_padicValNat_factorial} in Mathlib, together with $s_2(m)\le m$.
+\end{proof}
+
+\begin{lemma}[\decl{V_add_two}, \decl{ruler_sum}]\label{lem:ruler}
+For every $n\ge0$, $V(n+2)=V(n)+\rho(\lfloor(n+2)/2\rfloor)$, and $\sum_{k=1}^{n}\rho(\lfloor(k+1)/2\rfloor)=V(n)+V(n+1)$.
+\end{lemma}
+
+\begin{proof}
+We have $V(n+2)=V(n)+v_2(n+1)+v_2(n+2)$. Exactly one of $n+1$ and $n+2$ is even, and it equals $2j$ with $j=\lfloor(n+2)/2\rfloor$. The odd one has valuation $0$, so $v_2(n+1)+v_2(n+2)=v_2(2j)=\rho(j)$. The sum identity follows by induction on $n$: both sides vanish at $n=0$, and the new term $k=n+1$ is $\rho(\lfloor(n+2)/2\rfloor)=V(n+2)-V(n)$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $n\ge1$ and take $e,u$ from Lemma~\ref{lem:key}. By Corollary~\ref{cor:conv}, $c_n=P(n)/Q(n)$, where $Q(n)>0$ (Lemma~\ref{lem:qpos}) and $P(n)$ is odd (Lemma~\ref{lem:closed}). Lemma~\ref{lem:lowest} with $A=P(n)$ and $B=Q(n)$ gives $p_n+q_n=2^e$. Hence $a(n)=\lfloor\log_2 2^e\rfloor=e=V(n)+V(n+1)$ and $2^{a(n)}=p_n+q_n$. The ruler-sum form is Lemma~\ref{lem:ruler}, and the form $A011371(n)+A011371(n+1)$ is Lemma~\ref{lem:legendre}. Finally, $V(n)=n-s_2(n)$ and $V(n+1)=n+1-s_2(n+1)$ in $\Z$, which gives $a(n)=2n+1-s_2(n)-s_2(n+1)$.
+\end{proof}
+
+\begin{remark}\label{rem:wallis}
+(Not formalized.) (1) In W.~Lang's indexing \cite{A001901}, the partial Wallis products are $W(n)=\prod_{k=0}^{n}N(k)/D'(k)$, with $N(0)=1$, $N(k)=2\lfloor(k+1)/2\rfloor$ for $k\ge1$, and $D'(k)=2\lfloor k/2\rfloor+1$. Lemma~\ref{lem:closed} shows that $\prod_{k\le n}N(k)=T(n)$ and $\prod_{k\le n}D'(k)=P(n)$. Hence $W(n)=T(n)/P(n)=1+1/c_n$. As $\gcd(T(n),P(n))=\gcd(P(n),Q(n))$, $W(n)$ reduces to $2^{a(n)}/p_n$, confirming Hanna's and Ordowski's identifications and A001901$(n)=2^{a(n)}$. (2) Suchenek's formula $a(n-1)=2n-2s_2(n)-v_2(n)$ ($n\ge2$) follows; his comment that this is the heap-construction count rests on \cite{Suchenek}.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A092054.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file and the audit commands in \path{lean/Math0/Audit.lean}. It contains the private definitions \decl{tailEval}, \decl{pq} ($k\mapsto x_k$), \decl{P}, \decl{Q}, \decl{D} and \decl{V}, the private lemmas named in Section~\ref{sec:proof}, and a few auxiliary lemmas. The main declaration is \decl{Math0.Frontier.A092054.result}, of type \decl{Math0.Statements.A092054.statement}, and the file ends with the command \texttt{\#math0\_settles Math0.Frontier.A092054.result Math0.Statements.A092054.statement}.
+
+One step has no counterpart in Section~\ref{sec:proof}: because the type ascription \texttt{(k : ℚ)} makes the bound variable \texttt{k} rational, Lean elaborates the list in \decl{conv} through a coercion from \texttt{List ℕ} to \texttt{List ℚ} via the list monad, and the lemma \decl{conv_eq_pq} rewrites it to the plain list $(x_0,\dots,x_{n-1})$. The proof contains no \texttt{sorry}, no \texttt{native\_decide} and no \texttt{maxHeartbeats} option, and uses \texttt{decide} only for the base cases $0<Q(1)$ and ``$D(0)$ is odd''; the kernel evaluations of the statement file serve only the data checks.
+
+\emph{Audit.} The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless \decl{statement} is a universe-monomorphic definition of type \texttt{Prop}, the type of \decl{result} is syntactically the statement or its negation (up to metadata, with no unfolding), and both depend on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}; this rejects \decl{sorryAx}, the axioms \decl{Lean.ofReduceBool} and \decl{Lean.trustCompiler} of \texttt{native\_decide}, and custom axioms. On this file it reports:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A092054.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A092054.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A092054.result' proves 'Math0.Statements.A092054.statement'
+\end{lstlisting}
+The data checks of the statement file, such as \decl{a_data}, use the same three axioms.
+
+\emph{Toolchain and reproduction.} We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}. The repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root; it builds all math0 results with \texttt{lake build}, re-running every audit, and checks that the pinned dependencies are unmodified. To check this file alone, run \texttt{lake build Math0.Statements.OEIS.A092054} (about $20$ seconds) and then \texttt{lake env lean Math0/Frontier/OEIS/A092054.lean}, both in \path{lean/}.
+
+\begin{thebibliography}{99}
+\footnotesize\setlength{\itemsep}{0pt}
+
+\bibitem{Draim}
+N.~A. Draim, \emph{$\pi$ in the form of a continued fraction with infinite terms}, Fibonacci Quart.\ \textbf{7} (1969), no.~3, 275--276. \url{https://www.mathstat.dal.ca/FQ/Scanned/7-3/draim.pdf}.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171 [cs.AI], 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A001901}
+The OEIS Foundation Inc., \url{https://oeis.org/A001901} and \url{https://oeis.org/A001902} (numerators and denominators of Wallis's approximation to $\pi/2$, reduced), with formulas by W.~Lang (Dec.~7, 2017) and T.~Ordowski (Oct.~19, 2024).
+
+\bibitem{OEIS}
+The OEIS Foundation Inc., entries \url{https://oeis.org/A000120} (binary weight), \url{https://oeis.org/A001511} (ruler function), \url{https://oeis.org/A005187} and \url{https://oeis.org/A011371}.
+
+\bibitem{A056982}
+The OEIS Foundation Inc., \url{https://oeis.org/A056982}, entry by E.~W. Weisstein.
+
+\bibitem{A092053}
+The OEIS Foundation Inc., \url{https://oeis.org/A092053}, entry by P.~D. Hanna (Feb.~19, 2004).
+
+\bibitem{A092054}
+The OEIS Foundation Inc., \url{https://oeis.org/A092054}, entry by P.~D. Hanna (Feb.~19, 2004), with a formula by F.~T. Adams-Watters (Feb.~2, 2006) and a comment and formula by M.~A. Suchenek (Mar.~16, 2014); revision \#43, Aug.~9, 2026.
+
+\bibitem{Suchenek}
+M.~A. Suchenek, \emph{Elementary yet precise worst-case analysis of Floyd's heap-construction program}, Fund.\ Inform.\ \textbf{120} (2012), no.~1, 75--92. \url{https://doi.org/10.3233/FI-2012-751}.
+
+\end{thebibliography}
+
+\end{document}

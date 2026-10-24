@@ -49,14 +49,14 @@ New results (open problems settled; each checked by the Lean kernel and judged n
 * [A262957: Israel's b(n), c(n) are coprime integers and a(n) = b(n)](results/oeis-a262957/README.md) ([paper](results/oeis-a262957/paper.pdf))
 * [A356360: the continued-fraction denominators are 1 or prime](results/oeis-a356360/README.md) ([paper](results/oeis-a356360/paper.pdf))
 * [A375522: S2(n) - S1(n) = 1 fails at n = 42 (the difference is 5)](results/oeis-a375522/README.md) ([paper](results/oeis-a375522/paper.pdf))
-* [Convergents of [1; 1/2, 1/3, ..., 1/n]: numerator + denominator = 2^(v2(n!) + v2((n+1)!)) (A092054)](results/oeis-a092054/README.md)
+* [Convergents of [1; 1/2, 1/3, ..., 1/n]: numerator + denominator = 2^(v2(n!) + v2((n+1)!)) (A092054)](results/oeis-a092054/README.md) ([paper](results/oeis-a092054/paper.pdf))
 * [Imaginary parts of the convergents of [1+i; 1+i, 1+i, ...] are A317974(n+1)/A138573(n)](results/oeis-a093726/README.md)
 * [OEIS A362086: every denominator of 1/(2-3/(3-4/(...(n-1)-n/(-3)))) except 9 is 1 or a prime](results/oeis-a362086/README.md) ([paper](results/oeis-a362086/paper.pdf))
 * [OEIS A363482: apart from 49, every denominator of 1/(2-3/(3-4/(...(n-1)-n/(-5)))) is 1 or a prime](results/oeis-a363482/README.md) ([paper](results/oeis-a363482/paper.pdf))
 * [Repunit residues: a(n) = n - 1 exactly for long period primes](results/oeis-a335012/README.md) ([paper](results/oeis-a335012/paper.pdf))
 * [Zeros of a(3n) for the signed Stern sequence A005590 are exactly the fibbinary numbers](results/oeis-a005590/README.md) ([paper](results/oeis-a005590/paper.pdf))
 * [A326602: a(n) is odd iff n is a square](results/oeis-a326602/README.md) ([paper](results/oeis-a326602/paper.pdf))
-* [A351743: from n = 139 the sequence is affine in 42-blocks, which proves Sycamore's, Sigrist's and the A355149 conjectures](results/oeis-a351743/README.md)
+* [A351743: from n = 139 the sequence is affine in 42-blocks, which proves Sycamore's, Sigrist's and the A355149 conjectures](results/oeis-a351743/README.md) ([paper](results/oeis-a351743/paper.pdf))
 * [Every n not divisible by 5 has a multiple with only prime digits (A342992)](results/oeis-a342992/README.md) ([paper](results/oeis-a342992/paper.pdf))
 * [Lang's conjecture a(n) = A250400(n+1)/(n+1) for A294512 fails at n = 164](results/oeis-a294512/README.md) ([paper](results/oeis-a294512/paper.pdf))
 * [Odd descending-by-2 multiples exist exactly when 125 does not divide 2n+1 (A062887)](results/oeis-a062887/README.md) ([paper](results/oeis-a062887/paper.pdf))
@@ -64,7 +64,7 @@ New results (open problems settled; each checked by the Lean kernel and judged n
 * [The 1089-trick map has two 9-digit fixed points (A393794 uniqueness conjecture is false)](results/oeis-a393794/README.md) ([paper](results/oeis-a393794/paper.pdf))
 * [The only fixed points of reverse(x) - maxdigit(x) are 0 and 89](results/oeis-a097154/README.md) ([paper](results/oeis-a097154/paper.pdf))
 * [There are no 5-Rotation Cycle Primes (A086004, Conjecture 2)](results/oeis-a086004/README.md) ([paper](results/oeis-a086004/paper.pdf))
-* [Yanev's identity for A073642 (sum of the positions of the 1-bits)](results/oeis-a073642/README.md)
+* [Yanev's identity for A073642 (sum of the positions of the 1-bits)](results/oeis-a073642/README.md) ([paper](results/oeis-a073642/paper.pdf))
 <!-- HIGHLIGHTS:END -->
 
 ## Two tracks

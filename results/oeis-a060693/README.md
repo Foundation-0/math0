@@ -20,6 +20,10 @@ Conjecture as stated in OEIS: "Conjecture: Sum_{k=0..n} (-1)^k*T(n,k)*(n+1-k)^2 
 
 Referees: Prior Lean proof: the-omega-institute/trureturing, PR #7436 by ElonSG, "prove: OEIS A060693 Schröder-path peak identity (Schulte 2017)", merged into dev on 2026-09-13 (https://github.com/the-omega-institute/trureturing/pull/7436). It supersedes PR #7402 (https://github.com/the-omega-institute/trureturing/pull/7402), with pre-registration issue #7384 (https://github.com/the-omega-institute/trureturing/issues/7384). The file is D5/S1/Recurrence/Invariants/SchroederPeakAlternatingQuadraticMoment.lean and the theorem is schulte_a060693. The result also follows directly from the OEIS A060693 formula T_n(x) = C_n(x+1) with C_n the Narayana row polynomial (Mitch Harris, Jan 2007), plus the Narayana values N(n,1)=1 and N(n,2)=n(n-1)/2 (A001263). The OEIS entry (local mirror, %I #147, Oct 04 2026) still says "Conjecture". The identity is not in the OEIS Open benchmark (arXiv:2608.11941; tadamcz.com/oeis-open results.json). LANTERN (arXiv:2609.32264), cited in the entry, is about cross-reference relations and does not address this conjecture.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

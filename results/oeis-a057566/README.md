@@ -24,6 +24,10 @@ Referees: There is no explicit published refutation, but OEIS already contains e
 - A334704 (N. J. A. Sloane and Tom Duff, 2020) tabulates collinear-triple counts for n x k grids up to 50 x 50; row 3 is A057566.
 - I searched the web (arXiv including 2609.25133, general search) and found no explicit statement that Layman's floor conjecture fails.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

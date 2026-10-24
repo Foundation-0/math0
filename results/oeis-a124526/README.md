@@ -26,6 +26,10 @@ Prior proofs, stated in partition-monoid and partition-category language:
 
 Checked and not relevant: Yaqubi–Mirzavaziri arXiv:2608.30097; Ehrenborg–Hedmark–Hettle (JIS 2017, odd/even block sizes); Shattuck arXiv:1401.6588.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

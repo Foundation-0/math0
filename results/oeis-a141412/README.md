@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: "Conjecture: T(n, k) = d(n+1, k+1), with d(n,k) = 
 
 Referees: P. Flajolet, X. Gourdon and B. Salvy, "Sur une famille de polynômes issus de l'analyse numérique", Gazette des Mathématiciens 55 (1993) 67-78, also INRIA Research Report RR-1857 (Feb 1993), https://inria.hal.science/inria-00074815/document. Eq. (3) is the generating function log(1+z)/(z(1-x·log(1+z))), and eq. (6) is P_n(x) = (-1)^n/(n+1)! Σ_k s_{n+1,k+1}(k+1)!(-x)^k, which gives the conjecture at once. This paper is cited in A141412's own %D line. The OEIS records the same identity in A140749 %F (Paul Curtz, Jul 17 2008, numerators = those of A048594(n+1,k+1)/(n+1)!) and A141412 %F (G. C. Greubel, Oct 24 2023, "Equals denominators of A048594(n+1,k+1)/(n+1)!"), with A048594's column e.g.f. log(1+x)^k. Farhi's d(n,k) comes from B. Farhi, arXiv:1810.07560 (Funct. Approx. Comment. Math. 61 (2019)). I found no earlier formal proof.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

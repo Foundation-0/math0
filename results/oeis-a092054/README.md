@@ -26,6 +26,10 @@ Referees: No prior explicit proof of A092054's conjectured formula found. Releva
 - N. A. Draim, "Pi in the form of a continued fraction with infinite terms", Fibonacci Quarterly 7.3 (1969) 275-276, https://www.mathstat.dal.ca/FQ/Scanned/7-3/draim.pdf: Wallis partial products equal the convergents of a continued fraction with partial numerators (n-1)n.
 - Kummer/Legendre: v2(C(2m,m)) = s2(m), v2(m!) = m - s2(m).
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex
