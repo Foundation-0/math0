@@ -20,7 +20,7 @@ quietly prove an easier statement than the one the problem's curators wrote down
 ## Highlights
 
 <!-- HIGHLIGHTS:START -->
-**121 verified results.** 51 new results, 46 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
+**122 verified results.** 52 new results, 46 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
 
 New results (open problems settled; each checked by the Lean kernel and judged new by an independent novelty referee):
 
@@ -54,6 +54,7 @@ New results (open problems settled; each checked by the Lean kernel and judged n
 * [The inverse of the 1/Catalan band triangle (A127767) has integer entries](results/oeis-a127767/README.md)
 * [The least number of inequivalent cells of a (6k+5)-iamond is 3(k+1)](results/oeis-a369366/README.md) ([paper](results/oeis-a369366/paper.pdf))
 * [The row-LCM of denominators of the cube of the mean matrix is n · lcm(1..n)²](results/oeis-a119936/README.md)
+* [The subword complexity polynomial S(n,x) has leading coefficient n(n+1)/2 (A341761, Guo's conjecture)](results/oeis-a341761/README.md)
 * [A116184: Adamchuk's conjectures on 37^3 dividing the numerator of sum_{k=1}^{36} 1/k^n](results/oeis-a116184/README.md) ([paper](results/oeis-a116184/paper.pdf))
 * [A262957: Israel's b(n), c(n) are coprime integers and a(n) = b(n)](results/oeis-a262957/README.md) ([paper](results/oeis-a262957/paper.pdf))
 * [A356360: the continued-fraction denominators are 1 or prime](results/oeis-a356360/README.md) ([paper](results/oeis-a356360/paper.pdf))

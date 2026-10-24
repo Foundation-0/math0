@@ -97,6 +97,7 @@ import Math0.Frontier.OEIS.A334595
 import Math0.Frontier.OEIS.A334603
 import Math0.Frontier.OEIS.A335012
 import Math0.Frontier.OEIS.A338885
+import Math0.Frontier.OEIS.A341761
 import Math0.Frontier.OEIS.A342992
 import Math0.Frontier.OEIS.A344710
 import Math0.Frontier.OEIS.A348484
