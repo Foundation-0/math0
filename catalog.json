@@ -1364,6 +1364,29 @@
    "date": "2026-10-20"
   },
   {
+   "id": "OEIS-frontier/A121750",
+   "slug": "oeis-a121750",
+   "title": "Mathar's order-6 recurrence for A121750 (even-length columns in deco polyominoes) holds for all n >= 7",
+   "area": "Discrete geometry",
+   "source": "OEIS A121750",
+   "source_url": "https://oeis.org/A121750",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A121750.lean",
+    "decl": "Math0.Statements.A121750.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A121750.lean",
+   "our_decl": "Math0.Frontier.A121750.result",
+   "summary": "Let a(n) be the total number of columns of even length over all deco polyominoes of height n (OEIS A121750). The polyominoes are encoded as column lists, as in the statement file. Then for every n >= 7:\na(n) - (n+2)a(n-1) + (-n^2+4n-2)a(n-2) + (n^3-3n^2-4n+11)a(n-3) - (n-1)(n^2-11n+26)a(n-4) + (-n^3+5n^2+7n-43)a(n-5) + (n-3)(n-5)^2 a(n-6) = 0.",
+   "notes": "Conjecture as stated in OEIS: %F Conjecture D-finite with recurrence a(n) +(-n-2)*a(n-1) +(-n^2+4*n-2)*a(n-2) +(n^3-3*n^2-4*n+11)*a(n-3) -(n-1)*(n^2-11*n+26)*a(n-4) +(-n^3+5*n^2+7*n-43)*a(n-5) +(n-3)*(n-5)^2*a(n-6)=0. - R. J. Mathar, Jul 26 2022\n\nReferees: I found no published proof of this recurrence. Sources checked:\n- OEIS A121750, local mirror and upstream raw oeisdata (revision #13, 2024-08-20, still says 'Conjecture'). Cross-references A121748, A121747, A121749, A121751 also contain no proof.\n- E. Barcucci, S. Brunetti, F. Del Ristoro, 'Succession rules and deco polyominoes', RAIRO ITA 34 (2000) 1-14. Full text read; it does not treat even-length columns.\n- E. Barcucci, A. Del Lungo, R. Pinzani, TCS 159 (1996) 29-42.\n- E. Deutsch, E. Pergola, R. Pinzani, 'Six bijections between deco polyominoes and permutations', arXiv:0810.2876. It gives the definition of directed height and has no even-column results.\n- S. B. Ekhad, X. Yang, D. Zeilberger, arXiv:1707.04654. It predates the 2022 conjecture.\n- S. Fried, arXiv:2410.07237; JIS 28 (2025) Art. 25.4.3; JIS vol. 29 fried21; arXiv:2607.24832. None covers A121750.\n- T. Niu, arXiv:2605.15500, 2605.04369, 2605.08444, 2605.16553 (2026). None covers A121750.\n- M. Kauers, C. Koutschan, arXiv:2303.02793. Does not cover A121750.\n\nNote: the order-6 recurrence would follow routinely from Deutsch's first-order recurrence in the same entry (holonomic closure). That recurrence is stated in the entry without proof.",
+   "date": "2026-10-24"
+  },
+  {
    "id": "OEIS-frontier/A124526",
    "slug": "oeis-a124526",
    "title": "Hanna's conjecture A124418(n,k) = k! * A124526(n,k) (partitions with k mixed-parity blocks) proved",
@@ -1502,6 +1525,29 @@
    "date": "2026-10-24"
   },
   {
+   "id": "OEIS-frontier/A178295",
+   "slug": "oeis-a178295",
+   "title": "A178295: collinear 4-subsets of {0,...,4}^n number 9^n/2 + 3*7^n/2 - 2*5^n (Mathar's conjecture, all three formulas)",
+   "area": "Discrete geometry",
+   "source": "OEIS A178295",
+   "source_url": "https://oeis.org/A178295",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A178295.lean",
+    "decl": "Math0.Statements.A178295.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A178295.lean",
+   "our_decl": "Math0.Frontier.A178295.result",
+   "summary": "Let a(n) be the number of 4-element subsets of the grid {0,...,4}^n whose points lie on one line. Collinearity means that all 2x2 minors of the difference vectors vanish. Then three things hold. (1) a(n) = 9^n/2 + 3*7^n/2 - 2*5^n for every n >= 0. (2) a(n) = 21 a(n-1) - 143 a(n-2) + 315 a(n-3) for every n >= 3. (3) As formal power series over Q, sum a(n) x^n = x(-5+41x) / ((9x-1)(7x-1)(5x-1)).",
+   "notes": "Conjecture as stated in OEIS: Conjecture: a(n) = 9^n/2+3*7^n/2-2*5^n. a(n)= +21*a(n-1) -143*a(n-2) +315*a(n-3). G.f.: x*(-5+41*x)/((9*x-1)*(7*x-1)*(5*x-1)). [_R. J. Mathar_, May 24 2010]\n\nReferees: No published resolution of the A178295 formula was found. Local mirror oeisdata seq/A178/A178295.seq (%I #15, Jul 22 2025): the formula is still labelled \"Conjecture [R. J. Mathar, May 24 2010]\", with no %E lines and no cross-references to it.\n\nRelated sources:\n- **R. J. Mathar, \"Points on a line in the finite d-dimensional simple cubic lattice\"** (oeis.org/A178294/a178294.pdf). Its abstract calls it a \"mostly speculative summary\", fitting Hardin's tables to Ehrhart polynomials. I saw only search snippets and an independent report, not the full text: the mirror has only an LFS pointer, and oeis.org and the Wayback Machine were inaccessible.\n- **the-omega-institute/trureturing, GitHub issue #7376 (Sep 12–13, 2026).** A Lean proof of sibling A178294 (triples in the 4^n grid). Its literature check found \"no proof or refutation as of 2026-09-13\" and says the Mathar PDF gives the formula only as a fit. It does not mention A178295.\n- **Classical full-line count ((k+2)^n - k^n)/2**, which gives the (7^n-5^n)/2 ingredient (A081200, itself still labelled a Hardin conjecture in OEIS):\n  - P. Erdős and J. L. Selfridge, J. Combin. Theory Ser. A 14 (1973) 298-301.\n  - S. W. Golomb and A. W. Hales, \"Hypercube Tic-Tac-Toe\", MSRI Publ. 42 (2002), Theorem 1.\n  - L. Moser's proof, via Honsberger.\n  - O. Patashnik, Math. Mag. 53 (1980).\n- **Same-batch siblings, still labelled conjectures:** A081199, A081200, A081201, A178294, A178296-A178299.\n- **Checked, no relevant result:** arXiv:2609.25133 (Kudriashov, Sep 2026), arXiv:2404.02369, arXiv:1107.0327.",
+   "date": "2026-10-24"
+  },
+  {
    "id": "OEIS-frontier/A195249",
    "slug": "oeis-a195249",
    "title": "3 × 3 lower triangles with neighbours differing by at most two: a(n) = 1047 n - 1459 for n > 2 (A195249)",
@@ -1571,6 +1617,29 @@
    "date": "2026-10-18"
   },
   {
+   "id": "OEIS-frontier/A211343",
+   "slug": "oeis-a211343",
+   "title": "A211343: positive entries are smallest parts of consecutive-part partitions; last positive column is A109814(n)",
+   "area": "Discrete geometry",
+   "source": "OEIS A211343",
+   "source_url": "https://oeis.org/A211343",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A211343.lean",
+    "decl": "Math0.Statements.A211343.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A211343.lean",
+   "our_decl": "Math0.Frontier.A211343.result",
+   "summary": "Let T(n,k) be the triangle in which column k (k >= 1) begins in row k(k+1)/2 and lists 1, 0^(k-1), 2, 0^(k-1), 3, ... going down. In other words, for 1 <= k and k(k+1)/2 <= n we have T(n,k) = j/k + 1 when k divides j = n - k(k+1)/2, and T(n,k) = 0 otherwise. Two claims are made. (1) For n >= 1 and any entry (n,k) of the triangle with T(n,k) > 0, n has a partition into k consecutive parts m, m+1, ..., m+k-1, and T(n,k) is the smallest part of every such partition. (2) For n >= 1, A109814(n), the largest k such that n is a sum of k consecutive positive integers, is the largest column k of row n with T(n,k) > 0.",
+   "notes": "Conjecture as stated in OEIS: %C Conjecture 1: T(n,k) is the smallest part of the partition of n into k consecutive parts, if T(n,k) > 0. %C Conjecture 2: the last positive integer in the row n is in the column A109814(n). (Omar E. Pol, Apr 30 2017)\n\nReferees: OEIS (local mirror): A261699 comment by Peter Munn, Jul 30 2017 (\"A211343(n,k) = abs(n/d - d/2) + 1/2, smallest part\"; one-to-one link between odd divisors and partitions into k consecutive parts). A286013 comment by Peter Munn, Jun 18 2017 (trapezoid proof of the largest-part companion conjecture, which carries over directly to smallest parts). A285898 comment by David A. Corneth, Apr 28 2017 (n has a partition into k consecutive parts iff (n - C(k,2))/k is a positive integer). A196020 formula by Max Alekseyev, Nov 18 2013 (T(n,k) = 2n/k - k on the support), combined with the A211343 formula T = floor((1+A196020)/2). A237048 property by Hartmut F. W. Hoft, Oct 2014. A286000 \"Theorem\" (Pol). A379632 (Pol, Dec 2024: \"Positive terms of A211343\", \"Right border gives A118235\"). A118235 (smallest part of partitions into consecutive parts). A109814 (Jaap Spies / David W. Wilson: 2n = k(2m+k-1)). The classical background is Sylvester's enumeration of partitions into consecutive parts. Not retrievable (web.archive.org unreachable): Joerg Arndt, SeqFan, Jun 3 2017, proof of the A285914/A204217 conjectures. Web searches found no counterexample and no paper on A211343 specifically.",
+   "date": "2026-10-24"
+  },
+  {
    "id": "OEIS-frontier/A215010",
    "slug": "oeis-a215010",
    "title": "An equiangular decagon with sides in arithmetic progression (A215010)",
@@ -1592,6 +1661,29 @@
    "summary": "Garcia's conjecture (OEIS A215010) says that hexagons are the only equiangular simple convex polygons whose integer side lengths are the N terms t, t+d, ..., t+(N-1)d (with d ≥ 1) of an arithmetic progression, in some order. Formally: if N ≥ 3, every side t + σ(k)·d is positive, and Σ_k (t + σ(k)d)·exp(2πik/N) = 0 for a permutation σ of Fin N, then N = 6. We prove that this is false. Take N = 10 and t = d = 1, with consecutive sides (1, 4, 5, 8, 9, 2, 3, 6, 7, 10), so σ = (0, 3, 4, 7, 8, 1, 2, 5, 6, 9). This gives an equiangular decagon.",
    "notes": "Conjecture as stated in OEIS: \"Conjecture: hexagons are the only simple convex polygons with equal interior angles with such property, due to the fact that cos(Pi/3) = 1/2.\" Here 'such property' means integer side lengths in arithmetic progression t+m*d, as in the entry name. (entry by _Robin Garcia_, Jul 31 2012)\n\nReferees: Prior refutations, all at least as old as or published soon after Garcia's 2012 conjecture:\n\n(1) OEIS A118887 (H. Pfoertner, May 03 2006). \"Number of ways to place n objects with weights 1,...,n evenly spaced around a circle so it balances.\" T. D. Noe, Sep 13 2005: \"Also number of equiangular polygons whose sides are some permutation of 1,2,3,...,n.\" The data have included a(10)=24, a(12)=732, a(14)=720, a(15)=48 since the first revision in 2006. W. Edwin Clark (Sep 14 2005) proved there are no solutions when n is a prime power. J. Sondow (Oct 17 2013) records that Murray Klamkin proved solutions exist when n is not a prime power, and adds the formula a(A024619(n)) > 0. The problem was proposed by Brendan McKay on the SeqFan mailing list, Sep 12 2005. https://oeis.org/A118887\n\n(2) G. J. Woeginger, \"Nothing new about equiangular polygons\", Amer. Math. Monthly 120(9) (2013) 849–850, doi:10.4169/amer.math.monthly.120.09.849. Abstract: \"We survey results on equiangular n-vertex polygons with edge lengths in arithmetic progression. Such a polygon exists if and only if n has at least two distinct prime factors.\" This is exactly the A215010 setting, and it gives n = 10, 12, 14, 15, ... as counterexamples.\n\n(3) Supporting references:\n- D. Ball, \"Equiangular polygons\", Math. Gazette 86 (2002) 396–407.\n- A. Bernoff, \"Bernoff's Puzzler\", MuddMath Newsletter 4(1) (2005), p. 10.\n- M. Munteanu and L. Munteanu, \"Rational equiangular polygons\", Applied Math. 4 (2013) 1460–1465, doi:10.4236/am.2013.410197.\n- U. Abel, \"Coincidence of the barycentre and the geometric centre of weighted points\", Math. Gazette (online Oct 2019). It restates the criterion: at least two distinct prime factors.\n\nA215010 itself (history checked through revision #43, Jan 23 2015) never cites any of these, and its conjecture remains uncorrected. I found no earlier formalization in Lean or any other proof assistant.",
    "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A223395",
+   "slug": "oeis-a223395",
+   "title": "A223395: walks on the 4 x 4 grid graph satisfy Hardin's recurrence, Barker's g.f. and closed form",
+   "area": "Discrete geometry",
+   "source": "OEIS A223395",
+   "source_url": "https://oeis.org/A223395",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A223395.lean",
+    "decl": "Math0.Statements.A223395.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A223395.lean",
+   "our_decl": "Math0.Frontier.A223395.result",
+   "summary": "Let a(n) be the number of walks with n vertices in the 4 x 4 grid graph P4 x P4 (the number of n x 1 arrays over the nodes 0..15 where vertically adjacent entries are adjacent nodes). Then (1) a(n) = 3a(n-1) + 2a(n-2) - 4a(n-3) for all n >= 4 (in Z); (2) (1 - x)(1 - 2x - 4x^2) * sum_{n>=1} a(n) x^n = 8x(2 - 3x^2) as formal power series over Z; (3) a(n) = (8 + (11 - 5 sqrt5)(1 - sqrt5)^n + (1 + sqrt5)^n (11 + 5 sqrt5)) / 5 for all n >= 1 (in R).",
+   "notes": "Conjecture as stated in OEIS: \"Empirical: a(n) = 3*a(n-1) + 2*a(n-2) - 4*a(n-3).\" and \"Conjectures from _Colin Barker_, Aug 20 2018: G.f.: 8*x*(2 - 3*x^2) / ((1 - x)*(1 - 2*x - 4*x^2)) ...\"\n\nReferees: OEIS sources (local mirror):\n- A223395 (R. H. Hardin, Mar 19 2013; Barker's conjectures added Aug 20 2018; rev #7). The recurrence is still \"Empirical\" and the g.f. and closed form are still \"Conjectures\"; there are no %E lines.\n- A223402 (rev #8, Oct 03 2025). The column k=1 recurrence is still listed as empirical.\n- A223372 (the 3x3 analogue, also empirical).\n- A081057 (P. D. Hanna 2003; g.f. and recurrence by M. Somos and V. Jovovic, Mar 2003; R. J. Mathar, Oct 2010: \"apparently\" counts walks from a corner of the 4x4 board; D. Scambler, Oct 2010: decomposition into independent horizontal and vertical walks, giving a binomial convolution of Fibonacci numbers; I. M. Gessel 2022). It has the same signature (3,2,−4), but for corner-start walks only. I observed that A223395(n) = 2(A081057(n) + A081057(n+1)); this identity is not recorded anywhere.\n- A052899 (same signature; R. Jehn's Oct 2024 comment on walks leaving a 4x4 board).\n\nGeneral theory (implies the result routinely but does not state it):\n- D. Cvetković, M. Doob, H. Sachs, Spectra of Graphs (1980), Thm 1.11: the generating function of total walk counts, in terms of the characteristic polynomials of G and its complement.\n- P. Rowlinson, \"The main eigenvalues of a graph: a survey\", Appl. Anal. Discrete Math. 1 (2007) 455–471.\n- The classical spectrum of P_m□P_n, {2cos(iπ/(m+1)) + 2cos(jπ/(n+1))}.\n\nChecked and not relevant (they concern a different Hardin family):\n- R. Dougherty-Bliss & M. Kauers, \"Hardinian Arrays\", arXiv:2309.00487.\n- G. Spahn & R. Dougherty-Bliss, \"Rectangular Hardinian Arrays\" (2024).\n\nWeb searches (arXiv, MathOverflow/MSE, general) found no explicit prior proof of the A223395 recurrence, g.f. or closed form.",
+   "date": "2026-10-24"
   },
   {
    "id": "OEIS-frontier/A229159",
@@ -2305,6 +2397,29 @@
    "summary": "Conjecture (OEIS A386538, Felix Huber): for every n ≥ 0, the largest area of a polygon with vertices on Z^2 inside the closed disk of radius n is the same whether the disk's center is a grid point or any point of the plane. In the frozen encoding: for all n : ℕ, ⨆_{c ∈ ℝ²} vol(conv(Z² ∩ B(c, n))) = vol(conv(Z² ∩ B(0, n))). We prove the negation. At n = 7 with center c0 = (5/12, 5/24), the convex hull of the lattice points in B(c0, 7) has area at least 277/2 = 138.5. The convex hull for the center 0 has area at most 3457/25 = 138.28; its true value is 138 = a(7).",
    "notes": "Conjecture as stated in OEIS: \"Conjecture: The maximum possible area of a polygon within the circle would be the same if only the vertices but not the center were fixed on grid points.\" (entry by _Felix Huber_, Aug 05 2025). The same conjecture appears for ellipses in A386539, which has T(n,n) = A386538(n).\n\nReferees: Sources checked:\n- Local OEIS mirror and raw.githubusercontent.com/oeis/oeisdata, A386538: #23, Aug 19 2025, no %E lines. A386539: #19, Aug 19 2025.\n- Entries that cite A386538/A386539: A398490, A396223, A391113. None addresses the conjecture.\n- Cross-references read: A066643, A123690, A125228, A288247, A322106, A322107, A357577, A108126. None resolves it. A123690 and A295344 concern lattice-point counts with an off-grid center, not polygon areas.\n- Web searches for the A386538 number, the entry's wording, Felix Huber plus counterexample, SeqFan, and MathOverflow/Math.SE on convex hulls of lattice points in a shifted disk.\n\nRelated but not resolving:\n- J. Zhao, \"The Largest Circle Enclosing n Lattice Points\", https://arxiv.org/abs/2505.06234, and its sequel https://arxiv.org/pdf/2609.16081\n- Bárány–Larman and Balog–Deshouillers on the integer convex hull of a disk (vertex counts, origin-centered only), e.g. https://www.renyi.hu/~barany/cikkek/73.pdf\n\nNo prior proof or counterexample found.",
    "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A386655",
+   "slug": "oeis-a386655",
+   "title": "A386655 modulo 6 is eventually periodic with pattern [1, 0, 3, 0, 3, 2]",
+   "area": "Sequences and series",
+   "source": "OEIS A386655",
+   "source_url": "https://oeis.org/A386655",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A386655.lean",
+    "decl": "Math0.Statements.A386655.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A386655.lean",
+   "our_decl": "Math0.Frontier.A386655.result",
+   "summary": "Let a(n) = sum_{k=0..n} C(n,k) 2^(k(k+1)) (2^k - (n-k))^(n-k-1), where the k = n term is read as 2^(n^2) and 0^0 = 1. Then for every n >= 6, a(n) mod 6 equals the entry with index (n-6) mod 6 of [1, 0, 3, 0, 3, 2]. Equivalently, a(n) mod 6 = 1, 2, 0, 3, 0, 3 for n ≡ 0, 1, 2, 3, 4, 5 (mod 6). (Paul D. Hanna's conjecture, OEIS A386655.)",
+   "notes": "Conjecture as stated in OEIS: A386655 (E.g.f.: Sum_{n>=0} (2^n*x + LambertW(x))^n / n!): \"Conjecture: for n >= 6, a(n) (mod 6) equals [1, 0, 3, 0, 3, 2] repeating.\" (_Paul D. Hanna_, Aug 23 2025). Analogues: A386656 (q=3) [4,3,2,1,0,1], A386657 (q=4) [1,2,3,2,3,4], A386658 (q=5) [4,3,0,3,0,5].\n\nReferees: I found no earlier resolution.\n- OEIS A386655 (local mirror and current GitHub oeisdata, revision #14, Aug 24 2025) still states the mod-6 claim as a conjecture by Paul D. Hanna, with no %E edit or proof note.\n- The cross-referenced sister entries A386656, A386657 and A386658 (q = 3, 4, 5) state analogous mod-6 conjectures, none marked proved. The related entry A386648 also has an open mod-6 conjecture.\n- Web searches turned up only OEIS pages (e.g. https://oeis.org/A386648, https://oeis.org/A136524) and no paper, arXiv preprint, MathOverflow/Math StackExchange post or SeqFan message proving or refuting the A386655 conjecture.\n- The classical tool used is the expansion e^(cW(x)) = Sum_k c(c-k)^(k-1) x^k/k! (the tree-function/Lambert W identity), together with Fermat's little theorem and the binomial-transform identity Sum_m C(n,m)C(m,j)x^m = C(n,j)x^j(1+x)^(n-j).",
+   "date": "2026-10-24"
   },
   {
    "id": "OEIS-frontier/A392943",

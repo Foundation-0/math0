@@ -20,7 +20,7 @@ quietly prove an easier statement than the one the problem's curators wrote down
 ## Highlights
 
 <!-- HIGHLIGHTS:START -->
-**109 verified results.** 41 new results, 44 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
+**114 verified results.** 45 new results, 45 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
 
 New results (open problems settled; each checked by the Lean kernel and judged new by an independent novelty referee):
 
@@ -29,6 +29,8 @@ New results (open problems settled; each checked by the Lean kernel and judged n
 * [A090905: every row ends at twice the largest prime of the previous row (Murthy's conjecture proved)](results/oeis-a090905/README.md) ([paper](results/oeis-a090905/paper.pdf))
 * [A106505: common sides of A/2A primitive triangles are periodic mod 8, so a(n+5) = a(n) + 8](results/oeis-a106505/README.md) ([paper](results/oeis-a106505/paper.pdf))
 * [A172164: the second differences of the Theodorus-spiral turns are always 18, 19, 20 or 21](results/oeis-a172164/README.md)
+* [A178295: collinear 4-subsets of {0,...,4}^n number 9^n/2 + 3*7^n/2 - 2*5^n (Mathar's conjecture, all three formulas)](results/oeis-a178295/README.md)
+* [A223395: walks on the 4 x 4 grid graph satisfy Hardin's recurrence, Barker's g.f. and closed form](results/oeis-a223395/README.md)
 * [A332010: the average first letter of one-descent derangements has denominator 2^(n-2)](results/oeis-a332010/README.md) ([paper](results/oeis-a332010/paper.pdf))
 * [A338885: the smallest number in row 655 is 104, not A228286(655) = 115](results/oeis-a338885/README.md) ([paper](results/oeis-a338885/paper.pdf))
 * [A348484: no two squares two steps apart; the conjectured formula holds](results/oeis-a348484/README.md) ([paper](results/oeis-a348484/paper.pdf))
@@ -41,6 +43,7 @@ New results (open problems settled; each checked by the Lean kernel and judged n
 * [Domino towers of height 2 and of height n-1, n-2, n-3 (A333650): all four Kagey/Luschny conjectures](results/oeis-a333650/README.md) ([paper](results/oeis-a333650/paper.pdf))
 * [Even and odd legs with odd prime factors ≡ 3 (mod 4): a(n)/n → π (A354571, A354570)](results/oeis-a354571/README.md) ([paper](results/oeis-a354571/paper.pdf))
 * [Internal n-gons in a regular n-gon: triple points occur only for n = 3, 4, 6, and otherwise there are n k^2 + 1 regions (Shannon's A357216 conjecture)](results/oeis-a357216/README.md) ([paper](results/oeis-a357216/paper.pdf))
+* [Mathar's order-6 recurrence for A121750 (even-length columns in deco polyominoes) holds for all n >= 7](results/oeis-a121750/README.md)
 * [Prime-Minesweeper on the A060734 array: a(n) < 6, and a(n) = 5 only at n = 6](results/oeis-a326407/README.md) ([paper](results/oeis-a326407/paper.pdf))
 * [Stephan's conjectured g.f. for A242396 is false (first failure at n = 97)](results/oeis-a242396/README.md) ([paper](results/oeis-a242396/paper.pdf))
 * [The Golomb-row triangle A113676 and Levine's sequence A014644](results/oeis-a113676/README.md) ([paper](results/oeis-a113676/paper.pdf))
@@ -57,6 +60,7 @@ New results (open problems settled; each checked by the Lean kernel and judged n
 * [Zeros of a(3n) for the signed Stern sequence A005590 are exactly the fibbinary numbers](results/oeis-a005590/README.md) ([paper](results/oeis-a005590/paper.pdf))
 * [A326602: a(n) is odd iff n is a square](results/oeis-a326602/README.md) ([paper](results/oeis-a326602/paper.pdf))
 * [A351743: from n = 139 the sequence is affine in 42-blocks, which proves Sycamore's, Sigrist's and the A355149 conjectures](results/oeis-a351743/README.md) ([paper](results/oeis-a351743/paper.pdf))
+* [A386655 modulo 6 is eventually periodic with pattern [1, 0, 3, 0, 3, 2]](results/oeis-a386655/README.md)
 * [Every n not divisible by 5 has a multiple with only prime digits (A342992)](results/oeis-a342992/README.md) ([paper](results/oeis-a342992/paper.pdf))
 * [Lang's conjecture a(n) = A250400(n+1)/(n+1) for A294512 fails at n = 164](results/oeis-a294512/README.md) ([paper](results/oeis-a294512/paper.pdf))
 * [Odd descending-by-2 multiples exist exactly when 125 does not divide 2n+1 (A062887)](results/oeis-a062887/README.md) ([paper](results/oeis-a062887/paper.pdf))
