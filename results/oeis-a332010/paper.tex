@@ -1,0 +1,353 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,noncomputable,rw,constructor,by_contra,set,apply},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {∀}{{$\forall$}}1
+    {∃}{{$\exists$}}1 {∈}{{$\in$}}1 {∉}{{$\notin$}}1
+    {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {¬}{{$\neg$}}1 {→}{{$\to$}}1 {←}{{$\leftarrow$}}1
+    {↔}{{$\leftrightarrow$}}1 {≤}{{$\le$}}1 {≥}{{$\ge$}}1 {≠}{{$\ne$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {·}{{$\cdot$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\des}{\operatorname{des}}
+
+\title[Derangements with one descent]{The average first letter of derangements with one descent has denominator $2^{n-2}$}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 19, 2026}
+
+\begin{document}
+\begin{abstract}
+For $n\ge2$ let $T(n,1)$ be the denominator, in lowest terms, of the average first letter of the derangements of $\{1,\dots,n\}$ with exactly one descent; these numbers form the first column of the triangle A332010 of the OEIS, contributed by Peter Kagey in 2020.
+We prove Kagey's conjecture, recorded in that entry, that $T(n,1)=2^{n-2}$: the derangements in question are exactly the $2^{n-2}$ words $s\,n\,1\,\bar s$, where $s$ is the increasing word on a subset of $\{2,\dots,n-1\}$ and $\bar s$ the increasing word on its complement, and their first letters sum to $3\cdot2^{n-2}-1$, which is coprime to $2^{n-2}$ (it is odd for $n\ge3$).
+To our knowledge this is the first proof of the conjecture; the argument is elementary and also gives the companion conjecture for the numerators in A332009.
+The theorem is verified in Lean~4 against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry (not part of the formal-conjectures repository), whose definitions are kernel-checked against the first $25$ listed terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For $n\ge1$ we write a permutation of $[n]=\{1,\dots,n\}$ in one-line notation, as the word $w=w_1w_2\cdots w_n$ of its values. It is a \emph{derangement} if $w_i\ne i$ for every $i$, and $i\in\{1,\dots,n-1\}$ is a \emph{descent} of $w$ if $w_i>w_{i+1}$; let $\des(w)$ be the number of descents. The entry A332010 of the OEIS \cite{A332010}, contributed by Peter Kagey on February~4, 2020, is the irregular triangle (offset $2$)
+\[
+  T(n,k)=\text{denominator, in lowest terms, of }\ \frac{1}{|\cD_{n,k}|}\sum_{w\in\cD_{n,k}}w_1,
+\]
+where $\cD_{n,k}$ is the set of derangements $w$ of $[n]$ with $\des(w)=k$; row $n\ge2$ consists of $T(n,1),\dots,T(n,n-1)$ for even $n$ and $T(n,1),\dots,T(n,n-2)$ for odd $n$. The numerators form the companion entry A332009 \cite{A332009}. For example, $\cD_{4,1}=\{2341,2413,3412,4123\}$ and the average first letter is $11/4$, so $T(4,1)=4$.
+
+The comments of A332010 contain the conjecture $T(n,1)=2^{n-2}$, and those of A332009 the conjecture that the corresponding numerator is $A083329(n-1)$, where $A083329(j)=3\cdot2^{j-1}-1$ for $j\ge1$ \cite{A083329}. We prove both (Theorem~\ref{thm:main} and Corollary~\ref{cor:num}); only the first is formalized. The idea is simple: a word with distinct letters and one descent is the concatenation of two increasing runs, and in a derangement the letter $1$ cannot lie in the first run (it would sit at position $1$) and the letter $n$ cannot lie in the second run (it would sit at position $n$).
+
+\subsection*{Prior work and status}
+The analogous denominators for all permutations are all $1$, as the entry remarks: the expected first letter of a permutation of $[n]$ with $k$ descents is $k+1$, a result of Conger \cite{Conger}. Kagey's later paper \cite{Kagey} studies the expected value of the letters of permutations with a given number of $k$-cycles and does not treat derangements by descents. The number of derangements of $[n]$ with $k$ descents is the triangle A219836 of David Callan \cite{A219836}; its recurrence gives $|\cD_{n,1}|=2^{n-2}$, which is the denominator \emph{before} reduction, and the entry links related work of Fu, Lin and Zeng \cite{FLZ} and of Alexandersson \cite{Alexandersson}. Derangements with prescribed descent sets were enumerated by Han and Xin \cite{HanXin} and by Eriksen, Freij and W\"astlund \cite{EFW}; we found no treatment of the first letter there.
+
+Both conjectures are still marked ``Conjecture'' in the current revisions of A332010 (\#17) and A332009 (\#18), dated March~30, 2024, in the copy of the OEIS database used by math0 (October~17, 2026), where no other entry refers to either sequence. The math0 referees' searches (arXiv, Mathematics Stack Exchange, the SeqFan list, and the papers above) found no proof; MathOverflow could not be searched. We therefore classify the result as new. The argument is short and elementary, and we do not claim that the description of one-descent derangements (Propositions~\ref{prop:words}--\ref{prop:converse}) is new; what we did not find is any proof of the conjecture.
+
+\section{Statement}\label{sec:statement}
+
+\begin{theorem}\label{thm:main}
+Let $n\ge2$. Then \textup{(1)} $|\cD_{n,1}|=2^{n-2}$; \textup{(2)} $\sum_{w\in\cD_{n,1}}w_1=3\cdot2^{n-2}-1$; and \textup{(3)} the average first letter of the elements of $\cD_{n,1}$ is $(3\cdot2^{n-2}-1)/2^{n-2}=3-2^{2-n}$, a fraction in lowest terms; in particular $T(n,1)=2^{n-2}$.
+\end{theorem}
+
+The formal statement is the last assertion, $T(n,1)=2^{n-2}$; parts (1) and (2) are proved in Lean as intermediate steps.
+
+\begin{corollary}[A332009; not formalized]\label{cor:num}
+For $n\ge2$ the numerator of the average first letter of $\cD_{n,1}$ in lowest terms is $3\cdot2^{n-2}-1=A083329(n-1)$.
+\end{corollary}
+
+The name of A332010 \cite{A332010} reads, verbatim, ``\texttt{Irregular triangle of denominators of the average value of the first letter over all derangements of {\char123}1, 2, ..., n{\char125} with k descents.}'', and its comments contain, verbatim, ``\texttt{Even-indexed rows have length n - 1; odd-indexed rows have length n - 2.}'' and
+\begin{quote}
+\texttt{Conjecture: T(n, 1) = 2\^{}(n-2).}
+\end{quote}
+The comment is unsigned; the revision history of the entry shows that it was part of Peter Kagey's original submission of February~4, 2020. It gives no range of $n$; we read it for every row $n\ge2$ of the triangle. The companion comment in A332009 reads ``\texttt{Conjecture: T(n, 1) = A083329(n - 1).}''
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A332010.lean}, reviewed for fidelity and frozen (SHA-256 \texttt{4e58e0c3\ldots 7cd}) before any proof attempt. Its definitions and the statement read, verbatim (omitting the import, comments and docstrings, blank lines, the theorems, and the auxiliary definitions \decl{derB}, \decl{desB}, \decl{DC} and \decl{rowC} used only for the kernel data check described below):
+\begin{lstlisting}
+namespace Math0.Statements.A332010
+def IsDerangement (w : List ℕ) : Prop := ∀ (i : ℕ) (h : i < w.length), w[i] ≠ i + 1
+instance : DecidablePred IsDerangement := fun w => by unfold IsDerangement; infer_instance
+def des (w : List ℕ) : ℕ := (w.zip w.tail).countP fun p => p.2 < p.1
+def ders (n k : ℕ) : List (List ℕ) :=
+  (List.range' 1 n).permutations.filter fun w => decide (IsDerangement w) && des w == k
+def avgFirstLetter (E : List (List ℕ)) : ℚ :=
+  (((E.map fun w => w.headD 0).sum : ℕ) : ℚ) / ((E.length : ℕ) : ℚ)
+def avgFirst (n k : ℕ) : ℚ := avgFirstLetter (ders n k)
+def T (n k : ℕ) : ℕ := (avgFirst n k).den
+def rowLen (n : ℕ) : ℕ := if n % 2 = 0 then n - 1 else n - 2
+def row (n : ℕ) : List ℕ := (List.range (rowLen n)).map fun j => T n (j + 1)
+def statement : Prop := ∀ n : ℕ, 2 ≤ n → T n 1 = 2 ^ (n - 2)
+end Math0.Statements.A332010
+\end{lstlisting}
+Words are lists of natural numbers; \texttt{w[i]} is the letter at the $0$-based index $i$, i.e.\ at position $i+1$, so \decl{IsDerangement} is the derangement condition. \texttt{List.permutations} lists each rearrangement of $[1,\dots,n]$ (\texttt{List.range' 1 n}) once, \decl{des} counts the adjacent pairs $(w_i,w_{i+1})$ with $w_{i+1}<w_i$, and \texttt{w.headD 0} is the first letter $w_1$. Thus \texttt{ders n k} lists $\cD_{n,k}$ without repetitions, \texttt{avgFirst n k} is the average first letter (with the value $0/0=0$ if $\cD_{n,k}=\emptyset$), and \texttt{T n k} is its denominator. Mathlib's rationals are always stored in lowest terms, so \texttt{Rat.den} is the denominator of the reduced fraction. For $n\ge2$ the natural-number subtraction $n-2$ is exact, and $\cD_{n,1}$ is nonempty (it contains $23\cdots n1$), so $T(n,1)$ is never the value $1$ coming from $0/0$.
+
+The same file proves that \texttt{ders n k} lists exactly the derangements of $[n]$ with $k$ descents (\decl{mem_ders}: \texttt{w ∈ ders n k ↔ w.Perm (List.range' 1 n) ∧ IsDerangement w ∧ des w = k}), each once (\decl{nodup_ders}), and it checks the definitions against the data of the entry:
+\begin{lstlisting}
+theorem a_data : (List.range 7).flatMap (fun i => row (i + 2)) =
+    [1, 2, 4, 1, 1, 8, 3, 4, 16, 104, 40, 24, 1, 32, 392, 896, 480, 54, 64, 152, 308, 1496, 63,
+      108, 1] := by
+  simp only [row_eq_rowC]
+  decide +kernel
+\end{lstlisting}
+Since \texttt{List.permutations} uses well-founded recursion, which the kernel does not evaluate efficiently, the check goes through a copy \decl{rowC} of \decl{row} that enumerates words with the structurally recursive \texttt{List.permutations'} and uses recursive tests \decl{derB} and \decl{desB}, proved equal to \decl{IsDerangement} and \decl{des} (\decl{derB_one}, \decl{desB_eq}); its word lists are permutations of \texttt{ders n k} (\decl{ders_perm}), which changes neither count nor sum (\decl{avgFirstLetter_perm}), whence \decl{row_eq_rowC}. Thus the kernel evaluates rows $2$ to $8$ (row $8$ runs through all $8!=40320$ words) and matches the first $25$ listed terms, including $T(n,1)=2^{n-2}$ for $2\le n\le8$; rows $9$ to $11$ are out of its reach. The theorem \decl{example_T41} checks the worked example of the entry ($\cD_{4,1}$, the average $11/4$, and $T(4,1)=4$).
+
+\section{Proof}\label{sec:proof}
+
+We follow the Lean file \path{lean/Math0/Frontier/OEIS/A332010.lean}; each step names the corresponding declaration. Words are finite sequences of natural numbers, $|u|$ is the length of $u$, juxtaposition is concatenation, and \emph{increasing} means strictly increasing. Positions are numbered from $1$.
+
+\begin{definition}\label{def:free}
+Let $p\ge0$. A word $u=u_1\cdots u_\ell$ is \emph{free at $p$} if $u_j\ne p+j-1$ for $1\le j\le\ell$; that is, placed at positions $p,p+1,\dots,p+\ell-1$, no letter of $u$ is at its own position.
+\end{definition}
+
+In Lean this is \texttt{derB u p = true}, where \texttt{derB [] p = true} and \texttt{derB (x :: xs) p = (x != p \&\& derB xs (p + 1))}. A word is a derangement if and only if it is free at $1$ (\decl{derB_one}), and $uv$ is free at $p$ if and only if $u$ is free at $p$ and $v$ is free at $p+|u|$ (\decl{derB_append}).
+
+\begin{lemma}[\decl{derB_of_lower}, \decl{lower_of_derB}]\label{lem:lower}
+Let $u$ be an increasing word and $p\ge0$. \textup{(1)} If every letter of $u$ is $>p$, then $u$ is free at $p$. \textup{(2)} If every letter of $u$ is $\ge p$ and $u$ is free at $p$, then every letter of $u$ is $>p$.
+\end{lemma}
+
+\begin{proof}
+(1) Since $u$ is an increasing sequence of integers, $u_j\ge u_1+j-1>p+j-1$. (2) We have $u_1\ge p$ and $u_1\ne p$, so $u_1>p$, and $u_j\ge u_1$ for all $j$. In Lean both parts are proved by induction along $u$, passing from $p$ to $p+1$ for the tail.
+\end{proof}
+
+\begin{lemma}[\decl{derB_of_upper}, \decl{upper_of_derB}]\label{lem:upper}
+Let $u=u_1\cdots u_\ell$ be an increasing word, $p\ge0$, and $q=p+\ell-1$ the last position of $u$ when placed at $p$. \textup{(1)} If every letter of $u$ is $<q$, then $u$ is free at $p$. \textup{(2)} If every letter of $u$ is $\le q$ and $u$ is free at $p$, then every letter of $u$ is $<q$.
+\end{lemma}
+
+\begin{proof}
+(1) Since $u$ is increasing, $u_j+(\ell-j)\le u_\ell<q=p+\ell-1$, so $u_j<p+j-1$. (Lean: \decl{head_add_length_lt} states $u_1+(\ell-1)<B$ when all letters are $<B$, and \decl{derB_of_upper} applies it along the list.) (2) We may assume $\ell\ge1$. The last letter $u_\ell$ sits at position $q$, so $u_\ell\ne q$, and with $u_\ell\le q$ this gives $u_\ell<q$; all other letters are smaller than $u_\ell$. In Lean this is an induction from the front of the list.
+\end{proof}
+
+\begin{lemma}[\decl{desB_of_pairwise}, \decl{pairwise_of_desB}, \decl{desB_split}, \decl{split_of_desB}]\label{lem:des}
+\textup{(1)} An increasing word has no descent, and a word with distinct letters and no descent is increasing. \textup{(2)} For words $l,m$ and letters $a,b$, $\des(l\,a\,b\,m)=\des(l\,a)+[\,b<a\,]+\des(b\,m)$, where $[\,b<a\,]$ is $1$ if $b<a$ and $0$ otherwise. \textup{(3)} A word $w$ with distinct letters and $\des(w)=1$ can be written $w=u\,a\,b\,v$ with $u\,a$ and $b\,v$ increasing.
+\end{lemma}
+
+\begin{proof}
+(1) and (2) are immediate from the definition (in Lean, inductions on the word using $\des(x\,y\,l)=[\,y<x\,]+\des(y\,l)$). For (3) we argue by induction on $w=x\,y\,l$ (a word with a descent has at least two letters). If $y<x$, the step $(x,y)$ is the only descent, so $y\,l$ has no descent and is increasing by (1); take $u$ empty, $a=x$, $b=y$, $v=l$. Otherwise $x<y$ (the letters are distinct), $\des(y\,l)=1$, and by induction $y\,l=u'\,a\,b\,v$ with $u'a$ and $bv$ increasing. Every letter of $u'a$ is $\ge y>x$, so $x\,u'\,a$ is increasing, and $w=(x\,u')\,a\,b\,v$.
+\end{proof}
+
+Fix $m\ge0$ and let $R_m=2\,3\cdots(m+1)$ be the increasing word on $\{2,\dots,m+1\}$ (\texttt{List.range' 2 m}). The subwords (sublists) of $R_m$ are exactly the increasing words with letters in $\{2,\dots,m+1\}$, one for each subset; Mathlib's \texttt{List.sublists'} lists the $2^m$ of them, each once.
+
+\begin{definition}[\decl{word}, \decl{words}]\label{def:word}
+For a sublist $s$ of $R_m$ let $\bar s$ be the sublist of $R_m$ formed by the letters not in $s$, and
+\[
+  W_m(s)=s\,(m+2)\,1\,\bar s .
+\]
+Let $\mathcal W_m$ be the list of the words $W_m(s)$, with $s$ running over the sublists of $R_m$.
+\end{definition}
+
+For $m=2$ the sublists $\emptyset,2,3,23$ give $4123$, $2413$, $3412$, $2341$, the four words of the example in A332010.
+
+\begin{proposition}[\decl{word_mem_ders}]\label{prop:words}
+For every sublist $s$ of $R_m$, $W_m(s)$ is a derangement of $[m+2]$ with exactly one descent.
+\end{proposition}
+
+\begin{proof}
+Write $v=\bar s$, so $W=W_m(s)=s\,(m+2)\,1\,v$. The words $s$ and $v$ are increasing, their letters lie in $\{2,\dots,m+1\}$, and each element of $\{2,\dots,m+1\}$ is a letter of exactly one of them. Hence $W$ has distinct letters and its set of letters is $[m+2]$, so $W$ is a rearrangement of $1\,2\cdots(m+2)$ (\texttt{List.perm\_ext\_iff\_of\_nodup}); comparing lengths, $|s|+|v|=m$.
+
+\emph{No fixed point.} By \decl{derB_append}, $W$ is free at $1$ if and only if: $s$ is free at $1$, which holds by Lemma~\ref{lem:lower}(1) since its letters are $\ge2$; the letter $m+2$ is not at position $|s|+1\le m+1$; the letter $1$ is not at position $|s|+2\ge2$; and $v$ is free at $|s|+3$. For the last condition, $v$ occupies positions $|s|+3,\dots,|s|+2+|v|=m+2$ and its letters are $\le m+1<m+2$, so Lemma~\ref{lem:upper}(1) applies.
+
+\emph{One descent.} The words $s\,(m+2)$ and $1\,v$ are increasing, because the letters of $s$ are $\le m+1$ and those of $v$ are $\ge2$. By Lemma~\ref{lem:des}(1),(2), $\des(W)=0+[\,1<m+2\,]+0=1$.
+\end{proof}
+
+\begin{proposition}[\decl{mem_words_of_mem_ders}]\label{prop:converse}
+Every derangement $w$ of $[m+2]$ with exactly one descent equals $W_m(s)$ for some sublist $s$ of $R_m$.
+\end{proposition}
+
+\begin{proof}
+By Lemma~\ref{lem:des}(3), $w=u\,a\,b\,v$ with $P=u\,a$ and $Q=b\,v$ increasing, and $|P|+|Q|=m+2$. Since $w$ is free at $1$, $P$ is free at $1$ and $Q$ is free at $|P|+1$, and the last position of $Q$ is $m+2$. All letters of $w$ lie in $[m+2]$. Lemma~\ref{lem:lower}(2) shows that every letter of $P$ is $>1$, and Lemma~\ref{lem:upper}(2) that every letter of $Q$ is $<m+2$.
+
+Hence the letter $1$ of $w$ lies in $Q$, and since $b$ is the smallest letter of $Q$ and $b\ge1$, we get $b=1$. Likewise the letter $m+2$ lies in $P$, and since $a$ is the largest letter of $P$ and $a\le m+2$, we get $a=m+2$. So $w=u\,(m+2)\,1\,v$.
+
+The word $u$ is increasing and its letters lie in $\{2,\dots,m+1\}$ (they are $>1$ and $<a$); an increasing word with distinct letters from $R_m$ is a sublist of $R_m$ (\texttt{List.subperm\_of\_subset}, \texttt{List.sublist\_of\_subperm\_of\_pairwise}). It remains to show $v=\bar u$. Both words are increasing, so it suffices that they have the same letters (\texttt{List.Pairwise.eq\_of\_mem\_iff}). A letter $x$ of $v$ satisfies $1<x<m+2$ (since $Q=1\,v$ is increasing and its letters are $<m+2$), and $x$ is not a letter of $u$ because $w$ has distinct letters; so $x$ is a letter of $\bar u$. Conversely, if $2\le x\le m+1$ and $x$ is not a letter of $u$, then $x$ is a letter of $w$ different from $m+2$ and $1$, so it is a letter of $v$. Hence $w=W_m(u)$.
+\end{proof}
+
+\begin{lemma}[\decl{words_nodup}]\label{lem:inj}
+The map $s\mapsto W_m(s)$ is injective on the sublists of $R_m$; hence $\mathcal W_m$ has no repetitions.
+\end{lemma}
+
+\begin{proof}
+The letter $m+2$ occurs neither in $s$ nor in $1\,\bar s$, so $s$ is the part of $W_m(s)$ before the letter $m+2$ (\texttt{List.append\_cons\_inj\_of\_notMem}). The list of sublists of $R_m$ has no repetitions since $R_m$ has none.
+\end{proof}
+
+\begin{corollary}[\decl{ders_perm_words}]\label{cor:perm}
+The list \texttt{ders (m+2) 1} of $\cD_{m+2,1}$ is a permutation of $\mathcal W_m$. Consequently $|\cD_{m+2,1}|=2^m$ and $\sum_{w\in\cD_{m+2,1}}w_1=\sum_{s}\bigl(\text{first letter of }W_m(s)\bigr)$, the sum over the sublists $s$ of $R_m$.
+\end{corollary}
+
+\begin{proof}
+Both lists have no repetitions (\decl{nodup_ders} and Lemma~\ref{lem:inj}) and they have the same elements (\decl{mem_ders} with Propositions~\ref{prop:words} and~\ref{prop:converse}), so one is a permutation of the other (\texttt{List.perm\_ext\_iff\_of\_nodup}). Length and sum of first letters are invariant under permutation (\decl{avgFirstLetter_perm}).
+\end{proof}
+
+For a word $s$ and $c\ge0$ let $h_c(s)$ be the first letter of $s$ if $s$ is nonempty, and $c$ if $s$ is empty (\texttt{s.headD c}). The first letter of $W_m(s)$ is $h_{m+2}(s)$.
+
+\begin{lemma}[\decl{sum_heads}]\label{lem:sum}
+For $a,k\ge0$ let $F(a,k)=\sum_s h_{a+k}(s)$, the sum over the $2^k$ sublists $s$ of $a\,(a+1)\cdots(a+k-1)$. Then $F(a,k)+1=(a+1)\,2^k$.
+\end{lemma}
+
+\begin{proof}
+Induction on $k$, for all $a$ simultaneously. For $k=0$ the only sublist is empty and $F(a,0)=a$. For the step, the sublists of $a\,(a+1)\cdots(a+k)$ are the sublists $s$ of $(a+1)\cdots(a+k)$ together with the words $a\,s$ (\texttt{List.sublists'\_cons}). The first group contributes $F(a+1,k)$, because $h_{a+(k+1)}=h_{(a+1)+k}$; the second contributes $a\cdot2^k$. By the induction hypothesis,
+\[
+  F(a,k+1)+1=\bigl(F(a+1,k)+1\bigr)+a\,2^k=(a+2)\,2^k+a\,2^k=(a+1)\,2^{k+1}. \qedhere
+\]
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Write $n=m+2$. By Corollary~\ref{cor:perm}, $|\cD_{n,1}|=2^m$ and
+\[
+  N:=\sum_{w\in\cD_{n,1}}w_1=\sum_s h_{m+2}(s)=F(2,m),
+\]
+so $N+1=3\cdot2^m$ by Lemma~\ref{lem:sum}. This proves (1) and (2), and the average first letter is $N/2^m$. The integers $N$ and $2^m$ are coprime: for $m=0$ trivially, and for $m\ge1$ because $N=3\cdot2^m-1$ is odd. Hence the fraction $N/2^m$ is in lowest terms and its denominator is $2^m=2^{n-2}$ (Mathlib's \texttt{Rat.den\_div\_eq\_of\_coprime}). Finally $N/2^m=3-2^{-m}=3-2^{2-n}$.
+\end{proof}
+
+Corollary~\ref{cor:num} follows: by Theorem~\ref{thm:main}(3) the numerator is $3\cdot2^{n-2}-1=A083329(n-1)$ \cite{A083329}.
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A332010.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A332010.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A332010.result}, of type \decl{Math0.Statements.A332010.statement}; the auxiliary declarations of this file named in Section~\ref{sec:proof} are private to it, while \decl{derB_one}, \decl{mem_ders}, \decl{nodup_ders} and \decl{avgFirstLetter_perm} are public lemmas of the statement file. The tactic proof of \decl{result} follows the proof of Theorem~\ref{thm:main} step by step (parts (1) and (2) appear as the facts \texttt{hlen} and \texttt{hsum}). The file's last line is the audit command
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A332010.result Math0.Statements.A332010.statement
+\end{lstlisting}
+Neither file contains \texttt{sorry}, \texttt{native\_decide}, \texttt{set\_option} or an axiom declaration; the data checks in the statement file use \texttt{decide +kernel}, which adds no axioms.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles} (defined in \path{lean/Math0/Audit.lean}, for statements formalized by math0) fails unless \decl{statement} is a universe-monomorphic \texttt{Prop}-valued definition, both \decl{statement} and \decl{result} depend on no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (which excludes \decl{sorryAx} and \texttt{native\_decide}), and the type of \decl{result} is syntactically \decl{statement} or its negation, without unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+math0 audit: 'Math0.Statements.A332010.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A332010.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A332010.result' proves 'Math0.Statements.A332010.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh}: it fetches the Mathlib cache, builds all math0 results (re-running every audit), and checks that the pinned dependencies are unmodified. This result alone is checked in \path{lean/} by \texttt{lake build Math0.Statements.OEIS.A332010} (about a minute of CPU time, mostly \decl{a_data}) and \texttt{lake env lean Math0/Frontier/OEIS/A332010.lean}.
+
+{\footnotesize\raggedright
+\begin{thebibliography}{99}
+
+\bibitem{Alexandersson}
+P.~Alexandersson, \emph{Real-rooted Eulerian polynomials from permutations, words, and paths}, arXiv:2609.07325, 2026.
+
+\bibitem{Conger}
+M.~Conger, \emph{A refinement of the Eulerian numbers, and the joint distribution of $\pi(1)$ and $\mathrm{Des}(\pi)$ in $S_n$}, arXiv:math/0508112, 2005.
+
+\bibitem{EFW}
+N.~Eriksen, R.~Freij, and J.~W\"astlund, \emph{Enumeration of derangements with descents in prescribed positions}, Electron. J. Combin. \textbf{16} (2009), no.~1, \#R32; arXiv:0811.1925.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{FLZ}
+S.~Fu, Z.~Lin, and J.~Zeng, \emph{On two unimodal descent polynomials}, Discrete Math. \textbf{341} (2018), 2616--2626; arXiv:1507.05184.
+
+\bibitem{HanXin}
+G.-N. Han and G.~Xin, \emph{Permutations with extremal number of fixed points}, J. Combin. Theory Ser.~A \textbf{116} (2009), 449--459; arXiv:0706.1738.
+
+\bibitem{Kagey}
+P.~Kagey, \emph{Expected value of letters of permutations with a given number of $k$-cycles}, arXiv:2112.05281, 2021.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proc.\ 9th ACM SIGPLAN Int.\ Conf.\ Certified Programs and Proofs (CPP 2020), 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A083329}
+The OEIS Foundation Inc., \url{https://oeis.org/A083329}, entry by P.~Barry (April~27, 2003).
+
+\bibitem{A219836}
+The OEIS Foundation Inc., \url{https://oeis.org/A219836}, entry by D.~Callan (November~29, 2012).
+
+\bibitem{A332009}
+The OEIS Foundation Inc., \url{https://oeis.org/A332009}, entry by P.~Kagey (February~4, 2020).
+
+\bibitem{A332010}
+The OEIS Foundation Inc., \url{https://oeis.org/A332010}, entry by P.~Kagey (February~4, 2020).
+
+\end{thebibliography}
+}
+
+\end{document}

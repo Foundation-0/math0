@@ -1,0 +1,455 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,set,rw,at,push_cast,exact_mod_cast,apply,by_cases,field_simp,linear_combination},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true, upquote=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={∑}{{$\sum$}}1 {∈}{{$\in$}}1 {ℕ}{{$\mathbb{N}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {ℤ}{{$\mathbb{Z}$}}1
+    {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {≥}{{$\ge$}}1 {≤}{{$\le$}}1 {≠}{{$\ne$}}1 {…}{{$\ldots$}}1
+    {¬}{{$\neg$}}1 {→}{{$\to$}}1 {←}{{$\leftarrow$}}1 {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1
+    {∣}{{$\mid$}}1 {·}{{$\cdot$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+\newunicodechar{…}{\ensuremath{\ldots}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+
+\title[Non-integrality of a binomial sum (OEIS A175385)]{The sum $\sum_{i=1}^{n}\frac{1}{i}\binom{2n-i-1}{i-1}$ is not an integer for $n\ge 2$}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 18, 2026}
+
+\begin{document}
+\begin{abstract}
+For $n\ge1$ let $S(n)=\sum_{i=1}^{n}\frac1i\binom{2n-i-1}{i-1}$.
+We prove that $S(n)$ is not an integer for any $n\ge2$, as conjectured by V.~Shevelev and Z.~Seidov in 2010 in OEIS A175385.
+The proof combines the identity $2nS(n)+1=L_{2n}$, where $L_j$ is the $j$th Lucas number, with a congruence modulo $4$ for even $n$ and, for odd $n$, an argument in an algebraic closure of $\F_p$, where $p$ is the least prime factor of $n$.
+The result is not new: it follows from the classical theorem that no even composite $N$ divides $L_N-1$ (White, Hunt and Dresel 1977; Di Porto 1993; Bruckman 1994), and a Lean proof found by the AlphaProof Nexus agent was published in 2026, so ours is an independent formal proof of a known result.
+It is verified in Lean~4 with Mathlib against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry, whose definitions are checked by the kernel against the $27$ listed terms of the sequence.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+The OEIS sequence A175385 \cite{A175385}, contributed by Vladimir Shevelev and Zak Seidov on April~24, 2010, lists the numerators of the rational numbers
+\[
+  S(n)=\sum_{i=1}^{n}\frac{1}{i}\binom{2n-i-1}{i-1},\qquad n\ge1,
+\]
+and its companion A175386 \cite{A175386} lists their denominators:
+$S(1)=1$, $S(2)=3/2$, $S(3)=17/6$, $S(4)=23/4$, $S(5)=61/5$, \dots.
+Both entries record the conjecture that $S(n)$ is not an integer for $n>1$.
+They also give the closed form $S(n)=\bigl({}_2F_1(\tfrac12-n,-n;1-2n;-4)-1\bigr)/(2n)$.
+
+The problem becomes transparent once one notices the identity
+\begin{equation}\label{eq:lucas}
+  2n\,S(n)+1=L_{2n}\qquad(n\ge1),
+\end{equation}
+where $L_j=F_{j+1}+F_{j-1}$ are the Lucas numbers \cite{A000032} and $F_j$ the Fibonacci numbers (Proposition~\ref{prop:closed} below; it follows from the diagonal sums of Pascal's triangle).
+Thus $S(n)\in\Z$ if and only if $2n\mid L_{2n}-1$, and the conjecture says that $2n\nmid L_{2n}-1$ for every $n\ge2$.
+
+\subsection*{Prior work}
+In this form the conjecture is a special case of a classical theorem.
+A composite number $N$ with $N\mid L_N-1$ is called a (Bruckman--)Lucas pseudoprime \cite{A005845}, and Bruckman \cite{Br} proved that such numbers are odd: no even composite $N$ divides $L_N-1$.
+As Bruckman acknowledges in \cite{Br}, this had been proved earlier by White, Hunt and Dresel \cite{WHD}, and independently by Di Porto \cite{DP}, who calls such $N$ Fibonacci pseudoprimes of the first kind.
+For $n\ge2$ the number $N=2n\ge4$ is even and composite, so this theorem and \eqref{eq:lucas} give the conjecture.
+The conjecture, posed in 2010, is therefore a consequence of results published between 1977 and 1994.
+This deduction was pointed out by the math0 referees; we do not know whether it was recorded earlier, but it is not mentioned in A175385.
+
+More recently, on May~25, 2026, Ralf Stephan added a comment to A175386 \cite{A175386} stating that the conjecture was proved by an autonomous AI agent, with references to the paper of Tsoukalas et al.\ \cite{Ts} and to a Lean file of Google DeepMind's AlphaProof Nexus \cite{APN}; the entry also cites Adamczewski \cite[p.~15, Appendix~A]{Ad} for a proof.
+The Lean file proves, for $n>1$, that the denominator of $S(n)$ is not $1$, which is equivalent to the conjecture.
+It also starts from \eqref{eq:lucas} and splits on the parity of $n$.
+For odd $n$ it uses $L_{2n}=L_n^2+2$, the factorization $F_{3n}=F_n(L_n^2+1)$, the divisibility $p\mid F_{p^2-1}$ for primes $p\ne2,5$, and the strong divisibility property of the Fibonacci numbers to conclude that the least prime factor of $n$ divides $F_3=2$.
+The entry A175385 itself (revision \#14, March 2023) records no proof.
+
+\subsection*{This paper}
+We give a self-contained proof of the conjecture and an independent Lean formalization of it, checked against a statement that math0 formalized from A175385 (Section~\ref{sec:statement}).
+The case of even $n$ is a congruence modulo $4$, as in \cite{APN}.
+For odd $n$ we argue in an algebraic closure of $\F_p$, where $p$ is the least prime factor of $n$: a root $\alpha$ of $X^2-X-1$ satisfies $\alpha^{p^2-1}=1$, and from $L_{2n}\equiv1\pmod p$ we derive $\alpha^6=-1$, which forces $p\mid 20$.
+Arguments of this kind are standard in the study of Lucas sequences modulo primes, and we claim no novelty for the mathematics.
+We classify the result as an \emph{independent formal proof of a known result}.
+
+\section{Statement}\label{sec:statement}
+
+\begin{theorem}\label{thm:main}
+For every integer $n\ge2$, the rational number $S(n)=\sum_{i=1}^{n}\frac{1}{i}\binom{2n-i-1}{i-1}$ is not an integer.
+\end{theorem}
+
+The COMMENTS section of A175385 \cite{A175385} reads, verbatim:
+\begin{quote}
+\raggedright\texttt{We conjecture that Sum\_\char`\{i=1..n\char`\}\ ((1/i)*C(2n-i-1,i-1)) is not an integer for n>1.}
+\end{quote}
+The entry is authored by Vladimir Shevelev and Zak Seidov and dated April~24, 2010; the name of the sequence is \texttt{a(n) = numerator of Sum\_\char`\{i=1..n\char`\}\ binomial(2n-i-1,i-1)/i} (offset~$1$).
+The same conjecture appears in A175386 \cite{A175386}.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A175385.lean}; it was reviewed for fidelity and frozen (SHA-256 \texttt{3e8f66ae\ldots c8654}) before any proof attempt.
+After the copyright header, the import of Mathlib and the module docstring, the file reads verbatim:
+\begin{lstlisting}
+namespace Math0.Statements.A175385
+
+/-- The sum `∑_{i=1}^{n} C(2n-i-1, i-1)/i`, computed exactly in `ℚ`. -/
+def S (n : ℕ) : ℚ :=
+  ∑ i ∈ Finset.Icc 1 n, ((Nat.choose (2 * n - i - 1) (i - 1) : ℕ) : ℚ) / (i : ℚ)
+
+/-- A175385 (offset `1`): the numerator, in lowest terms, of
+`∑_{i=1..n} binomial(2n-i-1, i-1)/i`. -/
+def a (n : ℕ) : ℕ := (S n).num.natAbs
+
+/-- The definition reproduces all 27 terms listed in OEIS, `a 1, …, a 27` (kernel-checked). -/
+theorem a_data : (List.range 27).map (fun i => a (i + 1)) =
+    [1, 3, 17, 23, 61, 107, 421, 1103, 5777, 7563, 19801, 103681, 135721, 355323, 1860497,
+      2435423, 6376021, 11128427, 43701901, 114413063, 599074577, 784198803, 2053059121,
+      10749957121, 14071876561, 36840651123, 192900153617] := by
+  decide +kernel
+
+/-- Conjecture (Shevelev and Seidov, A175385): for every `n > 1`, the sum
+`∑_{i=1..n} C(2n-i-1, i-1)/i` is not an integer. -/
+def statement : Prop :=
+  ∀ n : ℕ, 1 < n → ¬ ∃ k : ℤ, S n = (k : ℚ)
+
+end Math0.Statements.A175385
+\end{lstlisting}
+The definition \decl{S} is the defining sum of the entry, computed exactly in $\Q$ with Mathlib's \decl{Nat.choose}; it is not the hypergeometric formula.
+Subtraction in $\N$ is truncated, but for $1\le i\le n$ we have $2n-i-1\ge n-1\ge0$ and $i-1\ge0$, so no truncation occurs, and the divisor $i$ is at least $1$.
+The function \decl{a} is the numerator of $S(n)$ in lowest terms (\decl{Rat.num}, converted to $\N$ by \decl{Int.natAbs}, which is harmless since $S(n)>0$ for $n\ge1$), with the OEIS offset~$1$.
+The lemma \decl{a_data} checks, by \texttt{decide +kernel}, that $a(1),\dots,a(27)$ are exactly the $27$ terms listed in the entry; the Lean kernel evaluates the $27$ rational sums from the definitions and compares the numerators.
+This ties \decl{S} to the OEIS data; \decl{a} itself does not occur in \decl{statement}.
+Finally, ``is not an integer'' is encoded as the nonexistence of $k\in\Z$ with $S(n)=k$ in $\Q$, and ``for $n>1$'' as the hypothesis \texttt{1 < n} on $n\in\N$.
+The excluded value $n=1$ is a genuine exception, since $S(1)=1$.
+
+\section{Proof}\label{sec:proof}
+
+We write $F_0=0$, $F_1=1$, $F_{j+2}=F_{j+1}+F_j$ (Mathlib's \decl{Nat.fib}), and use the convention $\binom{a}{b}=0$ for $b>a$.
+For $n\ge1$ we put
+\[
+  T(n)=F_{2n+1}+F_{2n-1},
+\]
+which is the Lucas number $L_{2n}$; the formal proof works with $T(n)$ directly and never defines Lucas numbers.
+The proof follows the structure of the Lean file; Section~\ref{sec:lean} lists the corresponding declarations.
+
+\subsection{The closed form}
+
+\begin{lemma}[Diagonal sums of Pascal's triangle]\label{lem:diag}
+If $m,N\in\N$ and $m<2N$, then $F_{m+1}=\sum_{k=0}^{N-1}\binom{m-k}{k}$.
+\end{lemma}
+
+\begin{proof}
+Mathlib's \decl{Nat.fib_succ_eq_sum_choose} states $F_{m+1}=\sum_{a+b=m}\binom{a}{b}$; reindexing the antidiagonal gives $F_{m+1}=\sum_{k=0}^{m}\binom{m-k}{k}$.
+If $k\ge N$ then $2k\ge 2N>m$, so $m-k<k$ (in truncated subtraction) and $\binom{m-k}{k}=0$; likewise for $k>m$.
+Hence both $\sum_{k=0}^{m}$ and $\sum_{k=0}^{N-1}$ equal the sum over $0\le k\le N+m$.
+\end{proof}
+
+\begin{lemma}\label{lem:term}
+For $1\le i\le n$,
+\[
+  \frac{2n}{i}\binom{2n-i-1}{i-1}=\binom{2n-i}{i}+\binom{2n-i-1}{i-1}.
+\]
+\end{lemma}
+
+\begin{proof}
+The identity $(M+1)\binom{M}{k}=(k+1)\binom{M+1}{k+1}$ (\decl{Nat.add_one_mul_choose_eq}) with $M=2n-i-1$ and $k=i-1$ gives $(2n-i)\binom{2n-i-1}{i-1}=i\binom{2n-i}{i}$.
+Adding $i\binom{2n-i-1}{i-1}$ to both sides and dividing by $i$ gives the claim.
+\end{proof}
+
+\begin{proposition}\label{prop:closed}
+For every $n\ge1$, $2n\,S(n)+1=T(n)=F_{2n+1}+F_{2n-1}$.
+\end{proposition}
+
+\begin{proof}
+Write $n=m+1$ and substitute $i=j+1$; then $S(n)=\sum_{j=0}^{m}\binom{2m-j}{j}/(j+1)$.
+By Lemma~\ref{lem:term},
+\[
+  2n\,S(n)=\sum_{j=0}^{m}\binom{2m+1-j}{j+1}+\sum_{j=0}^{m}\binom{2m-j}{j}.
+\]
+Lemma~\ref{lem:diag} with $(m,N)$ replaced by $(2m+2,m+2)$ gives $F_{2m+3}=\sum_{k=0}^{m+1}\binom{2m+2-k}{k}=1+\sum_{j=0}^{m}\binom{2m+1-j}{j+1}$, where we split off $k=0$ and put $k=j+1$.
+Lemma~\ref{lem:diag} with $(2m,m+1)$ gives $F_{2m+1}=\sum_{j=0}^{m}\binom{2m-j}{j}$.
+Hence $2nS(n)=(F_{2m+3}-1)+F_{2m+1}=T(n)-1$.
+\end{proof}
+
+\subsection{Lucas numbers in a commutative ring}
+
+\begin{lemma}\label{lem:ring}
+Let $R$ be a commutative ring and $\alpha\in R$ with $\alpha^2=\alpha+1$. Then:
+\begin{enumerate}
+\item $\alpha^{j+1}=F_{j+1}\alpha+F_j$ for all $j\ge0$;
+\item $\beta=1-\alpha$ satisfies $\beta^2=\beta+1$ and $\alpha\beta=-1$;
+\item $\alpha^{2n}+(1-\alpha)^{2n}=T(n)\cdot1_R$ for all $n\ge1$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) By induction on $j$: the case $j=0$ is trivial, and
+$\alpha^{j+2}=\alpha(F_{j+1}\alpha+F_j)=F_{j+1}(\alpha+1)+F_j\alpha=F_{j+2}\alpha+F_{j+1}$.
+(2) $\beta^2=1-2\alpha+\alpha^2=2-\alpha=\beta+1$ and $\alpha\beta=\alpha-\alpha^2=-1$.
+(3) Apply (1) to $\alpha$ and to $\beta$ with $j=2n-1$ and add:
+$\alpha^{2n}+\beta^{2n}=F_{2n}(\alpha+\beta)+2F_{2n-1}=F_{2n}+2F_{2n-1}=F_{2n+1}+F_{2n-1}$.
+\end{proof}
+
+\subsection{\texorpdfstring{Even $n$}{Even n}}
+
+\begin{lemma}\label{lem:mod4}
+$F_{j+6}\equiv F_j\pmod4$ for all $j\ge0$. Consequently, if $n\ge2$ is even, then $T(n)\equiv2$ or $3\pmod4$.
+\end{lemma}
+
+\begin{proof}
+The addition formula $F_{a+b+1}=F_aF_b+F_{a+1}F_{b+1}$ (\decl{Nat.fib_add}) with $a=5$ gives $F_{j+6}=5F_j+8F_{j+1}\equiv F_j\pmod 4$.
+So $F_j\bmod 4$ depends only on $j\bmod 6$, and $(F_0,\dots,F_5)\equiv(0,1,1,2,3,1)\pmod4$.
+Write $n=m+1$ with $m$ odd, so $m\equiv1,3,5\pmod6$ and correspondingly $(2m+3,2m+1)\equiv(5,3),(3,1),(1,5)\pmod6$.
+Hence $T(n)=F_{2m+3}+F_{2m+1}\equiv 1+2,\ 2+1,\ 1+1$, that is $3,3,2\pmod4$.
+\end{proof}
+
+\subsection{\texorpdfstring{Odd $n$}{Odd n}}
+
+\begin{lemma}\label{lem:reduce}
+Let $n\ge1$ and suppose that $S(n)=k$ with $k\in\Z$. Then $T(n)=2nk+1$ in $\Z$, and $T(n)\cdot1_R=1$ in every commutative ring $R$ whose characteristic divides $n$.
+\end{lemma}
+
+\begin{proof}
+The first claim is Proposition~\ref{prop:closed}, transported from $\Q$ to $\Z$ by injectivity of $\Z\to\Q$. Mapping it to $R$, where $n\cdot1_R=0$, gives the second.
+\end{proof}
+
+\begin{lemma}[Frobenius]\label{lem:frob}
+Let $K$ be a field of prime characteristic $p$ and $\alpha\in K$ with $\alpha^2=\alpha+1$. Then $\alpha\ne0$ and $\alpha^{p^2-1}=1$.
+\end{lemma}
+
+\begin{proof}
+Since $x\mapsto x^p$ is a ring endomorphism of $K$, $y=\alpha^p$ satisfies $y^2=(\alpha^2)^p=(\alpha+1)^p=y+1$.
+Then $(y-\alpha)\bigl(y-(1-\alpha)\bigr)=y^2-y+\alpha-\alpha^2=(y+1)-y+\alpha-(\alpha+1)=0$, so $y=\alpha$ or $y=1-\alpha$.
+In the first case $\alpha^{p^2}=y^p=\alpha^p=\alpha$; in the second $\alpha^{p^2}=(1-\alpha)^p=1-\alpha^p=1-(1-\alpha)=\alpha$.
+Finally $\alpha\neq0$ because $0^2\ne0+1$, and cancelling $\alpha$ from $\alpha^{p^2}=\alpha$ gives $\alpha^{p^2-1}=1$.
+\end{proof}
+
+\begin{lemma}\label{lem:coprime}
+Let $n>1$ be odd and let $p$ be its least prime factor. Then $\gcd(n,p^2-1)=1$.
+\end{lemma}
+
+\begin{proof}
+Write $p=r+1$, so $r\ge1$, $r$ is even (as $p$ is odd), and $p^2-1=r(r+2)$.
+Let $q$ be a prime dividing both $n$ and $r(r+2)$. Then $q\ge p=r+1$, and $q$ is odd because $n$ is.
+If $q\mid r$ then $q\le r$, which is impossible.
+If $q\mid r+2$ then $q\le r+2$, so $q=r+1$ or $q=r+2$.
+In the first case $r+1$ divides $(r+2)-(r+1)=1$, so $r=0$, a contradiction; in the second $q=r+2$ is even, a contradiction.
+\end{proof}
+
+\begin{lemma}\label{lem:core}
+Let $K$ be a field of prime characteristic $p\notin\{2,5\}$, let $\alpha\in K$ with $\alpha^2=\alpha+1$, and let $N$ be an odd natural number with $\gcd(N,p^2-1)=1$. Then $\alpha^{2N}+(1-\alpha)^{2N}\ne1$.
+\end{lemma}
+
+\begin{proof}
+Suppose $\alpha^{2N}+(1-\alpha)^{2N}=1$ and put $x=\alpha^{2N}$, $x'=(1-\alpha)^{2N}$.
+By Lemma~\ref{lem:ring}(2), $xx'=(\alpha(1-\alpha))^{2N}=(-1)^{2N}=1$. Hence
+\[
+  x^2-x+1=x(x+x'-1)-(xx'-1)=0,
+\]
+and $x^3+1=(x+1)(x^2-x+1)=0$, that is $\alpha^{6N}=-1$ and $\alpha^{12N}=1$.
+Let $d$ be the multiplicative order of $\alpha$, which is finite by Lemma~\ref{lem:frob}.
+Then $d\mid 12N$, and $d\mid p^2-1$ by Lemma~\ref{lem:frob}; since $\gcd(N,p^2-1)=1$ we get $\gcd(d,N)=1$ and hence $d\mid 12$, i.e.\ $\alpha^{12}=1$.
+Writing $N=2t+1$, we obtain $-1=\alpha^{6N}=(\alpha^{12})^t\alpha^6=\alpha^6$.
+By Lemma~\ref{lem:ring}(1), $\alpha^6=F_6\alpha+F_5=8\alpha+5$, so $8\alpha=-6$.
+Using $\alpha^2=\alpha+1$ we compute $64\alpha^2$ in two ways:
+$64\alpha^2=(8\alpha)^2=36$ and $64\alpha^2=8\cdot(8\alpha)+64=-48+64=16$.
+Hence $20=0$ in $K$, so $p\mid20$ and $p\in\{2,5\}$, a contradiction.
+(The Lean proof obtains $20=0$ in one step from the identity
+$20=(14-8X)(X^6+1)+(8X^5-6X^4+2X^3-4X^2-2X-6)(X^2-X-1)$ in $\Z[X]$, evaluated at $X=\alpha$.)
+\end{proof}
+
+\subsection{\texorpdfstring{Proof of Theorem~\ref{thm:main}}{Proof of Theorem 1}}\label{sec:assembly}
+Let $n\ge2$ and suppose that $S(n)=k\in\Z$. By Lemma~\ref{lem:reduce}, $T(n)=2nk+1$.
+
+\emph{Case $n$ even.} Write $n=2t$. Then $T(n)=4tk+1\equiv1\pmod4$, contradicting Lemma~\ref{lem:mod4}.
+
+\emph{Case $n$ odd.} Let $p$ be the least prime factor of $n$; then $p\ne2$.
+
+\emph{Subcase $p=5$.} Take $R=\Z/5\Z$, whose characteristic $5$ divides $n$, so $T(n)=1$ in $\Z/5\Z$ by Lemma~\ref{lem:reduce}.
+The element $\alpha=3$ satisfies $\alpha^2=9=4=\alpha+1$ in $\Z/5\Z$, and $1-\alpha=-2=3$.
+By Lemma~\ref{lem:ring}(3) and since $3^2=-1$ and $n$ is odd,
+$T(n)=3^{2n}+3^{2n}=2\,(3^2)^n=2\,(-1)^n=-2=3$ in $\Z/5\Z$. As $3\ne1$ in $\Z/5\Z$, this is a contradiction.
+
+\emph{Subcase $p\ne5$.} Let $K$ be an algebraic closure of $\Z/p\Z$; it is a field of characteristic $p$.
+Choose $s\in K$ with $s^2=5$ (Mathlib's \decl{IsAlgClosed.exists_eq_mul_self}); since $p\ne2$, $2\ne0$ in $K$, and $\alpha=(1+s)/2$ satisfies
+$\alpha^2=(6+2s)/4=\alpha+1$.
+By Lemma~\ref{lem:ring}(3) and Lemma~\ref{lem:reduce} applied to $R=K$, $\alpha^{2n}+(1-\alpha)^{2n}=T(n)\cdot1_K=1$.
+But $n$ is odd and $\gcd(n,p^2-1)=1$ by Lemma~\ref{lem:coprime}, so Lemma~\ref{lem:core} with $N=n$ shows that $\alpha^{2n}+(1-\alpha)^{2n}\ne1$, a contradiction.
+
+In all cases the assumption $S(n)\in\Z$ is contradictory, which proves Theorem~\ref{thm:main}.\qed
+
+\begin{remark}
+The prime $p=3$ needs no separate treatment: it is covered by the last subcase.
+The prime $p=5$ must be treated separately, because $X^2-X-1=(X-3)^2$ over $\F_5$ and $20=0$ in characteristic $5$, so Lemma~\ref{lem:core} gives nothing.
+The algebraic closure is used only to provide a square root of $5$; the field $\F_{p^2}$ would suffice.
+By \eqref{eq:lucas}, Theorem~\ref{thm:main} is equivalent to the assertion that no even $N\ge4$ divides $L_N-1$, which is exactly the theorem that Lucas pseudoprimes are odd \cite{WHD,DP,Br}, since the even composite numbers are the even numbers $N\ge4$. So the argument above is also a proof of that theorem; we have not compared it with the published proofs.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is the file \path{lean/Math0/Frontier/OEIS/A175385.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}.
+It imports the frozen statement file of Section~\ref{sec:statement} and the audit commands of \path{lean/Math0/Audit.lean}.
+Its only public declaration is \texttt{theorem result : statement} in the namespace \decl{Math0.Frontier.A175385}, so \decl{Math0.Frontier.A175385.result} has type exactly \decl{Math0.Statements.A175385.statement}.
+All auxiliary lemmas are \texttt{private}. They correspond to Section~\ref{sec:proof} as follows:
+\begin{center}
+\small
+\begin{tabular}{ll}
+Lemma~\ref{lem:diag} & \decl{fib_succ_eq_sum_range}, \decl{fib_succ_eq_sum_range'}\\
+Lemma~\ref{lem:term} & \decl{term_identity}\\
+Proposition~\ref{prop:closed} & \decl{S_succ}, \decl{main_identity}\\
+Lemma~\ref{lem:ring} & \decl{pow_eq_fib}, \decl{lucas}\\
+Lemma~\ref{lem:mod4} & \decl{fib_add_six_mod}, \decl{fib_mod_four}, \decl{T_mod_four}\\
+Lemma~\ref{lem:frob} & \decl{frob}\\
+Lemma~\ref{lem:coprime} & \decl{coprime_minFac}\\
+Lemma~\ref{lem:core} & \decl{field_part}, \decl{prime_dvd_twenty}\\
+Lemma~\ref{lem:reduce}, Section~\ref{sec:assembly} & \decl{result} (with the local fact \decl{key})
+\end{tabular}
+\end{center}
+The least prime factor is Mathlib's \decl{Nat.minFac}, the characteristic is expressed by the class \decl{CharP}, the algebraic closure is \texttt{AlgebraicClosure (ZMod p)}, and the multiplicative order is \decl{orderOf}.
+The Frobenius step uses \decl{add_pow_char} and \decl{sub_pow_char} directly, with no appeal to the cardinality of a finite field.
+The finite computations are all small: $F_5=5$ and $F_6=8$ in \decl{fib_add_six_mod} (by \texttt{rfl}); the residues $F_j\bmod4$ for $j\le5$ in \decl{T_mod_four}, and $3^2=3+1$, $1-3=3$, $3^2=-1$ and $-1+(-1)\ne1$ in $\Z/5\Z$ (by \texttt{decide}); and the primes dividing $20$ in \decl{prime_dvd_twenty} (by \texttt{interval\_cases}).
+The file uses no \texttt{sorry}, \texttt{native\_decide}, \texttt{set\_option}, new axioms or new syntax.
+
+\subsection*{Audit}
+The file ends with the command \texttt{\#math0\_settles}, applied to \decl{Math0.Frontier.A175385.result} and \decl{Math0.Statements.A175385.statement}; this command is defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself.
+It fails unless (1) \decl{statement} is a definition of type \texttt{Prop} without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, the axiom \decl{Lean.ofReduceBool} introduced by \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically the constant \decl{statement} or its negation, after removing metadata annotations and without unfolding.
+On this file it reports
+\begin{lstlisting}
+math0 audit: 'Math0.Statements.A175385.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A175385.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A175385.result' proves 'Math0.Statements.A175385.statement'
+\end{lstlisting}
+The SHA-256 hash of the statement file is unchanged from the value recorded when it was frozen.
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use, since the statement is not part of formal-conjectures.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks.
+The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A175385.lean} in the directory \path{lean}; this takes a few minutes on our machine, most of it spent loading Mathlib.
+
+\begin{thebibliography}{99}
+
+\bibitem{Ad}
+T.~Adamczewski, \emph{OEIS Open: How many conjectures can language models turn into theorems?}, arXiv:2608.11941, 2026.
+
+\bibitem{Br}
+P.~S. Bruckman, \emph{Lucas pseudoprimes are odd}, Fibonacci Quart. \textbf{32} (1994), no.~2, 155--157.
+
+\bibitem{DP}
+A.~Di Porto, \emph{Nonexistence of even Fibonacci pseudoprimes of the 1st kind}, Fibonacci Quart. \textbf{31} (1993), no.~2, 173--177.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{APN}
+Google DeepMind, \emph{AlphaProof Nexus: A175386 Lean file}, \url{https://github.com/google-deepmind/alphaproof-nexus-results/blob/main/APNOutputs/OEIS/oeis_175386_conjecture_0.lean}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A000032}
+The OEIS Foundation Inc., \url{https://oeis.org/A000032} (Lucas numbers).
+
+\bibitem{A005845}
+The OEIS Foundation Inc., \url{https://oeis.org/A005845} (Bruckman--Lucas pseudoprimes).
+
+\bibitem{A175385}
+The OEIS Foundation Inc., \url{https://oeis.org/A175385}, entry by V.~Shevelev and Z.~Seidov (2010).
+
+\bibitem{A175386}
+The OEIS Foundation Inc., \url{https://oeis.org/A175386}, entry by Z.~Seidov and V.~Shevelev (2010), comment by R.~Stephan (2026).
+
+\bibitem{Ts}
+G.~Tsoukalas et al., \emph{Advancing Mathematics Research with AI-Driven Formal Proof Search}, arXiv:2605.22763, 2026.
+
+\bibitem{WHD}
+D.~J. White, J.~N. Hunt, and L.~A.~G. Dresel, \emph{Uniform Huffman sequences do not exist}, Bull. London Math. Soc. \textbf{9} (1977), no.~2, 193--198.
+
+\end{thebibliography}
+
+\end{document}

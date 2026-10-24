@@ -1,0 +1,373 @@
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    noncomputable,private},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {ℝ}{{$\mathbb{R}$}}1 {∧}{{$\wedge$}}1
+    {×}{{$\times$}}1 {∈}{{$\in$}}1 {→}{{$\to$}}1 {∃}{{$\exists$}}1 {∀}{{$\forall$}}1
+    {≤}{{$\le$}}1 {≠}{{$\ne$}}1 {↔}{{$\leftrightarrow$}}1 {√}{{$\surd$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\DeclareMathOperator{\dett}{det_2}
+
+\title[Non-obtuse lattice triangles (OEIS A344710)]{Non-obtuse lattice triangles with no side shorter than $\sqrt{n}$ have doubled area greater than $\frac{\sqrt3}{2}\,n$: Waldmann's inequality for OEIS A344710}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 18, 2026}
+
+\begin{document}
+\begin{abstract}
+For $n\ge1$ let $a(n)$ be twice the smallest area of a non-obtuse triangle with vertices in $\Z^2$ and no side shorter than $\sqrt n$; this is the sequence A344710 of the OEIS.
+We prove that $a(n)>\sqrt{3/4}\,n$ for every $n\ge1$, the inequality recorded as conjectured in the entry by J.~F. Waldmann (2021).
+The proof combines the identity $16\,\mathrm{area}^2=2XY+2YZ+2ZX-X^2-Y^2-Z^2$ for the squared side lengths $X,Y,Z$ with the bound $(X+Y-Z)^2\le XY$, valid when $Z$ is the largest of them and the triangle is non-obtuse, and it excludes equality by the irrationality of $\sqrt3$.
+The result is not new: it follows directly from the formula $\mathrm{area}=\frac12 bc\sin\alpha$, and in the equivalent form $S(D)>\frac{\sqrt3}{2}D^2$ it is stated, and called obvious, in a 2019 paper of Mazel, Stuhl and Suhov on the hard-core model on $\Z^2$; the OEIS entry still lists it as a conjecture.
+Our contribution is, to our knowledge, the first formal proof: it is verified in Lean~4 with Mathlib against a statement that math0 formalized from the OEIS entry, reviewed for fidelity and frozen before any proof attempt.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+The OEIS entry A344710 \cite{A344710}, created by Jonathan F. Waldmann on May~26, 2021, has the name
+\begin{quote}
+a(n)/2 is the smallest possible area of a non-obtuse triangle with coordinates in Z\^{}2 and no side shorter than sqrt(n).
+\end{quote}
+It has offset $1$ and lists the $49$ terms
+\[
+1,2,4,4,5,8,8,8,9,10,12,12,12,15,15,15,15,18,20,20,23,23,23,23,23,24,28,\dots,45
+\]
+for $n=1,\dots,49$. For example, $a(4)=4$, attained by the right isosceles triangle with vertices $(0,0),(2,0),(0,2)$.
+Its FORMULA section contains the line ``\texttt{a(n) > sqrt(3/4)*n (conjectured).}'', and the companion entry A344845 \cite{A344845} (same author, May~29, 2021), in which the shortest side has length exactly $\sqrt m$ for $m$ a sum of two squares \cite{A001481}, records the same inequality as conjectured.
+An equilateral triangle of side $\sqrt n$ has doubled area $\frac{\sqrt3}{2}n=\sqrt{3/4}\,n$, so the conjecture says that lattice triangles cannot do as well as the equilateral one.
+We prove it (Theorem~\ref{thm:main}).
+
+\subsection*{Prior work and status}
+We do not claim the result as new.
+For a non-obtuse triangle with largest angle $\gamma$ and adjacent sides $b,c\ge\sqrt n$ one has $\pi/3\le\gamma\le\pi/2$, hence $2\,\mathrm{area}=bc\sin\gamma\ge\frac{\sqrt3}{2}n$, and equality would require an equilateral triangle, which cannot have its vertices in $\Z^2$. This is the classical argument; our proof (Section~\ref{sec:proof}) is an algebraic form of it, see Remark~\ref{rem:geom}.
+
+The quantity $a(n)$ itself was studied before the OEIS entry was created.
+Mazel, Stuhl and Suhov \cite{MSS}, in their work on the high-density hard-core model on $\Z^2$ with Euclidean exclusion distance $D$ (arXiv, first version September~2019), consider the problem of minimizing the area of a $\Z^2$-triangle with side lengths at least $D$ and angles at most $\pi/2$ \cite[(2.1)]{MSS}, and write $S(D)$ for twice the minimal area; they assume throughout that $D^2$ is a sum of two squares. For such $n=D^2$ one therefore has $a(n)=S(\sqrt n)$. This loses nothing: squared distances in $\Z^2$ are sums of two squares, so $a(n)=a(n')$ for the least sum of two squares $n'\ge n$ (cf.\ the second comment of A344710), and a lower bound $\frac{\sqrt3}{2}n'$ for $a(n')$ gives the bound $\frac{\sqrt3}{2}n$ for $a(n)$.
+Their Lemma~3.4.4 states
+\[
+  \tfrac{\sqrt3}{2}D^2<S(D)<\tfrac{\sqrt3}{2}D^2+\sqrt2\,D,
+\]
+and its proof says ``The lower bound for $S(D)$ is obvious.''
+Krachun \cite{Kr} defines the same $S(D)$ for every $D>0$ \cite[Definition~2.1]{Kr}, so that $a(n)=S(\sqrt n)$ for all $n\ge1$, and proves $S(D)=\frac{\sqrt3}{2}D^2+O(D^{4/5})$ \cite[Theorem~2]{Kr}. Thus $a(n)=\frac{\sqrt3}{2}n+O(n^{2/5})$, and the constant $\frac{\sqrt3}{2}$ in Theorem~\ref{thm:main} cannot be improved.
+Mazel, Stuhl and Suhov also solve the disk-packing problem on $\Z^2$ for disks of diameter $D$ (their Lemma~3.5 gives the maximal density $1/S(D)$); this is the packing problem behind the sequence $b(n)$ discussed in the comments of A344710, which we do not treat here.
+Neither paper is cited in A344710 or A344845, and both entries (revisions \#84 and \#52, February~16, 2022) still mark the inequality as conjectured. It is not among the statements of the formal-conjectures repository \cite{FC} at the commit pinned by math0 (\texttt{c77fdd4}).
+We therefore classify the result as the first formal proof, to our knowledge, of a known result.
+
+\subsection*{Method}
+Write $X,Y,Z$ for the squared side lengths and $D$ for twice the signed area. The Lagrange identity gives $4D^2=4XY-(X+Y-Z)^2$; if $Z$ is the largest of the three and the triangle is non-obtuse then $0\le X+Y-Z\le\min(X,Y)$, so $4D^2\ge3XY\ge3n^2$ (Lemmas~\ref{lem:id}--\ref{lem:sym}). Equality $4D^2=3n^2$ with $n\ge1$ would make $\sqrt3$ rational (Lemma~\ref{lem:irr}).
+
+\section{Statement}\label{sec:statement}
+
+For $A,B,C\in\Z^2$ and $n\in\N$ put
+\[
+  \dett(A,B,C)=\det(B-A,\,C-A),\qquad |PQ|^2=(P_1-Q_1)^2+(P_2-Q_2)^2 ,
+\]
+so that $|\dett(A,B,C)|$ is twice the area of the triangle $ABC$. The angle of $ABC$ at $A$ is at most $\pi/2$ if and only if $(B-A)\cdot(C-A)\ge0$, and similarly at $B$ and $C$.
+
+\begin{definition}\label{def:adm}
+A triple $(A,B,C)$ of points of $\Z^2$ is \emph{$n$-admissible} if $\dett(A,B,C)\ne0$, the three squared side lengths $|AB|^2,|BC|^2,|CA|^2$ are at least $n$, and
+\[
+  (B-A)\cdot(C-A)\ge0,\qquad (C-B)\cdot(A-B)\ge0,\qquad (A-C)\cdot(B-C)\ge0 .
+\]
+Let $a(n)$ be the least value of $|\dett(A,B,C)|$ over all $n$-admissible triples.
+\end{definition}
+
+The right isosceles triangle $(0,0),(n+1,0),(0,n+1)$ is $n$-admissible, so the minimum exists. Thus $a(n)/2$ is the smallest area of a non-obtuse lattice triangle with no side shorter than $\sqrt n$, which is the definition of A344710.
+
+\begin{theorem}\label{thm:main}
+For every integer $n\ge1$,
+\[
+  a(n)>\sqrt{3/4}\;n=\tfrac{\sqrt3}{2}\,n ,\qquad\text{equivalently}\qquad 4a(n)^2>3n^2 .
+\]
+\end{theorem}
+
+The conjecture appears in the FORMULA section of A344710 \cite{A344710} as the line
+\begin{quote}
+{\small\texttt{a(n) > sqrt(3/4)*n (conjectured).}}
+\end{quote}
+This line is unsigned; the entry's author is Jonathan F. Waldmann (May~26, 2021), and its last revision (\#84) is dated February~16, 2022.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A344710.lean}, reviewed for fidelity and frozen (SHA-256 \texttt{4f0e6940\ldots 6fdf74}, recorded in \path{lean/Math0/Statements/FROZEN.sha256}) before any proof attempt. Its definitions read as follows (verbatim; the copyright header, the import, docstrings, blank lines, the decidability instance, the bounded search used for the data check and all theorems are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A344710
+def det2 (A B C : ℤ × ℤ) : ℤ := (B.1 - A.1) * (C.2 - A.2) - (C.1 - A.1) * (B.2 - A.2)
+def dist2 (P Q : ℤ × ℤ) : ℤ := (P.1 - Q.1) * (P.1 - Q.1) + (P.2 - Q.2) * (P.2 - Q.2)
+def dotAt (V P Q : ℤ × ℤ) : ℤ := (P.1 - V.1) * (Q.1 - V.1) + (P.2 - V.2) * (Q.2 - V.2)
+def IsValid (n : ℕ) (A B C : ℤ × ℤ) : Prop :=
+  det2 A B C ≠ 0 ∧
+  (n : ℤ) ≤ dist2 A B ∧ (n : ℤ) ≤ dist2 B C ∧ (n : ℤ) ≤ dist2 C A ∧
+  0 ≤ dotAt A B C ∧ 0 ≤ dotAt B C A ∧ 0 ≤ dotAt C A B
+def areas (n : ℕ) : Set ℕ :=
+  {k | ∃ A B C : ℤ × ℤ, IsValid n A B C ∧ (det2 A B C).natAbs = k}
+noncomputable def a (n : ℕ) : ℕ := sInf (areas n)
+def statement : Prop :=
+  ∀ n : ℕ, 1 ≤ n → Real.sqrt (3 / 4) * (n : ℝ) < (a n : ℝ)
+end Math0.Statements.A344710
+\end{lstlisting}
+Here \decl{det2}, \decl{dist2} and \texttt{dotAt V P Q} $=(P-V)\cdot(Q-V)$ are $\dett$, the squared distance and the dot product at a vertex, and \decl{IsValid} is Definition~\ref{def:adm}. \texttt{sInf} on $\N$ is the least element of a nonempty set (and $0$ for the empty set), so the junk value cannot occur once \decl{areas}~$n$ is shown to be nonempty. The file proves, among others (statements shown, proofs omitted):
+\begin{lstlisting}
+theorem nonObtuse_iff (A B C : ℤ × ℤ) :
+    (0 ≤ dotAt A B C ∧ 0 ≤ dotAt B C A ∧ 0 ≤ dotAt C A B) ↔
+      2 * max (dist2 A B) (max (dist2 B C) (dist2 C A)) ≤
+        dist2 A B + dist2 B C + dist2 C A
+theorem areas_nonempty (n : ℕ) : (areas n).Nonempty
+theorem isLeast_a (n : ℕ) : IsLeast (areas n) (a n)
+theorem aRegion_data : (List.range 49).map (fun i => aRegion (i + 1)) = data
+theorem a_data_le : ∀ i < 49, a (i + 1) ≤ data.getD i 0
+\end{lstlisting}
+The lemma \decl{nonObtuse_iff} shows that the angle condition is the criterion
+\[
+  2\max\{|AB|^2,|BC|^2,|CA|^2\}\le|AB|^2+|BC|^2+|CA|^2
+\]
+given in the first comment of the entry. The lemma \decl{areas_nonempty} uses the right isosceles triangle with legs $n+1$, and \decl{isLeast_a} states that \decl{a}~$n$ is the least element of \decl{areas}~$n$.
+The non-collinearity condition $\dett\ne0$ is not an extra restriction for $n\ge1$: three collinear points that are pairwise distinct have an angle $\pi$, and two coincident points give a side of length $0$.
+The statement is the FORMULA line with $n$ ranging over the offset range $n\ge1$; $3/4$ is real division, and no hypotheses are added.
+
+\subsection*{Data check}
+Since the minimum defining \decl{a} ranges over all triples of points of $\Z^2$, \decl{a} is not computable as written. The statement file therefore defines a helper \texttt{aRegion n}, the least $|\dett(A,B,C)|$ over $n$-admissible triples with $A=(0,0)$, $C$ in the annulus $n\le|P|^2\le\lfloor5n/4\rfloor+2$ and $B$ in the part $0\le y\le x$ of that annulus (the search described in the comments of the entry, slightly widened). The lemma \decl{aRegion_data}, proved by \texttt{decide +kernel} (evaluation in the kernel, which adds no axioms), states that \texttt{aRegion} reproduces all $49$ listed terms, and \decl{a_data_le} transfers this to $a(n)\le$ listed term for $n=1,\dots,49$. The matching lower bound $a(n)\ge$ listed term would require that the search region always contains an optimal triangle; this is not proved in Lean. An independent check is given in Remark~\ref{rem:search}.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A344710.lean}; the name of the Lean declaration is given with each step. Throughout,
+\[
+  Q(X,Y,Z)=2XY+2YZ+2ZX-X^2-Y^2-Z^2 ,
+\]
+a symmetric polynomial. For a triple $(A,B,C)$ we write
+\[
+  X=|AB|^2,\qquad Y=|CA|^2,\qquad Z=|BC|^2,\qquad D=\dett(A,B,C).
+\]
+
+\begin{lemma}\label{lem:id}
+For all $A,B,C\in\Z^2$,
+\begin{gather*}
+  2(B-A)\cdot(C-A)=X+Y-Z,\qquad 2(C-B)\cdot(A-B)=X+Z-Y,\\
+  2(A-C)\cdot(B-C)=Y+Z-X,\qquad 4D^2=Q(X,Y,Z).
+\end{gather*}
+\end{lemma}
+
+\begin{proof}
+Put $u=B-A$ and $v=C-A$. Then $X=|u|^2$, $Y=|v|^2$ and $Z=|u-v|^2=X+Y-2\,u\cdot v$, which is the first identity; the other two follow in the same way at the vertices $B$ and $C$. With $D=\det(u,v)$, the Lagrange identity $|u|^2|v|^2=(u\cdot v)^2+\det(u,v)^2$ gives
+\[
+  4D^2=4XY-(2\,u\cdot v)^2=4XY-(X+Y-Z)^2=Q(X,Y,Z).
+\]
+In Lean all four identities are polynomial identities in the six coordinates and are proved by \texttt{ring} (inside \decl{det_sq_ge}).
+\end{proof}
+
+\begin{lemma}[\decl{heron_bound_of_max}]\label{lem:max}
+Let $X,Y,Z,n\in\Z$ with $0\le n\le X$, $n\le Y$, $0\le X+Y-Z$, $X\le Z$ and $Y\le Z$. Then $Q(X,Y,Z)\ge3n^2$.
+\end{lemma}
+
+\begin{proof}
+Put $s=X+Y-Z$. Then $0\le s$, $s\le X$ (because $Y\le Z$) and $s\le Y$ (because $X\le Z$). Since $0\le s\le X$ and $0\le s\le Y$, we get $s^2\le XY$. Also $0\le n\le X$ and $n\le Y$ give $n^2\le XY$. Expanding,
+\[
+  Q(X,Y,Z)=4XY-s^2\ge 3XY\ge 3n^2 .
+\]
+In Lean the two products are bounded by \texttt{mul\_le\_mul}, and \texttt{nlinarith} combines them: $Q-3n^2=(XY-s^2)+3(XY-n^2)$. (The intermediate bound $Q\ge3XY$ is not stated separately in Lean.)
+\end{proof}
+
+\begin{lemma}[\decl{heron_bound}]\label{lem:sym}
+Let $X,Y,Z,n\in\Z$ with $0\le n$, $n\le X$, $n\le Y$, $n\le Z$ and
+\[
+  0\le X+Y-Z,\qquad 0\le X+Z-Y,\qquad 0\le Y+Z-X .
+\]
+Then $Q(X,Y,Z)\ge3n^2$.
+\end{lemma}
+
+\begin{proof}
+If $Z$ is the largest of $X,Y,Z$, apply Lemma~\ref{lem:max} to $(X,Y,Z)$. If $Y$ is the largest, apply it to $(X,Z,Y)$, using $0\le X+Z-Y$; if $X$ is the largest, apply it to $(Y,Z,X)$, using $0\le Y+Z-X$. Since $Q$ is symmetric, each case gives $Q(X,Y,Z)\ge3n^2$. In Lean the case distinction is made by nested case splits on \texttt{le\_total}.
+\end{proof}
+
+\begin{lemma}[\decl{det_sq_ge}]\label{lem:det}
+If $(A,B,C)$ is $n$-admissible, then $3n^2\le4\,\dett(A,B,C)^2$.
+\end{lemma}
+
+\begin{proof}
+By admissibility $X,Y,Z\ge n\ge0$, and by Lemma~\ref{lem:id} the three dot product conditions say $X+Y-Z\ge0$, $X+Z-Y\ge0$ and $Y+Z-X\ge0$. Lemma~\ref{lem:sym} gives $Q(X,Y,Z)\ge3n^2$, and $Q(X,Y,Z)=4D^2$ by Lemma~\ref{lem:id}.
+\end{proof}
+
+\begin{lemma}[\decl{four_sq_ne_three_sq}]\label{lem:irr}
+There are no $m,n\in\N$ with $n\ge1$ and $4m^2=3n^2$.
+\end{lemma}
+
+\begin{proof}
+Suppose $4m^2=3n^2$ with $n\ge1$. Then $(2m)^2=3n^2$, and taking square roots in $\R$ gives $\sqrt3\,n=2m$, so $\sqrt3=2m/n\in\mathbb{Q}$. This contradicts the irrationality of $\sqrt3$, which Mathlib provides as \texttt{Nat.Prime.irrational\_sqrt} for the prime $3$.
+(Alternatively: $m\ne0$ since $3n^2>0$, and then the $3$-adic valuation of $4m^2$ is even while that of $3n^2$ is odd.)
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main} (\decl{result})]
+Let $n\ge1$. By \decl{isLeast_a}, $a(n)$ belongs to the set of values $|\dett(A,B,C)|$, so there is an $n$-admissible triple $(A,B,C)$ with $|\dett(A,B,C)|=a(n)$. By Lemma~\ref{lem:det}, $3n^2\le4a(n)^2$, and by Lemma~\ref{lem:irr} the two sides differ. Hence
+\[
+  3n^2<4a(n)^2 .
+\]
+In particular $a(n)>0$, since otherwise $3n^2<0$. As $n\ge0$ we have $\sqrt{3/4}\,n=\sqrt{3/4}\,\sqrt{n^2}=\sqrt{\tfrac34n^2}$, and for $a(n)>0$ the inequality $\sqrt{\tfrac34n^2}<a(n)$ is equivalent to $\tfrac34n^2<a(n)^2$ (Mathlib's \texttt{Real.sqrt\_lt\textquotesingle}), which we have shown.
+\end{proof}
+
+\begin{remark}[geometric form]\label{rem:geom}
+If $Z$ is the largest squared side, the angle $\gamma$ at $A$, between the sides of squared lengths $X$ and $Y$, is the largest angle, and $X+Y-Z=2\sqrt{XY}\cos\gamma$. The inequality $(X+Y-Z)^2\le XY$ in the proof of Lemma~\ref{lem:max} is $\cos^2\gamma\le\frac14$, that is, $\gamma\ge\pi/3$, which holds because $\gamma$ is the largest angle; the condition $X+Y-Z\ge0$ is $\gamma\le\pi/2$. Then $4D^2=4XY\sin^2\gamma\ge3XY$ is the classical bound $2\,\mathrm{area}=\sqrt{XY}\sin\gamma\ge\frac{\sqrt3}{2}\sqrt{XY}$. Equality in Lemma~\ref{lem:det} would need $X=Y=Z=n$ and $\gamma=\pi/3$, an equilateral lattice triangle.
+\end{remark}
+
+\begin{remark}[the angle condition is needed]
+Without the non-obtuseness condition the minimum is $1$ for every $n$: for $k\ge1$ the triangle $(0,0),(k,1),(2k+1,2)$ has squared sides $k^2+1$, $(k+1)^2+1$ and $(2k+1)^2+4$, all at least $n$ once $k^2+1\ge n$, and $|\dett|=|2k-(2k+1)|=1$.
+\end{remark}
+
+\begin{remark}[a complete finite search; not formalized]\label{rem:search}
+The proof of Lemma~\ref{lem:max} gives more than Theorem~\ref{thm:main}: in every $n$-admissible triangle the squared lengths $X,Y$ of the two sides at the largest angle satisfy $3XY\le4D^2$. Let $k=\lceil\sqrt n\,\rceil$; the triangle $(0,0),(k,0),(0,k)$ is $n$-admissible, so $a(n)\le k^2$. A triangle with $|D|\le k^2$ therefore has $X,Y\le 4k^4/(3n)$, and after translating its largest-angle vertex to the origin, $a(n)$ is a minimum over finitely many pairs of lattice points. Running this search (as the math0 referees did independently) reproduces the $49$ listed terms and gives, for $n=50,\dots,64$,
+\[
+  45,\,48,\,48,\,52,\,53,\,53,\,53,\,53,\,53,\,56,\,56,\,56,\,56,\,56,\,56 .
+\]
+A comment in A344710 lists ``conjectured next terms (from the conjectured inequality)'' $a(50),\dots,a(64)=45,48,48,52,55,55,55,55,55,56,\dots,56$; the guesses $a(54)=\dots=a(58)=55$ are too large. This can be checked by hand: the triangle $(0,0),(-8,-1),(-5,6)$ has squared sides $65$, $61$ and $58$, satisfies $2\cdot65\le65+61+58$, and has $|\dett|=|{-48}-5|=53$; since $a$ is non-decreasing, $a(n)\le53$ for all $n\le58$. Neither the search nor these values are part of the Lean development, and the frozen statement does not formalize the guessed terms.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is the file \path{lean/Math0/Frontier/OEIS/A344710.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A344710.lean} (Section~\ref{sec:statement}) and the audit commands of \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A344710.result}, of type \decl{Math0.Statements.A344710.statement}; the auxiliary lemmas of Section~\ref{sec:proof} are private. Their statements read (verbatim; proofs and docstrings omitted):
+\begin{lstlisting}
+private lemma heron_bound_of_max (X Y Z n : ℤ) (hn : 0 ≤ n) (hX : n ≤ X) (hY : n ≤ Y)
+    (h0 : 0 ≤ X + Y - Z) (hZX : X ≤ Z) (hZY : Y ≤ Z) :
+    3 * n ^ 2 ≤ 2 * X * Y + 2 * Y * Z + 2 * Z * X - X ^ 2 - Y ^ 2 - Z ^ 2
+private lemma heron_bound (X Y Z n : ℤ) (hn : 0 ≤ n) (hX : n ≤ X) (hY : n ≤ Y) (hZ : n ≤ Z)
+    (h1 : 0 ≤ X + Y - Z) (h2 : 0 ≤ X + Z - Y) (h3 : 0 ≤ Y + Z - X) :
+    3 * n ^ 2 ≤ 2 * X * Y + 2 * Y * Z + 2 * Z * X - X ^ 2 - Y ^ 2 - Z ^ 2
+private lemma det_sq_ge {n : ℕ} {A B C : ℤ × ℤ} (h : IsValid n A B C) :
+    3 * (n : ℤ) ^ 2 ≤ 4 * (det2 A B C) ^ 2
+private lemma four_sq_ne_three_sq (m n : ℕ) (hn : 1 ≤ n) : 4 * m ^ 2 ≠ 3 * n ^ 2
+theorem result : statement
+#math0_settles Math0.Frontier.A344710.result Math0.Statements.A344710.statement
+\end{lstlisting}
+In \decl{det_sq_ge} the variables $X,Y,Z$ of \decl{heron_bound} are instantiated as \texttt{dist2 A B}, \texttt{dist2 C A} and \texttt{dist2 B C}, as in Section~\ref{sec:proof}. From the statement file the proof uses only the definitions and \decl{isLeast_a} (which rests on \decl{areas_nonempty}); it does not use the data lemmas. Neither file contains \texttt{sorry}, \texttt{native\_decide}, \texttt{axiom} or \texttt{set\_option}; the data lemma \decl{aRegion_data} is proved by \texttt{decide +kernel}.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles} (\path{lean/Math0/Audit.lean}), used for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (rejecting \decl{sorryAx}, the axiom behind \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically \decl{statement} or its negation, up to metadata, with no unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A344710.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A344710.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A344710.result' proves 'Math0.Statements.A344710.statement'
+\end{lstlisting}
+The data lemma \decl{aRegion_data} depends on no axioms.
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A344710.lean} in the directory \path{lean}, once the statement module has been built; this takes well under a minute on our machine, most of it spent loading Mathlib. Building the statement module itself includes the kernel evaluation of \decl{aRegion_data}, about $23$ seconds of kernel time.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Kr}
+D.~Krachun, \emph{Triangles on $\Z^2$ and sliding phenomenon}, arXiv:1912.07566, 2019; theorem numbers as in v2 (June 2020, PDF title \emph{Extreme Gibbs measures for high-density hard-core model on $\Z^2$}).
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{MSS}
+A.~Mazel, I.~Stuhl, and Y.~Suhov, \emph{High-density hard-core model on $\Z^2$ and norm equations in ring $\Z[\sqrt[6]{-1}]$}, arXiv:1909.11648, 2019 (v3, June 2023).
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput.\ Sci.\ \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A001481}
+The OEIS Foundation Inc., \url{https://oeis.org/A001481}, Numbers that are the sum of 2 squares; entry by N.~J.~A. Sloane.
+
+\bibitem{A344710}
+The OEIS Foundation Inc., \url{https://oeis.org/A344710}, entry by J.~F. Waldmann (May~26, 2021); revision \#84, February~16, 2022.
+
+\bibitem{A344845}
+The OEIS Foundation Inc., \url{https://oeis.org/A344845}, entry by J.~F. Waldmann (May~29, 2021); revision \#52, February~16, 2022.
+
+\end{thebibliography}
+}
+
+\end{document}

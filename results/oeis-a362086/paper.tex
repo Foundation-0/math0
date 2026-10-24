@@ -1,0 +1,407 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw,by_cases},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1
+    {≤}{{$\le$}}1 {≠}{{$\ne$}}1 {→}{{$\to$}}1 {∨}{{$\vee$}}1 {¬}{{$\neg$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {·}{{$\cdot$}}1 {…}{{$\ldots$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+\newunicodechar{…}{\ensuremath{\ldots}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\lf}{\mathop{!}}
+\DeclareMathOperator{\den}{den}
+\DeclareMathOperator{\cf}{cf}
+
+\title[Denominators of a continued fraction (OEIS A362086)]{Apart from $9$, every denominator of $1/(2-3/(3-4/(\cdots(n-1)-n/(-3))))$ is $1$ or a prime}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 18, 2026}
+
+\begin{document}
+\begin{abstract}
+For $n\ge3$ let $a(n)$ be the denominator, in lowest terms, of the finite continued fraction $1/(2-3/(3-4/(\cdots(n-1)-n/(-3))))$; this is the OEIS sequence A362086.
+We prove the conjecture of M.~Bouras (2023) that every term other than $9$ is $1$ or a prime, and the argument shows that $a(5)=9$ is the only composite term.
+The proof derives the closed form $a(n)=N/\gcd\bigl(N,3(n-1)(n-3)!\bigr)$ with $N=n^2+n-3$ from the convergents of the continued fraction, studies the least prime factor of $a(n)$ for $n\ge36$, and reads off the cases $n\le35$ from the listed terms.
+To our knowledge this is a new result: the entry records the conjecture without a proof, the analogous conjectures for the endpoints $-1$, $-2$, $-4$ and $-5$ were settled earlier, and our argument adapts the one used for the endpoint $-5$.
+The proof is verified in Lean~4 against a statement that math0 formalized from the OEIS entry and checked against its $57$ listed terms; the statement is not part of the formal-conjectures repository.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+In 2022--2023 M.~Bouras contributed to the OEIS five sequences of denominators of the finite continued fractions $1/(2-3/(3-4/(\cdots(n-1)-n/(-c))))$, $c=1,\dots,5$: A356247, A363102, A362086, A363347 and A363482 \cite{A356247,A363102,A362086,A363347,A363482}. By the formulas in these entries the unreduced denominator is $n^2+(c-2)n-c$, and each entry conjectures that the reduced denominators are $1$ or prime, with at most one exceptional value; see also \cite{Bslides,Barxiv}.
+For $c=3$ the unreduced denominator is $N=n^2+n-3$, and the entry A362086, created by Bouras on May~28, 2023, states: ``Conjecture: Except for 9, every term of this sequence is either a prime or 1.''
+We prove this conjecture (Theorem~\ref{thm:main}); we do not address the entry's further conjecture, due to B.~McEachen, on record values.
+
+\subsection*{Prior work}
+For $c=1$, the conjectures of A356247 are proved in a note of B.~Cloitre \cite{Cloitre}, according to a 2025 comment in that entry.
+For $c=2$, the conjecture that A363102 contains only $1$'s and primes is marked as solved in the formal-conjectures repository \cite{FC}, with a formal proof found by the methods of Tsoukalas et al.\ \cite{Tsoukalas}; T.~Adamczewski gives a proof sketch in \cite[Appendix~A]{Ad}, and the AlphaProof Nexus outputs \cite{APN} contain a Lean file for it.
+For $c=4$, Conjectures~1 and~2 of A363347 were proved by an AI agent (AlphaProof Nexus) \cite{APN}; see also \cite[Appendix~A]{Ad}. Conjecture~2 of A363347 is also marked as solved in formal-conjectures \cite{FC}, with a formal proof found by the methods of \cite{Tsoukalas}.
+For $c=5$, the conjecture of A363482 (exceptional value $49$) was proved, with a Lean proof, in the math0 project \cite{M0A363482}.
+
+For $c=3$ the math0 referees found no proof. The current revision of A362086 (\#35, May~9, 2024) records the conjecture but no proof, and Bouras's preprint \cite{Barxiv} lists A362086 in the family $n^2+(k-2)n-k$ of its Table~1 and states the primality property only as a conjecture. The sequence has no file in formal-conjectures \cite{FC} (at the pinned commit \texttt{c77fdd4}), and the referees found it neither among the AlphaProof Nexus outputs \cite{APN} nor in Epoch AI's LeanOpenProblems repositories. Searches of arXiv, MathOverflow and Mathematics Stack Exchange found no proof or counterexample.
+We therefore classify Theorem~\ref{thm:main} as a \emph{new result}, with two caveats. First, the method is not new: the proof is an adaptation of the math0 proof for $c=5$ \cite{M0A363482}, which in turn follows the template of the $c=2$ proof in \cite[Appendix~A]{Ad} (a closed form for the unreduced fraction, then bounds on the powers of small primes dividing factorials). Second, the referees could not read Cloitre's note \cite{Cloitre}, so we cannot exclude that it treats a general endpoint $-c$; the entry A356247 describes it only as a proof of that entry's conjectures, and A362086 carries no reference to it.
+
+\section{Statement}\label{sec:statement}
+
+For $q\in\Q$ we write $\den q\ge1$ for its denominator in lowest terms.
+
+\begin{definition}\label{def:a}
+For an integer $k\ge2$ and $t\in\Q\setminus\{0\}$ put $s_k(t)=k-(k+1)/t$. For $n\ge3$ let $t_n=-3$ and $t_k=s_k(t_{k+1})$ for $k=n-1,\dots,2$, and put
+\[
+  \cf(n)=1/t_2=1/\bigl(2-3/(3-4/(\cdots(n-1)-n/(-3)))\bigr),\qquad a(n)=\den\cf(n).
+\]
+\end{definition}
+
+That no $t_k$ vanishes is shown in Proposition~\ref{prop:closed} (for $n=3$, $t_2=s_2(-3)=3$). For example $\cf(3)=1/3$, $\cf(4)=13/17$, $\cf(5)=13/9$ and $\cf(6)=41/13$.
+The OEIS entry \cite{A362086} (offset $3$) is named ``Denominator of the continued fraction 1/(2-3/(3-4/(4-5/(...(n-1)-n/(-3)))))'', gives the first three examples, and contains the comment, verbatim,
+\begin{quote}
+\texttt{Conjecture: Except for 9, every term of this sequence is either a prime or 1.}
+\end{quote}
+which is unsigned and hence due to the author of the entry, Mohammed Bouras, May~28, 2023.
+
+\begin{theorem}\label{thm:main}
+For every $n\ge3$ with $a(n)\ne9$, $a(n)=1$ or $a(n)$ is prime.
+\end{theorem}
+
+\begin{corollary}\label{cor:9}
+For $n\ge3$, $a(n)$ is composite if and only if $n=5$; in particular $a(n)=9$ only for $n=5$.
+\end{corollary}
+
+So the two readings of ``Except for 9'' (an exception for the value $9$, or for the term $a(5)$) are equivalent.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A362086.lean}, reviewed for fidelity and frozen (SHA-256 prefix \texttt{e9131261}) before any proof attempt. Its definitions and statement are, verbatim except that docstrings are omitted:
+\begin{lstlisting}
+namespace Math0.Statements.A362086
+
+def step (k : ℕ) (t : ℚ) : ℚ := (k : ℚ) - ((k : ℚ) + 1) / t
+
+def cf (n : ℕ) : ℚ := 1 / (List.range' 2 (n - 2)).foldr step (-3)
+
+def a (n : ℕ) : ℕ := (cf n).den
+
+def statement : Prop :=
+  ∀ n : ℕ, 3 ≤ n → a n ≠ 9 → a n = 1 ∨ (a n).Prime
+
+end Math0.Statements.A362086
+\end{lstlisting}
+\texttt{step k t} is $s_k(t)$. For $n\ge3$, \texttt{List.range' 2 (n - 2)} is the list $[2,3,\dots,n-1]$, and the right fold of \decl{step} over it, starting at $-3$, is \texttt{step 2 (step 3 (...(step (n-1) (-3))))}, i.e.\ $t_2$. So \texttt{cf n} is $\cf(n)$, and \texttt{a n} is its reduced denominator \decl{Rat.den}, which is positive. This is the definition in the name of the entry, not the gcd formula listed there. The statement quantifies over $n\ge3$, the offset of the entry, and reads ``Except for 9'' as an exception for the value $9$; values of \texttt{a n} for $n<3$ are never used.
+Lean defines $q/0=0$, which would change the value if some $t_k$ vanished; this never happens: $t_n=-3$, and for $n\ge4$ Proposition~\ref{prop:closed} gives $t_k\ge k-2>0$ for $3\le k\le n-1$ and $t_2>0$ (for $n=3$, $t_2=3$). The formal proof evaluates the fold under the same bounds (Lemma~\ref{lem:conv}).
+The same file checks the definitions against the entry by kernel evaluation (\texttt{decide +kernel}): the theorem \decl{a_data} states that $(a(3),\dots,a(59))$ is the list $[3,17,9,13,53,\dots,367,263,131]$ of all $57$ terms in the data section of the entry, and an \texttt{example} confirms the entry's examples $\cf(3)=1/3$, $\cf(4)=13/17$, $\cf(5)=13/9$.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A362086.lean} (Section~\ref{sec:lean}). Throughout, $x=n-3\ge0$,
+\[
+  N=x^2+7x+9=n^2+n-3,\qquad M=3(x+2)\,x!=3(n-1)(n-3)!,
+\]
+and $\lf m=\sum_{i=0}^{m-1}i!$ is the left factorial (A003422 \cite{A003422}; the notation is Kurepa's \cite{Kurepa}). Thus $\lf0=0$, $\lf1=1$, $\lf2=2$ and $\lf(m+1)=\lf m+m!$; as $m!$ is even for $m\ge2$, $\lf m$ is even for every $m\ge2$.
+
+\subsection{Convergents and the closed form}
+For $m\ge0$ define the linear polynomials
+\[
+  P_m(t)=2\bigl((m+2)t-(m+1)(m+3)\bigr),\qquad Q_m(t)=(m+2)\lf(m+1)\,t-(m+1)(m+3)\lf m,
+\]
+and, where defined, $G_m(t)=s_2(s_3(\cdots s_{m+2}(t)\cdots))$. Thus $G_0=s_2$ and $G_{m+1}(t)=G_m(s_{m+3}(t))$.
+
+\begin{lemma}\label{lem:step}
+For $m\ge0$ and $t\ne0$, $\;t\,P_m(s_{m+3}(t))=P_{m+1}(t)$ and $t\,Q_m(s_{m+3}(t))=Q_{m+1}(t)$.
+\end{lemma}
+
+\begin{proof}
+Put $s=s_{m+3}(t)$, so $ts=(m+3)t-(m+4)$. Then
+\begin{align*}
+  tP_m(s)&=2\bigl((m+2)((m+3)t-(m+4))-(m+1)(m+3)t\bigr)\\
+  &=2\bigl((m+3)t-(m+2)(m+4)\bigr)=P_{m+1}(t),\\
+  tQ_m(s)&=(m+3)\bigl[(m+2)\lf(m+1)-(m+1)\lf m\bigr]t-(m+2)(m+4)\lf(m+1)=Q_{m+1}(t),
+\end{align*}
+because $(m+2)\lf(m+1)-(m+1)\lf m=\lf m+(m+2)\,m!=\lf(m+1)+(m+1)!=\lf(m+2)$.
+\end{proof}
+
+\begin{lemma}\label{lem:conv}
+Let $m\ge0$ and $t\in\Q$ with $t\ge m+1$. Then $G_m(t)$ is defined, the argument of each $s_k$ $(2\le k\le m+2)$ occurring in it is at least $k-1$, $Q_m(t)>0$, and $G_m(t)=P_m(t)/Q_m(t)$.
+\end{lemma}
+
+\begin{proof}
+$Q_m$ has positive leading coefficient and $Q_m(m+1)=(m+1)\bigl[(m+2)\,m!-\lf m\bigr]>0$, since $\lf m\le m\cdot(m-1)!=m!$ for $m\ge1$ and $\lf0=0$; hence $Q_m(t)>0$.
+The rest is by induction on $m$. For $m=0$, $t\ge1$ and $G_0(t)=2-3/t=(2t-3)/t=P_0(t)/Q_0(t)$, as $P_0(t)=2(2t-3)$ and $Q_0(t)=2t$.
+For the step let $t\ge m+2$. Then $(m+4)/t\le(m+4)/(m+2)\le2$, so $s=s_{m+3}(t)\ge m+1$. By the induction hypothesis $G_{m+1}(t)=G_m(s)$ is defined, with the stated bounds on the arguments, and by Lemma~\ref{lem:step}
+\[
+  G_{m+1}(t)=\frac{P_m(s)}{Q_m(s)}=\frac{tP_m(s)}{tQ_m(s)}=\frac{P_{m+1}(t)}{Q_{m+1}(t)}.\qedhere
+\]
+\end{proof}
+
+In Lean, $P_m(t)/Q_m(t)$ is \texttt{F m t}, and Lemmas~\ref{lem:step} and~\ref{lem:conv} are \decl{F_step} and \decl{fold_eq_F}; the positivity of $Q_m$ is not needed there, as with $q/0=0$ we have $(ta)/(tb)=a/b$ for all $a,b$ when $t\ne0$.
+
+\begin{proposition}\label{prop:closed}
+Let $x\ge1$, i.e.\ $n\ge4$. Then $t_k\ge k-2>0$ for $3\le k\le n-1$, $t_2=2N/(N\cdot{\lf x}+M)>0$, and
+\[
+  \cf(x+3)=\frac{N\cdot\lf x+3(x+2)\,x!}{2N}.
+\]
+\end{proposition}
+
+\begin{proof}
+Let $n=x+3$ and $u=t_{n-1}=s_{x+2}(-3)=(x+2)+(x+3)/3\ge x$. Lemma~\ref{lem:conv} with $m=x-1$ gives the bounds on $t_3,\dots,t_{n-1}$ and $t_2=G_{x-1}(u)=P_{x-1}(u)/Q_{x-1}(u)$. Lemma~\ref{lem:step} with $m=x-1$ and $t=-3$ gives $-3P_{x-1}(u)=P_x(-3)$ and $-3Q_{x-1}(u)=Q_x(-3)$, and
+\begin{align*}
+  P_x(-3)&=2\bigl(-3(x+2)-(x+1)(x+3)\bigr)=-2N,\\
+  Q_x(-3)&=-3(x+2)\bigl(\lf x+x!\bigr)-(x+1)(x+3)\lf x=-\bigl(N\cdot{\lf x}+M\bigr).
+\end{align*}
+So $t_2=2N/(N\cdot{\lf x}+M)>0$, and $\cf(x+3)=1/t_2$ is as stated.
+\end{proof}
+
+For $x=1,2,3$ the formula gives $26/34$, $78/54$ and $246/78$, in accordance with the examples; it also holds for $x=0$, where it gives $6/18=1/3$, but the formal proof does not need this case.
+In Lean, Proposition~\ref{prop:closed} is \decl{cf_closed}, stated with $x=y+1$.
+
+\subsection{The reduced denominator}
+
+\begin{proposition}\label{prop:den}
+$N$ is odd, and for $x\ge2$, $a(x+3)=N/\gcd(N,M)$.
+\end{proposition}
+
+\begin{proof}
+$N=x(x+1)+6x+9$ with $x(x+1)$ even. For $x\ge2$ both $\lf x$ and $x!$ are even, so $N\cdot{\lf x}+M=2X$ with $X\in\N$, and $\cf(x+3)=X/N$ by Proposition~\ref{prop:closed}. Hence $a(x+3)=N/\gcd(N,X)$, and since $N$ is odd,
+$\gcd(N,X)=\gcd(N,2X)=\gcd(N,M+\lf x\cdot N)=\gcd(N,M)$.
+\end{proof}
+
+In Lean these are \decl{N_odd} and \decl{a_eq}; the latter is stated for $x\ge3$, which is all that is used.
+The entry also gives the formula $a(n)=N/\gcd\bigl(N,3\,A051403(n-3)+n\,A051403(n-4)\bigr)$, where $A051403(m)=(m+2)\lf(m+1)/2$ \cite{A051403}. Since $3\,A051403(x)+(x+3)\,A051403(x-1)=X$, the proof above also confirms this formula for $n\ge5$; this identification is not part of the formal proof.
+
+\subsection{Three arithmetic lemmas}
+These lemmas are also used in \cite{M0A363482}; we include their short proofs.
+
+\begin{lemma}\label{lem:fact}
+For integers $q\ge1$ and $k\ge0$, $q^k\mid(qk)!$.
+\end{lemma}
+
+\begin{proof}
+Induction on $k$: $(q(k+1))!=q(k+1)\cdot(qk+q-1)!$, where $q\mid q(k+1)$ and $(qk)!\mid(qk+q-1)!$.
+\end{proof}
+
+\begin{lemma}[lifting]\label{lem:lift}
+Let $N\ge1$ and $M,q\in\N$, put $g=\gcd(N,M)$ and $d=N/g$, and suppose $q\mid d$. Then for every $j\ge0$, $q^j\mid M$ implies $q^{j+1}\mid N$.
+\end{lemma}
+
+\begin{proof}
+Note $N=gd$. For $j=0$, $q\mid d\mid N$. If the claim holds for $j$ and $q^{j+1}\mid M$, then $q^j\mid M$, so $q^{j+1}\mid N$; hence $q^{j+1}\mid\gcd(N,M)=g$, and $q^{j+2}=q^{j+1}\cdot q\mid gd=N$.
+\end{proof}
+
+\begin{lemma}\label{lem:bound}
+If $q\ge3$, $j\ge3$ and $qj\ge34$, then $(qj+4)^2<q^j$.
+\end{lemma}
+
+\begin{proof}
+If $j=3$ then $q\ge12$, and $q^3\ge12q^2\ge9q^2+36q>(3q+4)^2$.
+If $j=4$ then $q\ge9$, and $q^4\ge81q^2>32q^2\ge16(q+1)^2=(4q+4)^2$.
+If $j=5$ then $q\ge7$, and $q^5\ge343q^2>36q^2\ge(5q+4)^2$.
+For $j\ge6$ we induct on $j$, for any $q\ge3$: $q^6\ge81q^2>64q^2\ge(6q+4)^2$, and if $(qj+4)^2<q^j$ with $j\ge6$, then $q\le(qj+4)/6$, so $(q(j+1)+4)^2\le\bigl(\tfrac76\bigr)^2(qj+4)^2<3q^j\le q^{j+1}$.
+\end{proof}
+
+\subsection{The main case}\label{sec:main}
+
+\begin{proposition}\label{prop:main}
+Let $x\ge33$, $g=\gcd(N,M)$ and $d=N/g$. Then $d=1$ or $d$ is prime.
+\end{proposition}
+
+\begin{proof}
+We have $N=gd>0$, $d\mid N$, $x!\mid M$, and
+\[
+  (x+3)^2<N<(x+4)^2,
+\]
+since $N-(x+3)^2=x$ and $(x+4)^2-N=x+7$. Suppose $d\ne1$, and let $p$ be the least prime factor of $d$. Then $p\mid N$, so $p\ge3$ as $N$ is odd.
+
+\emph{Case (A): $2p\le x$.} Let $k=\lfloor x/p\rfloor\ge2$. Since $pk\le x$, Lemma~\ref{lem:fact} gives $p^k\mid(pk)!\mid x!\mid M$, so $p^{k+1}\mid N$ by Lemma~\ref{lem:lift}, and $p^{k+1}\le N$. Moreover $x<p(k+1)$, so $p(k+1)\ge34$ and $x+4\le p(k+1)+4$. Lemma~\ref{lem:bound} with $q=p$ and $j=k+1\ge3$ gives
+$p^{k+1}\le N<(x+4)^2\le\bigl(p(k+1)+4\bigr)^2<p^{k+1}$, a contradiction.
+
+\emph{Case (B): $p\le x<2p$.} Then $p\mid x!\mid M$, so $p^2\mid N$ by Lemma~\ref{lem:lift}; write $N=mp^2$ with $m\ge1$. If $m\ge5$, then, as $2p\ge x+1$, $4N=m(2p)^2\ge5(x+1)^2=4N+x(x-18)-31>4N$, which is absurd. So $1\le m\le4$, and $m\ne2,4$ as $N$ is odd. If $m=1$, then $(x+3)^2<p^2=N<(x+4)^2$, so $x+3<p<x+4$, which is impossible. Hence $N=3p^2$. As $N>27$, $p\ne3$, and $3\mid M$ by the definition of $M$; since also $p\mid M$, the distinct primes $3$ and $p$ give $3p\mid M$. Also $3p\mid N$, hence $3p\mid g$; write $g=3ph$. Then $3p\cdot p=N=gd=3p\cdot hd$ gives $p=hd$, so $d\mid p$ and $d=p$ is prime.
+
+\emph{Case (C): $p>x$.} We have
+\[
+  N=(x+1)(x+6)+3,\quad N+1=(x+2)(x+5),\quad N+3=(x+3)(x+4).
+\]
+So if $x+i$ divided $N$ for some $i\in\{1,2,3\}$, it would divide $3$, $1$ or $3$ respectively, which is impossible as $x+1\ge34$. Hence every divisor of $N$ exceeding $x$ is at least $x+4$; in particular $p\ge x+4$. Suppose $d\ne p$, and let $r=d/p$. Then $r\ne1$, and $r\ne0$ as $d\ne0$. The least prime factor $q$ of $r$ divides $d$, so $q\ge p$ by minimality of $p$. Hence $r\ge q\ge p\ge x+4$ and $d=pr\ge(x+4)^2>N\ge d$, a contradiction. So $d=p$ is prime.
+\end{proof}
+
+\begin{remark}\label{rem:9}
+For $x=2$ ($n=5$) we have $N=27=3^3$, $M=24=2^3\cdot3$, $g=3$ and $d=9$: the least prime factor $p=3=x+1$ of $d$ exceeds $x$, and the step ``$x+1\mid3$ is impossible'' of Case~(C) fails. In Case~(B) the factor $3$ of $M$, which comes from the endpoint $-3$, is what makes the case $N=3p^2$ harmless. The threshold $x\ge33$ is chosen for convenience in Cases~(A) and~(B).
+\end{remark}
+
+\subsection{Proof of Theorem~\ref{thm:main} and Corollary~\ref{cor:9}}
+Let $n\ge3$. If $n\ge36$, then $x=n-3\ge33$, and $a(n)=N/\gcd(N,M)$ is $1$ or prime by Propositions~\ref{prop:den} and~\ref{prop:main}. If $3\le n\le35$, then $a(n)$ is one of the first $33$ entries of the list in \decl{a_data}, which equals $(a(3),\dots,a(59))$ by kernel computation; each of its $57$ entries is $9$, $1$ or a prime (the largest is $2753$). This proves Theorem~\ref{thm:main}. The only entry of the list that is neither $1$ nor prime is $a(5)=9$, which gives Corollary~\ref{cor:9}; it is not a separate Lean theorem, but follows at once from \decl{a_eq}, \decl{main} and \decl{a_data}.\qed
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is the file \path{lean/Math0/Frontier/OEIS/A362086.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A362086.result}, of type \decl{Math0.Statements.A362086.statement}. Besides the private declarations named in Section~\ref{sec:proof}, the file contains \decl{lf}, \decl{lf_succ}, \decl{two_dvd_lf} (left factorial), \decl{fold_concat} (peeling off the innermost level of the fold), \decl{pow_dvd_fact}, \decl{pow_step}, \decl{bound6}, \decl{bound} (Lemmas~\ref{lem:fact}--\ref{lem:bound}), \decl{not_dvd_aux}, \decl{main} (Proposition~\ref{prop:main}) and \decl{small} (the cases $3\le n<60$, from \decl{a_data}; only $n<36$ is used). Here \decl{main} states that $N/\gcd(N,M)$ is $1$ or prime for $x\ge33$, and the final proof reads, verbatim:
+\begin{lstlisting}
+theorem result : statement := by
+  intro n hn h9
+  by_cases hsmall : n < 36
+  · exact small n hn (by omega) h9
+  · obtain ⟨x, rfl⟩ : ∃ x, n = x + 3 := ⟨n - 3, by omega⟩
+    rw [a_eq x (by omega)]
+    exact main x (by omega)
+\end{lstlisting}
+
+\subsection*{Kernel computation}
+In the statement file, \decl{a_data} and the examples are proved by \texttt{decide +kernel}: the Lean kernel evaluates the continued fractions for $n=3,\dots,59$ in exact rational arithmetic and compares the reduced denominators with the $57$ OEIS terms (about $6$ seconds of kernel time). In the proof file, \decl{small} rewrites with \decl{a_data} and discharges the $57$ claims ``$v\ne9\Rightarrow v=1\lor v$ prime'' with \decl{norm_num}, whose primality extension produces proof terms that the kernel checks; the base case $2\mid\lf2$ of \decl{two_dvd_lf} is closed by \texttt{decide}. Neither file uses \texttt{native\_decide} (which would add the axiom \decl{Lean.ofReduceBool}) or \texttt{sorry}, and the proof file sets no options.
+
+\subsection*{Audit}
+The file ends with the command \texttt{\#math0\_settles} applied to \decl{result} and \decl{statement}. This command, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a definition of type \texttt{Prop} without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (so no \decl{sorryAx}, \decl{Lean.ofReduceBool} or custom axiom); and (3) the type of \decl{result} is syntactically the statement or its negation, up to metadata annotations, with no unfolding. Running \texttt{lake env lean Math0/Frontier/OEIS/A362086.lean} in \path{lean/} prints
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A362086.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A362086.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A362086.result' proves 'Math0.Statements.A362086.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib cache, rebuilds all math0 results with \texttt{lake build} (re-running every audit command) and checks that the pinned dependencies are unmodified.
+
+\begin{thebibliography}{99}
+
+\bibitem{Ad}
+T.~Adamczewski, \emph{OEIS Open: How many conjectures can language models turn into theorems?}, arXiv:2608.11941 [cs.AI], 2026.
+
+\bibitem{Bslides}
+M.~Bouras, \emph{The distribution of prime numbers and continued fractions}, slides, 2022, \url{https://doi.org/10.5281/zenodo.10992128}.
+
+\bibitem{Barxiv}
+M.~Bouras, \emph{A new primes-generating sequence}, arXiv:2509.09745 [math.GM], 2025.
+
+\bibitem{Cloitre}
+B.~Cloitre, \emph{On the sequence A356247}, 2025, note attached to OEIS A356247, \url{https://oeis.org/A356247/a356247_1.pdf}.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171 [cs.AI], 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{APN}
+Google DeepMind, \emph{AlphaProof Nexus results}, GitHub repository \path{google-deepmind/alphaproof-nexus-results}.
+
+\bibitem{Kurepa}
+\DJ.~Kurepa, \emph{On the left factorial function $!n$}, Math. Balkanica \textbf{1} (1971), 147--153.
+
+\bibitem{M0A363482}
+math0, \emph{Apart from $49$, every denominator of $1/(2-3/(3-4/(\cdots(n-1)-n/(-5))))$ is $1$ or a prime}, manuscript and Lean proof, 2026, \url{https://github.com/Foundation-0/math0/tree/main/results/oeis-a363482}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Tsoukalas}
+G.~Tsoukalas et al., \emph{Advancing mathematics research with AI-driven formal proof search}, arXiv:2605.22763 [cs.AI], 2026.
+
+\bibitem{A003422}
+The OEIS Foundation Inc., \url{https://oeis.org/A003422} (left factorials).
+
+\bibitem{A051403}
+The OEIS Foundation Inc., \url{https://oeis.org/A051403}.
+
+\bibitem{A356247}
+The OEIS Foundation Inc., \url{https://oeis.org/A356247}, entry by M.~Bouras (2022).
+
+\bibitem{A362086}
+The OEIS Foundation Inc., \url{https://oeis.org/A362086}, entry by M.~Bouras (2023).
+
+\bibitem{A363102}
+The OEIS Foundation Inc., \url{https://oeis.org/A363102}, entry by M.~Bouras (2023).
+
+\bibitem{A363347}
+The OEIS Foundation Inc., \url{https://oeis.org/A363347}, entry by M.~Bouras (2023).
+
+\bibitem{A363482}
+The OEIS Foundation Inc., \url{https://oeis.org/A363482}, entry by M.~Bouras (2023).
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,339 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+\usepackage{booktabs}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    noncomputable,private},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8, upquote=true,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1
+    {↔}{{$\leftrightarrow$}}1 {→}{{$\to$}}1 {←}{{$\leftarrow$}}1 {∧}{{$\wedge$}}1
+    {∨}{{$\vee$}}1 {≤}{{$\le$}}1 {²}{{$^2$}}1 {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1
+    {×}{{$\times$}}1 {∈}{{$\in$}}1 {≥}{{$\ge$}}1 {·}{{$\cdot$}}1 {…}{{$\dots$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\tru}{\mathsf{t}}
+\newcommand{\fls}{\mathsf{f}}
+
+\title[Fixed polyominoes with $n$ cells and width $n-2$]{Fixed polyominoes with $n$ cells and width $n-2$: a formal proof of $T(n,n-2)=8n^2-51n+86$ (OEIS A308359)}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 19, 2026}
+
+
+\begin{document}
+\begin{abstract}
+Let $T(n,w)$ be the number of fixed polyominoes with $n$ cells whose bounding box has width $w$ (OEIS A308359). We prove that $T(n,n-2)=8n^2-51n+86$ for every $n\ge5$, which R.~J. Mathar recorded as a conjecture in the entry in 2019. The formula can also be derived from two theorems of Goupil, Cloutier and Nouboud (2010) on polyominoes inscribed in a rectangle, so we classify our result as the first formal proof of a known result. Our proof is self-contained: it shows that such a polyomino lies in a strip of height $3$ and has interval columns, and counts these shapes with a $36$-state transfer matrix, whose counting vector has quadratic polynomials in the width as entries. It is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, reviewed for fidelity, and frozen before the proof attempt.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+A \emph{fixed polyomino} with $n$ cells is a set of $n$ unit squares of the square grid, connected through shared edges, taken up to translation only. Their number is OEIS A001168 \cite{A001168}. The triangle A308359 \cite{A308359}, contributed by R.~J. Mathar on May~22, 2019, refines this count: ``Triangle T(n,w) read by rows: the number of fixed polyominoes with n cells and width w of the convex hull.'' Its rows for $n\le7$ are $1$; $1,1$; $1,4,1$; $1,9,8,1$; $1,18,31,12,1$; $1,35,95,68,16,1$; $1,66,269,282,121,20,1$. The entry gives $T(n,1)=T(n,n)=1$ and $T(n,n-1)=4n-8$ for $n\ge3$, and its FORMULA section, part of Mathar's entry, states
+\begin{quote}
+``\verb|Conjecture: T(n,n-2) = 8*n^2 - 51*n + 86 for n >= 5.|''
+\end{quote}
+The column $w=3$ is A335606 \cite{A335606}, and A292357 \cite{A292357} counts fixed polyominoes by width and height. In the current revision of A308359 (\#23, October~10, 2022) the formula is still marked as a conjecture, and no proof is recorded. We prove it (Theorem~\ref{thm:main}).
+
+\subsection*{Prior work}
+The math0 literature referee observed that the formula follows from results of Goupil, Cloutier and Nouboud \cite{GCN}, published nine years before the conjecture. They count the polyominoes \emph{inscribed} in a $b\times k$ rectangle (that is, with this bounding box) that have the minimum number $b+k-1$ of cells, $p_{\min}(b,k)$, and those with $b+k$ cells, $p_{\min+1}(b,k)$. A polyomino of width $w$ with $w+2$ cells has height $3$ (minimum area) or $2$ (minimum area plus one), so $T(w+2,w)=p_{\min}(w,3)+p_{\min+1}(w,2)$, and their Theorems~1 and~3 evaluate this to $8w^2-19w+16$ (Remark~\ref{rem:gcn}). This consequence is not stated in \cite{GCN}, which predates the triangle, and the referees found no place where it is drawn: the OEIS entry records no proof, and they found none on arXiv, MathOverflow, Mathematics Stack Exchange or the SeqFan list. Marin \cite{Ma} constructs automata for polyominoes inscribed in a rectangle of fixed width and growing height; this does not address the diagonal $w=n-2$. Since the statement follows from published theorems, we classify our result as the \emph{first formal proof of a known result}. Our proof (Section~\ref{sec:proof}) does not port the case analysis of \cite{GCN}: it reduces the count to a transfer matrix on $36$ states and certifies quadratic closed forms by finite computations that the Lean kernel checks.
+
+\section{Statement}\label{sec:statement}
+
+We write cells as pairs $(x,y)\in\N^2$, with column $x$ and row $y$. Two cells are \emph{adjacent} if they agree in one coordinate and differ by $1$ in the other, and a finite set $S\subseteq\N^2$ is \emph{connected} if any two of its cells are joined by a chain of cells of $S$ in which consecutive cells are adjacent. Each translation class of finite nonempty sets of cells of $\Z^2$ contains exactly one set $S\subseteq\N^2$ that meets both the column $x=0$ and the row $y=0$. Its bounding box (equivalently, its convex hull) has width $\max_{p\in S}p_x+1$.
+
+\begin{definition}\label{def:T}
+A \emph{normalized polyomino with $n$ cells and width $w$} is a connected set $S\subseteq\N^2$ with $|S|=n$ that meets the column $x=0$ and the row $y=0$ and has $\max_{p\in S}p_x+1=w$. Let $T(n,w)$ be the number of these sets.
+\end{definition}
+
+\begin{theorem}[Mathar's conjecture]\label{thm:main}
+For every integer $n\ge5$, $T(n,n-2)=8n^2-51n+86$. Equivalently, $T(w+2,w)=8w^2-19w+16$ for every $w\ge3$.
+\end{theorem}
+
+For $n=5,\dots,11$ the formula gives the listed values $31,68,121,190,275,376,493$. For $w=1,2$ it fails: $T(3,1)=1$ and $T(4,2)=9$, while $8w^2-19w+16$ equals $5$ and $10$.
+
+\subsection*{The Lean statement}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A308359.lean}, reviewed for fidelity against the OEIS entry, and frozen (SHA-256 \texttt{84eea4b2\ldots80f7}) before any proof attempt. Its definitions (without their docstrings and without the \code{DecidableRel} instance for \code{Adj}) and the statement (with its docstring) read verbatim, in the namespace \decl{Math0.Statements.A308359}:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+def Adj (p q : ℕ × ℕ) : Prop :=
+  (p.1 = q.1 ∧ (p.2 + 1 = q.2 ∨ q.2 + 1 = p.2)) ∨ (p.2 = q.2 ∧ (p.1 + 1 = q.1 ∨ q.1 + 1 = p.1))
+def Step (S : Finset (ℕ × ℕ)) (p q : ℕ × ℕ) : Prop := p ∈ S ∧ q ∈ S ∧ Adj p q
+def IsConnected (S : Finset (ℕ × ℕ)) : Prop :=
+  ∀ p ∈ S, ∀ q ∈ S, Relation.ReflTransGen (Step S) p q
+def IsPoly (n w : ℕ) (S : Finset (ℕ × ℕ)) : Prop :=
+  S.card = n ∧ (∃ p ∈ S, p.1 = 0) ∧ (∃ p ∈ S, p.2 = 0) ∧ S.sup Prod.fst + 1 = w ∧ IsConnected S
+noncomputable def T (n w : ℕ) : ℕ := {S : Finset (ℕ × ℕ) | IsPoly n w S}.ncard
+
+/-- Conjecture (Mathar, A308359): for every `n ≥ 5`, the number of fixed polyominoes with `n`
+cells and width `n - 2` is `T(n, n - 2) = 8n² - 51n + 86`. -/
+def statement : Prop :=
+  ∀ n : ℕ, 5 ≤ n → (T n (n - 2) : ℤ) = 8 * (n : ℤ) ^ 2 - 51 * n + 86
+\end{lstlisting}
+
+\subsection*{How the Lean definitions encode the entry}
+\code{IsPoly n w S} is Definition~\ref{def:T}: \code{IsConnected} is connectivity through chains of adjacent cells (the reflexive--transitive closure of \code{Step S}), and \code{S.sup Prod.fst} is $\max_{p\in S}p_x$. \code{T} counts with \decl{Set.ncard}, which returns $0$ on infinite sets; this junk value does not arise, since the statement file proves (\decl{T_eq_Tbox}) that every such $S$ lies in the box $[0,w)\times[0,n+1-w)$ (Lemma~\ref{lem:box}), so that $T(n,w)$ equals a computable count \code{Tbox n w} over the $n$-element subsets of the box. For $n\ge5$ the truncated subtraction $n-2$ in $\N$ is exact, and the right-hand side is computed in $\Z$.
+
+Only the width is prescribed. The comment line of the entry says that the height $h$ satisfies $w\le h\le n$, but the entry contradicts this: $T(4,3)=8$ counts the eight tetrominoes of width $3$, all of height $2$; the formula $T(n,n-1)=4n-8$ is annotated ``width n-1 and height 2''; and the row sums are A001168. Under the restriction $h\ge w$ the listed $T(6,4)=68$ would be $0$, since a polyomino of width $4$ with $6$ cells has height at most $3$ (Lemma~\ref{lem:box}). The formalization follows the data. To check it against the data, the statement file defines the triangle read by rows, \code{a}, proves $a(n(n-1)/2+w)=T(n,w)$ for $1\le w\le n$ (\decl{a_eq_T}), and proves, by four \texttt{decide +kernel} computations, that $a(1),\dots,a(23)$ are the first $23$ listed terms (\decl{a_data}: rows $1$ to $6$, $T(7,1)=1$, $T(7,2)=66$), including the first two values $T(5,3)=31$ and $T(6,4)=68$ of the conjecture. For this evaluation, connectivity is decided by a flood fill on bit masks, proved equivalent to \code{IsConnected} (\decl{isConnected_iff_bits}).
+
+\section{Proof}\label{sec:proof}
+
+The \emph{column} $x$ of $S\subseteq\N^2$ is $S_x=\{y:(x,y)\in S\}$, and $[a,b]=\{y\in\N: a\le y\le b\}$. The first three lemmas are proved in the statement file.
+
+\begin{lemma}[\decl{frontier}, \decl{exists_coord}]\label{lem:chain}
+Let $c_0,\dots,c_m$ be a chain in $S$. (1) If $c_0\in A$ and $c_m\notin A$, then some cell of $A\cap S$ is adjacent to some cell of $S\setminus A$. (2) If $f$ is one of the two coordinates, every integer $k$ between $f(c_0)$ and $f(c_m)$ equals $f(c)$ for some $c\in S$.
+\end{lemma}
+
+\begin{proof}
+(1) If $j$ is the first index with $c_j\notin A$, then $c_{j-1}\in A$ is adjacent to $c_j$. (2) Each step changes $f$ by at most $1$.
+\end{proof}
+
+\begin{lemma}[\decl{cols_add_rows_le}]\label{lem:colsrows}
+If $S$ is nonempty, connected, and occupies $C$ columns and $R$ rows, then $C+R\le|S|+1$.
+\end{lemma}
+
+\begin{proof}
+Start from one cell, which occupies $1+1$ columns and rows. While some cell of $S$ is not yet taken, Lemma~\ref{lem:chain}(1) (applied to a chain from a taken cell to an untaken one) gives an untaken cell $c$ adjacent to a taken cell $b$. Take $c$. As $c$ shares its column or its row with $b$, the number of occupied columns and rows grows by at most $1$ per cell.
+\end{proof}
+
+\begin{lemma}[\decl{subset_box}]\label{lem:box}
+A normalized polyomino $S$ with $n$ cells and width $w$ lies in $[0,w)\times[0,n+1-w)$, and its columns $S_0,\dots,S_{w-1}$ are nonempty.
+\end{lemma}
+
+\begin{proof}
+Lemma~\ref{lem:chain}(2), applied to a chain from a cell in column $0$ to a cell in column $w-1$, shows that all $w$ columns $0,\dots,w-1$ are occupied. For $p\in S$, a chain from a cell in row $0$ to $p$ shows that the rows $0,\dots,p_y$ are occupied. By Lemma~\ref{lem:colsrows}, $w+p_y+1\le n+1$. Finally $p_x\le w-1$ by the definition of the width.
+\end{proof}
+
+From now on $w\ge1$ and $n=w+2$. By Lemma~\ref{lem:box}, a normalized polyomino with $w+2$ cells and width $w$ lies in $[0,w)\times\{0,1,2\}$ and has $w$ nonempty columns, so
+\begin{equation}\label{eq:excess}
+  \textstyle\sum_{x<w}\bigl(|S_x|-1\bigr)=|S|-w=2.
+\end{equation}
+
+\begin{definition}[\decl{Good}]\label{def:good}
+A finite set $S\subseteq\N^2$ is \emph{good of width $w$} if (i) all cells of $S$ lie in columns $x<w$; (ii) for every $x<w$, $S_x=[a_x,b_x]$ for some $a_x\le b_x\le2$; and (iii) for every $x$ with $x+1<w$, the columns $S_x$ and $S_{x+1}$ share a row.
+\end{definition}
+
+\begin{lemma}[\decl{good_conn}]\label{lem:goodconn}
+Every good set is connected.
+\end{lemma}
+
+\begin{proof}
+Let $S$ be good of width $w\ge1$ (for $w=0$, $S=\emptyset$). By induction on $x<w$, every cell of column $x$ is joined to $(0,a_0)$ by a chain in $S$: for $x=0$, walk vertically inside the interval $S_0$; for $x+1$, take a row $y$ shared by $S_x$ and $S_{x+1}$, reach $(x,y)$ by induction, step to $(x+1,y)$, and walk vertically inside $S_{x+1}$. Since adjacency is symmetric, any two cells are joined through $(0,a_0)$.
+\end{proof}
+
+\begin{lemma}[\decl{cross}, \decl{no_gap}]\label{lem:nogap}
+Let $S$ be connected, with $|S|=w+2$, all cells in columns $<w$, and every column $x<w$ nonempty. Then no column $S_x$ contains the rows $0$ and $2$ but not the row $1$.
+\end{lemma}
+
+\begin{proof}
+A chain from a row $\le k$ to a row $>k$ contains a vertical step from some $(c,k)$ to $(c,k+1)$, namely its first step into a row $>k$ (\decl{cross}). Suppose $(x,0),(x,2)\in S$ and $(x,1)\notin S$. Applying this to a chain from $(x,0)$ to $(x,2)$ with $k=0$ and with $k=1$ gives columns $c_1,c_2$ with $\{0,1\}\subseteq S_{c_1}$ and $\{1,2\}\subseteq S_{c_2}$, both different from $x$ because $1\notin S_x$. If $c_1=c_2$, then $|S_{c_1}|-1\ge2$ and $|S_x|-1\ge1$; otherwise $x,c_1,c_2$ are three distinct columns with $|S_\cdot|-1\ge1$. Either way $\sum_{x'<w}(|S_{x'}|-1)\ge3$, whereas the hypotheses give $\sum_{x'<w}(|S_{x'}|-1)=|S|-w=2$.
+\end{proof}
+
+\begin{proposition}[\decl{struct}, \decl{poly_iff}]\label{prop:struct}
+Let $w\ge1$. A set $S\subseteq\N^2$ is a normalized polyomino with $w+2$ cells and width $w$ if and only if $S$ is good of width $w$, $|S|=w+2$, and $S$ meets the row $0$.
+\end{proposition}
+
+\begin{proof}
+Let $S$ be such a polyomino. By Lemma~\ref{lem:box}, (i) holds and each $S_x$, $x<w$, is a nonempty subset of $\{0,1,2\}$; the only such subset that is not an interval is $\{0,2\}$, which Lemma~\ref{lem:nogap} excludes, so (ii) holds. For (iii), suppose $S_x$ and $S_{x+1}$ share no row, and let $A$ be the set of cells of $S$ in columns $\le x$. By Lemma~\ref{lem:chain}(1), applied to a chain from column $x$ to column $x+1$, some $b\in A$ is adjacent to some $c\in S\setminus A$. Then $b_x\le x<c_x$, so $b=(x,y)$ and $c=(x+1,y)$ for a row $y$ shared by $S_x$ and $S_{x+1}$, a contradiction.
+
+Conversely, a good set of width $w$ with $w+2$ cells that meets row $0$ is connected (Lemma~\ref{lem:goodconn}), meets column $0$ as $S_0\ne\emptyset$, and has largest column $w-1$ as $S_{w-1}\ne\emptyset$.
+\end{proof}
+
+\subsection*{The transfer matrix}
+A \emph{state} is a quadruple $s=(e,a,b,z)$ with $e\in\{0,1,2\}$, $0\le a\le b\le2$ and $z\in\{\tru,\fls\}$ (true, false); there are $36$ states (\decl{states}). For $w\ge1$, a good set $S$ of width $w$ is \emph{in state $s$} (\decl{InP}) if $|S|=w+e$, $S_{w-1}=[a,b]$, and $z=\tru$ exactly when $S$ meets row $0$. Let $P(w,s)$ be the (finite) set of good sets of width $w$ in state $s$. A good set is in at most one state (\decl{Pset_unique}). A state $t=(e',a',b',z')$ \emph{feeds} $s=(e,a,b,z)$ (\decl{Compat}) if
+\[
+  e=e'+(b-a),\qquad a\le b'\ \text{and}\ a'\le b\ \ (\text{i.e. }[a,b]\cap[a',b']\neq\emptyset),\qquad z=(z'\ \text{or}\ a=0).
+\]
+Define $D(1,s)=1$ if $e=b-a$ and $z=[a=0]$, $D(1,s)=0$ otherwise, and $D(w+1,s)=\sum_{t\text{ feeds }s}D(w,t)$ for $w\ge1$.
+
+\begin{lemma}[\decl{Pset_one}, \decl{Pset_succ}, \decl{card_Pset}]\label{lem:transfer}
+For every $w\ge1$ and every state $s$, $|P(w,s)|=D(w,s)$.
+\end{lemma}
+
+\begin{proof}
+A good set of width $1$ with last column $[a,b]$ is $\{0\}\times[a,b]$; it has $b-a+1$ cells and meets row $0$ iff $a=0$. So $|P(1,s)|=D(1,s)$.
+
+Let $w\ge1$ and $s=(e,a,b,z)$. We show that $S\mapsto S'=\{p\in S:p_x<w\}$ is a bijection from $P(w+1,s)$ onto the union of the sets $P(w,t)$ over the states $t$ feeding $s$, which is disjoint by uniqueness of states, with inverse $S'\mapsto S'\cup(\{w\}\times[a,b])$. Let $S\in P(w+1,s)$. Then $S'$ is good of width $w$, so $|S'|\ge w$; write $|S'|=w+e'$, $S'_{w-1}=[a',b']$, and let $z'$ record whether $S'$ meets row $0$. From $|S|=|S'|+(b-a+1)$ we get $e=e'+(b-a)$, so $e'\le2$ and $t=(e',a',b',z')$ is a state. Columns $w-1$ and $w$ of $S$ share a row, so $[a,b]\cap[a',b']\neq\emptyset$; and $S$ meets row $0$ iff $S'$ does or $a=0$. So $t$ feeds $s$ and $S'\in P(w,t)$. Conversely, let $S'\in P(w,t)$ with $t$ feeding $s$, and $S=S'\cup(\{w\}\times[a,b])$. Then (i) and (ii) hold for width $w+1$; for (iii), the row $\max(a,a')$ lies in $[a',b']\cap[a,b]$. Moreover $|S|=w+e'+(b-a+1)=(w+1)+e$, $S_w=[a,b]$, and $S$ meets row $0$ iff $z'$ or $a=0$, that is, iff $z$. So $S\in P(w+1,s)$. The two maps are mutually inverse. Hence $|P(w+1,s)|=\sum_{t\text{ feeds }s}|P(w,t)|$, and the lemma follows by induction on $w$.
+\end{proof}
+
+\begin{table}[t]
+\centering\small
+\begin{tabular}{@{}lr@{\qquad}lr@{\qquad}lr@{}}
+\toprule
+$s$ & $D(w,s)$ & $s$ & $D(w,s)$ & $s$ & $D(w,s)$\\
+\midrule
+$(0,0,0,\tru)$ & $1$ & $(1,1,1,\tru)$ & $2w-3$ & $(2,1,1,\fls)$ & $2w^2-10w+13$\\
+$(0,1,1,\fls)$ & $1$ & $(1,1,2,\fls)$ & $2$ & $(2,1,1,\tru)$ & $4w^2-15w+16$\\
+$(0,2,2,\fls)$ & $1$ & $(1,2,2,\fls)$ & $2w-3$ & $(2,1,2,\fls)$ & $4w-8$\\
+$(1,0,0,\tru)$ & $2w-3$ & $(2,0,0,\tru)$ & $3w^2-11w+12$ & $(2,1,2,\tru)$ & $2w-3$\\
+$(1,0,1,\tru)$ & $2$ & $(2,0,1,\tru)$ & $6w-11$ & $(2,2,2,\fls)$ & $2w^2-10w+13$\\
+$(1,1,1,\fls)$ & $2w-3$ & $(2,0,2,\tru)$ & $3$ & $(2,2,2,\tru)$ & $w^2-w-1$\\
+\bottomrule
+\end{tabular}
+\medskip
+\caption{The closed forms $D(w,s)=A_sw^2+B_sw+C_s$, $w\ge3$ (the Lean function \code{coef}). For the other $18$ states, $(A_s,B_s,C_s)=(0,0,0)$; no good set is in these states (e.g.\ $(0,0,1,z)$ has a $2$-cell column but excess $0$, and $(e,0,b,\fls)$ uses row $0$). The six final states are those with $e=2$ and $z=\tru$.}
+\label{tab:coef}
+\end{table}
+
+\begin{lemma}[\decl{D_three}, \decl{coefA}, \decl{coefB}, \decl{coefC}, \decl{D_poly}]\label{lem:poly}
+With $(A_s,B_s,C_s)\in\Z^3$ as in Table~\ref{tab:coef}, $D(w,s)=A_sw^2+B_sw+C_s$ for every $w\ge3$ and every state $s$.
+\end{lemma}
+
+\begin{proof}
+Induction on $w\ge3$. For $w=3$ the identity is checked for all $36$ states by evaluation. If it holds for $w$, then $D(w+1,s)=\sum_{t\text{ feeds }s}(A_tw^2+B_tw+C_t)$, while $A_s(w+1)^2+B_s(w+1)+C_s=A_sw^2+(2A_s+B_s)w+(A_s+B_s+C_s)$. So it suffices that for each of the $36$ states $s$
+\begin{equation}\label{eq:coef}
+  \sum_{t\text{ feeds }s}A_t=A_s,\qquad \sum_{t\text{ feeds }s}B_t=2A_s+B_s,\qquad \sum_{t\text{ feeds }s}C_t=A_s+B_s+C_s.
+\end{equation}
+These $108$ integer identities are checked by evaluation. For example, the states feeding $s=(2,2,2,\tru)$ have $e'=2$, $b'=2$, $z'=\tru$; they are $(2,a',2,\tru)$ for $a'=0,1,2$, and the sums are $(0+0+1,\ 0+2-1,\ 3-3-1)=(1,1,-1)=(A_s,\,2A_s+B_s,\,A_s+B_s+C_s)$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $n\ge5$, $w=n-2\ge3$, and let $F$ be the set of the six final states $(2,a,b,\tru)$. By Proposition~\ref{prop:struct}, the sets counted by $T(w+2,w)$ are the good sets of width $w$ with $w+2$ cells meeting row $0$, that is, the members of the pairwise disjoint sets $P(w,s)$, $s\in F$ (\decl{T_eq}). By Lemmas~\ref{lem:transfer} and~\ref{lem:poly} and Table~\ref{tab:coef} (\decl{final_sum}),
+\[
+  T(n,n-2)=\sum_{s\in F}\bigl(A_sw^2+B_sw+C_s\bigr)=(3+4+1)w^2+(-11+6-15+2-1)w+(12-11+3+16-3-1),
+\]
+which is $8w^2-19w+16=8n^2-51n+86$.
+\end{proof}
+
+\begin{remark}[derivation from \cite{GCN}; not formalized]\label{rem:gcn}
+By Lemma~\ref{lem:colsrows}, a polyomino of width $w$ and height $h$ has at least $w+h-1$ cells, so with $w+2$ cells $h\le3$; and $h=1$ would mean $w$ cells. Those of height $3$ are inscribed in a $w\times3$ rectangle with minimum area $w+2$, and those of height $2$ are inscribed in a $w\times2$ rectangle with area $w+2$, the minimum plus one. A quarter-turn shows that the orientation of the rectangle does not matter. Theorem~1 of \cite{GCN}, $p_{\min}(b,k)=2k+2b-3bk-8+8\binom{b+k-2}{b-1}$ for $b,k\ge2$, gives $p_{\min}(w,3)=4w^2-3w-2$, and Theorem~3 of \cite{GCN} gives $p_{\min+1}(b,2)=4b^2-16b+18$ for $b>2$; the sum is $8w^2-19w+16$ (for $w=3,4$: $25+6$ and $50+18$). Theorem~1 with $k=2$ also gives the entry's $T(n,n-1)=p_{\min}(n-1,2)=4n-8$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files, declarations and kernel computations}
+The proof, about $750$ lines, is the file \path{lean/Math0/Frontier/OEIS/A308359.lean} of the math0 repository \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file without modifying it, proves \code{theorem result : statement} in the namespace \decl{Math0.Frontier.A308359}, and ends with
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A308359.result Math0.Statements.A308359.statement
+\end{lstlisting}
+Section~\ref{sec:proof} names the declaration behind each step; Lemmas~\ref{lem:chain}--\ref{lem:box} are in the statement file, the rest are private declarations of the proof file, where $P(w,s)$ is \code{Pset w s}, a filter of the powerset of $[0,w)\times[0,3)$. Five finite facts are proved by \texttt{decide +kernel}: \decl{D_three} (the base case of Lemma~\ref{lem:poly}), \decl{coefA}, \decl{coefB}, \decl{coefC} (the identities \eqref{eq:coef} for all $36$ states), and \decl{final_sum}. With \texttt{decide +kernel} the Lean kernel itself reduces the \code{Decidable} instance of the proposition to \code{isTrue}, so these steps add no axioms and trust no compiled code; the first four carry \texttt{set\_option maxHeartbeats 4000000}, a resource limit. Neither file uses \texttt{native\_decide}, \texttt{sorry}, or a declared axiom.
+
+\subsection*{Audit}
+\texttt{\#math0\_settles} (in \path{lean/Math0/Audit.lean}) fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (excluding \decl{sorryAx}, the axioms behind \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically \decl{statement} or its negation, up to metadata, with no unfolding. It reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A308359.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A308359.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A308359.result' proves 'Math0.Statements.A308359.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}. The repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}; this conjecture is not in that collection, so math0 formalized it. To reproduce, run \path{scripts/verify.sh} from the repository root: it builds all math0 results with \texttt{lake build}, re-running every audit command, and checks that the pinned dependencies are unmodified. The single file is checked by \texttt{lake env lean Math0/Frontier/OEIS/A308359.lean} in \path{lean/}. Independently of the formal proof, the referees checked the formula numerically: an enumeration of all fixed polyominoes with up to $13$ cells agreed with the listed terms, and a column transfer matrix with full connectivity tracking, not using Proposition~\ref{prop:struct}, confirmed it for $5\le n\le32$.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026; \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{GCN}
+A.~Goupil, H.~Cloutier, F.~Nouboud, \emph{Enumeration of inscribed polyominos}, in: 22nd International Conference on Formal Power Series and Algebraic Combinatorics (FPSAC 2010), Discrete Math.\ Theor.\ Comput.\ Sci.\ Proc.\ \textbf{AN} (2010), 737--748, doi:10.46298/dmtcs.2808.
+
+\bibitem{Ma}
+L.~Marin, \emph{Counting polyominoes in a rectangle $b\times h$}, in: Proceedings of GASCom 2024, Electron.\ Proc.\ Theor.\ Comput.\ Sci.\ \textbf{403} (2024), 145--149, doi:10.4204/EPTCS.403.30; arXiv:2406.16413.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput.\ Sci.\ \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A001168}
+The OEIS Foundation Inc., \emph{Number of fixed polyominoes with $n$ cells}, \url{https://oeis.org/A001168}.
+
+\bibitem{A292357}
+The OEIS Foundation Inc., \url{https://oeis.org/A292357}, entry by A.~Howroyd (Oct.~2, 2017).
+
+\bibitem{A308359}
+The OEIS Foundation Inc., \url{https://oeis.org/A308359}, entry and conjecture by R.~J. Mathar (May~22, 2019); revision \#23, Oct.~10, 2022.
+
+\bibitem{A335606}
+The OEIS Foundation Inc., \url{https://oeis.org/A335606}, entry by R.~J. Mathar (Jun.~15, 2020).
+
+\end{thebibliography}
+}
+\end{document}

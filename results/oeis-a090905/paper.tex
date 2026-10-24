@@ -1,0 +1,346 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8, upquote=true,
+  literate={ℕ}{{$\mathbb{N}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {∧}{{$\wedge$}}1
+    {→}{{$\to$}}1 {≤}{{$\le$}}1 {∣}{{$\mid$}}1 {×}{{$\times$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\rf}[2]{#1^{\overline{#2}}}
+\newcommand{\fl}[1]{\lfloor #1\rfloor}
+
+\title[The divisible-product triangle A090905 and the Bertrand primes]{The rows of the divisible-product triangle OEIS A090905 end at twice the Bertrand primes}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 20, 2026}
+
+\begin{document}
+\begin{abstract}
+Split $1,2,3,\dots$ into consecutive blocks: block $1$ is $(1)$, and each later block is the shortest block, not shorter than its predecessor, whose product is a multiple of the product of its predecessor (OEIS A090905).
+We prove Amarnath Murthy's 2003 conjecture from this entry: for every $n>4$ the last term of block $n$ is $2p$, where $p$ is the largest prime of block $n-1$, and $p$ is the Bertrand prime $B_{n-1}$ (OEIS A006992: $B_1=2$, and $B_{k+1}$ is the largest prime below $2B_k$).
+The proof combines Legendre's formula with a prime in $(5x/3,2x)$ for every integer $x\ge83$, a weak form of Nagura's 1952 theorem, which we reprove by an explicit prime ladder and Chebyshev's method.
+We know of no earlier proof, so we classify the result as new, although the argument is elementary once the prime-gap bound is available.
+The theorem is verified in Lean~4 against the frozen, fidelity-reviewed math0 formalization of the conjecture, whose definitions are checked by the kernel against the OEIS data.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+OEIS A090905 \cite{A090905}, contributed by Amarnath Murthy on December~13, 2003, is the ``Left side of irregular triangle of natural numbers in which every row product is a multiple of the previous''. The triangle splits $1,2,3,\dots$ into consecutive blocks (``groups'') $(1)$, $(2)$, $(3,4)$, $(5,\dots,8)$, $(9,\dots,14)$, $(15,\dots,26)$, $(27,\dots,46)$, \dots\ Each block starts right after the previous one, and its length is the least $k$, not smaller than the previous length, such that the product of the previous block divides the product of the new one; this is the rule of the Mathematica program of M.~De Vlieger (2016) in the entry. The companion entries A090904, A090906 and A090907 \cite{A090904} list the row products, the row lengths, and the ratios of consecutive row products. All four entries carry Murthy's conjecture (quoted in Section~\ref{sec:statement}): for $n>4$ the last term of row $n$ is twice the largest prime of row $n-1$, and these primes are the Bertrand primes A006992 \cite{A006992}. We prove it (Theorem~\ref{thm:main}).
+
+\subsection*{Method}
+Let $b<a<c$ be consecutive Bertrand primes and suppose row $n$ is $[2b+1,2a]$. The prime $c$ lies in row $n$, and no multiple of $c$ lies in $(2a,2c)$, so row $n+1$ must reach $2c$; ending at $2c$ suffices because $(2a)!^2\mid(2b)!\,(2c)!$ (Legendre's formula). Both steps use $3a>5b$ and $3c>5a$, i.e.\ a prime in $(5x/3,2x)$ for every integer $x\ge83$. This follows from Nagura's theorem \cite{Nag} (a prime in $(x,6x/5)$ for $x\ge25$); the Lean development proves the needed form from scratch, by a ladder of primes below $10^6$ and by Chebyshev's method \cite{Cheb} above.
+
+\subsection*{Status and prior work}
+The entries A090904--A090907 (last edited in December 2016) state the claim only as a conjecture. A090907 \cite{A090904} gives a formula for the ratios in terms of A006992, ``verified for $4<n<21$''. A090906 \cite{A090904} contains an unproved formula of M.~Bouayoun (March 2004) for the row lengths, $2(\mathrm{A006992}(n)-\mathrm{A006992}(n-1))$ for $n>4$; as written it is off by one index (it gives $12$ for $n=5$, whereas the fifth row length is $6$). Theorem~\ref{thm:main} gives the shifted form $2(\mathrm{A006992}(n-1)-\mathrm{A006992}(n-2))$ for $n\ge6$, and the formula of A090907 for $n\ge6$ (neither consequence is formalized). A381901 \cite{A381901} (A.~Niedermaier, March 2025) defines the same partition without the lower bound on the row length and states, without proof, that the last term of row $n$ is $2\,\mathrm{A006992}(n-1)$ for $n\ge5$; this follows from Theorem~\ref{thm:main} and Remark~\ref{rem:bound}. Related entries are A113117, A113118 (L.~Quet, 2006) and Murthy's variant A093911 \cite{A093911}. The math0 referees found no proof or counterexample in searches of arXiv, MathOverflow, Mathematics Stack Exchange and SeqFan-style queries, and no formalization in the formal-conjectures repository \cite{FC}.
+
+\section{Statement}\label{sec:statement}
+
+For integers $s\ge1$ and $k\ge0$ write $\rf{s}{k}=s(s+1)\cdots(s+k-1)$ (Lean's \decl{Nat.ascFactorial}), the product of the block $s,\dots,s+k-1$.
+
+\begin{definition}\label{def:tri}
+Let $a(1)=1$, $L(1)=1$ and, for $n\ge1$,
+\[
+a(n+1)=a(n)+L(n),\qquad L(n+1)=\min\{k\ge L(n): \rf{a(n)}{L(n)}\mid \rf{a(n+1)}{k}\}.
+\]
+Row $n$ is the block $[a(n),e(n)]$ with $e(n)=a(n)+L(n)-1$. The Bertrand primes are $B_1=2$ and $B_{k+1}=$ the largest prime $<2B_k$; thus $(B_k)_{k\ge1}=2,3,5,7,13,23,43,83,163,317,\dots$
+\end{definition}
+
+The minimum exists: $k=a(n+1)-1=a(n)+L(n)-1\ge L(n)$ is admissible, because the row product divides $(a(n+1)-1)!$, which divides the product of any $a(n+1)-1$ consecutive integers. The COMMENTS section of A090905 reads, verbatim (the entry is by Amarnath Murthy, December~13, 2003):
+\begin{quote}
+{\small\raggedright\texttt{Conjecture: For n > 4 the last term of the n-th group is 2p where p is the largest prime in the (n-1)th group. And these are the Bertrand primes.}\par}
+\end{quote}
+
+\begin{theorem}\label{thm:main}
+For every $n\ge5$, the set of primes in row $n-1$ has a largest element $p$; moreover $e(n)=2p$ and $p=B_{n-1}$.
+\end{theorem}
+
+Applying this to $n$ and to $n-1$ and using $a(n)=e(n-1)+1$, we see that row $n$ is $[2B_{n-2}+1,\,2B_{n-1}]$ and $L(n)=2B_{n-1}-2B_{n-2}$ for every $n\ge6$.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A090905.lean}, reviewed for fidelity and frozen (SHA-256 \texttt{8616fe97\ldots a42a44}) before any proof attempt. Its definitions read as follows (verbatim; docstrings and the auxiliary theorems are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A090905
+def search (P s : ℕ) : ℕ → ℕ → ℕ → ℕ
+  | 0, k, _ => k
+  | fuel + 1, k, Q => if P ∣ Q then k else search P s fuel (k + 1) ((s + k) * Q)
+def next (r : ℕ × ℕ) : ℕ × ℕ :=
+  (r.1 + r.2,
+    search (r.1.ascFactorial r.2) (r.1 + r.2) (r.1 + r.2) r.2 ((r.1 + r.2).ascFactorial r.2))
+def row (n : ℕ) : ℕ × ℕ := next^[n - 1] (1, 1)
+def a (n : ℕ) : ℕ := (row n).1
+def len (n : ℕ) : ℕ := (row n).2
+def last (n : ℕ) : ℕ := a n + len n - 1
+def bertrand (n : ℕ) : ℕ := (fun b => Nat.findGreatest Nat.Prime (2 * b - 1))^[n - 1] 2
+def statement : Prop :=
+  ∀ n : ℕ, 4 < n → ∃ p : ℕ,
+    IsGreatest {q : ℕ | q.Prime ∧ a (n - 1) ≤ q ∧ q ≤ last (n - 1)} p ∧
+      last n = 2 * p ∧ p = bertrand (n - 1)
+\end{lstlisting}
+A row is stored as the pair (first term, length). Called with $Q=\rf{s}{k}$, \lstinline|search P s fuel k Q| returns the least $j\in[k,k+\mathit{fuel})$ with $P\mid\rf{s}{j}$ (or $k+\mathit{fuel}$ if there is none). The file proves \decl{a_one}, \decl{len_one}, \decl{a_succ} and \decl{len_succ_isLeast}, i.e.\ the recursion of Definition~\ref{def:tri} for $n\ge1$; in particular the fuel $a(n+1)$ always suffices (the admissible $k=a(n+1)-1$ lies in the search window), so \decl{a}, \decl{len}, \decl{last} are exactly $a$, $L$, $e$ (and $a(n)\ge1$, so the truncated subtraction in \decl{last} is harmless). Since $B_k\ge2$, \lstinline|Nat.findGreatest Nat.Prime (2 * b - 1)| at $b=B_k$ is the largest prime $<2B_k$, so \decl{bertrand} is A006992. Lemmas proved by \texttt{decide +kernel} check $a(1),\dots,a(18)$, $L(1),\dots,L(17)$ and $B_1,\dots,B_{13}$ against the data of A090905, A090906 and A006992 (\decl{a_data}, \decl{len_data}, \decl{bertrand_data}).
+
+``The largest prime in the $(n-1)$th group'' is the greatest element of the set of primes in $[a(n-1),e(n-1)]$, whose existence is asserted. ``These are the Bertrand primes'' is read as $p=B_{n-1}$: for $n=5$ the largest prime of row $4=(5,\dots,8)$ is $7=B_4$, and the rows are disjoint and increasing ($2,3,5$ do not occur as such $p$). This is the strongest natural reading; the weaker reading ``each such $p$ is a Bertrand prime'' follows from it.
+
+\begin{remark}\label{rem:bound}
+The bound $k\ge L(n)$ comes from De Vlieger's program, not from the entry's name. Dropping it does not change the triangle (not formalized): rows $1$--$20$ agree by computer check, and for $n\ge10$ the minimality argument of Lemma~\ref{lem:step} does not use the bound.
+\end{remark}
+
+\section{Proof}\label{sec:proof}
+
+We follow the Lean proof; names of its (private) lemmas are given in brackets.
+
+\subsection{\texorpdfstring{A prime between $5x/3$ and $2x$}{A prime between 5x/3 and 2x}}
+
+\begin{proposition}[\decl{exists_prime}]\label{prop:nagura}
+For every integer $x\ge83$ there is a prime $p$ with $5x<3p<6x$.
+\end{proposition}
+
+This follows from Nagura's theorem \cite{Nag} at $5x/3\ge25$; we give the self-contained proof that is formalized.
+
+\begin{lemma}[\decl{ladder_aux}]\label{lem:ladder}
+Let $q_0=138$, and let $q_1<\dots<q_{53}$ be the primes $163$, $193$, $229$, \dots, $1491013$, $1789201$ of the list \decl{ladder}, which satisfy $5q_{i}<6q_{i-1}$ for $1\le i\le53$. Then Proposition~\ref{prop:nagura} holds for $83\le x<10^6$.
+\end{lemma}
+
+\begin{proof}
+We have $3q_0=414<5x$ and $5x<5\cdot10^6<3q_{53}=5367603$. Let $i\ge1$ be least with $5x<3q_i$. Then $3q_{i-1}\le5x$, so $15q_i<18q_{i-1}\le30x$, i.e.\ $3q_i<6x$. In Lean, \texttt{norm\_num} produces a primality certificate for each $q_i$, which the kernel checks, and the $53$ inequalities $5q_i<6q_{i-1}$ are checked by \texttt{decide}.
+\end{proof}
+
+Let $\Lambda$ be the von Mangoldt function, $\psi(y)=\sum_{d\le y}\Lambda(d)$ and $\theta(y)=\sum_{p\le y}\log p$.
+
+The identity $\log M!=\sum_{d\le M}\Lambda(d)\fl{M/d}$ follows by induction on $M$ from $\fl{(M+1)/d}-\fl{M/d}=[d\mid M+1]$ and $\sum_{d\mid n}\Lambda(d)=\log n$; with $\fl{\fl{N/k}/d}=\fl{\fl{N/d}/k}$ it gives $\log\fl{N/k}!=\sum_{d\le N}\Lambda(d)\fl{\fl{N/d}/k}$ for $k\ge1$ (\decl{log_factorial_div_eq_sum}). A \emph{weight} is a list $W$ of pairs $(c_i,k_i)\in\mathbb{Z}\times\N_{\ge1}$. Put $H_W(n)=\sum_i c_i\fl{n/k_i}$ and $G_W(N)=\sum_i c_i\log\fl{N/k_i}!$. Then
+\begin{equation}\label{eq:G}
+G_W(N)=\sum_{d\le N}\Lambda(d)\,H_W(\fl{N/d}).
+\end{equation}
+
+\begin{lemma}[\decl{Gw_le_psi}, \decl{psi_le_Gw}]\label{lem:weights}
+\textup{(a)} If $H_W\le1$ on $\N$, then $G_W(N)\le\psi(N)$.
+\textup{(b)} If $H_W\ge0$ on $\N$ and $H_W(n)\ge1$ whenever $P\nmid n$, then $\psi(N)\le G_W(N)+\psi(\fl{N/P})$.
+\end{lemma}
+
+\begin{proof}
+(a) is immediate from \eqref{eq:G} and $\Lambda\ge0$. For (b), split $\psi(N)=\sum_{d\le N}\Lambda(d)$ according to whether $P\mid\fl{N/d}$. If so, then $P\le\fl{N/d}$ (as $\fl{N/d}\ge1$), hence $d\le\fl{N/P}$, and these terms contribute at most $\psi(\fl{N/P})$. The other terms satisfy $\Lambda(d)\le\Lambda(d)H_W(\fl{N/d})$, and the remaining terms of \eqref{eq:G} are $\ge0$.
+\end{proof}
+
+We use Chebyshev's weight \cite{Cheb} and a $19$-term weight found by linear programming over the divisors of $420$:
+\begin{align*}
+W_L&=(1,1),(-1,2),(-1,3),(-1,5),(1,30),\\
+W_U&=(1,1),(-1,2),(-1,3),(-1,5),(1,6),(-1,7),(1,10),(-1,12),(1,14),(-1,20),\\
+&\quad\ (-1,30),(1,35),(-1,42),(1,60),(-1,70),(1,84),(-1,105),(1,210),(-4,420).
+\end{align*}
+If every $k_i$ divides $P$, then $H_W(n)=H_W(n\bmod P)+\fl{n/P}\,R_W(P)$ with $R_W(P)=\sum_ic_iP/k_i$ (\decl{Hw_mod}). Here $R_{W_L}(30)=R_{W_U}(420)=0$, so $H_{W_L}$ has period $30$ and $H_{W_U}$ has period $420$. Evaluating one period in the kernel (\texttt{decide} in \decl{HL_le}, \texttt{decide +kernel} in \decl{HU_spec}) gives $H_{W_L}\le1$, $H_{W_U}\ge0$, and $H_{W_U}(n)\ge1$ for $420\nmid n$. Lemma~\ref{lem:weights} then gives $G_{W_L}(N)\le\psi(N)\le G_{W_U}(N)+\psi(\fl{N/420})$.
+
+\begin{lemma}[\decl{log_fact_lower}, \decl{log_fact_upper}]\label{lem:stirling}
+For $M\ge1$: $M\log M-M+\tfrac12\log M+\tfrac12\le\log M!\le M\log M-M+\tfrac12\log M+1$.
+\end{lemma}
+
+\begin{proof}
+The lower bound is \decl{Stirling.le_log_factorial_stirling} with $\log(2\pi)\ge1$. For the upper bound, $M!/(\sqrt{2M}\,(M/e)^M)$ is non-increasing in $M\ge1$ (\decl{Stirling.log_stirlingSeq'_antitone}) and equals $e/\sqrt2$ at $M=1$.
+\end{proof}
+
+\begin{lemma}[\decl{Gw_bounds}, \decl{psi_lower}, \decl{psi_upper}]\label{lem:psi}
+For every integer $m\ge1$, \ $386.94\,m-5.025-\tfrac12\log m\le\psi(420m)\le448.99\,m-3.685-3\log m+\psi(m)$.
+\end{lemma}
+
+\begin{proof}
+Let $W$ be $W_L$ or $W_U$ and $r_i=420/k_i\in\N$, so that $\fl{420m/k_i}=r_im$. Apply Lemma~\ref{lem:stirling} to $M=r_im$, write $\log M=\log r_i+\log m$, multiply by $c_i$ (reversing the inequalities when $c_i<0$) and sum. Since $\sum_ic_ir_i=0$, the terms in $m\log m$ and $m$ cancel, and
+\[
+mD_1+\tfrac12D_2+\tfrac S2\log m+E^-\ \le\ G_W(420m)\ \le\ mD_1+\tfrac12D_2+\tfrac S2\log m+E^+,
+\]
+where $D_1=\sum c_ir_i\log r_i$, $D_2=\sum c_i\log r_i$, $S=\sum c_i$, $E^+=\sum_{c_i>0}c_i+\sum_{c_i<0}c_i/2$ and $E^-=\sum_{c_i>0}c_i/2+\sum_{c_i<0}c_i$. For $W_L$: $D_1=196\log2+126\log3+70\log5\ge386.94$, $D_2=-\log420\ge-6.05$, $S=-1$, $E^-=-2$. For $W_U$: $D_1=192\log2+123\log3+70\log5+35\log7\le448.99$, $D_2=-\log11760\le-9.37$, $S=-6$, $E^+=1$. These numerical bounds use Mathlib's $0.6931471803<\log2<0.6931471808$ and $16$ terms of the series of $\log(1-t)$ at $t=\frac14,\frac15,\frac18$ with Mathlib's remainder bound \decl{Real.abs_log_sub_add_sum_range_le}. Combining with $G_{W_L}(420m)\le\psi(420m)\le G_{W_U}(420m)+\psi(m)$ gives the claim.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:nagura} for $x\ge10^6$ \textup{(\decl{exists_prime_large})}]
+For an integer $p$, $5x<3p<6x$ means $\fl{5x/3}<p\le2x-1$. Suppose there is no such prime; then $\theta(2x-1)=\theta(\fl{5x/3})$. Let $m_0=\fl{(2x-1)/420}$, $m_1=\fl{\fl{5x/3}/420}+1$, $s=\sqrt x\ge1000$ and $\lambda=\log x$. Then $1\le m_0,m_1\le x$, $420m_0\le2x-1$, $2x\le420m_0+420$, $\fl{5x/3}\le420m_1$, $1260m_1\le5x+1260$ and $196m_1\le x$. We use Mathlib's bounds $\psi(y)-\theta(y)\le2\sqrt y\log y$ and $\psi(y)\le y\log4+2\sqrt y\log y$ for $y\ge1$, the monotonicity of $\psi$, $\theta\le\psi$, Lemma~\ref{lem:psi}, $\sqrt{2x-1}\le1.4143\,s$, $\log(2x-1)\le\log2+\lambda$, $0\le\log m_i\le\lambda$ and $\sqrt{m_1}\le s/14$:
+\begin{align*}
+\theta(2x-1)&\ge\psi(420m_0)-2\sqrt{2x-1}\log(2x-1)\ge\frac{386.94\,x}{210}-391.965-\frac\lambda2-2.8286\,s(\log2+\lambda),\\
+\theta(\fl{5x/3})&\le\psi(420m_1)\le\frac{448.99\,x}{252}+445.305+\frac{1.3864\,x}{196}+\frac{s\lambda}{7}.
+\end{align*}
+The left sides are equal, $386.94/210-448.99/252-1.3864/196>0.05379$ and $2.8286\log2\le1.9608$, so $0.05379\,x\le837.27+\lambda/2+1.9608\,s+2.9715\,s\lambda$. From $\log(s/1000)\le s/1000-1$ and $\log1000=3\log2+3\log5\le6.9078$ we get $\lambda=2\log s\le11.8157+s/500$. Substituting this and $x=s^2$ yields $0.0478\,s^2-37.08\,s-843.2\le0$, which is false because $s^2\ge1000s$ (one \texttt{linarith} call in Lean).
+\end{proof}
+
+\subsection{The Bertrand chain}
+
+\begin{lemma}[\decl{chain_step}, \decl{bertrand_ge}]\label{lem:chain}
+For $k\ge8$: $B_k\ge83$, $5B_k<3B_{k+1}$, $B_{k+1}<2B_k$, and no prime lies in $(B_{k+1},2B_k)$.
+\end{lemma}
+
+\begin{proof}
+If $b\ge83$ and $c$ is the largest prime $\le2b-1$, Proposition~\ref{prop:nagura} gives a prime $p\le2b-1$ with $5b<3p$, so $5b<3c$; the other claims hold by the choice of $c$. Now induct from $B_8=83$ (a kernel computation).
+\end{proof}
+
+\subsection{The factorial divisibility}
+
+\begin{lemma}[\decl{pointwise}]\label{lem:pointwise}
+Let $a<2b$ and $5a<3c$. For an integer $y\ge1$ put $k=\fl{2a/y}$ and $f(y)=\fl{2b/y}+\fl{2c/y}-2k$. Then \textup{(i)} $f(y)\ge-1$; \textup{(ii)} $f(y)\ge0$ unless $c<y\le2a$; \textup{(iii)} $f(y)\ge1$ if $k\ge13$.
+\end{lemma}
+
+\begin{proof}
+Let $q_1=\fl{2b/y}$, $q_2=\fl{2c/y}$. From $ky\le2a<4b<2(q_1+1)y$ and $5ky\le10a<6c<3(q_2+1)y$ we get $2q_1\ge k-1$ and $3q_2\ge5k-2$, so $q_1+q_2\ge(13k-7)/6$, which is $\ge2k-1$ for $k\ge1$ and $\ge2k+1$ for $k\ge13$. This gives (iii), and (i) since $f\ge0$ when $k=0$. For (ii): $y>2a$ forces $k=0$. If $y\le c$, then $q_2\ge2$, which gives $f\ge0$ for $k\le1$; for $k\ge2$ the bounds $q_1\ge\lceil(k-1)/2\rceil$ and $q_2\ge\lceil(5k-2)/3\rceil$ give $q_1+q_2\ge2k$ (directly for $2\le k\le6$, and from $(13k-7)/6\ge2k$ for $k\ge7$). In Lean all cases are closed by \texttt{omega}.
+\end{proof}
+
+\begin{lemma}[\decl{fact_dvd}]\label{lem:factdvd}
+Let $b\ge83$, $5b<3a$, $a<2b$, $5a<3c$, $c<2a$, and suppose that no prime lies in $(c,2a)$. Then $(2a)!^2\mid(2b)!\,(2c)!$.
+\end{lemma}
+
+\begin{proof}
+By Legendre's formula (Mathlib's \decl{Nat.factorization_factorial}) it suffices to show $\sum_{j\ge1}f(\ell^j)\ge0$ for every prime $\ell$, with $f$ as in Lemma~\ref{lem:pointwise}. If no power $\ell^j$ ($j\ge1$) lies in $(c,2a]$, every term is $\ge0$ by Lemma~\ref{lem:pointwise}(ii). Otherwise let $c<\ell^j\le2a$. This $j$ is unique: if also $c<\ell^i\le2a$ with $i<j$, then $2a\ge\ell^j\ge2\ell^i>2c$, contradicting $c>5a/3$. Moreover $j\ge2$: a prime $\ell\in(c,2a)$ is excluded by hypothesis, and $\ell=2a$ is impossible since $2a>2$ is even. Hence $\ell^2\le2a$, and so $13\ell\le2a$ (from $\ell^2\le2a$ if $\ell\ge13$, and from $2a>10b/3>156$ if $\ell<13$). Thus $\fl{2a/\ell}\ge13$, so $f(\ell)\ge1$ by (iii), $f(\ell^j)\ge-1$ by (i), and all other terms are $\ge0$ by (ii).
+\end{proof}
+
+\subsection{The rows}
+
+\begin{lemma}[\decl{step_core}]\label{lem:step}
+Under the hypotheses of Lemma~\ref{lem:factdvd}, if $c$ is prime, then $2c-2a$ is the least $k\ge2a-2b$ with $\rf{(2b+1)}{2a-2b}\mid\rf{(2a+1)}{k}$.
+\end{lemma}
+
+\begin{proof}
+First, $c>5a/3$ and $b>a/2$ give $b+c>2a$, i.e.\ $2c-2a\ge2a-2b$. Next, $(2b)!\,\rf{(2b+1)}{2a-2b}=(2a)!$ and $(2a)!\,\rf{(2a+1)}{2c-2a}=(2c)!$; multiplying the desired divisibility by $(2b)!\,(2a)!$ turns it into Lemma~\ref{lem:factdvd}, so $k=2c-2a$ is admissible. Finally, $c>5a/3>25b/9>2b$ and $c<2a$, so the prime $c$ divides $\rf{(2b+1)}{2a-2b}$. If $k<2c-2a$, the factors $2a+1,\dots,2a+k$ of $\rf{(2a+1)}{k}$ lie strictly between $c$ and $2c$, so $c\nmid\rf{(2a+1)}{k}$ and $k$ is not admissible. (This part does not use the bound $k\ge2a-2b$.)
+\end{proof}
+
+\begin{proposition}[\decl{rows}]\label{prop:rows}
+For every $n\ge10$, $a(n)=2B_{n-2}+1$ and $L(n)=2B_{n-1}-2B_{n-2}$.
+\end{proposition}
+
+\begin{proof}
+Induction on $n$. For $n=10$ the kernel evaluates $a(10)=167$, $L(10)=160$, $B_8=83$ and $B_9=163$ (\texttt{decide +kernel}). For the step put $b=B_{n-2}$, $a=B_{n-1}$, $c=B_n$. Lemma~\ref{lem:chain} gives the hypotheses of Lemmas~\ref{lem:factdvd} and~\ref{lem:step}. By the induction hypothesis row $n$ is $[2b+1,2a]$, so $a(n+1)=2a+1$, and \decl{len_succ_isLeast} together with Lemma~\ref{lem:step} gives $L(n+1)=2c-2a$.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:main}}
+For $n=5,\dots,10$, row $n-1$ is $[5,8]$, $[9,14]$, $[15,26]$, $[27,46]$, $[47,86]$, $[87,166]$, with largest prime $p=7,13,23,43,83,163$, which is $B_{n-1}$, and $e(n)=14,26,46,86,166,326=2p$. These values are evaluated by the kernel (\texttt{decide +kernel}), and the absence of primes in $(p,e(n-1)]$ is checked by \texttt{interval\_cases} and \texttt{norm\_num} (\decl{small_case}). Let $n\ge11$. By Proposition~\ref{prop:rows}, row $n-1$ is $[2B_{n-3}+1,2B_{n-2}]$ and $e(n)=2B_{n-1}$. By the chain inequalities, $p=B_{n-1}$ satisfies $p>25B_{n-3}/9>2B_{n-3}$ and $p<2B_{n-2}$, so it is a prime in row $n-1$. A prime $q>p$ in row $n-1$ would satisfy $q<2B_{n-2}$ (as $2B_{n-2}>2$ is even), contradicting the absence of primes in $(B_{n-1},2B_{n-2})$. Hence $p$ is the largest prime of row $n-1$, and $e(n)=2p$. \qed
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and audit}
+The proof is the file \path{lean/Math0/Frontier/OEIS/A090905.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. The main declaration is \decl{Math0.Frontier.A090905.result}, of type \decl{Math0.Statements.A090905.statement}; all other declarations in the file are private. The file uses no \texttt{sorry}, \texttt{native\_decide}, \texttt{axiom} or \texttt{set\_option}; the finite computations use \texttt{decide}, \texttt{decide +kernel} and \texttt{norm\_num}, whose results are checked by the kernel. The file ends with \lstinline|#math0_settles result statement| (with fully qualified names), a command defined in \path{lean/Math0/Audit.lean} for statements formalized by math0. It fails unless \decl{statement} is a \texttt{Prop}-valued definition without universe parameters, the type of \decl{result} is syntactically \decl{statement} or its negation (up to metadata, without unfolding), and both depend only on the axioms \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (which excludes \decl{sorryAx}, \texttt{native\_decide} and custom axioms). It reports:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize,belowskip=0pt]
+math0 audit: 'Math0.Statements.A090905.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A090905.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A090905.result' proves 'Math0.Statements.A090905.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh}: it fetches the Mathlib cache, builds the library with \texttt{lake build} (re-running every audit), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and counts the passed statement checks.
+
+{\footnotesize\raggedright
+\begin{thebibliography}{99}
+
+\bibitem{Cheb}
+P.~L. Tchebichef, \emph{M\'emoire sur les nombres premiers}, J. Math.\ Pures Appl.\ (1) \textbf{17} (1852), 366--390.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput.\ Sci.\ \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Nag}
+J.~Nagura, \emph{On the interval containing at least one prime number}, Proc.\ Japan Acad.\ \textbf{28} (1952), 177--181.
+
+\bibitem{A006992}
+The OEIS Foundation Inc., A006992 (Bertrand primes), \url{https://oeis.org/A006992}.
+
+\bibitem{A090904}
+The OEIS Foundation Inc., A090904, A090906, A090907 (A.~Murthy, 2003), \url{https://oeis.org/A090904}, \url{https://oeis.org/A090906}, \url{https://oeis.org/A090907}.
+
+\bibitem{A090905}
+The OEIS Foundation Inc., A090905 (A.~Murthy, Dec.~13, 2003), \url{https://oeis.org/A090905}.
+
+\bibitem{A093911}
+The OEIS Foundation Inc., A093911 (A.~Murthy, 2004), A113117, A113118 (L.~Quet, 2006), \url{https://oeis.org/A093911}, \url{https://oeis.org/A113117}, \url{https://oeis.org/A113118}.
+
+\bibitem{A381901}
+The OEIS Foundation Inc., A381901 (A.~Niedermaier, Mar.~9, 2025), \url{https://oeis.org/A381901}.
+
+\end{thebibliography}
+}
+
+\end{document}

@@ -1,0 +1,423 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8, upquote=true,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {ℝ}{{$\mathbb{R}$}}1 {∀}{{$\forall$}}1
+    {∑}{{$\textstyle\sum$}}1 {∈}{{$\in$}}1 {→}{{$\to$}}1 {∧}{{$\wedge$}}1 {≤}{{$\le$}}1 {≠}{{$\ne$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\up}{{\uparrow}}
+\newcommand{\dn}{{\downarrow}}
+\newcommand{\ev}{\operatorname{ev}}
+\newcommand{\rev}{\operatorname{rev}}
+\newcommand{\code}{\operatorname{code}}
+\newcommand{\NC}{\mathrm{NC}}
+
+\title[Collinear five-point subsets of $\{0,\dots,4\}^n$]{The grid $\{0,1,2,3,4\}^n$ has $(7^n-5^n)/2$ collinear five-point subsets: a formal proof of Hardin's conjecture in OEIS A081200}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 24, 2026}
+
+\begin{document}
+\begin{abstract}
+We prove that for every $n\ge0$ the number of $5$-element subsets of the grid $\{0,1,2,3,4\}^n\subset\R^n$ that lie on a real line is $a(n)=\sum_{k=0}^{n}\binom nk 6^{n-k}(k\bmod 2)=(7^n-5^n)/2$, where $a$ is OEIS A081200, the 6th binomial transform of $0,1,0,1,\dots$; this is the conjecture that Ron Hardin recorded in that entry in 2010.
+The result is not new: these five-point sets are the winning lines of $n$-dimensional $5^n$ tic-tac-toe, and the number $((k+2)^n-k^n)/2$ of winning lines on the board of side $k$ is classical (Moser; Erd\H{o}s and Selfridge, 1973; Golomb and Hales, 2002).
+Our contribution is, to our knowledge, the first formal proof, and it includes the elementary step that every real line through five grid points is such a winning line.
+The theorem is verified in Lean~4 against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry, whose definition of $a$ the kernel checks against all $23$ terms listed there.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For $n\ge0$ let $G_n=\{0,1,2,3,4\}^n$, viewed as a subset of $\R^n$, and let $c(n)$ be the number of $5$-element subsets of $G_n$ that are contained in a line of $\R^n$.
+The OEIS sequence A081200 \cite{A081200} (Paul Barry, 2003; offset $0$) is defined as the 6th binomial transform of $0,1,0,1,\dots$ (A000035 \cite{A000035}), that is, $a(n)=\sum_{k=0}^{n}\binom nk 6^{n-k}(k\bmod 2)$; it begins $0,1,12,109,888,6841,\dots$.
+On May~24, 2010, Ron Hardin added the comment that conjecturally (``verified up to a(9)'') $a(n)$ is the number of collinear $5$-tuples of points in the $n$-dimensional $5\times\dots\times5$ grid, that is, $c(n)=a(n)$. Hardin made the analogous comments for side $4$ in A081199 \cite{A081199} and for side $6$ in A081201 \cite{A081201}. The side-$3$ analogue, that there are $(5^n-3^n)/2$ lines through $3$ points of the grid $\{0,1,2\}^n$, is recorded in A005059 \cite{A005059} by D.~W. Wilson (c.~1999), without a conjecture label. The comment in A081200 is still labelled ``Conjecture'' in the current revision (\#53, September~22, 2025). We prove it (Theorem~\ref{thm:main}) and verify the proof in Lean~4.
+
+\subsection*{Prior work and status}
+The $5$-element collinear subsets of $G_n$ are the winning lines of $n$-dimensional tic-tac-toe on the $5^n$ board. On the board of side $k$ there are $((k+2)^n-k^n)/2$ winning lines; Erd\H{o}s and Selfridge state this count in their paper on positional games \cite{ES}.
+Golomb and Hales \cite[Theorem~1]{GH} give two proofs.
+The first embeds the board in the board of side $k+2$: every winning line ends in exactly two cells of the border shell, and every border cell ends a line.
+The second describes an oriented line by choosing, for each coordinate, ``increasing'', ``decreasing'' or one of the $k$ constants, excluding the all-constant choices; this gives $(k+2)^n-k^n$ oriented lines, and the count is halved because each line has two orientations.
+Golomb and Hales state that, apart from some later sections, their work dates from before 1972.
+The shell argument is credited to Leo Moser in Honsberger's \emph{Mathematical Morsels} \cite{Ho}, as reproduced in \cite{CTK} for the $8\times8\times8$ cube, which has $(10^3-8^3)/2=244$ winning lines.
+The case $k=4$, $n=3$ is the game Qubic, with $(6^3-4^3)/2=76$ winning lines, which Patashnik showed by a computer-assisted search to be a first-player win \cite{Pa}; positional games on the boards $k^n$ go back to Hales and Jewett \cite{HJ}.
+For $k=5$ the count is $(7^n-5^n)/2=a(n)$ (Lemma~\ref{lem:aeq}).
+
+These sources leave one step implicit: every line of $\R^n$ containing five points of $G_n$ is a winning line in the coordinate description, that is, each coordinate of the five points, suitably ordered, is constant, runs through $0,\dots,4$, or runs through $4,\dots,0$. (Golomb and Hales define winning paths as paths ``in any straight line, including any type of diagonal''.)
+This step is elementary, since each coordinate is an affine function of the position along the line (Proposition~\ref{prop:exists}).
+Hardin's conjecture therefore follows from a result known since at least 1973, and we classify our contribution as the \emph{first formal proof of a known result}; the proof is the word-encoding argument, together with the step just described.
+We do not know of an earlier machine-checked proof. Mathlib's formalization of the Hales--Jewett theorem \cite{Mathlib} uses \emph{combinatorial} lines, in which every coordinate is constant or increasing. For $n\ge2$ these are a proper subset of the lines counted here: for $n=2$ there are $6^2-5^2=11$ combinatorial lines, but $12$ collinear five-point sets, since the anti-diagonal is missing.
+Our statement is not among those of the formal-conjectures repository \cite{FC}.
+
+\section{Statement}\label{sec:statement}
+
+Call a set $S\subseteq\R^n$ \emph{collinear} if there are $p,v\in\R^n$ such that every point of $S$ has the form $p+rv$ with $r\in\R$; equivalently, the linear span of $\{x-y: x,y\in S\}$ has dimension at most $1$.
+Let $\mathcal C_n$ be the set of $5$-element collinear subsets of $G_n$, so that $c(n)=|\mathcal C_n|$.
+
+\begin{theorem}\label{thm:main}
+For every $n\ge0$,
+\[
+  |\mathcal C_n| \;=\; \sum_{k=0}^{n}\binom nk\,6^{\,n-k}\,(k\bmod 2)\;=\;\frac{7^n-5^n}{2}.
+\]
+\end{theorem}
+
+The COMMENTS section of A081200 \cite{A081200} contains, verbatim:
+\begin{quote}
+{\small\raggedright\texttt{Conjecture (verified up to a(9)): Number of collinear 5-tuples of points in a 5 X 5 X 5 X ... n-dimensional cubic grid. - \_Ron Hardin\_, May 24 2010}\par}
+\end{quote}
+
+\subsection*{Lean formalization}
+math0 formalized the statement in the file \path{lean/Math0/Statements/OEIS/A081200.lean}. It was reviewed for fidelity and frozen (SHA-256 \texttt{41ab2753\ldots 3232}) before any proof attempt. The definitions and the statement read as follows (verbatim; the import, the documentation and the data lemma \decl{a_data} are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A081200
+def binomialTransform (m : ℕ) (b : ℕ → ℕ) (n : ℕ) : ℕ :=
+  ∑ k ∈ Finset.range (n + 1), n.choose k * m ^ (n - k) * b k
+def A000035 (k : ℕ) : ℕ := k % 2
+def a (n : ℕ) : ℕ := binomialTransform 6 A000035 n
+def toReal (n : ℕ) (x : Fin n → Fin 5) : Fin n → ℝ := fun i => ((x i : ℕ) : ℝ)
+def statement : Prop :=
+  ∀ n : ℕ,
+    {s : Finset (Fin n → Fin 5) |
+        s.card = 5 ∧ Collinear ℝ (toReal n '' (s : Set (Fin n → Fin 5)))}.ncard = a n
+end Math0.Statements.A081200
+\end{lstlisting}
+This encodes the first equality of Theorem~\ref{thm:main}; the second equality is Lemma~\ref{lem:aeq} below, which is also proved in the Lean file (\decl{a_eq}). The encoding is as follows.
+\begin{itemize}
+\item \decl{a} is the binomial transform named in the OEIS entry, in the OEIS convention $(m,b)\mapsto\bigl(n\mapsto\sum_{k=0}^n\binom nk m^{n-k}b(k)\bigr)$; it is not defined by a closed form. The lemma \decl{a_data} checks all $23$ listed terms $a(0),\dots,a(22)$ (from $0$ to $1953718431395986212$) by \texttt{decide +kernel}.
+\item $G_n$ is \texttt{Fin n → Fin 5}, and the injective map \decl{toReal} sends a grid point to the point of $\R^n$ (\texttt{Fin n → ℝ}) with the same coordinates. Mathlib's \texttt{Collinear ℝ S} says that the vector span of $S$ has rank at most $1$; by \decl{collinear_iff_exists_forall_eq_smul_vadd} this is our notion of collinearity.
+\item A ``collinear $5$-tuple'' is read as an unordered set, a \texttt{Finset} of $5$ grid points. The data force this reading: $a(1)=1$, whereas ordered $5$-tuples would give $120$; and $a(2)=12$ counts five rows, five columns and two diagonals.
+\item The count is \texttt{Set.ncard} of a set of \texttt{Finset}s of a finite type; that set is finite, so \texttt{ncard} is its true cardinality. The statement covers all $n\in\N$, matching the offset $0$; for $n=0$ both sides are $0$.
+\end{itemize}
+Independent brute-force counts by the math0 referees gave $c(1),\dots,c(4)=1,12,109,888=a(1),\dots,a(4)$.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file (Section~\ref{sec:lean}); each step names its Lean declaration. We write $[5]=\{0,1,2,3,4\}$, so that $G_n=[5]^n$.
+
+\subsection{Words and their lines}
+Let $A=\{0,1,2,3,4,\up,\dn\}$. In Lean, $A$ is \texttt{Fin 7}, with $5$ standing for $\up$ and $6$ for $\dn$.
+The letters $0,\dots,4$ are \emph{constant} letters and $\up,\dn$ are \emph{arrows}.
+For $c\in A$ and $t\in[5]$ define $\ev(c,t)\in[5]$ by
+\[
+  \ev(c,t)=c\ \ (c\in[5]),\qquad \ev(\up,t)=t,\qquad \ev(\dn,t)=4-t .
+\]
+Let $\rev\colon A\to A$ swap $\up$ and $\dn$ and fix the constant letters. For $u_0,u_4\in[5]$ let $\code(u_0,u_4)$ be $u_0$ if $u_0=u_4$; $\up$ if $u_0\ne u_4$ and $u_0=0$; and $\dn$ otherwise.
+A \emph{word} is an element $w\in A^n$. It defines the points $p_w(t)\in G_n$ for $t\in[5]$, with coordinates $p_w(t)_i=\ev(w_i,t)$, and its \emph{line}
+\[
+  L(w)=\{p_w(t): t\in[5]\}\subseteq G_n .
+\]
+Let $\NC_n\subseteq A^n$ be the set of \emph{non-constant} words, those with at least one arrow, and write $\rev(w)$ for the word $(\rev(w_i))_i$.
+In Lean (where \texttt{Fin.rev t} is $4-t$ and \texttt{rw7} is $\rev$):
+\begin{lstlisting}
+private def ev (c : Fin 7) (t : Fin 5) : Fin 5 :=
+  if h : c.val < 5 then ⟨c.val, h⟩ else if c.val = 5 then t else Fin.rev t
+private def rw7 (c : Fin 7) : Fin 7 := if c = 5 then 6 else if c = 6 then 5 else c
+private def code (u0 u4 : Fin 5) : Fin 7 :=
+  if u0 = u4 then ⟨u0.val, by omega⟩ else if u0.val = 0 then 5 else 6
+private def pt {n : ℕ} (w : Fin n → Fin 7) (t : Fin 5) : Fin n → Fin 5 := fun i => ev (w i) t
+private def line {n : ℕ} (w : Fin n → Fin 7) : Finset (Fin n → Fin 5) :=
+  Finset.univ.image (pt w)
+private def T : Finset (Fin 7) := Finset.univ.filter (fun c => c.val < 5)
+private def NC (n : ℕ) : Finset (Fin n → Fin 7) := Finset.univ \ Fintype.piFinset (fun _ => T)
+\end{lstlisting}
+
+\subsection{Finite checks}
+In Lean the next three lemmas (the first split into six declarations) are closed propositions quantified over \texttt{Fin 7} and \texttt{Fin 5}, each proved by \texttt{decide +kernel}: the kernel evaluates its \texttt{Decidable} instance by definitional unfolding to \texttt{true}. Unlike \texttt{native\_decide}, this runs no compiled code and adds no axiom. We also give proofs by hand.
+
+\begin{lemma}[\decl{ev_inj}, \decl{ev_const}, \decl{ev_invol}, \decl{ev_rw7}, \decl{rw7_ge}, \decl{ev_affine}]\label{lem:letters}
+For all $c\in A$ and $t,u\in[5]$:
+\begin{enumerate}
+\item if $c$ is an arrow, then $t\mapsto\ev(c,t)$ is injective, and $\ev(c,\ev(c,t))=t$;
+\item if $c$ is constant, then $\ev(c,t)=\ev(c,0)$;
+\item $\ev(\rev c,t)=\ev(c,4-t)$, and if $c$ is an arrow, then $\rev c$ is an arrow other than $c$;
+\item $\ev(c,t)=\ev(c,0)+t\,\bigl(\ev(c,1)-\ev(c,0)\bigr)$ in $\Z$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+The maps $t\mapsto t$ and $t\mapsto 4-t$ are involutions of $[5]$, which gives~(1); (2) and~(3) are immediate from the definitions. For~(4), the three kinds of letters give $\ev(c,\cdot)$ equal to $t\mapsto c$, $t\mapsto t$ and $t\mapsto 4-t$, all affine in $t$.
+\end{proof}
+
+\begin{lemma}[\decl{H}]\label{lem:H}
+Let $u_0,u_1,u_4,t,v\in[5]$ satisfy
+\[
+  u_4-u_0=4(u_1-u_0)\qquad\text{and}\qquad t\,(u_4-u_0)=4(v-u_0)
+\]
+in $\Z$. Then $\ev(\code(u_0,u_4),t)=v$.
+\end{lemma}
+
+\begin{proof}
+By the first equation $u_4-u_0$ is a multiple of $4$ in $[-4,4]$, so it is $0$, $4$ or $-4$.
+If it is $0$, then $\code(u_0,u_4)=u_0$, and the second equation gives $v=u_0$.
+If it is $4$, then $u_0=0$ and $u_4=4$, so $\code(u_0,u_4)=\up$, and the second equation gives $v=t$.
+If it is $-4$, then $u_0=4\ne0$ and $u_4=0$, so $\code(u_0,u_4)=\dn$, and the second equation gives $v=4-t$.
+In Lean the lemma is checked over all $5^5=3125$ tuples $(u_0,u_1,u_4,t,v)$.
+\end{proof}
+
+\begin{lemma}[\decl{F}]\label{lem:F}
+Let $a,a'$ be arrows and $b,b'\in A$, and suppose that $\ev(b,\ev(a,\ev(a',t)))=\ev(b',t)$ for all $t\in[5]$. If $a'=a$ then $b'=b$, and if $a'\ne a$ then $b'=\rev b$.
+\end{lemma}
+
+\begin{proof}
+The map $b\mapsto\ev(b,\cdot)$ from $A$ to functions $[5]\to[5]$ is injective: its values are the five distinct constant functions, the identity and $t\mapsto4-t$.
+If $a'=a$, then $\ev(a,\ev(a,t))=t$ by Lemma~\ref{lem:letters}(1), so $\ev(b,\cdot)=\ev(b',\cdot)$ and $b'=b$.
+If $a'\ne a$, then $\{a,a'\}=\{\up,\dn\}$ and $\ev(a,\ev(a',t))=4-t$, so $\ev(b',t)=\ev(b,4-t)=\ev(\rev b,t)$ by Lemma~\ref{lem:letters}(3), and $b'=\rev b$.
+In Lean the lemma is checked over all $7^4=2401$ quadruples $(a,a',b,b')$, each with the five values of $t$.
+\end{proof}
+
+\subsection{Lines of words}
+
+\begin{lemma}[\decl{pt_inj}, \decl{card_line}, \decl{line_collinear}]\label{lem:line}
+For every word $w$, the set $L(w)$ is collinear. If $w\in\NC_n$, then $t\mapsto p_w(t)$ is injective, so $|L(w)|=5$.
+\end{lemma}
+
+\begin{proof}
+Let $v\in\R^n$ have coordinates $v_i=\ev(w_i,1)-\ev(w_i,0)$. By Lemma~\ref{lem:letters}(4), $p_w(t)=p_w(0)+t\,v$ for every $t$, so $L(w)$ lies on the line through $p_w(0)$ with direction $v$.
+If $w_i$ is an arrow, then $p_w(t)_i=\ev(w_i,t)$ is injective in $t$ by Lemma~\ref{lem:letters}(1).
+\end{proof}
+
+\begin{lemma}[\decl{line_rev}]\label{lem:rev}
+For every word $w$, $L(\rev w)=L(w)$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:letters}(3), $p_{\rev w}(t)=p_w(4-t)$, and $t\mapsto4-t$ is a bijection of $[5]$.
+\end{proof}
+
+\begin{lemma}[\decl{line_eq}]\label{lem:lineeq}
+If $w,w'\in\NC_n$ and $L(w')=L(w)$, then $w'=w$ or $w'=\rev w$.
+\end{lemma}
+
+\begin{proof}
+Choose $i_0$ such that $w_{i_0}$ is an arrow. Let $t\in[5]$. Since $p_{w'}(t)\in L(w)$, there is $u\in[5]$ with $p_w(u)=p_{w'}(t)$. Comparing coordinate $i_0$ gives $\ev(w_{i_0},u)=\ev(w'_{i_0},t)$. Applying $\ev(w_{i_0},\cdot)$, an involution by Lemma~\ref{lem:letters}(1), gives $u=\sigma(t)$, where $\sigma(t)=\ev(w_{i_0},\ev(w'_{i_0},t))$. Hence
+\begin{equation}\label{eq:sigma}
+  p_w(\sigma(t))=p_{w'}(t)\qquad\text{for all }t\in[5].
+\end{equation}
+The letter $w'_{i_0}$ is an arrow. Otherwise $\ev(w'_{i_0},\cdot)$ would be constant by Lemma~\ref{lem:letters}(2), so $\sigma(1)=\sigma(0)$, and \eqref{eq:sigma} would give $p_{w'}(1)=p_{w'}(0)$, contradicting Lemma~\ref{lem:line}.
+For each coordinate $j$, \eqref{eq:sigma} says $\ev(w_j,\ev(w_{i_0},\ev(w'_{i_0},t)))=\ev(w'_j,t)$ for all $t$. Lemma~\ref{lem:F} with $(a,a',b,b')=(w_{i_0},w'_{i_0},w_j,w'_j)$ gives $w'_j=w_j$ for all $j$ if $w'_{i_0}=w_{i_0}$, and $w'_j=\rev(w_j)$ for all $j$ otherwise.
+\end{proof}
+
+\subsection{Collinear sets are lines}
+
+\begin{lemma}[\decl{P_of_collinear}]\label{lem:P}
+Let $S\subseteq G_n$ be collinear. Then for all $x,y,z\in S$ and all coordinates $i,j$,
+\begin{equation}\label{eq:P}
+  (x_i-z_i)(y_j-z_j)=(x_j-z_j)(y_i-z_i)\qquad\text{in }\Z .
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Since $z\in S$ and $S$ is collinear, there is $v\in\R^n$ with $x=z+rv$ and $y=z+r'v$ for some $r,r'\in\R$ (in Lean, \decl{collinear_iff_of_mem}). Both sides of \eqref{eq:P} equal $rr'v_iv_j$. The identity holds in $\R$ between integers, hence in $\Z$.
+\end{proof}
+
+\begin{proposition}[\decl{exists_line}]\label{prop:exists}
+Every $S\in\mathcal C_n$ is of the form $L(w)$ with $w\in\NC_n$.
+\end{proposition}
+
+\begin{proof}
+Let $S\subseteq G_n$ be collinear with $|S|=5$. Choose distinct $y,z\in S$ and a coordinate $i_0$ with $y_{i_0}\ne z_{i_0}$.
+
+\emph{Step 1: the map $x\mapsto x_{i_0}$ is injective on $S$.} Suppose $x,x'\in S$, $x\ne x'$ and $x_{i_0}=x'_{i_0}$, and choose $j$ with $x_j\ne x'_j$. Apply \eqref{eq:P} to the points $(y,x',x)$ in place of $(x,y,z)$ and to the coordinates $(i_0,j)$:
+\[
+  (y_{i_0}-x_{i_0})(x'_j-x_j)=(y_j-x_j)(x'_{i_0}-x_{i_0})=0 .
+\]
+Since $x'_j\ne x_j$, we get $y_{i_0}=x_{i_0}$. The same argument with $z$ in place of $y$ gives $z_{i_0}=x_{i_0}$. Hence $y_{i_0}=z_{i_0}$, a contradiction.
+
+\emph{Step 2: the points $q_t$.} By Step~1 the image of $S$ under $x\mapsto x_{i_0}$ has $5$ elements, so it is all of $[5]$. For each $t\in[5]$ choose $q_t\in S$ with $(q_t)_{i_0}=t$.
+
+\emph{Step 3: the word.} Define $w\in A^n$ by $w_j=\code((q_0)_j,(q_4)_j)$. Fix $t$ and $j$, and put $u_0=(q_0)_j$, $u_1=(q_1)_j$, $u_4=(q_4)_j$ and $v=(q_t)_j$.
+Applying \eqref{eq:P} to the points $(q_1,q_4,q_0)$ and the coordinates $(i_0,j)$ gives $1\cdot(u_4-u_0)=(u_1-u_0)\cdot4$. Applying it to $(q_t,q_4,q_0)$ gives $t\,(u_4-u_0)=(v-u_0)\cdot4$.
+By Lemma~\ref{lem:H}, $\ev(w_j,t)=v$. Hence $p_w(t)=q_t$ for all $t$.
+Moreover $w_{i_0}=\code(0,4)=\up$, so $w\in\NC_n$.
+
+\emph{Step 4: $L(w)=S$.} We have $L(w)=\{q_t: t\in[5]\}\subseteq S$. The $q_t$ are distinct, because $(q_t)_{i_0}=t$, so $|L(w)|=5=|S|$ and $L(w)=S$.
+\end{proof}
+
+\subsection{Counting}
+
+\begin{lemma}[\decl{card_NC}, \decl{two_mul_card}]\label{lem:count}
+$|\NC_n|=7^n-5^n$, and $2\,\bigl|\{L(w): w\in\NC_n\}\bigr|=|\NC_n|$.
+\end{lemma}
+
+\begin{proof}
+$\NC_n$ is the complement in $A^n$ of the $5^n$ words with only constant letters, so $|\NC_n|=7^n-5^n$.
+For the second claim, partition $\NC_n$ into the fibres of $w\mapsto L(w)$. Let $w\in\NC_n$ and choose $i_0$ with $w_{i_0}$ an arrow. By Lemma~\ref{lem:letters}(3), $\rev w\in\NC_n$ and $(\rev w)_{i_0}\ne w_{i_0}$, so $\rev w\ne w$. By Lemmas~\ref{lem:rev} and~\ref{lem:lineeq}, the fibre of $L(w)$ is exactly $\{w,\rev w\}$, which has two elements. Summing over the fibres gives $|\NC_n|=2\,|\{L(w): w\in\NC_n\}|$.
+\end{proof}
+
+\begin{lemma}[\decl{a_eq}]\label{lem:aeq}
+$2a(n)+5^n=7^n$ for every $n\ge0$.
+\end{lemma}
+
+\begin{proof}
+By the binomial theorem, $7^n=(1+6)^n=\sum_{k=0}^n\binom nk 6^{n-k}$ and $5^n=(-1+6)^n=\sum_{k=0}^n\binom nk 6^{n-k}(-1)^k$. Since $2\,(k\bmod 2)=1-(-1)^k$, subtracting gives $7^n-5^n=\sum_{k=0}^n\binom nk6^{n-k}\cdot2\,(k\bmod2)=2a(n)$. In Lean this computation is done in $\Z$ and then cast back to $\N$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+By Proposition~\ref{prop:exists} and Lemma~\ref{lem:line}, $\mathcal C_n=\{L(w): w\in\NC_n\}$ (\decl{set_eq}). By Lemma~\ref{lem:count}, $2\,|\mathcal C_n|=7^n-5^n$, and by Lemma~\ref{lem:aeq}, $2a(n)=7^n-5^n$. Hence $|\mathcal C_n|=a(n)=(7^n-5^n)/2$. In Lean the last step is done by \texttt{omega} from $2\,|\mathcal C_n|=|\NC_n|$, $|\NC_n|=7^n-5^n$ (natural subtraction) and $2a(n)+5^n=7^n$.
+\end{proof}
+
+\begin{remark}[other side lengths; not formalized]\label{rem:k}
+For any side $k\ge2$ (grid $\{0,\dots,k-1\}^n$, letters $0,\dots,k-1,\up,\dn$ with $\ev(\dn,t)=k-1-t$, and $k$-element collinear subsets) the same argument gives $((k+2)^n-k^n)/2$ subsets; in Lemma~\ref{lem:H} the relation at $t=1$ forces $u_{k-1}-u_0\in\{0,\pm(k-1)\}$. As the $m$-th binomial transform of $0,1,0,1,\dots$ is $((m+1)^n-(m-1)^n)/2$, this settles, in the same reading, Hardin's comments in A081199 ($k=4$) and A081201 ($k=6$); like the case $k=5$, these follow from the classical count together with the step of Proposition~\ref{prop:exists}. Only $k=5$ is formalized here.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A081200.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A081200.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}.
+The main declaration is the theorem \decl{Math0.Frontier.A081200.result}, whose type is \decl{statement}. It is proved by rewriting with \decl{set_eq} and \decl{Set.ncard_coe_finset} and combining \decl{two_mul_card}, \decl{card_NC} and \decl{a_eq} by \texttt{omega}; all auxiliary definitions and lemmas are \texttt{private}. The file ends with the command
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A081200.result Math0.Statements.A081200.statement
+\end{lstlisting}
+The proof file contains no \texttt{sorry}, \texttt{admit}, \texttt{native\_decide}, \texttt{axiom} or \texttt{set\_option}. All finite checks (\decl{ev_inj}, \decl{ev_const}, \decl{ev_invol}, \decl{ev_rw7}, \decl{rw7_ge}, \decl{ev_affine}, \decl{H}, \decl{F}) are proved by \texttt{decide +kernel} within the default heartbeat limit.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, which rejects \decl{sorryAx}, \decl{Lean.ofReduceBool} (from \texttt{native\_decide}) and custom axioms; and (3) the type of \decl{result} is syntactically the statement or its negation, up to metadata, with no unfolding. Here it reports:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A081200.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A081200.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A081200.result' proves 'Math0.Statements.A081200.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, both pinned in \path{lean/}. The repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The single file is checked by \texttt{lake env lean Math0/Frontier/OEIS/A081200.lean} in the directory \path{lean}, in under two minutes on our machine, including loading Mathlib.
+
+{\footnotesize
+\begin{thebibliography}{99}
+
+\bibitem{CTK}
+A.~Bogomolny, \emph{Tic-Tac-Toe in 3D}, Cut The Knot, \url{https://www.cut-the-knot.org/proofs/tictactoe.shtml} (excerpt from \cite{Ho}).
+
+\bibitem{ES}
+P.~Erd\H{o}s and J.~L. Selfridge, \emph{On a combinatorial game}, J. Combin. Theory Ser.~A \textbf{14} (1973), no.~3, 298--301.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{GH}
+S.~W. Golomb and A.~W. Hales, \emph{Hypercube tic-tac-toe}, in: R.~J. Nowakowski (ed.), \emph{More Games of No Chance}, MSRI Publications \textbf{42}, Cambridge University Press, 2002, 167--182.
+
+\bibitem{HJ}
+A.~W. Hales and R.~I. Jewett, \emph{Regularity and positional games}, Trans. Amer. Math. Soc. \textbf{106} (1963), no.~2, 222--229.
+
+\bibitem{Ho}
+R.~Honsberger, \emph{Mathematical Morsels}, Mathematical Association of America, 1978.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Pa}
+O.~Patashnik, \emph{Qubic: $4\times4\times4$ tic-tac-toe}, Math. Mag. \textbf{53} (1980), no.~4, 202--216.
+
+\bibitem{A000035}
+The OEIS Foundation Inc., \url{https://oeis.org/A000035}.
+
+\bibitem{A005059}
+The OEIS Foundation Inc., \url{https://oeis.org/A005059}; comment by D.~W. Wilson (c.~1999).
+
+\bibitem{A081199}
+The OEIS Foundation Inc., \url{https://oeis.org/A081199}; conjecture by R.~H. Hardin (May 24, 2010).
+
+\bibitem{A081200}
+The OEIS Foundation Inc., \url{https://oeis.org/A081200}, entry by P.~Barry (March 11, 2003); conjecture by R.~Hardin (May 24, 2010); revision \#53, September 22, 2025.
+
+\bibitem{A081201}
+The OEIS Foundation Inc., \url{https://oeis.org/A081201}; conjecture by R.~H. Hardin (May 23, 2010).
+
+\end{thebibliography}
+}
+
+\end{document}

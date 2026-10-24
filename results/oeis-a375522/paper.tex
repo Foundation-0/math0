@@ -1,0 +1,393 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+\usepackage{booktabs}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  upquote=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {ℚ}{{$\mathbb{Q}$}}1
+    {→}{{$\to$}}1 {≠}{{$\ne$}}1 {≤}{{$\le$}}1 {≥}{{$\ge$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1
+    {¬}{{$\neg$}}1 {∧}{{$\wedge$}}1 {⌊}{{$\lfloor$}}1 {⌋}{{$\rfloor$}}1 {∑}{{$\sum$}}1
+    {…}{{$\dots$}}1 {·}{{$\cdot$}}1 {×}{{$\times$}}1 {∣}{{$\mid$}}1 {⟨}{{$\langle$}}1
+    {⟩}{{$\rangle$}}1 {≡}{{$\equiv$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+\newunicodechar{…}{\ensuremath{\dots}}
+\newunicodechar{é}{\'e}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\DeclareMathOperator{\num}{num}
+\DeclareMathOperator{\den}{den}
+\newcommand{\fl}[1]{\left\lfloor #1\right\rfloor}
+
+\title[A counterexample to a conjecture in OEIS A375522]{The greedy prime-reciprocal sums of OEIS A375781:\\ $S_2(42)-S_1(42)=5$, refuting a conjecture of Sigrist and Sloane}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 18, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $p_k$ be the $k$-th prime, let $b(k)$ (OEIS A375781) be the least positive integer keeping $s(k)=\sum_{j\le k}1/(p_j\,b(j))$ below $1$, and write $s(n)=S_1(n)/S_2(n)$ in lowest terms (A375521, A375522).
+Sigrist and Sloane conjectured that $S_2(n)-S_1(n)=1$ for all $n\ge1$ except $n=4,6$, having checked $n\le 34$.
+We show that $S_2(42)-S_1(42)=5$, so the conjecture is false; to our knowledge this is a new result. As $S_2(42)$ has about $3.9\cdot 10^{11}$ decimal digits, the proof tracks the numerator of $1-s(n)$ exactly and its denominator only modulo a shrinking modulus, with a lemma certifying each step.
+The proof is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, checked against the OEIS data and frozen before the proof attempt.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Since $\sum_k 1/p_k$ diverges, one can ask how much each term must be damped to keep the partial sums below~$1$. Rémy Sigrist's sequence A375781 \cite{OEISrel} is the lexicographically earliest sequence of positive integers $b(1),b(2),\dots$ with $s(n)=\sum_{k=1}^{n}1/(p_k\,b(k))<1$ for all $n\ge1$, where $p_k$ is the $k$-th prime. It begins $1,1,2,3,5,89,39304,46994541278,\dots$ and grows doubly exponentially.
+Sigrist and Sloane wrote $s(n)=S_1(n)/S_2(n)$ in lowest terms; $S_1$ and $S_2$ are A375521 \cite{OEISrel} and A375522 \cite{A375522}.
+In A375522 they reported that $S_2(n)-S_1(n)$ equals $1$ for $1\le n\le 34$, except at $n=4$ and $n=6$, where it equals~$2$, and conjectured that this pattern continues for all~$n$ (Section~\ref{sec:statement}).
+Equivalently, the remainder $1-s(n)$ is a unit fraction for every $n\ge1$ except $n=4,6$.
+
+The conjecture is modelled on a theorem about the harmonic series. For the analogous greedy sequence A374663, with $k$ in place of $p_k$, Sigrist proved that every remainder $1-s(n)$ with $n>1$ is the reciprocal of an integer \cite{OEISrel,SigristProof}.
+In A375528 \cite{OEISrel}, the analogue for the lucky numbers, Sloane writes that for the primes ``it seems that all partial sums except for $n = 4$ and $6$ have this property''.
+The sequences are discussed in Sloane's talk at the Rutgers Experimental Mathematics Seminar \cite{SloaneTalk}; the slides list them and give no counterexample. They also state a more general conjecture (Conjecture~4 there): for such dampened series there are a constant $c$ and integers $e_n$ with $s(n)=(e_n-c)/e_n$ for all sufficiently large~$n$. Our result does not decide that conjecture.
+The entries A374663 and A376048 \cite{OEISrel} cite a manuscript in preparation by Sigrist and Sloane, \emph{Dampening Down a Divergent Series} \cite{SiSl}.
+
+\subsection*{Result and status}
+We prove that $S_2(42)-S_1(42)=5$ (Theorem~\ref{thm:main}), so the conjecture is false.
+The math0 referees found no earlier counterexample or proof in the revision histories of A375522 and the related entries above, the slides of \cite{SloaneTalk}, arXiv (the recent collection \cite{Fried} of proofs of OEIS conjectures does not treat these sequences), web searches, or the formal-conjectures repository \cite{FC}, which does not contain this conjecture. The archive of the SeqFan mailing list could not be reached and was not searched. With that caveat, we classify the result as \emph{new}.
+
+The difficulty is size. If $1-s(n-1)=1/D$, then $1-s(n)=(p_n-r)/\bigl(D(D+p_n-r)\bigr)$ with $r=D\bmod p_n$ (Remark~\ref{rem:unit}), so the denominators roughly square at each step: $S_2(20)$ has $92406$ decimal digits, and $S_2(42)$ has about $3.9\cdot10^{11}$ digits. We never compute $S_2(42)$. Instead we track the small numerator $u_n$ of $1-s(n)$ exactly and the denominator only modulo a modulus that shrinks at each step (Lemma~\ref{lem:mod}); the Lean kernel runs and checks this computation.
+Numerical computations outside the formal proof show that $n=42$ is the smallest counterexample, and that further counterexamples occur at $n=50$ (difference $3$), $n=56$ and $n=59$ (difference $5$ in both cases), with no others for $n\le 70$.
+
+\section{Statement}\label{sec:statement}
+
+\subsection{The sequences}
+Let $p_k$ denote the $k$-th prime ($p_1=2$). For $x\in\Q$ let $\num(x)\in\Z$ and $\den(x)\in\N_{>0}$ be its numerator and denominator in lowest terms. Define $s(0)=0$ and, for $n\ge1$,
+\begin{equation}\label{eq:rec}
+  b(n)=1+\fl{\frac{1}{(1-s(n-1))\,p_n}},\qquad s(n)=s(n-1)+\frac{1}{p_n\,b(n)}.
+\end{equation}
+By Lemma~\ref{lem:T} below, $0<1-s(n)\le 1$ for all~$n$, so \eqref{eq:rec} is well defined.
+For $c\in\N_{>0}$, $s(n-1)+1/(p_nc)<1$ if and only if $c>1/((1-s(n-1))p_n)$, i.e.\ $c\ge b(n)$; as every admissible prefix extends, $b$ is the lexicographically earliest admissible sequence, the OEIS definition of A375781. Put $S_1(n)=\num(s(n))$ and $S_2(n)=\den(s(n))$.
+
+\begin{theorem}\label{thm:main}
+$S_2(42)-S_1(42)=5$.
+\end{theorem}
+
+\begin{corollary}\label{cor:main}
+The following statement is false: for every $n\ge1$ with $n\ne4$ and $n\ne6$, $S_2(n)-S_1(n)=1$.
+\end{corollary}
+
+\subsection{The OEIS conjecture}
+The conjecture is a comment in A375522 \cite{A375522}, an entry by Rémy Sigrist and N.~J.~A. Sloane dated Aug 30 2024 (revision \#25, Apr 22 2025). It reads verbatim:
+\begin{quote}\small
+Let S(n) = Sum\_\{k = 1..n\} 1 / (k*A375781(k)) = S1(n)/S2(n) when reduced to lowest terms, where S1(n) = A375521(n), S2(n) = the present sequence.
+The differences S2(n) - S1(n) are surprisingly small: for n = 1,2,...,34 the values S2(n) - S1(n) are:
+1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+suggesting the conjecture that they are always 1 except for n = 4 and 6 (compare the Theorem in A374983).
+\end{quote}
+The entry's name and this comment write $1/(k\cdot\mathrm{A375781}(k))$. The data, the worked example ($0/1, 1/2, 5/6, 14/15,\dots$) and the Maple, Mathematica and Python programs of A375521, A375522 and A375781 all use $1/(p_k\cdot\mathrm{A375781}(k))$. With $k$ read literally the first sum would already be $1/(1\cdot1)=1$, contradicting $S_2(1)=2$. So ``$k$'' is a typo for $\mathrm{prime}(k)$, and \eqref{eq:rec} is exactly the recursion in the entries' Maple and Mathematica programs.
+
+\subsection{The Lean statement}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A375522.lean} (namespace \decl{Math0.Statements.A375522}). It was reviewed for fidelity and frozen (SHA-256 \texttt{3eec79b4\dots ced342}) before any proof attempt. The primes are computed by a bounded search (docstrings omitted):
+\begin{lstlisting}
+def firstPrimeFrom : ℕ → ℕ → ℕ
+  | 0, _ => 0
+  | fuel + 1, q => if q.Prime then q else firstPrimeFrom fuel (q + 1)
+def nextPrime (m : ℕ) : ℕ := firstPrimeFrom (m + 2) (m + 1)
+def primeAt : ℕ → ℕ
+  | 0 => 2
+  | i + 1 => nextPrime (primeAt i)
+def prime (k : ℕ) : ℕ := primeAt (k - 1)
+\end{lstlisting}
+The sums, the three sequences and the statement are (verbatim):
+\begin{lstlisting}
+/-- `s n = ∑_{k = 1..n} 1 / (prime k * b k)` with the greedy
+`b k = 1 + ⌊1 / ((1 - s (k - 1)) * prime k)⌋` (A375781), `s 0 = 0`. -/
+def s : ℕ → ℚ
+  | 0 => 0
+  | n + 1 => s n + 1 / ((prime (n + 1) : ℚ) *
+      ((1 + ⌊1 / ((1 - s n) * (prime (n + 1) : ℚ))⌋ : ℤ) : ℚ))
+
+/-- A375781: `b n = 1 + floor(1/((1 - s(n-1)) * prime(n)))` for `n ≥ 1`. -/
+def b (n : ℕ) : ℤ := 1 + ⌊1 / ((1 - s (n - 1)) * (prime n : ℚ))⌋
+
+/-- A375521: `S1 n`, the numerator of `s n` in lowest terms. -/
+def S1 (n : ℕ) : ℤ := (s n).num
+
+/-- A375522: `a n = S2 n`, the denominator of `s n = ∑_{k = 1..n} 1 / (prime k * A375781 k)`
+in lowest terms. -/
+def a (n : ℕ) : ℕ := (s n).den
+
+/-- Conjecture (Sigrist and Sloane, 2024): for every `n ≥ 1` other than `n = 4` and `n = 6`,
+`S2(n) - S1(n) = 1`, i.e. `s n = 1 - 1 / a n`. -/
+def statement : Prop :=
+  ∀ n : ℕ, 1 ≤ n → n ≠ 4 → n ≠ 6 → (a n : ℤ) - S1 n = 1
+\end{lstlisting}
+
+\subsection{How the encoding matches the OEIS}
+\emph{Primes.} The file proves \decl{primeAt_eq_nth}: \texttt{primeAt i = Nat.nth Nat.Prime i}, using Bertrand's postulate (Mathlib's \decl{Nat.exists_prime_lt_and_le_two_mul}) to guarantee a prime in the search window $m+1,\dots,2m+2$. So \texttt{prime k} is Mathlib's $k$-th prime $p_k$ for $k\ge1$; \texttt{prime 0} is never used.
+\emph{Sums.} \decl{s} is the recursion \eqref{eq:rec} over $\Q$ with \decl{Int.floor}; the lemma \decl{s_succ} (proved by \texttt{rfl}) states $s(n+1)=s(n)+1/(p_{n+1}\,b(n+1))$.
+\emph{Fractions.} A Mathlib rational is stored in lowest terms with a positive denominator, so \texttt{S1 n} and \texttt{a n} are $S_1(n)$ and $S_2(n)$, with OEIS offset~$0$. The difference is taken in $\Z$, so truncated subtraction in $\N$ plays no role.
+\emph{Range.} The comment concerns $n\ge1$ (at $n=0$ the difference is $1$ anyway).
+\emph{Data.} The kernel checks, by \texttt{decide +kernel}, that the definitions reproduce all $11$ listed terms of A375522 (\decl{a_data}), A375521 (\decl{S1_data}) and A375781 (\decl{b_data}), and that the differences for $n=1,\dots,24$ are $1,1,1,2,1,2,1,1,\dots,1$, as in the comment (\decl{diff_data}). This also confirms the reading of ``$k$'' as $\mathrm{prime}(k)$.
+
+Corollary~\ref{cor:main} is the Lean theorem \decl{Math0.Frontier.A375522.result}, whose type is \texttt{¬ statement}. Theorem~\ref{thm:main} is not a separate exported Lean declaration. It follows from the private lemmas \decl{diff_eq}, \decl{T_spec}, \decl{mrun_spec} and \decl{mrun_42} of Section~\ref{sec:proof}, which are kernel-checked in the same file and combined in the proof of \decl{result}.
+
+\section{Proof}\label{sec:proof}
+
+Throughout, $R_n=1-s(n)$, and for integers $m$ and $M>0$, $m\bmod M\in[0,M)$ denotes the least nonnegative residue.
+
+\subsection{Reduction to the remainder}
+
+\begin{lemma}[\decl{diff_eq}]\label{lem:diff}
+For every $n$, $S_2(n)-S_1(n)=\num(R_n)$.
+\end{lemma}
+\begin{proof}
+For $x\in\Q$ we have $\den(1-x)=\den(x)$, since $1-x=(\den x-\num x)/\den x$ and $\gcd(\den x-\num x,\den x)=\gcd(\num x,\den x)=1$. Hence
+$\num(1-x)=(1-x)\den(1-x)=(1-x)\den(x)=\den(x)-\num(x)$. Take $x=s(n)$.
+\end{proof}
+
+\begin{lemma}[\decl{rat_step}]\label{lem:step}
+Let $u,D,p$ be positive integers and $R=u/D$ (not necessarily in lowest terms). Write $D=upq+r$ with $q=\fl{D/(up)}$ and $0\le r<up$. Then $\fl{1/(Rp)}=q$ and
+\[
+  R-\frac{1}{p\,(1+\fl{1/(Rp)})}=\frac{up-r}{Dp(q+1)},\qquad up-r\ge1 .
+\]
+Consequently, with $g=\gcd\bigl(up-r,\;Dp(q+1)\bigr)$, the numerator and denominator of the left-hand side in lowest terms are $(up-r)/g>0$ and $Dp(q+1)/g$.
+\end{lemma}
+\begin{proof}
+We have $1/(Rp)=D/(up)$, whose floor is $q$, and $u/D-1/(p(q+1))=(up(q+1)-D)/(Dp(q+1))$ with $up(q+1)-D=up-r\ge1$. The last claim holds because, for positive integers $N$ and $M$, the fraction $N/M$ in lowest terms is $(N/\gcd(N,M))/(M/\gcd(N,M))$; in Lean this is \decl{Rat.num_mkRat} and \decl{Rat.den_mkRat}.
+\end{proof}
+
+Let $\tau_p(u,D)$ denote the pair $\bigl((up-r)/g,\;Dp(q+1)/g\bigr)$ of Lemma~\ref{lem:step} (Lean: \decl{tstep}). Define $(u_0,D_0)=(1,1)$ and $(u_n,D_n)=\tau_{p_n}(u_{n-1},D_{n-1})$ (Lean: \decl{T}).
+
+\begin{lemma}[\decl{T_spec}]\label{lem:T}
+For every $n$, $\num(R_n)=u_n$, $\den(R_n)=D_n$ and $u_n>0$. In particular $0<R_n\le1$, and $S_2(n)-S_1(n)=u_n$.
+\end{lemma}
+\begin{proof}
+Induction on $n$. For $n=0$, $R_0=1=1/1$. For the step, \eqref{eq:rec} gives $R_n=R_{n-1}-1/\bigl(p_n(1+\fl{1/(R_{n-1}p_n)})\bigr)$, and $R_{n-1}=u_{n-1}/D_{n-1}$ with $u_{n-1},D_{n-1}>0$ by the induction hypothesis. Lemma~\ref{lem:step} gives $\num(R_n)=u_n>0$ and $\den(R_n)=D_n$. Moreover $R_n\le R_{n-1}\le 1$. The last assertion follows from Lemma~\ref{lem:diff}.
+\end{proof}
+
+\begin{remark}\label{rem:unit}
+Suppose $u_{n-1}=1$, write $D=D_{n-1}$, $p=p_n$, $r=D\bmod p$, and put $m=p-r$. Then $p(q+1)=D+m$, so $1-s(n)=m/(D(D+m))$. Since $D(D+m)\equiv D^2\pmod m$,
+\[
+  u_n=\frac{m}{\gcd(m,D^2)},\qquad D_n=\frac{D(D+m)}{\gcd(m,D^2)}.
+\]
+Hence $u_n=1$ if and only if $(p_n-r)\mid D_{n-1}^2$, and $D_n\ge D_{n-1}^2/p_n$. The Lean proof does not use this remark.
+\end{remark}
+
+\subsection{A certified modular simulation}
+For a prime $p$ and a triple $(u,d,X)\in\N^3$, where $d$ stands for a residue of the true denominator modulo~$X$, put
+\[
+  \nu=up-(d\bmod up),\quad \delta=d\,p\,\bigl(\fl{d/(up)}+1\bigr),\quad \gamma=\gcd(\nu,\delta),\quad X'=\fl{\fl{X/u}/\gamma},
+\]
+and define $\mu_p(u,d,X)=\bigl(\nu/\gamma,\ (\delta/\gamma)\bmod X',\ X'\bigr)$ (Lean: \decl{mstep}).
+The step is \emph{checked} if $\mathrm{ok}_p(u,d,X)$ holds, meaning that $up>0$, $up\mid X$ and $\nu\mid \fl{X/u}$ (Lean: \decl{mok}).
+
+\begin{lemma}[\decl{mstep_spec}]\label{lem:mod}
+Let $p,u,D,d,X\in\N$ with $\mathrm{ok}_p(u,d,X)$ and $D\equiv d\pmod X$. Then the first component of $\tau_p(u,D)$ equals $\nu/\gamma$, and the second component of $\tau_p(u,D)$ is congruent to $\delta/\gamma$, hence to $(\delta/\gamma)\bmod X'$, modulo $X'$.
+\end{lemma}
+\begin{proof}
+Write $X=upk$. Then $\fl{X/u}=pk$, and the hypothesis says $\nu\mid pk$.
+(a) Since $up\mid X$ and $D\equiv d\pmod X$, we have $D\bmod up=d\bmod up=:r$. So the true unreduced numerator $up-(D\bmod up)$ equals $\nu=up-r$.
+(b) Write $D=upq_1+r$ and $d=upq_2+r$. Then $upk=X$ divides $d-D=up(q_2-q_1)$, hence $k\mid q_2-q_1$. Write $d-D=upkc$ and $q_2-q_1=ke$ with $c,e\in\Z$.
+(c) Let $\delta_t=Dp(q_1+1)$ be the true unreduced denominator. Then $\delta=dp(q_2+1)$, and
+\[
+  \delta-\delta_t=p\bigl[(d-D)(q_2+1)+D(q_2-q_1)\bigr]=pk\bigl[upc\,(q_2+1)+De\bigr],
+\]
+so $\delta_t\equiv\delta\pmod{pk}$.
+(d) Since $\nu\mid pk$, also $\delta_t\equiv\delta\pmod\nu$, so $\gcd(\nu,\delta_t)=\gcd(\nu,\delta)=\gamma$. The true step therefore divides by the same $\gamma$, and its first component is $\nu/\gamma$ by Lemma~\ref{lem:step}.
+(e) Since $\gamma$ divides $\nu$, it divides $pk$, and it also divides $\delta_t$ and $\delta$. Cancelling $\gamma$ in $\delta_t\equiv\delta\pmod{pk}$ gives $\delta_t/\gamma\equiv\delta/\gamma\pmod{pk/\gamma}$, and $pk/\gamma=X'$.
+\end{proof}
+
+Fix $X_0\in\N$. The \emph{checked run} is $\rho_0=(1,1,X_0)$, and $\rho_n=\mu_{p_n}(\rho_{n-1})$ if $\rho_{n-1}$ is defined and $\mathrm{ok}_{p_n}(\rho_{n-1})$ holds; otherwise $\rho_n$ is undefined (Lean: \decl{mrun}, with values in \texttt{Option}).
+
+\begin{lemma}[\decl{mrun_spec}]\label{lem:run}
+If $\rho_n=(u,d,X)$ is defined, then $u_n=u$ and $D_n\equiv d\pmod X$.
+\end{lemma}
+\begin{proof}
+Induction on $n$; for $n=0$, $(u_0,D_0)=(1,1)$. If $\rho_n$ is defined, then $\rho_{n-1}=(u,d,X)$ is defined, $\mathrm{ok}_{p_n}(u,d,X)$ holds, and by induction $u_{n-1}=u$ and $D_{n-1}\equiv d\pmod X$. Lemma~\ref{lem:mod} with $D=D_{n-1}$ gives the claim for $(u_n,D_n)=\tau_{p_n}(u,D_{n-1})$.
+\end{proof}
+
+\subsection{The computation}
+
+\begin{proposition}[\decl{mrun_42}]\label{prop:run}
+For $X_0=(190!)^2$, the checked run $\rho_{42}$ is defined and its first component is~$5$.
+\end{proposition}
+
+This is a finite computation carried out by the Lean kernel (Section~\ref{sec:lean}). The modulus $X_0$ has $2339$ bits. Each step divides it by $u_{n-1}\gamma$, and after $42$ steps it still has $2157$ bits; no intermediate number exceeds about $4700$ bits.
+Table~\ref{tab:run} records the run: for each step, the residue $r=D_{n-1}\bmod u_{n-1}p_n$, the unreduced numerator $\nu$, and the cancelled factor $\gamma$. By Lemma~\ref{lem:mod}(a),(d) these are the true values, and $u_n=\nu/\gamma$.
+
+\begin{table}[tbp]
+\centering\footnotesize
+\setlength{\tabcolsep}{3.6pt}
+\begin{tabular}{rrrrr@{\hspace{1.6em}}rrrrr@{\hspace{1.6em}}rrrrr}
+\toprule
+$n$ & $p_n$ & $r$ & $\nu$ & $\gamma$ & $n$ & $p_n$ & $r$ & $\nu$ & $\gamma$ & $n$ & $p_n$ & $r$ & $\nu$ & $\gamma$\\
+\midrule
+1 & 2 & 1 & 1 & 1 & 15 & 47 & 39 & 8 & 8 & 29 & 109 & 9 & 100 & 100\\
+2 & 3 & 2 & 1 & 1 & 16 & 53 & 20 & 33 & 33 & 30 & 113 & 57 & 56 & 56\\
+3 & 5 & 1 & 4 & 4 & 17 & 59 & 29 & 30 & 30 & 31 & 127 & 104 & 23 & 23\\
+\textbf{4} & 7 & 1 & 6 & 3 & 18 & 61 & 15 & 46 & 46 & 32 & 131 & 0 & 131 & 131\\
+5 & 11 & 17 & 5 & 5 & 19 & 67 & 66 & 1 & 1 & 33 & 137 & 27 & 110 & 110\\
+\textbf{6} & 13 & 11 & 2 & 1 & 20 & 71 & 19 & 52 & 52 & 34 & 139 & 132 & 7 & 7\\
+7 & 17 & 33 & 1 & 1 & 21 & 73 & 17 & 56 & 56 & 35 & 149 & 57 & 92 & 92\\
+8 & 19 & 17 & 2 & 2 & 22 & 79 & 45 & 34 & 34 & 36 & 151 & 23 & 128 & 128\\
+9 & 23 & 15 & 8 & 8 & 23 & 83 & 79 & 4 & 4 & 37 & 157 & 52 & 105 & 105\\
+10 & 29 & 1 & 28 & 28 & 24 & 89 & 0 & 89 & 89 & 38 & 163 & 38 & 125 & 125\\
+11 & 31 & 28 & 3 & 3 & 25 & 97 & 4 & 93 & 93 & 39 & 167 & 36 & 131 & 131\\
+12 & 37 & 11 & 26 & 26 & 26 & 101 & 0 & 101 & 101 & 40 & 173 & 0 & 173 & 173\\
+13 & 41 & 21 & 20 & 20 & 27 & 103 & 0 & 103 & 103 & 41 & 179 & 178 & 1 & 1\\
+14 & 43 & 22 & 21 & 21 & 28 & 107 & 3 & 104 & 104 & \textbf{42} & 181 & 56 & 125 & 25\\
+\bottomrule
+\end{tabular}
+\caption{The checked run from $X_0=(190!)^2$: $r=D_{n-1}\bmod u_{n-1}p_n$, $\nu=u_{n-1}p_n-r$, $\gamma=\gcd(\nu,\delta)$, $u_n=\nu/\gamma$. Here $u_n=1$ except at the steps in bold ($u_4=u_6=2$, $u_{42}=5$). The Lean theorem records only $u_{42}=5$; the table was recomputed in Python.}
+\label{tab:run}
+\end{table}
+
+\emph{Step $42$ by hand.} The run gives $u_{41}=1$, and its modulus $X_{41}$ is divisible by $181\cdot 5^3$; its residue yields $D_{41}\equiv56\pmod{181}$ and $D_{41}\equiv5\pmod{125}$. So $r=56$ and $m=\nu=125$, and by Remark~\ref{rem:unit}, $u_{42}=125/\gcd(125,D_{41}^2)$. Since $5\parallel D_{41}$, $\gcd(125,D_{41}^2)=25$ and $u_{42}=5$. By contrast, at step $38$ the same $\nu=125$ cancels completely, because $5^2\mid D_{37}$.
+
+\begin{proof}[Proof of Theorem~\ref{thm:main} and Corollary~\ref{cor:main}]
+By Lemma~\ref{lem:T}, $S_2(42)-S_1(42)=u_{42}$. By Proposition~\ref{prop:run} and Lemma~\ref{lem:run}, $u_{42}=5$. Since $42\ge1$, $42\ne4$ and $42\ne6$, while $5\ne1$, the statement of Corollary~\ref{cor:main} fails at $n=42$.
+\end{proof}
+
+The Lean proof of \decl{result} follows this route: it specializes \decl{statement} to $n=42$, rewrites with \decl{diff_eq} and \decl{T_spec} to get $u_{42}=1$, and then uses \decl{mrun_42} and \decl{mrun_spec} to get $u_{42}=5$, a contradiction.
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+In the math0 repository (\url{https://github.com/Foundation-0/math0}), the proof is in \path{lean/Math0/Frontier/OEIS/A375522.lean}, namespace \decl{Math0.Frontier.A375522}, and the main theorem is \decl{Math0.Frontier.A375522.result}. The private auxiliary declarations are named in Section~\ref{sec:proof} next to the corresponding definitions and lemmas. Verbatim excerpts (docstrings omitted):
+\begin{lstlisting}
+private def X0 : ℕ := Nat.factorial 190 ^ 2
+
+private theorem mrun_42 : (mrun X0 42).map (·.1) = some 5 := by
+  decide +kernel
+
+#math0_settles Math0.Frontier.A375522.result Math0.Statements.A375522.statement
+\end{lstlisting}
+
+\subsection*{Kernel computation}
+Proposition~\ref{prop:run} is proved by \texttt{decide +kernel}: the Lean kernel reduces the decision procedure to \texttt{true}, computing $190!$, the primes $p_1,\dots,p_{42}$ via the statement file's \decl{prime}, and all $42$ steps and checks with its built-in arbitrary-precision arithmetic on natural-number literals. No compiled code is trusted; the file uses no \decl{native_decide} (which would add the axiom \decl{Lean.ofReduceBool}), \texttt{sorry}, \texttt{axiom} or \texttt{set\_option}.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a universe-monomorphic definition of type \texttt{Prop}; (2) \decl{statement} depends only on the axioms \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, so it cannot hide a \texttt{sorry}; (3) the type of \decl{result} is, up to metadata and with no unfolding, either \texttt{statement} or \texttt{¬ statement}; and (4) \decl{result} also depends only on those three axioms. On this file it reports:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A375522.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A375522.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A375522.result' refutes 'Math0.Statements.A375522.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root; it builds all math0 results with \texttt{lake build} (re-running every audit command) and checks that the pinned dependencies are unmodified. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A375522.lean} in \path{lean/}; this took about one minute of wall-clock time on our machine.
+Two math0 referees reimplemented the run in Python, with $X_0=(190!)^2$ and with other starting moduli up to $(2000!)^4$, and obtained identical results.
+
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Fried}
+S.~Fried, \emph{Further proofs of conjectures from the OEIS}, arXiv:2607.24832, 2026.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A375522}
+The OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, entry A375522 (R.~Sigrist and N.~J.~A. Sloane), revision \#25, Apr 22 2025, \url{https://oeis.org/A375522}.
+
+\bibitem{OEISrel}
+The OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, entries A375521 (R.~Sigrist and N.~J.~A. Sloane), A374663, A374983 and A375781 (R.~Sigrist), A375516, A375528 and A376048 (N.~J.~A. Sloane), at \url{https://oeis.org/}.
+
+\bibitem{SigristProof}
+R.~Sigrist, \emph{Proof of Theorem} (in A374983), Aug 26 2024, revised Sep 01 2024, \url{https://oeis.org/A374983/a374983.txt}.
+
+\bibitem{SiSl}
+R.~Sigrist and N.~J.~A. Sloane, \emph{Dampening Down a Divergent Series}, manuscript in preparation, September 2024 (cited in OEIS A374663 and A376048).
+
+\bibitem{SloaneTalk}
+N.~J.~A. Sloane, \emph{A Nasty Surprise in a Sequence and Other OEIS Stories}, Experimental Mathematics Seminar, Rutgers University, Oct 10 2024. Video: \url{https://www.youtube.com/watch?v=3RAYoaKMckM}; slides: \url{https://sites.math.rutgers.edu/~zeilberg/expmath/sloane85BD.pdf}.
+
+\end{thebibliography}
+
+\end{document}

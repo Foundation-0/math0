@@ -1,0 +1,376 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,noncomputable,ring,push_cast},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1
+    {↔}{{$\leftrightarrow$}}1 {¬}{{$\neg$}}1 {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {→}{{$\to$}}1
+    {≤}{{$\le$}}1 {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {·}{{$\cdot$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\T}{\mathsf{T}}
+\newcommand{\pr}{\operatorname{prime}}
+
+\title[Every odd prime is a side of a Heronian triangle]{Every odd prime is a side length of a triangle with integer sides and integer area (OEIS A229159)}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 18, 2026}
+
+\begin{document}
+\begin{abstract}
+We prove that for every prime $p>2$ there is a non-degenerate triangle with integer side lengths and integer area one of whose sides has length $p$; this is the conjecture recorded by Michel Lagneau in 2013 in the OEIS entry A229159, whose terms are the least such areas.
+The conjecture is an immediate consequence of the classical fact, attributed to Pythagoras by Proclus, that every odd $n=2m+1\ge 3$ is a leg of the right triangle with sides $n$, $(n^2-1)/2$, $(n^2+1)/2$, whose area $m(m+1)(2m+1)$ is an integer.
+The result is therefore known, and we classify this note as a first formal proof of a known result, not as new mathematics.
+The theorem is verified in Lean~4 against a statement that math0 formalized from the OEIS entry and that was reviewed for fidelity and frozen before the proof attempt; the definitions in that statement file are checked by the kernel against the first $19$ listed terms, and the same file shows that five later listed terms are not minimal.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+A \emph{Heronian triangle} is a non-degenerate triangle whose side lengths and area are integers.
+The OEIS entry A229159 \cite{A229159}, submitted by Michel Lagneau on September~17, 2013, has the name ``Smallest integer areas of integer-sided triangles where at least one side is of length prime(n)'', with offset~$1$; its first terms are
+\[
+  0,\ 6,\ 6,\ 42,\ 66,\ 24,\ 36,\ 114,\ 966,\ 60,\ 930,\ 114,\ 126,\ 1290,\ 4230,\ 90,\ 1770,\ 330,\ 2814,\ \dots,
+\]
+where $a(1)=0$ records that no such triangle has a side of length $\pr(1)=2$.
+The entry states the conjecture that every prime $p>2$ is a side length of a Heronian triangle (Section~\ref{sec:statement}), that is, $a(n)>0$ for all $n\ge2$.
+A companion entry by the same author, A226453 \cite{A226453}, lists the integer areas of integer-sided triangles with at least one side of prime length.
+
+\subsection*{Prior work}
+The conjecture follows at once from a classical construction.
+Proclus, in his commentary on Proposition~I.47 of Euclid's \emph{Elements} \cite{Proclus}, attributes to Pythagoras a rule that takes an odd number $n$ as the shorter leg of a right triangle, $(n^2-1)/2$ as the other leg and $(n^2+1)/2$ as the hypotenuse; see also Eves \cite[Sec.~3-4]{Eves}.
+The lemma that precedes Proposition~X.29 of the \emph{Elements} \cite[vol.~3]{Heath} constructs, in general, two square numbers whose sum is a square; in modern terms it contains this rule as a special case.
+For an odd prime $p$ the rule gives a right triangle with integer sides whose area $p(p^2-1)/4$ is an integer, since $8\mid p^2-1$.
+
+The rule, and the fact that every odd prime is a leg of a Pythagorean triangle, were recorded in the OEIS before Lagneau's entry.
+In A046079 \cite{A046079} (number of Pythagorean triangles with leg $n$), Ant King noted on January~29, 2011 that for $n>2$ the positions of the ones are the primes and their doubles, so each odd prime is a leg of exactly one Pythagorean triangle; and Richard R.~Forberg noted on May~31, 2013, with $L$ the length of the longest leg and $H$ the hypotenuse, that ``For odd $n$: $L=(n^2-1)/2$ and $H=L+1$''.
+In a related direction, A042965 \cite{A042965} records (in a comment by Sharon Sela, January~25, 2002) that its terms are the nonnegative integers that are differences of two squares, and N.~J.~A.~Sloane added on May~30, 2014, after Lagneau's entry, that the primes in the sequence are all the odd primes.
+
+The A229159 entry (revision \#18 of September~16, 2017, which is the version we read) still states the conjecture and does not mention this construction.
+The math0 referees found no source that addresses the conjecture of A229159 directly.
+Mathlib \cite{Mathlib} contains the classification of Pythagorean triples (\path{Mathlib/NumberTheory/PythagoreanTriples.lean}) but not this statement, and the statement is not among those of the formal-conjectures repository \cite{FC}.
+The mathematics in this note is classical and elementary.
+What we add is a complete proof that matches a kernel-checked Lean proof of a frozen formal statement (Section~\ref{sec:lean}); to our knowledge it is the first formal proof of the statement.
+We also record (Remark~\ref{rem:errata}) a by-product of the check of the formal definitions against the OEIS data: the listed terms $a(20)$, $a(25)$, $a(29)$, $a(32)$ and $a(40)$ are not minimal.
+
+\section{Statement}\label{sec:statement}
+
+\subsection*{The OEIS conjecture}
+The comments of A229159 contain the following sentence, verbatim:
+\begin{quote}
+Conjecture: for all prime p $>$ 2 there exists an integer-sided triangle with integer area where at least one side is of length p.
+\end{quote}
+This is the wording of the current revision (\#18).
+Michel Lagneau added the conjecture when he submitted the entry on September~17, 2013 (revision \#7 in the entry's edit history), in the form ``Conjecture: for all prime p $>$ 2 there exists an integer-sided triangles where at least one side is of p length.''
+The words ``with integer area'' and the present phrasing come from a copy-edit by Jon E.~Schoenfield of September~15, 2017 (revision \#12, approved as revision \#18).
+Read together with the entry's name, which asks for integer areas, the original wording expresses the same conjecture; we formalize the current wording.
+
+\subsection*{Mathematical formulation}
+By Heron's formula, a triangle with side lengths $x,y,z$ has area $S$ with
+\[
+  16S^2=(x+y+z)(-x+y+z)(x-y+z)(x+y-z).
+\]
+A triple of positive reals is the triple of side lengths of a non-degenerate triangle if and only if it satisfies the three strict triangle inequalities, and the right-hand side is then positive.
+This motivates the following definition.
+
+\begin{definition}\label{def:T}
+For $x,y,z,A\in\N$ write $\T(x,y,z;A)$ if $x<y+z$, $y<x+z$, $z<x+y$ and
+\[
+  16A^2=(x+y+z)(-x+y+z)(x-y+z)(x+y-z)\qquad\text{in }\Z.
+\]
+\end{definition}
+
+Thus $\T(x,y,z;A)$ holds exactly when $x,y,z$ are the side lengths of a non-degenerate triangle whose area is the natural number $A$; in that case $x,y,z\ge1$ and $A\ge1$.
+
+\begin{theorem}\label{thm:main}
+For every prime $p>2$ there are $x,y,z,A\in\N$ with $\T(x,y,z;A)$ and $p\in\{x,y,z\}$.
+\end{theorem}
+
+The proof (Section~\ref{sec:proof}) gives an explicit witness: if $p=2m+1$, then
+\[
+  \T\bigl(2m+1,\ 2m^2+2m,\ 2m^2+2m+1;\ m(m+1)(2m+1)\bigr).
+\]
+
+\subsection*{Lean statement}
+The statement is the definition \decl{Math0.Statements.A229159.statement} in the frozen math0 statement file \path{lean/Math0/Statements/OEIS/A229159.lean}.
+The two definitions it consists of are, verbatim (docstrings omitted; both lie in the namespace \decl{Math0.Statements.A229159}):
+\begin{lstlisting}
+def IsIntTriangle (x y z A : ℕ) : Prop :=
+  x < y + z ∧ y < x + z ∧ z < x + y ∧
+    16 * (A : ℤ) ^ 2 =
+      ((x : ℤ) + y + z) * (-(x : ℤ) + y + z) * ((x : ℤ) - y + z) * ((x : ℤ) + y - z)
+
+def statement : Prop :=
+  ∀ p : ℕ, p.Prime → 2 < p →
+    ∃ x y z A : ℕ, IsIntTriangle x y z A ∧ (x = p ∨ y = p ∨ z = p)
+\end{lstlisting}
+\texttt{IsIntTriangle x y z A} is $\T(x,y,z;A)$, and \decl{statement} is Theorem~\ref{thm:main}.
+
+\subsection*{Encoding}
+An ``integer-sided triangle'' is a triple of natural numbers satisfying the strict triangle inequalities, so degenerate triangles are excluded and every side is at least~$1$.
+Without this exclusion the statement would be trivial, since $(p,p,2p)$ would be a ``triangle'' of area~$0$, and $a(1)=0$ would no longer mean that there is no triangle.
+``Integer area'' means that the area given by Heron's formula is a natural number $A$; the formal statement uses Heron's formula as the definition of the area and does not refer to Euclidean geometry.
+The four factors are computed in $\Z$, so truncated subtraction in $\N$ plays no role.
+``At least one side is of length $p$'' is the disjunction $x=p\lor y=p\lor z=p$.
+The entry's Maple program uses the same notion: for sides $a\le b\le c$ it computes $x=s(s-a)(s-b)(s-c)$ with $s=(a+b+c)/2$, takes $\sqrt{x}$ only when $x>0$, and tests whether it is an integer; since $16x$ is the Heron product, this is the condition $\T(a,b,c;\sqrt{x})$.
+
+\subsection*{Check against the OEIS data}
+The statement file also defines the sequence itself:
+\begin{lstlisting}
+def areas (m : ℕ) : Set ℕ :=
+  {A | ∃ x y z : ℕ, IsIntTriangle x y z A ∧ (x = m ∨ y = m ∨ z = m)}
+
+noncomputable def prime (n : ℕ) : ℕ := Nat.nth Nat.Prime (n - 1)
+
+noncomputable def a (n : ℕ) : ℕ := sInf (areas (prime n))
+\end{lstlisting}
+Here \texttt{prime n} is the $n$th prime with \texttt{prime 1 = 2}, and \decl{sInf} on $\N$ is the least element of a nonempty set and $0$ for the empty set, which matches the convention $a(1)=0$.
+In these terms \decl{statement} says that \texttt{areas p} is nonempty for every prime $p>2$, that is, $a(n)\ne0$ for $n\ge2$.
+
+The file proves \decl{a_data}, which states that $(a(1),\dots,a(19))$ equals the first $19$ listed terms (the primes up to~$67$).
+The value $a(1)=0$ is proved by hand from \texttt{areas 2 =~}$\emptyset$ (Remark~\ref{rem:two}).
+For $n=2,\dots,19$ a single \texttt{decide +kernel} evaluates, in the kernel, a Boolean certificate for each table entry $(n,p,A_0,b,c)$: that $p$ is prime and is the $n$th prime (via \decl{Nat.count}); that $(p,b,c)$ satisfies the triangle inequalities with Heron product $16A_0^2$ (the witnesses are the triangles in the entry's table); and that no triangle with a side $p$ has an integer area below $A_0$.
+For the last check, a triangle $(p,b,c)$ with $b\le c$ has $d=c-b<p$, and for fixed $p$ and $d$ the Heron product of $(p,b,b+d)$ is monotone in $b$ (lemma \decl{heronN_mono}); so for each $d<p$ the check scans $b=0,1,2,\dots$ until the Heron product reaches $16A_0^2$ and verifies that no earlier $(p,b,b+d)$ satisfying the triangle inequalities has a Heron product that is $16$ times a square, certifying each non-square $N$ by an $r$ with $r^2<N<(r+1)^2$.
+Soundness of these helpers is proved in the file, so \decl{a_data} is a statement about the noncomputable \decl{a} above.
+Independently of the formal check, a brute-force search by the math0 fidelity referee agrees with all $48$ listed terms except the five discussed next.
+
+\begin{remark}[Listed terms that are not minimal]\label{rem:errata}
+The statement file proves, by kernel evaluation of witness certificates,
+\begin{lstlisting}
+theorem oeis_errata : a 20 ≤ 11928 ∧ a 25 ≤ 396 ∧ a 29 ≤ 330 ∧ a 32 ≤ 6288 ∧ a 40 ≤ 2970
+\end{lstlisting}
+using the triangles $(71,505,560)$, $(97,11,90)$, $(109,11,100)$, $(131,265,390)$ and $(173,36,187)$, whose integer areas are $11928$, $396$, $330$, $6288$ and $2970$.
+The listed terms are $a(20)=14910$, $a(25)=420$, $a(29)=840$, $a(32)=11790$ and $a(40)=3276$, so they are not minimal.
+We do not determine the true values here, and we note only that the entry's Maple program limits the sides to $500$ and stops at the first triangle it finds, which is in general not one of least area.
+These errata concern the listed values only, not the conjecture, which is an existence statement.
+\end{remark}
+
+\section{Proof}\label{sec:proof}
+
+The proof has one lemma, which is the Lean lemma \decl{isIntTriangle_odd}.
+
+\begin{lemma}\label{lem:odd}
+Let $m\ge1$ be an integer and put
+\[
+  x=2m+1,\qquad y=2m^2+2m,\qquad z=2m^2+2m+1,\qquad A=m(m+1)(2m+1).
+\]
+Then $\T(x,y,z;A)$.
+\end{lemma}
+
+\begin{proof}
+\emph{Triangle inequalities.}
+We have $y+z-x=4m^2+2m>0$, so $x<y+z$.
+Next $y<z<x+z$.
+Finally $x+y-z=2m>0$, so $z<x+y$.
+The first and last inequalities use $m\ge1$.
+
+\emph{Heron's identity.}
+Computing in $\Z$,
+\begin{align*}
+  x+y+z &= 4m^2+6m+2 = 2(m+1)(2m+1), & -x+y+z &= 4m^2+2m = 2m(2m+1),\\
+  x-y+z &= 2m+2 = 2(m+1), & x+y-z &= 2m.
+\end{align*}
+The product of the four factors is
+\[
+  2(m+1)(2m+1)\cdot 2m(2m+1)\cdot 2(m+1)\cdot 2m = 16\,m^2(m+1)^2(2m+1)^2 = 16A^2. \qedhere
+\]
+\end{proof}
+
+In Lean, the inequality $x<y+z$ is closed by \texttt{nlinarith}, the other two by \texttt{omega} (which treats $m^2$ as an atom), and Heron's identity by \texttt{push\_cast} followed by \texttt{ring}, which proves it as a polynomial identity in $m$ over $\Z$.
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $p$ be a prime with $p>2$.
+Then $p\ne2$, so $p$ is odd and $p=2m+1$ for some $m\in\N$; since $p>2$ we have $m\ge1$.
+Lemma~\ref{lem:odd} gives $\T(p,\,2m^2+2m,\,2m^2+2m+1;\,m(m+1)(2m+1))$, and the first side is $p$.
+\end{proof}
+
+In Lean, the oddness of $p$ is \decl{Nat.Prime.odd_of_ne_two}, and the witness is supplied with the first disjunct $x=p$.
+
+\begin{remark}
+The triangle of Lemma~\ref{lem:odd} is the right triangle of the Pythagorean rule: $x^2+y^2=z^2$, and $A=xy/2$.
+Neither fact is used in the proof, which checks Heron's identity directly.
+Primality is used only to obtain that $p$ is odd, so the argument shows that every odd $n\ge3$ is a side length of a Heronian triangle.
+It also gives $1\le a(n)\le \pr(n)\bigl(\pr(n)^2-1\bigr)/4$ for $n\ge2$; we did not state this bound in Lean.
+The witness is in general far from minimal: for $p=7$ it has area $84$, whereas $a(4)=42$, attained by $(7,15,20)$.
+\end{remark}
+
+\begin{remark}\label{rem:two}
+The hypothesis $p>2$ is necessary; the statement file proves \texttt{areas 2 =~}$\emptyset$.
+By symmetry of $\T$ it suffices to consider triangles $(2,b,c)$ with $b\le c$, and then $c<b+2$.
+If $c=b$, then $2<2b$ gives $b\ge2$, and the Heron product is $(2b+2)(2b-2)\cdot2\cdot2=16(b^2-1)$; but $b^2-1$ is not a square, since $(b-1)^2<b^2-1<b^2$.
+If $c=b+1$, the Heron product is $3(2b+3)(2b-1)$, which is odd and so is not $16A^2$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A229159.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}.
+It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A229159.lean} (Section~\ref{sec:statement}; SHA-256 \texttt{634d66ee\ldots481a}, unchanged since the fidelity review) and the audit commands in \path{lean/Math0/Audit.lean}.
+The main declaration is \decl{Math0.Frontier.A229159.result}, of type \decl{Math0.Statements.A229159.statement}; its only auxiliary lemma is the private theorem \decl{isIntTriangle_odd}.
+The proof file is, verbatim except for the license header, the imports and the docstrings:
+\begin{lstlisting}
+namespace Math0.Frontier.A229159
+open Math0.Statements.A229159
+
+private theorem isIntTriangle_odd (m : ℕ) (hm : 1 ≤ m) :
+    IsIntTriangle (2 * m + 1) (2 * m ^ 2 + 2 * m) (2 * m ^ 2 + 2 * m + 1)
+      (m * (m + 1) * (2 * m + 1)) := by
+  refine ⟨?_, by omega, ?_, ?_⟩
+  · nlinarith
+  · omega
+  · push_cast
+    ring
+
+theorem result : statement := by
+  intro p hp h2
+  obtain ⟨m, rfl⟩ : Odd p := hp.odd_of_ne_two (by omega)
+  exact ⟨_, _, _, _, isIntTriangle_odd m (by omega), Or.inl rfl⟩
+
+end Math0.Frontier.A229159
+
+#math0_settles Math0.Frontier.A229159.result Math0.Statements.A229159.statement
+\end{lstlisting}
+In Mathlib, \texttt{Odd p} unfolds to $\exists m,\ p=2m+1$, so the pattern \decl{rfl} replaces $p$ by $2m+1$.
+The proof file uses no \texttt{decide}, \texttt{native\_decide}, \texttt{sorry} or \texttt{set\_option}.
+The kernel evaluations described in Section~\ref{sec:statement} (\decl{a_data}, \decl{oeis_errata}) live in the statement file, use \texttt{decide +kernel} (not \texttt{native\_decide}) and depend only on \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}; \decl{result} does not depend on them.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, the axiom \decl{Lean.ofReduceBool} introduced by \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically the statement or its negation, up to metadata annotations, with no unfolding.
+Running \texttt{lake env lean Math0/Frontier/OEIS/A229159.lean} in the directory \path{lean} prints
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A229159.statement' depends on axioms [propext]
+math0 audit: 'Math0.Frontier.A229159.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A229159.result' proves 'Math0.Statements.A229159.statement'
+\end{lstlisting}
+so \decl{result} proves the statement (it does not refute it) and depends only on the three standard axioms.
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks.
+To check this result alone, run \texttt{lake build Math0.Statements.OEIS.A229159} (about one minute, almost all of it the kernel evaluations of the data check) and then \texttt{lake env lean Math0/Frontier/OEIS/A229159.lean} in the directory \path{lean}; the second command only elaborates the short proof file, and most of its running time is spent loading Mathlib.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{Eves}
+H.~Eves, \emph{An Introduction to the History of Mathematics, with Cultural Connections by Jamie H. Eves}, 6th ed., Saunders College Publishing, Fort Worth, 1990.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Heath}
+T.~L.~Heath, \emph{The Thirteen Books of Euclid's Elements}, translated with introduction and commentary, 2nd ed., 3 vols., Cambridge University Press, 1926; reprinted by Dover, New York, 1956.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Proclus}
+Proclus, \emph{A Commentary on the First Book of Euclid's Elements}, translated with introduction and notes by G.~R.~Morrow, Princeton University Press, Princeton, 1970; 2nd ed.\ with a foreword by I.~Mueller, 1992.
+
+\bibitem{A042965}
+The OEIS Foundation Inc., \url{https://oeis.org/A042965} (nonnegative integers not congruent to $2$ mod $4$), entry by N.~J.~A. Sloane.
+
+\bibitem{A046079}
+The OEIS Foundation Inc., \url{https://oeis.org/A046079} (number of Pythagorean triangles with leg $n$), entry by E.~W. Weisstein.
+
+\bibitem{A226453}
+The OEIS Foundation Inc., \url{https://oeis.org/A226453}, entry by M.~Lagneau, Sep.~16, 2013.
+
+\bibitem{A229159}
+The OEIS Foundation Inc., \url{https://oeis.org/A229159}, entry by M.~Lagneau, Sep.~17, 2013; revision \#18, Sep.~16, 2017; edit history at \url{https://oeis.org/history?seq=A229159}.
+
+\end{thebibliography}
+}
+
+\end{document}

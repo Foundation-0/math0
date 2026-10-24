@@ -1,0 +1,362 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,noncomputable,rw,ring,push_cast},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1
+    {¬}{{$\neg$}}1 {→}{{$\to$}}1 {≤}{{$\le$}}1 {∈}{{$\in$}}1
+    {∑}{{$\sum$}}1 {·}{{$\cdot$}}1 {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Et}{E_2}
+\newcommand{\tP}{\widetilde P}
+
+\title[Alexandersson's recurrence for OEIS A395454]{A differential recurrence for the alternating binomial transform of the second-order Eulerian polynomials (OEIS A395454)}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 24, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $P_m(t)=\sum_{k=0}^{m}T(m,k)t^k$ be the row polynomials of the triangle OEIS A395454, $T(n,k)=\sum_{j=0}^{n}(-1)^{n-j}\binom nj\Et(j,n-k)$, where $\Et(j,i)$ are the second-order Eulerian numbers.
+We prove that $P_m=(m-1)(1+t)P_{m-1}+(t-t^2)P_{m-1}'+2(m-1)t\,P_{m-2}$ in $\Z[t]$ for every $m\ge2$.
+This is the recurrence conjectured by Per W. Alexandersson in the OEIS entry (June 2026) when the rows are counted from~$1$; with the entry's own numbering from~$0$ the formula as written fails already at row~$2$ (and, as we show on paper, for every $n\ge2$).
+We found no earlier proof, so we classify the result as new, although the argument is a short computation with reversed second-order Eulerian polynomials and their binomial transform.
+The result is verified in Lean~4 against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry, whose definitions are checked by the kernel against all $55$ listed terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+The second-order Eulerian numbers $\Et(n,k)$, in the indexing of Graham, Knuth and Patashnik \cite[\S6.2]{GKP} and of the OEIS entry A201637 \cite{A201637}, are given by $\Et(0,k)=[k=0]$ and, for $n\ge1$ and $k\ge0$,
+\begin{equation}\label{eq:E2}
+  \Et(n,k)=(2n-1-k)\,\Et(n-1,k-1)+(k+1)\,\Et(n-1,k),\qquad \Et(n-1,-1)=0 .
+\end{equation}
+The first rows are $(1)$, $(1,0)$, $(1,2,0)$, $(1,8,6,0)$. In April 2026 Peter Luschny added to the OEIS the triangle A395454 \cite{A395454},
+\[
+  T(n,k)=\sum_{j=0}^{n}\binom{-j-1}{-n-1}\Et(j,n-k)\qquad(0\le k\le n),
+\]
+where the binomial coefficient at negative integers is understood as in Maple; for $0\le j\le n$ it equals $(-1)^{n-j}\binom nj$, so
+\begin{equation}\label{eq:T}
+  T(n,k)=\sum_{j=0}^{n}(-1)^{n-j}\binom nj\Et(j,n-k).
+\end{equation}
+Thus the reversed rows of A395454 are the alternating binomial transform of the rows of A201637. The rows of A395454 begin $(1)$, $(0,0)$, $(0,2,0)$, $(0,6,2,0)$, $(0,24,34,2,0)$; their sums $1,0,2,8,60,544,\dots$ form A053871 \cite{A053871}, defined by $a(n)=2(n-1)\bigl(a(n-1)+a(n-2)\bigr)$, $a(0)=1$, $a(1)=0$.
+On June~27, 2026 Per W. Alexandersson added to the entry a conjectured three-term differential recurrence for the row polynomials (Section~\ref{sec:statement}). The current revision (\#30, October~14, 2026) still labels it a conjecture and records no proof.
+With the entry's numbering of the rows from~$0$ the formula is false, already for row~$2$; with the rows counted from~$1$, which is evidently what the author's $P(n)$ refers to, it holds. This is our main result (Theorem~\ref{thm:main}).
+
+\subsection*{Prior work}
+The math0 referees found no earlier proof or refutation (searching OEIS cross-references, arXiv and the web). The closest work we know of is by Ma and Yeh \cite{MY} on Stirling permutations of the second kind and Stirling derangements, enumerated by cycle ascent plateaus and cycles. We use the numbering of the arXiv version; its Proposition~9, Theorem~17 and Corollary~18 are Proposition~4, Theorem~11 and Corollary~12 of the journal version. Their Theorem~17 is a recurrence of the same shape for the Stirling derangement polynomials, which we denote $D_n(x,q)$ (their $R_n(x,q)$) to avoid a clash with our $R_j$ in Section~\ref{sec:proof}:
+$D_{n+1}=2nxD_n+2x(1-x)\,\partial_xD_n+2nxq\,D_{n-1}$ for $n\ge1$. It concerns a different family (at $q=1$, $D_3=4x+4x^2$, whereas $P_3=6t+2t^2$); compare Remark~\ref{rem:reversed}. Their Corollary~18 shows that the numbers of Stirling derangements satisfy the recurrence and initial values of A053871, so they are the row sums of A395454 (see Corollary~\ref{cor:literal}). A referee observed that their Proposition~9 and binomial inversion over fixed points suggest that $P_n(t)$ is the distribution of $n-\mathrm{casc}$ over Stirling derangements of order~$n$ (checked for $n=2,3$); we have not verified this further and do not use it.
+The related papers \cite{DLMY,MKYY} do not treat this triangle or recurrence, nor does Fried's recent collection of proofs of OEIS conjectures \cite{Fried}.
+Our proof is routine: a differential recurrence for the reversed second-order Eulerian polynomials (a reformulation of \eqref{eq:E2}) is transported through the binomial transform \eqref{eq:T}; the result is new only in that we found no written proof.
+
+\section{Statement}\label{sec:statement}
+
+The FORMULA section of A395454 \cite{A395454} contains, verbatim, the line
+\begin{quote}
+{\small\raggedright\texttt{Conjecture: Let P(n) be the generating polynomial (in t) of row n. Then P(n) = (n - 2*t + n*t - 2)*P(n-1) + (t - t\^{}2)*P'(n-1) + t*(2*n-4)*P(n-2). - \_Per W. Alexandersson\_, Jun 27 2026}\par}
+\end{quote}
+Here $P'$ is the derivative in $t$, and $n-2t+nt-2=(n-2)(1+t)$.
+For $m\ge0$ let $P_m(t)=\sum_{k=0}^{m}T(m,k)t^k\in\Z[t]$ be the generating polynomial of the row with index $m$ in the entry's numbering (offset~$0$), so $P_0=1$, $P_1=0$, $P_2=2t$, $P_3=6t+2t^2$, $P_4=24t+34t^2+2t^3$.
+
+\subsection*{The reading of the conjecture}
+If $P(n)$ is taken to be $P_n$, the formula is false: at $n=2$ its right-hand side is $0\cdot P_1+(t-t^2)P_1'+0\cdot P_0=0$, while $P_2=2t$; at $n=3$ it gives $4t$ instead of $6t+2t^2$ (see also Corollary~\ref{cor:literal}). If $P(n)$ is the polynomial $\tP(n)=P_{n-1}$ of the $n$-th row counted from~$1$, the formula holds. Exact computations by the math0 fidelity reviewer found the literal reading false for $2\le n\le19$ and the shifted one true for $3\le n\le20$; the row sums confirm the shift, since at $t=1$ the conjecture is the recurrence of A053871 moved by one index. The math0 statement therefore formalizes the shifted reading for $n\ge3$, where $\tP(n),\tP(n-1),\tP(n-2)$ are all rows (at $n=2$ it is $0=0$); the literal reading is recorded separately and refuted.
+
+\begin{theorem}\label{thm:main}
+For every integer $m\ge2$, in $\Z[t]$,
+\begin{equation}\label{eq:main}
+  P_m=(m-1)(1+t)\,P_{m-1}+(t-t^2)\,P_{m-1}'+2(m-1)t\,P_{m-2}.
+\end{equation}
+Equivalently (put $m=n-1$), with $\tP(n)=P_{n-1}$, for every $n\ge3$,
+\[
+  \tP(n)=(n-2t+nt-2)\,\tP(n-1)+(t-t^2)\,\tP'(n-1)+t(2n-4)\,\tP(n-2).
+\]
+\end{theorem}
+
+\begin{corollary}[not formalized]\label{cor:literal}
+Let $a(m)=P_m(1)$. Then $a(m)=2(m-1)\bigl(a(m-1)+a(m-2)\bigr)$ for $m\ge2$, so $a$ is A053871. Moreover, for every $n\ge2$ the literal reading $P_n=(n-2)(1+t)P_{n-1}+(t-t^2)P_{n-1}'+2(n-2)t\,P_{n-2}$ is false.
+\end{corollary}
+
+\begin{proof}
+Put $t=1$ in \eqref{eq:main}; with $a(0)=1$, $a(1)=0$ this is A053871. Induction gives $a(m)\ge0$, so $a(2)=2$ and $a(m)\ge2(m-1)a(m-1)>0$ for $m\ge3$; thus $a(k)>0$ for $k\ne1$. Subtracting the literal right-hand side from \eqref{eq:main} at $m=n$ leaves $(1+t)P_{n-1}+2tP_{n-2}$, whose value at $t=1$ is $2\bigl(a(n-1)+a(n-2)\bigr)>0$, because at most one of $n-1$, $n-2$ equals $1$.
+\end{proof}
+
+\begin{remark}[reversed form; not formalized]\label{rem:reversed}
+Let $Q_n(x)=x^nP_n(1/x)=\sum_{i=0}^{n}T(n,n-i)x^i=\sum_{j=0}^{n}(-1)^{n-j}\binom nj\sum_i\Et(j,i)x^i$. Taking $m=n+1$ in \eqref{eq:main}, substituting $t=1/x$ and multiplying by $x^{n+1}$ gives
+$Q_{n+1}=2nx\,(Q_n+Q_{n-1})+x(1-x)\,Q_n'$ for $n\ge1$, with $Q_1=0$ and $Q_2=2x$. At $q=1$ the recurrence of \cite[Theorem~17]{MY} has the same initial values $D_1=0$, $D_2=2x$ and differs from this one only in the coefficient of the derivative term, $2x(1-x)$ instead of $x(1-x)$.
+\end{remark}
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A395454.lean}, reviewed for fidelity, and frozen (SHA-256 \texttt{99c82099\ldots 6646d}) before the proof was written. The definitions and the statement read as follows, inside \texttt{namespace Math0.Statements.A395454} with \texttt{open Polynomial} (verbatim; header, docstrings, theorems and the variant \decl{statement_literal} omitted):
+\begin{lstlisting}
+def E2 : ℕ → ℕ → ℤ
+  | 0, 0 => 1
+  | 0, _ + 1 => 0
+  | n + 1, 0 => E2 n 0
+  | n + 1, k + 1 =>
+      (2 * ((n : ℤ) + 1) - 1 - ((k : ℤ) + 1)) * E2 n k + ((k : ℤ) + 1 + 1) * E2 n (k + 1)
+def T (n k : ℕ) : ℤ :=
+  ∑ j ∈ Finset.range (n + 1), (-1) ^ (n - j) * (n.choose j : ℤ) * E2 j (n - k)
+def a (i : ℕ) : ℤ :=
+  ((List.range (i + 1)).flatMap fun n => (List.range (n + 1)).map (T n)).getD i 0
+noncomputable def P (n : ℕ) : ℤ[X] :=
+  ∑ k ∈ Finset.range (n + 1), C (T n k) * X ^ k
+noncomputable def P1 (n : ℕ) : ℤ[X] := P (n - 1)
+def statement : Prop :=
+  ∀ n : ℕ, 3 ≤ n →
+    P1 n = ((n : ℤ[X]) - 2 * X + (n : ℤ[X]) * X - 2) * P1 (n - 1)
+      + (X - X ^ 2) * derivative (P1 (n - 1))
+      + X * (2 * (n : ℤ[X]) - 4) * P1 (n - 2)
+\end{lstlisting}
+\emph{Encoding.} \decl{E2} is \eqref{eq:E2}, stated for row $n+1$ and computed in $\Z$. \decl{T} is \eqref{eq:T}, Maple's $\binom{-j-1}{-n-1}$ being replaced by $(-1)^{n-j}\binom nj$; it is used only for $k\le n$, where $n-k$ is exact. \decl{a} is the triangle read by rows (the OEIS sequence, offset~$0$). \decl{P}~$n$ is $P_n\in\Z[X]$ ($X=t$), \decl{derivative} is the formal derivative, and \decl{P1}~$n=P_{n-1}=\tP(n)$. The coefficients are cast to $\Z[X]$, and for $n\ge3$ the natural-number subtractions in the indices are exact. \decl{statement_literal} is the same formula with \decl{P} for \decl{P1}, for $n\ge2$.
+
+\emph{Checks against the data.} The statement file proves \decl{E2_data}, stating that the values \texttt{E2 n k} for $0\le k\le n\le8$ are rows $0,\dots,8$ of A201637 ($45$ terms, written out), and \decl{a_data}, stating that \texttt{(List.range 55).map (fun i => a (i + 0))} is the literal list of all $55$ terms in the DATA section of A395454 (rows $0,\dots,9$). Both are proved by \texttt{decide +kernel}: the kernel evaluates the closed left-hand side by unfolding the definitions and compares it with the literal list. This anchors \decl{E2}, \decl{T} and \decl{a} to the OEIS data independently of the conjecture. Finally, \decl{not_statement_literal}\,: $\neg$\,\decl{statement_literal} compares coefficients of $t$ at $n=2$, using \decl{P_one}\,: \texttt{P 1 = 0} and \decl{P_two}\,: \texttt{P 2 = C 2 * X}.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A395454.lean}; the Lean names of the corresponding declarations are given in brackets. All polynomials lie in $\Z[t]$, the prime denotes the formal derivative $d/dt$, and we write $u=-t$.
+
+\begin{lemma}[\decl{E2_eq_zero}, \decl{E2_succ_zero}, \decl{E2_succ_succ}]\label{lem:E2}
+For all $j,i\ge0$: $\Et(j,i)=0$ if $i>j$; $\Et(j+1,0)=\Et(j,0)$; and
+$\Et(j+1,i+1)=(2j-i)\,\Et(j,i)+(i+2)\,\Et(j,i+1)$.
+\end{lemma}
+
+\begin{proof}
+The last two are the defining clauses of \decl{E2}, with simplified coefficients. The first follows by induction on $j$: $\Et(0,i)=0$ for $i\ge1$, and if $i+1>j+1$ then $i>j$ and $i+1>j$, so both terms of $\Et(j+1,i+1)$ vanish.
+\end{proof}
+
+\begin{lemma}[\decl{XX_deriv_pow}, \decl{XX_deriv_negpow}]\label{lem:deriv}
+For every $k\ge0$, $(t-t^2)(t^k)'=k\,(t^k-t^{k+1})$ and $(t-t^2)(u^k)'=k(1-t)\,u^k$.
+\end{lemma}
+\begin{proof}
+Both sides vanish for $k=0$; for $k\ge1$, $(t-t^2)kt^{k-1}=k(t^k-t^{k+1})$ and $-(t-t^2)ku^{k-1}=k(1-t)u^k$.
+\end{proof}
+
+For $j\ge0$ define the \emph{reversed second-order Eulerian polynomial} [\decl{R}]
+\[
+  R_j(t)=\sum_{i=0}^{j}\Et(j,i)\,t^{j-i},
+\]
+so $R_0=1$, $R_1=t$, $R_2=t^2+2t$, $R_3=t^3+8t^2+6t$.
+
+\begin{lemma}[\decl{R_rhs}, \decl{R_succ}]\label{lem:R}
+For every $j\ge0$, $R_{j+1}=\bigl(j+(j+1)t\bigr)R_j+(t-t^2)R_j'$.
+\end{lemma}
+
+\begin{proof}
+For $i\le j$, Lemma~\ref{lem:deriv} with $k=j-i$ gives $\bigl(j+(j+1)t\bigr)t^{j-i}+(t-t^2)(t^{j-i})'=(2j-i)t^{j-i}+(i+1)t^{j-i+1}$. Hence the right-hand side equals
+\begin{equation}\label{eq:Rrhs}
+  \sum_{i=0}^{j}(2j-i)\Et(j,i)\,t^{j-i}+\sum_{i=0}^{j}(i+1)\Et(j,i)\,t^{j-i+1}.
+\end{equation}
+On the left, split off the term $i=0$ of $R_{j+1}=\sum_{i=0}^{j+1}\Et(j+1,i)t^{j+1-i}$ and write the others with index $i+1$, $0\le i\le j$. By Lemma~\ref{lem:E2},
+\[
+  R_{j+1}=\sum_{i=0}^{j}(2j-i)\Et(j,i)\,t^{j-i}+\Bigl(\sum_{i=0}^{j}(i+2)\Et(j,i+1)\,t^{j-i}+\Et(j,0)\,t^{j+1}\Bigr).
+\]
+The first sum is the first sum in \eqref{eq:Rrhs}. In the bracket the term $i=j$ vanishes, since $\Et(j,j+1)=0$ (Lemma~\ref{lem:E2}); shifting the index of the remaining terms by one, the bracket becomes $\sum_{i=1}^{j}(i+1)\Et(j,i)t^{j-i+1}+1\cdot\Et(j,0)t^{j+1}$, which is the second sum in \eqref{eq:Rrhs}.
+\end{proof}
+
+Next define the binomial transform [\decl{S}]
+\[
+  S_n=\sum_{j=0}^{n}\binom nj u^{\,n-j}R_j\qquad(n\ge0).
+\]
+
+\begin{lemma}[\decl{S_term}, \decl{P_eq_S}]\label{lem:PS}
+For every $n\ge0$, $P_n=S_n$.
+\end{lemma}
+
+\begin{proof}
+Let $0\le j\le n$. Since $(n-j)+(j-i)=n-i$ for $i\le j$,
+\[
+  \binom nj u^{n-j}R_j=\sum_{i=0}^{j}(-1)^{n-j}\binom nj\Et(j,i)\,t^{n-i}=\sum_{i=0}^{n}(-1)^{n-j}\binom nj\Et(j,i)\,t^{n-i},
+\]
+where the sum may be extended to $i\le n$ because $\Et(j,i)=0$ for $i>j$ (Lemma~\ref{lem:E2}). Summing over $j$ and exchanging the two finite sums,
+\[
+  S_n=\sum_{i=0}^{n}\Bigl(\sum_{j=0}^{n}(-1)^{n-j}\binom nj\Et(j,i)\Bigr)t^{n-i}
+     =\sum_{k=0}^{n}\Bigl(\sum_{j=0}^{n}(-1)^{n-j}\binom nj\Et(j,n-k)\Bigr)t^{k}=\sum_{k=0}^{n}T(n,k)t^k,
+\]
+by the reflection $i=n-k$ of the range $\{0,\dots,n\}$ (\texttt{Finset.sum\_range\_reflect}) and \eqref{eq:T}.
+\end{proof}
+
+The recurrence for $S_n$ is proved by writing every quantity as a sum over $0\le j\le n+1$ of multiples of $\binom{n+1}{j}u^{n+1-j}R_j$ and $\binom{n+1}{j}u^{n+1-j}R_{j+1}$.
+
+\begin{lemma}[\decl{S_succ}, \decl{S_deriv}, \decl{S_mul}]\label{lem:S3}
+For every $n\ge0$:
+\begin{align*}
+  &\text{(a)}\quad S_{n+1}=\sum_{j=0}^{n}\binom nj\bigl(u^{n-j}R_{j+1}+u^{n-j+1}R_j\bigr);\\
+  &\text{(b)}\quad (t-t^2)S_n'=\sum_{j=0}^{n}\binom nj\Bigl((n-j)(1-t)\,u^{n-j}R_j+u^{n-j}\bigl(R_{j+1}-(j+(j+1)t)R_j\bigr)\Bigr);\\
+  &\text{(c)}\quad (n+1)\,u\,S_n=\sum_{j=0}^{n+1}\binom{n+1}{j}(n+1-j)\,u^{n+1-j}R_j .
+\end{align*}
+\end{lemma}
+
+\begin{proof}
+(a) In $S_{n+1}=\sum_{j=0}^{n+1}\binom{n+1}{j}u^{n+1-j}R_j$ split off $j=0$ and write the other terms with index $j+1$, $0\le j\le n$. By Pascal's rule $\binom{n+1}{j+1}=\binom nj+\binom n{j+1}$,
+\[
+  S_{n+1}=\sum_{j=0}^{n}\binom nj u^{n-j}R_{j+1}+\Bigl(\sum_{j=0}^{n}\binom n{j+1}u^{n-j}R_{j+1}+u^{n+1}R_0\Bigr).
+\]
+In the bracket the term $j=n$ vanishes ($\binom n{n+1}=0$); shifting the index of the others, the bracket is $\sum_{j=0}^{n}\binom nj u^{n-j+1}R_j$.
+
+(b) Differentiate termwise with the product rule, $(u^{n-j}R_j)'=(u^{n-j})'R_j+u^{n-j}R_j'$, and multiply by $t-t^2$. Lemma~\ref{lem:deriv} with $k=n-j$ handles the first term, and Lemma~\ref{lem:R}, in the form $(t-t^2)R_j'=R_{j+1}-(j+(j+1)t)R_j$, the second.
+
+(c) The term $j=n+1$ on the right is $0$. For $j\le n$, $(n+1)\binom nj=(n+1-j)\binom{n+1}j$ (\texttt{Nat.choose\_mul\_succ\_eq}) and $u\cdot u^{n-j}=u^{n+1-j}$, so the remaining terms agree with those of $(n+1)uS_n$.
+\end{proof}
+
+\begin{proposition}[\decl{S_rec}]\label{prop:Srec}
+For every $n\ge0$,
+\[
+  S_{n+2}=(n+1)(1+t)\,S_{n+1}+(t-t^2)\,S_{n+1}'+2(n+1)t\,S_n .
+\]
+\end{proposition}
+
+\begin{proof}
+Write $2(n+1)tS_n=-2\,(n+1)uS_n$. Apply Lemma~\ref{lem:S3}(a) (with $n+1$ in place of $n$) to the left-hand side, the definition of $S_{n+1}$ to the first term on the right, Lemma~\ref{lem:S3}(b) (with $n+1$) to the second and Lemma~\ref{lem:S3}(c) to the third. Every quantity is now a sum over $0\le j\le n+1$, and it suffices to compare the summands. Fix $j$, put $K=n+1-j$, and divide by $\binom{n+1}{j}$. The summand on the left is $u^KR_{j+1}+u^{K+1}R_j=u^KR_{j+1}-t\,u^KR_j$, and on the right it is
+\[
+  u^K\Bigl(R_{j+1}+\bigl[(n+1)(1+t)+K(1-t)-j-(j+1)t-2K\bigr]R_j\Bigr).
+\]
+The terms with $R_{j+1}$ agree, and since $n+1=j+K$ the bracket equals $(j+K)(1+t)+K-Kt-j-jt-t-2K=-t$. (In Lean: \texttt{Nat.cast\_sub} for $K$, then \texttt{ring}.)
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $n\ge3$ and write $n=m+3$ with $m\ge0$. Then $\tP(n)=P_{m+2}$, $\tP(n-1)=P_{m+1}$, $\tP(n-2)=P_m$, and by Lemma~\ref{lem:PS} these equal $S_{m+2}$, $S_{m+1}$, $S_m$. The coefficients of the conjecture are $n-2t+nt-2=(m+1)(1+t)$ and $t(2n-4)=2(m+1)t$, so the claimed identity is Proposition~\ref{prop:Srec} with $m$ in place of $n$. Replacing $m+2$ by $m$ gives \eqref{eq:main}.
+\end{proof}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in \path{lean/Math0/Frontier/OEIS/A395454.lean} in the math0 repository, \url{https://github.com/Foundation-0/math0}; it imports the frozen statement file (Section~\ref{sec:statement}) and \path{lean/Math0/Audit.lean}. The main declaration \decl{Math0.Frontier.A395454.result} has type \decl{Math0.Statements.A395454.statement}; the private auxiliary declarations are named in brackets in Section~\ref{sec:proof}. As there, \decl{result} writes $n=m+3$, rewrites the three \texttt{P1} terms with \decl{P_eq_S}, applies \decl{S_rec}~\texttt{m} and ends with \texttt{push\_cast; ring}. Neither file uses \texttt{sorry}, \texttt{native\_decide}, custom axioms or \texttt{set\_option}; the statement file uses \texttt{decide +kernel} only for its data checks and for the values of \decl{T} used in \decl{P_one} and \decl{P_two}.
+
+\subsection*{Audit}
+The file ends with \texttt{\#math0\_settles} \decl{Math0.Frontier.A395454.result} \decl{Math0.Statements.A395454.statement}. This command (\path{lean/Math0/Audit.lean}) fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) both declarations depend on no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (so no \decl{sorryAx}, \texttt{native\_decide} or custom axioms); and (3) the type of \decl{result} is syntactically \decl{statement} or $\neg$\,\decl{statement}, up to metadata, with no unfolding. It reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A395454.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A395454.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A395454.result' proves 'Math0.Statements.A395454.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; formal-conjectures \cite{FC} is pinned at commit \texttt{c77fdd4} but not used here. Running \path{scripts/verify.sh} from the repository root fetches the Mathlib cache, rebuilds all results with \texttt{lake build} (re-running every audit), checks that the pinned dependencies are unmodified, and counts the passed statement checks. The single file is checked by \texttt{lake env lean Math0/Frontier/OEIS/A395454.lean} in \path{lean/}.
+
+{\footnotesize
+\begin{thebibliography}{99}
+
+\bibitem{DLMY}
+G.-H. Duh, Y.-C.~R. Lin, S.-M. Ma, and Y.-N. Yeh, \emph{Stirling permutations, marked permutations and Stirling derangements}, arXiv:1612.07391 [math.CO], 2016.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171 [cs.AI], 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Fried}
+S.~Fried, \emph{Further proofs of conjectures from the OEIS}, arXiv:2607.24832 [math.GM], 2026.
+
+\bibitem{GKP}
+R.~L. Graham, D.~E. Knuth, and O.~Patashnik, \emph{Concrete Mathematics: A Foundation for Computer Science}, 2nd ed., Addison-Wesley, Reading, MA, 1994.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{MKYY}
+S.-M. Ma, S.~Kitaev, J.~Yeh, and Y.-N. Yeh, \emph{Eulerian-type polynomials over matchings and matching permutations}, arXiv:2601.20665 [math.CO], 2026.
+
+\bibitem{MY}
+S.-M. Ma and Y.-N. Yeh, \emph{Eulerian polynomials, Stirling permutations of the second kind and perfect matchings}, Electron. J. Combin. \textbf{24}(4) (2017), \#P4.27, \url{https://doi.org/10.37236/7288}; arXiv:1607.01311.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{A053871}
+The OEIS Foundation Inc., entry A053871 (C.~Moore and C.~G. Bower, 2000) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A053871}.
+
+\bibitem{A201637}
+The OEIS Foundation Inc., \emph{Triangle of second-order Eulerian numbers}, entry A201637 (P.~Luschny, 2012) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A201637}.
+
+\bibitem{A395454}
+The OEIS Foundation Inc., entry A395454 (P.~Luschny, 2026; conjecture by P.~W. Alexandersson, June~27, 2026) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A395454}; revision \#30, October~14, 2026.
+
+\end{thebibliography}
+}
+
+\end{document}

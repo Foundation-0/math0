@@ -1,0 +1,400 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+\usepackage{booktabs}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,noncomputable,rw},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1
+    {∈}{{$\in$}}1 {≠}{{$\ne$}}1 {≤}{{$\le$}}1 {≥}{{$\ge$}}1 {→}{{$\to$}}1 {∧}{{$\wedge$}}1
+    {∑}{{$\sum$}}1 {×}{{$\times$}}1 {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1
+    {⟦}{{$[\![$}}1 {⟧}{{$]\!]$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\ways}{\operatorname{ways}}
+\newcommand{\nrm}{\operatorname{nrm}}
+\newcommand{\St}{\mathcal{S}}
+
+\title[Domino towers by height (OEIS A333650)]{Domino towers of height $2$ and of height $n-1$, $n-2$, $n-3$: proof of the four conjectures in OEIS A333650}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 19, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $T(n,k)$ be the number of domino towers with $n$ bricks and $k$ rows (OEIS A333650).
+We prove the four conjectures recorded in that entry by P.~Kagey and P.~Luschny in 2020: $T(n,2)=F_{n+2}-1$ for $n\ge2$, and $T(n,n-1)$, $T(n,n-2)$, $T(n,n-3)$ are the terms of index $n-2$, $n-3$, $n-4$ of the sequences A339252, A339254, A339029.
+For the near-diagonals, the row-by-row recursion on rows normalized up to translation closes on thirteen states, each counted by $2^h$ times an explicit polynomial of degree at most $3$ in the number $h$ of remaining rows.
+To our knowledge the near-diagonal identities are new (the height-two case is elementary and was in effect observed by Luschny); the entry still lists all four as conjectures.
+The theorem is verified in Lean~4 against a frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry and checked against its data; it is not part of formal-conjectures.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+A \emph{domino tower} is a stack of bricks of width $2$ and height $1$ in the plane, arranged in rows so that (1) each row is offset from the row below by half a brick, (2) the bottom row is contiguous, and (3) each brick above the bottom row is supported from below by at least half a brick (this is the definition in A264746 and A320314 \cite{A264746}, by Kagey). As in A333650, stability is not required, towers are counted up to translation, and mirror images are different.
+There are $3^{n-1}$ domino towers with $n$ bricks; the count goes back to the theory of directed animals with a compact source \cite{GBV,BP} (see Zeilberger \cite{Z} and Bóna's \emph{Handbook} \cite[pp.~25--27]{Bona}). Towers of other pieces, and convex towers, are counted in \cite{EZ,Br1,Br2,Ha}.
+
+The OEIS entry A333650 \cite{A333650}, created by Peter Kagey on March~31, 2020, refines $3^{n-1}$ by height: $T(n,k)$ is the number of domino towers with $n$ bricks and $k$ rows. It lists rows $1$--$10$ (rows up to $18$ in a b-file), states $T(n,1)=1$ and $T(n,n)=2^{n-1}$, and records four conjectures (quoted in Section~\ref{sec:statement}): $T(n,2)=\mathrm{A000071}(n+2)$ (Kagey), $T(n,n-1)=\mathrm{A339252}(n-2)$ (Kagey), $T(n,n-2)=\mathrm{A339254}(n-3)$ and $T(n,n-3)=\mathrm{A339029}(n-4)$ (Luschny). We prove all four (Theorem~\ref{thm:main}).
+
+\subsection*{Method}
+For height two, $T(n,2)=\sum_b\binom{b+1}{n-b}$, a diagonal binomial sum. For a tower with $n$ bricks and $n-e$ rows ($e$ bricks beyond one per row), the recursion over rows normalized up to translation involves thirteen states when $e\le3$, each counted by $2^h$ times an explicit polynomial in the number $h$ of remaining rows; the right-hand sequences have the same closed forms.
+
+\subsection*{Status and prior work}
+All four statements are still marked ``Conjecture'' in A333650 (revision \#68, August~12, 2022).
+The entries A339252, A339254, A339029 \cite{A339252} define the right-hand sequences by recurrences or a generating function and record their closed forms (Corollary~\ref{cor:closed}; for A339252 by K.~Ryde, for A339254 by S.~Spezia), but they do not connect them to towers.
+For height two, Luschny remarks in A339494 \cite{A339494} (December 2020) that the towers of height at most $2$, classified by base size, form ``the binomial triangle $C(k, n-k)$ without the first column, triangle A030528'', which ``highlights the connection between the Pascal triangle and the Fibonacci numbers''; a formula in A339495 \cite{A339494} presupposes conjecture (1). This is essentially our argument for (1), but no proof is recorded.
+The math0 referees found no proof or counterexample of any of the four conjectures: the works on domino towers they read \cite{GBV,BP,Z,Bona,EZ,Br1,Br2,Ha} count towers by bricks, base size or convexity, not by height; Kagey's questions on Mathematics Stack Exchange concern symmetric towers and towers without the half-brick offset \cite{K1}; and web searches for the polynomials of Corollary~\ref{cor:closed} and for SeqFan discussions found nothing beyond the OEIS entries themselves.
+We therefore classify the result as \emph{new}, the height-two case being elementary.
+A333650 is not among the OEIS statements of formal-conjectures \cite{FC}. Its remark that A038622 ``appears to give'' the counts by base size is not treated here.
+
+\section{Statement}\label{sec:statement}
+
+The COMMENTS section of A333650 \cite{A333650} contains, verbatim:
+\begin{quote}\small\ttfamily
+Conjecture: For n > 1, T(n,2) = A000071(n+2).\\
+Conjecture: T(n,n-1) = A339252(n-2). - \_Peter Kagey\_, Nov 21 2020\\
+Conjecture: T(n,n-2) = A339254(n-3). - \_Peter Luschny\_, Nov 29 2020\\
+Conjecture: T(n,n-3) = A339029(n-4). - \_Peter Luschny\_, Dec 01 2020
+\end{quote}
+and Luschny's summary (December~1, 2020) $T(2n+k,n+k)=d_n(n+k-1)$ for $k\ge1$, $0\le n\le3$, with explicit $d_n$ (Corollary~\ref{cor:closed}). The first conjecture is unsigned, hence by convention by the entry's author, Kagey (March~31, 2020).
+The entry's definition reads: ``$T(n,k)$ gives the number of domino towers of height $k$ consisting of $n$ bricks. The towers must have a contiguous base of bricks, and each brick must be at least half supported below by another brick. The stacks do not need to be stable.'' The offset is $1$, so $1\le k\le n$.
+
+\begin{definition}\label{def:tower}
+Positions are measured in half bricks: a brick with left end $x\in\Z$ occupies $[x,x+2)$. Let $B_b=\{0,2,\dots,2b-2\}$. A \emph{tower of height $k$ with $n$ bricks} is a sequence $(L_0,\dots,L_{k-1})$ of finite subsets of $\Z$ (the left ends of the bricks of row $i$, row $0$ at the bottom) such that
+(a) every $L_i$ is nonempty;
+(b) $L_0=B_b$ for some $b\ge1$;
+(c) $|x-y|\ge2$ for distinct $x,y$ in the same row;
+(d) $x\equiv i\pmod 2$ for $x\in L_i$;
+(e) for every $x\in L_{i+1}$ there is $y\in L_i$ with $|x-y|\le1$ (so the bricks overlap in length $2-|x-y|\ge1$);
+(f) $\sum_i|L_i|=n$.
+$T(n,k)$ is the number of towers of height $k$ with $n$ bricks.
+\end{definition}
+Let $F_m$ be the Fibonacci numbers ($F_0=0$, $F_1=1$), and let $a_1,a_2,a_3\colon\N\to\Z$ be A339252, A339254, A339029 (offset $0$):
+\begin{gather*}
+a_1(0),a_1(1),a_1(2)=1,4,11,\quad a_1(m+3)=4a_1(m+2)-4a_1(m+1);\\
+a_2(0),\dots,a_2(4)=1,7,24,70,193,\quad a_2(m+5)=6a_2(m+4)-12a_2(m+3)+8a_2(m+2);\\
+\textstyle\sum_{m\ge0}a_3(m)x^m=(1+4x-20x^2+8x^3+33x^4-4x^5-33x^6)/(1-2x)^4 .
+\end{gather*}
+
+\begin{theorem}\label{thm:main}
+(1) $T(n,2)=F_{n+2}-1$ for $n\ge2$.\quad (2) $T(n,n-1)=a_1(n-2)$ for $n\ge2$.\quad (3) $T(n,n-2)=a_2(n-3)$ for $n\ge3$.\quad (4) $T(n,n-3)=a_3(n-4)$ for $n\ge4$.
+\end{theorem}
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A333650.lean}, reviewed for fidelity and frozen (SHA-256 \texttt{20320a51\ldots b96302}) before any proof attempt. Its definitions read (verbatim; the import, comments, docstrings, blank lines, and all lemmas and auxiliary definitions omitted):
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+namespace Math0.Statements.A333650
+open Finset
+def base (b : ℕ) : Finset ℤ := (range b).image fun j : ℕ => 2 * (j : ℤ)
+def IsTower (n k : ℕ) (t : List (Finset ℤ)) : Prop :=
+  t.length = k ∧ (∀ L ∈ t, L.Nonempty) ∧
+  (∃ b, 0 < b ∧ t.head? = some (base b)) ∧
+  (∀ L ∈ t, ∀ x ∈ L, ∀ y ∈ L, x ≠ y → 2 ≤ |x - y|) ∧
+  (∀ (i : ℕ) (hi : i < t.length), ∀ x ∈ t[i], Even (x - i)) ∧
+  (∀ (i : ℕ) (hi : i + 1 < t.length), ∀ x ∈ t[i + 1], ∃ y ∈ t[i], |x - y| ≤ 1) ∧
+  (t.map Finset.card).sum = n
+noncomputable def T (n k : ℕ) : ℕ := {t | IsTower n k t}.ncard
+def A000071 (n : ℕ) : ℤ := (Nat.fib n : ℤ) - 1
+def A339252 : ℕ → ℤ
+  | 0 => 1
+  | 1 => 4
+  | 2 => 11
+  | n + 3 => 4 * A339252 (n + 2) - 4 * A339252 (n + 1)
+def A339254 : ℕ → ℤ
+  | 0 => 1
+  | 1 => 7
+  | 2 => 24
+  | 3 => 70
+  | 4 => 193
+  | n + 5 => 6 * A339254 (n + 4) - 12 * A339254 (n + 3) + 8 * A339254 (n + 2)
+open PowerSeries in
+noncomputable def A339029 (n : ℕ) : ℤ :=
+  coeff n ((1 + 4 * X - 20 * X ^ 2 + 8 * X ^ 3 + 33 * X ^ 4 - 4 * X ^ 5 - 33 * X ^ 6 : ℤ⟦X⟧) *
+    invOfUnit ((1 - 2 * X) ^ 4) 1)
+def statement_col2 : Prop :=
+  ∀ n : ℕ, 1 < n → (T n 2 : ℤ) = A000071 (n + 2)
+def statement_diag1 : Prop :=
+  ∀ n : ℕ, 2 ≤ n → (T n (n - 1) : ℤ) = A339252 (n - 2)
+def statement_diag2 : Prop :=
+  ∀ n : ℕ, 3 ≤ n → (T n (n - 2) : ℤ) = A339254 (n - 3)
+def statement_diag3 : Prop :=
+  ∀ n : ℕ, 4 ≤ n → (T n (n - 3) : ℤ) = A339029 (n - 4)
+def statement : Prop :=
+  statement_col2 ∧ statement_diag1 ∧ statement_diag2 ∧ statement_diag3
+end Math0.Statements.A333650
+\end{lstlisting}
+\texttt{IsTower n k t} is Definition~\ref{def:tower} for $t=[L_0,\dots,L_{k-1}]$, with (d) as \texttt{Even (x - i)}.
+The half-brick offset is forced by the data: if a brick could also sit exactly on another, then $T(2,2)=3$, not the listed $2$.
+\decl{T_eq_Tc} proves that $T$ equals a computable count \decl{Tc} (the row recursion of Section~\ref{sec:rec}), so the set of towers is finite and \texttt{ncard} is not the junk value $0$; with \decl{a_spec}, \decl{a_data} checks all $55$ listed terms (rows $1$--$10$) by \texttt{decide +kernel}, i.e.\ by evaluation in the kernel.
+The right-hand sequences use their own OEIS definitions; \decl{A339029_eq} identifies A339029 with a computable sequence \decl{A339029rec} given by the recurrence read off from $(1-2x)^4$, and data lemmas check $40$, $32$, $30$, $29$ listed terms of A000071, A339252, A339254, A339029.
+Values are compared in $\Z$. Conjectures (2)--(4) state no range; they are read for every $n$ at which the index on the right is a natural number. \decl{statement_check} verifies the four identities for $n\le10$ by \texttt{decide +kernel}. Luschny's summary is not formalized separately.
+
+\section{Proof}\label{sec:proof}
+
+\subsection{The row recursion}\label{sec:rec}
+For finite $L\subseteq\Z$ let $\supp L=(L-1)\cup(L+1)$, the positions available to bricks resting on $L$. The statement file defines
+\[
+\ways(L,0,m)=[m=0],\qquad \ways(L,h+1,m)=\sum_{j=1}^{m-h}\ \sum_{L'\subseteq\supp L,\ |L'|=j}\ways(L',h,m-j)
+\]
+($m-h$ truncated at $0$), and proves that $\ways(L,h,m)$ counts the sequences $(L_1,\dots,L_h)$ of nonempty sets with $L_1\subseteq\supp L$, $L_{i+1}\subseteq\supp L_i$ and $\sum|L_i|=m$ (the bound $j\le m-h$ holds because the other $h$ sets need $h$ elements). In particular $\ways(L,h,m)=0$ if $m<h$ (\decl{ways_eq_zero}).
+
+\begin{lemma}[\decl{T_eq_Tc}, statement file]\label{lem:Tc}
+For $k\ge1$, $T(n,k)=\sum_{b=1}^{n}\ways(B_b,k-1,n-b)$.
+\end{lemma}
+\begin{proof}
+Given $L_0=B_b$, (c)--(e) are equivalent to $L_{i+1}\subseteq\supp L_i$ for all $i$: if $x\in L_{i+1}$, $y\in L_i$ and $|x-y|\le1$, then $x-y$ is odd by (d), so $x=y\pm1$. Conversely, the inclusions give (e), give (d) by induction from the even set $B_b$, and (d) gives (c). Finally $b=|B_b|\le n$.
+\end{proof}
+
+\subsection{Height two}
+\begin{proposition}[\decl{col2}]\label{prop:col2}
+For $n\ge2$, $T(n,2)=F_{n+2}-1$.
+\end{proposition}
+\begin{proof}
+For $r\ge1$, only $j=r$ contributes to $\ways(L,1,r)$, so $\ways(L,1,r)=\binom{|\supp L|}{r}$ (\decl{ways_one}); and for $b\ge1$, $\supp B_b=\{2i-1:0\le i\le b\}$ has $b+1$ elements (\decl{card_supported_base}). For $n=m+2$, the term $b=n$ of Lemma~\ref{lem:Tc} is $\ways(B_n,1,0)=0$, so
+$T(m+2,2)=\sum_{b=1}^{m+1}\binom{b+1}{m+2-b}=\sum_{b=0}^{m}\binom{b+2}{m+1-b}$.
+By Mathlib's \decl{Nat.fib_succ_eq_sum_choose}, $F_{m+4}=\sum_{i=0}^{m+3}\binom{i}{m+3-i}$. Here the terms $i=0,1$ vanish, the term $i=m+3$ is $1$, and $i=b+2$ gives $\binom{b+2}{m+1-b}$. Hence $F_{m+4}=T(m+2,2)+1$.
+\end{proof}
+
+\subsection{Translation invariance and excess}
+For nonempty finite $L$ let $\nrm L=L-\min L$, and put $V(S,e,h)=\ways(S,h,h+e)$, the number of ways to place $h$ more rows with excess $e$ on the row $S$.
+
+\begin{lemma}[\decl{ways_map}, \decl{ways_nrm}, \decl{ways_succ}]\label{lem:step}
+$\ways(L+c,h,m)=\ways(L,h,m)$ for $c\in\Z$, hence $\ways(\nrm L,h,m)=\ways(L,h,m)$; and
+\[
+V(L,e,h+1)=\sum_{j=0}^{e}\ \sum_{L'\subseteq\supp L,\ |L'|=j+1}V(\nrm L',e-j,h).
+\]
+\end{lemma}
+\begin{proof}
+Since $\supp(L+c)=\supp(L)+c$, the map $L'\mapsto L'+c$ is a bijection between the $j$-subsets of $\supp L$ and those of $\supp(L+c)$; invariance follows by induction on $h$. The recursion gives $\ways(L,h+1,h+1+e)=\sum_{i=1}^{e+1}\sum_{|L'|=i}\ways(L',h,h+1+e-i)$; put $i=j+1$ and use invariance.
+\end{proof}
+
+\begin{lemma}[\decl{Tc_diag}]\label{lem:diagsum}
+For $n\ge e+1$ and $h=n-e-1$, $T(n,n-e)=\sum_{b=0}^{e}V(B_{b+1},e-b,h)$.
+\end{lemma}
+\begin{proof}
+By Lemma~\ref{lem:Tc}, $T(n,n-e)=\sum_{b=1}^{n}\ways(B_b,h,n-b)$. For $b\ge e+2$, $n-b<h$ and the term vanishes; for $b=b'+1\le e+1$, $n-b=h+(e-b')$.
+\end{proof}
+
+\subsection{Thirteen states}
+Let $\St$ be the set of the thirteen pairs $(S,e)$ of Table~\ref{tab:states}, with the integer polynomials $p_{S,e}$ listed there: the bases $B_b$ with excess $e\le4-b$, and three gapped pairs that the recursion produces.
+
+\begin{table}[ht]
+\footnotesize
+\caption{The states $(S,e)$; one step of Lemma~\ref{lem:step} (the multiset of the $(\nrm L',e-j)$); the polynomial $p_{S,e}$ with $128\,V(S,e,h)=2^hp_{S,e}(h)$ for $h\ge3$; and $V(S,e,3)$.}\label{tab:states}
+\begin{tabular}{@{}llll@{}}
+\toprule
+$(S,e)$ & one step & $p_{S,e}(h)$ & $V(S,e,3)$\\
+\midrule
+$(\{0\},0)$ & $2(\{0\},0)$ & $128$ & $8$\\
+$(\{0\},1)$ & $2(\{0\},1)+(\{0,2\},0)$ & $-32+96h$ & $16$\\
+$(\{0,2\},0)$ & $3(\{0\},0)$ & $192$ & $12$\\
+$(\{0\},2)$ & $2(\{0\},2)+(\{0,2\},1)$ & $-104+28h+36h^2$ & $19$\\
+$(\{0,2\},1)$ & $3(\{0\},1)+2(\{0,2\},0)+(\{0,4\},0)$ & $128+144h$ & $35$\\
+$(\{0,2,4\},0)$ & $4(\{0\},0)$ & $256$ & $16$\\
+$(\{0\},3)$ & $2(\{0\},3)+(\{0,2\},2)$ & $-228+h+30h^2+9h^3$ & $18$\\
+$(\{0,2\},2)$ & $3(\{0\},2)+2(\{0,2\},1)+(\{0,4\},1)+(\{0,2,4\},0)$ & $80+174h+54h^2$ & $68$\\
+$(\{0,2,4\},1)$ & $4(\{0\},1)+3(\{0,2\},0)+2(\{0,4\},0)+(\{0,6\},0)$ & $416+192h$ & $62$\\
+$(\{0,2,4,6\},0)$ & $5(\{0\},0)$ & $320$ & $20$\\
+$(\{0,4\},0)$ & $4(\{0\},0)$ & $256$ & $16$\\
+$(\{0,4\},1)$ & $4(\{0\},1)+3(\{0,2\},0)+2(\{0,4\},0)+(\{0,6\},0)$ & $416+192h$ & $62$\\
+$(\{0,6\},0)$ & $4(\{0\},0)$ & $256$ & $16$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{lemma}[\decl{closure_check}, \decl{coef_check}, \decl{base_check}]\label{lem:finite}
+For every $(S,e)\in\St$: (i) $(\nrm L',e-j)\in\St$ for all $0\le j\le e$ and $L'\subseteq\supp S$ with $|L'|=j+1$; (ii) $\sum_{j=0}^{e}\sum_{L'}p_{\nrm L',e-j}(x)=2\,p_{S,e}(x+1)$ in $\Z[x]$, with $L'$ as in (i); (iii) $128\,V(S,e,3)=2^3p_{S,e}(3)$.
+\end{lemma}
+\begin{proof}
+These are finite computations, summarized in Table~\ref{tab:states}. For example, from $(\{0,2\},1)$, with $\supp\{0,2\}=\{-1,1,3\}$, the singletons give $(\{0\},1)$ three times and the pairs give $(\{0,2\},0)$ twice and $(\{0,4\},0)$ once, so (ii) reads $2(128+144(x+1))=3(-32+96x)+2\cdot192+256$.
+In Lean the polynomials are coefficient lists (\decl{tab}), \decl{nx} maps the coefficients of $p$ to those of $2p(x+1)$ (\decl{pe_nx}, by \texttt{ring}), and (ii) is checked on the coefficients of $x^0,\dots,x^3$. Each of (i)--(iii) is one \texttt{decide +kernel}; for (iii) the kernel evaluates $\ways(S,3,3+e)$ by the recursion.
+\end{proof}
+
+\begin{proposition}[\decl{main}]\label{prop:main}
+For all $h\ge3$ and $(S,e)\in\St$, $128\,V(S,e,h)=2^hp_{S,e}(h)$.
+\end{proposition}
+\begin{proof}
+Induction on $h$, starting from Lemma~\ref{lem:finite}(iii). By Lemma~\ref{lem:step}, the induction hypothesis (applicable by Lemma~\ref{lem:finite}(i)) and Lemma~\ref{lem:finite}(ii),
+$128\,V(S,e,h+1)=\sum_{j,L'}128\,V(\nrm L',e-j,h)=2^h\sum_{j,L'}p_{\nrm L',e-j}(h)=2^{h+1}p_{S,e}(h+1)$.
+\end{proof}
+
+For $e\le3$ let $P_e=\sum_{b=0}^{e}p_{B_{b+1},e-b}$; these pairs lie in $\St$ (\decl{base_mem}), and by Table~\ref{tab:states} (lemmas \decl{R1}--\decl{R3}; all by \texttt{decide +kernel})
+\[
+P_1=160+96h,\qquad P_2=280+172h+36h^2,\qquad P_3=588+367h+84h^2+9h^3 .
+\]
+\begin{proposition}[\decl{diag}]\label{prop:diag}
+For $e\le3$, $n\ge e+4$ and $h=n-e-1$, $128\,T(n,n-e)=2^hP_e(h)$ (with $P_0=128$).
+\end{proposition}
+\noindent This is Proposition~\ref{prop:main} summed over Lemma~\ref{lem:diagsum}.
+
+\subsection{The right-hand sequences}
+\begin{lemma}[\decl{A339252_closed}, \decl{A339254_closed}, \decl{A339029_closed}]\label{lem:seq}
+For $e\in\{1,2,3\}$ and $h\ge e$, $128\,a_e(h)=2^hP_e(h)$.
+\end{lemma}
+\begin{proof}
+By \decl{A339029_eq}, $a_3(m+7)=8a_3(m+6)-24a_3(m+5)+32a_3(m+4)-16a_3(m+3)$ with $a_3(0),\dots,a_3(6)=1,12,52,168,497,1412,3879$. So for $h\ge e$, $a_e(h+e+1)$ is obtained from $a_e(h),\dots,a_e(h+e)$ by the recurrence with characteristic polynomial $(x-2)^{e+1}$, which $2^hP_e(h)$ also satisfies, as $\deg P_e\le e$. Induct on windows of $e+1$ consecutive values; the base window $h=e,\dots,2e$ is closed by \texttt{norm\_num}, the steps by \texttt{linear\_combination}.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:main}}
+Part (1) is Proposition~\ref{prop:col2}. Let $e\in\{1,2,3\}$ and $n\ge e+1$. If $n\le10$, the identity is \decl{statement_check}. If $n\ge11$, then $n\ge e+4$ and $h=n-e-1\ge7$, and Proposition~\ref{prop:diag} and Lemma~\ref{lem:seq} give $128\,T(n,n-e)=2^hP_e(h)=128\,a_e(h)$ with $h=n-2,n-3,n-4$. \qed
+
+\begin{corollary}\label{cor:closed}
+$T(n,n-1)=2^{n-4}(3n-1)$ for $n\ge3$, $T(n,n-2)=2^{n-8}(9n^2-11n+22)$ for $n\ge5$, and $T(n,n-3)=2^{n-11}(9n^3-24n^2+127n-112)$ for $n\ge7$. Equivalently $T(n,n-e)=d_e(n-e-1)$ for $n\ge2e+1$, where $d_1(m)=2^{m-3}(10+6m)$, $d_2(m)=2^{m-5}(70+43m+9m^2)$, $d_3(m)=2^{m-7}(588+367m+84m^2+9m^3)$; this is Luschny's summary for $1\le n\le 3$.
+\end{corollary}
+This follows from Theorem~\ref{thm:main} and Lemma~\ref{lem:seq}, as $2^hP_e(h)/128=d_e(h)$; Luschny's $T(2n+k,n+k)$ is $T(N,N-e)$ with $e=n$, $N=2e+k$. The case $d_0$ is $T(n,n)=2^{n-1}$. The corollary is not stated in Lean.
+
+\section{Machine verification}\label{sec:lean}
+
+The proof is in \path{lean/Math0/Frontier/OEIS/A333650.lean} (394 lines) of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file (unchanged, same SHA-256) and \path{lean/Math0/Audit.lean}. Its main declaration is \decl{Math0.Frontier.A333650.result}, assembled from the private lemmas \decl{col2}, \decl{diag1}, \decl{diag2}, \decl{diag3} as in Section~\ref{sec:proof}, and the file ends with \texttt{\#math0\_settles Math0.Frontier.A333650.result Math0.Statements.A333650.statement}. All finite checks use \texttt{decide +kernel} (evaluation by the kernel, which unlike \texttt{native\_decide} adds no axiom). Neither file contains \texttt{sorry}, \texttt{native\_decide}, \texttt{axiom} or \texttt{set\_option}.
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a universe-monomorphic \texttt{Prop}-valued definition; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice}, \decl{Quot.sound} (so no \decl{sorryAx} or \decl{Lean.ofReduceBool}); (3) the type of \decl{result} is syntactically the statement or its negation (up to metadata, no unfolding). It reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A333650.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A333650.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A333650.result' proves 'Math0.Statements.A333650.statement'
+\end{lstlisting}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh}: it builds all math0 results with \texttt{lake build}, re-running every audit, and checks that the pinned dependencies are unmodified. The single file is checked by \texttt{lake env lean Math0/Frontier/OEIS/A333650.lean} in \path{lean} (about a minute on our machine once Mathlib's compiled files are cached).
+
+{\footnotesize
+\begin{thebibliography}{99}\setlength{\itemsep}{0pt}
+
+\bibitem{BP}
+J.~Bétréma and J.-G. Penaud, \emph{Animaux et arbres guingois}, Theoret.\ Comput.\ Sci.\ \textbf{117} (1993), 67--89.
+
+\bibitem{Bona}
+M.~Bóna (ed.), \emph{Handbook of Enumerative Combinatorics}, CRC Press, 2015; Ch.~1 (F.~Ardila) is arXiv:1409.2562.
+
+\bibitem{Br1}
+T.~M. Brown, \emph{Convex domino towers}, J.\ Integer Seq.\ \textbf{20} (2017), Article~17.3.1; arXiv:1608.01562.
+
+\bibitem{Br2}
+T.~M. Brown, \emph{On the enumeration of $k$-omino towers}, Discrete Math.\ \textbf{340} (2017), 1319--1326; arXiv:1608.01563.
+
+\bibitem{EZ}
+S.~B. Ekhad and D.~Zeilberger, \emph{Automated counting of towers (à la Bordelaise)}, arXiv:1212.4105, 2012.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026.
+
+\bibitem{GBV}
+D.~Gouyou-Beauchamps and G.~Viennot, \emph{Equivalence of the two dimensional directed animals problem to a one-dimensional path problem}, Adv.\ in Appl.\ Math.\ \textbf{9} (1988), 334--357.
+
+\bibitem{Ha}
+A.~M. Haupt, \emph{Enumeration of $S$-omino towers and row-convex $k$-omino towers}, J.\ Integer Seq.\ \textbf{24} (2021), Article~21.3.6; arXiv:1810.10428.
+
+\bibitem{K1}
+P.~Kagey, \emph{Symmetric brick stacking} (2018) and \emph{Number of ways to stack LEGO bricks} (2020), Mathematics Stack Exchange, questions 2949131 and 3659431.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, CPP 2020, ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, CADE 28, LNCS \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Z}
+D.~Zeilberger, \emph{The amazing $3^n$ theorem and its even more amazing proof}, arXiv:1208.2258, 2012.
+
+\bibitem{A333650}
+The OEIS Foundation Inc., \url{https://oeis.org/A333650} (P.~Kagey, 2020; revision \#68, Aug.~12, 2022).
+
+\bibitem{A264746}
+The OEIS Foundation Inc., \url{https://oeis.org/A264746}, \url{https://oeis.org/A320314} (P.~Kagey, 2018).
+
+\bibitem{A339252}
+The OEIS Foundation Inc., \url{https://oeis.org/A339252} (P.~Kagey and P.~Luschny, 2020), \url{https://oeis.org/A339254} and \url{https://oeis.org/A339029} (P.~Luschny, 2020).
+
+\bibitem{A339494}
+The OEIS Foundation Inc., \url{https://oeis.org/A339494}, \url{https://oeis.org/A339495} (P.~Luschny, 2020).
+
+\end{thebibliography}
+}
+
+\end{document}

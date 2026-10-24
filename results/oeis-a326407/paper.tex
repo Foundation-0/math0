@@ -1,0 +1,434 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,noncomputable,subst,by_contra,by_cases},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1
+    {↔}{{$\leftrightarrow$}}1 {¬}{{$\neg$}}1 {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {→}{{$\to$}}1
+    {≤}{{$\le$}}1 {≥}{{$\ge$}}1 {≠}{{$\ne$}}1 {×}{{$\times$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {·}{{$\cdot$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\val}{\operatorname{val}}
+\newcommand{\pos}{\operatorname{pos}}
+\newcommand{\near}{\operatorname{near}}
+
+\title[Prime neighbours in the square array A060734]{In the square array A060734 only the cell of $6$ has more than four prime neighbours (OEIS A326407)}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 18, 2026}
+
+\begin{document}
+\begin{abstract}
+Write the positive integers in the square array A060734, and let $a(n)=-1$ if $n$ is prime and otherwise let $a(n)$ be the number of primes in the at most eight cells adjacent (horizontally, vertically or diagonally) to the cell of $n$; this is the ``Minesweeper sequence'' OEIS A326407.
+We prove the two conjectures that Witold Tatkiewicz recorded in that entry in 2019: $a(n)<6$ for every $n\ge1$, and $a(n)=5$ only for $n=6$.
+The proof is a checkerboard parity argument: the entry in row $i$ and column $j$ has the parity of $i+j+1$ and the only even prime sits in a single cell, so at most four neighbours of any cell other than the cell of $6$ can hold primes.
+We found no earlier proof and classify the result as new, although the argument is elementary and of the same kind as one recorded in the OEIS for a hexagonal arrangement (A327893).
+The theorem is verified in Lean~4 against a statement that math0 formalized from the OEIS entry and that was reviewed for fidelity and frozen before the proof attempt; its definitions are checked by the kernel against all $81$ listed terms of A326407 and $66$ terms of A060734.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+In 2019 Witold Tatkiewicz contributed to the OEIS a family of ``Minesweeper sequences'' (A326405--A326410): the positive integers are written along a path that fills a two-dimensional grid, each prime is treated as a mine and replaced by $-1$, and each non-prime is replaced by the number of primes in the adjacent grid cells, as in the game Minesweeper.
+In A326407 \cite{A326407} the grid is the square array A060734 \cite{A060734}, which grows by alternately adding a row at its bottom edge and a column at its right edge:
+\[
+\begin{array}{rrrrrrl}
+  1 & 4 & 9 & 16 & 25 & 36 & \cdots\\
+  2 & 3 & 8 & 15 & 24 & 35 & \\
+  5 & 6 & 7 & 14 & 23 & 34 & \\
+  10 & 11 & 12 & 13 & 22 & 33 & \\
+  17 & 18 & 19 & 20 & 21 & 32 & \\
+  26 & 27 & 28 & 29 & 30 & 31 & \cdots
+\end{array}
+\]
+The sequence begins $a(1),a(2),\ldots = 2,-1,-1,2,-1,5,-1,2,1,3,-1,4,\dots$; for example, $6$ is not prime and five of its eight neighbours ($2,3,5,7,11$) are prime, so $a(6)=5$.
+The entry states three conjectures (Section~\ref{sec:statement}): $a(n)<6$; $a(n)=5$ only for $n=6$; and $a(n)=4$ for infinitely many $n$.
+We prove the first two (Theorem~\ref{thm:main}).
+In fact we prove the slightly stronger statement that every cell of the array other than the cell of $6$, including the cells that hold primes, has at most four prime neighbours (Theorem~\ref{thm:cells}).
+
+\subsection*{Prior work}
+The entry, in revision \#27 of March~20, 2020, which is the version we read, still marks both statements as conjectured; it has no correction lines and no link to a proof.
+In the entry A327893 \cite{A327893} (Michael De Vlieger, October~9, 2019), the analogous sequence for a hexagonal spiral, a comment credited to Tatkiewicz explains that its largest term is $4$ by the pattern of odd and even numbers in that arrangement.
+This is an argument of the same kind as ours, applied to a different arrangement, and it does not address A326407.
+The sibling entries A326408 \cite{A326408} and A326409 \cite{A326409} state $a(n)<5$ for their arrangements without the qualifier ``conjectured'', but give no argument; the math0 referees found nothing relevant in A326405, A326406, A326410 or A060734, and searches of arXiv, MathOverflow, Mathematics Stack Exchange, the SeqFan list and the general web found no proof or counterexample.
+On this basis we classify the result as new.
+The proof is short and elementary; this note adds a complete written proof and a kernel-checked formal proof of a frozen formal statement of the two conjectures (Section~\ref{sec:lean}).
+The third conjecture is not addressed; see Remark~\ref{rem:four}.
+
+\section{Statement}\label{sec:statement}
+
+\subsection*{The OEIS conjecture}
+The entry A326407, by Witold Tatkiewicz, October~2, 2019, has the name ``Minesweeper sequence of positive integers arranged on a 2D grid along a square array that grows by alternately adding a row at its bottom edge and a column at its right edge'' and offset~$1$.
+Its definition reads, verbatim:
+\begin{quote}
+Place positive integers on a 2D grid starting with 1 in the top left corner and continue along an increasing square array as in A060734.
+Replace each prime with -1 and each nonprime with the number of primes in adjacent grid cells around them.
+n is replaced by a(n).
+\end{quote}
+The conjectures are three comments of the entry, verbatim:
+\begin{quote}
+a(n) $<$ 6 (conjectured).\\
+a(n) = 5 for n=\{6\} (conjectured).\\
+Set of n such that a(n) = 4 is unbounded (conjectured).
+\end{quote}
+We read the second comment as saying that the set of $n$ with $a(n)=5$ is exactly $\{6\}$.
+The formal statement covers the first two comments.
+
+\subsection*{Mathematical formulation}
+We index rows and columns from $0$, with row $0$ on top and column $0$ on the left.
+For $k\ge0$ the \emph{hook} $k$ consists of the $2k+1$ cells $(r,c)$ with $\max(r,c)=k$; in A060734 it holds the numbers $k^2+1,\dots,(k+1)^2$, with $k^2+1,\dots,k^2+k$ in row $k$ from left to right (columns $0,\dots,k-1$) and $k^2+k+1,\dots,(k+1)^2$ in column $k$ from bottom to top (rows $k,\dots,0$).
+
+\begin{definition}\label{def:array}
+For $r,c\in\N$ put
+\[
+  \val(r,c)=\begin{cases}(c+1)^2-r, & r\le c,\\ r^2+1+c, & r>c,\end{cases}
+\]
+and for $n\in\N$ put $k=\lfloor\sqrt{n-1}\rfloor$ (with $0-1=0$ in $\N$) and
+\[
+  \pos(n)=\begin{cases}(k,\ n-k^2-1), & n\le k^2+k,\\ \bigl((k+1)^2-n,\ k\bigr), & n>k^2+k.\end{cases}
+\]
+\end{definition}
+
+\begin{lemma}[\decl{pos_val}, \decl{val_pos}]\label{lem:bij}
+$\pos(\val(r,c))=(r,c)$ for all $r,c\in\N$, and $\val(\pos(n))=n$ for all $n\ge1$.
+In particular, since $\val(r,c)\ge1$ for all $r,c$, the map $\val$ is a bijection from $\N^2$ onto the positive integers.
+\end{lemma}
+
+\begin{proof}
+If $r\le c$ then $n=\val(r,c)=(c+1)^2-r$ satisfies $c^2+c\le n-1=c^2+(2c-r)\le c^2+2c$, so $\lfloor\sqrt{n-1}\rfloor=c$ and $n>c^2+c$; hence $\pos(n)=((c+1)^2-n,c)=(r,c)$.
+If $r>c$ then $n=r^2+1+c$ with $c\le r-1$, so $n-1=r^2+c$ has $\lfloor\sqrt{n-1}\rfloor=r$ and $n\le r^2+r$; hence $\pos(n)=(r,n-r^2-1)=(r,c)$.
+Conversely, let $n\ge1$ and $k=\lfloor\sqrt{n-1}\rfloor$, so $k^2+1\le n\le (k+1)^2$.
+If $n\le k^2+k$, then $\pos(n)=(k,c)$ with $c=n-k^2-1<k$, and $\val(k,c)=k^2+1+c=n$.
+Otherwise $\pos(n)=(r,k)$ with $r=(k+1)^2-n\le k$, and $\val(r,k)=(k+1)^2-r=n$.
+\end{proof}
+
+The neighbours of a cell are the cells reached by one king move that stay in the grid.
+For $x\in\N$ let $\near(x)$ be the list $(0,1)$ if $x=0$ and $(x-1,x,x+1)$ if $x\ge1$.
+
+\begin{definition}\label{def:a}
+For a cell $(r,c)$ let $L(r,c)$ be the list of the numbers $\val(i,j)$ with $i\in\near(r)$, $j\in\near(c)$ and $(i,j)\ne(r,c)$, taken in this order (first by $i$, then by $j$), and let $\kappa(r,c)$ be the number of entries of $L(r,c)$ that are prime.
+For $n\ge1$ put
+\[
+  a(n)=\begin{cases}-1, & n\text{ prime},\\ \kappa(\pos(n)), & n\text{ not prime}.\end{cases}
+\]
+\end{definition}
+
+The list $L(r,c)$ has $8$ entries if $r,c\ge1$, $5$ entries if exactly one of $r,c$ is $0$, and $3$ entries if $r=c=0$; by Lemma~\ref{lem:bij} its entries are distinct, and they are the numbers in the neighbouring cells of $(r,c)$.
+
+\begin{theorem}\label{thm:main}
+For every $n\ge1$ we have $a(n)<6$, and $a(n)=5$ if and only if $n=6$.
+\end{theorem}
+
+Theorem~\ref{thm:main} follows from the following statement about cells, which we prove in Section~\ref{sec:proof}.
+
+\begin{theorem}\label{thm:cells}
+$\kappa(r,c)\le4$ for every cell $(r,c)\ne(2,1)$, and $\kappa(2,1)=5$.
+\end{theorem}
+
+\subsection*{Lean statement}
+The statement is the definition \decl{Math0.Statements.A326407.statement} in the frozen math0 statement file \path{lean/Math0/Statements/OEIS/A326407.lean}.
+Its definitions are, verbatim (docstrings and proofs omitted; all lie in the namespace \decl{Math0.Statements.A326407}):
+\begin{lstlisting}
+def val (r c : ℕ) : ℕ := if r ≤ c then (c + 1) ^ 2 - r else r ^ 2 + 1 + c
+
+def pos (n : ℕ) : ℕ × ℕ :=
+  if n ≤ Nat.sqrt (n - 1) ^ 2 + Nat.sqrt (n - 1) then
+    (Nat.sqrt (n - 1), n - Nat.sqrt (n - 1) ^ 2 - 1)
+  else ((Nat.sqrt (n - 1) + 1) ^ 2 - n, Nat.sqrt (n - 1))
+
+theorem pos_val (r c : ℕ) : pos (val r c) = (r, c)
+theorem val_pos {n : ℕ} (hn : 1 ≤ n) : val (pos n).1 (pos n).2 = n
+
+def near (x : ℕ) : List ℕ := if x = 0 then [0, 1] else [x - 1, x, x + 1]
+
+def neighbours (n : ℕ) : List ℕ :=
+  (near (pos n).1).flatMap fun i =>
+    (near (pos n).2).filterMap fun j =>
+      if (i, j) = pos n then none else some (val i j)
+
+def a (n : ℕ) : ℤ :=
+  if n.Prime then -1 else (((neighbours n).filter fun m => m.Prime).length : ℤ)
+
+def statement : Prop :=
+  (∀ n : ℕ, 1 ≤ n → a n < 6) ∧ (∀ n : ℕ, 1 ≤ n → (a n = 5 ↔ n = 6))
+\end{lstlisting}
+Here \texttt{val}, \texttt{pos} and \texttt{near} are the functions of the same names above, \texttt{neighbours n} is the list $L(\pos(n))$, \texttt{a} is the function $a$ of Definition~\ref{def:a} (with values in $\Z$), and \texttt{statement} is Theorem~\ref{thm:main}.
+
+\subsection*{Encoding}
+The array is encoded by the closed formula $\val$, not by simulating its growth, and Lemma~\ref{lem:bij} (proved in the statement file) shows that it places every positive integer in exactly one cell, so that ``the cell of $n$'' is $\pos(n)$.
+The ``adjacent grid cells'' of the entry are the Minesweeper neighbours: all cells at king-move distance~$1$, including the diagonal ones, cut off at the top row and the left column, where the grid ends.
+The two conjectures are stated over the whole range $n\ge1$ of the sequence; \texttt{a 0} is a junk value that does not occur in the statement.
+The truncated subtractions in \texttt{val} and \texttt{pos} are exact where they are used, by Lemma~\ref{lem:bij}.
+The third conjecture is recorded separately in the statement file as the definition \decl{statement_four_unbounded}, which says that for every $N$ there is $n\ge N$ with $a(n)=4$; it is not part of \decl{statement}.
+
+\subsection*{Check against the OEIS data}
+The statement file proves by kernel evaluation (\texttt{decide +kernel}) two data checks.
+The theorem \decl{val_data} states that the values $\val(0,d),\val(1,d-1),\dots,\val(d,0)$ for $d=0,\dots,10$ are the first $66$ listed terms of A060734 (the array read by antidiagonals downwards), and that the $6\times6$ corner of $\val$ is the array printed in the example of A326407 and in the introduction.
+The theorem \decl{a_data} states that $a(1),\dots,a(81)$ are the $81$ listed terms of A326407.
+In the fidelity review, which found the statement faithful and made no edits, a referee also rebuilt the array in Python by growing it row by row and column by column, found agreement with $\val$ on a $60\times60$ grid, and reproduced the $81$ listed terms independently.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A326407.lean}; the Lean names of the lemmas are given in brackets.
+
+\begin{lemma}[Checkerboard parity, \decl{val_mod_two}]\label{lem:parity}
+For all $i,j\in\N$ we have $\val(i,j)\equiv i+j+1\pmod 2$.
+In particular $\val(i,j)$ is even if and only if $i+j$ is odd.
+\end{lemma}
+
+\begin{proof}
+Since $x^2=x\cdot x\equiv x\pmod 2$ for every $x\in\N$ (\decl{mul_self_mod_two}), we get, if $i\le j$, from $\val(i,j)+i=(j+1)^2$ that $\val(i,j)\equiv (j+1)^2-i\equiv j+1+i$, and, if $i>j$, that $\val(i,j)=i^2+1+j\equiv i+1+j$.
+\end{proof}
+
+\begin{lemma}[\decl{val_eq_two}]\label{lem:two}
+If $\val(i,j)=2$, then $(i,j)=(1,0)$.
+\end{lemma}
+
+\begin{proof}
+We have $\lfloor\sqrt{1}\rfloor=1$ and $2\le1^2+1$, so $\pos(2)=(1,0)$.
+By Lemma~\ref{lem:bij}, $(i,j)=\pos(\val(i,j))=\pos(2)=(1,0)$.
+(In Lean, $\pos(2)=(1,0)$ is obtained by kernel evaluation.)
+\end{proof}
+
+\begin{corollary}[\decl{not_prime_val}]\label{cor:np}
+If $i+j$ is odd and $(i,j)\ne(1,0)$, then $\val(i,j)$ is not prime.
+\end{corollary}
+
+\begin{proof}
+A prime is $2$ or odd.
+By Lemma~\ref{lem:two}, $\val(i,j)\ne2$, and by Lemma~\ref{lem:parity}, $\val(i,j)$ is even.
+\end{proof}
+
+We call a cell $(i,j)$ with $i+j$ odd and $(i,j)\ne(1,0)$ \emph{excluded}.
+Since $\kappa(r,c)$ is the sum over the entries $x$ of $L(r,c)$ of $1$ if $x$ is prime and $0$ otherwise, Corollary~\ref{cor:np} gives
+\begin{equation}\label{eq:count}
+  \kappa(r,c)\le |L(r,c)|-e,
+\end{equation}
+whenever $e$ distinct neighbouring cells of $(r,c)$ are excluded.
+
+\begin{lemma}[\decl{count_le}]\label{lem:count}
+If $(r,c)\ne(2,1)$, then $\kappa(r,c)\le4$.
+\end{lemma}
+
+\begin{proof}
+We distinguish whether $r$ and $c$ are $0$ or successors, as in the Lean proof.
+
+\emph{The corner $(0,0)$.}
+Here $L(0,0)=(4,2,3)$ has three entries, so $\kappa(0,0)\le3$ (in fact $\kappa(0,0)=2$; the Lean proof evaluates this directly).
+
+\emph{Row $0$: $(r,c)=(0,t+1)$.}
+The neighbouring cells are $(0,t)$, $(0,t+2)$, $(1,t)$, $(1,t+1)$, $(1,t+2)$.
+If $t$ is even, $(1,t+2)$ is excluded: $1+t+2$ is odd and its column is not $0$.
+If $t$ is odd, $(0,t)$ and $(0,t+2)$ are excluded: their coordinate sums $t$ and $t+2$ are odd and they lie in row $0$.
+By \eqref{eq:count}, $\kappa(0,t+1)\le 5-1=4$.
+
+\emph{Column $0$: $(r,c)=(s+1,0)$.}
+The neighbouring cells are $(s,0)$, $(s,1)$, $(s+1,1)$, $(s+2,0)$, $(s+2,1)$.
+If $s$ is even, $(s,1)$ is excluded: $s+1$ is odd and its column is $1$.
+If $s$ is odd, $(s+1,1)$ and $(s+2,0)$ are excluded: both coordinate sums equal $s+2$, which is odd, the first cell lies in column $1$, and the second in row $s+2\ge3$.
+By \eqref{eq:count}, $\kappa(s+1,0)\le4$.
+
+\emph{Interior cells: $(r,c)=(s+1,t+1)$.}
+If $s=t=0$, the cell is $(1,1)$, holding $3$, with $L(1,1)=(1,4,9,2,8,5,6,7)$, so $\kappa(1,1)=3$ (evaluated directly in Lean).
+Otherwise the eight neighbouring cells split into the four orthogonal ones
+\[
+  (s,t+1),\quad (s+1,t),\quad (s+1,t+2),\quad (s+2,t+1),
+\]
+whose coordinate sums are $\equiv s+t+1\pmod2$, and the four diagonal ones
+\[
+  (s,t),\quad (s,t+2),\quad (s+2,t),\quad (s+2,t+2),
+\]
+whose coordinate sums are $\equiv s+t\pmod2$.
+If $s+t$ is even, the four orthogonal cells have odd coordinate sums; the cells $(s,t+1)$, $(s+1,t+2)$ and $(s+2,t+1)$ have column $\ge1$, so only $(s+1,t)$ could be $(1,0)$, and it is $(1,0)$ only if $s=t=0$, which we have excluded.
+If $s+t$ is odd, the four diagonal cells have odd coordinate sums; the cells $(s,t+2)$, $(s+2,t)$ and $(s+2,t+2)$ have row or column $\ge2$, so only $(s,t)$ could be $(1,0)$, and $(s,t)=(1,0)$ would mean $(r,c)=(2,1)$, which is excluded by hypothesis.
+In both cases four neighbouring cells are excluded, and \eqref{eq:count} gives $\kappa(s+1,t+1)\le8-4=4$.
+\end{proof}
+
+In Lean, each case other than the cells $(0,0)$ and $(1,1)$ unfolds $L(r,c)$ into an explicit list of values $\val(i,j)$, rewrites the number of prime entries as a sum of indicators by \decl{len_filter_cons} (avoiding the nested case splits produced by unfolding \texttt{List.filter}), sets the indicators of the excluded cells to $0$ by Corollary~\ref{cor:np} (its side conditions are discharged by \texttt{omega}), and checks \eqref{eq:count} with \texttt{split\_ifs <;> omega}.
+
+\begin{lemma}[\decl{a_six}]\label{lem:six}
+$\pos(6)=(2,1)$, $\kappa(2,1)=5$ and $a(6)=5$.
+\end{lemma}
+
+\begin{proof}
+We have $\lfloor\sqrt5\rfloor=2$ and $6\le2^2+2$, so $\pos(6)=(2,6-4-1)=(2,1)$.
+The neighbouring cells of $(2,1)$ hold
+\[
+  L(2,1)=(2,3,8,5,7,10,11,12),
+\]
+of which exactly $2,3,5,7,11$ are prime.
+Since $6$ is not prime, $a(6)=\kappa(2,1)=5$.
+\end{proof}
+
+In Lean, $a(6)=5$ is proved by kernel evaluation (\texttt{decide +kernel}) of the definition, including $\pos(6)$, the list \texttt{neighbours 6} and the primality of its entries.
+
+\begin{proof}[Proof of Theorems~\ref{thm:main} and~\ref{thm:cells}]
+Theorem~\ref{thm:cells} is Lemmas~\ref{lem:count} and~\ref{lem:six}.
+Let $n\ge1$ with $n\ne6$ (Lean: \decl{a_le_four}).
+If $n$ is prime, then $a(n)=-1\le4$.
+Otherwise $a(n)=\kappa(\pos(n))$.
+If $\pos(n)$ were $(2,1)$, Lemma~\ref{lem:bij} would give $n=\val(2,1)=6$; hence $\pos(n)\ne(2,1)$, and $a(n)\le4$ by Lemma~\ref{lem:count}.
+Together with $a(6)=5$ (Lemma~\ref{lem:six}) this gives $a(n)<6$ for every $n\ge1$, and $a(n)=5$ if and only if $n=6$.
+\end{proof}
+
+\begin{remark}[The third conjecture]\label{rem:four}
+The value $4$ occurs, for instance $a(12)=4$, and the entry conjectures that it occurs infinitely often.
+We do not address this, and the parity argument says nothing about it.
+It concerns prime constellations: if $v\ne6$ is even and its cell $(r,c)$ has $r,c\ge1$, then by the case ``$s+t$ odd'' of Lemma~\ref{lem:count} the diagonal neighbours of $(r,c)$ are non-prime, so $a(v)=4$ forces all four orthogonal neighbours to be prime.
+These include the cells of $v\pm1$: by the description of the hooks, $m$ and $m+1$ occupy orthogonally adjacent cells unless $m=(k+1)^2$ with $k\ge1$, and then $m$ lies in row~$0$ and $m+1$ in column~$0$.
+So for such $v$, $a(v)=4$ implies that $v-1$ and $v+1$ are twin primes.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A326407.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}.
+It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A326407.lean} (Section~\ref{sec:statement}; SHA-256 \texttt{32bef0c0\ldots c912e}, unchanged since the fidelity review) and the audit commands in \path{lean/Math0/Audit.lean}.
+The main declaration is \decl{Math0.Frontier.A326407.result}, of type \decl{Math0.Statements.A326407.statement}.
+Its auxiliary declarations are private: the list \texttt{nb r c} $=L(r,c)$ (with \texttt{neighbours n = nb (pos n).1 (pos n).2} by \texttt{rfl}), the helper lemmas \decl{mul_self_mod_two} and \decl{len_filter_cons}, the lemmas named in Section~\ref{sec:proof}, and
+\begin{lstlisting}
+private theorem count_le (r c : ℕ) (h : ¬ (r = 2 ∧ c = 1)) :
+    ((nb r c).filter fun m => m.Prime).length ≤ 4
+private theorem a_le_four {n : ℕ} (hn : 1 ≤ n) (h6 : n ≠ 6) : a n ≤ 4
+\end{lstlisting}
+The theorem \texttt{result : statement} follows from \decl{a_six} and \decl{a_le_four} by a case split on $n=6$ and \texttt{omega}, as in the last proof of Section~\ref{sec:proof}; the file ends with
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A326407.result Math0.Statements.A326407.statement
+\end{lstlisting}
+The finite computations (the cells $(0,0)$ and $(1,1)$ in \decl{count_le}, the value $\pos(2)=(1,0)$ in \decl{val_eq_two}, and \decl{a_six}) use \texttt{decide +kernel}, which evaluates a decision procedure in the Lean kernel, and the value $\val(2,1)=6$ in \decl{a_le_four} is checked by \texttt{decide}; no \texttt{native\_decide}, \texttt{sorry}, \texttt{set\_option} or added axiom occurs in either file.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles} (in \path{lean/Math0/Audit.lean}) fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, the axiom \decl{Lean.ofReduceBool} introduced by \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically the statement or its negation, up to metadata annotations, with no unfolding.
+Running \texttt{lake env lean Math0/Frontier/OEIS/A326407.lean} in the directory \path{lean} prints
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A326407.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A326407.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A326407.result' proves 'Math0.Statements.A326407.statement'
+\end{lstlisting}
+so \decl{result} proves the statement (it does not refute it) and depends only on the three standard axioms.
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib cache, builds all math0 results with \texttt{lake build} (re-running every audit command) and checks that the pinned dependencies are unmodified.
+To check this result alone, run \texttt{lake build Math0.Statements.OEIS.A326407} (this re-runs \decl{val_data} and \decl{a_data}) and \texttt{lake env lean Math0/Frontier/OEIS/A326407.lean} in \path{lean}.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171 [cs.AI], 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A060734}
+The OEIS Foundation Inc., \url{https://oeis.org/A060734}, entry by F.~Ellermann, Apr.~23, 2001.
+
+\bibitem{A326407}
+The OEIS Foundation Inc., \url{https://oeis.org/A326407}, entry by W.~Tatkiewicz, Oct.~2, 2019; revision \#27, Mar.~20, 2020.
+
+\bibitem{A326408}
+The OEIS Foundation Inc., \url{https://oeis.org/A326408}, entry by W.~Tatkiewicz, Oct.~4, 2019.
+
+\bibitem{A326409}
+The OEIS Foundation Inc., \url{https://oeis.org/A326409}, entry by W.~Tatkiewicz, Oct.~7, 2019.
+
+\bibitem{A327893}
+The OEIS Foundation Inc., \url{https://oeis.org/A327893}, entry by M.~De Vlieger, Oct.~9, 2019.
+
+\end{thebibliography}
+}
+
+\end{document}

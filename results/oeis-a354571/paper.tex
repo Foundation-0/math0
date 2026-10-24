@@ -1,0 +1,380 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    noncomputable,private},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8, upquote=true,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℝ}{{$\mathbb{R}$}}1 {∀}{{$\forall$}}1
+    {∃}{{$\exists$}}1 {→}{{$\to$}}1 {∧}{{$\wedge$}}1 {∑}{{$\sum$}}1 {∈}{{$\in$}}1
+    {↔}{{$\leftrightarrow$}}1 {×}{{$\times$}}1 {≡}{{$\equiv$}}1 {²}{{$^2$}}1 {π}{{$\pi$}}1
+    {∞}{{$\infty$}}1 {≥}{{$\ge$}}1 {≤}{{$\le$}}1 {≠}{{$\ne$}}1 {…}{{$\dots$}}1 {·}{{$\cdot$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\emergencystretch=3em
+
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\one}{\mathbf{1}}
+\newcommand{\re}{\operatorname{Re}}
+\newcommand{\wE}{w_{\mathrm E}}
+\newcommand{\wO}{w_{\mathrm O}}
+\newcommand{\FE}{F_{\mathrm E}}
+\newcommand{\FO}{F_{\mathrm O}}
+
+\title[Selle's conjecture for OEIS A354570 and A354571]{Legs of primitive Pythagorean triangles whose odd prime factors are all congruent to $3$ modulo $4$: a proof that $a(n)/n\to\pi$ for OEIS A354570 and A354571}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 20, 2026}
+\hypersetup{pdftitle={Legs of primitive Pythagorean triangles whose odd prime factors are all congruent to 3 modulo 4: a proof that a(n)/n -> pi for OEIS A354570 and A354571},pdfauthor={math0}}
+
+\begin{document}
+\begin{abstract}
+OEIS A354571 lists, in increasing order and with multiplicity, the even legs $k$ of primitive Pythagorean triangles such that every odd prime factor of $k$ is $\equiv3\pmod 4$ and $k$ has an odd prime factor; A354570 does the same for the odd legs all of whose prime factors are $\equiv3\pmod4$. We prove Lothar Selle's 2022 conjecture that both sequences satisfy $a(n)/n\to\pi$, by counting triangles through coprime factorizations and applying a Wiener--Ikehara theorem to $(1-2^{-s})\zeta(s)/L(s,\chi_4)$. We found no earlier proof and classify the result as new, with the caveat that it is a routine consequence of classical analytic number theory. The theorem, including the Tauberian theorem, is verified in Lean~4 with Mathlib against a statement formalized by math0 from the OEIS entries, reviewed for fidelity and frozen before the proof attempt.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+A \emph{primitive Pythagorean triangle} (PPT) is a triple $(x,y,z)$ of positive integers with $x^2+y^2=z^2$ and $\gcd(x,y,z)=1$; $x$ and $y$ are its legs, and exactly one of them is even. For $k\ge1$ let $t(k)$ be the number of pairs $(b,c)$ such that $(b,k,c)$ is a PPT, i.e.\ the number of PPTs having $k$ as a leg, each triangle counted once. The OEIS entries A354571 \cite{A354571} and A354570 \cite{A354570}, contributed by Lothar Selle in June 2022, are the ``Ordered even leg lengths k (listed with multiplicity) of primitive Pythagorean triangles such that all odd prime factors of k are congruent to 3 (mod 4) and at least one prime factor is odd'', namely $12,12,24,24,28,28,36,\dots$ ($12$ occurs twice because of $(5,12,13)$ and $(12,35,37)$), and the ``Ordered odd leg lengths k (listed with multiplicity) of primitive Pythagorean triangles such that all prime factors of k are congruent to 3 (mod 4)'', namely $3,7,9,11,19,21,21,\dots$; both have offset $1$. The COMMENTS section of A354571 (entry by Selle, June~4, 2022) reads
+\begin{quote}
+``Conjecture: lim\_\{n-\textgreater{}oo\} a(n)/n = Pi. Also, lim\_\{n-\textgreater{}oo\} A354570(n)/n = Pi.''
+\end{quote}
+and A354570 contains the same comment with the two sequences exchanged. We prove both limits.
+
+\subsection*{Prior work and status}
+Asymptotic counts of PPTs go back to D.~N.~Lehmer \cite{Leh} (e.g.\ the number with hypotenuse at most $N$ is $\sim N/(2\pi)$). Lehmer also studied sums over the integers all of whose prime factors lie in prescribed residue classes (for instance all $\equiv1\pmod4$), a question treated in general by Landau \cite{La}; the referees found no treatment in \cite{Leh} of the restricted counts considered here. The entries cite Selle's book \cite{Se} for the sequences (chapters~2.3.3 and~2.2.1) and refer to its chapter~2.3.10 ``for identity of'' the limit for the other sequence; the referees read this as concerning the \emph{equality} of the two limits, not their value. Neither we nor the referees could consult the book. In the current revisions (A354571 \#41, A354570 \#54, both August 2022) the limits are still stated as conjectures, and the math0 referees found no proof or counterexample in the related OEIS entries or by web searches (arXiv, MathOverflow, Math StackExchange, SeqFan). Related conjectures of Selle in A120427, A120890 and A354569 are not addressed here. We therefore classify Theorem~\ref{thm:main} as a \emph{new result}, with a caveat on its depth: the key asymptotic $\sum_{n\le N}g(n)\sim(2/\pi)N$ (Proposition~\ref{prop:S}) is a standard consequence of the Wiener--Ikehara theorem \cite{Ik,Wi} or of Delange's generalization \cite{De} (see \cite{Ko}), and an expert would regard the result as routine.
+
+\section{Statement}\label{sec:statement}
+
+\begin{theorem}\label{thm:main}
+Let $a(n)$ and $a'(n)$ $(n\ge1)$ be the $n$-th terms of A354571 and A354570. Then $a(n)/n\to\pi$ and $a'(n)/n\to\pi$ as $n\to\infty$.
+\end{theorem}
+
+Theorem~\ref{thm:main} is the content of the Lean \decl{statement} below. On the way (Section~\ref{sec:proof}) we show that for each of the two sequences the number of terms $\le N$, counted with multiplicity, is $N/\pi+o(N)$; for a nondecreasing sequence this is equivalent to the limit.
+
+\subsection*{The Lean statement}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A354571.lean}, reviewed for fidelity against the OEIS entries, and frozen (SHA-256 \texttt{8b6ac74e\ldots 8ca9ee}) before any proof attempt. Its definitions and the statement are, verbatim (namespace \decl{Math0.Statements.A354571}; blank lines, two \code{Decidable} instances, the lemmas, and all docstrings but the last are omitted):
+\begin{lstlisting}
+def IsPPT (x y z : ℕ) : Prop :=
+  0 < x ∧ 0 < y ∧ x ^ 2 + y ^ 2 = z ^ 2 ∧ Nat.gcd (Nat.gcd x y) z = 1
+def cand (k d : ℕ) : ℕ × ℕ := ((k ^ 2 / d - d) / 2, (k ^ 2 / d - d) / 2 + d)
+def legTriangles (k : ℕ) : Finset (ℕ × ℕ) :=
+  ((Finset.range k).filter (fun d => IsPPT (cand k d).1 k (cand k d).2)).image (cand k)
+def CondE (k : ℕ) : Prop :=
+  (∀ p ∈ k.primeFactors, Odd p → p % 4 = 3) ∧ ∃ p ∈ k.primeFactors, Odd p
+def CondO (k : ℕ) : Prop := ∀ p ∈ k.primeFactors, p % 4 = 3
+def wE (k : ℕ) : ℕ := if Even k ∧ CondE k then (legTriangles k).card else 0
+def wO (k : ℕ) : ℕ := if Odd k ∧ CondO k then (legTriangles k).card else 0
+def numLE (w : ℕ → ℕ) (k : ℕ) : ℕ := ∑ j ∈ Finset.range (k + 1), w j
+noncomputable def nthTerm (w : ℕ → ℕ) (n : ℕ) : ℕ := sInf {k | n ≤ numLE w k}
+noncomputable def a (n : ℕ) : ℕ := nthTerm wE n
+noncomputable def a354570 (n : ℕ) : ℕ := nthTerm wO n
+/-- Conjecture (Selle, A354571 and A354570): `a(n)/n → π` and `A354570(n)/n → π` as `n → ∞`. -/
+def statement : Prop :=
+  Filter.Tendsto (fun n : ℕ => (a n : ℝ) / n) Filter.atTop (nhds Real.pi) ∧
+    Filter.Tendsto (fun n : ℕ => (a354570 n : ℝ) / n) Filter.atTop (nhds Real.pi)
+\end{lstlisting}
+
+\subsection*{How the Lean definitions encode the entries}
+\code{IsPPT b k c} says that $(b,k,c)$ is a PPT with hypotenuse $c$. The set \code{legTriangles k} is computed by a search over $d=c-b<k$ (as $k^2=d(2b+d)$), and the theorem \decl{mem_legTriangles} proves $(b,c)\in\code{legTriangles k}\iff\code{IsPPT b k c}$. A PPT never has two equal legs, so \code{(legTriangles k).card} is $t(k)$, each triangle counted once; as exactly one leg is even, for even (odd) $k$ it is the number of PPTs whose even (odd) leg is $k$, which is the multiplicity in the entries (cf.\ their examples). \code{CondE} and \code{CondO} are the prime-factor conditions of the two \%N lines; for $k=1$, \code{CondO} holds vacuously, but $t(1)=0$. \code{nthTerm w n} is the least $k$ with $\sum_{j\le k}w(j)\ge n$, i.e.\ the $n$-th term (offset $1$) of the nondecreasing list in which $j$ occurs $w(j)$ times; \decl{a_spec} and \decl{a354570_spec} show that the infimum is attained, as both lists are infinite (\decl{wE_pos} and \decl{wO_pos} use the PPTs $(u^2-1,2u,u^2+1)$ with $u=2\cdot3^{m+1}$, and $\bigl(3^{m+1},\frac{9^{m+1}-1}2,\frac{9^{m+1}+1}2\bigr)$). The junk values $a(0)=a'(0)=0$ do not affect the limits, and the quotients are taken in $\R$. Finally, \decl{a_data} and \decl{a354570_data} check that $a(1),\dots,a(58)$ and $a'(1),\dots,a'(60)$ are the $58$ and $60$ terms listed in the entries, by \texttt{decide +kernel} on the computed list \code{expand w K} (each $j<K$ repeated $w(j)$ times; $K=197$, resp.\ $192$) and the lemma \decl{nthTerm_eq_getElem_expand}. The fidelity review found no discrepancy.
+
+\section{Proof}\label{sec:proof}
+
+Lean names of the corresponding private lemmas of the proof file are given in brackets. Write $\omega(m)$ for the number of distinct prime factors of $m$, $[P]\in\{0,1\}$ for the truth value of $P$, $\wE,\wO$ for the multiplicities above, and let $g(m)=2^{\omega(m)}$ if $m$ is odd and all prime factors of $m$ are $\equiv3\pmod4$, $g(m)=0$ otherwise (so $g(0)=0$, $g(1)=1$, and $g$ vanishes on even numbers), and $S(N)=\sum_{n\le N}g(n)$.
+
+\subsection{Triangles with a given leg}
+For $N\ge1$ let $U(N)$ be the number of ordered pairs $(x,y)$ with $xy=N$ and $\gcd(x,y)=1$, and $U_<(N)$ the number of those with $x<y$.
+
+\begin{lemma}[\code{ppt\_coprime}, \code{ppt\_of}, \code{ppt\_even\_leg\_odd}, \code{UU\_eq}, \code{UU\_eq\_UC}]\label{lem:ppt}
+\leavevmode
+\begin{enumerate}
+\item[(a)] Let $b,k,c\ge1$ with $b^2+k^2=c^2$. Then $(b,k,c)$ is a PPT if and only if $\gcd(b,c)=1$. In that case $b<c$, and if $k$ is even then $b$ and $c$ are odd.
+\item[(b)] For $N\ge1$, $U(N)=2^{\omega(N)}$ and $U(N)=2U_<(N)+[N=1]$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) If $d=\gcd(b,c)$, then $d^2\mid c^2-b^2=k^2$, so $d\mid k$ and $d\mid\gcd(b,k,c)$; conversely $\gcd(b,k,c)\mid\gcd(b,c)$. If $k$ and $b$ are even, so is $c$, contradicting $\gcd(b,c)=1$; so if $k$ is even, $b$ is odd, and then $c^2=b^2+k^2$ is odd. (b) Let $p$ be prime, $p\nmid a$, $n\ge1$. In a coprime factorization of $p^na$ the factor $p^n$ goes wholly into $x$ or into $y$, so the coprime factorizations of $p^na$ are the pairs $(p^nx',y')$ and $(x',p^ny')$ with $x'y'=a$ coprime, two disjoint families. Hence $U(p^na)=2U(a)$, and $U(1)=1$. Finally $(x,y)\mapsto(y,x)$ exchanges the pairs with $x<y$ and $x>y$, and $x=y$ with $\gcd(x,y)=1$ forces $N=1$.
+\end{proof}
+
+\begin{lemma}[\code{card\_leg\_odd}, \code{leg\_two\_mul\_odd}, \code{card\_leg\_even}]\label{lem:legs}
+\leavevmode
+\begin{enumerate}
+\item[(a)] If $k$ is odd, $t(k)=U_<(k^2)$, via $(b,c)\mapsto(c-b,c+b)$ with inverse $(d,e)\mapsto\bigl(\tfrac{e-d}2,\tfrac{e+d}2\bigr)$.
+\item[(b)] If $n$ is odd, $t(2n)=0$.
+\item[(c)] If $n\ge2$ is even, $t(2n)=U_<(n^2)$, via $(b,c)\mapsto\bigl(\tfrac{c-b}2,\tfrac{c+b}2\bigr)$ with inverse $(d,e)\mapsto{}$\linebreak[2]${(e-d,e+d)}$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) If $(b,k,c)$ is a PPT, then $(c-b)(c+b)=k^2$ with $c-b<c+b$, and a common divisor of $c\pm b$ divides $2\gcd(b,c)=2$ and is odd (it divides $k^2$). Conversely, if $de=k^2$ with $d<e$ coprime, then $d,e$ are odd; put $b=(e-d)/2\ge1$, $c=(e+d)/2=b+d$. Then $b^2+k^2=b^2+d(d+2b)=c^2$, and $\gcd(b,c)=\gcd(b,d)$ divides $\gcd(e,d)=1$ as $e=2b+d$; apply Lemma~\ref{lem:ppt}(a).
+(b) By Lemma~\ref{lem:ppt}(a), $b=2u+1$ and $c=2v+1$, and $b^2+4n^2=c^2$ gives $u(u+1)+n^2=v(v+1)$, so $n$ is even, a contradiction.
+(c) If $(b,2n,c)$ is a PPT, then $c=b+2d$ with $d\ge1$, and $c^2-b^2=4n^2$ gives $d(b+d)=n^2$; $\gcd(d,b+d)=\gcd(b,d)$ divides $\gcd(b,c)=1$. Conversely, if $de=n^2$ with $d<e$ coprime, exactly one of $d,e$ is even since $n$ is even, so $e-d$ is odd; $(e-d)^2+4de=(e+d)^2$, and $\gcd(e-d,e+d)$ divides $\gcd(2e,2d)=2$ and is odd. In each case the two maps are mutually inverse.
+\end{proof}
+
+\begin{corollary}[\code{wO\_eq}, \code{wE\_of\_mod}, \code{wE\_eight}, \code{wE\_odd}]\label{cor:weights}
+For all $k,i\in\N$ and odd $j$: (i) $2\wO(k)+[k=1]=g(k)$; (ii) $\wE(k)=0$ unless $4\mid k$; (iii) $\wE(8i)=\wE(4i)$; (iv) $\wE(4j)+[j=1]=g(j)$.
+\end{corollary}
+
+\begin{proof}
+For $k\ge1$, Lemma~\ref{lem:ppt}(b) and $\omega(k^2)=\omega(k)$ give $2U_<(k^2)+[k=1]=2^{\omega(k)}$.
+(i) If $k$ is odd and satisfies \code{CondO}, then $\wO(k)=t(k)=U_<(k^2)$ by Lemma~\ref{lem:legs}(a) and $g(k)=2^{\omega(k)}$; otherwise $\wO(k)=g(k)=0$ and $k\ne1$.
+(ii) If $\wE(k)\ne0$, then $k=2r$ with $r$ even by Lemma~\ref{lem:legs}(b).
+(iii) The case $i=0$ is trivial. For $i\ge1$, $8i$ and $4i$ have the same prime factors, so \code{CondE} holds for both or neither, and $t(8i)=U_<(16i^2)=2^{\omega(4i)-1}=2^{\omega(2i)-1}=U_<(4i^2)=t(4i)$ by Lemma~\ref{lem:legs}(c).
+(iv) \code{CondE}$(4j)$ holds if and only if $j\ne1$ and all prime factors of $j$ are $\equiv3\pmod4$, and $t(4j)=U_<(4j^2)=2^{\omega(2j)-1}=2^{\omega(j)}$.
+\end{proof}
+
+\subsection{Reduction to the summatory function of \texorpdfstring{$g$}{g}}
+Let $\FE(N)=\sum_{k\le N}\wE(k)$ and $\FO(N)=\sum_{k\le N}\wO(k)$ (\code{numLE wE N}, \code{numLE wO N}), $E(J)=\sum_{j\le J}\wE(4j)$, and $R(M)=S(M)-[M\ge1]$; thus $R(0)=0$ and $R\ge0$ since $g(1)=1$.
+
+\begin{lemma}[\code{numLE\_wO}, \code{numLE\_wE}, \code{EE\_rec}, \code{EE\_tsum}]\label{lem:reduce}
+For all $N,J\in\N$: $2\FO(N)+[N\ge1]=S(N)$; $\FE(N)=E(\lfloor N/4\rfloor)$; $E(J)=R(J)+E(\lfloor J/2\rfloor)$; hence $E(J)=\sum_{i\ge0}R(\lfloor J/2^i\rfloor)$, a finite sum.
+\end{lemma}
+
+\begin{proof}
+Sum Corollary~\ref{cor:weights}(i) over $k\le N$; the second claim is (ii). For the third, split $1\le j\le J$ by parity: by (iii) the even $j=2i$ contribute $\sum_{i\le J/2}\wE(8i)=E(\lfloor J/2\rfloor)$, and by (iv) the odd $j$ contribute $\sum_{j\le J\text{ odd}}(g(j)-[j=1])=R(J)$. Iterate, using $R(0)=E(0)=0$.
+\end{proof}
+
+\subsection{The function \texorpdfstring{$g$}{g} and its Dirichlet series}
+Let $\chi_4$ be the nontrivial character modulo $4$ and $\chi_0=\one_{\mathrm{odd}}$ the principal one.
+
+\begin{lemma}[\texttt{gA\_mul\_\(\chi\)A}, \code{window\_le}, \code{partial\_le}]\label{lem:linear}
+$g*\chi_4=\one_{\mathrm{odd}}$ (Dirichlet convolution), $\sum_{N/2<n\le N}g(n)\le N$, and $S(N)\le2N$.
+\end{lemma}
+
+\begin{proof}
+All three functions are multiplicative, so compare them at $p^i$, $i\ge1$, where $(g*\chi_4)(p^i)=\sum_{j=0}^ig(p^j)\chi_4(p^{i-j})$. For $p=2$ both sides vanish; for $p\equiv1\pmod4$ only $j=0$ contributes, giving $1$; for $p\equiv3\pmod4$ the sum is $(-1)^i+2\sum_{j=1}^i(-1)^{i-j}=1$. Let $P(m)=\sum_{e=1}^m\chi_4(e)\in\{0,1\}$. Summing the identity over $n\le N$ gives $\sum_{n\le N}g(n)P(\lfloor N/n\rfloor)=\#\{n\le N\text{ odd}\}\le N$; all terms are $\ge0$, and $P(\lfloor N/n\rfloor)=P(1)=1$ for $N/2<n\le N$. Then $S(N)\le S(\lfloor N/2\rfloor)+N\le2N$ by strong induction.
+\end{proof}
+
+By Lemma~\ref{lem:linear}, $L(g,s)=\sum_{n\ge1}g(n)n^{-s}$ converges absolutely for $\re s>1$, and multiplying Dirichlet series turns Lemma~\ref{lem:linear} into $L(g,s)L(s,\chi_4)=L(s,\chi_0)$ there (\code{LSeries\_identity}). We use Mathlib's Dirichlet $L$-functions: $L(s,\chi_4)$ is entire and does not vanish on $\re s\ge1$ (\decl{LFunction_ne_zero_of_one_le_re}), and $(s-1)L(s,\chi_0)$ extends to an entire function $T(s)$ with $T(1)=\prod_{p\mid4}(1-p^{-1})=\tfrac12$.
+
+\begin{lemma}[\texttt{LFunction\_\(\chi\)C\_one}]\label{lem:L1}
+$L(1,\chi_4)=\pi/4$.
+\end{lemma}
+
+\begin{proof}
+For real $\sigma>1$, $L(\sigma,\chi_4)=\sum_{m\ge0}u_\sigma(m)$ with $u_\sigma(m)=(4m+1)^{-\sigma}-(4m+3)^{-\sigma}\ge0$. For $1\le\sigma\le2$, with $\alpha=4m+1$ and $\beta=\alpha+2$, Bernoulli's inequality $(\alpha/\beta)^\sigma\ge1-2\sigma/\beta$ gives $u_\sigma(m)=\alpha^{-\sigma}(1-(\alpha/\beta)^\sigma)\le4/(\alpha\beta)\le4/(m+1)^2$. By dominated convergence, $\sum_mu_\sigma(m)\to\sum_m\bigl(\frac1{4m+1}-\frac1{4m+3}\bigr)=\frac\pi4$ (Leibniz) as $\sigma\to1^+$, and $L(s,\chi_4)$ is continuous at $1$.
+\end{proof}
+
+\begin{lemma}[\code{HH\_one}, \code{continuousOn\_G}, \code{G\_eq}]\label{lem:G}
+Let $H(s)=T(s)/(s\,L(s,\chi_4))$, $G(s)=(H(s)-H(1))/(s-1)$ for $s\ne1$ and $G(1)=H'(1)$. Then $H(1)=2/\pi$, $G$ is continuous on $\{\re s\ge1\}$, and $L(g,s)/s-(2/\pi)/(s-1)=G(s)$ for $\re s>1$.
+\end{lemma}
+
+\begin{proof}
+$H$ is holomorphic on the open set $\{s\ne0,\ L(s,\chi_4)\ne0\}\supseteq\{\re s\ge1\}$, hence so is $G$ (Mathlib's \code{dslope H 1}) by the removable singularity theorem. $H(1)=\frac12/\frac\pi4$ by Lemma~\ref{lem:L1}. For $\re s>1$, $L(g,s)=T(s)/((s-1)L(s,\chi_4))$, i.e.\ $L(g,s)/s=H(s)/(s-1)$.
+\end{proof}
+
+\subsection{A Tauberian theorem}
+
+\begin{theorem}[\code{Tauber.tauberian}]\label{thm:tauber}
+Let $a_n\ge0$ $(n\ge1)$ and $M\ge0$ with $A(N)=\sum_{n=1}^Na_n\le MN$ for all $N$. Let $c\ge0$ and let $G:\C\to\C$ be continuous on $\{\re s\ge1\}$ with $\sum_na_nn^{-s}/s-c/(s-1)=G(s)$ for $\re s>1$. Then $A(N)/N\to c$.
+\end{theorem}
+
+\begin{proof}
+Put $A(x)=\sum_{1\le n\le x}a_n$ for $x\in\R$ and $B(v)=e^{-v}A(e^v)$; $A$ is nondecreasing and $0\le B\le M$.
+
+\emph{Step 1} (\code{laplace\_repr}). Partial summation gives $\sum_na_nn^{-s}=s\int_1^\infty A(x)x^{-s-1}dx$ (\decl{LSeries_eq_mul_integral_of_nonneg}); substituting $x=e^v$ yields
+\begin{equation}\label{eq:laplace}
+  G(s)=\int_0^\infty(B(v)-c)\,e^{-(s-1)v}\,dv\qquad(\re s>1).
+\end{equation}
+
+\emph{Step 2} (Fej\'er kernel). For $L>0$ let $\varphi_L(t)=\max(0,1-|t|/L)$ and $\Phi_L(u)=\int_\R\varphi_L(t)e^{iut}dt$, which equals $L$ at $u=0$ and $2(1-\cos Lu)/(Lu^2)$ otherwise (\code{fourier\_phi}). Hence $0\le\Phi_L(u)\le\min(L,4/(Lu^2))$, and $\Phi_L(u)\ge L/2$ for $|u|\le1/L$ (as $1-\cos x\ge x^2/2-5x^4/96$ for $|x|\le1$). So $\Phi_L$ is integrable, $K_L:=\int_\R\Phi_L\ge1$, and for $\delta>0$, $\tau_L(\delta):=\int_{|u|>\delta}\Phi_L\le\int_\R\frac{8\,du}{L(\delta^2+u^2)}=\frac{8\pi}{L\delta}$. (In fact $K_L=2\pi$; only $K_L\ge1$ is used.)
+
+\emph{Step 3} (\code{fubini\_identity}, \code{limit\_identity}). Fix $L>0$, $y\in\R$. For $\varepsilon>0$, inserting \eqref{eq:laplace} at $s=1+\varepsilon+it$ and applying Fubini (the integrand is bounded by $(M+|c|)\varphi_L(t)e^{-\varepsilon v}$) gives $\int_\R\varphi_L(t)G(1+\varepsilon+it)e^{iyt}dt=\int_0^\infty(B(v)-c)e^{-\varepsilon v}\Phi_L(y-v)\,dv$. As $\varepsilon\to0^+$, dominated convergence applies on both sides ($G$ is bounded on the compact set $[1,2]\times[-L,L]$; the right integrand is bounded by $(M+|c|)\Phi_L(y-v)$), so
+\begin{equation}\label{eq:J}
+  \int_0^\infty(B(v)-c)\,\Phi_L(y-v)\,dv=\int_\R\varphi_L(t)\,G(1+it)\,e^{iyt}\,dt .
+\end{equation}
+
+\emph{Step 4} (\code{J\_tendsto}, \code{tail\_tendsto}, \code{I\_tendsto}). As $t\mapsto\varphi_L(t)G(1+it)$ is continuous with compact support, \eqref{eq:J} tends to $0$ as $y\to\infty$ by the Riemann--Lebesgue lemma. For $y>0$, $\int_{-\infty}^0\Phi_L(y-v)\,dv\le\tau_L(y/2)\le16\pi/(Ly)$, so $\int_0^\infty\Phi_L(y-v)\,dv\to K_L$. Therefore
+\begin{equation}\label{eq:I}
+  I_L(y):=\int_0^\infty B(v)\,\Phi_L(y-v)\,dv\ \longrightarrow\ cK_L\qquad(y\to\infty).
+\end{equation}
+
+\emph{Step 5} (\code{upper\_bound}, \code{lower\_bound}). Let $\delta>0$. As $A$ is nondecreasing, $B(v)\ge e^{-2\delta}B(y)$ on $[y,y+2\delta]$ and $B(v)\le e^{2\delta}B(y)$ on $[y-2\delta,y]$. Restricting $I_L(y+\delta)$ to $|y+\delta-v|\le\delta$, and splitting $I_L(y-\delta)$ according to $|y-\delta-v|\le\delta$ or $>\delta$ (with $B\le M$ on the second part), we get, for $y>0$,
+\begin{equation}\label{eq:sandwich}
+  e^{-2\delta}B(y)\bigl(K_L-\tau_L(\delta)\bigr)\le I_L(y+\delta),\qquad I_L(y-\delta)\le e^{2\delta}B(y)K_L+M\tau_L(\delta).
+\end{equation}
+
+\emph{Step 6} (\code{tendsto\_Bf}). Put $\eta=8\pi/(L\delta)$, so $\tau_L(\delta)\le\eta\le\eta K_L$. Given $c'>c$, choose $\delta$ with $e^{2\delta}c<c'$, then $L$ with $\eta<1$ and $e^{2\delta}c/(1-\eta)<c'$; by \eqref{eq:sandwich} and \eqref{eq:I}, $\limsup_{y\to\infty}B(y)\le e^{2\delta}cK_L/(K_L-\tau_L(\delta))\le e^{2\delta}c/(1-\eta)<c'$. Given $0\le c'<c$, choose $\delta$ with $c'<e^{-2\delta}c$, then $L$ with $c'<e^{-2\delta}(c-M\eta)$; then $\liminf_{y\to\infty}B(y)\ge(cK_L-M\tau_L(\delta))/(e^{2\delta}K_L)\ge e^{-2\delta}(c-M\eta)>c'$. Hence $B(y)\to c$, and $B(\log N)=A(N)/N$.
+\end{proof}
+
+\subsection{Conclusion}
+
+\begin{proposition}[\code{SN\_tendsto}]\label{prop:S}
+$S(N)/N\to2/\pi$.
+\end{proposition}
+
+\begin{proof}
+Apply Theorem~\ref{thm:tauber} with $a_n=g(n)$, $M=2$ (Lemma~\ref{lem:linear}), $c=2/\pi$ and $G$ from Lemma~\ref{lem:G}.
+\end{proof}
+
+By Lemma~\ref{lem:reduce}, $\FO(N)/N=(S(N)-1)/(2N)\to1/\pi$ (\code{wO\_tendsto}).
+
+\begin{lemma}[\code{Fin1.dyadic}]\label{lem:dyadic}
+If $R:\N\to\R$, $R(0)=0$, $0\le R(m)\le Cm$ and $R(m)/m\to\lambda$, then $J^{-1}\sum_{i\ge0}R(\lfloor J/2^i\rfloor)\to2\lambda$.
+\end{lemma}
+
+\begin{proof}
+For fixed $q\ge1$, $\lfloor J/q\rfloor/J\to1/q$ and $\lfloor J/q\rfloor\to\infty$, so $R(\lfloor J/q\rfloor)/J\to\lambda/q$. The $i$-th term is at most $C2^{-i}$, and dominated convergence for series gives the limit $\sum_i\lambda2^{-i}$.
+\end{proof}
+
+Here $0\le R(M)\le2M$ and $R(M)/M\to2/\pi$, so Lemmas~\ref{lem:reduce} and~\ref{lem:dyadic} give $E(J)/J\to4/\pi$ and $\FE(N)/N=E(\lfloor N/4\rfloor)/N\to1/\pi$ (\code{EE\_tendsto}, \code{wE\_tendsto}). This is the counting form of Theorem~\ref{thm:main} mentioned in Section~\ref{sec:statement}. (Numerically, not as part of the proof, the referees found $\FO(10^7)/10^7\approx0.31832$ and $\FE(10^7)/10^7\approx0.31834$.)
+
+\begin{lemma}[\code{nth\_limit}]\label{lem:inverse}
+Let $w:\N\to\N$, $F(N)=\sum_{j\le N}w(j)$ unbounded with $F(N)/N\to\lambda>0$, and $\nu(n)=\min\{k:F(k)\ge n\}$. Then $\nu(n)/n\to1/\lambda$.
+\end{lemma}
+
+\begin{proof}
+If $n>F(K)$ then $\nu(n)>K$, so $\nu(n)\to\infty$. For $\nu(n)\ge1$, $F(\nu(n)-1)<n\le F(\nu(n))$; divided by $\nu(n)$, both bounds tend to $\lambda$, so $n/\nu(n)\to\lambda$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+$a(n)=\nu(n)$ for $w=\wE$ and $a'(n)=\nu(n)$ for $w=\wO$, and both counting functions are unbounded (Section~\ref{sec:statement}). Apply Lemma~\ref{lem:inverse} with $\lambda=1/\pi$. In Lean this is \code{theorem result : statement}.
+\end{proof}
+
+\section{Machine verification}\label{sec:lean}
+
+The proof is in \path{lean/Math0/Frontier/OEIS/A354571.lean} (about $2280$ lines) of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file and \path{Math0/Audit.lean}; the main declaration is \code{theorem result : statement} in the namespace \decl{Math0.Frontier.A354571}, and the file ends with
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A354571.result Math0.Statements.A354571.statement
+\end{lstlisting}
+All auxiliary lemmas are private, in the sub-namespaces \code{Tauber} (Theorem~\ref{thm:tauber}, about $900$ lines), \code{Arith}, \code{Fin1}, \code{Comb} and \code{Final}. Mathlib has no Wiener--Ikehara theorem and no value of $L(1,\chi_4)$, so both are proved in the file from Mathlib's measure theory, the Riemann--Lebesgue lemma, Leibniz's series, and its theory of Dirichlet $L$-functions.
+
+\emph{Audit.} The command \texttt{\#math0\_settles} (in \path{lean/Math0/Audit.lean}) fails unless \decl{statement} is a \texttt{Prop}-valued definition without universe parameters, \decl{statement} and \decl{result} depend on no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (so no \decl{sorryAx}, no \texttt{native\_decide}, no custom axioms), and the type of \decl{result} is syntactically the constant \decl{statement} (or its negation), up to metadata and without unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A354571.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A354571.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A354571.result' proves 'Math0.Statements.A354571.statement'
+\end{lstlisting}
+Neither file uses \texttt{sorry}, \texttt{native\_decide}, \texttt{set\_option} or new notation; the data checks use \texttt{decide +kernel}, i.e.\ evaluation by the kernel.
+
+\emph{Toolchain and reproduction.} We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use (A354571 is not in formal-conjectures). Running \path{scripts/verify.sh} rebuilds all math0 results with \texttt{lake build}, re-running every audit, and checks that the pinned dependencies are unmodified. The single file is checked in about $45$ seconds by \texttt{lake env lean Math0/Frontier/OEIS/A354571.lean} in \path{lean/}.
+
+{\footnotesize
+\begin{thebibliography}{99}
+
+\bibitem{De}
+H.~Delange, \emph{G\'en\'eralisation du th\'eor\`eme de Ikehara}, Ann.\ Sci.\ \'Ec.\ Norm.\ Sup\'er.\ (3) \textbf{71} (1954), 213--242.
+
+\bibitem{FC}
+M.~Firsching et al., \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026; \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Ik}
+S.~Ikehara, \emph{An extension of Landau's theorem in the analytic theory of numbers}, J. Math.\ Phys.\ (MIT) \textbf{10} (1931), 1--12.
+
+\bibitem{Ko}
+J.~Korevaar, \emph{Tauberian Theory: A Century of Developments}, Grundlehren der mathematischen Wissenschaften \textbf{329}, Springer, 2004.
+
+\bibitem{La}
+E.~Landau, \emph{L\"osung des Lehmerschen Problems}, Amer.\ J. Math.\ \textbf{31} (1909), 86--102.
+
+\bibitem{Leh}
+D.~N.~Lehmer, \emph{Asymptotic evaluation of certain totient sums}, Amer.\ J. Math.\ \textbf{22} (1900), 293--335.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proc.\ 9th ACM SIGPLAN Int.\ Conf.\ Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: CADE 28, LNCS \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Se}
+L.~Selle, \emph{Kleines Handbuch Pythagoreische Zahlentripel}, Books on Demand, 4th impression, 2022.
+
+\bibitem{Wi}
+N.~Wiener, \emph{Tauberian theorems}, Ann.\ of Math.\ (2) \textbf{33} (1932), 1--100.
+
+\bibitem{A354570}
+OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, entry A354570 (L.~Selle, June~3, 2022; rev.~\#54, Aug.~28, 2022), \url{https://oeis.org/A354570}.
+
+\bibitem{A354571}
+OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, entry A354571 (L.~Selle, June~4, 2022; rev.~\#41, Aug.~30, 2022), \url{https://oeis.org/A354571}.
+
+\end{thebibliography}
+}
+\end{document}

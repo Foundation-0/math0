@@ -1,0 +1,387 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8}
+% Unicode inside listings (pdfLaTeX listings cannot read multibyte characters directly).
+\lstset{keepspaces=true, literate={ξ}{{$\xi$}}1 {ε}{{$\varepsilon$}}1 {ᶠ}{{$^{\mathrm{f}}$}}1
+  {↑}{{$\uparrow$}}1 {ℕ}{{$\mathbb{N}$}}1 {ℝ}{{$\mathbb{R}$}}1 {→}{{$\to$}}1 {∀}{{$\forall$}}1
+  {∃}{{$\exists$}}1 {∧}{{$\wedge$}}1 {≤}{{$\le$}}1 {≥}{{$\ge$}}1 {⟨}{{$\langle$}}1
+  {⟩}{{$\rangle$}}1 {·}{{$\cdot$}}1 {∈}{{$\in$}}1 {∨}{{$\vee$}}1 {–}{{-}}1 {ó}{{\'o}}1 {§}{{\S}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{ξ}{\ensuremath{\xi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\frc}{\operatorname{frac}}
+
+\title[Ratio floor $1+c/\log n$ and density modulo one]{A sequence with consecutive ratios at least $1+c/\log n$ whose irrational dilates are dense modulo one, and the status of a formal statement of Bugeaud's Problem 10.6}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 17, 2026}
+
+\begin{document}
+\begin{abstract}
+We construct a strictly increasing sequence $(m_n)_{n\ge0}$ of positive integers with $m_{n+1}/m_n\ge 1+1/(8\log n)$ for every $n\ge2$ such that $(\xi m_n)_{n\ge0}$ is dense modulo one for every irrational $\xi$.
+This proves the statement \decl{Bugeaud06.problem_10_6_variant_1} of the formal-conjectures repository, which reads Bugeaud's Problem~10.6 (``to find a very rapidly increasing sequence'' with this density property) as a ratio floor $1+c/\log n$ and labels it as an open research problem.
+The statement is, however, a special case of a 1983 theorem of Ajtai, Havas and Koml\'os that Bugeaud records in the same book, so it does not express the open problem; this is a misformalization report, not progress on Problem~10.6, and we propose a corrected labelling and an accompanying solved statement.
+Our proof is elementary and self-contained and gives density only, not uniform distribution; it is verified in Lean~4 against the upstream formal-conjectures statement.
+\end{abstract}
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+For a sequence $(m_n)$ of positive integers and $\xi\in\R$ one asks whether the fractional parts of $\xi m_n$ are dense in $[0,1)$, that is, whether the image of $(\xi m_n)$ in $\R/\Z$ is dense.
+For lacunary sequences ($m_{n+1}/m_n\ge\lambda>1$ for all $n$) the answer is negative for some irrational $\xi$: answering a question of Erd\H{o}s, Pollington \cite{Pol79} and de Mathan \cite{Mat80} showed that such $\xi$ always exist, and indeed there are uncountably many of them \cite[pp.~29 and~215]{Bug12}.
+On the other hand, Furstenberg \cite{Fur67} proved that $(\xi\,2^a3^b)_{a,b\ge1}$ is dense modulo one for every irrational $\xi$.
+Between these two facts Bugeaud poses the following problem \cite[Problem~10.6, p.~215]{Bug12}:
+\begin{quote}
+\emph{To find a very rapidly increasing sequence $(m_n)_{n\ge1}$ of positive integers such that $(\xi m_n)_{n\ge1}$ is dense modulo one for every irrational number $\xi$.}
+\end{quote}
+
+\subsection*{A known theorem}
+In the notes to Chapter~2 of the same book \cite[\S2.8, p.~45]{Bug12}, Bugeaud records that ``Ajtai, Havas and Koml\'os [26] showed that, for any given sequence $(\varepsilon_n)_{n\ge1}$ of positive real numbers tending to $0$, there exists a sequence $(m_n)_{n\ge1}$ of positive integers such that $m_{n+1}/m_n>1+\varepsilon_n$ for $n\ge1$ and the sequence $(\xi m_n)_{n\ge1}$ is uniformly distributed modulo one for every irrational number $\xi$; see also [121]'', where [26] and [121] are \cite{AHK83} and \cite{Bos83}.
+We rely on this statement of the theorem of \cite{AHK83} as recorded by Bugeaud.
+Gao, Mooroogen and Yip \cite[Example~2.4(d)]{GMY} describe the same result in the form: if $(b_n)$ has sub-exponential growth and $d_n\to\infty$, there is $(a_n)$ with $b_n\le a_n\le b_n+d_n$ such that $(xa_n)$ is uniformly distributed modulo one for every real $x\ne0$.
+
+\subsection*{The formal statement}
+The formal-conjectures repository \cite{FC} formalizes Problem~10.6 in \path{FormalConjectures/Books/BugeaudDistributionModuloOne/Problem10_6.lean}.
+Its module docstring lists three readings of ``very rapidly increasing'' (a lower bound on the terms, an upper bound on the counting function, a lower bound on the ratios), records that the first two are not open, and states that the third, the ratio floor $m_{n+1}/m_n\ge1+c/\log n$, ``remains open''.
+That reading is \decl{Bugeaud06.problem_10_6_variant_1}, tagged \texttt{research open}.
+With $\varepsilon_n=1/\log(n+2)$, the theorem quoted above implies it directly (Section~\ref{sec:defect}), so the label is incorrect; and since Bugeaud records that theorem in the same book, this reading is unlikely to be what Problem~10.6 asks.
+
+\subsection*{Contribution and status}
+We give an elementary, self-contained proof of \decl{problem_10_6_variant_1} (Theorem~\ref{thm:main}) and verify it in Lean~4.
+The proof does not rely on \cite{AHK83}, and it yields only density, not uniform distribution.
+Since the formal statement is a special case of a known theorem and does not capture the open problem, we classify this result as a \emph{misformalization report}; it is not progress on Problem~10.6 under any reading that is still open.
+If the upstream reading is instead taken at face value as the intended mathematics, what remains is a formal proof of a special case of a known result, not a new theorem.
+Section~\ref{sec:defect} explains the defect and proposes a corrected statement.
+We found no earlier formal proof: \decl{problem_10_6_variant_1} is still proved by \texttt{sorry} in the formal-conjectures repository and in the fork that supplies \texttt{formal\_proof} links for other statements of the same file (a complete search of public Lean code was not possible).
+
+\section{Statement}\label{sec:statement}
+
+Throughout, $\N=\{0,1,2,\dots\}$, $\log$ is the natural logarithm, and a sequence $(t_n)$ of reals is \emph{dense modulo one} if its image under the quotient map $\pi\colon\R\to\R/\Z$ is dense.
+Following \cite{FC}, call $m\colon\N\to\N$ \emph{genuinely sublacunary} if there is $c>0$ such that
+\begin{equation}\label{eq:floor}
+  1+\frac{c}{\log n}\le\frac{m(n+1)}{m(n)}\qquad\text{for all sufficiently large }n.
+\end{equation}
+(In Lean, $\log 0=0$ and division by zero gives $0$; this plays no role, since \eqref{eq:floor} is only required for large $n$ and our sequence has positive terms.)
+
+\begin{theorem}\label{thm:main}
+There is a strictly increasing $m\colon\N\to\N$ with $m(n)\ge1$ for all $n$ and
+\[
+  m(n+1)\ge\Bigl(1+\frac{1}{8\log n}\Bigr)m(n)\qquad\text{for all }n\ge2,
+\]
+such that $(\xi m(n))_{n\in\N}$ is dense modulo one for every irrational $\xi$. In particular $m$ is genuinely sublacunary, with $c=1/8$.
+\end{theorem}
+
+The upstream statement, copied verbatim from \path{Problem10_6.lean} at commit \texttt{c77fdd4} (inside \texttt{namespace Bugeaud06}, with \texttt{open Filter}; the docstring of the theorem is omitted), is:
+\begin{lstlisting}
+/-- The sequence $m$ eventually grows at least geometrically with a logarithmic correction. -/
+def IsGenuinelySublacunary (m : ℕ → ℕ) : Prop :=
+  ∃ c > 0, ∀ᶠ (n : ℕ) in atTop, (1 + c / Real.log n) ≤ (m (n+1) : ℝ) / m n
+
+@[category research open, AMS 11]
+theorem problem_10_6_variant_1 :
+    ∃ m : ℕ → ℕ,
+    StrictMono m ∧
+    IsGenuinelySublacunary m ∧
+    ∀ ξ : ℝ, Irrational ξ →
+      Dense (Set.range fun n => (↑(ξ * m n) : AddCircle (1 : ℝ))) := by
+  sorry
+\end{lstlisting}
+Here \texttt{AddCircle (1 : ℝ)} is $\R/\Z$ with its quotient topology, and \texttt{↑} is the quotient map $\pi$.
+The omitted docstring states Problem~10.6, says that this ratio reading ``is the one that remains open'', and argues that it ``is not answered by runs of consecutive integers, since inside a run $m_{n+1}-m_n=1$''.
+Theorem~\ref{thm:main} proves this statement. The formal statement indexes the sequence from $0$ rather than from $1$ as in \cite{Bug12}, which is immaterial.
+
+\section{Proof}\label{sec:proof}
+
+\subsection{The construction}
+For $k\in\N$ put
+\[
+  K_k=2^k,\quad M_k=2^{4^k},\quad D_k=2^{M_k},\quad W_k=2D_kK_k,\quad A_k=K_kW_k,\quad L_k=M_k+2k+1,
+\]
+\[
+  B_k=\bigl\{A_k+rW_k+(D_k+r)j : 0\le r<K_k,\ 0\le j<K_k\bigr\},\qquad
+  S=\{2^i:i\in\N\}\cup\bigcup_{k\in\N}B_k .
+\]
+Thus $B_k$ consists of $K_k$ arithmetic progressions of length $K_k$ with the slightly different large differences $D_k+r$, the $r$-th one starting at $A_k+rW_k$.
+The powers of two are included so that every element of $S$ has a large index (Lemma~\ref{lem:enum}).
+When $k$ is clear we drop the subscript.
+
+\begin{lemma}[Block arithmetic]\label{lem:block}
+Let $k\in\N$ and $r,j<K$.
+\begin{enumerate}
+\item[(i)] $K\le D$.
+\item[(ii)] $A=2^{L}$ and $2A=4\cdot4^kD$.
+\item[(iii)] $(D+r)j+D\le W$.
+\item[(iv)] Every $x\in B_k$ satisfies $A\le x$ and $x+D\le 2A$.
+\item[(v)] If $x,y\in B_k$ and $x<y$, then $x+D\le y$.
+\item[(vi)] If $k<k'$, then $L_k+1\le L_{k'}$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) $k\le 2^k\le 4^k\le 2^{4^k}=M$, so $K=2^k\le2^{M}=D$.
+(ii) $A=2DK^2=2\cdot2^{M}\cdot4^k=2^{M+2k+1}$, and $2A=4DK^2=4\cdot4^kD$.
+(iii) Using $r<K$, $j+1\le K$ and (i): $(D+r)j+D\le(D+r)(j+1)\le(D+K)K\le2DK=W$.
+(iv) Let $x=A+rW+(D+r)j$. Clearly $x\ge A$, and by (iii), $x+D\le A+(r+1)W\le A+KW=2A$.
+(v) Write $x=A+rW+(D+r)j$ and $y=A+r'W+(D+r')j'$. If $r<r'$ then $y\ge A+(r+1)W\ge x+D$ by (iii). If $r=r'$ then $j<j'$ and $y-x=(D+r)(j'-j)\ge D$. If $r>r'$ then $x\ge A+(r'+1)W\ge y+D$ by (iii), contradicting $x<y$.
+(vi) $M_k\le M_{k'}$ and $2k+1<2k'+1$.
+\end{proof}
+
+\begin{lemma}[Gaps]\label{lem:gaps}
+Let $x,y\in S$ with $x<y$.
+\begin{enumerate}
+\item[(a)] If $x\in B_k$, then $y\ge x+D_k$.
+\item[(b)] If $x=2^i$ with $i\ne L_k$ for every $k$, then $y\ge2x$.
+\end{enumerate}
+Moreover, every $x\in S$ falls under (a) or (b).
+\end{lemma}
+
+\begin{proof}
+(a) Suppose first $y=2^{i'}$. If $i'\le L_k$ then $y\le2^{L_k}=A_k\le x$ by Lemma~\ref{lem:block}(ii),(iv), which is impossible; so $i'\ge L_k+1$ and $y\ge2A_k\ge x+D_k$. Suppose next $y\in B_{k'}$. If $k'=k$, use Lemma~\ref{lem:block}(v). If $k<k'$, then by Lemma~\ref{lem:block}(vi), $y\ge A_{k'}=2^{L_{k'}}\ge2^{L_k+1}=2A_k\ge x+D_k$. If $k'<k$, then $y<2A_{k'}=2^{L_{k'}+1}\le2^{L_k}=A_k\le x$, which is impossible.
+
+(b) If $y=2^{i'}$ then $i'>i$ and $y\ge2^{i+1}$. If $y\in B_k$ then $2^i<y<2A_k=2^{L_k+1}$, so $i\le L_k$; as $i\ne L_k$, we get $i+1\le L_k$ and $y\ge A_k=2^{L_k}\ge2^{i+1}$.
+
+Finally, a power $2^{L_k}$ equals $A_k\in B_k$ (take $r=j=0$), so it falls under (a).
+\end{proof}
+
+\begin{lemma}[Enumeration]\label{lem:enum}
+The set $S$ is infinite. Let $m\colon\N\to\N$ be its increasing enumeration ($m(n)$ is the $(n+1)$-st smallest element of $S$). Then $m$ is strictly increasing, $m(\N)=S$, and $1\le m(n)\le2^n$ for every $n$.
+\end{lemma}
+
+\begin{proof}
+$S$ contains all powers of two, so it is infinite, and the first three properties are standard facts about the enumeration of an infinite subset of $\N$ (in Lean, \decl{Nat.nth} with \decl{Nat.nth_strictMono}, \decl{Nat.nth_mem_of_infinite} and \decl{Nat.range_nth_of_infinite}).
+Every element of $S$ is a power of two or at least $A_k\ge1$, so $m(n)\ge1$.
+For $i\in\N$ let $f(i)$ be the index with $m(f(i))=2^i$. Since $m$ and $i\mapsto2^i$ are strictly increasing, so is $f$; hence $f(n)\ge n$ and $m(n)\le m(f(n))=2^n$.
+\end{proof}
+
+\begin{proposition}[Ratio floor]\label{prop:ratio}
+For every $n\ge2$, $m(n+1)\ge\bigl(1+\frac{1}{8\log n}\bigr)m(n)$.
+\end{proposition}
+
+\begin{proof}
+Put $x=m(n)$ and $y=m(n+1)$, so $x<y$ and both lie in $S$. Since $n\ge2$, $\log n\ge\log2>1/2$.
+If $x$ falls under Lemma~\ref{lem:gaps}(b), then $y\ge2x\ge(1+\frac1{8\log n})x$, because $\frac1{8\log n}<\frac14$.
+Otherwise $x\in B_k$ for some $k$. By Lemmas~\ref{lem:block}(ii),(iv) and~\ref{lem:enum}, $2^{L_k}=A_k\le x\le2^n$, so $n\ge L_k\ge M_k=2^{4^k}$ and $\log n\ge4^k\log2\ge4^k/2$. By Lemma~\ref{lem:block}(ii),(iv), $x<2A_k=4\cdot4^kD_k$. Hence
+\[
+  \frac{x}{8\log n}\le\frac{4\cdot4^kD_k}{8\cdot4^k/2}=D_k,
+\]
+and Lemma~\ref{lem:gaps}(a) gives $y\ge x+D_k\ge\bigl(1+\frac1{8\log n}\bigr)x$.
+\end{proof}
+
+\subsection{Density}
+For real $t$ write $\lfloor t\rfloor$ for the floor and $\frc(t)=t-\lfloor t\rfloor\in[0,1)$.
+
+\begin{lemma}[Stepping]\label{lem:step}
+Let $s\ne0$ and $\eta>0$ be real with $|s|\le\eta$, and let $N\in\N$ with $N|s|\ge1$. For all real $u,a$ there are $j\in\{0,\dots,N\}$ and $z\in\Z$ with $a\le u+js+z\le a+\eta$.
+\end{lemma}
+
+\begin{proof}
+Let $s>0$. Put $w=\frc(a-u)$, $j=\lceil w/s\rceil$ and $z=\lfloor a-u\rfloor$. Then $w\le js<w+s$, so $u+js+z=a+(js-w)\in[a,a+s)\subseteq[a,a+\eta]$. Since $w<1\le Ns$, we have $w/s<N$ and $j\le N$.
+If $s<0$, apply the case just proved to $-s$, $-u$ and $-a-\eta$, obtaining $j\le N$ and $z$ with $-a-\eta\le-u-js+z\le-a$; then $j$ and $-z$ work.
+\end{proof}
+
+\begin{proposition}\label{prop:dense}
+Let $\xi$ be irrational and $a<b$ real. There are $x\in S$ and $z\in\Z$ with $a<\xi x+z<b$.
+\end{proposition}
+
+\begin{proof}
+Put $\eta=(b-a)/2$ and $n_0=\lceil2/\eta\rceil+1$.
+By Dirichlet's approximation theorem (Mathlib's \decl{Real.exists_nat_abs_mul_sub_round_le}) there is an integer $q$ with $1\le q\le n_0$ and $|q\xi-R|\le1/(n_0+1)\le\eta/2$, where $R$ is the integer nearest to $q\xi$.
+Put $\delta=q\xi-R$. Then $\delta\ne0$, since $q\xi$ is irrational.
+Let $N_1=\lceil1/|\delta|\rceil$, $N_2=\lceil2/\eta\rceil$ and $k=N_1q+N_2$; then $K_k=2^k>k$. Write $K,D,W,A$ for the parameters of block $k$.
+
+\emph{Step 1: choosing the progression.}
+Lemma~\ref{lem:step} with step $\delta$, window length $\eta/2$ (note $|\delta|\le\eta/2$ and $N_1|\delta|\ge1$), $u=\xi D$, and $\eta/2$ in place of $a$ gives $j_1\le N_1$ and $z_1\in\Z$ such that $s:=\xi D+j_1\delta+z_1\in[\eta/2,\eta]$. Put $r=j_1q$; then $r\le N_1q\le k<K$, and
+\[
+  s=\xi(D+r)+z_1-j_1R .
+\]
+
+\emph{Step 2: walking along it.}
+Since $0<s\le\eta$ and $N_2s\ge(2/\eta)(\eta/2)=1$, Lemma~\ref{lem:step} with step $s$, window length $\eta$, $u=\xi(A+rW)$, and $a+\eta/2$ in place of $a$ gives $j_2\le N_2<K$ and $z_2\in\Z$ with $a+\eta/2\le\xi(A+rW)+j_2s+z_2\le a+3\eta/2$.
+
+Let $x=A+rW+(D+r)j_2\in B_k\subseteq S$ and $z=z_2+j_2(z_1-j_1R)\in\Z$. By Step~1,
+\[
+  \xi x+z=\xi(A+rW)+j_2s+z_2\in[a+\eta/2,\,a+3\eta/2]\subset(a,b). \qedhere
+\]
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $m$ be the enumeration of Lemma~\ref{lem:enum}; it is strictly increasing with positive terms, and Proposition~\ref{prop:ratio} gives the ratio floor.
+Let $\xi$ be irrational. By Proposition~\ref{prop:dense}, $T=\{\xi x+z:x\in S,\ z\in\Z\}$ is dense in $\R$. The map $\pi$ is continuous and surjective, so $\pi(T)$ is dense in $\R/\Z$. Since $S=m(\N)$ and $\pi(\xi x+z)=\pi(\xi x)$, we have $\pi(T)\subseteq\{\pi(\xi m(n)):n\in\N\}$, which is therefore dense.
+\end{proof}
+
+\begin{remark}\label{rem:general}
+The upstream docstring argues that runs of consecutive integers cannot answer the ratio reading. The construction above avoids this by replacing runs with progressions of large differences $D_k+r$; Dirichlet's theorem selects a difference $D_k+r$ whose dilate $\xi(D_k+r)$ is a small positive number modulo one. Apart from $M_k\ge k$ and the monotonicity of $k\mapsto M_k$ (used in Lemma~\ref{lem:block}(i),(vi)), the proof uses the specific value $M_k=2^{4^k}$ only in Proposition~\ref{prop:ratio}. Given positive $\varepsilon_n\to0$, choosing $M_k$ nondecreasing with $M_k\ge k$ and $\varepsilon_n\le1/(4\cdot4^k)$ for all $n\ge M_k$ yields, by the same argument, $m(n+1)\ge(1+\varepsilon_n)m(n)$ for all large $n$. This recovers an eventual, density-only form of the theorem of \cite{AHK83}; it is not part of the formal verification.
+\end{remark}
+
+\section{The defect and a corrected statement}\label{sec:defect}
+
+\subsection*{The statement is a special case of a known theorem}
+Take $\varepsilon_n=1/\log(n+2)$, which is positive and tends to $0$, in the theorem of Ajtai, Havas and Koml\'os as recorded in \cite[p.~45]{Bug12} (with indices shifted to start at $0$). The resulting $(m_n)$ has positive terms, is strictly increasing because every ratio exceeds $1$, and satisfies \eqref{eq:floor} with $c=1/2$: for $n\ge2$ we have $n+2\le n^2$, so $\log(n+2)\le2\log n$ and $1/\log(n+2)\ge1/(2\log n)$. Uniform distribution modulo one implies density. Hence \decl{problem_10_6_variant_1} follows from a result published in 1983 and recorded in the book from which Problem~10.6 is taken.
+
+First, the tag \texttt{research open} and the docstring sentences saying that the ratio reading ``remains open'' are incorrect. Second, in both natural cases of an eventual ratio floor $m_{n+1}/m_n\ge1+\varepsilon_n$ the answer is already known: floors with $\varepsilon_n\to0$ are attainable by \cite{AHK83}, while a floor $\varepsilon_n\ge\lambda-1>0$ makes the sequence eventually lacunary, and then density fails for some irrational $\xi$ by Pollington and de Mathan \cite{Pol79,Mat80}. Since Bugeaud states the theorem of \cite{AHK83} before posing Problem~10.6, the problem presumably asks for something that a bare existence statement with a ratio condition does not capture, such as an explicit or natural sequence. We do not attempt to formalize that.
+
+\subsection*{Proposed correction}
+We propose (1) changing the attribute of \decl{problem_10_6_variant_1} to \texttt{@[category research solved, AMS 11]}, replacing ``and it is the one that remains open'' in its docstring (and the corresponding sentence in the module docstring) by a reference to \cite{AHK83} and \cite[\S2.8]{Bug12}; and (2) adding the theorem of \cite{AHK83}, in the density form that suffices here, as a solved statement:
+\begin{lstlisting}
+/-- Ajtai–Havas–Komlós [AHK83], as recorded in [Bug12, §2.8], in the weaker form of
+density modulo one (they obtain uniform distribution). -/
+@[category research solved, AMS 11]
+theorem problem_10_6_variants.ajtai_havas_komlos (ε : ℕ → ℝ) (hε : ∀ n, 0 < ε n)
+    (hlim : Tendsto ε atTop (nhds 0)) :
+    ∃ m : ℕ → ℕ, (∀ n, 0 < m n) ∧ (∀ n, 1 + ε n < (m (n + 1) : ℝ) / m n) ∧
+    ∀ ξ : ℝ, Irrational ξ →
+      Dense (Set.range fun n => (↑(ξ * m n) : AddCircle (1 : ℝ))) := by
+  sorry
+\end{lstlisting}
+In a scratch file outside the repository, with the pinned versions of Section~\ref{sec:lean}, we checked that this statement elaborates in \texttt{namespace Bugeaud06} and that, taken as a hypothesis, it implies \decl{problem_10_6_variant_1} by the argument above, using only the three standard axioms. The math0 result does not depend on it.
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{File and declarations}
+The proof is the file \path{lean/Math0/Books/Bugeaud06_problem_10_6_variant_1.lean} of the math0 repository (\url{https://github.com/Foundation-0/math0}). It imports only the upstream file \path{Problem10_6.lean} and the audit commands \path{lean/Math0/Audit.lean}. In \texttt{namespace Math0.Bugeaud06} it defines the parameters $K_k,M_k,D_k,W_k,A_k,L_k$ of Section~\ref{sec:proof} as \decl{bK}, \decl{bM}, \decl{bD}, \decl{bW}, \decl{bA}, \decl{bL}, the block element \texttt{elt k r j}~$=A_k+rW_k+(D_k+r)j$, the set \decl{S} exactly as in Section~\ref{sec:proof}, and \texttt{seq := Nat.nth (· ∈ S)}, the increasing enumeration of $S$.
+The lemmas correspond to Section~\ref{sec:proof} as follows: Lemma~\ref{lem:block} is \decl{bK_le_bD}, \decl{bA_eq}, \decl{bA_eq'}, \decl{two_mul_bA}, \decl{key_bound}, \decl{elt_ge}, \decl{elt_add_le}, \decl{within_gap} and \decl{bL_lt}; Lemma~\ref{lem:gaps} is \decl{gap_block}, \decl{gap_filler} and \decl{S_cases}; Lemma~\ref{lem:enum} is \decl{S_infinite}, \decl{seq_strictMono}, \decl{seq_mem}, \decl{range_seq}, \decl{seq_le_pow} and \decl{seq_pos}; Proposition~\ref{prop:ratio} is \decl{sublacunary} (which proves \decl{IsGenuinelySublacunary}~\texttt{seq} with $c=1/8$, using Mathlib's bound $\log2>0.6931471803$); Lemma~\ref{lem:step} is \decl{step_pos} and \decl{step_any}; Proposition~\ref{prop:dense} is \decl{dense_aux}; and the final projection to $\R/\Z$ is \decl{dense_seq}. The file ends with
+\begin{lstlisting}
+theorem problem_10_6_variant_1 : type_of% @Bugeaud06.problem_10_6_variant_1 :=
+  ⟨seq, seq_strictMono, sublacunary, dense_seq⟩
+
+end Math0.Bugeaud06
+
+#math0_proves Math0.Bugeaud06.problem_10_6_variant_1 Bugeaud06.problem_10_6_variant_1
+\end{lstlisting}
+The file contains no \texttt{sorry}, \texttt{native\_decide}, \texttt{set\_option} or new axioms, and it compiles in about 15 seconds.
+
+\subsection*{Audit}
+The command \decl{#math0_proves}, defined in \path{lean/Math0/Audit.lean}, fails unless (1) the two declarations have the same universe parameters, (2) the type of \decl{Math0.Bugeaud06.problem_10_6_variant_1} is syntactically identical to the type of the upstream \decl{Bugeaud06.problem_10_6_variant_1}, up to metadata annotations only (no unfolding and no definitional-equality check), and (3) our theorem depends on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, which rules out \decl{sorryAx}, the axioms behind \decl{native_decide} and custom axioms. On this file it reports
+\begin{lstlisting}
+math0 audit: 'Math0.Bugeaud06.problem_10_6_variant_1' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Bugeaud06.problem_10_6_variant_1' proves 'Bugeaud06.problem_10_6_variant_1'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1}, Mathlib \cite{Mathlib} \texttt{v4.33.1} and formal-conjectures \cite{FC} at commit \texttt{c77fdd446d23539302aa73bcfae4a9fa962b8382}, all pinned in \path{lean/}. To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. A single file can be checked with \texttt{lake env lean} from \path{lean/}.
+
+\begin{thebibliography}{99}
+\raggedright
+
+\bibitem{AHK83}
+M.~Ajtai, I.~Havas, and J.~Koml\'os, \emph{Every group admits a bad topology}, in: Studies in Pure Mathematics (to the memory of P.~Tur\'an), Birkh\"auser, Basel, 1983, 21--34.
+
+\bibitem{Bos83}
+M.~D. Boshernitzan, \emph{Homogeneously distributed sequences and Poincar\'e sequences of integers of sublacunary growth}, Monatsh. Math. \textbf{96} (1983), 173--181.
+
+\bibitem{Bug12}
+Y.~Bugeaud, \emph{Distribution Modulo One and Diophantine Approximation}, Cambridge Tracts in Mathematics \textbf{193}, Cambridge University Press, Cambridge, 2012.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Fur67}
+H.~Furstenberg, \emph{Disjointness in ergodic theory, minimal sets, and a problem in Diophantine approximation}, Math. Systems Theory \textbf{1} (1967), 1--49.
+
+\bibitem{GMY}
+X.~Gao, Y.~Mooroogen, and C.~H. Yip, \emph{On an Erd\H{o}s similarity problem in the large}, Bull. Lond. Math. Soc. \textbf{57} (2025), no.~6, 1801--1818; arXiv:2311.06727 (numbering cited from arXiv v3).
+
+\bibitem{Mat80}
+B.~de Mathan, \emph{Numbers contravening a condition in density modulo~$1$}, Acta Math. Acad. Sci. Hungar. \textbf{36} (1980), 237--241.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Pol79}
+A.~D. Pollington, \emph{On the density of sequence $\{n_k\xi\}$}, Illinois J. Math. \textbf{23} (1979), 511--515.
+
+\end{thebibliography}
+
+\end{document}

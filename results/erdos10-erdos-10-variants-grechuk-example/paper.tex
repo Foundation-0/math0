@@ -1,0 +1,417 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+\usepackage{booktabs}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, upquote=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {≤}{{$\le$}}1 {∉}{{$\notin$}}1 {·}{{$\cdot$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {▸}{{$\triangleright$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+\newunicodechar{▸}{\ensuremath{\triangleright}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\cS}{\mathcal{S}}
+\newcommand{\wt}{\nu}
+
+\title[$1117175146$ is not a prime plus at most three powers of two]{The integer $1117175146$ is not the sum of a prime and at most three powers of two}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 17, 2026}
+
+\begin{document}
+\begin{abstract}
+We prove that $N=1117175146$ cannot be written as $p+2^{e_1}+\dots+2^{e_k}$ with $p$ prime, $0\le k\le 3$, and exponents $e_1,\dots,e_k\ge 0$ that need not be distinct.
+This was observed by Bogdan Grechuk in connection with Erd\H{o}s Problem~\#10, and shows that the restriction to odd integers in a conjecture of Granville and Soundararajan cannot simply be dropped; the result is known, and we provide a complete certificate-based proof and, to our knowledge, its first formal proof.
+The proof bounds every exponent by $30$ and checks, for each of the $5828$ admissible exponent multisets with sum $s$, that $N-s$ has a proper divisor in an explicit list of $38$ primes; we also give a hand-checkable form of this certificate based on $N-1=(2^{16}-1)\cdot 17047$.
+The argument is verified in Lean~4, with the finite computation carried out by the Lean kernel, against the statement \decl{Erdos10.erdos_10.variants.grechuk_example} of the formal-conjectures repository.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Erd\H{o}s asked whether there is a constant $k$ such that every sufficiently large integer is the sum of a prime and at most $k$ powers of $2$ \cite[p.~96]{Er80}, \cite[p.~28]{ErGr80}.
+This is Problem~\#10 on the Erd\H{o}s Problems website \cite{EP10}, where it is listed as open.
+Gallagher \cite{Ga75} proved that for every $\varepsilon>0$ there is $k(\varepsilon)$ such that the integers that are the sum of a prime and at most $k(\varepsilon)$ powers of $2$ have lower density at least $1-\varepsilon$.
+Granville and Soundararajan \cite{GrSo98} conjectured that at most three powers of $2$ suffice for all odd integers, and hence at most four suffice for all even integers.
+
+As recorded on \cite{EP10}, the restriction to odd integers matters: Bogdan Grechuk observed that $1117175146$ is not the sum of a prime and at most three powers of $2$.
+Grechuk also pointed out that parity considerations, together with the existence of many integers that are not the sum of a prime and two powers of $2$, suggest that infinitely many even integers are not the sum of a prime and at most three powers of $2$.
+The formal-conjectures repository \cite{FC} notes that this infinite statement follows from Crocker's construction \cite{Cr71} of infinitely many odd integers that are not the sum of a prime and two powers of $2$, and links a Lean formalisation of the infinite statement \cite{Da}; that formalisation does not treat the specific integer $1117175146$.
+
+\subsection*{Status and contribution}
+The statement proved here is Grechuk's observation and is not new.
+The page \cite{EP10} records it without describing how it was verified.
+We give (i) a complete proof by an explicit finite certificate (Section~\ref{sec:proof}); (ii) a form of the certificate that can be checked by hand, in which all but $44$ of the remainders are handled by one congruence argument (Section~\ref{sec:hand}); and (iii) a Lean~4 proof of the upstream formal statement \decl{Erdos10.erdos_10.variants.grechuk_example} of \cite{FC} (Section~\ref{sec:lean}).
+The upstream file links no formal proof for this statement. The Lean files it links as formal proofs of two neighbouring variants (the infinite statement above \cite{Da}, and a statement about two powers of $2$ \cite{Oh}) do not prove it: the first does not mention $1117175146$, and the second restates it with \texttt{sorry}. A web search found no other formal proof.
+We therefore classify the result as the \emph{first formal proof of a known result}.
+We do not know how Grechuk found or verified the example.
+
+\section{Statement}\label{sec:statement}
+
+Let $\N=\{0,1,2,\dots\}$. For $k\in\N$ let
+\[
+  \cS_k=\Bigl\{\,p+\sum_{i=1}^{j}2^{e_i} \;:\; p \text{ prime},\ 0\le j\le k,\ e_1,\dots,e_j\in\N\,\Bigr\}.
+\]
+Here $2^0=1$ counts as a power of two, and the exponents need not be distinct.
+
+\begin{theorem}\label{thm:main}
+Let $N=1117175146$. Then $N\notin\cS_3$; that is, there are no prime $p$, integer $0\le j\le 3$ and exponents $e_1,\dots,e_j\in\N$ with $N=p+2^{e_1}+\dots+2^{e_j}$.
+\end{theorem}
+
+Because repeated exponents, the exponent $0$, and fewer than three summands are all allowed, Theorem~\ref{thm:main} implies the variants in which the powers are required to be distinct, to be at least $2$, or to be exactly three in number.
+
+In the formal-conjectures repository \cite{FC} (commit \texttt{c77fdd4}) the set $\cS_k$ is the abbreviation \texttt{sumPrimeAndTwoPows}~$k$, in which the exponents form a multiset \texttt{pows} of natural numbers of cardinality at most $k$. A multiset of cardinality $j$ is the same as an unordered $j$-tuple, so this is exactly the set $\cS_k$ above.
+The definition and the statement, copied verbatim from \path{FormalConjectures/ErdosProblems/10.lean}, are:
+\begin{lstlisting}
+/--
+The set of natural numbers that can be written as a sum
+of a prime and at most $k$ powers of $2$.
+-/
+abbrev sumPrimeAndTwoPows (k : ℕ) : Set ℕ :=
+  { p + (pows.map (2 ^ ·)).sum | (p : ℕ) (pows : Multiset ℕ) (_ : p.Prime)
+    (_ : pows.card ≤ k)}
+
+/--
+Bogdan Grechuk has observed that `1117175146` is not the sum of a prime
+and at most $3$ powers of $2$.
+-/
+@[category research solved, AMS 5 11]
+theorem erdos_10.variants.grechuk_example :
+    1117175146 ∉ sumPrimeAndTwoPows 3 := by
+  sorry
+\end{lstlisting}
+
+\section{Proof}\label{sec:proof}
+
+Throughout, $N=1117175146$. Its binary expansion is
+\[
+N=2^{30}+2^{25}+2^{23}+2^{20}+2^{18}+2^{17}+2^{15}+2^{13}+2^{12}+2^{11}+2^{10}+2^{8}+2^{6}+2^{5}+2^{3}+2^{1},
+\]
+so in particular $2^{30}\le N<2^{31}=2147483648$.
+
+\subsection{The certificate}
+Let $W$ be the following list of $38$ primes:
+\[
+\begin{aligned}
+W=(&2, 3, 5, 7, 11, 13, 17, 19, 23, 37, 41, 47, 59, 61, 73, 79, 89, 97, 101,\\
+   &103, 107, 131, 163, 199, 211, 229, 257, 379, 547, 659, 877, 1381, 1481,\\
+   &1699, 2099, 7283, 7703, 19391).
+\end{aligned}
+\]
+
+\begin{definition}\label{def:cert}
+An integer $m\in\N$ is \emph{certified} if $m<2$, or if there is $q\in W$ with $q\mid m$ and $q<m$.
+\end{definition}
+
+\begin{lemma}\label{lem:sound}
+A certified integer is not prime.
+\end{lemma}
+
+\begin{proof}
+If $m<2$ then $m$ is not prime. Otherwise some $q\in W$ satisfies $q\mid m$ and $q<m$. Every element of $W$ is at least $2$, so $q$ is a divisor of $m$ with $1<q<m$, and $m$ is not prime.
+\end{proof}
+
+The proof uses only that every element of $W$ is at least $2$; the primality of the elements of $W$ plays no role, and the formal proof does not check it.
+
+\begin{lemma}\label{lem:exp}
+If $e\in\N$ and $2^e\le N$, then $e\le 30$.
+\end{lemma}
+
+\begin{proof}
+If $e\ge 31$ then $2^e\ge 2^{31}>N$.
+\end{proof}
+
+\begin{proposition}\label{prop:finite}
+Let $j\in\{0,1,2,3\}$ and $e_1,\dots,e_j\in\N$, and put $s=\sum_{i=1}^j 2^{e_i}$. If $s\le N$, then $N-s$ is certified.
+\end{proposition}
+
+\begin{proof}
+Each summand satisfies $1\le 2^{e_i}\le s\le N$, so $e_i\le 30$ by Lemma~\ref{lem:exp}. It therefore suffices to check the claim for the tuples $(e_1,\dots,e_j)\in\{0,\dots,30\}^j$ with $s\le N$: the empty tuple ($s=0$), the $31$ singletons, $952$ of the $31^2=961$ ordered pairs, and $29009$ of the $31^3=29791$ ordered triples. For each of these one verifies by trial division that $N-s$ has a divisor $q\in W$ with $q<N-s$. This finite verification is carried out by the Lean kernel (Section~\ref{sec:lean}); Section~\ref{sec:hand} gives a version of it that can be checked by hand.
+\end{proof}
+
+Up to reordering there are $5984$ multisets of at most three exponents in $\{0,\dots,30\}$, and $5828$ of them satisfy $s\le N$.
+Of these, $5336$ have $s$ even, and then $q=2$ is a witness (see Section~\ref{sec:hand}).
+The other $492$ have $s$ odd; for them the least prime factor of $N-s$ is always a witness, and $W$ consists exactly of $2$ together with the $37$ distinct least prime factors that occur.
+The least prime factor is $3$ in $224$ of these cases, $5$ in $111$, $17$ in $40$ and $7$ in $28$, while the largest primes in $W$, namely $7283$, $7703$ and $19391$, are each needed for only one or two exponent multisets.
+
+\subsection{Conclusion}
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Suppose, for a contradiction, that $N=p+\sum_{i=1}^{j}2^{e_i}$ with $p$ prime and $0\le j\le 3$.
+(In the formal proof the multiset of exponents is represented by a list $(e_1,\dots,e_j)$, and the cases $j=0,1,2,3$ are treated separately; a list of length at least $4$ contradicts the cardinality bound.)
+Put $s=\sum_{i=1}^{j}2^{e_i}$. Since $p\ge 0$ we have $s\le N$ and $p=N-s$.
+By Proposition~\ref{prop:finite}, $p$ is certified, so $p$ is not prime by Lemma~\ref{lem:sound}. This contradiction proves Theorem~\ref{thm:main}.
+\end{proof}
+
+\subsection{A form of the certificate that can be checked by hand}\label{sec:hand}
+This subsection is not used in the formal proof. It gives a second derivation of Proposition~\ref{prop:finite}, organised so that every step can be checked by hand or with a pocket calculator.
+For $n\in\N$ let $\wt(n)$ be the number of ones in the binary expansion of $n$.
+
+\begin{lemma}\label{lem:weight}
+If $s=2^{e_1}+\dots+2^{e_j}$, then $\wt(s)\le j$.
+\end{lemma}
+
+\begin{proof}
+It suffices to show $\wt(n+2^e)\le \wt(n)+1$ for all $n,e\in\N$ and then induct on $j$. If bit $e$ of $n$ is $0$, adding $2^e$ sets it, and $\wt$ increases by $1$. Otherwise let $t\ge 1$ be the length of the maximal run of ones in $n$ starting at bit $e$; adding $2^e$ clears these $t$ bits and sets bit $e+t$, so $\wt$ changes by $1-t\le 0$.
+\end{proof}
+
+A direct computation gives
+\[
+\begin{gathered}
+\wt(N)=16,\quad \wt(N-1)=16,\quad \wt(N-2)=15,\quad \wt(N-3)=17,\\
+\wt(N-5)=16,\quad \wt(N-17)=16,\quad \wt(N-257)=15.
+\end{gathered}
+\]
+By Lemma~\ref{lem:weight}, a sum $s$ of at most three powers of $2$ is therefore never equal to $N-r$ for $r\in\{0,1,2,3,5,17,257\}$; that is,
+\begin{equation}\label{eq:excl}
+N-s\notin\{0,1,2,3,5,17,257\}.
+\end{equation}
+In particular $N-s\ge 2$, so the alternative $m<2$ in Definition~\ref{def:cert} never occurs.
+
+\emph{Even $s$.} Then $N-s$ is even, and by \eqref{eq:excl} it is neither $0$ nor $2$. So $2\mid N-s$ and $2<N-s$.
+
+\emph{Odd $s$.} Since $2^{e_i}\le s\le N$, every exponent $e_i$ is at most $30$ by Lemma~\ref{lem:exp}. The parity of $s$ is the parity of the number of indices $i$ with $e_i=0$, so this number is $1$ or $3$. If it is $3$, then $s=3=1+2^1$. If it is $1$, then $s=1+t$, where $t$ is $0$, a single power $2^c$ with $1\le c\le 30$, or a sum $2^a+2^b$ with $1\le a\le b\le 30$. If $a=b$ then $t=2^{a+1}$ with $a+1\le 30$, because $2^{a+1}\le s\le N$. If $a<b$ and $16\mid b-a$, then $b=a+16$, because $b-a\le 29$. Hence $N-s$ is one of the following:
+\begin{enumerate}
+\item[(a)] $N-1$;
+\item[(b)] $N-1-2^{c}$ with $1\le c\le 30$;
+\item[(c)] $N-1-2^{a}-2^{b}$ with $1\le a<b\le 30$ and $b\not\equiv a\pmod{16}$;
+\item[(d)] $N-1-2^{a}-2^{a+16}$ with $1\le a\le 14$.
+\end{enumerate}
+The key fact is the factorisation
+\[
+N-1=1117175145=(2^{16}-1)\cdot 17047,\qquad 2^{16}-1=3\cdot 5\cdot 17\cdot 257.
+\]
+
+\begin{lemma}\label{lem:cover}
+In cases \textup{(a)} and \textup{(c)}, $N-s$ is divisible by some $q\in\{3,5,17,257\}$ with $q<N-s$.
+\end{lemma}
+
+\begin{proof}
+In case (a), $N-s=N-1$, and $3\mid 2^{16}-1\mid N-1$ with $3<N-1$. In case (c), write $b-a=2^v u$ with $u$ odd; since $16\nmid b-a$ we have $v\in\{0,1,2,3\}$. Let $q=2^{2^v}+1\in\{3,5,17,257\}$, a divisor of $2^{16}-1=(2+1)(2^2+1)(2^4+1)(2^8+1)$. Then $2^{2^v}\equiv -1\pmod q$, hence $2^{b-a}\equiv(-1)^u=-1\pmod q$, and so $q$ divides $2^a(2^{b-a}+1)=2^a+2^b$. As $q\mid N-1$, we get $q\mid N-1-2^a-2^b=N-s$. Finally $N-s\ne q$ by \eqref{eq:excl}, so $q<N-s$.
+\end{proof}
+
+Case (c) accounts for $417$ of the $492$ odd-$s$ multisets and case (a) for one more. The remaining $74$ multisets lead to only $44$ distinct remainders, those of cases (b) and (d). Table~\ref{tab:residual} lists each of them with a prime divisor $q$ (its least prime factor) and the cofactor; in every row $1<q<N-s$. All primes used in Lemma~\ref{lem:cover} and in Table~\ref{tab:residual} belong to $W$. This proves Proposition~\ref{prop:finite} again.
+
+\begin{table}[ht]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{rrrr@{\qquad}rrrr}
+\toprule
+$c$ & $N-1-2^c$ & $q$ & cofactor & $c$ & $N-1-2^c$ & $q$ & cofactor\\
+\midrule
+1 & 1117175143 & 7 & 159596449 & 16 & 1117109609 & 7 & 159587087 \\
+2 & 1117175141 & 1381 & 808961 & 17 & 1117044073 & 89 & 12551057 \\
+3 & 1117175137 & 13 & 85936549 & 18 & 1116913001 & 163 & 6852227 \\
+4 & 1117175129 & 7 & 159596447 & 19 & 1116650857 & 7 & 159521551 \\
+5 & 1117175113 & 23 & 48572831 & 20 & 1116126569 & 19391 & 57559 \\
+6 & 1117175081 & 11 & 101561371 & 21 & 1115077993 & 59 & 18899627 \\
+7 & 1117175017 & 7 & 159596431 & 22 & 1112980841 & 7 & 158997263 \\
+8 & 1117174889 & 379 & 2947691 & 23 & 1108786537 & 107 & 10362491 \\
+9 & 1117174633 & 37 & 30193909 & 24 & 1100397929 & 101 & 10895029 \\
+10 & 1117174121 & 7 & 159596303 & 25 & 1083620713 & 7 & 154802959 \\
+11 & 1117173097 & 1481 & 754337 & 26 & 1050066281 & 11 & 95460571 \\
+12 & 1117171049 & 73 & 15303713 & 27 & 982957417 & 13 & 75612109 \\
+13 & 1117166953 & 7 & 159595279 & 28 & 848739689 & 7 & 121248527 \\
+14 & 1117158761 & 1699 & 657539 & 29 & 580304233 & 2099 & 276467 \\
+15 & 1117142377 & 13 & 85934029 & 30 & 43433321 & 73 & 594977 \\
+\midrule
+$a$ & $N-1-2^a-2^{a+16}$ & $q$ & cofactor & $a$ & $N-1-2^a-2^{a+16}$ & $q$ & cofactor\\
+\midrule
+1 & 1117044071 & 11 & 101549461 & 8 & 1100397673 & 19 & 57915667 \\
+2 & 1116912997 & 877 & 1273561 & 9 & 1083620201 & 41 & 26429761 \\
+3 & 1116650849 & 101 & 11055949 & 10 & 1050065257 & 7703 & 136319 \\
+4 & 1116126553 & 659 & 1693667 & 11 & 982955369 & 11 & 89359579 \\
+5 & 1115077961 & 47 & 23725063 & 12 & 848735593 & 547 & 1551619 \\
+6 & 1112980777 & 7283 & 152819 & 13 & 580296041 & 13 & 44638157 \\
+7 & 1108786409 & 79 & 14035271 & 14 & 43416937 & 131 & 331427 \\
+\bottomrule
+\end{tabular}
+\caption{The $44$ remainders of cases (b) and (d), with least prime factor $q$ and cofactor.}
+\label{tab:residual}
+\end{table}
+
+In particular, the largest elements of $W$ come from Table~\ref{tab:residual}: $19391$ is needed for $s=1+2^{20}=1+2^{19}+2^{19}$, $7283$ for $s=1+2^6+2^{22}$, and $7703$ for $s=1+2^{10}+2^{26}$.
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the following file of the math0 repository, \url{https://github.com/Foundation-0/math0}:
+\[
+\text{\path{lean/Math0/ErdosProblems/Erdos10_erdos_10_variants_grechuk_example.lean}},
+\]
+in the namespace \decl{Math0.Erdos10}.
+The main theorem is \decl{Math0.Erdos10.erdos_10_grechuk_example}. It is stated as \texttt{type\_of\% @}\decl{Erdos10.erdos_10.variants.grechuk_example}, so its type is, by construction, the type of the upstream declaration.
+The auxiliary declarations are \decl{wit} ($W$), \decl{good} (Definition~\ref{def:cert}, as a Boolean function), \decl{not_prime_of_good} (Lemma~\ref{lem:sound}), \decl{exp_lt} (Lemma~\ref{lem:exp}), the Boolean checks \decl{check1}--\decl{check3} over $\{0,\dots,30\}^j$ with their kernel evaluations \decl{check1_eq}--\decl{check3_eq} and \decl{good_N} ($j=0$), and \decl{spec1}--\decl{spec3}, which combine these with \decl{exp_lt} into Proposition~\ref{prop:finite}. Figure~\ref{fig:lean} reproduces the certificate test, the main proof and the final audit command verbatim.
+\begin{figure}[tbp]
+\begin{lstlisting}
+def good (m : ℕ) : Bool := m < 2 || wit.any (fun q => m % q == 0 && q < m)
+
+def check3 : Bool :=
+  (List.range 31).all fun x => (List.range 31).all fun y => (List.range 31).all fun z =>
+    !(2 ^ x + 2 ^ y + 2 ^ z ≤ 1117175146) || good (1117175146 - (2 ^ x + 2 ^ y + 2 ^ z))
+
+theorem check3_eq : check3 = true := by decide +kernel
+
+theorem erdos_10_grechuk_example : type_of% @Erdos10.erdos_10.variants.grechuk_example := by
+  rintro ⟨p, pows, hp, hcard, h⟩
+  induction pows using Quotient.inductionOn with
+  | h l =>
+  rcases l with _ | ⟨a, _ | ⟨b, _ | ⟨c, _ | ⟨d, l⟩⟩⟩⟩
+  · simp at h
+    exact not_prime_of_good (h ▸ good_N) hp
+  · simp at h
+    have hs : 2 ^ a ≤ 1117175146 := by omega
+    exact not_prime_of_good (show p = 1117175146 - 2 ^ a by omega ▸ spec1 hs) hp
+  · simp at h
+    have hs : 2 ^ a + 2 ^ b ≤ 1117175146 := by omega
+    exact not_prime_of_good (show p = 1117175146 - (2 ^ a + 2 ^ b) by omega ▸ spec2 hs) hp
+  · simp at h
+    have hs : 2 ^ a + 2 ^ b + 2 ^ c ≤ 1117175146 := by omega
+    exact not_prime_of_good (show p = 1117175146 - (2 ^ a + 2 ^ b + 2 ^ c) by omega ▸ spec3 hs) hp
+  · simp at hcard
+    omega
+
+#math0_proves Math0.Erdos10.erdos_10_grechuk_example Erdos10.erdos_10.variants.grechuk_example
+\end{lstlisting}
+\caption{Verbatim excerpt of the Lean file.}
+\label{fig:lean}
+\end{figure}
+The main proof follows Section~\ref{sec:proof}: the multiset of exponents is replaced by a list representing it (via \decl{Quotient.inductionOn}); the list is split by length, \decl{omega} derives $s\le N$ and $p=N-s$ from $p+s=N$, and the certificate gives $\neg\,\mathrm{Prime}(p)$. In the last case \decl{simp} rewrites the cardinality hypothesis as an inequality between numerals and the list length that \decl{omega} refutes.
+
+\subsection*{Kernel computation}
+The finite verification consists of the four theorems \decl{good_N}, \decl{check1_eq}, \decl{check2_eq} and \decl{check3_eq}, each proved by \texttt{decide +kernel}. This tactic closes a decidable goal with a proof term whose type-correctness the Lean kernel establishes by reducing the decision procedure to \decl{true}, evaluating the Boolean functions by definitional unfolding with its built-in arbitrary-precision arithmetic on natural-number literals. No compiled code is trusted: the file does not use \decl{native_decide}, which would introduce the axiom \decl{Lean.ofReduceBool}. The largest check, \decl{check3_eq}, runs through all $29791$ triples and takes about $20$ seconds; the whole file compiles in about $30$ seconds with default settings.
+
+\subsection*{Audit}
+The last command of the file is \texttt{\#math0\_proves}, applied to our theorem and the upstream declaration (Figure~\ref{fig:lean}). This command, defined in \path{lean/Math0/Audit.lean}, fails unless (1) the two declarations have the same universe parameters, (2) their types are syntactically identical after removing metadata annotations, with no unfolding and no definitional-equality check, and (3) our theorem depends on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}. In particular it rejects \decl{sorryAx}, \decl{Lean.ofReduceBool} and \decl{Lean.trustCompiler}, and any custom axiom. On this file it reports
+\begin{lstlisting}
+math0 audit: 'Math0.Erdos10.erdos_10_grechuk_example' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Erdos10.erdos_10_grechuk_example' proves 'Erdos10.erdos_10.variants.grechuk_example'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1}, Mathlib \cite{Mathlib} \texttt{v4.33.1} and formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, all pinned in \path{lean/}.
+To reproduce, run \path{scripts/verify.sh} from the repository root. It fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The single file can also be checked by running \texttt{lake env lean} on it from the \path{lean} directory.
+A recomputation in Python (SymPy) confirmed all counts above and that no remainder $N-s$ is prime.
+
+\begin{thebibliography}{99}
+
+\bibitem{EP10}
+T.~F. Bloom, \emph{Erd\H{o}s Problems}, Problem \#10, \url{https://www.erdosproblems.com/10}, accessed October 2026.
+
+\bibitem{Cr71}
+R.~Crocker, \emph{On the sum of a prime and of two powers of two}, Pacific J. Math. \textbf{36} (1971), no.~1, 103--107.
+
+\bibitem{Da}
+DaryxXx, \emph{Lean formalisation of \texttt{erdos\_10.variants.grechuk}}, GitHub gist, file \texttt{Main.lean}, revision \texttt{4b34789}, \url{https://gist.github.com/DaryxXx/e112c74cc648b08a420b0959315cf65f}, linked from \cite{FC}.
+
+\bibitem{Er80}
+P.~Erd\H{o}s, \emph{A survey of problems in combinatorial number theory}, Ann. Discrete Math. \textbf{6} (1980), 89--115.
+
+\bibitem{ErGr80}
+P.~Erd\H{o}s and R.~L. Graham, \emph{Old and new problems and results in combinatorial number theory}, Monographies de L'Enseignement Math\'ematique \textbf{28}, Universit\'e de Gen\`eve, Geneva, 1980.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Ga75}
+P.~X. Gallagher, \emph{Primes and powers of $2$}, Invent. Math. \textbf{29} (1975), 125--142.
+
+\bibitem{GrSo98}
+A.~Granville and K.~Soundararajan, \emph{A binary additive problem of Erd\H{o}s and the order of $2$ mod $p^2$}, Ramanujan J. \textbf{2} (1998), 283--298.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Oh}
+anatoliiohorodnyk, \emph{lean-fc-proofs}, GitHub repository, file \path{Proofs/T_Erdos10_erdos_10_variants_two_pows.lean} at commit \texttt{5da9642}, \url{https://github.com/anatoliiohorodnyk/lean-fc-proofs}, linked from \cite{FC}.
+
+\end{thebibliography}
+
+\end{document}

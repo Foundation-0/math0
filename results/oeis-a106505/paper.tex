@@ -1,0 +1,378 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    noncomputable,private,set,rw,rwa,only},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8, upquote=true,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℝ}{{$\mathbb{R}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1
+    {↔}{{$\leftrightarrow$}}1 {→}{{$\to$}}1 {←}{{$\leftarrow$}}1 {∧}{{$\wedge$}}1
+    {∨}{{$\vee$}}1 {≤}{{$\le$}}1 {²}{{$^2$}}1 {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1
+    {π}{{$\pi$}}1 {·}{{$\cdot$}}1 {…}{{$\dots$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Side}{\mathcal{S}}
+\newcommand{\ang}{\theta}
+\DeclareMathOperator{\cnt}{N}
+
+\title[The common side of the angles $A$ and $2A$]{The common side of the angles $A$ and $2A$ in primitive integer triangles: a proof of Stephan's conjecture $a(n+5)=a(n)+8$ for OEIS A106505}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 19, 2026}
+
+\begin{document}
+\begin{abstract}
+OEIS A106505 lists, in increasing order and without repetition, the integers $c$ such that some primitive integer-sided triangle has two angles $A$ and $2A$ whose common side has length $c$: $5,7,9,11,13,15,16,17,\dots$.
+We prove the conjecture recorded by Ralf Stephan in the entry in 2010, that the $n$-th term satisfies $a(n+5)=a(n)+8$ for all $n>2$.
+The proof determines the set of these lengths: it consists of the odd numbers $c\ge5$ and the multiples of $8$ with $c\ge16$, so that from $9$ on it is periodic modulo $8$ with five residues per period. The argument is elementary (a residue computation modulo $8$ and two explicit families of triangles); the OEIS entry still lists the statement as a conjecture and we found no recorded proof, so we classify the result as new, with the caveat that the set description is close to known facts recorded for the related sequence A321499.
+The theorem is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, reviewed for fidelity and frozen before the proof attempt, whose definitions are checked by the kernel against all $67$ listed terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Let a triangle have integer side lengths with $\gcd$ equal to $1$ (a \emph{primitive} triangle), and suppose that two of its angles are $A$ and $2A$. The side joining the vertices of these two angles is the side \emph{common} to them. The sequence A106505 of the OEIS \cite{A106505}, contributed by Lekraj Beedassy on May~4, 2005 and extended by Ray Chandler, is titled
+\begin{quote}
+``Ordered and uniqued length of side common to the two angles, one being the double of the other, of a primitive integer-sided triangle.''
+\end{quote}
+It has offset $1$ and begins $5,7,9,11,13,15,16,17,19,21,23,24,25,\dots$; the entry lists $67$ terms, up to $112$. For example, $33$ is the common side of the two primitive triangles with sides $(33,28,16)$ and $(33,272,256)$. On November~16, 2010, Ralf Stephan added to the FORMULA section of the entry the conjecture
+\begin{quote}
+``Conjecture: for n$>$2, a(n+5) = a(n) + 8. -{}~Ralf Stephan, Nov 16 2010.''
+\end{quote}
+and on October~5, 2013, Colin Barker added an ``empirical'' generating function, which is equivalent to the same recurrence together with the first eight terms. We prove Stephan's conjecture (Theorem~\ref{thm:main}), by determining the set of common sides (Theorem~\ref{thm:set}): it is $\{c \text{ odd}: c\ge 5\}\cup\{8m: m\ge2\}$.
+
+\subsection*{Background}
+If a triangle with sides $a,b,c$ opposite the angles $A,B,C$ has $B=2A$, then $b^2=a(a+c)$, and conversely; Zelator \cite{Ze} gives a proof and traces this relation to a 1976 note in the Mathematical Gazette. The primitive integer triangles with one angle twice another were determined by Luthar \cite{Lu}; parametric families were given by Deshpande \cite{De}, and Zelator \cite{Ze} gives formulas covering all integer triangles with this property. In the notation of OEIS A343063 \cite{A343063} (B.~Schott, 2021), which lists the primitive triples, the common side is $m^2-k^2$ and the other two sides are $mk$ and $k^2$, where $\gcd(m,k)=1$ and $k<m<2k$. Accordingly, A106505 records the formula ``\verb|Values s^2 - r^2, where r<s<2r and (r, s)=1|''. The companion sequence A343064 \cite{A343064} (Schott, 2021) lists the common sides with repetition.
+
+\subsection*{Status and prior work}
+In the current revision of A106505 (\#21, April~23, 2021) the statement is still marked ``Conjecture'' and Barker's generating function is still ``empirical''. The closest prior result is in OEIS A321499 \cite{A321499} (M.~F. Hasler, 2018), the numbers of the form $(x-y)(x^2-y^2)$ with $x>y>0$. Its comment shows that these are exactly the odd numbers $>2$ and the multiples of $8$ larger than $8$, and D.~A. Corneth recorded there that $a(n+5)=a(n)+8$ for $n>3$ for that sequence; the complement is analysed in A321501 \cite{A321501}. A321499 concerns a different set, and its cross-reference still reads ``Cf.\ A106505 (conjectured to be the sequence without the 3)''; Theorem~\ref{thm:set} proves this identification. The math0 referees found no proof of Stephan's conjecture in the OEIS entries that cite A106505, in Fried's papers on OEIS conjectures \cite{Fr24,Fr26}, in the OEIS Open benchmark \cite{Ad} (built on the Lean formalizations of Tsoukalas et al.\ \cite{APN}), in the formal-conjectures repository \cite{FC}, or by web searches (including Mathematics Stack Exchange and the SeqFan list). We therefore classify the result as \emph{new}, with a caveat: it is elementary. Granting the parametrization above, the set description reduces to the fact that $s^2-r^2$ is odd or divisible by $8$ when $\gcd(r,s)=1$, plus two explicit families, and it may well be known informally; what we did not find recorded is a proof of the statement in the entry.
+
+\subsection*{Method}
+Following the Lean proof, we work with the relation $y^2=x(x+c)$ (Lemma~\ref{lem:metric}) rather than the parametrization: a residue computation modulo $8$ (Lemma~\ref{lem:mod}), two explicit families (Lemma~\ref{lem:families}), and a counting argument (Lemma~\ref{lem:count}).
+
+\section{Statement}\label{sec:statement}
+
+For positive reals $p,q,r$ satisfying the strict triangle inequalities, the angle opposite the side $p$ in the triangle with sides $p,q,r$ is, by the law of cosines,
+\[
+  \ang(p;q,r)=\arccos\frac{q^2+r^2-p^2}{2qr}\in(0,\pi).
+\]
+
+\begin{definition}\label{def:side}
+For $x,y,c\in\N$, write $T(x,y,c)$ if $x<y+c$, $y<x+c$, $c<x+y$ and $\ang(y;x,c)=2\,\ang(x;y,c)$; that is, $x,y,c$ are the sides of a non-degenerate triangle in which the angle opposite $y$ is twice the angle opposite $x$. The side $c$ joins the vertices of these two angles. Let
+\[
+  \Side=\{c\in\N:\ \exists\, x,y\in\N,\ T(x,y,c)\ \text{and}\ \gcd(x,y,c)=1\},
+\]
+and for $n\ge1$ let $a(n)$ be the $n$-th smallest element of $\Side$.
+\end{definition}
+
+Every triangle with two angles, one twice the other, arises in this way (let $x$ and $y$ be the sides opposite the smaller and the larger angle), so $a$ is the sequence A106505. As $\Side$ is infinite (Lemma~\ref{lem:families}), $a(n)$ is defined for all $n\ge1$.
+
+\begin{theorem}[Stephan's conjecture]\label{thm:main}
+For every integer $n>2$, $a(n+5)=a(n)+8$.
+\end{theorem}
+
+\begin{theorem}\label{thm:set}
+$\Side=\{c\in\N:\ c\ \text{odd},\ c\ge5\}\cup\{8m:\ m\in\N,\ m\ge2\}$.
+\end{theorem}
+
+Explicitly, $a(1)=5$, $a(2)=7$, and for $k\ge0$ the five terms $a(5k+3),\dots,a(5k+7)$ are $8k+9$, $8k+11$, $8k+13$, $8k+15$, $8k+16$. The recurrence fails for $n=1,2$: $a(6)=15\ne13$ and $a(7)=16\ne15$.
+
+\begin{remark}\label{rem:gf}
+Theorem~\ref{thm:main} implies Barker's generating function
+\[
+  \sum_{n\ge1}a(n)x^n=\frac{x\,(5+2x+2x^2+2x^3+2x^4-3x^5-x^6-x^7)}{(1-x)(1-x^5)}
+\]
+(the entry writes the denominator as $(x-1)^2(x^4+x^3+x^2+x+1)$): by Theorem~\ref{thm:main}, $(1-x)(1-x^5)\sum a(n)x^n$ is a polynomial of degree at most $8$, and computing it from $a(1),\dots,a(8)$ gives the numerator above. This consequence is not formalized.
+\end{remark}
+
+\subsection*{The Lean statement}
+The statement was formalized by math0 in the file \path{lean/Math0/Statements/OEIS/A106505.lean}, reviewed for fidelity against the OEIS entry, and frozen (SHA-256 \texttt{f1815676\ldots99ac}) before any proof attempt. Its definitions and the statement are, verbatim:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+/-- The angle opposite the side of length `p` in a triangle with side lengths `p, q, r`, by the
+law of cosines: `arccos ((q² + r² - p²) / (2 q r))`. -/
+noncomputable def angleOpp (p q r : ℝ) : ℝ :=
+  Real.arccos ((q ^ 2 + r ^ 2 - p ^ 2) / (2 * q * r))
+
+/-- `x, y, c` are the side lengths of a non-degenerate triangle in which the angle opposite `y`
+is twice the angle opposite `x`. The side `c` is the side common to these two angles. -/
+def IsDoubleAngleTriangle (x y c : ℕ) : Prop :=
+  x < y + c ∧ y < x + c ∧ c < x + y ∧
+    angleOpp (y : ℝ) (x : ℝ) (c : ℝ) = 2 * angleOpp (x : ℝ) (y : ℝ) (c : ℝ)
+
+/-- `c` is the length of the side common to the two angles, one being the double of the other,
+of a primitive integer-sided triangle. -/
+def IsSide (c : ℕ) : Prop :=
+  ∃ x y : ℕ, IsDoubleAngleTriangle x y c ∧ Nat.gcd (Nat.gcd x y) c = 1
+
+instance : DecidablePred IsSide := fun c => decidable_of_iff _ (isSide_iff c).symm
+
+/-- A106505: the `n`-th smallest (offset `1`) length of the side common to the two angles, one
+being the double of the other, of a primitive integer-sided triangle. -/
+noncomputable def a (n : ℕ) : ℕ := Nat.nth IsSide (n - 1)
+
+/-- Conjecture (Stephan, A106505): for `n > 2`, `a(n + 5) = a(n) + 8`. -/
+def statement : Prop := ∀ n : ℕ, 2 < n → a (n + 5) = a n + 8
+\end{lstlisting}
+All declarations are in the namespace \decl{Math0.Statements.A106505}.
+
+\subsection*{How the Lean definitions encode the entry}
+The definitions follow the name of the entry, not its formula $s^2-r^2$. \code{angleOpp p q r} is $\ang(p;q,r)$, the unoriented angle given by the real arccosine. \code{IsDoubleAngleTriangle x y c} is $T(x,y,c)$; the strict triangle inequalities make the triangle non-degenerate and force $x,y,c\ge1$. \code{IsSide c} adds primitivity, $\gcd(\gcd(x,y),c)=1$, and quantifies over all $x,y$, which covers every labelling of the triangle. ``Ordered and uniqued'' with offset $1$ is \code{a n = Nat.nth IsSide (n - 1)}, where \code{Nat.nth p k} is the $k$-th smallest element (counted from $0$) of $\{n : p(n)\}$. Since $\Side$ is infinite, the junk value $0$ that Mathlib assigns to \decl{Nat.nth} beyond the end of a finite set does not arise, and since $n>2$ the truncated subtraction $n-1$ is harmless. The statement is Stephan's conjecture verbatim, with $1$-indexed $n$.
+
+The statement file also proves that the angle condition is equivalent to $y^2=x(x+c)$ (\decl{isDoubleAngleTriangle_iff}, Lemma~\ref{lem:metric} below), and turns membership in $\Side$ into a bounded search (\decl{isSide_iff}, Corollary~\ref{cor:search}), which yields the \decl{DecidablePred} instance shown above. With it, the theorem \decl{a_data} checks that $a(1),\dots,a(67)$ are the $67$ terms listed in the entry: the kernel evaluates \decl{List.filter} over $\{0,\dots,112\}$ (by \texttt{decide +kernel}), and a general lemma, \decl{map_nth_eq_of_filter}, identifies the filtered list with the list of the values \code{Nat.nth IsSide k} for $k<67$. The theorem \decl{example_33} checks the two triangles with common side $33$ quoted in the entry, $(x,y,c)=(16,28,33)$ and $(256,272,33)$.
+
+\section{Proof}\label{sec:proof}
+
+\begin{lemma}[metric relation; \decl{isDoubleAngleTriangle_iff}]\label{lem:metric}
+Let $x,y,c\in\N$ satisfy $x<y+c$, $y<x+c$ and $c<x+y$. Then $\ang(y;x,c)=2\,\ang(x;y,c)$ if and only if $y^2=x(x+c)$.
+\end{lemma}
+
+\begin{proof}
+Write $X,Y,C>0$ for the three lengths as reals, and put
+\[
+  u=\frac{X^2+C^2-Y^2}{2XC},\qquad v=\frac{Y^2+C^2-X^2}{2YC},
+\]
+so that $\ang(y;x,c)=\arccos u$ and $\ang(x;y,c)=\arccos v$. The triangle inequalities give $(X-C)^2<Y^2<(X+C)^2$ and $(Y-C)^2<X^2<(Y+C)^2$, hence $u,v\in[-1,1]$. With $P=(X+C)(Y+C-X)(X+Y-C)>0$, a direct computation gives
+\begin{equation}\label{eq:factor}
+  2XY^2C^2\,(u-2v^2+1)=P\cdot\bigl(X(X+C)-Y^2\bigr).
+\end{equation}
+
+Suppose $\arccos u=2\arccos v$. Taking cosines, and using $\cos\arccos t=t$ for $t\in[-1,1]$ and $\cos2\alpha=2\cos^2\alpha-1$, we get $u=2v^2-1$, so \eqref{eq:factor} gives $Y^2=X(X+C)$.
+
+Conversely, suppose $Y^2=X(X+C)$. Then $u=2v^2-1=\cos(2\arccos v)$ by \eqref{eq:factor}. Moreover $Y^2+C^2-X^2=XC+C^2>0$, so $v\ge0$ and $\arccos v\in[0,\pi/2]$. Hence $t=2\arccos v\in[0,\pi]$, where $\arccos(\cos t)=t$, and $\arccos u=\arccos(\cos t)=2\arccos v$.
+\end{proof}
+
+\begin{corollary}[\decl{isSide_iff}]\label{cor:search}
+If $T(x,y,c)$, then $d=y-x$ satisfies $0<d$, $2d<c$ and $x(c-2d)=d^2$. Consequently $c\in\Side$ if and only if there is $d$ with $0<d$, $2d<c$, $(c-2d)\mid d^2$ such that $x=d^2/(c-2d)$ and $y=x+d$ satisfy $c<x+y$ and $\gcd(x,y,c)=1$.
+\end{corollary}
+
+\begin{proof}
+By Lemma~\ref{lem:metric}, $y^2=x(x+c)>x^2$, so $d=y-x>0$, and expanding $(x+d)^2=x^2+xc$ gives $xc=2xd+d^2$. Since $d^2>0$, $c>2d$, and $x(c-2d)=d^2$. For the converse, the given $x$ and $y=x+d$ satisfy $x<y+c$ and $y<x+c$ (as $d<c$), and $c<x+y$ by assumption, while $y^2=x^2+2xd+d^2=x^2+xc$; so $T(x,y,c)$ by Lemma~\ref{lem:metric}.
+\end{proof}
+
+Corollary~\ref{cor:search} reduces membership $c\in\Side$ to a finite search over $d<c$; this is the decision procedure that the Lean kernel runs in the finite checks below. For instance, $1,3,8\notin\Side$: for $c=1$ there is no $d$; for $c=3$ only $d=1$, $x=1$, $y=2$, and $c<x+y$ fails; for $c=8$ the condition $(8-2d)\mid d^2$ with $d\in\{1,2,3\}$ leaves only $d=2$, $x=1$, $y=3$, and again $c<x+y$ fails.
+
+\begin{lemma}[\decl{residue_check}, \decl{isSide_mod}]\label{lem:mod}
+If $c\in\Side$, then $c$ is odd or $8\mid c$.
+\end{lemma}
+
+\begin{proof}
+Take $x,y$ with $T(x,y,c)$ and $\gcd(x,y,c)=1$, so $y^2=x(x+c)$ by Lemma~\ref{lem:metric}, and suppose that $c$ is even and $c\not\equiv0\pmod 8$. If $x$ were odd, then $x+c$ and hence $y^2$ would be odd, so $x^2\equiv y^2\equiv1\pmod8$, and $y^2=x^2+xc$ would give $xc\equiv0\pmod8$, hence $8\mid c$ since $x$ is odd, a contradiction. So $x$ is even, hence $y^2=x(x+c)$ is even and $y$ is even. Then $2$ divides $x$, $y$ and $c$, contradicting $\gcd(x,y,c)=1$.
+\end{proof}
+
+In Lean, the parity argument is the finite check \decl{residue_check}: for all $a,b,e\in\{0,\dots,7\}$ with $b^2\equiv a(a+e)\pmod 8$, $e$ even and $e\ne0$, both $a$ and $b$ are even. \texttt{decide} evaluates its $8^3=512$ cases in the kernel; it is applied to $(x,y,c)\bmod 8$.
+
+\begin{lemma}[\decl{isSide_odd}, \decl{isSide_eight}]\label{lem:families}
+\leavevmode
+\begin{enumerate}
+\item For $m\ge2$, $T(m^2,\,m(m+1),\,2m+1)$ holds and $\gcd(m^2,m(m+1),2m+1)=1$; so $2m+1\in\Side$.
+\item For $j\ge1$ and $n=2j+1$, $T(n^2,\,n(n+2),\,8j+8)$ holds and $\gcd(n^2,n(n+2),8j+8)=1$; so $8j+8\in\Side$.
+\end{enumerate}
+In particular $\Side$ is infinite (\decl{isSide_infinite}).
+\end{lemma}
+
+\begin{proof}
+We use Lemma~\ref{lem:metric}. For (1), let $x=m^2$, $y=m(m+1)$, $c=2m+1$. Then $y^2=m^2(m^2+2m+1)=x(x+c)$. The inequality $x<y+c$ is clear, $y<x+c$ reads $m^2+m<m^2+2m+1$, and $c<x+y$ reads $2m+1<2m^2+m$, that is $m(2m-1)>1$, which holds for $m\ge2$. Since $2m+1=1+2m$, $\gcd(m,2m+1)=1$, so $\gcd(m^2,2m+1)=1$, and $\gcd(x,y,c)$ divides $\gcd(x,c)=1$.
+
+For (2), let $x=n^2$, $y=n(n+2)$ and $c=8j+8=4(n+1)$. Then $y^2=n^2(n^2+4n+4)=x(x+c)$. The inequality $x<y+c$ is clear, $y<x+c$ reads $n^2+2n<n^2+4n+4$, and $c<x+y$ reads $4n+4<2n^2+2n$, that is $(n-2)(n+1)>0$, which holds as $n\ge3$. Since $c=4+4n$, $\gcd(n,c)=\gcd(n,4)=1$ because $n$ is odd; so $\gcd(n^2,c)=1$ and $\gcd(x,y,c)=1$.
+\end{proof}
+
+\begin{proposition}[\decl{isSide_iff_large}, \decl{isSide_add_eight}]\label{prop:large}
+For $c\ge9$, $c\in\Side$ if and only if $c$ is odd or $8\mid c$. Consequently $c+8\in\Side\iff c\in\Side$ for all $c\ge9$.
+\end{proposition}
+
+\begin{proof}
+Necessity is Lemma~\ref{lem:mod}. An odd $c\ge9$ is $2m+1$ with $m\ge4$, and a multiple of $8$ with $c\ge9$ is $8j+8$ with $j\ge1$; Lemma~\ref{lem:families} applies. The second statement holds because ``odd or divisible by $8$'' depends only on $c\bmod8$, and both $c$ and $c+8$ are at least $9$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:set}]
+For $c\ge9$ this is Proposition~\ref{prop:large}. For $c\le8$, Lemma~\ref{lem:mod} leaves the candidates $0,1,3,5,7,8$; $0\notin\Side$ by the triangle inequalities, $1,3,8\notin\Side$ by the computation after Corollary~\ref{cor:search}, and $5,7\in\Side$ by Lemma~\ref{lem:families}(1) with $m=2,3$, realized by the triangles $(x,y,c)=(4,6,5)$ and $(9,12,7)$.
+\end{proof}
+
+For the counting argument, let $\cnt(t)=\#\{c<t:\ c\in\Side\}$ (Mathlib's \code{Nat.count IsSide t}), and let $s_k$ be the $k$-th smallest element of $\Side$ counted from $0$ (\code{Nat.nth IsSide k}), so that $a(n)=s_{n-1}$.
+
+\begin{lemma}[\decl{count_add_eight}]\label{lem:count}
+For every $t\ge9$, $\cnt(t+8)=\cnt(t)+5$.
+\end{lemma}
+
+\begin{proof}
+Induction on $t\ge9$. For $t=9$, $\cnt(9)=2$ (the elements $5,7$) and $\cnt(17)=7$ (the elements $5,7,9,11,13,15,16$); the Lean proof establishes $\cnt(17)=\cnt(9)+5$ by kernel evaluation (\texttt{decide +kernel}) of the decision procedure of Corollary~\ref{cor:search} for $c<17$. For the step, $\cnt(t+1)=\cnt(t)+[t\in\Side]$, so by the induction hypothesis and Proposition~\ref{prop:large},
+\[
+  \cnt(t+9)=\cnt(t+8)+[t+8\in\Side]=\cnt(t)+5+[t\in\Side]=\cnt(t+1)+5.\qedhere
+\]
+\end{proof}
+
+\begin{lemma}[\decl{nth_two}]\label{lem:nth}
+Since $\Side$ is infinite, $k\mapsto s_k$ is strictly increasing, $s_k\in\Side$ and $\cnt(s_k)=k$ for every $k$, and $s_{\cnt(c)}=c$ for every $c\in\Side$. Moreover $s_2=9$.
+\end{lemma}
+
+\begin{proof}
+The first facts are Mathlib's \decl{Nat.nth_le_nth}, \decl{Nat.nth_mem_of_infinite}, \decl{Nat.count_nth_of_infinite} and \decl{Nat.nth_count}. As $9\in\Side$ and $\cnt(9)=2$ (both by \texttt{decide +kernel}), $s_2=s_{\cnt(9)}=9$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $n\ge3$ and $m=n-1\ge2$, and put $c=a(n)=s_m$. By Lemma~\ref{lem:nth}, $c\in\Side$, $\cnt(c)=m$, and $c\ge s_2=9$. By Proposition~\ref{prop:large}, $c+8\in\Side$, and by Lemma~\ref{lem:count}, $\cnt(c+8)=\cnt(c)+5=m+5$. Hence, by Lemma~\ref{lem:nth},
+\[
+  a(n+5)=s_{m+5}=s_{\cnt(c+8)}=c+8=a(n)+8.\qedhere
+\]
+\end{proof}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A106505.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file (Section~\ref{sec:statement}). The main declaration is \code{theorem result : statement} in the namespace \decl{Math0.Frontier.A106505}; the file ends with the command
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A106505.result Math0.Statements.A106505.statement
+\end{lstlisting}
+The lemmas of Section~\ref{sec:proof} correspond to the declarations named there: \decl{isDoubleAngleTriangle_iff} and \decl{isSide_iff} are in the statement file, and \decl{residue_check}, \decl{isSide_mod}, \decl{isSide_odd}, \decl{isSide_eight}, \decl{isSide_iff_large}, \decl{isSide_add_eight}, \decl{isSide_infinite}, \decl{count_add_eight} and \decl{nth_two} are private lemmas of the proof file. Theorem~\ref{thm:set} is not stated as a single Lean declaration: its part $c\ge9$ is \decl{isSide_iff_large}, and its part $c<9$ is contained in the kernel-checked \decl{a_data} together with $\cnt(9)=2$.
+
+The kernel computations (\decl{residue_check} by \texttt{decide}; $9\in\Side$, $\cnt(9)=2$ and $\cnt(17)=\cnt(9)+5$ by \texttt{decide +kernel}, which runs the search of Corollary~\ref{cor:search}) add no axioms. Neither file uses \texttt{native\_decide}, \texttt{sorry} or \texttt{set\_option}.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles} (in \path{lean/Math0/Audit.lean}) fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (so no \decl{sorryAx}, no \texttt{native\_decide}, and no custom axioms); and (3) the type of \decl{result} is syntactically the statement or its negation, up to metadata, with no unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A106505.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A106505.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A106505.result' proves 'Math0.Statements.A106505.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root; it builds all math0 results with \texttt{lake build}, re-running every audit command, and checks that the pinned dependencies are unmodified. The single file is checked by \texttt{lake env lean Math0/Frontier/OEIS/A106505.lean} in \path{lean/}.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{Ad}
+T.~Adamczewski, \emph{OEIS Open: How many conjectures can language models turn into theorems?}, arXiv:2608.11941, 2026.
+
+\bibitem{De}
+M.~N. Deshpande, \emph{Some new triples of integers and associated triangles}, Math.\ Gaz.\ \textbf{86} (2002), 464--466.
+
+\bibitem{FC}
+M.~Firsching et al., \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026; \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Fr24}
+S.~Fried, \emph{Proofs of some conjectures from the OEIS}, arXiv:2410.07237, 2024.
+
+\bibitem{Fr26}
+S.~Fried, \emph{Further proofs of conjectures from the OEIS}, arXiv:2607.24832, 2026.
+
+\bibitem{Lu}
+R.~S. Luthar, \emph{Integer-sided triangles with one angle twice another}, College Math.\ J.\ \textbf{15} (1984), 55--56.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput.\ Sci.\ \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{APN}
+G.~Tsoukalas et al., \emph{Advancing Mathematics Research with AI-Driven Formal Proof Search}, arXiv:2605.22763, 2026.
+
+\bibitem{Ze}
+K.~Zelator, \emph{Integral triangles with one angle twice another, and with the bisector (of the double angle) also of integral length}, arXiv:1208.0497, 2012.
+
+\bibitem{A106505}
+The OEIS Foundation Inc., \url{https://oeis.org/A106505}, entry by L.~Beedassy (2005); conjecture by R.~Stephan (Nov.~16, 2010); revision \#21, Apr.~23, 2021.
+
+\bibitem{A321499}
+The OEIS Foundation Inc., \url{https://oeis.org/A321499}, entry by M.~F. Hasler (Nov.~22, 2018); revision \#24, Feb.~26, 2025.
+
+\bibitem{A321501}
+The OEIS Foundation Inc., \url{https://oeis.org/A321501}, entry by M.~F. Hasler (Nov.~22, 2018).
+
+\bibitem{A343063}
+The OEIS Foundation Inc., \url{https://oeis.org/A343063}, entry by B.~Schott (Apr.~4, 2021).
+
+\bibitem{A343064}
+The OEIS Foundation Inc., \url{https://oeis.org/A343064}, entry by B.~Schott (Apr.~10, 2021).
+
+\end{thebibliography}
+}
+\end{document}

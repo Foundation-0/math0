@@ -1,0 +1,398 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw,at,push_cast,exact_mod_cast,set,linear_combination},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {∀}{{$\forall$}}1
+    {∃}{{$\exists$}}1 {→}{{$\to$}}1 {≤}{{$\le$}}1 {∧}{{$\wedge$}}1 {×}{{$\times$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {₀}{{$_0$}}1 {₁}{{$_1$}}1 {₂}{{$_2$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+
+\title[Israel's conjecture for OEIS A262957]{Israel's sequences for the alternating continued fraction $1-1/(2+1/(3-1/(4+\cdots)))$ are coprime integers (OEIS A262957)}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 18, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $\xi_n=1-1/(2+1/(3-\cdots(n+1)+(-1)^{n+1}/1))$ and let $a(n)$ be the numerator of $\xi_n$ in lowest terms (OEIS A262957). In 2015 Robert Israel gave a three-term recurrence with rational coefficients for two sequences $b(n),c(n)$ and conjectured that $b(n)$ and $c(n)$ are coprime for all $n$, so that $a(n)=b(n)$. We prove that for every $n\ge1$ the numbers $b(n)$ and $c(n)$ are coprime integers and $a(n)=b(n)$; along the way we show that $b(n),c(n)>0$ and $\xi_n=b(n)/c(n)$. The proof identifies $b(n)$ and $c(n)$ with $P_n\pm P_{n-1}$ and $Q_n\pm Q_{n-1}$, where $P_k/Q_k$ are the convergents, and uses the determinant identity $P_kQ_{k-1}-P_{k-1}Q_k=\pm1$. To our knowledge the result is new (the entry still lists it as a conjecture), although it is a routine consequence of classical continued-fraction theory once this identification is made. The theorem is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, whose definitions are checked by the kernel against the listed terms; this statement is not part of the formal-conjectures repository.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For an integer $k\ge1$ and a rational $t\ne0$ put $f_k(t)=k+(-1)^k/t$, and for $n\ge0$ let
+\[
+  \xi_n=f_1\bigl(f_2(\cdots f_{n+1}(1)\cdots)\bigr)
+  =1-\cfrac{1}{2+\cfrac{1}{3-\cfrac{1}{\ddots\;(n+1)+\cfrac{(-1)^{n+1}}{1}}}}\,.
+\]
+Thus $\xi_1=2/3$, $\xi_2=3/5$, $\xi_3=19/33$, $\xi_4=64/111$.
+The OEIS entry A262957 \cite{A262957}, contributed by Mohamed Sabba in November 2015, lists the numerators $a(n)$ of $\xi_n$ in lowest terms, with offset~$1$; the denominators form A263295 \cite{A263295}, and the analogous fractions beginning with $1+\cdots$ form A244279 and A244280 \cite{A244279,A244280}.
+The entry also records that $\xi_n$ converges to $0.57663338973\ldots$ (A346590 \cite{A346590}), a number with simple continued fraction $[0;1,1,2,1,3,4,1,5,6,1,7,8,\dots]$. This follows from Peter Bala's note \cite{Bala}, linked from the entry, which shows that for every integer sequence $(a_n)$ with $a_n>1$ for $n\ge2$ the infinite alternating continued fraction $a_1-1/(a_2+1/(a_3-\cdots))$ converges, and gives its simple continued fraction explicitly in terms of the $a_n$.
+
+On December~22, 2015, Robert Israel added to the entry a three-term recurrence with rational coefficients for sequences $b(n),c(n)$ such that $a(n)$ is the numerator of $b(n)/c(n)$, and conjectured that $b(n)$ and $c(n)$ are coprime for all $n$, ``so that $a(n)=b(n)$''; he verified this for $n\le10000$ (the comment is quoted in Section~\ref{sec:statement}).
+We prove the conjecture, including the integrality of $b(n)$ and $c(n)$ (Theorem~\ref{thm:main}); along the way we prove the identity $\xi_n=b(n)/c(n)$, which underlies Israel's assertion, stated in the entry without proof, that $a(n)$ is the numerator of $b(n)/c(n)$.
+
+\subsection*{Method}
+Let $P_k/Q_k$ be the convergents of $f_1(f_2(f_3(\cdots)))$, so that $P_k=(k+1)P_{k-1}+(-1)^kP_{k-2}$, and likewise for $Q_k$.
+Since $\xi_n$ is this continued fraction cut after the partial denominator $n+1$ with tail $(-1)^{n+1}/1$, we have $\xi_n=x(n)/y(n)$ with $x(n)=P_n+(-1)^{n+1}P_{n-1}$ and $y(n)=Q_n+(-1)^{n+1}Q_{n-1}$ (Lemma~\ref{lem:fold}).
+A computation split by the parity of $n$ shows that $x$ and $y$ satisfy Israel's recurrence (Lemma~\ref{lem:israel}); the initial values are $2,3$ and $3,5$, so $b=x$ and $c=y$.
+Finally $x(n)Q_{n-1}-P_{n-1}y(n)=P_nQ_{n-1}-P_{n-1}Q_n=\pm1$, so $x(n)$ and $y(n)$ are coprime, and they are positive.
+
+\subsection*{Status and prior work}
+The statement is still marked ``Conjecture'' in A262957 (revision \#80, March~4, 2025).
+Bala's note \cite{Bala} concerns only the limit of $\xi_n$; it does not mention Israel's recurrence or the coprimality of $b(n)$ and $c(n)$, and the cross-referenced entries \cite{A263295,A346590,A244279,A244280} contain no proof.
+A262957 is not among the conjectures of the OEIS Open benchmark \cite{Ad}, nor in the GitHub repositories \texttt{epoch-research/LeanOpenProblems} and \texttt{LeanOpenProblems-results}, nor in formal-conjectures \cite{FC}; searches of arXiv, MathOverflow, Mathematics Stack Exchange and the SeqFan mailing list by the math0 referees found no proof or counterexample.
+We therefore classify the result as \emph{new}, with the caveat that the argument is a routine application of the classical theory of convergents (see e.g.\ \cite{LW}); the one step that needs an idea is to recognize Israel's recurrence as the recurrence satisfied by $P_n\pm P_{n-1}$.
+The conjecture does not follow from the recurrence directly: the recurrence divides by $n\mp1$, so integrality is not evident, and the cross-determinants $b(n+1)c(n)-b(n)c(n+1)$ have absolute value $n$ or $n+2$, which, granting integrality, only shows that $\gcd(b(n),c(n))$ divides $3$ (Remark~\ref{rem:D}).
+
+\section{Statement}\label{sec:statement}
+
+\begin{definition}\label{def:main}
+For $n\ge0$ let $\xi_n\in\Q$ be as above, and for $n\ge1$ let $a(n)$ be the numerator of $\xi_n$ in lowest terms.
+(For $k\ge2$ and $t\ge1$ we have $f_k(t)\ge k-1\ge1$, so every inner value in $\xi_n$ is at least $1$ and no division by zero occurs; for $n\ge1$, $\xi_n=1-1/t$ with $t=f_2(\cdots)>2$, so $\xi_n>0$.)
+Define $b,c\colon\{1,2,\dots\}\to\Q$ by $b(1)=2$, $b(2)=3$, $c(1)=3$, $c(2)=5$ and, for $n\ge2$ and $w\in\{b,c\}$,
+\begin{equation}\label{eq:israel}
+  w(n+1)=\frac{\bigl((-1)^n(n-1)+n(n+2)\bigr)\,w(n)-\bigl(1+(-1)^n(n+1)\bigr)\,w(n-1)}{n-(-1)^n}.
+\end{equation}
+The divisor $n-(-1)^n\in\{n-1,n+1\}$ is nonzero for $n\ge2$.
+\end{definition}
+
+The COMMENTS section of A262957 \cite{A262957} contains, verbatim:
+\begin{lstlisting}[keywords={},frame=none,basicstyle=\ttfamily\footnotesize]
+From _Robert Israel_, Dec 22 2015: (Start)
+a(n) is the numerator of b(n)/c(n) where
+b(1) = 2, b(2) = 3, c(1) = 3, c(2) = 5,
+b(n+1) = (((-1)^n*(n-1)+n*(n+2))*b(n) - (1+(-1)^n*(n+1))*b(n-1))/(n-(-1)^n),
+c(n+1) = (((-1)^n*(n-1)+n*(n+2))*c(n) - (1+(-1)^n*(n+1))*c(n-1))/(n-(-1)^n).
+Conjecture: b(n) and c(n) are coprime for all n, so that a(n) = b(n).
+I have verified this for n <= 10000. (End)
+\end{lstlisting}
+
+\begin{theorem}\label{thm:main}
+For every $n\ge1$, the numbers $b(n)$ and $c(n)$ are integers, $\gcd(b(n),c(n))=1$, and $a(n)=b(n)$.
+\end{theorem}
+
+Theorem~\ref{thm:main} is exactly the Lean statement below. The proof shows moreover that $b(n)>0$, $c(n)>0$ and $\xi_n=b(n)/c(n)$ for $n\ge1$ (Corollaries~\ref{cor:cf} and~\ref{cor:bc} and Lemma~\ref{lem:pos}); these facts are proved in the Lean file as auxiliary lemmas but are not part of the formal statement.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A262957.lean}, reviewed for fidelity and frozen (SHA-256 \texttt{a21c48e2\dots0895207}) before any proof attempt. Its declarations are, verbatim with the docstrings omitted:
+\begin{lstlisting}
+import Mathlib
+namespace Math0.Statements.A262957
+def cf (n : ℕ) : ℚ :=
+  (List.range' 1 (n + 1)).foldr (fun (k : ℕ) (t : ℚ) => (k : ℚ) + (-1) ^ k / t) 1
+def a (n : ℕ) : ℕ := (cf n).num.natAbs
+theorem a_data : (List.range 22).map (fun i => a (i + 1)) =
+    [2, 3, 19, 64, 538, 2833, 29169, 210308, 2572158, 23595915, 334778571, 3732092084,
+      60305234822, 791741083537, 14359827157009, 217037153818264, 4366918714540522,
+      74685204276602819, 1651116684587556019, 31524723785455714840, 759659139498065625218,
+      16017463672140861567617] := by
+  decide +kernel
+def step (m : ℕ) (u v : ℚ) : ℚ :=
+  (((-1) ^ m * ((m : ℚ) - 1) + (m : ℚ) * ((m : ℚ) + 2)) * v
+      - (1 + (-1) ^ m * ((m : ℚ) + 1)) * u) / ((m : ℚ) - (-1) ^ m)
+def israelPair (x₁ x₂ : ℚ) : ℕ → ℚ × ℚ
+  | 0 => (x₁, x₂)
+  | n + 1 =>
+    let p := israelPair x₁ x₂ n
+    (p.2, step (n + 2) p.1 p.2)
+def b (n : ℕ) : ℚ := (israelPair 2 3 (n - 1)).1
+def c (n : ℕ) : ℚ := (israelPair 3 5 (n - 1)).1
+theorem bc_data : (List.range 6).map (fun i => (b (i + 1), c (i + 1))) =
+    [(2, 3), (3, 5), (19, 33), (64, 111), (538, 933), (2833, 4913)] := by
+  decide +kernel
+def statement : Prop :=
+  ∀ n : ℕ, 1 ≤ n →
+    ∃ p q : ℤ, b n = (p : ℚ) ∧ c n = (q : ℚ) ∧ Int.gcd p q = 1 ∧
+      ((a n : ℕ) : ℚ) = b n
+end Math0.Statements.A262957
+\end{lstlisting}
+
+\emph{Encoding.}
+\texttt{List.range' 1 (n + 1)} is $[1,2,\dots,n+1]$, so \texttt{cf n} is the right fold $f_1(f_2(\cdots f_{n+1}(1)\cdots))=\xi_n$, computed exactly in $\Q$; as every inner value is at least $1$, Lean's convention $x/0=0$ never intervenes.
+\decl{Rat.num} is the numerator in lowest terms (with positive denominator), so \texttt{a n} $=|\mathrm{num}(\xi_n)|=a(n)$; the absolute value mirrors the entry's PARI program, which returns \texttt{denominator(1/t)}.
+\texttt{step m u v} is the right-hand side of \eqref{eq:israel} with $n=m$, $w(n-1)=u$, $w(n)=v$, and by induction \texttt{israelPair} $x_1$ $x_2$ \texttt{k} is $(w(k+1),w(k+2))$ for the sequence with $w(1)=x_1$, $w(2)=x_2$ and \eqref{eq:israel}, the step from $k$ to $k+1$ using \eqref{eq:israel} at $n=k+2\ge2$. Hence \texttt{b n}, \texttt{c n} are $b(n)$, $c(n)$ for $n\ge1$ (the values at $n=0$ are unused).
+The data lemmas are proved by evaluation in the kernel (\texttt{decide +kernel}, which, unlike \texttt{native\_decide}, does not trust compiled code): \decl{a_data} reproduces all $22$ terms $a(1),\dots,a(22)$ listed in A262957, and \decl{bc_data} gives $(b(n),c(n))$ for $n\le6$, matching the initial values, the examples $19/33$ and $64/111$, and the first terms of A263295.
+
+\emph{Reading of the conjecture.}
+Since \eqref{eq:israel} divides, $b(n)$ and $c(n)$ are a priori rationals; ``coprime'' presupposes that they are integers, and \decl{statement} asserts this (the integers $p,q$) together with $\gcd(p,q)=1$. It keeps the stated consequence ``so that $a(n)=b(n)$'' as a conjunct, cast to $\Q$; this depends on Israel's unproved assertion that $a(n)$ is the numerator of $b(n)/c(n)$, which our proof establishes (Corollaries~\ref{cor:cf} and~\ref{cor:bc}). The range $n\ge1$ is the index range of $b$ and $c$.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows \path{lean/Math0/Frontier/OEIS/A262957.lean}; each step names the corresponding Lean declaration.
+
+\begin{definition}[\decl{seq}, \decl{z}]\label{def:seq}
+For $r_0,r_1\in\Z$ let $r\colon\N\to\Z$ be given by $r(0)=r_0$, $r(1)=r_1$ and
+\begin{equation}\label{eq:rec}
+  r(k+2)=(k+2)\,r(k+1)+(-1)^{k+1}\,r(k)\qquad(k\ge0),
+\end{equation}
+and put $z_r(n)=r(n+1)+(-1)^{n+1}r(n)$. Let $p$ and $q$ be the sequences with $(r_0,r_1)=(1,1)$ and $(0,1)$, and put $x=z_p$, $y=z_q$.
+\end{definition}
+
+Thus $p=1,1,1,4,15,79,459,\dots$, $q=0,1,2,7,26,137,796,\dots$, $x(1),x(2),\ldots=2,3,19,64,\dots$ and $y(1),y(2),\ldots=3,5,33,111,\dots$. In the notation of the introduction $p(k)=P_{k-1}$ and $q(k)=Q_{k-1}$, with the usual initial values $P_{-1}=P_0=1$, $Q_{-1}=0$, $Q_0=1$ \cite{LW}; we do not use this interpretation, since Lemma~\ref{lem:fold} proves what is needed.
+
+\begin{lemma}[\decl{fold_eq}]\label{lem:fold}
+For every $k\ge0$ and every $t\in\Q$ with $t\ge1$,
+\begin{equation}\label{eq:fold}
+  f_1\bigl(f_2(\cdots f_{k+1}(t)\cdots)\bigr)
+  =\frac{p(k+1)\,t+(-1)^{k+1}p(k)}{q(k+1)\,t+(-1)^{k+1}q(k)} .
+\end{equation}
+\end{lemma}
+
+As in Lean, $u/0$ is read as $0$; the only property of division used is $(N/t)/(D/t)=N/D$ for $t\neq0$, which also holds when $D=0$. The left-hand side involves no division by zero, since every argument of an $f_i$ is at least $1$.
+
+\begin{proof}
+Induction on $k$, for all $t\ge1$ simultaneously. Write $F_k(t)$ for the left-hand side and $\varepsilon_k=(-1)^{k}$.
+For $k=0$, $F_0(t)=1-1/t=(t-1)/t$, which is the right-hand side $(1\cdot t-1)/(1\cdot t-0)$.
+Let $k\ge0$ and $t\ge1$. Since $[1,\dots,k+2]$ is $[1,\dots,k+1]$ followed by $k+2$ (in Lean, \decl{List.range'_concat} and \decl{List.foldr_append}), $F_{k+1}(t)=F_k(t')$ with $t'=f_{k+2}(t)=k+2+\varepsilon_{k+2}/t$.
+As $0<1/t\le1$, $t'\ge k+1\ge1$, so the induction hypothesis gives $F_{k+1}(t)=N'/D'$ with $N'=p(k+1)t'+\varepsilon_{k+1}p(k)$ and $D'=q(k+1)t'+\varepsilon_{k+1}q(k)$. By \eqref{eq:rec},
+\[
+  t\,N'=\bigl((k+2)p(k+1)+\varepsilon_{k+1}p(k)\bigr)t+\varepsilon_{k+2}\,p(k+1)
+  =p(k+2)\,t+\varepsilon_{k+2}\,p(k+1)=:N,
+\]
+and likewise $t\,D'=q(k+2)t+\varepsilon_{k+2}q(k+1)=:D$. Hence $F_{k+1}(t)=(N/t)/(D/t)=N/D$, which is \eqref{eq:fold} for $k+1$.
+\end{proof}
+
+\begin{corollary}[\decl{cf_eq}]\label{cor:cf}
+For every $n\ge0$, $\xi_n=x(n)/y(n)$.
+\end{corollary}
+
+\begin{proof}
+Take $k=n$ and $t=1$ in Lemma~\ref{lem:fold}.
+\end{proof}
+
+\begin{lemma}[\decl{step_z}]\label{lem:israel}
+Let $r$ satisfy \eqref{eq:rec} and $z=z_r$. For every $m\ge0$, $z$ satisfies \eqref{eq:israel} at $n=m+2$:
+\[
+  z(m+3)=\frac{\bigl((-1)^{m}(m+1)+(m+2)(m+4)\bigr)\,z(m+2)-\bigl(1+(-1)^{m}(m+3)\bigr)\,z(m+1)}{m+2-(-1)^{m}} .
+\]
+\end{lemma}
+
+\begin{proof}
+Put $u=r(m+1)$, $v=r(m+2)$ and $s=(-1)^m$, so $s^2=1$. By \eqref{eq:rec}, $r(m+3)=(m+3)v+su$ and $r(m+4)=(m+4)\,r(m+3)-sv$, hence
+\[
+\begin{gathered}
+  z(m+1)=v+su,\qquad
+  z(m+2)=(m+3-s)\,v+su,\\
+  z(m+3)=\bigl((m+4+s)(m+3)-s\bigr)v+\bigl(1+(m+4)s\bigr)u.
+\end{gathered}
+\]
+The divisor $m+2-s\in\{m+1,m+3\}$ is nonzero, so the claim is equivalent to
+\[
+  \bigl(s(m+1)+(m+2)(m+4)\bigr)\,z(m+2)-\bigl(1+s(m+3)\bigr)\,z(m+1)=(m+2-s)\,z(m+3).
+\]
+If $s=1$, both sides equal $(m+1)(m+5)\,u+(m^3+9m^2+22m+14)\,v$: the left is $(m^2+7m+9)\bigl(u+(m+2)v\bigr)-(m+4)(u+v)$ and the right is $(m+1)\bigl((m+5)u+(m^2+8m+14)v\bigr)$.
+If $s=-1$, both sides equal $-(m+3)^2u+(m^3+9m^2+28m+30)\,v$: the left is $(m^2+5m+7)\bigl((m+4)v-u\bigr)+(m+2)(v-u)$ and the right is $(m+3)\bigl(-(m+3)u+(m^2+6m+10)v\bigr)$.
+\end{proof}
+
+In Lean, after rewriting $r(m+3)$ and $r(m+4)$ by \eqref{eq:rec}, the proof splits on $(-1)^m=\pm1$ (\decl{neg_one_pow_eq_or}), clears the divisor (\decl{div_eq_iff}) and closes each case with \decl{ring}.
+
+\begin{corollary}[\decl{israelPair_z}]\label{cor:bc}
+For every $n\ge1$, $b(n)=x(n)$ and $c(n)=y(n)$; in particular $b(n),c(n)\in\Z$.
+\end{corollary}
+
+\begin{proof}
+We have $x(1)=p(2)+p(1)=2$, $x(2)=p(3)-p(2)=3$, $y(1)=q(2)+q(1)=3$ and $y(2)=q(3)-q(2)=5$, the initial values of $b$ and $c$.
+For $r$ satisfying \eqref{eq:rec}, induction on $k$ with Lemma~\ref{lem:israel} at $m=k$ shows that \decl{israelPair} started from $(z_r(1),z_r(2))$ equals $(z_r(k+1),z_r(k+2))$ at step $k$. Taking $r=p,q$ and $k=n-1$ gives the claim.
+\end{proof}
+
+\begin{lemma}[\decl{det_eq}]\label{lem:det}
+For every $k\ge0$, $d(k):=p(k+1)q(k)-p(k)q(k+1)\in\{1,-1\}$.
+\end{lemma}
+
+\begin{proof}
+$d(0)=1\cdot0-1\cdot1=-1$, and by \eqref{eq:rec}, with $\varepsilon=(-1)^{k+1}$,
+\[
+  d(k+1)=\bigl((k+2)p(k+1)+\varepsilon p(k)\bigr)q(k+1)-p(k+1)\bigl((k+2)q(k+1)+\varepsilon q(k)\bigr)
+  =-\varepsilon\,d(k). \qedhere
+\]
+\end{proof}
+
+\begin{corollary}\label{cor:coprime}
+For every $n\ge0$, $\gcd(x(n),y(n))=1$.
+\end{corollary}
+
+\begin{proof}
+The terms $\pm p(n)q(n)$ cancel in $x(n)q(n)-p(n)y(n)$, which therefore equals $p(n+1)q(n)-p(n)q(n+1)=d(n)$.
+With $d=d(n)$ we have $d^2=1$ by Lemma~\ref{lem:det}, so $\bigl(d\,q(n)\bigr)x(n)+\bigl(-d\,p(n)\bigr)y(n)=1$. In Lean these coefficients witness \texttt{IsCoprime (z 1 1 n) (z 0 1 n)} (closed by \decl{linear_combination}), which \decl{Int.isCoprime_iff_gcd_eq_one} turns into $\gcd=1$.
+\end{proof}
+
+\begin{lemma}[\decl{seq_mono}]\label{lem:mono}
+If $0\le r_0\le r_1$, then $0\le r(k)\le r(k+1)$ for every $k\ge0$.
+\end{lemma}
+
+\begin{proof}
+Induction on $k$. If $0\le r(k)\le r(k+1)$, then $r(k+1)\ge0$ and $(-1)^{k+1}r(k)\ge-r(k)\ge-r(k+1)$, so by \eqref{eq:rec} $r(k+2)\ge(k+1)r(k+1)\ge r(k+1)$.
+\end{proof}
+
+\begin{lemma}[\decl{z_pos}]\label{lem:pos}
+If $0\le r_0\le r_1$ and $r_1\ge1$, then $z_r(n)>0$ for every $n\ge1$. In particular $x(n),y(n)>0$ for $n\ge1$.
+\end{lemma}
+
+\begin{proof}
+Write $n=j+1$ and $s=(-1)^j$. By Lemma~\ref{lem:mono}, $r$ is nondecreasing, so $r(j+1)\ge r_1\ge1$ and $0\le r(j)\le r(j+1)$. By \eqref{eq:rec}, $z_r(j+1)=r(j+2)+s\,r(j+1)=(j+2+s)\,r(j+1)-s\,r(j)$.
+If $s=1$ this is $(j+3)r(j+1)-r(j)\ge(j+2)r(j+1)>0$; if $s=-1$ it is $(j+1)r(j+1)+r(j)>0$. The pairs $(r_0,r_1)=(1,1)$ and $(0,1)$ satisfy the hypotheses.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main} (\decl{result})]
+Let $n\ge1$. By Corollary~\ref{cor:bc}, $b(n)=x(n)$ and $c(n)=y(n)$ are integers; they are positive by Lemma~\ref{lem:pos}, coprime by Corollary~\ref{cor:coprime}, and $\xi_n=x(n)/y(n)$ by Corollary~\ref{cor:cf}.
+A fraction $x/y$ with $y>0$ and $\gcd(x,y)=1$ has numerator $x$ in lowest terms (\decl{Rat.num_div_eq_of_coprime}), so $a(n)=|x(n)|=x(n)=b(n)$. In the Lean statement take $p=x(n)$, $q=y(n)$.
+\end{proof}
+
+\begin{remark}[not formalized]\label{rem:D}
+Applied to \eqref{eq:israel} directly, the determinant argument does not suffice. Let $D(n)=b(n+1)c(n)-b(n)c(n+1)$. Substituting \eqref{eq:israel}, the terms in $b(n)c(n)$ cancel and $D(n)=\frac{1+(-1)^n(n+1)}{n-(-1)^n}D(n-1)$ for $n\ge2$, with $D(1)=-1$; the factor is $(n+2)/(n-1)$ for even $n$ and $-n/(n+1)$ for odd $n$, so $|D(n)|=n$ for odd $n$ and $n+2$ for even $n$ ($D=-1,-4,3,6,-5,-8,\dots$). Granting integrality, a common divisor of $b(n)$ and $c(n)$ divides $D(n-1)$ and $D(n)$; for odd $n\ge3$ these are $\pm(n+1)$ and $\pm n$, but for even $n$ they are $\pm(n-1)$ and $\pm(n+2)$, so a common factor $3$ is not excluded when $n\equiv4\pmod6$ (e.g.\ $n=4$: $D(3)=3$, $D(4)=6$, and $3\mid c(4)=111$).
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+The proof is the file \path{lean/Math0/Frontier/OEIS/A262957.lean} of the math0 repository (\url{https://github.com/Foundation-0/math0}). It imports the frozen statement file of Section~\ref{sec:statement} and the audit commands \path{lean/Math0/Audit.lean}. The main declaration is
+\begin{lstlisting}
+theorem result : statement
+\end{lstlisting}
+in namespace \decl{Math0.Frontier.A262957}, with type \decl{Math0.Statements.A262957.statement}. All auxiliary declarations are \texttt{private}: \decl{seq}, \decl{seq_succ_succ}, \decl{z}, \decl{step_z}, \decl{israelPair_z}, \decl{seq_mono}, \decl{z_pos}, \decl{det_eq}, \decl{fold_eq} and \decl{cf_eq}, as in Section~\ref{sec:proof}; $p,q,x,y$ are \texttt{seq 1 1}, \texttt{seq 0 1}, \texttt{z 1 1}, \texttt{z 0 1}. The proof treats all $n$ at once; the only evaluations are of $z_p(1),z_p(2),z_q(1),z_q(2)$ (by \decl{norm_num}) and of $d(0)=-1$ (by \decl{decide}). The data lemmas \decl{a_data} and \decl{bc_data} are not used. The file contains no \texttt{sorry}, \texttt{native\_decide}, \texttt{set\_option} or \texttt{axiom}.
+
+\subsection*{Audit}
+The file ends with
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A262957.result Math0.Statements.A262957.statement
+\end{lstlisting}
+This command, used for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a definition of type \texttt{Prop} without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, the \decl{Lean.ofReduceBool} and \decl{Lean.trustCompiler} axioms behind \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically the constant \decl{statement} or its negation, up to metadata annotations, with no unfolding. Running \texttt{lake env lean Math0/Frontier/OEIS/A262957.lean} in \path{lean/} prints
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize,keywords={}]
+math0 audit: 'Math0.Statements.A262957.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A262957.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A262957.result' proves 'Math0.Statements.A262957.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/lean-toolchain} and \path{lean/lake-manifest.json}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root. It fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (which re-runs every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{Ad}
+T.~Adamczewski, \emph{OEIS Open: How many conjectures can language models turn into theorems?}, arXiv:2608.11941, 2026.
+
+\bibitem{Bala}
+P.~Bala, \emph{A note on A262957 and A263295}, December 24, 2015, linked from \cite{A262957}: \url{https://oeis.org/A262957/a262957.pdf}.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{LW}
+L.~Lorentzen and H.~Waadeland, \emph{Continued Fractions with Applications}, Studies in Computational Mathematics~3, North-Holland, Amsterdam, 1992.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A244279}
+The OEIS Foundation Inc., Sequence A244279, The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A244279}.
+
+\bibitem{A244280}
+The OEIS Foundation Inc., Sequence A244280, The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A244280}.
+
+\bibitem{A262957}
+The OEIS Foundation Inc., Sequence A262957, The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A262957}.
+
+\bibitem{A263295}
+The OEIS Foundation Inc., Sequence A263295, The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A263295}.
+
+\bibitem{A346590}
+The OEIS Foundation Inc., Sequence A346590, The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A346590}.
+
+\end{thebibliography}
+}
+\end{document}
