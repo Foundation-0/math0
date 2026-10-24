@@ -1,0 +1,313 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw,unfold,infer_instance},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {ℝ}{{$\mathbb{R}$}}1 {∃}{{$\exists$}}1
+    {↔}{{$\leftrightarrow$}}1 {¬}{{$\neg$}}1 {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {≤}{{$\le$}}1
+    {√}{{$\surd$}}1 {⟦}{{$[\![$}}1 {⟧}{{$]\!]$}}1 {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{√}{\ensuremath{\surd}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\fps}{\Z[\![x]\!]}
+\newcommand{\coef}[1]{[x^{#1}]}
+\newcommand{\MI}{\mathrm{M}}
+
+\title[The conjectured generating function of OEIS A242396 is false]{Rows of the unit triangular tiling meeting a circle of radius $n$: the conjectured generating function of OEIS A242396 fails at $n=97$}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 21, 2026}
+
+\begin{document}
+\begin{abstract}
+For $n\ge1$ let $a(n)$ be the number of rows of the tiling of the plane by unit equilateral triangles that meet a circle of radius $n$ (OEIS A242396). In 2014 R.~Stephan conjectured that $\sum_{n\ge1}a(n)x^n=N(x)/\bigl((1-x)(1-x^{13})\bigr)$ for an explicit polynomial $N$ of degree~$14$; this rational function reproduces all $61$ terms listed in the entry.
+We prove that the conjecture is false: comparing coefficients of $x^{97}$, it would force $a(97)-a(96)-a(84)+a(83)=0$, whereas $a(83),a(84),a(96),a(97)=192,194,222,226$, so this expression equals $2$. As far as we and the math0 referees could determine, the refutation is a new result, although the argument is elementary.
+It is verified in Lean~4 against a statement that math0 formalized from the OEIS entry and that was reviewed for fidelity and frozen before any proof attempt; in that statement $a(n)$ is proved equal to the geometric row count, and its first $61$ values are checked by the kernel against the OEIS data.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+On May~13, 2014, K.~Ngaokrajang contributed three related sequences to the OEIS. A242394 \cite{A242394} and A242395 \cite{A242395} count the unit equilateral triangles of the standard triangular tiling that meet the circle of radius $n$ centred at $(0,0)$ and at $(1/2,0)$, respectively. A242396 \cite{A242396} counts the \emph{rows} of the tiling that meet the circle; the comments of A242394 and A242395 note that this count is the same for both centres. The entry A242396 lists the $61$ terms $a(1),\dots,a(61)=4,6,8,\dots,142$ and contains a Small Basic program that prints $a(1),\dots,a(100)$.
+
+On May~18, 2014, R.~Stephan added a conjectured rational generating function with denominator $x^{14}-x^{13}-x+1=(1-x)(1-x^{13})$, together with the consequence $a(n)\sim\frac{30}{13}n$ (both quoted verbatim in Section~\ref{sec:statement}). The rational function reproduces all $61$ listed terms. We show that the conjecture is false (Theorem~\ref{thm:main}).
+
+\subsection*{Method}
+A row meets the circle exactly when its vertical extent meets $[-n,n]$; this gives $a(n)=2\lfloor 2n/\sqrt3\rfloor+2$ (Lemma~\ref{lem:closed}). Clearing the denominator, the conjecture forces the coefficient of $x^{97}$ in $\bigl(\sum_{n\ge1}a(n)x^n\bigr)(x^{14}-x^{13}-x+1)$, namely $a(97)-a(96)-a(84)+a(83)$, to vanish, but this coefficient is $226-222-194+192=2$. The Lean proof extracts this coefficient and lets the kernel evaluate the four values directly from the definition of $a$. Since $a(n)$ grows with the irrational slope $4/\sqrt3$, no identity of this shape can hold; Remark~\ref{rem:mech} identifies $n=97$ as the first coefficient at which the conjectured series and $a$ differ.
+
+\subsection*{Status and prior work}
+The math0 referees checked the current version of the entry, both in a local mirror of the OEIS data and in the public \texttt{oeisdata} repository: it is revision \#18 (May~31, 2014), and the generating function is still marked ``conjectured'', with no correction or comment. The cross-referenced entries A242394 and A242395 say nothing about it, and a search of the OEIS mirror for the sequences $\lfloor 2n/\sqrt3\rfloor$ and $2\lfloor 2n/\sqrt3\rfloor+2$ finds only A242396 itself. The status page \url{http://www.ark.in-berlin.de/conj.txt} of Stephan's earlier conjecture collection covers only conjectures from 2004--2005 and does not mention A242396. Fried's papers proving conjectures from the OEIS \cite{Fr24,Fr25,Fr26a,Fr26b} do not mention A242396, and searches of arXiv, MathOverflow, Mathematics Stack Exchange and the SeqFan mailing list found no counterexample or refutation. The sequence is not among the OEIS statements of the formal-conjectures repository \cite{FC} (at the commit pinned in math0). We therefore classify the result as \emph{new}, with two caveats: the argument is elementary, and the entry's own program, which runs up to $n=100$, already computes $a(97)=226$, a value incompatible with the conjectured generating function (Remark~\ref{rem:program}). We found no record that this discrepancy had been noticed.
+
+\section{Statement}\label{sec:statement}
+
+Let $h=\sqrt3/2$. The tiling of the plane by equilateral triangles of side $1$ with a vertex at the origin and horizontal sides has vertices $(k+\tfrac i2,\,ih)$, $i,k\in\Z$; this is consistent with the program of A242394, which searches for tiling vertices on the circle among the points $(s/2,\,ih)$, $s,i\in\Z$. For $j\in\Z$, the triangles between the lines $y=jh$ and $y=(j+1)h$ form \emph{row~$j$}; they tile exactly the closed strip $S_j=\{(x,y)\in\R^2 : jh\le y\le (j+1)h\}$, so row~$j$ meets a set exactly when $S_j$ does.
+
+\begin{definition}\label{def:a}
+For $c\in\R$ and $n\in\N$ let $C_{c,n}=\{(x,y):(x-c)^2+y^2=n^2\}$ and $a(n)=\#\{j\in\Z : S_j\cap C_{c,n}\neq\emptyset\}$. By Lemma~\ref{lem:geom} this does not depend on $c$; in particular the centres $(0,0)$ and $(1/2,0)$ of the OEIS name give the same sequence.
+\end{definition}
+
+The entry A242396 \cite{A242396} (offset $1$, author K.~Ngaokrajang) has the name ``Number of rows of equilateral triangles (sides length = 1) that intersect the circumference of a circle of radius n centered at (0,0) or (1/2,0).'' Its FORMULA section reads, verbatim:
+\begin{quote}
+{\small\texttt{G.f., conjectured: (-2*x\^{}14 + 4*x\^{}13 + 2*x\^{}12 + 2*x\^{}11 + 2*x\^{}10 + 2*x\^{}9 + 2*x\^{}8 + 4*x\^{}7 + 2*x\^{}6 + 2*x\^{}5 + 2*x\^{}4 + 2*x\^{}3 + 2*x\^{}2 + 4*x)/(x\^{}14 - x\^{}13 - x + 1). - \_Ralf Stephan\_, May 18 2014}}
+
+{\small\texttt{Asymptotics from g.f.: a(n) \textasciitilde{} 30/13 * n. - \_Ralf Stephan\_, May 18 2014}}
+\end{quote}
+Put $F(x)=\sum_{n\ge1}a(n)x^n\in\fps$, $D(x)=x^{14}-x^{13}-x+1=(1-x)(1-x^{13})$ and
+\[
+  N(x)=4x+2x^2+2x^3+2x^4+2x^5+2x^6+4x^7+2x^8+2x^9+2x^{10}+2x^{11}+2x^{12}+4x^{13}-2x^{14}.
+\]
+
+\begin{conjecture}[Stephan, 2014]\label{conj}
+$F(x)=N(x)/D(x)$ in $\fps$.
+\end{conjecture}
+
+Since $D$ has constant term $1$, it is a unit of $\fps$, so Conjecture~\ref{conj} is equivalent to $F(x)\,D(x)=N(x)$.
+
+\begin{theorem}\label{thm:main}
+Conjecture~\ref{conj} is false: the coefficient of $x^{97}$ in $F(x)D(x)$ is $2$, whereas the coefficient of $x^{97}$ in $N(x)$ is $0$.
+\end{theorem}
+
+The derived claim $a(n)\sim\frac{30}{13}n$ is also false (Remark~\ref{rem:mech}); it is not part of Theorem~\ref{thm:main} and is not formalized.
+
+\subsection*{Lean formalization}
+math0 formalized the statement in \path{lean/Math0/Statements/OEIS/A242396.lean}, which was reviewed for fidelity and frozen before any proof attempt. Its definitions, verbatim (the copyright header, the import, docstrings, blank lines, theorems and the auxiliary definition \decl{statement_asymptotic} omitted), are:
+\begin{lstlisting}
+namespace Math0.Statements.A242396
+open Real
+def RowMeets (c : ℝ) (n : ℕ) (j : ℤ) : Prop :=
+  ∃ x y : ℝ, (x - c) ^ 2 + y ^ 2 = (n : ℝ) ^ 2 ∧
+    (j : ℝ) * (√3 / 2) ≤ y ∧ y ≤ ((j : ℝ) + 1) * (√3 / 2)
+def MeetsInt (n : ℕ) (j : ℤ) : Prop :=
+  (j ≤ 0 ∨ 3 * j ^ 2 ≤ 4 * (n : ℤ) ^ 2) ∧ (0 ≤ j + 1 ∨ 3 * (j + 1) ^ 2 ≤ 4 * (n : ℤ) ^ 2)
+instance (n : ℕ) : DecidablePred (MeetsInt n) := fun _ => by
+  unfold MeetsInt; infer_instance
+def a (n : ℕ) : ℕ :=
+  ((Finset.range (4 * n + 5)).filter (fun i : ℕ => MeetsInt n ((i : ℤ) - (2 * n + 2)))).card
+open PowerSeries in
+def statement : Prop :=
+  PowerSeries.mk (fun n => if n = 0 then (0 : ℤ) else a n) * (X ^ 14 - X ^ 13 - X + 1) =
+    -2 * X ^ 14 + 4 * X ^ 13 + 2 * X ^ 12 + 2 * X ^ 11 + 2 * X ^ 10 + 2 * X ^ 9 + 2 * X ^ 8 +
+      4 * X ^ 7 + 2 * X ^ 6 + 2 * X ^ 5 + 2 * X ^ 4 + 2 * X ^ 3 + 2 * X ^ 2 + 4 * X
+end Math0.Statements.A242396
+\end{lstlisting}
+Here \texttt{RowMeets c n j} says $S_j\cap C_{c,n}\ne\emptyset$, and \texttt{MeetsInt n j} is the integer condition
+\[
+  \MI(n,j):\quad \bigl(j\le0\ \text{or}\ 3j^2\le4n^2\bigr)\ \text{and}\ \bigl(j+1\ge0\ \text{or}\ 3(j+1)^2\le4n^2\bigr).
+\]
+The function \decl{a} counts the $i<4n+5$ with $\MI(n,i-(2n+2))$, i.e.\ the $j\in[-(2n+2),2n+2]$ with $\MI(n,j)$; it is a finite count that the kernel can evaluate, not a closed form. The statement file connects it with Definition~\ref{def:a} and with the OEIS data through the following proved theorems (statements verbatim):
+\begin{lstlisting}
+theorem rowMeets_iff (c : ℝ) (n : ℕ) (j : ℤ) : RowMeets c n j ↔ MeetsInt n j
+theorem bounds_of_meetsInt {n : ℕ} {j : ℤ} (h : MeetsInt n j) :
+    -(2 * (n : ℤ) + 2) ≤ j ∧ j ≤ 2 * n + 2
+theorem a_eq_ncard (c : ℝ) (n : ℕ) : a n = {j : ℤ | RowMeets c n j}.ncard
+\end{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+theorem a_data : (List.range 61).map (fun i => a (i + 1)) =
+    [4, 6, 8, 10, 12, 14, 18, 20, 22, 24, 26, 28, 32, 34, 36, 38, 40, 42, 44, 48, 50, 52, 54, 56,
+     58, 62, 64, 66, 68, 70, 72, 74, 78, 80, 82, 84, 86, 88, 92, 94, 96, 98, 100, 102, 104,
+     108, 110, 112, 114, 116, 118, 122, 124, 126, 128, 130, 132, 134, 138, 140, 142]
+\end{lstlisting}
+The first three are the content of Lemma~\ref{lem:geom}; \decl{a_data}, proved by \texttt{decide +kernel} (evaluation in the Lean kernel), says that $a(1),\dots,a(61)$ are exactly the terms listed in the entry.
+
+\begin{lemma}\label{lem:geom}
+Let $c\in\R$, $n\in\N$ and $j\in\Z$.
+\begin{enumerate}
+\item $S_j\cap C_{c,n}\ne\emptyset$ if and only if $jh\le n$ and $-n\le(j+1)h$.
+\item For $k\in\Z$: $kh\le n$ if and only if $k\le0$ or $3k^2\le4n^2$.
+\item $S_j\cap C_{c,n}\ne\emptyset$ if and only if $\MI(n,j)$.
+\item If $\MI(n,j)$, then $-(2n+2)\le j\le 2n+2$.
+\end{enumerate}
+Consequently, for every $c$, the number computed by \textup{\texttt{a}} equals $\#\{j\in\Z:S_j\cap C_{c,n}\ne\emptyset\}$.
+\end{lemma}
+
+\begin{proof}
+(1) If $(x,y)\in S_j\cap C_{c,n}$, then $y^2\le n^2$, so $-n\le y\le n$, and $jh\le y\le(j+1)h$ gives both inequalities. Conversely, put $y=\max(jh,-n)$. Then $jh\le y\le n$ and $y\le(j+1)h$ (using $h\ge0$, $n\ge0$ and the hypotheses), so $|y|\le n$ and the point $(c+\sqrt{n^2-y^2},\,y)$ lies in $S_j\cap C_{c,n}$.
+(2) If $k\le0$ then $kh\le0\le n$. If $k>0$, both sides of $k\sqrt3\le2n$ are nonnegative, so it is equivalent to $3k^2\le4n^2$.
+(3) The condition $-n\le(j+1)h$ reads $(-(j+1))h\le n$; apply (1) and (2) with $k=j$ and $k=-(j+1)$.
+(4) If $j>2n+2$, then $j>0$ and $3j^2>4n^2$, so the first clause of $\MI(n,j)$ fails; if $j<-(2n+2)$, then $j+1<0$ and $3(j+1)^2>4n^2$, so the second fails.
+By (3) and (4), $i\mapsto i-(2n+2)$ is a bijection from the set counted by \decl{a} onto $\{j:S_j\cap C_{c,n}\ne\emptyset\}$.
+\end{proof}
+
+In the statement file, items (1)--(4) are \decl{rowMeets_iff_real}, \decl{mul_half_sqrt_three_le_iff}, \decl{rowMeets_iff} and \decl{bounds_of_meetsInt}, and the final assertion is \decl{a_eq_ncard}; their Lean proofs follow the argument above.
+
+\begin{remark}[encoding choices]\label{rem:enc}
+(i) Rows are closed strips. Open strips give the same count for $n\ge1$: the two conditions differ only if $jh=n$ or $(j+1)h=-n$, which would make $\sqrt3$ rational.
+(ii) The definition gives $a(0)=2$ (the degenerate circle $\{(c,0)\}$ meets rows $-1$ and $0$), which is not a term of the sequence (offset~$1$). The series in \decl{statement} has coefficient $0$ at $x^0$, so it is $F(x)$; this matches the conjectured generating function, which vanishes at $x=0$.
+(iii) The identity is stated in $\fps$ with the unit denominator cleared; there is no truncated subtraction or division.
+(iv) The separate definition \decl{statement_asymptotic} records $a(n)\sim\frac{30}{13}n$; it is not part of \decl{statement} and is not addressed by the Lean proof.
+\end{remark}
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A242396.lean}: the identity is reduced to one linear relation between four values of $a$ (Lemma~\ref{lem:coef}), and these values are computed (Lemma~\ref{lem:vals}).
+
+\begin{lemma}\label{lem:coef}
+Let $b\colon\N\to\Z$ and $B(x)=\sum_{n\ge0}b(n)x^n\in\fps$. For every $n\ge14$,
+$\coef{n}\bigl(B(x)\,D(x)\bigr)=b(n)-b(n-1)-b(n-13)+b(n-14)$.
+\end{lemma}
+
+\begin{proof}
+$B\,D=x^{14}B-x^{13}B-xB+B$, and $\coef{n}\bigl(x^kB(x)\bigr)=b(n-k)$ for $k\le n$.
+\end{proof}
+
+\begin{lemma}[closed form; not used in Lean]\label{lem:closed}
+Let $m(n)=\max\{k\in\N:3k^2\le4n^2\}=\lfloor 2n/\sqrt3\rfloor$. Then $a(n)=2m(n)+2$ for all $n\in\N$.
+\end{lemma}
+
+\begin{proof}
+For $k\in\N$, $3k^2\le4n^2$ if and only if $k\le 2n/\sqrt3$, if and only if $k\le m(n)$. By Lemma~\ref{lem:geom}, $a(n)=\#\{j\in\Z:\MI(n,j)\}$. If $j\ge1$, the second clause of $\MI(n,j)$ holds and the first holds if and only if $j\le m(n)$: $m(n)$ values. If $j\in\{-1,0\}$, both clauses hold: $2$ values. If $j\le-2$, the first clause holds and the second holds if and only if $-(j+1)\le m(n)$, i.e.\ $j\in\{-m(n)-1,\dots,-2\}$: $m(n)$ values.
+\end{proof}
+
+\begin{lemma}[\decl{vals}]\label{lem:vals}
+$a(83)=192$, $a(84)=194$, $a(96)=222$ and $a(97)=226$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:closed} it suffices to determine $m(n)$, and $m(n)=k$ is certified by $3k^2\le4n^2<3(k+1)^2$:
+\[
+\begin{array}{c|c|c|c|c}
+ n & 3k^2 & 4n^2 & 3(k+1)^2 & m(n)=k,\ a(n)=2k+2\\\hline
+ 83 & 27075 & 27556 & 27648 & 95,\ 192\\
+ 84 & 27648 & 28224 & 28227 & 96,\ 194\\
+ 96 & 36300 & 36864 & 36963 & 110,\ 222\\
+ 97 & 37632 & 37636 & 38307 & 112,\ 226
+\end{array}\qedhere
+\]
+\end{proof}
+
+In Lean, Lemma~\ref{lem:vals} is the private declaration \decl{vals}, proved by \texttt{decide +kernel} without Lemma~\ref{lem:closed}. The kernel evaluates the decision procedure for the conjunction of the four equalities by unfolding \decl{a}: for each of the four values of $n$ it runs through the $4n+5\le393$ indices $i$, decides $\MI(n,i-(2n+2))$ by exact integer arithmetic, and counts the successes. The kernel has built-in arbitrary-precision arithmetic on natural-number literals; unlike \texttt{native\_decide}, this adds no axiom and does not trust compiled code. The table above is an independent, human-checkable certificate for the same values.
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Apply Lemma~\ref{lem:coef} with $n=97$ to $b(0)=0$ and $b(k)=a(k)$ for $k\ge1$, so that $B=F$. By Lemma~\ref{lem:vals},
+\[
+  \coef{97}\bigl(F(x)D(x)\bigr)=a(97)-a(96)-a(84)+a(83)=226-222-194+192=2 .
+\]
+Every monomial of $N(x)$ has degree at most $14$, so $\coef{97}N(x)=0$, and $F(x)D(x)\ne N(x)$.
+\end{proof}
+
+The Lean proof of \decl{result} follows these lines. It assumes \decl{statement}, rewrites the numerals $2$ and $4$ of $\fps$ as the constant series $C\,2$ and $C\,4$, and applies \texttt{coeff 97} to both sides. Simplification with distributivity, linearity of \texttt{coeff}, and Mathlib's lemmas \decl{coeff_C_mul}, \decl{coeff_X_pow}, \decl{coeff_X} and \decl{coeff_X_pow_mul'} (the identity $\coef{n}(x^kB)=b(n-k)$ for $k\le n$ used in Lemma~\ref{lem:coef}) reduces the hypothesis to a linear equation in $\Z$ between $a(97)$, $a(96)$, $a(84)$ and $a(83)$ expressing that the coefficient vanishes. Substituting the values from \decl{vals} yields a false numerical equation, which \texttt{norm\_num} refutes.
+
+\begin{remark}[why and where the conjecture fails; not formalized]\label{rem:mech}
+Let $P_n=\sum_{k\le n}\coef{k}N(x)$, so $P_n=N(1)=30$ for $n\ge14$. Since $F\,D=N$ is equivalent to $F(x)(1-x^{13})=N(x)/(1-x)=\sum_nP_nx^n$, Conjecture~\ref{conj} says $a(n)-a(n-13)=P_n$ for all $n\ge1$ (with $a(k)=0$ for $k\le0$). For $n\le13$ this is $a(n)=P_n$, true by the data ($P_1,\dots,P_{13}=4,6,\dots,28,32$); so the conjecture is equivalent to $a(n+13)-a(n)=30$ for all $n\ge1$. Now $15<26/\sqrt3<16$ (as $675<676<768$); write $26/\sqrt3=15+\delta$, $\delta=0.0111\ldots$. With $t=2n/\sqrt3$, Lemma~\ref{lem:closed} gives $a(n+13)-a(n)=2(\lfloor t+15+\delta\rfloor-\lfloor t\rfloor)$, which is $30$ if $\{t\}<1-\delta$ and $32$ otherwise. Hence the conjecture holds if and only if $\{2n/\sqrt3\}<16-26/\sqrt3=0.98889\ldots$ for all $n\ge1$. For $n=84$, $\lfloor168/\sqrt3\rfloor=96$, and $\{168/\sqrt3\}\ge16-26/\sqrt3$ is equivalent to $194/\sqrt3\ge112$, i.e.\ to $194^2=37636\ge37632=3\cdot112^2$, the certificate for $a(97)$ above. So $a(97)-a(84)=32$, while $a(96)-a(83)=30$. A direct computation shows that $n=84$ is the smallest $n\ge1$ with $\{2n/\sqrt3\}\ge1-\delta$ (the next are $168$ and $265$), so the coefficients of $N/D$ agree with $a(n)$ exactly for $n\le96$, and at $n=97$ they give $224$ instead of $226$.
+
+Failures recur infinitely often: if $a(n+13)-a(n)=30$ for all large $n$, then $a(n)/n\to30/13$, whereas Lemma~\ref{lem:closed} gives $a(n)/n\to4/\sqrt3=2.3094\ldots\ne30/13=2.3077\ldots$. The same limit shows that the derived claim $a(n)\sim\frac{30}{13}n$ is false.
+\end{remark}
+
+\begin{remark}[the entry's program]\label{rem:program}
+The Small Basic program in A242396 sets $r=n\sin(30^\circ)/(\sqrt3/2)=n/\sqrt3$ and prints $4\operatorname{round}(r)$ if $r-\lfloor r\rfloor>\frac12$ and $2(2\operatorname{round}(r)+1)$ otherwise. In both cases this is $2\lfloor2r\rfloor+2=2\lfloor2n/\sqrt3\rfloor+2$ ($\{r\}=\frac12$ is impossible). The program runs for $n=1,\dots,100$, so it prints $a(97)=226$, while the published data stop at $n=61$. The math0 referees confirmed the agreement numerically for $n\le5000$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in \path{lean/Math0/Frontier/OEIS/A242396.lean} of the math0 repository (\url{https://github.com/Foundation-0/math0}). It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A242396.lean} and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A242396.result}, of type $\neg$\,\decl{Math0.Statements.A242396.statement}. Verbatim (the copyright header, imports, docstrings, blank lines, and the \texttt{namespace}, \texttt{open} and \texttt{end} lines omitted):
+\begin{lstlisting}
+private lemma vals : a 97 = 226 ∧ a 96 = 222 ∧ a 84 = 194 ∧ a 83 = 192 := by
+  decide +kernel
+theorem result : ¬ statement := by
+  intro h
+  have e2 : (2 : ℤ⟦X⟧) = C 2 := (map_ofNat C 2).symm
+  have e4 : (4 : ℤ⟦X⟧) = C 4 := (map_ofNat C 4).symm
+  rw [statement, e2, e4] at h
+  have h97 := congrArg (coeff 97) h
+  simp only [mul_sub, mul_add, mul_one, neg_mul, map_add, map_sub, map_neg, coeff_C_mul,
+    coeff_X_pow, coeff_X] at h97
+  simp [mul_comm _ (X ^ _), coeff_X_pow_mul'] at h97
+  obtain ⟨h1, h2, h3, h4⟩ := vals
+  rw [h1, h2, h3, h4] at h97
+  norm_num at h97
+#math0_settles Math0.Frontier.A242396.result Math0.Statements.A242396.statement
+\end{lstlisting}
+Neither file contains \texttt{sorry}, \texttt{native\_decide}, \texttt{axiom} or \texttt{set\_option}; the only auxiliary declaration of the proof file, \decl{vals}, is private.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless: (1) \decl{statement} is a universe-monomorphic definition of type \texttt{Prop}; (2) \decl{statement} and \decl{result} depend on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, which excludes \decl{sorryAx}, the axiom \decl{Lean.ofReduceBool} introduced by \texttt{native\_decide}, and any custom axiom; (3) the type of \decl{result} is syntactically \decl{statement} or $\neg$\,\decl{statement}, up to metadata annotations, with no unfolding or definitional equality. Compiling the proof file prints
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A242396.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A242396.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A242396.result' refutes 'Math0.Statements.A242396.statement'
+\end{lstlisting}
+The SHA-256 hash of the statement file equals the hash recorded when it was frozen, \texttt{35a266981a9f235aba6be189940a3573e9447b74f2e966fc2da862bd24685b7d}.
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of statement checks that passed. To check this file alone, run \texttt{lake env lean Math0/Frontier/OEIS/A242396.lean} in the directory \path{lean}.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Fr24}
+S.~Fried, \emph{Proofs of some conjectures from the OEIS}, arXiv:2410.07237, 2024.
+
+\bibitem{Fr25}
+S.~Fried, \emph{Proofs of several conjectures from the OEIS}, J. Integer Seq.\ \textbf{28} (2025), Article~25.4.3.
+
+\bibitem{Fr26a}
+S.~Fried, \emph{Proofs of ten conjectures from the OEIS}, J. Integer Seq.\ \textbf{29} (2026), Article~26.1.8.
+
+\bibitem{Fr26b}
+S.~Fried, \emph{Further proofs of conjectures from the OEIS}, arXiv:2607.24832, 2026.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381; arXiv:1910.09336.
+
+\bibitem{A242394}
+The OEIS Foundation Inc., \url{https://oeis.org/A242394}, entry by K.~Ngaokrajang (May~13, 2014).
+
+\bibitem{A242395}
+The OEIS Foundation Inc., \url{https://oeis.org/A242395}, entry by K.~Ngaokrajang (May~13, 2014).
+
+\bibitem{A242396}
+The OEIS Foundation Inc., \url{https://oeis.org/A242396}, entry by K.~Ngaokrajang (May~13, 2014); conjectured generating function by R.~Stephan (May~18, 2014); revision \#18, May~31, 2014.
+
+\end{thebibliography}
+}
+
+\end{document}

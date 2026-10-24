@@ -1,0 +1,396 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+\usepackage{booktabs}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,unfold,rw,at},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {∀}{{$\forall$}}1 {↔}{{$\leftrightarrow$}}1 {¬}{{$\neg$}}1
+    {←}{{$\leftarrow$}}1 {≡}{{$\equiv$}}1 {∣}{{$\mid$}}1 {·}{{$\cdot$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+\raggedbottom
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+
+\title[A counterexample to the squarefree conjecture in OEIS A083020]{The number $3^{3^{18}}+2$ is divisible by $31^2$: a counterexample to Hilliard's squarefree conjecture in OEIS A083020}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 21, 2026}
+
+\begin{document}
+\begin{abstract}
+The OEIS entry A083020 (Cino Hilliard, 2003) lists the prime factors of the numbers $N_n=3^{3^n}+2$, $n\ge0$, and conjectures that every $N_n$ is squarefree.
+We show that $31^2$ divides $N_{18}$, a number with $184{,}846{,}550$ decimal digits, so the conjecture is false; the proof reduces the exponent $3^{18}$ modulo $\varphi(31^2)=930$ and then needs only the congruence $3^{159}\equiv-2\pmod{961}$.
+We also show, without formalizing it, that $31^2\mid N_n$ exactly when $n\equiv18\pmod{60}$ and $29^2\mid N_n$ exactly when $n\equiv73\pmod{84}$, so infinitely many $N_n$ are not squarefree.
+To our knowledge the counterexample is new: the OEIS entry still states the conjecture and we found no recorded resolution, although the argument is elementary.
+The refutation is verified in Lean~4 with Mathlib against the frozen statement that math0 formalized from the OEIS entry; its definitions are checked by the kernel against the entry's data, and it was reviewed for fidelity before the proof attempt.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For $n\ge0$ let
+\[
+  N_n = 3^{3^n}+2 .
+\]
+The OEIS entry A083020 \cite{A083020}, submitted by Cino Hilliard on May~31, 2003, is the irregular triangle whose row $n$ lists the prime factors of $N_n$ in increasing order.
+Its example section reads $N_0=5$, $N_1=29$, $N_2=5\cdot31\cdot127$, $N_3=11\cdot693236134999$; the listed terms continue with the six prime factors of $N_4=3^{81}+2$, the $116$-digit number $N_5=3^{243}+2$ (so the entry asserts that $N_5$ is prime), and the two smallest prime factors $5,31$ of the $348$-digit number $N_6$.
+The comments contain the conjecture that all of these numbers are squarefree (Conjecture~\ref{conj} below).
+
+We show that the conjecture fails at $n=18$.
+
+\begin{theorem}\label{thm:main}
+$31^2=961$ divides $N_{18}=3^{3^{18}}+2$. In particular $N_{18}$ is not squarefree.
+\end{theorem}
+
+The number $N_{18}$ has $\lfloor 3^{18}\log_{10}3\rfloor+1=184{,}846{,}550$ decimal digits, so it is far out of reach of factorization; but divisibility by the fixed number $961$ only depends on the residue of $3^{3^{18}}$ modulo $961$, which Euler's theorem reduces to the residue of $3^{159}$ (Section~\ref{sec:proof}).
+The same reduction describes all $n$ (Proposition~\ref{prop:all}): $961\mid N_n$ if and only if $n\equiv18\pmod{60}$, and $29^2=841$ divides $N_n$ if and only if $n\equiv73\pmod{84}$.
+In particular infinitely many $N_n$ are not squarefree.
+
+\subsection*{Status and prior work}
+The entry A083020 (revision \#20 of January~4, 2026, which is still the current revision in October~2026) still states the conjecture; its EXTENSIONS section records only a correction by T.~D.~Noe (November~15, 2006) and a clarified name with the terms $a(14),a(15)$ added by Sean A.~Irvine (January~4, 2026).
+The math0 literature referees found no prior counterexample or proof.
+They checked the OEIS entries on related numbers, namely A055777 ($3^{3^n}$) \cite{A055777}, A129290 ($3^{3^n}+1$) \cite{A129290}, A129291 \cite{A129291}, A113913 \cite{A113913}, A140331 \cite{A140331} and A061678 \cite{A061678}, none of which discusses the squarefreeness of $N_n$; Stephan's collection \emph{Prove or disprove.\ 100 conjectures from the OEIS} \cite{St04}, which does not contain A083020; and web searches of arXiv, MathOverflow, Mathematics Stack Exchange and the SeqFan mailing list.
+The conjecture is not among the OEIS statements of the formal-conjectures repository \cite{FC} at the commit pinned by math0 (\texttt{c77fdd4}).
+We therefore classify Theorem~\ref{thm:main} as a new result, with the caveat that the argument is elementary and the counterexample may have been noticed without being recorded.
+We do not claim that $n=18$ is the least $n$ for which $N_n$ is not squarefree (Remark~\ref{rem:small}).
+
+\section{Statement}\label{sec:statement}
+
+\subsection*{The OEIS conjecture}
+The COMMENTS section of A083020 contains the following sentence, verbatim:
+\begin{quote}
+\raggedright{\small\texttt{Conjecture: These numbers have no repeating factors or 3\^{}(3\^{}n) + 2 is squarefree.}}
+\end{quote}
+The comment carries no separate attribution; it is part of the original entry by Cino Hilliard, May~31, 2003.
+The entry has offset $0$, so ``these numbers'' are $N_n$ for all $n\ge0$, and the two phrasings joined by ``or'' say the same thing: $N_n$ has no repeated prime factor.
+
+\begin{conjecture}[Hilliard]\label{conj}
+For every integer $n\ge0$, the number $N_n=3^{3^n}+2$ is squarefree.
+\end{conjecture}
+
+By Theorem~\ref{thm:main}, Conjecture~\ref{conj} is false.
+
+\subsection*{Lean statement}
+The statement is the definition \decl{Math0.Statements.A083020.statement} in the math0 statement file \path{lean/Math0/Statements/OEIS/A083020.lean}, which was reviewed for fidelity and frozen (SHA-256 \texttt{d520c666\ldots ae473}) before any proof attempt.
+The definitions that encode the triangle, and the statement, read verbatim (docstrings omitted; namespace \decl{Math0.Statements.A083020}):
+\begin{lstlisting}
+def N (n : ℕ) : ℕ := 3 ^ (3 ^ n) + 2
+
+def row (n : ℕ) : List ℕ := Nat.primeFactorsList (N n)
+
+def a (i : ℕ) : ℕ := ((List.range (i + 1)).flatMap row).getD i 0
+
+def statement : Prop :=
+  ∀ n : ℕ, Squarefree (3 ^ (3 ^ n) + 2)
+\end{lstlisting}
+In Mathlib, \texttt{Squarefree r} is defined as $\forall x,\ x\cdot x\mid r\to\texttt{IsUnit}\ x$, and the only unit of $\N$ is $1$ (\decl{Nat.isUnit_iff}); so for a natural number $r$ it says that no square $x^2$ with $x\ge2$ divides $r$, which is the usual notion.
+Thus \decl{statement} is Conjecture~\ref{conj}, quantified over all $n\in\N$ as the offset $0$ requires, with no extra hypotheses; it involves no subtraction or division in $\N$, and $N_n\ge5$ rules out degenerate cases.
+The file also proves
+\begin{lstlisting}
+theorem statement_iff : statement ↔ ∀ n, (row n).Nodup
+\end{lstlisting}
+from Mathlib's \decl{Nat.squarefree_iff_nodup_primeFactorsList}; this is the ``no repeating factors'' phrasing: no prime occurs twice in row $n$.
+We prove \texttt{¬ statement}.
+
+\subsection*{Encoding and check against the OEIS data}
+Row $n$ of the triangle is \texttt{row n}, Mathlib's list of the prime factors of $N_n$ in increasing order with multiplicity. The listed rows contain no repeated primes, so listing distinct primes instead would give the same terms; the conjecture is stated directly about $N_n$ in any case.
+The sequence itself is \texttt{a}, the triangle read by rows with offset $0$: \texttt{a i} is the entry at position $i$ of the concatenation of rows $0,\dots,i$, which has at least $i+1$ entries because every row is nonempty.
+
+The function \texttt{a} is computable, but evaluating it means factoring $N_n$ by trial division, so the statement file checks the data through certificates instead.
+The lemma \decl{primeFactorsList_eq_of} says that a sorted list of primes with product $m$ is \texttt{Nat.primeFactorsList m} (uniqueness of factorization), and \decl{row_data} applies it to
+\[
+  5,\quad 29,\quad 5\cdot31\cdot127,\quad 11\cdot 693236134999,\quad 5\cdot15679\cdot2372959\cdot5945531\cdot3312453269\cdot121032673159
+\]
+for $n=0,\dots,4$. The products are checked by \texttt{norm\_num}, sortedness by \texttt{decide}, primes below $10^5$ by \texttt{norm\_num}, and the larger primes by Lucas certificates (Table~\ref{tab:lucas}).
+Mathlib's \decl{lucas_primality} says that $p$ is prime if some $w$ satisfies $w^{p-1}\equiv1\pmod p$ and $w^{(p-1)/q}\not\equiv1\pmod p$ for every prime $q\mid p-1$.
+The Boolean function \decl{lucasCheck} tests these conditions for a given $w$ and a list of primes with product $p-1$, computing powers with a square-and-multiply function \decl{powMod} that is proved equal to $w^e\bmod p$ for $e<2^{64}$; the theorem \decl{prime_of_lucasCheck} turns a successful check into a proof of primality, and each check is evaluated by \texttt{decide +kernel}.
+The primes in the lists for $p-1$ are proved prime by \texttt{norm\_num} or by certificates of their own.
+The theorem \decl{a_data} then states that $a(0),\dots,a(12)$ are the $13$ listed terms $5, 29, 5, 31, 127, 11, 693236134999, 5, 15679, 2372959, 5945531, 3312453269, 121032673159$.
+
+\begin{table}[h]
+\centering\small
+\begin{tabular}{rrl}
+\toprule
+$p$ & $w$ & factorization of $p-1$\\
+\midrule
+$391151$ & $13$ & $2\cdot5^2\cdot7823$\\
+$693236134999$ & $7$ & $2\cdot3^2\cdot11\cdot8951\cdot391151$\\
+$2372959$ & $3$ & $2\cdot3^2\cdot7\cdot37\cdot509$\\
+$5945531$ & $2$ & $2\cdot5\cdot37\cdot16069$\\
+$22381441$ & $7$ & $2^7\cdot3\cdot5\cdot11657$\\
+$3312453269$ & $2$ & $2^2\cdot37\cdot22381441$\\
+$4317661$ & $6$ & $2^2\cdot3^2\cdot5\cdot17^2\cdot83$\\
+$20172112193$ & $3$ & $2^6\cdot73\cdot4317661$\\
+$121032673159$ & $3$ & $2\cdot3\cdot20172112193$\\
+\bottomrule
+\end{tabular}
+\caption{The Lucas certificates in the statement file: for each $p$, the witness $w$ and the prime factors of $p-1$.}
+\label{tab:lucas}
+\end{table}
+
+The remaining listed terms are $a(13)$, a $116$-digit number, and $a(14)=5$, $a(15)=31$.
+The theorem \decl{N5_data} checks that $a(13)$ as listed equals $N_5=3^{243}+2$, and \decl{row6_data} checks that row $6$ begins with $5,31$, by computing the two smallest prime factors of $N_6$.
+The primality of $N_5$ is not proved in Lean (SymPy's primality test reports it prime), so $a(13),a(14),a(15)$ sit at the listed positions exactly when $N_5$ is prime, and these positions are not checked as indices.
+All of these checks live in the statement file; the refutation below does not depend on them.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the declarations of the Lean file: the private lemmas \decl{pow_930}, \decl{split_exp} and \decl{sq_dvd}, and the theorem \decl{result}.
+Congruences are in $\N$ (\texttt{Nat.ModEq}).
+
+\begin{lemma}[\decl{pow_930}]\label{lem:euler}
+$3^{930}\equiv1\pmod{961}$.
+\end{lemma}
+
+\begin{proof}
+Since $31$ is prime, $\varphi(31^2)=31\cdot30=930$, and $\gcd(3,961)=1$, so this is Euler's theorem.
+The Lean proof does not use Euler's theorem: it unfolds the congruence to $3^{930}\bmod 961=1\bmod 961$ and checks this equation by \texttt{decide +kernel}, which makes the kernel evaluate both sides; $3^{930}$ has $1475$ binary digits.
+\end{proof}
+
+\begin{lemma}[\decl{split_exp}]\label{lem:split}
+$3^{18}=930\cdot416581+159$, and hence $3^{3^{18}}=\bigl(3^{930}\bigr)^{416581}\cdot3^{159}$.
+\end{lemma}
+
+\begin{proof}
+$3^{18}=387420489$ and $930\cdot416581=387420330$.
+The second claim follows from the first by the laws $(x^b)^c=x^{bc}$ and $x^bx^c=x^{b+c}$.
+In Lean, the right-hand side is rewritten with these two laws (\decl{pow_mul}, \decl{pow_add}) into $3^{930\cdot416581+159}$, and \texttt{norm\_num} checks that the two exponents agree; the number $3^{3^{18}}$ is never evaluated.
+\end{proof}
+
+\begin{lemma}[\decl{sq_dvd}]\label{lem:dvd}
+$31\cdot31$ divides $3^{3^{18}}+2$.
+\end{lemma}
+
+\begin{proof}
+Raising Lemma~\ref{lem:euler} to the power $416581$, multiplying by $3^{159}$ on the right and adding $2$ gives
+\[
+  \bigl(3^{930}\bigr)^{416581}\cdot3^{159}+2\equiv 1^{416581}\cdot3^{159}+2\pmod{961}
+\]
+(\decl{Nat.ModEq.pow}, \decl{Nat.ModEq.mul_right}, \decl{Nat.ModEq.add_right}).
+Next, $3^{159}\equiv959\equiv-2\pmod{961}$, so $1^{416581}\cdot 3^{159}+2\equiv961\equiv0\pmod{961}$.
+To check the residue by hand: the successive squares $3^{2^k}\bmod961$ for $k=0,\dots,7$ are
+\[
+  3,\ 9,\ 81,\ 795,\ 648,\ 908,\ 887,\ 671,
+\]
+and $159=2^7+2^4+2^3+2^2+2+1$, so $3^{159}\equiv3\cdot9\cdot81\cdot795\cdot648\cdot671$; the partial products reduce to $27,\ 265,\ 216,\ 623,\ 959$ modulo $961$.
+In Lean, the congruence $1^{416581}\cdot3^{159}+2\equiv0\pmod{961}$ is checked by \texttt{decide +kernel}.
+By transitivity and Lemma~\ref{lem:split}, $3^{3^{18}}+2\equiv0\pmod{961}$, that is, $961$ divides $3^{3^{18}}+2$ (\decl{Nat.modEq_zero_iff_dvd}).
+In Lean the goal $31\cdot31\mid\dots$ is first rewritten with Lemma~\ref{lem:split}, and $31\cdot31$ is identified with $961$ by evaluating the product of the two literals.
+\end{proof}
+
+As a consistency check, which the proof does not use: modulo $31$ we have $3^{30}\equiv1$ and $3^{18}\equiv9\pmod{30}$, so $3^{3^{18}}\equiv3^9\equiv29\equiv-2\pmod{31}$, as Lemma~\ref{lem:dvd} requires.
+
+\begin{proof}[Proof of Theorem~\ref{thm:main} and of \texttt{¬ statement} (\decl{result})]
+Lemma~\ref{lem:dvd} is the first claim.
+Suppose that \decl{statement} holds. Then $N_{18}$ is squarefree, so by the definition of \texttt{Squarefree}, applied to $x=31$ and Lemma~\ref{lem:dvd}, $31$ is a unit of $\N$.
+By \decl{Nat.isUnit_iff} this means $31=1$, which is false (\texttt{omega}).
+\end{proof}
+
+\subsection*{All \texorpdfstring{$n$}{n}, and small primes}
+The following is not part of the formal proof.
+
+\begin{proposition}\label{prop:all}
+For $n\ge0$: $961\mid N_n$ if and only if $n\equiv18\pmod{60}$, and $841\mid N_n$ if and only if $n\equiv73\pmod{84}$.
+In particular infinitely many $N_n$ are not squarefree.
+\end{proposition}
+
+\begin{proof}
+Let $x_n=3^{3^n}\bmod961$, so that $x_{n+1}\equiv x_n^3\pmod{961}$, and $961\mid N_n$ if and only if $x_n=959$.
+By Lemma~\ref{lem:euler}, $x_n$ depends only on $3^n\bmod930$.
+Now $930=3\cdot310$ with $\gcd(3,310)=1$. For $n\ge1$ we have $3^n\equiv0\pmod 3$, and $3^n\bmod310$ is periodic in $n$ with period the order of $3$ modulo $310=2\cdot5\cdot31$, which is $\operatorname{lcm}(1,4,30)=60$.
+By the Chinese remainder theorem, $3^n\bmod930$, and hence $x_n$, depends only on $n\bmod60$ for $n\ge1$.
+Computing $x_1,\dots,x_{60}$ by repeated cubing modulo $961$ gives $x_n=959$ only for $n=18$, and $x_0=3$.
+This proves the first claim.
+For $841=29^2$ we have $\varphi(841)=812=2^2\cdot7\cdot29$, which is prime to $3$, so $3^n\bmod812$ is purely periodic in $n$ with period the order of $3$ modulo $812$, which is $\operatorname{lcm}(2,6,28)=84$. Hence $y_n=3^{3^n}\bmod841$ is periodic with period dividing $84$, and computing $y_0,\dots,y_{83}$ gives $y_n=839$ only for $n=73$.
+\end{proof}
+
+\begin{remark}[Smaller $n$]\label{rem:small}
+For $n\le4$ the factorizations in \decl{row_data} show that $N_n$ is squarefree, and $N_5$ is squarefree if it is prime, as the entry asserts.
+For $6\le n\le17$ we do not know whether $N_n$ is squarefree: these numbers have between $348$ and about $6.2\times10^7$ decimal digits, and none of them is completely factored (for $N_6$ only the factors $5$ and $31$ and a composite cofactor are known).
+A computer search (not part of the formal proof) that computes $3^{3^n}\bmod p^2$ by repeated cubing, for every prime $p<10^8$ and every $n\le18$, finds $p^2\mid N_n$ only for $(n,p)=(18,31)$.
+So $n=18$ is the least $n$ for which $N_n$ is divisible by the square of a prime below $10^8$, but we do not know whether it is the least $n$ for which $N_n$ is not squarefree.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A083020.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}.
+It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A083020.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}.
+The main declaration is \decl{Math0.Frontier.A083020.result}, of type \texttt{¬ Math0.Statements.A083020.statement}; the auxiliary lemmas \decl{pow_930}, \decl{split_exp} and \decl{sq_dvd} are private.
+The proof file reads, verbatim except for the license header, the imports, the docstrings and blank lines:
+\begin{lstlisting}
+namespace Math0.Frontier.A083020
+open Math0.Statements.A083020
+private theorem pow_930 : 3 ^ 930 ≡ 1 [MOD 961] := by
+  unfold Nat.ModEq
+  decide +kernel
+private theorem split_exp : (3 : ℕ) ^ (3 ^ 18) = (3 ^ 930) ^ 416581 * 3 ^ 159 := by
+  rw [← pow_mul, ← pow_add]
+  norm_num
+private theorem sq_dvd : 31 * 31 ∣ 3 ^ (3 ^ 18) + 2 := by
+  have h : (3 ^ 930) ^ 416581 * 3 ^ 159 + 2 ≡ 1 ^ 416581 * 3 ^ 159 + 2 [MOD 961] :=
+    ((pow_930.pow 416581).mul_right _).add_right _
+  have h0 : 1 ^ 416581 * 3 ^ 159 + 2 ≡ 0 [MOD 961] := by
+    unfold Nat.ModEq
+    decide +kernel
+  rw [split_exp]
+  exact Nat.modEq_zero_iff_dvd.1 (h.trans h0)
+theorem result : ¬ statement := by
+  intro h
+  have hu : IsUnit (31 : ℕ) := h 18 31 sq_dvd
+  rw [Nat.isUnit_iff] at hu
+  omega
+end Math0.Frontier.A083020
+#math0_settles Math0.Frontier.A083020.result Math0.Statements.A083020.statement
+\end{lstlisting}
+The file uses no \texttt{sorry}, \texttt{native\_decide}, \texttt{set\_option} or macros.
+
+\subsection*{How the kernel checks the computations}
+The tactic \texttt{decide +kernel} proves a decidable proposition by asking the kernel to reduce its decision procedure to \texttt{true}.
+Lean's kernel evaluates arithmetic on natural number literals (addition, multiplication, powers, division and remainder, among others) with arbitrary-precision integer arithmetic, so the checks $3^{930}\bmod961=1$ and $(1^{416581}\cdot3^{159}+2)\bmod961=0$ are immediate; unlike \texttt{native\_decide}, this adds no axiom.
+The only large exponent is handled symbolically: the proof manipulates \texttt{Nat.ModEq} terms whose sides are never evaluated, and Lemma~\ref{lem:split} only compares the exponents $3^{18}$ and $930\cdot416581+159$.
+The data checks in the statement file (Section~\ref{sec:statement}) use \texttt{decide +kernel} in the same way, on the Lucas certificates.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) both \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, which rejects \decl{sorryAx}, the axiom \decl{Lean.ofReduceBool} introduced by \texttt{native\_decide}, and custom axioms; and (3) the type of \decl{result} is syntactically the statement or its negation, up to metadata annotations, with no unfolding.
+Running \texttt{lake env lean Math0/Frontier/OEIS/A083020.lean} in the directory \path{lean} prints\par\nobreak\noindent
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A083020.statement' depends on axioms [propext]
+math0 audit: 'Math0.Frontier.A083020.result' depends on axioms [Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A083020.result' refutes 'Math0.Statements.A083020.statement'
+\end{lstlisting}
+\end{minipage}
+so \decl{result} proves the negation of the statement and depends only on \decl{propext} and \decl{Quot.sound}, a subset of the three permitted axioms.
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks.
+To check this result alone, run \texttt{lake build Math0.Statements.OEIS.A083020} and then \texttt{lake env lean Math0/Frontier/OEIS/A083020.lean} in the directory \path{lean}; the kernel computations take a few seconds, and most of the running time is spent loading Mathlib.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A055777}
+The OEIS Foundation Inc., \url{https://oeis.org/A055777} ($3^{3^n}$), entry by H.~Bottomley, Jul.~12, 2000.
+
+\bibitem{A061678}
+The OEIS Foundation Inc., \url{https://oeis.org/A061678} (continued fraction for $\sum_{k\ge0}3^{-3^k}$), entry by J.~Earls, Jun.~23, 2001.
+
+\bibitem{A083020}
+The OEIS Foundation Inc., \url{https://oeis.org/A083020} (prime factors of $3^{3^n}+2$), entry by C.~Hilliard, May~31, 2003; revision \#20, Jan.~4, 2026.
+
+\bibitem{A113913}
+The OEIS Foundation Inc., \url{https://oeis.org/A113913} (number of distinct prime factors of $3^{3^n}+1$), entry by J.~Coveiro, Jan.~29, 2006.
+
+\bibitem{A129290}
+The OEIS Foundation Inc., \url{https://oeis.org/A129290} (base-$3$ Fermat numbers $3^{3^n}+1$), entry by A.~Adamchuk, Apr.~8, 2007.
+
+\bibitem{A129291}
+The OEIS Foundation Inc., \url{https://oeis.org/A129291} ($1-3^{3^n}+9^{3^n}$), entry by A.~Adamchuk, Apr.~8, 2007.
+
+\bibitem{A140331}
+The OEIS Foundation Inc., \url{https://oeis.org/A140331} (smallest $k$ such that $3^{3^n}-k$ is prime), entry by J.~Vos Post, May~26, 2008.
+
+\bibitem{St04}
+R.~Stephan, \emph{Prove or disprove. 100 conjectures from the OEIS}, arXiv:math/0409509, 2004.
+
+\end{thebibliography}
+}
+
+\end{document}

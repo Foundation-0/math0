@@ -31,6 +31,10 @@ Referees: Sources checked:
 
 No prior resolution was found.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

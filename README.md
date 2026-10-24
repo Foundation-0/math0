@@ -25,7 +25,7 @@ quietly prove an easier statement than the one the problem's curators wrote down
 New results (open problems settled; each checked by the Lean kernel and judged new by an independent novelty referee):
 
 * [3 × 3 lower triangles with neighbours differing by at most two: a(n) = 1047 n - 1459 for n > 2 (A195249)](results/oeis-a195249/README.md) ([paper](results/oeis-a195249/paper.pdf))
-* [3^(3^18) + 2 is divisible by 31^2, so Hilliard's squarefree conjecture (A083020) fails](results/oeis-a083020/README.md)
+* [3^(3^18) + 2 is divisible by 31^2, so Hilliard's squarefree conjecture (A083020) fails](results/oeis-a083020/README.md) ([paper](results/oeis-a083020/paper.pdf))
 * [A090905: every row ends at twice the largest prime of the previous row (Murthy's conjecture proved)](results/oeis-a090905/README.md) ([paper](results/oeis-a090905/paper.pdf))
 * [A106505: common sides of A/2A primitive triangles are periodic mod 8, so a(n+5) = a(n) + 8](results/oeis-a106505/README.md) ([paper](results/oeis-a106505/paper.pdf))
 * [A172164: the second differences of the Theodorus-spiral turns are always 18, 19, 20 or 21](results/oeis-a172164/README.md)
@@ -42,7 +42,7 @@ New results (open problems settled; each checked by the Lean kernel and judged n
 * [Even and odd legs with odd prime factors ≡ 3 (mod 4): a(n)/n → π (A354571, A354570)](results/oeis-a354571/README.md) ([paper](results/oeis-a354571/paper.pdf))
 * [Internal n-gons in a regular n-gon: triple points occur only for n = 3, 4, 6, and otherwise there are n k^2 + 1 regions (Shannon's A357216 conjecture)](results/oeis-a357216/README.md) ([paper](results/oeis-a357216/paper.pdf))
 * [Prime-Minesweeper on the A060734 array: a(n) < 6, and a(n) = 5 only at n = 6](results/oeis-a326407/README.md) ([paper](results/oeis-a326407/paper.pdf))
-* [Stephan's conjectured g.f. for A242396 is false (first failure at n = 97)](results/oeis-a242396/README.md)
+* [Stephan's conjectured g.f. for A242396 is false (first failure at n = 97)](results/oeis-a242396/README.md) ([paper](results/oeis-a242396/paper.pdf))
 * [The Golomb-row triangle A113676 and Levine's sequence A014644](results/oeis-a113676/README.md) ([paper](results/oeis-a113676/paper.pdf))
 * [The least number of inequivalent cells of a (6k+5)-iamond is 3(k+1)](results/oeis-a369366/README.md) ([paper](results/oeis-a369366/paper.pdf))
 * [A116184: Adamchuk's conjectures on 37^3 dividing the numerator of sum_{k=1}^{36} 1/k^n](results/oeis-a116184/README.md) ([paper](results/oeis-a116184/paper.pdf))

@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: %C A083020 Conjecture: These numbers have no repea
 
 Referees: I found no prior resolution. Sources checked: the OEIS A083020 entry (local mirror and https://raw.githubusercontent.com/oeis/oeisdata/main/seq/A083/A083020.seq, revision #20 of Jan 04 2026, which still states the conjecture with no refutation), cross-referenced/related entries A055777, A129290, A129291, A113913, A140331 and A061678, R. Stephan's "Prove or Disprove. 100 Conjectures from the OEIS" (arXiv:math/0409509, which does not contain A083020), and primepuzzles.net Conjecture 107 (unrelated). I also ran web searches for "3^(3^n)+2 squarefree", "Cino Hilliard 3^3^n+2 seqfan" and "3^{3^n}+2 squarefree mathoverflow/stackexchange". None of these reported a counterexample or a proof.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex
