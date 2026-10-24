@@ -1065,6 +1065,29 @@
    "date": "2026-10-19"
   },
   {
+   "id": "OEIS-frontier/A081200",
+   "slug": "oeis-a081200",
+   "title": "Collinear 5-point sets in the grid {0,…,4}^n number (7^n − 5^n)/2 (Hardin's conjecture, A081200)",
+   "area": "Discrete geometry",
+   "source": "OEIS A081200",
+   "source_url": "https://oeis.org/A081200",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A081200.lean",
+    "decl": "Math0.Statements.A081200.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A081200.lean",
+   "our_decl": "Math0.Frontier.A081200.result",
+   "summary": "For every n ≥ 0, the number of 5-element subsets of the grid {0,1,2,3,4}^n ⊂ ℝ^n that lie on one real line equals a(n) = Σ_{k=0}^{n} C(n,k)·6^{n−k}·(k mod 2), the 6th binomial transform of 0,1,0,1,…. Equivalently the count is (7^n − 5^n)/2.",
+   "notes": "Conjecture as stated in OEIS: %C A081200 Conjecture (verified up to a(9)): Number of collinear 5-tuples of points in a 5 X 5 X 5 X ... n-dimensional cubic grid. - Ron Hardin, May 24 2010\n\nReferees: P. Erdős and J. L. Selfridge, \"On a combinatorial game\", J. Combin. Theory Ser. A 14 (1973) 298-301 (states that the n-dimensional hypercube of side k has ((k+2)^n - k^n)/2 winning lines; k=5 gives (7^n-5^n)/2 = A081200); S. W. Golomb and A. W. Hales, \"Hypercube Tic-Tac-Toe\", More Games of No Chance, MSRI Publ. 42 (2002), 167-182, Theorem 1 (same count, same word encoding and 2-to-1 reversal proof; work dates to before 1972); the border-shell proof is credited to Leo Moser in R. Honsberger, Mathematical Morsels (cut-the-knot.org/proofs/tictactoe.shtml); O. Patashnik, \"Qubic: 4x4x4 Tic-Tac-Toe\", Math. Mag. 53 (1980) (k^n game has ((k+2)^n - k^n)/2 lines); OEIS A005059 (k=3 analogue stated without a conjecture label, D. W. Wilson c. 1999). Related open Hardin comments that the same argument settles: A081199 (k=4) and A081201 (k=6).",
+   "date": "2026-10-24"
+  },
+  {
    "id": "OEIS-frontier/A083020",
    "slug": "oeis-a083020",
    "title": "3^(3^18) + 2 is divisible by 31^2, so Hilliard's squarefree conjecture (A083020) fails",
@@ -1178,6 +1201,29 @@
    "summary": "For every n >= 1, write the convergent [1; 1/2, 1/3, ..., 1/n] = 1 + 1/(1/2 + 1/(1/3 + ... + 1/(1/n))) in lowest terms as p/q. Then p + q is a power of 2, namely p + q = 2^a(n). Here a(n) is the base-2 logarithm, and a(n) = Sum_{k=1..n} A001511(floor((k+1)/2)) = 2n + 1 - s2(n) - s2(n+1) = A011371(n) + A011371(n+1). In these formulas A001511 is the ruler function, s2 = A000120 is the binary digit sum, and A011371(m) = m - s2(m).",
    "notes": "Conjecture as stated in OEIS: It appears that a(n) = Sum_{k=1..n} A001511(floor((k+1)/2)). Equivalently, a(n) = 2n + 1 - A000120(n) - A000120(n+1) = A011371(n) + A011371(n+1). - _Franklin T. Adams-Watters_, Feb 02 2006\n\nReferees: No prior explicit proof of A092054's conjectured formula found. Relevant partial or adjacent sources:\n- OEIS A092054 (#43, Aug 09 2026): the formula is still marked \"It appears\".\n- M. A. Suchenek, \"Elementary Yet Precise Worst-Case Analysis of Floyd's Heap-Construction Program\", Fundamenta Informaticae 120 (2012) 75-92, doi:10.3233/FI-2012-751. It proves 2N-2s2(N)-e2(N) for heap construction, which is algebraically equivalent to the conjectured formula. It does not prove the continued-fraction statement; the link to A092054 rests only on an OEIS comment.\n- OEIS A001901: reduced Wallis numerators, \"Subsequence of A000079\" (powers of 2). Ordowski (2024): A001901(n) = numerator of [1;1,1/2,...,1/n].\n- OEIS A056982 (Weisstein): 4^A005187(n) = denominator of prod_{k<=n}(1-1/(4k^2)). This gives the even-index exponent.\n- OEIS A001902 and A092053 (Hanna 2004): the convergent numerators are the Wallis denominators.\n- N. A. Draim, \"Pi in the form of a continued fraction with infinite terms\", Fibonacci Quarterly 7.3 (1969) 275-276, https://www.mathstat.dal.ca/FQ/Scanned/7-3/draim.pdf: Wallis partial products equal the convergents of a continued fraction with partial numerators (n-1)n.\n- Kummer/Legendre: v2(C(2m,m)) = s2(m), v2(m!) = m - s2(m).",
    "date": "2026-10-21"
+  },
+  {
+   "id": "OEIS-frontier/A093726",
+   "slug": "oeis-a093726",
+   "title": "Imaginary parts of the convergents of [1+i; 1+i, 1+i, ...] are A317974(n+1)/A138573(n)",
+   "area": "Number theory",
+   "source": "OEIS A093726",
+   "source_url": "https://oeis.org/A093726",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A093726.lean",
+    "decl": "Math0.Statements.A093726.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A093726.lean",
+   "our_decl": "Math0.Frontier.A093726.result",
+   "summary": "Let c_n = (1+i) + 1/((1+i) + ... + 1/(1+i)) be the continued fraction with n partial quotients 1+i, so c_1 = 1+i and c_{n+1} = (1+i) + 1/c_n. Write c_n = (A093725(n) + a(n) i)/A093727(n) in Mathematica's Numerator/Denominator form (A093727(n) = lcm of the denominators of Re c_n and Im c_n). Let A317974 be 0,0,1,1 and A138573 be 0,1,2,5, both continued by u(n) = 2(u(n-1)+u(n-2)+u(n-3)) - u(n-4). Then for every n >= 1, a(n)/A093727(n) = A317974(n+1)/A138573(n) as rational numbers.",
+   "notes": "Conjecture as stated in OEIS: Conjecture: a(n)/A093727(n) = A317974(n+1)/A138573(n). - _Zhuorui He_, Jun 16 2026\n\nReferees: OEIS A093726 rev #13 (Jun 20 2026): the formula is still marked \"Conjecture: a(n)/A093727(n) = A317974(n+1)/A138573(n). - Zhuorui He, Jun 16 2026\"; there is no later %E edit recording a proof. Related prior work: Peter Bala's 2014 formula in OEIS A138573 that A138573(n) = |U(n)|^2 for the Gaussian Lucas sequence U(n) = (1+i)U(n-1) + U(n-2), which covers the denominator part only. A317974 (rev #35, Jun 30 2026) has no relevant formula. Not covered by S. Fried, \"Further proofs of conjectures from the OEIS\", arXiv:2607.24832 (Jul 2026); I checked its full text for the A-numbers. Fried's earlier papers (arXiv:2410.07237; JIS 2025 and 2026) predate the conjecture. No MathOverflow, Math StackExchange, SeqFan or arXiv resolution found. Sources: https://raw.githubusercontent.com/oeis/oeisdata/main/seq/A093/A093726.seq, https://arxiv.org/abs/2607.24832",
+   "date": "2026-10-24"
   },
   {
    "id": "OEIS-frontier/A097154",
@@ -1364,6 +1410,52 @@
    "date": "2026-10-20"
   },
   {
+   "id": "OEIS-frontier/A160848",
+   "slug": "oeis-a160848",
+   "title": "Barker's order-20 recurrence for the lines through an 8 x n grid holds",
+   "area": "Discrete geometry",
+   "source": "OEIS A160848",
+   "source_url": "https://oeis.org/A160848",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A160848.lean",
+    "decl": "Math0.Statements.A160848.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A160848.lean",
+   "our_decl": "Math0.Frontier.A160848.result",
+   "summary": "Let a(n) be the number of lines in the plane through at least 2 points of the 8 x n grid {0..n-1} x {0..7} (OEIS A160848). Then for every n > 21: a(n) = -a(n-2) + a(n-5) + a(n-6) + 2a(n-7) + a(n-8) + a(n-9) - a(n-11) - a(n-12) - 2a(n-13) - a(n-14) - a(n-15) + a(n-18) + a(n-20) (Colin Barker's 2017 conjecture).",
+   "notes": "Conjecture as stated in OEIS: Conjectures from _Colin Barker_, Dec 25 2017: \"a(n) = -a(n-2) + a(n-5) + a(n-6) + 2*a(n-7) + a(n-8) + a(n-9) - a(n-11) - a(n-12) - 2*a(n-13) - a(n-14) - a(n-15) + a(n-18) + a(n-20) for n>21\", with g.f. denominator (1-x)^3(1+x)(1-x+x^2)(1+x^2)(1+x+x^2)(1+...+x^4)(1+...+x^6).\n\nReferees: - OEIS A160848 (local mirror, revision #13 of Dec 25 2017): Barker's g.f. and order-20 recurrence are labelled \"Conjectures from Colin Barker, Dec 25 2017\", with no later %E. Siblings A160845, A160846, A160847, A160849 and A160850 are likewise still conjectural or empirical; A295707 is the parent array.\n- S. Mustonen, \"On lines and their intersection points in a rectangular grid of points\", http://www.survo.fi/papers/PointsInGrid.pdf (2009). Section 3 proves L(m,n) = ½[f(m,n,1) - f(m,n,2)]. Appendix 2, eq. (38), gives the second-difference recursion L(m,n) = 2L(m,n-1) - L(m,n-2) + 2ψ1 + 2ψ4 with periodic residuals, supported by a heuristic \"bearing points\" argument and numerical checks; that recursion is the basis of the Mathematica code in the OEIS entry.\n- P. Haukkanen and J. K. Merikoski, arXiv:1108.1041 (2011), Remark 2: for n1 ≠ n2, \"Mustonen [5] conjectured a recursive formula\", and the question is \"more difficult\".\n- A.-M. Ernvall-Hytönen, K. Matomäki, P. Haukkanen and J. K. Merikoski, \"Formulas for the number of gridlines\", Monatsh. Math. 164 (2011) 157-170: proves Mustonen's recursions only for n×n and (n-1)×n grids.\n- S. Mustonen, \"On lines through a given number of points in a rectangular grid of points\", LinesInGrid2.pdf: covers square grids only.\n\nNo prior proof or counterexample of Barker's A160848 recurrence was found.",
+   "date": "2026-10-24"
+  },
+  {
+   "id": "OEIS-frontier/A172164",
+   "slug": "oeis-a172164",
+   "title": "A172164: the second differences of the Theodorus-spiral turns are always 18, 19, 20 or 21",
+   "area": "Discrete geometry",
+   "source": "OEIS A172164",
+   "source_url": "https://oeis.org/A172164",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A172164.lean",
+    "decl": "Math0.Statements.A172164.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A172164.lean",
+   "our_decl": "Math0.Frontier.A172164.result",
+   "summary": "Let S(k) = sum_{i=1}^{k} arctan(1/sqrt i) be the total central angle of the first k triangles of the spiral of Theodorus. Triangle i covers the angular sector [S(i-1), S(i)], and turn n is the angle range [2pi(n-1), 2pi n]. Let c(n) be the number of triangles i >= 1 that lie entirely inside turn n, that is, with 2pi(n-1) <= S(i-1) and S(i) <= 2pi n. Then for every n >= 2, the difference a(n) = c(n) - c(n-1) is one of 18, 19, 20, 21. This is Dumortier's conjecture in OEIS A172164.",
+   "notes": "Conjecture as stated in OEIS: \"Conjecture : The terms are only 18,19,20,21 (From the first thousand turns, there are 2,3% of 18, 36,5% of 19, 46,2% of 20 and 15% of 21). No period found. Probably due to Pi transcendence.\" (Sebastien Dumortier, Jan 27 2010)\n\nReferees: I found no prior proof or counterexample.\n\nOEIS entries (local mirror, identical to the raw GitHub copy):\n- A172164 (Dumortier, 2010): the conjecture, with numerical frequency checks by R. G. Wilson v (1e5 turns) and H. Kociemba (1e7 turns), 2013. Still listed as a conjecture at edit #25, Aug 2026.\n- A137515: \"the number added grows by 18, 19, 20 or 21 (tested up to 5000 terms)\"; restated by H. P. Dale in 2019 with no proof.\n- A072895: Kociemba's comment that floor((pi n + c)^2 - 1/6) with c = -K/2 = 1.0788914983... differs from A072895(n) by at most 1, and equals it for n < 1e9 (numerical only).\n- A105459: Hlawka's Schneckenkonstante K, with the formula Sum_{x<n} arctan(1/sqrt x) = 2 sqrt n + K + o(1).\n- A296179, A296181, A295338, A295339 (W. Lang): related revolution counts; nothing on this bound.\n\nBackground sources for the asymptotics:\n- E. Hlawka, \"Gleichverteilung und Quadratwurzelschnecke\", Monatsh. Math. 89 (1980) 19-44.\n- P. J. Davis, \"Spirals: From Theodorus to Chaos\" (1993).\n- D. Brink, Amer. Math. Monthly 119 (2012) 779-786.\n- J. Waldvogel, \"Analytic Continuation of the Theodorus Spiral\" (2008).\n- Kociemba, \"The Spiral of Theodorus\" (kociemba.org/themen/spirale/theodorus.html): unreachable, seen only through search snippets, which cover the asymptotics and turn counts but no proof of the 18–21 bound.\n\nUnrelated papers checked: arXiv 2403.20207 (Stouten, about hypotenuses on a common line; withdrawn) and arXiv 2407.07109 (the Fibonacci–Theodorus spiral).\n\nThe result follows from effective versions of the Hlawka/Davis asymptotics, but no source I found writes the bound down.",
+   "date": "2026-10-24"
+  },
+  {
    "id": "OEIS-frontier/A175385",
    "slug": "oeis-a175385",
    "title": "∑_{i=1..n} C(2n-i-1, i-1)/i is never an integer for n > 1 (A175385)",
@@ -1385,6 +1477,29 @@
    "summary": "For every integer n ≥ 2, the rational number S(n) = ∑_{i=1}^{n} C(2n-i-1, i-1)/i is not an integer. This is the Shevelev–Seidov conjecture from OEIS A175385.",
    "notes": "Conjecture as stated in OEIS: We conjecture that Sum_{i=1..n} ((1/i)*C(2n-i-1,i-1)) is not an integer for n>1. (Vladimir Shevelev, Zak Seidov, Apr 24 2010)\n\nReferees: OEIS A175386 (cross-reference of A175385), comment by Ralf Stephan, May 25 2026: the conjecture was proved by an autonomous AI agent (AlphaProof Nexus). Lean file: https://github.com/google-deepmind/alphaproof-nexus-results/blob/main/APNOutputs/OEIS/oeis_175386_conjecture_0.lean (theorem target_theorem_0: for n > 1, the denominator of S(n) is not 1; checked, no sorry). Papers: G. Tsoukalas et al., \"Advancing Mathematics Research with AI-Driven Formal Proof Search\", arXiv:2605.22763 (May 2026); T. Adamczewski, \"OEIS Open: How many conjectures can language models turn into theorems?\", arXiv:2608.11941 (Aug 2026), cited by OEIS for the proof on p. 15, Appendix A. Classical implication: P. S. Bruckman, \"Lucas Pseudoprimes Are Odd\", Fibonacci Quarterly 32(2) (1994) 155-157 (https://www.mathstat.dal.ca/FQ/Scanned/32-2/bruckman2.pdf). No even composite N has N | L_N − 1, and with 2n·S(n) = L_{2n} − 1 this settles the conjecture. The A175385 entry itself (https://oeis.org/A175385, history up to #14, Mar 2023) records no proof.",
    "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A176206",
+   "slug": "oeis-a176206",
+   "title": "Divisors of the terms of row n of A176206 are the parts of the partitions of n",
+   "area": "Discrete geometry",
+   "source": "OEIS A176206",
+   "source_url": "https://oeis.org/A176206",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A176206.lean",
+    "decl": "Math0.Statements.A176206.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A176206.lean",
+   "our_decl": "Math0.Frontier.A176206.result",
+   "summary": "Row n of A176206 lists n - k repeated p(k) times for k = 0, ..., n-1, where p is the partition function. Pol's conjecture says that for every n >= 1, the multiset of all divisors of all terms of row n equals the multiset of all parts of all partitions of n. Divisors and parts are counted with multiplicity: each term t of the row contributes each divisor of t once, and each partition contributes all of its parts.",
+   "notes": "Conjecture as stated in OEIS: %C Conjecture: all divisors of all terms in row n are also all parts of all partitions of n. (Omar E. Pol, Nov 2020)\n\nReferees: OEIS A066633 (number of k's in all partitions of n): g.f. x^k/(1-x^k)*Prod 1/(1-x^m) by V. Jovovic (Jan 2002); T(n,k) = Sum_{j<n, j==n mod k} P(j) by J. L. Arregui (Apr 2002); T(n+k,k) = T(n,k) + A000041(n), proved in M. Ghosh Dastidar and S. Sen Gupta, \"Generalization of a few results in Integer Partitions\", arXiv:1111.0094, Lemma 1. A related classical bijection appears in arXiv:1610.01863 (\"On Stanley's theorem and its generalizations\") and arXiv:1007.3459. M. Merca, \"A note on a classical connection between partitions and divisors\" (aos.ro), also counts the k's in all partitions of n. OEIS A338156 states the A176206 divisor/partition correspondence as fact. Sources: https://oeis.org/A066633 (read from local mirror), https://arxiv.org/abs/1111.0094, https://arxiv.org/pdf/1610.01863, https://arxiv.org/pdf/1007.3459, https://aos.ro/?p=14363",
+   "date": "2026-10-24"
   },
   {
    "id": "OEIS-frontier/A195249",
@@ -2259,6 +2374,29 @@
    "summary": "Let a(n) be the number of tilings, counted up to the symmetries of the rectangle, of the rows(n) x cols(n) rectangle by the n bars 1x1, 1x2, ..., 1xn, each used exactly once. Here rows(n) = floor((n+1)/2) and cols(n) = (n(n+1)/2)/rows(n). For n = 2m+1 the rectangle is (m+1) x (2m+1), and for n = 2m+2 it is (m+1) x (2m+3). In Lean, a(n) is the frozen bitmask-search definition: it sums the stabilizer sizes of all tilings found by the search and divides by the order of the symmetry group (Burnside). Claim (A394981 conjecture, read for odd n >= 3): for every odd n >= 3, a(n+1) = 4 a(n). The literal case n = 1 fails, a(2) = 1 != 4 = 4 a(1), and the statement excludes it.",
    "notes": "Conjecture as stated in OEIS: %F A394981 Conjecture: If n is odd, then a(n+1) = 4*a(n).  (Unattributed formula line. Entry by _Gary Yane_, Apr 08 2026; a(1)-a(2) corrected by _Pontus von Brömssen_, May 13 2026.)\n\nReferees: The OEIS A394981 entry (Gary Yane, Apr 08 2026; a(1)-a(2) corrected by Pontus von Brömssen, May 13 2026; revision #42, May 16 2026, the same in the local mirror and upstream oeisdata) still states the identity as a conjecture, with keyword \"more\" and no proof reference. No other OEIS entry cites it. Cross-references A254414/A254458/A254607/A329279 are unrelated counts. Searches found no proof or counterexample on arXiv, MathOverflow, Math StackExchange, SeqFan or the general web. Nearest work, all on a different problem: arXiv:2606.05439, Blanco, Dougherty-Bliss, Ter-Saakov and Zeilberger, \"In How Many Ways can a Rectangle be Rectangled?\" (tilings by bars of any length); arXiv:2607.29369, Martinez (L-tetromino tilings).",
    "date": "2026-10-20"
+  },
+  {
+   "id": "OEIS-frontier/A395454",
+   "slug": "oeis-a395454",
+   "title": "Alexandersson's recurrence for the row polynomials of A395454 holds (rows counted from 1)",
+   "area": "Discrete geometry",
+   "source": "OEIS A395454",
+   "source_url": "https://oeis.org/A395454",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A395454.lean",
+    "decl": "Math0.Statements.A395454.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A395454.lean",
+   "our_decl": "Math0.Frontier.A395454.result",
+   "summary": "Let E2(j,i) be the second-order Eulerian numbers (A201637): E2(0,0)=1, E2(0,i)=0 for i>=1, and E2(j+1,i) = (2j+1-i)E2(j,i-1) + (i+1)E2(j,i). Let T(n,k) = sum_{j=0}^n (-1)^{n-j} C(n,j) E2(j,n-k), the triangle A395454, and let P_m(t) = sum_{k=0}^m T(m,k) t^k be its row polynomials in the entry's numbering (P_0 = 1, P_1 = 0, P_2 = 2t, ...). Then for every m >= 2, in Z[t],\nP_m = (m-1)(1+t) P_{m-1} + (t - t^2) P'_{m-1} + 2(m-1) t P_{m-2}.\nEquivalently, with the rows counted from 1 (P1(n) = P_{n-1}), for every n >= 3: P1(n) = (n - 2t + nt - 2) P1(n-1) + (t - t^2) P1'(n-1) + t(2n-4) P1(n-2). This is Alexandersson's conjecture in the form fixed by the frozen statement.",
+   "notes": "Conjecture as stated in OEIS: %F A395454 Conjecture: Let P(n) be the generating polynomial (in t) of row n. Then P(n) = (n - 2*t + n*t - 2)*P(n-1) + (t - t^2)*P'(n-1) + t*(2*n-4)*P(n-2). - Per W. Alexandersson, Jun 27 2026\n\nReferees: No earlier resolution found. Closest related work:\n- S.-M. Ma and Y.-N. Yeh, \"Eulerian polynomials, Stirling permutations of the second kind and perfect matchings,\" Electron. J. Combin. 24(4) (2017) #P4.27, arXiv:1607.01311. Its Thm 17 is an analogous recurrence for Stirling-derangement polynomials by cycle ascent plateaus (a different family). Its Cor 18 is the A053871 row-sum recurrence. Its Prop 9 implies that A395454 row n is the distribution of n - casc over Stirling derangements.\n- G.-H. Duh, Y.-C. R. Lin, S.-M. Ma and Y.-N. Yeh, arXiv:1612.07391 (2016).\n- S.-M. Ma, S. Kitaev, J. Yeh and Y.-N. Yeh, arXiv:2601.20665 (2026).\n- S. Fried, \"Further proofs of conjectures from the OEIS,\" arXiv:2607.24832 (2026). Does not cover A395454.\n\nOEIS A395454 (#30, Oct 14 2026; Luschny's entry, Alexandersson's conjecture of Jun 27 2026) still lists the formula as a conjecture, with no proof recorded in any comment, %E line or link. Read with the entry's offset-0 numbering the formula is false; read with rows counted from 1 it holds.",
+   "date": "2026-10-24"
   },
   {
    "id": "OEIS-frontier/A397315",
