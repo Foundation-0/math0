@@ -19,7 +19,7 @@ Conjecture as stated in OEIS: %Y A373345 Cf. A007895 (conjectured row lengths) .
 
 Referees: OEIS A371176 (Mikhail Kurkov, 2024): the formula a(n) = b(n)*A001316(b(n))/2 with b(n) = A048679(n), and the recursion a(n) = 2^(A072649(n)-1) + [c(n)>0]*2*a(c(n)), were present by Apr 20 2024 (oeisdata commit 6ea59dd), before the A373345 conjecture of Jun 1 2024. Both were stated without proof and imply popcount(A371176(n)) = A007895(n). Kurkov's comment of Oct 21 2024 states the explicit Zeckendorf-rewriting description of A371176(n).
 H. V. Chu, "The Fibonacci Sequence and Schreier-Zeckendorf Sets", J. Integer Sequences 22 (2019), Art. 19.6.5 (arXiv:1906.10962), Theorem 3: a cardinality-preserving bijection between Schreier sets and Zeckendorf sets, which also preserves colex/binary order.
-GitHub issue https://github.com/the-omega-institute/trureturing/issues/9050 ("Research: full Schreier-Zeckendorf row-length identity (OEIS A373345)", Sep 20 2026): an informal paper proof of exactly this identity, with no Lean formalization.
+A referee search also reported a GitHub issue (the-omega-institute/trureturing #9050, Sep 2026) giving an informal proof of this identity; we could not independently check that link.
 Background only: A. Bird, "Jozef Schreier, Schreier sets and the Fibonacci sequence", Out Of The Norm blog, 2012, gives the binary ordering and the R/S block recursion but does not mention Zeckendorf. H. V. Chu, arXiv:2606.21865 (2026), is a survey and does not state the identity.
 No prior Lean formalization found.
 

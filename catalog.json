@@ -1893,6 +1893,29 @@
    "date": "2026-10-24"
   },
   {
+   "id": "OEIS-frontier/A270668",
+   "slug": "oeis-a270668",
+   "title": "Mathar's generating function for column 3 of A270668 (domino tilings of (4k+1)x5 boards with central hole)",
+   "area": "Discrete geometry",
+   "source": "OEIS A270668",
+   "source_url": "https://oeis.org/A270668",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A270668.lean",
+    "decl": "Math0.Statements.A270668.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A270668.lean",
+   "our_decl": "Math0.Frontier.A270668.result",
+   "summary": "Let c_k = T(2k, 2) be the number of domino tilings of the (4k+1) x 5 board with its central cell removed (c_0 = 1 for the 1 x 5 strip with its middle cell removed). Then, in Q[[x]],\n  sum_{k>=0} c_k x^k = (-1 - 4x + 543x^2 - 6238x^3 + 17032x^4 - 6238x^5 + 543x^6 - 4x^7 - x^8) / ((x-1)(x^2-7x+1)(x^2-23x+1)(x^4-161x^3+576x^2-161x+1)).\nThis is R. J. Mathar's 2016 conjectured g.f. for \"column 3\" of OEIS A270668. Equivalently, (sum c_k x^k) * den = num.",
+   "notes": "Conjecture as stated in OEIS: %F A270668 Conjectured g.f. for column 3: ( -1 -4*x +543*x^2 -6238*x^3 +17032*x^4 -6238*x^5 +543*x^6 -4*x^7 -x^8 ) / ( (x-1) *(x^2-7*x+1) *(x^2-23*x+1) *(x^4 -161*x^3 +576*x^2 -161*x +1) ). - _R. J. Mathar_, Mar 23 2016\n\nReferees: R. J. Mathar, \"A270668: Domino tilings with one monomer in the center\", PDF linked from OEIS A270668 (https://oeis.org/A270668/a270668.pdf), dated Apr 13 2016. It counts the 5 x (2m+1) floor with a central monomer by the transfer-matrix method: 50 states, nine centre configurations, and left/right Hadamard products of rational g.f.s in x = z^5. It appears to derive the column-3 g.f. that Mathar had conjectured on Mar 23 2016 in OEIS A270668 (still labelled \"Conjectured\" there). I saw its content only through search-engine extracts; the full PDF could not be downloaded. Related but not resolving: OEIS A143659 / M. Ciucu arXiv:0710.4500 (diagonal); A189003/A189006 (5xn corner-removed, same characteristic polynomial t^4-15t^3+32t^2-15t+1); A003775, A006238; B. E. Tenner, EJC 11(2) R17 (2005); Byun-Goddard arXiv:2502.05918; Stanley EC1 section 4.2.5 (Hadamard products of rational series). No prior Lean or other formalization found.",
+   "date": "2026-10-25"
+  },
+  {
    "id": "OEIS-frontier/A278212",
    "slug": "oeis-a278212",
    "title": "Kagey's conjecture for A278212: a(n) = floor(A275815(n)/2), via exact bishop and queen maxima from flow (LP-dual) certificates",
@@ -2694,7 +2717,7 @@
    "lean_file": "lean/Math0/Frontier/OEIS/A373345.lean",
    "our_decl": "Math0.Frontier.A373345.result",
    "summary": "Let A371176 be the increasing sequence of positive integers k whose binary weight (number of ones) is at most the ruler function v2(2k), i.e. at most one more than the index of the lowest set bit. Equivalently, these are the encodings sum 2^(s-1) of the finite Schreier sets S, meaning nonempty sets of positive integers with |S| <= min S. Row n of A373345 is the Schreier set encoded by A371176(n). Claim: for every n >= 1, row n has exactly as many elements as the Zeckendorf representation of n has terms. In the formal statement, (T n).length = (Nat.zeckendorf n).length.",
-   "notes": "Conjecture as stated in OEIS: %Y A373345 Cf. A007895 (conjectured row lengths) ... (Paolo Xausa, Jun 01 2024). Likewise %Y A373557 Cf. ... A007895 (conjectured row lengths) (Paolo Xausa, Jun 09 2024).\n\nReferees: OEIS A371176 (Mikhail Kurkov, 2024): the formula a(n) = b(n)*A001316(b(n))/2 with b(n) = A048679(n), and the recursion a(n) = 2^(A072649(n)-1) + [c(n)>0]*2*a(c(n)), were present by Apr 20 2024 (oeisdata commit 6ea59dd), before the A373345 conjecture of Jun 1 2024. Both were stated without proof and imply popcount(A371176(n)) = A007895(n). Kurkov's comment of Oct 21 2024 states the explicit Zeckendorf-rewriting description of A371176(n).\nH. V. Chu, \"The Fibonacci Sequence and Schreier-Zeckendorf Sets\", J. Integer Sequences 22 (2019), Art. 19.6.5 (arXiv:1906.10962), Theorem 3: a cardinality-preserving bijection between Schreier sets and Zeckendorf sets, which also preserves colex/binary order.\nGitHub issue https://github.com/the-omega-institute/trureturing/issues/9050 (\"Research: full Schreier-Zeckendorf row-length identity (OEIS A373345)\", Sep 20 2026): an informal paper proof of exactly this identity, with no Lean formalization.\nBackground only: A. Bird, \"Jozef Schreier, Schreier sets and the Fibonacci sequence\", Out Of The Norm blog, 2012, gives the binary ordering and the R/S block recursion but does not mention Zeckendorf. H. V. Chu, arXiv:2606.21865 (2026), is a survey and does not state the identity.\nNo prior Lean formalization found.",
+   "notes": "Conjecture as stated in OEIS: %Y A373345 Cf. A007895 (conjectured row lengths) ... (Paolo Xausa, Jun 01 2024). Likewise %Y A373557 Cf. ... A007895 (conjectured row lengths) (Paolo Xausa, Jun 09 2024).\n\nReferees: OEIS A371176 (Mikhail Kurkov, 2024): the formula a(n) = b(n)*A001316(b(n))/2 with b(n) = A048679(n), and the recursion a(n) = 2^(A072649(n)-1) + [c(n)>0]*2*a(c(n)), were present by Apr 20 2024 (oeisdata commit 6ea59dd), before the A373345 conjecture of Jun 1 2024. Both were stated without proof and imply popcount(A371176(n)) = A007895(n). Kurkov's comment of Oct 21 2024 states the explicit Zeckendorf-rewriting description of A371176(n).\nH. V. Chu, \"The Fibonacci Sequence and Schreier-Zeckendorf Sets\", J. Integer Sequences 22 (2019), Art. 19.6.5 (arXiv:1906.10962), Theorem 3: a cardinality-preserving bijection between Schreier sets and Zeckendorf sets, which also preserves colex/binary order.\nA referee search also reported a GitHub issue (the-omega-institute/trureturing #9050, Sep 2026) giving an informal proof of this identity; we could not independently check that link.\nBackground only: A. Bird, \"Jozef Schreier, Schreier sets and the Fibonacci sequence\", Out Of The Norm blog, 2012, gives the binary ordering and the R/S block recursion but does not mention Zeckendorf. H. V. Chu, arXiv:2606.21865 (2026), is a survey and does not state the identity.\nNo prior Lean formalization found.",
    "date": "2026-10-25"
   },
   {
