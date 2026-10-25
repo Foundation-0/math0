@@ -20,7 +20,7 @@ quietly prove an easier statement than the one the problem's curators wrote down
 ## Highlights
 
 <!-- HIGHLIGHTS:START -->
-**124 verified results.** 54 new results, 46 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
+**130 verified results.** 57 new results, 49 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
 
 New results (open problems settled; each checked by the Lean kernel and judged new by an independent novelty referee):
 
@@ -28,9 +28,11 @@ New results (open problems settled; each checked by the Lean kernel and judged n
 * [3^(3^18) + 2 is divisible by 31^2, so Hilliard's squarefree conjecture (A083020) fails](results/oeis-a083020/README.md) ([paper](results/oeis-a083020/paper.pdf))
 * [A090905: every row ends at twice the largest prime of the previous row (Murthy's conjecture proved)](results/oeis-a090905/README.md) ([paper](results/oeis-a090905/paper.pdf))
 * [A106505: common sides of A/2A primitive triangles are periodic mod 8, so a(n+5) = a(n) + 8](results/oeis-a106505/README.md) ([paper](results/oeis-a106505/paper.pdf))
+* [A127752 mod 2 is the first Feigenbaum symbolic sequence A035263](results/oeis-a127752/README.md)
 * [A172164: the second differences of the Theodorus-spiral turns are always 18, 19, 20 or 21](results/oeis-a172164/README.md) ([paper](results/oeis-a172164/paper.pdf))
 * [A178295: collinear 4-subsets of {0,...,4}^n number 9^n/2 + 3*7^n/2 - 2*5^n (Mathar's conjecture, all three formulas)](results/oeis-a178295/README.md) ([paper](results/oeis-a178295/paper.pdf))
 * [A223395: walks on the 4 x 4 grid graph satisfy Hardin's recurrence, Barker's g.f. and closed form](results/oeis-a223395/README.md) ([paper](results/oeis-a223395/paper.pdf))
+* [A249151(k) = k exactly when k + 1 is prime (Karttunen's conjecture, A249434/A249151)](results/oeis-a249434/README.md)
 * [A308107: Barker's rational generating function and order-15 recurrence for the sum of smallest sides of scalene integer triangles](results/oeis-a308107/README.md) ([paper](results/oeis-a308107/paper.pdf))
 * [A308121: for odd n > 1, row 2n is row n with its halves swapped](results/oeis-a308121/README.md)
 * [A332010: the average first letter of one-descent derangements has denominator 2^(n-2)](results/oeis-a332010/README.md) ([paper](results/oeis-a332010/paper.pdf))
@@ -50,6 +52,7 @@ New results (open problems settled; each checked by the Lean kernel and judged n
 * [Mathar's order-6 recurrence for A121750 (even-length columns in deco polyominoes) holds for all n >= 7](results/oeis-a121750/README.md) ([paper](results/oeis-a121750/paper.pdf))
 * [OEIS A350900: Schulte's gcd-ratio double sum is a Dirichlet convolution](results/oeis-a350900/README.md) ([paper](results/oeis-a350900/paper.pdf))
 * [Prime-Minesweeper on the A060734 array: a(n) < 6, and a(n) = 5 only at n = 6](results/oeis-a326407/README.md) ([paper](results/oeis-a326407/paper.pdf))
+* [Schulte's conjectures on A281000, T(n,k) = C(2n+1,2k+1)·Cat(n-k): antidiagonal sums and matrix inverse](results/oeis-a281000/README.md)
 * [Stephan's conjectured g.f. for A242396 is false (first failure at n = 97)](results/oeis-a242396/README.md) ([paper](results/oeis-a242396/paper.pdf))
 * [The Golomb-row triangle A113676 and Levine's sequence A014644](results/oeis-a113676/README.md) ([paper](results/oeis-a113676/paper.pdf))
 * [The inverse of the 1/Catalan band triangle (A127767) has integer entries](results/oeis-a127767/README.md) ([paper](results/oeis-a127767/paper.pdf))

@@ -1433,6 +1433,29 @@
    "date": "2026-10-21"
   },
   {
+   "id": "OEIS-frontier/A127752",
+   "slug": "oeis-a127752",
+   "title": "A127752 mod 2 is the first Feigenbaum symbolic sequence A035263",
+   "area": "Discrete geometry",
+   "source": "OEIS A127752",
+   "source_url": "https://oeis.org/A127752",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A127752.lean",
+    "decl": "Math0.Statements.A127752.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A127752.lean",
+   "our_decl": "Math0.Frontier.A127752.result",
+   "summary": "Let A(n,k) = 1/(3n+1) if k <= n <= 2k and 0 otherwise (n, k >= 0), and let a(n) be the row sums of the inverse of this lower-triangular matrix. Equivalently, a is defined by forward substitution: a(n) = 3n+1 - sum_{j<n, n<=2j} a(j). Let A035263 be the trajectory of 1 under the morphism 0 -> 11, 1 -> 10 (offset 1). Then for every n >= 0, a(n) mod 2 = A035263(n+1). This is Paul Barry's 2007 conjecture.",
+   "notes": "Conjecture as stated in OEIS: a(n) mod 2 is first Feigenbaum symbolic sequence A035263 (conjecture). (Paul Barry, Jan 28 2007; checked to 2048 terms by Antti Karttunen, Sep 29 2018)\n\nReferees: OEIS A127752 (P. Barry, Jan 28 2007; current version #11, Feb 11 2021) still says \"(conjecture)\", with A. Karttunen's 2018 check of the first 2048 terms. A127751 (#5) still calls it conjectural, and the related A127750, A127749 and A111967 conjectures (Fredholm-Rueppel parity for the 1/(2n+1) triangle) remain open. Checked and not relevant: S. Fried, \"On the inverse of a certain triangular matrix and its connection to the largest odd divisor\", NNTDM 32(2) (2026) 255-262, which covers A127793 and A000265, not A127752; S. Fried, JIS 28 (2025) Art. 25.4.3 and JIS 29 (2026) Art. 26.1.8; S. Fried, arXiv:2607.24832. No prior proof or counterexample found, and no existing formalization in formal-conjectures.",
+   "date": "2026-10-25"
+  },
+  {
    "id": "OEIS-frontier/A127767",
    "slug": "oeis-a127767",
    "title": "The inverse of the 1/Catalan band triangle (A127767) has integer entries",
@@ -1801,6 +1824,29 @@
    "date": "2026-10-21"
   },
   {
+   "id": "OEIS-frontier/A249434",
+   "slug": "oeis-a249434",
+   "title": "A249151(k) = k exactly when k + 1 is prime (Karttunen's conjecture, A249434/A249151)",
+   "area": "Discrete geometry",
+   "source": "OEIS A249434",
+   "source_url": "https://oeis.org/A249434",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A249434.lean",
+    "decl": "Math0.Statements.A249434.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A249434.lean",
+   "our_decl": "Math0.Frontier.A249434.result",
+   "summary": "Let P(k) = prod_{j=0..k} C(k,j) be the product of row k of Pascal's triangle. For every k >= 0, k is the largest m with m! | P(k) if and only if k+1 is prime. Equivalently, A249151(k) = k iff k+1 is prime, so A006093 = {k : A249151(k) = k}.",
+   "notes": "Conjecture as stated in OEIS: %C A249434 It seems that A006093 gives all those k for which A249151(k) = k. If that is true, then this is a disjoint union of A006093 and A249429. (_Antti Karttunen_, Nov 02 2014; the same claim appears in A249151: 'A006093 seems to give all such k, that a(k) = k', and %Y A249434 'Subsequences: A006093 (conjectured)')\n\nReferees: OEIS A249434, A249151, A249431 (Antti Karttunen, Oct/Nov 2014; latest revisions Aug–Sep 2025 still say \"seems\"/\"conjectured\"; no %E proof record). J. C. Lagarias and H. Mehta, \"Products of binomial coefficients and unreduced Farey fractions\", arXiv:1409.4145 (Int. J. Number Theory 2016): formulas for ord_p of the row product G_n, including ord_p(G_n) = 0 iff n = a·p^k − 1 with 1 ≤ a ≤ p−1. This is a related ingredient, but the paper does not state or prove the conjecture. L. Du and J. C. Lagarias, arXiv:2006.15439, and Du–Lagarias–Yangjit, arXiv:2112.14422: related, but they do not address the conjecture. The conjecture is not in the AlphaProof Nexus / formal-conjectures auto_oeis set of 492 (Tsoukalas et al., arXiv:2605.22763) or in OEIS Open (Adamczewski, arXiv:2608.11941). No MathOverflow, Math StackExchange or SeqFan resolution was found.",
+   "date": "2026-10-25"
+  },
+  {
    "id": "OEIS-frontier/A262957",
    "slug": "oeis-a262957",
    "title": "A262957: Israel's b(n), c(n) are coprime integers and a(n) = b(n)",
@@ -1868,6 +1914,29 @@
    "summary": "For every n >= 1, let a(n) be the largest total number of moves that same-colored bishops can make on an n x n board, and queenMax(n) the same for queens. A piece can only move to an empty square, and every square it passes must be empty. Then a(n) = floor(queenMax(n)/2). More precisely, the proof shows the following. For bishops, a(4) = 20, a(5) = 38 and a(n) = 4(n-2)^2 for n >= 6. For queens, queenMax(4) is 40 or 41, queenMax(5) is 76 or 77, queenMax(6) is 128 or 129, and queenMax(n) = 8(n-2)^2 for n >= 7. That last formula also settles Alec Jones's conjecture on A275815 for n >= 7. The cases n <= 3 come from the listed values.",
    "notes": "Conjecture as stated in OEIS: \"Conjecture: a(n) = floor(A275815(n)/2). - _Peter Kagey_, Nov 24 2016\" (also A275815: \"Conjecture: a(n) = 8(n-2)^2 for n >= 6. - _Alec Jones_, Nov 16 2016\")\n\nReferees: I found no prior resolution, only computation and partial bounds:\n- OEIS A278212 (#36, Nov 19 2023): Kagey's 2016 conjecture is still listed as open. It records Chai Wah Wu's bounds 4(n-2)² ≤ a(n) ≤ 4n² (Nov 2016), Andrew Howroyd's a(n) ≤ 4(n-2)²+4 (Oct 2023), and terms a(7)–a(50) computed by Christian Sievers with an ILP (PuLP), after M. S. Branicky's a(6).\n- OEIS A275815 (#43, Jul 2021): Alec Jones's conjecture a(n)=8(n-2)² for n≥6 is still a conjecture, with keyword \"more\". It records Wu's bounds 8(n-2)² ≤ a(n) ≤ 8n² and terms a(7)–a(32) computed by Jim Randell with MiniZinc.\n- Jim Randell, Enigma 69 \"Maximum queen moves\" (enigmaticcode.wordpress.com, 2013, comments through 2025): the 6×6 case is verified by computer and the border formula is called \"presumed\". There is no general proof.\n- Related entries A278211, A278213 and A278214 contain no proof.\n- Searches of arXiv, MathOverflow, Math StackExchange, Puzzling, SeqFan and Google Scholar-style queries found no general proof or counterexample.",
    "date": "2026-10-24"
+  },
+  {
+   "id": "OEIS-frontier/A281000",
+   "slug": "oeis-a281000",
+   "title": "Schulte's conjectures on A281000, T(n,k) = C(2n+1,2k+1)·Cat(n-k): antidiagonal sums and matrix inverse",
+   "area": "Discrete geometry",
+   "source": "OEIS A281000",
+   "source_url": "https://oeis.org/A281000",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A281000.lean",
+    "decl": "Math0.Statements.A281000.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A281000.lean",
+   "our_decl": "Math0.Frontier.A281000.result",
+   "summary": "Let T(n,k) = C(2n+1,2k+1)·C(2n-2k,n-k)/(n+1-k) = C(2n+1,2k+1)·Cat(n-k) for 0 ≤ k ≤ n, and T(n,k) = 0 for k > n. Let N(n,j) = C(n-1,j-1)·C(n,j-1)/j be the Narayana numbers, s = A001003 the little Schröder numbers, with s(0) = 1 and s(n) = Σ_{j=1..n} 2^{j-1} N(n,j) for n ≥ 1, and b = A103365 the first column of the inverse of the lower-unitriangular Narayana matrix, so that Σ_{j=1..n} N(n,j) b(j) = [n = 1]. Then:\n(1) for every n ≥ 0, Σ_{k=0..⌊n/2⌋} T(n-k,k) = s(n+1);\n(2) (corrected reading) for every n ≥ 0, Σ_{k=0..n} T(n,k)(2k+1)Cat(k)·b(k+1) = 0^n;\n(3) for every N, the inverse over ℚ of the N×N leading block of T is the N×N leading block of U(n,k) = T(n,k)·b(n+1-k).",
+   "notes": "Conjecture as stated in OEIS: %F A281000 Conjectures: (1) Antidiagonal sums equal A001003(n+1); (2) Sum_{k=0..n} (-1)^k*T(n,k)*(2*k+1)*A000108(k)*A103365(k) = A000007(n); (3) Matrix inverse equals T(n,k)*A103365(n+1-k). (Werner Schulte, Jan 12 2017)\n\nReferees: No prior resolution found. Sources checked:\n- Local OEIS mirror: A281000 (#17, Nov 25 2018), A280580, A103365, A103364, A238390, A097610, A001003, A006318, A126120, A180874. No entry other than A281000 itself mentions A281000.\n- arXiv 2607.24832 and 2410.07237 (Sela Fried, proofs of OEIS conjectures); no mention.\n- arXiv 2608.11941 (Adamczewski, \"OEIS Open\") and the epoch-research/LeanOpenProblems-results repo; A281000 is not among its conjectures.\n- Web searches on arXiv, MathOverflow, the OEIS wiki and SeqFan; no hits.\n\nClosest prior material, which makes the result routine without explicitly resolving it:\n- T. Copeland, comment in A238390 (Jan 30 2016): the inverse pair C(n,k)·A126120(n−k) ↔ C(n,k)·m(n−k), with m(2j) = (−1)^j·A238390(j). Its odd–odd block gives conjecture (3).\n- V. Kotesovec, Mathematica in A103365 (2014), and P. D. Hanna's g.f. (2009): link A103365 to x/BesselJ(1,2x), so (−1)^j·A238390(j) = Cat(j)·A103365(j+1).\n- P. Bala, A103364 (2013): generalized Riordan array (1/E(y), y).\n- P. Barry, A097610 (Apr 2010): diagonal sums of the Motzkin triangle are the aerated large Schröder numbers. Restricting to an odd number of level steps gives half of that, which is conjecture (1).",
+   "date": "2026-10-25"
   },
   {
    "id": "OEIS-frontier/A294512",
@@ -2075,6 +2144,29 @@
    "summary": "Let A(x) = Sum_{n>=0} (x^(2n-1)+1)^n x^n / (1+x^(2n+1))^(n+1) in Z[[x]] (the n=0 summand is 1/(1+x)), and let a(n) = [x^(2n)] A(x). Then for every n >= 0, a(n) is odd if and only if n is a perfect square (n = k^2 for some k >= 0, so 0 counts as a square).",
    "notes": "Conjecture as stated in OEIS: A326602 (G.f.: Sum_{n>=0} (x^(2n-1)+1)^n x^n/(1+x^(2n+1))^(n+1), an even function; a(n) = [x^(2n)]): \"a(n) is odd iff n is square (conjecture).\" (_Paul D. Hanna_, Aug 08 2019). Same family: A323689 (Sum (x^n+i)^n/(1+i x^n)^(n+1)): \"Odd terms occur only at n = k^2 for k >= 0 (conjecture);\" (Hanna, Feb 14 2019); A323675 (Sum x^n (x^n+i)^n/(1+i x^(n+1))^(n+1)): \"It appears that odd terms occur only at n*(n+1)\" (Hanna, Feb 10 2019); A323690 (Sum (x^(n+1)+i)^n/(1+i x^n)^(n+1)): \"the first column consists of all the odd terms\" (triangle rows start at n(n+1)) (Hanna, Feb 13 2019).\n\nReferees: No prior resolution of A326602 found.\n- OEIS A326602 (local mirror and upstream oeisdata) is still at revision #19, Aug 11 2019, and still says \"a(n) is odd iff n is square (conjecture)\". No later edits or proof links.\n\nClosest prior work (same involution or parity method, different sequences):\n- A323557 (odd terms only at n(n+1)): proved by AlphaProof Nexus (github.com/google-deepmind/alphaproof-nexus-results, APNOutputs/OEIS/oeis_323557_conjecture_0.lean) and in T. Adamczewski, \"OEIS Open: How many conjectures can language models turn into theorems?\", arXiv:2608.11941, Appendix A. Also R. Stephan's comment of Jun 01 2026 on A323557.\n- A325046: S. Fried, \"Proof of a conjecture stated in A325046\" (OEIS a325046.pdf, 2025), and \"Further proofs of conjectures from the OEIS\", arXiv:2607.24832, Sec. 3.8 / Thm 50.\n\nNeither arXiv paper mentions A326602, and A326602 is absent from google-deepmind/formal-conjectures, so it was not in the Tsoukalas et al. or OEIS Open benchmark sets.",
    "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A328202",
+   "slug": "oeis-a328202",
+   "title": "The gcd of the interior binomial coefficients of row n equals Λ-exp(n)·Λ-exp(n−1) (A328202, Maiga's conjecture)",
+   "area": "Discrete geometry",
+   "source": "OEIS A328202",
+   "source_url": "https://oeis.org/A328202",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A328202.lean",
+    "decl": "Math0.Statements.A328202.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A328202.lean",
+   "our_decl": "Math0.Frontier.A328202.result",
+   "summary": "For every n ≥ 4, let G(n) = gcd{ C(n,k) : 2 ≤ k ≤ n−2 }. Let L(m) = p if m = p^t is a prime power (p prime, t ≥ 1), and L(m) = 1 otherwise (A014963, the exponential of the von Mangoldt function). Then G(n) = L(n)·L(n−1).",
+   "notes": "Conjecture as stated in OEIS: %F A328202 a(n) = A014963(n) * A014963(n - 1) (conjecture). - _Jon Maiga_, Oct 08 2019; also %C (From _Robert Israel_, Oct 16 2019): 'If p is a Fermat prime > 3, a(p)=2*p. If p is a Mersenne prime, a(p+1)=2*p. Conjecture: these are the only cases where a(n)>n.'\n\nReferees: G. Kaplan and D. Levy, \"GCD of truncated rows in Pascal's triangle\", Integers 4 (2004), #A14 (https://math.colgate.edu/~integers/e14/e14.pdf). Theorem 4 with Theorem 7 at t=1 (h(n,1)=1 for n>=4), or equivalently Theorem 9, gives g(n,2) = lcm(g(n-1,1), g(n,1)) = A014963(n)*A014963(n-1). This proves the A328202 formula in 2004, before the 2019 OEIS conjecture, and the paper's Table 2 matches the sequence data. Also relevant: H. Joris, C. Oestreicher and J. Steinig, \"The greatest common divisor of certain sets of binomial coefficients\", J. Number Theory 21 (1985) 101-119, which gives a general formula for gcd{C(n,k): r<=k<=s} (not checked directly). Background: Ram (1909) for the g(n,1) case. The OEIS entry (rev #46, Oct 10 2026) still labels the formula \"(conjecture)\" and does not cite these papers.",
+   "date": "2026-10-25"
   },
   {
    "id": "OEIS-frontier/A332010",
@@ -2583,6 +2675,29 @@
    "date": "2026-10-20"
   },
   {
+   "id": "OEIS-frontier/A373345",
+   "slug": "oeis-a373345",
+   "title": "Row lengths of the Schreier-set triangle A373345 are A007895 (number of Zeckendorf summands)",
+   "area": "Discrete geometry",
+   "source": "OEIS A373345",
+   "source_url": "https://oeis.org/A373345",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A373345.lean",
+    "decl": "Math0.Statements.A373345.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A373345.lean",
+   "our_decl": "Math0.Frontier.A373345.result",
+   "summary": "Let A371176 be the increasing sequence of positive integers k whose binary weight (number of ones) is at most the ruler function v2(2k), i.e. at most one more than the index of the lowest set bit. Equivalently, these are the encodings sum 2^(s-1) of the finite Schreier sets S, meaning nonempty sets of positive integers with |S| <= min S. Row n of A373345 is the Schreier set encoded by A371176(n). Claim: for every n >= 1, row n has exactly as many elements as the Zeckendorf representation of n has terms. In the formal statement, (T n).length = (Nat.zeckendorf n).length.",
+   "notes": "Conjecture as stated in OEIS: %Y A373345 Cf. A007895 (conjectured row lengths) ... (Paolo Xausa, Jun 01 2024). Likewise %Y A373557 Cf. ... A007895 (conjectured row lengths) (Paolo Xausa, Jun 09 2024).\n\nReferees: OEIS A371176 (Mikhail Kurkov, 2024): the formula a(n) = b(n)*A001316(b(n))/2 with b(n) = A048679(n), and the recursion a(n) = 2^(A072649(n)-1) + [c(n)>0]*2*a(c(n)), were present by Apr 20 2024 (oeisdata commit 6ea59dd), before the A373345 conjecture of Jun 1 2024. Both were stated without proof and imply popcount(A371176(n)) = A007895(n). Kurkov's comment of Oct 21 2024 states the explicit Zeckendorf-rewriting description of A371176(n).\nH. V. Chu, \"The Fibonacci Sequence and Schreier-Zeckendorf Sets\", J. Integer Sequences 22 (2019), Art. 19.6.5 (arXiv:1906.10962), Theorem 3: a cardinality-preserving bijection between Schreier sets and Zeckendorf sets, which also preserves colex/binary order.\nGitHub issue https://github.com/the-omega-institute/trureturing/issues/9050 (\"Research: full Schreier-Zeckendorf row-length identity (OEIS A373345)\", Sep 20 2026): an informal paper proof of exactly this identity, with no Lean formalization.\nBackground only: A. Bird, \"Jozef Schreier, Schreier sets and the Fibonacci sequence\", Out Of The Norm blog, 2012, gives the binary ordering and the R/S block recursion but does not mention Zeckendorf. H. V. Chu, arXiv:2606.21865 (2026), is a survey and does not state the identity.\nNo prior Lean formalization found.",
+   "date": "2026-10-25"
+  },
+  {
    "id": "OEIS-frontier/A375522",
    "slug": "oeis-a375522",
    "title": "A375522: S2(n) - S1(n) = 1 fails at n = 42 (the difference is 5)",
@@ -2650,6 +2765,29 @@
    "summary": "Let a(n) = sum_{k=0..n} C(n,k) 2^(k(k+1)) (2^k - (n-k))^(n-k-1), where the k = n term is read as 2^(n^2) and 0^0 = 1. Then for every n >= 6, a(n) mod 6 equals the entry with index (n-6) mod 6 of [1, 0, 3, 0, 3, 2]. Equivalently, a(n) mod 6 = 1, 0, 3, 0, 3, 2 for n ≡ 0, 1, 2, 3, 4, 5 (mod 6). (Paul D. Hanna's conjecture, OEIS A386655.)",
    "notes": "Conjecture as stated in OEIS: A386655 (E.g.f.: Sum_{n>=0} (2^n*x + LambertW(x))^n / n!): \"Conjecture: for n >= 6, a(n) (mod 6) equals [1, 0, 3, 0, 3, 2] repeating.\" (_Paul D. Hanna_, Aug 23 2025). Analogues: A386656 (q=3) [4,3,2,1,0,1], A386657 (q=4) [1,2,3,2,3,4], A386658 (q=5) [4,3,0,3,0,5].\n\nReferees: I found no earlier resolution.\n- OEIS A386655 (local mirror and current GitHub oeisdata, revision #14, Aug 24 2025) still states the mod-6 claim as a conjecture by Paul D. Hanna, with no %E edit or proof note.\n- The cross-referenced sister entries A386656, A386657 and A386658 (q = 3, 4, 5) state analogous mod-6 conjectures, none marked proved. The related entry A386648 also has an open mod-6 conjecture.\n- Web searches turned up only OEIS pages (e.g. https://oeis.org/A386648, https://oeis.org/A136524) and no paper, arXiv preprint, MathOverflow/Math StackExchange post or SeqFan message proving or refuting the A386655 conjecture.\n- The classical tool used is the expansion e^(cW(x)) = Sum_k c(c-k)^(k-1) x^k/k! (the tree-function/Lambert W identity), together with Fermat's little theorem and the binomial-transform identity Sum_m C(n,m)C(m,j)x^m = C(n,j)x^j(1+x)^(n-j).",
    "date": "2026-10-24"
+  },
+  {
+   "id": "OEIS-frontier/A388724",
+   "slug": "oeis-a388724",
+   "title": "Column sums of strictly superdiagonal reversed partitions by maximum are A000245",
+   "area": "Discrete geometry",
+   "source": "OEIS A388724",
+   "source_url": "https://oeis.org/A388724",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A388724.lean",
+    "decl": "Math0.Statements.A388724.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A388724.lean",
+   "our_decl": "Math0.Frontier.A388724.result",
+   "summary": "Let T(n,k) be the number of reversed integer partitions y = (y_1 <= ... <= y_m) of n (positive parts, weakly increasing, sum n) that are strictly superdiagonal (y_i > i for all i) and have maximum part k. Then for every k >= 1, sum_n T(n,k) = A000245(k-1), where A000245(0) = 0 and A000245(K) = 3(2K)!/((K+2)!(K-1)!) for K >= 1.",
+   "notes": "Conjecture as stated in OEIS: Conjecture: Column sums are A000245. - _Gus Wiseman_, Sep 24 2025\n\nReferees: OEIS A388724 (rev #12, Oct 06 2025; the conjecture is still listed and no %E resolution is recorded). M. Archibald, A. Blecher, S. Elizalde, A. Knopfmacher, \"Subdiagonal and superdiagonal partitions\", Afrika Matematika 36:77 (2025), doi:10.1007/s13370-025-01282-0. Theorem 2.3 and its proof give a bijection from superdiagonal weakly increasing partitions with largest part m to pairs (P in D_m, 0 ≤ h < final E-run length of P), plus the generating function for fixed largest part. Theorem 2.2's proof gives a bijection from partitions with k parts and largest part s to the ballot paths B_{k-1,s}. Combined with the shift y_i -> y_i - 1 and the classical identity sum over D_m of final descent length = A000245(m) (E. Deutsch, \"Dyck path enumeration\", Discrete Math. 204 (1999); the A000245 comment by Homberger on total returns), or with Catalan-triangle row sums (A009766, which has A000245 as a diagonal), this yields the conjecture immediately. No explicit prior statement or proof of the column-sum identity was found on OEIS, arXiv, MathOverflow, Math StackExchange or the web.",
+   "date": "2026-10-25"
   },
   {
    "id": "OEIS-frontier/A392943",

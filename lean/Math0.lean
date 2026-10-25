@@ -65,6 +65,7 @@ import Math0.Frontier.OEIS.A119936
 import Math0.Frontier.OEIS.A120069
 import Math0.Frontier.OEIS.A121750
 import Math0.Frontier.OEIS.A124526
+import Math0.Frontier.OEIS.A127752
 import Math0.Frontier.OEIS.A127767
 import Math0.Frontier.OEIS.A129455
 import Math0.Frontier.OEIS.A141412
@@ -81,9 +82,11 @@ import Math0.Frontier.OEIS.A215010
 import Math0.Frontier.OEIS.A223395
 import Math0.Frontier.OEIS.A229159
 import Math0.Frontier.OEIS.A242396
+import Math0.Frontier.OEIS.A249434
 import Math0.Frontier.OEIS.A262957
 import Math0.Frontier.OEIS.A265210
 import Math0.Frontier.OEIS.A278212
+import Math0.Frontier.OEIS.A281000
 import Math0.Frontier.OEIS.A294512
 import Math0.Frontier.OEIS.A300789
 import Math0.Frontier.OEIS.A308107
@@ -93,6 +96,7 @@ import Math0.Frontier.OEIS.A308359
 import Math0.Frontier.OEIS.A323695
 import Math0.Frontier.OEIS.A326407
 import Math0.Frontier.OEIS.A326602
+import Math0.Frontier.OEIS.A328202
 import Math0.Frontier.OEIS.A332010
 import Math0.Frontier.OEIS.A333650
 import Math0.Frontier.OEIS.A334595
@@ -115,9 +119,11 @@ import Math0.Frontier.OEIS.A363482
 import Math0.Frontier.OEIS.A363609
 import Math0.Frontier.OEIS.A367119
 import Math0.Frontier.OEIS.A369366
+import Math0.Frontier.OEIS.A373345
 import Math0.Frontier.OEIS.A375522
 import Math0.Frontier.OEIS.A386538
 import Math0.Frontier.OEIS.A386655
+import Math0.Frontier.OEIS.A388724
 import Math0.Frontier.OEIS.A392943
 import Math0.Frontier.OEIS.A393794
 import Math0.Frontier.OEIS.A394981
