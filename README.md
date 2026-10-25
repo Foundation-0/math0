@@ -20,7 +20,7 @@ quietly prove an easier statement than the one the problem's curators wrote down
 ## Highlights
 
 <!-- HIGHLIGHTS:START -->
-**122 verified results.** 52 new results, 46 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
+**124 verified results.** 54 new results, 46 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
 
 New results (open problems settled; each checked by the Lean kernel and judged new by an independent novelty referee):
 
@@ -32,6 +32,7 @@ New results (open problems settled; each checked by the Lean kernel and judged n
 * [A178295: collinear 4-subsets of {0,...,4}^n number 9^n/2 + 3*7^n/2 - 2*5^n (Mathar's conjecture, all three formulas)](results/oeis-a178295/README.md) ([paper](results/oeis-a178295/paper.pdf))
 * [A223395: walks on the 4 x 4 grid graph satisfy Hardin's recurrence, Barker's g.f. and closed form](results/oeis-a223395/README.md) ([paper](results/oeis-a223395/paper.pdf))
 * [A308107: Barker's rational generating function and order-15 recurrence for the sum of smallest sides of scalene integer triangles](results/oeis-a308107/README.md)
+* [A308121: for odd n > 1, row 2n is row n with its halves swapped](results/oeis-a308121/README.md)
 * [A332010: the average first letter of one-descent derangements has denominator 2^(n-2)](results/oeis-a332010/README.md) ([paper](results/oeis-a332010/paper.pdf))
 * [A334595: a(n) = 1 iff n is a power of two, and the records occur exactly at 1 and 2^k + 1](results/oeis-a334595/README.md)
 * [A338885: the smallest number in row 655 is 104, not A228286(655) = 115](results/oeis-a338885/README.md) ([paper](results/oeis-a338885/paper.pdf))
@@ -55,6 +56,7 @@ New results (open problems settled; each checked by the Lean kernel and judged n
 * [The least number of inequivalent cells of a (6k+5)-iamond is 3(k+1)](results/oeis-a369366/README.md) ([paper](results/oeis-a369366/paper.pdf))
 * [The row-LCM of denominators of the cube of the mean matrix is n · lcm(1..n)²](results/oeis-a119936/README.md)
 * [The subword complexity polynomial S(n,x) has leading coefficient n(n+1)/2 (A341761, Guo's conjecture)](results/oeis-a341761/README.md)
+* [The triple-gcd Pascal triangle A129455: T(n,k) is an integer, divisible by C(n,k), and T(n,k)/C(n,k) is a sixth power](results/oeis-a129455/README.md)
 * [A116184: Adamchuk's conjectures on 37^3 dividing the numerator of sum_{k=1}^{36} 1/k^n](results/oeis-a116184/README.md) ([paper](results/oeis-a116184/paper.pdf))
 * [A262957: Israel's b(n), c(n) are coprime integers and a(n) = b(n)](results/oeis-a262957/README.md) ([paper](results/oeis-a262957/paper.pdf))
 * [A356360: the continued-fraction denominators are 1 or prime](results/oeis-a356360/README.md) ([paper](results/oeis-a356360/paper.pdf))
