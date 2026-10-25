@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: %F A308107 Conjectures from Colin Barker, May 13 2
 
 Referees: The OEIS entry A308107 (local mirror and current GitHub oeisdata, version #14 of Sep 12 2021) still marks Barker's May 13 2019 g.f. and recurrence as conjectures, with no proof note or %E edit. Its cross-reference A307686 and the related entries A308108, A308109 and A308158 also leave their Barker conjectures unproved. A005044 has Roger Cuculière's comment that scalene triangles of perimeter n+6 correspond to all triangles of perimeter n; this gives a reduction, not a proof. Sela Fried's proofs of OEIS conjectures (arXiv:2410.07237; JIS 28, 2025, Art. 25.4.3; JIS 29, 2026, Art. 26.1.8; arXiv:2607.24832) do not cover A308107 or any triangle sequence near it. Andrews–Paule–Riese (MacMahon's Partition Analysis IX, k-gon partitions), Hirschhorn on k-gon partitions, and arXiv:2308.01912 on Alcuin's sequence treat only the unweighted triangle count. I found no prior proof or counterexample.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

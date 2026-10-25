@@ -26,6 +26,10 @@ Referees: I found no prior proof or counterexample.
 - Sloane, math/0409509: no mention.
 - Web, MSE/MO and SeqFan searches turned up nothing.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex
