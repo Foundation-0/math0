@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: %C A249434 It seems that A006093 gives all those k
 
 Referees: OEIS A249434, A249151, A249431 (Antti Karttunen, Oct/Nov 2014; latest revisions Aug–Sep 2025 still say "seems"/"conjectured"; no %E proof record). J. C. Lagarias and H. Mehta, "Products of binomial coefficients and unreduced Farey fractions", arXiv:1409.4145 (Int. J. Number Theory 2016): formulas for ord_p of the row product G_n, including ord_p(G_n) = 0 iff n = a·p^k − 1 with 1 ≤ a ≤ p−1. This is a related ingredient, but the paper does not state or prove the conjecture. L. Du and J. C. Lagarias, arXiv:2006.15439, and Du–Lagarias–Yangjit, arXiv:2112.14422: related, but they do not address the conjecture. The conjecture is not in the AlphaProof Nexus / formal-conjectures auto_oeis set of 492 (Tsoukalas et al., arXiv:2605.22763) or in OEIS Open (Adamczewski, arXiv:2608.11941). No MathOverflow, Math StackExchange or SeqFan resolution was found.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

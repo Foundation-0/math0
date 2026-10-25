@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: a(n) mod 2 is first Feigenbaum symbolic sequence A
 
 Referees: OEIS A127752 (P. Barry, Jan 28 2007; current version #11, Feb 11 2021) still says "(conjecture)", with A. Karttunen's 2018 check of the first 2048 terms. A127751 (#5) still calls it conjectural, and the related A127750, A127749 and A111967 conjectures (Fredholm-Rueppel parity for the 1/(2n+1) triangle) remain open. Checked and not relevant: S. Fried, "On the inverse of a certain triangular matrix and its connection to the largest odd divisor", NNTDM 32(2) (2026) 255-262, which covers A127793 and A000265, not A127752; S. Fried, JIS 28 (2025) Art. 25.4.3 and JIS 29 (2026) Art. 26.1.8; S. Fried, arXiv:2607.24832. No prior proof or counterexample found, and no existing formalization in formal-conjectures.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

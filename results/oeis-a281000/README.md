@@ -32,6 +32,10 @@ Closest prior material, which makes the result routine without explicitly resolv
 - P. Bala, A103364 (2013): generalized Riordan array (1/E(y), y).
 - P. Barry, A097610 (Apr 2010): diagonal sums of the Motzkin triangle are the aerated large Schröder numbers. Restricting to an odd number of level steps gives half of that, which is conjecture (1).
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex
