@@ -24,6 +24,10 @@ Referees: - OEIS A308121 (Jamie Morken, May 13 2019; last edited Aug 05 2019, re
 - A308121 is absent from google-deepmind/formal-conjectures, and so from the OEIS Open benchmark (arXiv 2608.11941).
 - Web searches (arXiv, MSE/MO, OEIS wiki) found no prior proof or counterexample. The SeqFan archive could not be reached (503 / connection reset).
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

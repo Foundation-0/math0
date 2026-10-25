@@ -1,0 +1,394 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw,linear_combination},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {∀}{{$\forall$}}1
+    {∃}{{$\exists$}}1 {↔}{{$\leftrightarrow$}}1 {¬}{{$\neg$}}1 {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1
+    {→}{{$\to$}}1 {≤}{{$\le$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Tot}{\operatorname{Tot}}
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\cat}{\mathbin{+\!\!+}}
+\newcommand{\iv}[2]{[#1\,..\,#2]}
+
+\title[Neder's conjecture for OEIS A308121]{For odd $n>1$, row $2n$ of the triangle $T(n,k)=\operatorname{den}\bigl(\tfrac{\varphi(n)}{n}\bigr)k-\operatorname{num}\bigl(\tfrac{\varphi(n)}{n}\bigr)r_k(n)$ is row $n$ with its halves interchanged: Neder's conjecture for OEIS A308121}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 25, 2026}
+
+\begin{document}
+\begin{abstract}
+For $n\ge1$ let $r_1(n)<\dots<r_{\varphi(n)}(n)$ be the integers in $[1,n]$ coprime to $n$, and write $\varphi(n)/n=a_n/b_n$ in lowest terms; OEIS A308121 is the irregular triangle whose $n$-th row is $\bigl(b_nk-a_nr_k(n)\bigr)_{1\le k\le\varphi(n)}$.
+We prove the conjecture recorded in this entry by Charlie Neder in 2019 that for odd $n>1$, row $2n$ is obtained from row $n$ by interchanging its first and second halves.
+The proof lists the totatives of $2n$ as the images of the totatives of $n$ above $n/2$ under $r\mapsto 2r-n$, followed by the images of those below $n/2$ under $r\mapsto n+2r$, and shows that $\varphi(2n)/(2n)$ has reduced form $(a_n/2)/b_n$.
+To our knowledge the result is new, although the argument is elementary; the OEIS entry still lists the statement as a conjecture.
+The theorem is verified in Lean~4 against a frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry, whose definitions are checked by the kernel against the $72$ listed terms; this statement is not part of the formal-conjectures repository.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For an integer $n\ge1$ let $\varphi$ be Euler's totient function and let
+\[
+  r_1(n)<r_2(n)<\dots<r_{\varphi(n)}(n)
+\]
+be the integers $r$ with $1\le r\le n$ and $\gcd(r,n)=1$; this is row $n$ of the triangle A038566 \cite{A038566}, so that row $1$ is $(1)$. Write
+\[
+  \frac{\varphi(n)}{n}=\frac{a_n}{b_n},\qquad \gcd(a_n,b_n)=1,\quad b_n\ge1,
+\]
+so that $b_n$ is A109395$(n)$ \cite{A109395} and $a_n$ is A076512$(n)$ \cite{A076512}.
+The sequence A308121 \cite{A308121}, contributed by Jamie Morken on May~13, 2019, is the irregular triangle
+\[
+  T(n,k)=b_n\,k-a_n\,r_k(n)\qquad(n\ge1,\ 1\le k\le\varphi(n)),
+\]
+whose rows $1,\dots,15$ are
+\[
+\begin{array}{r|l@{\qquad}r|l@{\qquad}r|l}
+ 1&0 & 6&2,1 & 11&1,2,\dots,10\\
+ 2&1 & 7&1,2,3,4,5,6 & 12&2,1,2,1\\
+ 3&1,2 & 8&1,1,1,1 & 13&1,2,\dots,12\\
+ 4&1,1 & 9&1,2,1,2,1,2 & 14&4,5,6,1,2,3\\
+ 5&1,2,3,4 & 10&3,4,1,2 & 15&7,14,13,4,11,2,1,8
+\end{array}
+\]
+The entry records several properties of the rows; among them, Charlie Neder added on June~5, 2019 the observation that if a prime $p$ divides $n$ then row $pn$ consists of $p$ copies of row $n$, together with the following conjecture: \emph{if $n$ is odd, then row $2n$ can be obtained from row $n$ by interchanging the first and second halves.}
+The table illustrates it for $n=3,5,7$ ($6,10,14$); for $n=1$ it cannot hold, since row $1$ has a single entry.
+We prove the conjecture for every odd $n>1$ (Theorem~\ref{thm:main}).
+We do not treat Neder's observation on rows $pn$.
+
+\subsection*{Method}
+For odd $n\ge3$ the totatives of $2n$ are, in increasing order, $2r-n$ for the totatives $r>n/2$ of $n$, followed by $n+2r$ for the totatives $r<n/2$, and exactly half of the totatives of $n$ lie on each side of $n/2$ (Lemmas~\ref{lem:tot} and~\ref{lem:tot2}). Moreover $\varphi(2n)/(2n)$ has reduced form $(a_n/2)/b_n$ (Lemma~\ref{lem:frac}). Substituting both facts into the definition of $T(2n,k)$ gives the claim.
+
+\subsection*{Status and prior work}
+The statement is still marked ``Conjecture'' in A308121 (revision \#47, August~5, 2019), with no later comment or edit note recording a proof or a counterexample.
+Two other OEIS entries cite A308121: A307964 \cite{A307964} (J.~Morken, July~2019), which restricts the triangle to the rows of odd squarefree composite numbers and calls them its ``primitive rows'', and A309497 \cite{A309497} (J.~Morken, August~2019), which collects the ``Primorial rows of A308121''. Neither addresses the conjecture, and the entries A038566, A076512 and A109395 used in the definition say nothing about it.
+The math0 referees found no proof or counterexample on arXiv, MathOverflow, Mathematics Stack Exchange or the OEIS wiki; the SeqFan mailing-list archive could not be reached.
+The conjecture is not among the OEIS statements of the formal-conjectures repository \cite{FC}, and hence not among the $492$ conjectures of the OEIS Open benchmark \cite{Ad}, whose Lean statements (formalized by Tsoukalas et al.) were released in that repository.
+The ingredients are classical: $\varphi(2n)=\varphi(n)$ for odd $n$, and the totatives of $n$ and of $2n$ correspond bijectively. For instance, Nijenhuis \cite{Nij} uses the group isomorphism $y\mapsto y$ ($y$ odd), $y\mapsto y+n$ ($y$ even) from the reduced residues modulo $n$ to those modulo $2n$, whose proof he calls a simple exercise; our bijection $r\mapsto(2r+n)\bmod 2n$ is this isomorphism composed with doubling modulo $n$ (Remark~\ref{rem:map}).
+We therefore classify the result as \emph{new}, with the caveat that the argument is elementary and may well have been noticed without being recorded.
+
+\section{Statement}\label{sec:statement}
+
+\subsection*{Notation}
+All lists are finite sequences of integers. For integers $x\le y+1$ we write $\iv{x}{y}$ for the increasing list $(x,x+1,\dots,y)$ (empty if $x=y+1$); $\ell\cat\ell'$ is concatenation, $|\ell|$ the length, $\ell_i$ the $i$-th entry ($1\le i\le|\ell|$), $f(\ell)$ the list obtained by applying $f$ to every entry, and $\ell|_P$ the sublist of the entries satisfying a predicate $P$, in their original order.
+For $n\ge1$ let $C_n(r)$ be the predicate $\gcd(r,n)=1$ and
+\[
+  \Tot(n)=\iv{1}{n}|_{C_n}=(r_1(n),\dots,r_{\varphi(n)}(n)),\qquad
+  \R(n)=\bigl(T(n,1),\dots,T(n,\varphi(n))\bigr),
+\]
+so that $\R(n)$ is row $n$ of A308121.
+
+The COMMENTS section of A308121 \cite{A308121} contains, verbatim:
+\begin{quote}
+{\small\texttt{From \_Charlie Neder\_, Jun 05 2019: (Start)\\
+If p is a prime dividing n, then row p*n consists of p copies of row n.\\
+Conjecture: If n is odd, then row 2n can be obtained from row n by interchanging the first and second halves. (End)}}
+\end{quote}
+
+\begin{theorem}\label{thm:main}
+Let $n>1$ be odd. Then $\varphi(n)=\varphi(2n)=2h$ for an integer $h\ge1$, and
+\[
+  T(2n,k)=T(n,h+k),\qquad T(2n,h+k)=T(n,k)\qquad(1\le k\le h).
+\]
+Equivalently, there are lists $A,B$ with $|A|=|B|$, $\R(n)=A\cat B$ and $\R(2n)=B\cat A$.
+\end{theorem}
+
+For $n\ge3$ the number $\varphi(n)$ is even, so the halves of $\R(n)$ exist and are unique; $\R(1)=(0)$ has no halves.
+For even $n$ the statement does not apply, since then $\varphi(2n)=2\varphi(n)$.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in the file \path{lean/Math0/Statements/OEIS/A308121.lean}. It was reviewed for fidelity and frozen (SHA-256 \texttt{70da202a\ldots c9e58}) before any proof attempt. Its definitions read as follows (verbatim; the copyright header, the import, the module docstring, the docstrings, blank lines and the four theorems are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A308121
+def totatives (n : ℕ) : List ℕ :=
+  (List.range' 1 n).filter (fun r => Nat.Coprime r n)
+def A109395 (n : ℕ) : ℕ := ((Nat.totient n : ℚ) / n).den
+def A076512 (n : ℕ) : ℤ := ((Nat.totient n : ℚ) / n).num
+def T (n k : ℕ) : ℤ :=
+  (A109395 n : ℤ) * k - A076512 n * ((totatives n).getD (k - 1) 0 : ℕ)
+def row (n : ℕ) : List ℤ :=
+  (List.range (Nat.totient n)).map (fun i => T n (i + 1))
+def statement : Prop :=
+  ∀ n : ℕ, Odd n → 1 < n →
+    ∃ A B : List ℤ, row n = A ++ B ∧ A.length = B.length ∧ row (2 * n) = B ++ A
+end Math0.Statements.A308121
+\end{lstlisting}
+Here \texttt{List.range' 1 n} is $\iv{1}{n}$, so \decl{totatives} is $\Tot(n)$, i.e.\ row $n$ of A038566, described there as the ``triangle in which n-th row gives phi(n) numbers between 1 and n that are relatively prime to n'' \cite{A038566}; in particular \texttt{totatives 1 = [1]}.
+\decl{A109395} and \decl{A076512} are the denominator and numerator of the reduced rational number $\varphi(n)/n$, as in the names of A109395 and (via its comment ``Numerator of phi(n)/n'') A076512; Lean's \texttt{Rat.num} and \texttt{Rat.den} return the reduced form with positive denominator.
+\decl{T} computes $b_nk-a_nr_k(n)$ in $\Z$, because the sequence is signed; the index $k$ is $1$-based through \texttt{getD (k - 1) 0} (only the values with $1\le k\le\varphi(n)$ are used), and \decl{row} lists $T(n,1),\dots,T(n,\varphi(n))$, matching the comment ``Row n has length A000010(n)''.
+The conjecture is encoded literally: the first and second halves of row $n$ are lists $A,B$ of equal length with $\R(n)=A\cat B$, and $\R(2n)=B\cat A$.
+The hypothesis \texttt{1 < n} excludes $n=1$, for which row $1=(0)$ has no halves (and row $2=(1)$); the statement file documents this reading.
+Four theorems in the statement file, all proved by \texttt{decide +kernel} (evaluation in the kernel), compare the definitions with the OEIS entry; two of them read:
+\begin{lstlisting}
+theorem a_data : (List.range 15).flatMap (fun i => row (i + 1)) =
+    [0, 1, 1, 2, 1, 1, 1, 2, 3, 4, 2, 1, 1, 2, 3, 4, 5, 6, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 3, 4,
+      1, 2, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 2, 1, 2, 1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+      4, 5, 6, 1, 2, 3, 7, 14, 13, 4, 11, 2, 1, 8]
+theorem T_210_2 : T 210 2 = -18
+\end{lstlisting}
+\decl{a_data} checks that rows $1,\dots,15$, flattened, are exactly the $72$ listed terms $a(1),\dots,a(72)$ of A308121; \decl{T_210_2} checks the worked example $T(210,2)=35\cdot2-8\cdot11=-18$ of the entry; \decl{statement_check_7} and \decl{statement_check_15} check the halves swap for $n=7$ and $n=15$ (sanity checks of the transcription, not part of the proof).
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A308121.lean}; the names of the corresponding Lean declarations are given with each step.
+Throughout, $t\ge1$ and $n=2t+1$, and
+\[
+  L=\iv{1}{t}|_{C_n},\qquad H=\iv{t+1}{2t}|_{C_n},\qquad h=|L|.
+\]
+Thus $L$ lists the totatives of $n$ below $n/2$ and $H$ those above $n/2$, both increasing.
+
+\begin{lemma}[\decl{len_tot}]\label{lem:len}
+For every $m\ge1$, $|\Tot(m)|=\varphi(m)$.
+\end{lemma}
+
+\begin{proof}
+$|\Tot(m)|$ is the number of integers $r\in[1,m]$ with $\gcd(r,m)=1$, which is $\varphi(m)$. In Lean this is Mathlib's \decl{Nat.filter_coprime_Ico_eq_totient}, which counts the integers coprime to $m$ in any interval of $m$ consecutive integers.
+\end{proof}
+
+\begin{lemma}[\decl{tot_split}, \decl{map_sub_range'}, \decl{len_eq}]\label{lem:tot}
+$\Tot(n)=L\cat H$ and $|H|=|L|=h$. Consequently $\varphi(n)=2h$.
+\end{lemma}
+
+\begin{proof}
+We have $\iv{1}{n}=\iv{1}{t}\cat\iv{t+1}{2t}\cat(n)$, and $\gcd(n,n)=n>1$, so $n$ is removed by the filter. Filtering commutes with concatenation, so $\Tot(n)=L\cat H$.
+
+Let $\rho(r)=n-r$. Then $\rho\bigl(\iv{1}{t}\bigr)=(n-1,n-2,\dots,n-t)$ is the reverse of $\iv{t+1}{2t}$ (\decl{map_sub_range'}). Since $\gcd(n-r,n)=\gcd(r,n)$ for $1\le r\le t$, the predicates $C_n\circ\rho$ and $C_n$ agree on $\iv{1}{t}$. Filtering commutes with reversal, and the filter of a mapped list is the map of the filter by the composed predicate, so
+\[
+  \operatorname{rev}(H)=\iv{t+1}{2t}^{\mathrm{rev}}\big|_{C_n}=\rho\bigl(\iv{1}{t}\bigr)\big|_{C_n}=\rho\bigl(\iv{1}{t}|_{C_n\circ\rho}\bigr)=\rho(L).
+\]
+Hence $|H|=|L|=h$, and $\varphi(n)=|L|+|H|=2h$ by Lemma~\ref{lem:len}.
+\end{proof}
+
+\begin{lemma}[\decl{filter_pair}]\label{lem:pair}
+Let $m\ge1$, let $a$ be odd and $k\ge0$. Then
+\[
+  \iv{a}{a+2k-1}\big|_{C_{2m}}=(a,a+2,\dots,a+2k-2)\big|_{C_m}.
+\]
+\end{lemma}
+
+\begin{proof}
+Induction on $k$; the case $k=0$ is trivial. The list $\iv{a}{a+2k+1}$ begins with $a,a+1$, followed by $\iv{a+2}{a+2k+1}$, and $a+2$ is odd. Since $a$ is odd, $\gcd(a,2m)=1$ if and only if $\gcd(a,m)=1$; since $a+1$ is even, $\gcd(a+1,2m)\ne1$. Applying the induction hypothesis to $a+2$ gives the claim for $k+1$.
+\end{proof}
+
+\begin{lemma}[\decl{range'_two_eq_map}, \decl{cop_hi}, \decl{cop_lo}, \decl{tot2_split}]\label{lem:tot2}
+Let $\sigma(r)=2r-n$ and $\tau(r)=n+2r$. Then
+\[
+  \Tot(2n)=\sigma(H)\cat\tau(L).
+\]
+Consequently $\varphi(2n)=2h$.
+\end{lemma}
+
+\begin{proof}
+Split $\iv{1}{2n}=\iv{1}{2t}\cat(2t+1,2t+2)\cat\iv{2t+3}{4t+2}$. The middle entries are removed by the filter $C_{2n}$: $\gcd(2t+1,2n)=n>1$, and $2t+2$ is even. By Lemma~\ref{lem:pair} with $m=n$, $k=t$ and $a=1$, respectively $a=2t+3$,
+\[
+  \Tot(2n)=(1,3,\dots,2t-1)\big|_{C_n}\cat(2t+3,2t+5,\dots,4t+1)\big|_{C_n}.
+\]
+Since $\sigma(t+1)=1$ and $\sigma(r+1)=\sigma(r)+2$, we have $(1,3,\dots,2t-1)=\sigma\bigl(\iv{t+1}{2t}\bigr)$; likewise $\tau(1)=2t+3$ and $\tau(r+1)=\tau(r)+2$ give $(2t+3,\dots,4t+1)=\tau\bigl(\iv{1}{t}\bigr)$ (\decl{range'_two_eq_map}).
+Because $n$ is odd, $\gcd(2r-n,n)=\gcd(2r,n)=\gcd(r,n)$ for $2r\ge n$ (\decl{cop_hi}) and $\gcd(n+2r,n)=\gcd(2r,n)=\gcd(r,n)$ (\decl{cop_lo}). Hence $C_n\circ\sigma=C_n$ on $\iv{t+1}{2t}$ and $C_n\circ\tau=C_n$ on $\iv{1}{t}$, and as in the proof of Lemma~\ref{lem:tot},
+\[
+  \sigma\bigl(\iv{t+1}{2t}\bigr)\big|_{C_n}=\sigma(H),\qquad \tau\bigl(\iv{1}{t}\bigr)\big|_{C_n}=\tau(L).
+\]
+Finally $\varphi(2n)=|\sigma(H)|+|\tau(L)|=|H|+|L|=2h$ by Lemmas~\ref{lem:len} and~\ref{lem:tot}.
+\end{proof}
+
+In Lean, $\sigma$ is written with truncated subtraction \texttt{2 * r - (2 * t + 1)}; on $\iv{t+1}{2t}$ we have $2r\ge2t+2>n$, so the subtraction is exact.
+
+\begin{lemma}[\decl{rat_facts}]\label{lem:frac}
+Let $n>1$ be odd. Then $b_{2n}=b_n$, $2a_{2n}=a_n$, and $a_n\,n=b_n\,\varphi(n)$.
+\end{lemma}
+
+\begin{proof}
+Let $q=\varphi(n)/n=a_n/b_n$. Clearing denominators gives $a_n\,n=b_n\,\varphi(n)$. Since $\gcd(2,n)=1$, $\varphi(2n)=\varphi(2)\varphi(n)=\varphi(n)$, so $\varphi(2n)/(2n)=q/2$.
+As $n>2$, $\varphi(n)$ is even, so $a_n\,n$ is even; as $n$ is odd, $a_n$ is even, say $a_n=2c$. From $\gcd(a_n,b_n)=1$ we get $\gcd(c,b_n)=1$. Therefore $q/2=c/b_n$ with $b_n\ge1$ and $\gcd(c,b_n)=1$, and by uniqueness of the reduced form (Mathlib's \decl{Rat.num_div_eq_of_coprime} and \decl{Rat.den_div_eq_of_coprime}) $a_{2n}=c$ and $b_{2n}=b_n$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main} (\decl{result})]
+Let $n=2t+1$ with $t\ge1$, and let $L,H,h$ be as above. By Lemmas~\ref{lem:tot} and~\ref{lem:tot2}, $\varphi(n)=\varphi(2n)=2h$. Write $a=a_n$, $b=b_n$ and $c=a_{2n}$. By Lemma~\ref{lem:frac}, $b_{2n}=b$, $a=2c$ and $an=2bh$, so
+\begin{equation}\label{eq:key}
+  c\,n=b\,h .
+\end{equation}
+If $\varphi(m)=2h$, then $\R(m)=\bigl(T(m,1),\dots,T(m,h)\bigr)\cat\bigl(T(m,h+1),\dots,T(m,2h)\bigr)$ (\decl{row_split}). Apply this to $m=n$, and let $A$ and $B$ be the two halves of $\R(n)$, so $\R(n)=A\cat B$ and $|A|=|B|=h$. Apply it also to $m=2n$; it remains to show that the first half of $\R(2n)$ is $B$ and the second is $A$, i.e.\ the two identities of the theorem.
+
+Let $1\le k\le h$. By Lemma~\ref{lem:tot2}, $r_k(2n)=\sigma(H_k)=2H_k-n$ and $r_{h+k}(2n)=\tau(L_k)=n+2L_k$; by Lemma~\ref{lem:tot}, $r_k(n)=L_k$ and $r_{h+k}(n)=H_k$. Using $a=2c$ and \eqref{eq:key},
+\begin{align*}
+  T(2n,k)&=bk-c\,(2H_k-n)=bk-aH_k+cn=b(h+k)-aH_k=T(n,h+k),\\
+  T(2n,h+k)&=b(h+k)-c\,(n+2L_k)=b(h+k)-bh-aL_k=bk-aL_k=T(n,k).
+\end{align*}
+Hence $\R(2n)=B\cat A$.
+\end{proof}
+
+In Lean, the index bookkeeping (the positions $k$ and $h+k$ in $L\cat H$ and in $\sigma(H)\cat\tau(L)$) is done with \decl{List.getElem_append_left} and \decl{List.getElem_append_right}, and the two displayed identities are closed by \texttt{linear\_combination} from $2c=a$ and \eqref{eq:key}.
+
+\begin{remark}\label{rem:map}
+Lemma~\ref{lem:tot2} says that $r\mapsto(2r+n)\bmod 2n$ maps $\Tot(n)$ bijectively onto $\Tot(2n)$, increasingly on each of $L$ and $H$, with the image of $H$ preceding that of $L$. This map is the composition of doubling modulo $n$, $r\mapsto 2r\bmod n$, with the isomorphism $y\mapsto y$ ($y$ odd), $y\mapsto y+n$ ($y$ even) used by Nijenhuis \cite{Nij}. Theorem~\ref{thm:main} can also be read as $T(2n,k)=T(n,k')$, where $k'\equiv k+h\pmod{2h}$ and $1\le k'\le 2h$.
+\end{remark}
+
+\begin{example}
+For $n=15$: $\varphi(15)/15=8/15$, $L=(1,2,4,7)$, $H=(8,11,13,14)$, $h=4$, and $\R(15)=(7,14,13,4\mid 11,2,1,8)$. Lemma~\ref{lem:tot2} gives $\Tot(30)=(1,7,11,13,17,19,23,29)$, and $\varphi(30)/30=4/15$, so $c=4$, $b=15$, and $\R(30)=(11,2,1,8\mid 7,14,13,4)$, as in the b-file of A308121 (rows $1,\dots,210$). Similarly row $210$, which contains the entry's worked example $T(210,2)=-18$, is row $105$ with its halves of length $24$ interchanged.
+\end{example}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A308121.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A308121.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A308121.result}, of type \decl{Math0.Statements.A308121.statement}. The auxiliary lemmas are private: \decl{filter_pair} (Lemma~\ref{lem:pair}), \decl{range'_two_eq_map}, \decl{map_sub_range'}, \decl{len_tot} (Lemma~\ref{lem:len}), \decl{cop_hi}, \decl{cop_lo}, \decl{tot_split}, \decl{tot2_split}, \decl{len_eq}, \decl{rat_facts} (Lemma~\ref{lem:frac}), \decl{getD_lt} and \decl{row_split}. Two of them, and the end of the file, read verbatim (docstrings and proofs omitted):
+\begin{lstlisting}
+private lemma tot2_split (t : ℕ) (ht : 1 ≤ t) :
+    totatives (2 * (2 * t + 1)) =
+      ((List.range' (t + 1) t).filter (fun r => Nat.Coprime r (2 * t + 1))).map
+          (fun r => 2 * r - (2 * t + 1)) ++
+      ((List.range' 1 t).filter (fun r => Nat.Coprime r (2 * t + 1))).map
+          (fun r => (2 * t + 1) + 2 * r)
+private lemma rat_facts (n : ℕ) (hn : Odd n) (h1 : 1 < n) :
+    A109395 (2 * n) = A109395 n ∧ A076512 (2 * n) * 2 = A076512 n ∧
+      A076512 n * n = A109395 n * Nat.totient n
+theorem result : statement := by
+  ...
+end Math0.Frontier.A308121
+#math0_settles Math0.Frontier.A308121.result Math0.Statements.A308121.statement
+\end{lstlisting}
+The proof is general: it contains no finite case check, and it uses no \texttt{decide} or \texttt{native\_decide} tactic and no \texttt{set\_option}. It does not use the data theorems of the statement file.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, \decl{Lean.ofReduceBool} from \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically the statement or its negation, up to metadata annotations, with no unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A308121.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A308121.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A308121.result' proves 'Math0.Statements.A308121.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A308121.lean} in the directory \path{lean}; this takes between about 20 seconds and a minute on our machine, depending on load.
+Independently of Lean, the referees checked the conjecture numerically for all odd $n$ with $3\le n<6000$, and the intermediate Lemmas~\ref{lem:tot}, \ref{lem:tot2} and~\ref{lem:frac} for all odd $n$ with $3\le n<4000$.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{Ad}
+T.~Adamczewski, \emph{OEIS Open: How many conjectures can language models turn into theorems?}, arXiv:2608.11941, 2026.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Nij}
+A.~Nijenhuis, \emph{Small Gamma products with simple values}, arXiv:0907.1689, 2009.
+
+\bibitem{A038566}
+The OEIS Foundation Inc., \url{https://oeis.org/A038566}, entry by N.~J.~A. Sloane.
+
+\bibitem{A076512}
+The OEIS Foundation Inc., \url{https://oeis.org/A076512}, entry by R.~Zumkeller (Oct.~15, 2002).
+
+\bibitem{A109395}
+The OEIS Foundation Inc., \url{https://oeis.org/A109395}, entry by F.~Vrabec (Aug.~26, 2005).
+
+\bibitem{A307964}
+The OEIS Foundation Inc., \url{https://oeis.org/A307964}, entry by J.~Morken (July~29, 2019).
+
+\bibitem{A308121}
+The OEIS Foundation Inc., \url{https://oeis.org/A308121}, entry by J.~Morken (May~13, 2019); conjecture by C.~Neder (June~5, 2019); revision \#47, Aug.~5, 2019.
+
+\bibitem{A309497}
+The OEIS Foundation Inc., \url{https://oeis.org/A309497}, entry by J.~Morken (Aug.~5, 2019).
+
+\end{thebibliography}
+}
+
+\end{document}

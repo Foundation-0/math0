@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: Conjecture: the coefficient of x^n in S(n,x) is n*
 
 Referees: OEIS A341761 (Shiyao Guo, 2021; still labelled "Conjecture" in rev #33, Mar 2024), cross-referenced with OEIS A340885. Shiyao Guo (Mivik), "On the Expected Subword Complexity of Random Words", https://mivik.moe/2021/research/expected-subword-complexity-en/, and the Chinese version https://mivik.moe/2021/research/expected-subword-complexity/ (updated 2026-03-26, still calls it an unproven conjecture). Related work that does not settle it: S. Janson, S. Lonardi, W. Szpankowski, "On average sequence complexity", TCS 326 (2004); I. Gheorghiciuc, M. D. Ward, "On correlation polynomials and subword complexity", DMTCS Proc. AH (AofA 2007), https://dmtcs.episciences.org/3553; Ahmadi and Ward, "Asymptotic Analysis of the kth Subword Complexity" (Entropy, 2020); Ivanko (Trudy IMM UrO RAN, 2008). I found no prior proof.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

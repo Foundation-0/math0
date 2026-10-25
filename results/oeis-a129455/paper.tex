@@ -1,0 +1,359 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw,unfold},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {→}{{$\to$}}1
+    {←}{{$\leftarrow$}}1 {∧}{{$\wedge$}}1 {≤}{{$\le$}}1 {∏}{{$\prod$}}1 {∈}{{$\in$}}1
+    {∣}{{$\mid$}}1 {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {·}{{$\cdot$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\fl}[1]{\left\lfloor #1\right\rfloor}
+\newcommand{\Ind}[1]{[\,#1\,]}
+
+\title[The triple-gcd analogue of Pascal's triangle]{If $G(n)=\prod_{1\le h,i,j\le n}\gcd(h,i,j)$, then $G(n)/\bigl(G(k)\,G(n-k)\bigr)$ is $\binom{n}{k}$ times a sixth power: Bala's conjecture for OEIS A129455}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 25, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $G(n)=\prod_{1\le h,i,j\le n}\gcd(h,i,j)$ and $T(n,k)=G(n)/\bigl(G(k)G(n-k)\bigr)$ for $0\le k\le n$; this is the triangle OEIS A129455.
+We prove the three-part conjecture recorded there by Peter Bala in 2007: $T(n,k)$ is an integer, $\binom nk$ divides $T(n,k)$, and $T(n,k)/\binom nk$ is a perfect sixth power. In fact $G(n)=G(k)\,G(n-k)\binom nk M^6$ with an explicit integer $M\ge1$, obtained from the identity $g=\prod_{d\mid g}L(d)$, where $\log L$ is the von Mangoldt function, and from the identity $(A+B+c)^3=A^3+B^3+c+6e$ for $c\in\{0,1\}$ and some integer $e\ge0$.
+Integrality alone also follows from a $q$-fold gcd product formula recorded by Ma (2025). We found no earlier proof of the divisibility or sixth-power parts and classify the result as new, although the argument is elementary.
+The theorem is verified in Lean~4 against a frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry; the kernel checks its definitions against the listed OEIS terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For $n\ge0$ let
+\[
+  G_2(n)=\prod_{i=1}^{n}\prod_{j=1}^{n}\gcd(i,j)\qquad\text{and}\qquad G(n)=\prod_{h=1}^{n}\prod_{i=1}^{n}\prod_{j=1}^{n}\gcd(h,i,j),
+\]
+with $G_2(0)=G(0)=1$. The sequence $G_2$ is OEIS A092287 \cite{A092287}. In April 2007 Peter Bala conjectured there that $v_p(G_2(n))=\sum_{t\ge1}\fl{n/p^t}^2$ for every prime $p$, an analogue of Legendre's formula $v_p(n!)=\sum_{t\ge1}\fl{n/p^t}$, and C.~R. Greathouse~IV added the comment ``The conjecture is correct'' in April 2013 \cite{A092287}.
+On the same day in 2007 Bala created three further entries: the triple product A129454 \cite{A129454}, defined with offset $0$ by $\mathrm{A129454}(n)=\prod_{i,j,k=1}^{n-1}\gcd(i,j,k)$, so that $\mathrm{A129454}(n+1)=G(n)$; and two analogues of Pascal's triangle, A129453 \cite{A129453} for $G_2$ and A129455 \cite{A129455} for $G$, namely
+\[
+  T(n,k)=\frac{\mathrm{A129454}(n+1)}{\mathrm{A129454}(n-k+1)\,\mathrm{A129454}(k+1)}=\frac{G(n)}{G(k)\,G(n-k)}\qquad(0\le k\le n).
+\]
+The rows $n=4,5,6$ of this triangle are $1,256,384,256,1$, then $1,5,640,640,5,1$, then $1,\ 1146617856,\ 2866544640,\ 244611809280,\ \dots$.
+For both triangles Bala observed that the entries appear to be integers divisible by the binomial coefficients, with quotients that are perfect squares (for A129453) or perfect sixth powers (for A129455).
+We prove the statement for A129455 (Theorem~\ref{thm:main}); in fact $G(n)=G(k)\,G(n-k)\binom nk M^6$ with an explicit integer $M=M(n,k)\ge1$.
+
+\subsection*{Method}
+Let $L(d)=p$ if $d$ is a power $p^t$ ($t\ge1$) of a prime $p$, and $L(d)=1$ otherwise, so that $\log L$ is the von Mangoldt function $\Lambda$, and $g=\prod_{d\mid g}L(d)$ for every $g\ge1$. Counting multiples of $d$ then gives $G(m)=\prod_{d}L(d)^{\fl{m/d}^3}$ and $m!=\prod_dL(d)^{\fl{m/d}}$. With $A=\fl{k/d}$ and $B=\fl{(n-k)/d}$ we have $\fl{n/d}=A+B+c$ for a carry $c\in\{0,1\}$, and the theorem reduces to the identity $(A+B+c)^3=A^3+B^3+c+3\bigl(AB(A+B)+c(A+B)(A+B+1)\bigr)$, in which the bracket is even. The proof uses no $p$-adic valuations. Remarks~\ref{rem:padic} and~\ref{rem:square} (not formalized) give the corrected form of the factorization conjectured in A129454 and the analogous statement for A129453.
+
+\subsection*{Status and prior work}
+The three entries A129453, A129454 and A129455 still state the claims as conjectures (revisions \#9, \#8 and \#9, February 2024), and no comment in them records a proof.
+In the square case, beyond Greathouse's comment, D.~Forgues recorded in A092287 (April 2013) the formula $G_2(n)=n!\,\bigl(\prod_{j=1}^n\prod_{k=1}^{j-1}\gcd(j,k)\bigr)^2$, where the second factor is A224479 \cite{A224479} (P.~Luschny, 2013), and Luschny gave a further formula involving A224497 \cite{A224497}. Forgues' formula shows that the quotients of A129453 divided by $\binom nk$ are squares of rational numbers; nothing analogous is recorded for the cubic case.
+W.~Ma \cite{Ma}, extending Mingarelli's abstract factorials \cite{Mi}, states in \S2.2 the $q$-fold formula
+\[
+  \prod_{j_1,\dots,j_q=1}^{n}\gcd(j_1,\dots,j_q)=\prod_{p}p^{\sum_{t\ge1}\fl{n/p^t}^q},
+\]
+with a proof described as essentially the same as for $q=2$, and studies the integrality of the associated generalized binomial coefficients \cite[Theorems~2.5--2.6]{Ma}. For $q=3$ the formula implies part~(1) of Bala's conjecture, since $\fl{n/p^t}\ge\fl{k/p^t}+\fl{(n-k)/p^t}$ and $(a+b)^3\ge a^3+b^3$ for $a,b\ge0$; so integrality is implicitly known. Ma does not mention A129454 or A129455, divisibility by $\binom nk$, or sixth powers, and Mingarelli's paper contains no gcd products.
+The math0 referees found no source that proves parts (2) or (3).
+The statement is not among the OEIS statements of the formal-conjectures repository \cite{FC} (at the commit pinned in Section~\ref{sec:lean}).
+We therefore classify the result as \emph{new}, with two caveats: integrality was implicitly known, and the remaining parts are short, elementary consequences of the same multiplicative structure.
+
+\section{Statement}\label{sec:statement}
+
+The COMMENTS section of A129455 \cite{A129455} reads, verbatim:
+\begin{quote}
+\small It appears that the T(n,k) are always integers. This would follow from the conjectured prime factorization given in A129454. Calculation suggests that the binomial coefficients C(n,k) divide T(n,k) and that T(n,k)/C(n,k) are perfect sixth powers.
+\end{quote}
+The entry is due to Peter Bala (April 16, 2007). Its name is ``An analog of Pascal's triangle based on A129454. $T(n, k) = \mathrm{A129454}(n+1)/(\mathrm{A129454}(n-k+1)\cdot\mathrm{A129454}(k+1))$'', with offset $0$, and A129454 is defined as $a(n)=\prod_{i=1}^{n-1}\prod_{j=1}^{n-1}\prod_{k=1}^{n-1}\gcd(i,j,k)$, also with offset $0$ \cite{A129454}. The second sentence of the comment is an explanation, not part of the claim.
+
+\begin{theorem}\label{thm:main}
+Let $G(m)=\prod_{1\le h,i,j\le m}\gcd(h,i,j)$ for $m\ge0$. For all integers $0\le k\le n$ there is an integer $M\ge1$ with
+\begin{equation}\label{eq:main}\tag{$\ast$}
+  G(n)=G(k)\,G(n-k)\,\binom nk\,M^6 .
+\end{equation}
+Consequently: \textup{(1)} $G(k)G(n-k)$ divides $G(n)$, so $T(n,k)=G(n)/(G(k)G(n-k))$ is an integer; \textup{(2)} $\binom nk$ divides $T(n,k)$; \textup{(3)} $T(n,k)/\binom nk=M^6$ is a perfect sixth power.
+\end{theorem}
+
+For $n\le3$ all sixth roots $M(n,k)$ equal $1$, and for $n=4,\dots,8$ the rows $M(n,0),\dots,M(n,n)$ are
+\[
+\begin{gathered}
+(1,2,2,2,1),\quad (1,1,2,2,1,1),\quad (1,24,24,48,24,24,1),\quad (1,1,24,24,24,24,1,1),\\
+(1,128,128,3072,1536,3072,128,128,1);
+\end{gathered}
+\]
+for instance $T(6,3)=244611809280=20\cdot48^6$. These roots are listed in the statement file and checked there by the kernel (see below).
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A129455.lean}, and it was reviewed for fidelity and frozen (SHA-256 \texttt{f807271b\ldots dd80c5}) before any proof attempt. Its definitions and the statement read as follows (verbatim; the import, the namespace lines, docstrings, the triangle-as-sequence \decl{a}, the list \decl{roots} and the three check theorems are omitted):
+\begin{lstlisting}
+def A129454 (n : ℕ) : ℕ :=
+  ∏ i ∈ Finset.Icc 1 (n - 1), ∏ j ∈ Finset.Icc 1 (n - 1), ∏ k ∈ Finset.Icc 1 (n - 1),
+    Nat.gcd (Nat.gcd i j) k
+def T (n k : ℕ) : ℕ := A129454 (n + 1) / (A129454 (n - k + 1) * A129454 (k + 1))
+def statement : Prop :=
+  ∀ n k : ℕ, k ≤ n →
+    A129454 (n - k + 1) * A129454 (k + 1) ∣ A129454 (n + 1) ∧
+    n.choose k ∣ T n k ∧
+    ∃ m : ℕ, T n k / n.choose k = m ^ 6
+\end{lstlisting}
+The definition \decl{A129454} is the OEIS definition of A129454 itself, not its conjectured factorization: \texttt{Finset.Icc 1 (n - 1)} is $\{1,\dots,n-1\}$, which is empty for $n\le1$ (in $\N$, $0-1=0$), so $\mathrm{A129454}(0)=\mathrm{A129454}(1)=1$; and \texttt{Nat.gcd (Nat.gcd i j) k} is $\gcd(i,j,k)$. Hence \texttt{A129454 (m + 1)} is $G(m)$. The function \decl{T} copies the OEIS name, with truncating division in $\N$. Since the first conjunct of \decl{statement} asserts that the denominator divides the numerator, \texttt{T n k} is the true value of $T(n,k)$ whenever the statement holds; likewise the second conjunct makes \texttt{T n k / n.choose k} exact. So the conjunction is equivalent to the conjecture read over $\mathbb{Q}$, and the truncating divisions cannot hide a failure. The statement quantifies over all $0\le k\le n$ and has no further hypotheses.
+
+The statement file also contains three theorems proved by \texttt{decide +kernel}, i.e.\ by evaluation in the kernel: \decl{A129454_data} checks the first $10$ listed terms of A129454; \decl{a_data} checks all $45$ listed terms of A129455 (rows $n=0,\dots,8$), with the triangle read by rows; and \decl{statement_check} checks the three claims for $n\le8$, with the explicit sixth roots listed above. These are checks of the transcription, not part of the proof. Since $m\mapsto m^6$ is injective on $\N$, these roots coincide with the integers $M$ constructed in Section~\ref{sec:proof}.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows \path{lean/Math0/Frontier/OEIS/A129455.lean}; the Lean name of each step is given in its heading. For a statement $P$ we write $\Ind{P}$ for $1$ if $P$ holds and $0$ otherwise.
+
+\begin{definition}[\decl{L}]
+For $d\in\N$ let $L(d)=p$ if $d=p^t$ for a prime $p$ and some $t\ge1$, and $L(d)=1$ otherwise. In Lean, $L(d)$ is \texttt{if IsPrimePow d then d.minFac else 1}. Clearly $L(d)\ge1$ (\decl{L_pos}).
+\end{definition}
+
+\begin{lemma}[\decl{log_L}, \decl{prod_divisors_L}]\label{lem:divisors}
+For every $d\ge0$, $\log L(d)=\Lambda(d)$, where $\Lambda$ is the von Mangoldt function. For every integer $g\ge1$,
+\[
+  \prod_{d\mid g}L(d)=g .
+\]
+\end{lemma}
+
+\begin{proof}
+In Mathlib, $\Lambda(d)$ is defined as $\log(\text{least prime factor of }d)$ if $d$ is a prime power and $0$ otherwise, and $\log1=0$; this gives the first claim. Since every $L(d)$ is positive, $\log\prod_{d\mid g}L(d)=\sum_{d\mid g}\Lambda(d)$, and this equals $\log g$ by the classical identity $\sum_{d\mid g}\Lambda(d)=\log g$ (Mathlib's \decl{ArithmeticFunction.vonMangoldt_sum}). Since $\log$ is injective on $(0,\infty)$, the product equals $g$.
+(Directly: if $g=\prod_pp^{a_p}$, the divisors of $g$ that are prime powers are the $p^t$ with $1\le t\le a_p$, and each contributes a factor $p$.)
+\end{proof}
+
+\begin{lemma}[\decl{decomp}, \decl{count_mult}]\label{lem:decomp}
+\begin{enumerate}
+\item If $1\le g\le N$, then $g=\prod_{d=1}^{N}L(d)^{\Ind{d\mid g}}$.
+\item For $d,m\ge0$, $\#\{i\in\{1,\dots,m\}: d\mid i\}=\fl{m/d}$ (with $\fl{m/0}=0$).
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) Every divisor $d$ of $g$ satisfies $1\le d\le g\le N$, so the factors with $\Ind{d\mid g}=1$ are exactly the $L(d)$ with $d\mid g$; the others equal $1$. Apply Lemma~\ref{lem:divisors}.
+(2) This is Mathlib's \decl{Nat.Ioc_filter_dvd_card_eq_div}.
+\end{proof}
+
+\begin{lemma}[\decl{factorial_eq}, \decl{G_eq}]\label{lem:products}
+For all $0\le m\le N$,
+\[
+  m!=\prod_{d=1}^{N}L(d)^{\fl{m/d}}\qquad\text{and}\qquad G(m)=\prod_{d=1}^{N}L(d)^{\fl{m/d}^3}.
+\]
+\end{lemma}
+
+\begin{proof}
+Write $m!=\prod_{i=1}^m i$ and replace each $i$ (with $1\le i\le m\le N$) by $\prod_{d=1}^NL(d)^{\Ind{d\mid i}}$, using Lemma~\ref{lem:decomp}(1). Exchanging the two products gives $m!=\prod_{d=1}^NL(d)^{\sum_{i=1}^m\Ind{d\mid i}}$, and the exponent is $\fl{m/d}$ by Lemma~\ref{lem:decomp}(2).
+
+For $G(m)$, each factor $g=\gcd(h,i,j)$ with $h,i,j\in\{1,\dots,m\}$ satisfies $1\le g\le j\le m\le N$, so Lemma~\ref{lem:decomp}(1) applies to it. Moving the product over $d$ outside the three products over $h,i,j$ gives
+\[
+  G(m)=\prod_{d=1}^NL(d)^{S_d},\qquad S_d=\sum_{h,i,j=1}^{m}\Ind{d\mid\gcd(h,i,j)} .
+\]
+Since $d\mid\gcd(h,i,j)$ if and only if $d\mid h$, $d\mid i$ and $d\mid j$, the summand is $\Ind{d\mid h}\Ind{d\mid i}\Ind{d\mid j}$, so $S_d=\bigl(\sum_{h=1}^m\Ind{d\mid h}\bigr)^3=\fl{m/d}^3$ by Lemma~\ref{lem:decomp}(2).
+\end{proof}
+
+\begin{lemma}[\decl{two_dvd}, \decl{cube_identity}]\label{lem:cube}
+Let $A,B\in\N$ and $c\in\{0,1\}$. Then $AB(A+B)+c(A+B)(A+B+1)$ is even, and with $e=\tfrac12\bigl(AB(A+B)+c(A+B)(A+B+1)\bigr)\in\N$,
+\[
+  (A+B+c)^3=A^3+B^3+c+6e .
+\]
+\end{lemma}
+
+\begin{proof}
+If $A$ or $B$ is even, so is $AB(A+B)$; if both are odd, $A+B$ is even. The product $(A+B)(A+B+1)$ of consecutive integers is even. For the identity, expand and use $c^2=c^3=c$:
+\begin{align*}
+(A+B+c)^3&=(A+B)^3+3c(A+B)^2+3c(A+B)+c\\
+&=A^3+B^3+c+3AB(A+B)+3c(A+B)(A+B+1). \qedhere
+\end{align*}
+\end{proof}
+
+In Lean the identity is proved by \decl{nlinarith} separately for $c=0$ and $c=1$, after writing the even number as $2q$.
+
+\begin{proposition}[\decl{main_identity}]\label{prop:main}
+Let $0\le k\le n$. For $1\le d\le n$ put
+\[
+  A_d=\fl{k/d},\quad B_d=\fl{(n-k)/d},\quad c_d=\Ind{d\le (k\bmod d)+((n-k)\bmod d)},
+\]
+and let $e_d=\tfrac12\bigl(A_dB_d(A_d+B_d)+c_d(A_d+B_d)(A_d+B_d+1)\bigr)$. Then
+\[
+  \text{(a)}\ \ \fl{n/d}=A_d+B_d+c_d,\qquad
+  \text{(b)}\ \ \binom nk=\prod_{d=1}^nL(d)^{c_d},\qquad
+  \text{(c)}\ \ G(n)=G(n-k)\,G(k)\,\binom nk\,M^6,
+\]
+where $M=\prod_{d=1}^{n}L(d)^{e_d}\ge1$.
+\end{proposition}
+
+\begin{proof}
+(a) Write $k=A_dd+r$ and $n-k=B_dd+s$ with $0\le r,s<d$. Then $n=(A_d+B_d)d+r+s$ with $0\le r+s<2d$, so $\fl{n/d}=A_d+B_d+\Ind{r+s\ge d}$. (In Lean this is Mathlib's \decl{Nat.add_div}.)
+
+(b) Apply Lemma~\ref{lem:products} with $N=n$ to $n!$, $k!$ and $(n-k)!$ (note $k,n-k\le n$). Using (a),
+\[
+  \binom nk\,k!\,(n-k)!=n!=\prod_{d=1}^nL(d)^{A_d+B_d+c_d}=\Bigl(\prod_{d=1}^nL(d)^{c_d}\Bigr)\,k!\,(n-k)!,
+\]
+and we cancel the positive integer $k!\,(n-k)!$.
+
+(c) Apply Lemma~\ref{lem:products} with $N=n$ to $G(n)$, $G(k)$ and $G(n-k)$. By (a) and Lemma~\ref{lem:cube},
+\[
+  G(n)=\prod_{d=1}^nL(d)^{(A_d+B_d+c_d)^3}=\prod_{d=1}^nL(d)^{A_d^3+B_d^3+c_d+6e_d}
+  =G(k)\,G(n-k)\prod_{d=1}^nL(d)^{c_d}\Bigl(\prod_{d=1}^nL(d)^{e_d}\Bigr)^6,
+\]
+and the third factor is $\binom nk$ by (b). Finally $M\ge1$ because every $L(d)\ge1$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main} (\decl{result})]
+Proposition~\ref{prop:main}(c) is \eqref{eq:main}, and it gives~(1). Every factor $\gcd(h,i,j)$ with $j\ge1$ is positive, so $G(k)G(n-k)>0$ (\decl{A129454_pos}), and cancelling it in \eqref{eq:main} gives $T(n,k)=\binom nkM^6$, which is~(2). Since $\binom nk>0$ for $k\le n$, also $T(n,k)/\binom nk=M^6$, which is~(3). In Lean, the same cancellations show that the truncating divisions in \decl{T} and in the third conjunct are exact, and $M$ is the witness for \texttt{m}.
+\end{proof}
+
+\begin{remark}[$p$-adic form; not formalized in this form]\label{rem:padic}
+Collecting in Lemma~\ref{lem:products} the factors $L(p^t)=p$ for a fixed prime $p$ gives $v_p(G(m))=\sum_{t\ge1}\fl{m/p^t}^3$, which is Ma's formula for $q=3$; Proposition~\ref{prop:main} likewise gives $v_p(\binom nk)=\sum_{t\ge1,\,p^t\le n}c_{p^t}$, the number of carries when $k$ and $n-k$ are added in base $p$ (Kummer's theorem), and $v_p(M)=\sum_{t\ge1,\,p^t\le n}e_{p^t}$. In terms of A129454 the first formula reads $v_p(\mathrm{A129454}(n))=\sum_{t\ge1}\fl{(n-1)/p^t}^3$ for $n\ge1$. The conjectured factorization in A129454 \cite{A129454} has $\fl{n/p^t}$ in place of $\fl{(n-1)/p^t}$; read with the entry's offset $0$, it describes $\mathrm{A129454}(n+1)$ rather than $\mathrm{A129454}(n)$. For example it predicts $2^{8+1}\cdot3=1536$ for $n=4$, while $\mathrm{A129454}(4)=6$ and $\mathrm{A129454}(5)=1536$. This shift does not affect the formal statement, which uses the defining product of A129454 directly.
+\end{remark}
+
+\begin{remark}[the square case; not formalized]\label{rem:square}
+The same argument with $\fl{m/d}^2$ in place of $\fl{m/d}^3$, and with the identity $(A+B+c)^2=A^2+B^2+c+2\bigl(AB+c(A+B)\bigr)$ for $c\in\{0,1\}$, gives $G_2(n)=G_2(k)\,G_2(n-k)\binom nk\bigl(\prod_{d=1}^nL(d)^{A_dB_d+c_d(A_d+B_d)}\bigr)^2$. This proves the analogous statement of Bala in A129453 \cite{A129453}: the entries are integers, divisible by $\binom nk$, with perfect-square quotients. We checked this numerically for $n<40$ but did not formalize it, and we make no claim about its novelty.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is the file \path{lean/Math0/Frontier/OEIS/A129455.lean} in the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A129455.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A129455.result}, of type \decl{Math0.Statements.A129455.statement}. All auxiliary declarations are \texttt{private}: the definition \decl{L} and the lemmas \decl{L_pos}, \decl{log_L}, \decl{prod_divisors_L}, \decl{decomp}, \decl{count_mult}, \decl{factorial_eq}, \decl{G_eq}, \decl{two_dvd}, \decl{cube_identity}, \decl{main_identity} and \decl{A129454_pos}, which correspond to the steps of Section~\ref{sec:proof}. The statements of the main identity and of the theorem, and the audit command at the end of the file, read verbatim (proofs omitted):
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+private lemma main_identity (n k : ℕ) (hk : k ≤ n) :
+    ∃ M : ℕ, A129454 (n + 1) = A129454 (n - k + 1) * A129454 (k + 1) * (n.choose k * M ^ 6) := by
+theorem result : statement := by
+#math0_settles Math0.Frontier.A129455.result Math0.Statements.A129455.statement
+\end{lstlisting}
+The proof file uses no \texttt{decide}, \texttt{native\_decide} or \texttt{set\_option}; it is a proof for all $n$ and $k$, not a finite computation. Besides the Mathlib lemmas named in Section~\ref{sec:proof}, the main ones it uses are \decl{Real.log_injOn_pos}, \decl{Nat.choose_mul_factorial_mul_factorial} ($\binom nk\,k!\,(n-k)!=n!$), and \decl{Finset.prod_comm} and \decl{Finset.prod_pow_eq_pow_sum} for rearranging the finite products.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, which rules out \decl{sorryAx}, the axiom \decl{Lean.ofReduceBool} introduced by \texttt{native\_decide}, and custom axioms; and (3) the type of \decl{result} is syntactically \decl{statement} or its negation, up to metadata annotations, with no unfolding. Running \texttt{lake env lean Math0/Frontier/OEIS/A129455.lean} in the directory \path{lean} prints
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A129455.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A129455.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A129455.result' proves 'Math0.Statements.A129455.statement'
+\end{lstlisting}
+and takes about $16$ seconds on our machine, most of it spent loading Mathlib.
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root. It fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of statement checks that passed.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Ma}
+W.~Ma, \emph{Generalized factorials characterized by Dirichlet convolution}, arXiv:2509.13354, 2025.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Mi}
+A.~B. Mingarelli, \emph{Abstract factorials}, Notes on Number Theory and Discrete Mathematics \textbf{19} (2013), no.~4, 43--76; arXiv:0705.4299.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A092287}
+OEIS Foundation Inc., Entry A092287 in \emph{The On-Line Encyclopedia of Integer Sequences}, \url{https://oeis.org/A092287}; entry by N.~J.~A. Sloane after L.~Quet (2004), with comments by P.~Bala (2007), C.~R. Greathouse~IV and D.~Forgues (2013); revision \#71, Sep.~22, 2025.
+
+\bibitem{A129453}
+OEIS Foundation Inc., Entry A129453 in \emph{The On-Line Encyclopedia of Integer Sequences}, \url{https://oeis.org/A129453}; entry by P.~Bala (Apr.~16, 2007); revision \#9, Feb.~7, 2024.
+
+\bibitem{A129454}
+OEIS Foundation Inc., Entry A129454 in \emph{The On-Line Encyclopedia of Integer Sequences}, \url{https://oeis.org/A129454}; entry by P.~Bala (Apr.~16, 2007); revision \#8, Feb.~7, 2024.
+
+\bibitem{A129455}
+OEIS Foundation Inc., Entry A129455 in \emph{The On-Line Encyclopedia of Integer Sequences}, \url{https://oeis.org/A129455}; entry by P.~Bala (Apr.~16, 2007); revision \#9, Feb.~8, 2024.
+
+\bibitem{A224479}
+OEIS Foundation Inc., Entry A224479 in \emph{The On-Line Encyclopedia of Integer Sequences}, \url{https://oeis.org/A224479}; entry by P.~Luschny (Apr.~7, 2013).
+
+\bibitem{A224497}
+OEIS Foundation Inc., Entry A224497 in \emph{The On-Line Encyclopedia of Integer Sequences}, \url{https://oeis.org/A224497}; entry by P.~Luschny (Apr.~8, 2013).
+
+\end{thebibliography}
+}
+
+\end{document}

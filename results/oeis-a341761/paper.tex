@@ -1,0 +1,359 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1
+    {↔}{{$\leftrightarrow$}}1 {→}{{$\to$}}1 {∈}{{$\in$}}1 {≠}{{$\ne$}}1 {∧}{{$\wedge$}}1
+    {∑}{{$\sum$}}1 {·}{{$\cdot$}}1 {α}{{$\alpha$}}1 {≃}{{$\simeq$}}1 {↪}{{$\hookrightarrow$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+\newunicodechar{≃}{\ensuremath{\simeq}}
+\newunicodechar{↪}{\ensuremath{\hookrightarrow}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Fac}{\mathcal{F}}
+\newcommand{\Fix}{\operatorname{Fix}}
+\newcommand{\ff}[2]{#1^{\underline{#2}}}
+\newcommand{\coeff}[2]{[#1]\,#2}
+
+\title[The leading coefficient of the subword complexity polynomial]{The subword complexity polynomial $S(n,x)$ has leading coefficient $n(n+1)/2$: a proof of Guo's conjecture (OEIS A341761)}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 24, 2026}
+
+\begin{document}
+\begin{abstract}
+For a finite word $w$ let $c(w)$, the subword complexity of $w$, be the number of distinct nonempty factors (contiguous subwords) of $w$, and let $S(n,x)$ be the sum of $c(w)$ over the $x^n$ words $w$ of length $n$ over an alphabet with $x$ letters.
+In OEIS A341761, Shiyao Guo conjectured in 2021 that the coefficient of $x^n$ in the polynomial $S(n,x)$ is $n(n+1)/2$.
+We prove this by grouping words according to which positions carry equal letters: $S(n,x)=\sum_p c(p)\,x(x-1)\cdots(x-k(p)+1)$ over the equality patterns $p$, where $k(p)$ is the number of distinct letters, and only the pattern with $n$ distinct letters contributes to $x^n$.
+The argument is elementary; we found no earlier proof in the literature and report the result as new, settling the conjecture as stated.
+The proof, including the polynomiality of $S(n,\cdot)$, is verified in Lean~4 against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry; the kernel checks that statement's definition of $S$ against rows $0$--$5$ of the OEIS data.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+A \emph{factor} of a word $w=w_1w_2\cdots w_n$ is a contiguous subword $w_iw_{i+1}\cdots w_j$ with $1\le i\le j\le n$. The \emph{subword complexity} $c(w)$ is the number of distinct nonempty factors of $w$; for example $c(aba)=5$, the factors being $a,b,ab,ba,aba$. For $n,x\ge0$ let $S(n,x)=\sum_{w\in A_x^n}c(w)$, where $A_x$ is an alphabet with $x$ letters. For $x\ge1$, $S(n,x)/x^n$ is the expected subword complexity of a uniformly random word of length $n$ over $A_x$.
+
+The OEIS entry A341761 \cite{A341761}, submitted by Shiyao Guo on February~19, 2021, is the triangle whose row $n$ lists the coefficients of $S(n,x)$ as a polynomial in $x$, constant term first:
+$0;\ 0,1;\ 0,-1,3;\ 0,0,-3,6;\ 0,-1,1,-6,10;\ \dots$
+The entry states, without proof, that $S(n,x)$ has degree $n$ and constant coefficient $0$, and it contains the conjecture that the coefficient of $x^n$ is $n(n+1)/2$. The companion entry A340885 \cite{A340885} lists $S(n,2)$. In a blog post \cite{Guo}, Guo computes these polynomials (written $F_n(m)$ there) for $n\le 60$ by grouping candidate factors according to their autocorrelation, notes that $F_n$ is a polynomial of degree at most $n$, and lists $[x^n]F_n(x)=n(n+1)/2$ with the remark ``This is a conjecture.'' The entry links a table of rows $0$--$60$.
+
+We prove the conjecture (Theorem~\ref{thm:main}), via an explicit expansion of $S(n,x)$ in falling factorials of $x$ (Proposition~\ref{prop:formula}).
+
+\subsection*{Prior work and status}
+The conjecture is still labelled ``Conjecture'' in the current revision of A341761 (\#33, March~20, 2024). Guo's blog post \cite{Guo}, in its English and Chinese versions (updated March~26, 2026), still calls it a conjecture; it justifies $\deg F_n\le n$ in one line but gives no argument for the leading coefficient. The average subword complexity of random words has been studied by Janson, Lonardi and Szpankowski \cite{JLS} (the average number of distinct substrings of a random text of length $n$ over a $k$-letter alphabet), Ivanko \cite{Ivanko} (an explicit approximation over a finite alphabet), Gheorghiciuc and Ward \cite{GW} (the expected number of distinct factors of a fixed length, via correlation polynomials) and Ahmadi and Ward \cite{AW} (its asymptotics for binary memoryless sources). These works concern the behaviour as the word length grows, for a fixed alphabet or source; as far as the math0 referees could determine, none addresses the coefficients of $S(n,x)$ as a polynomial in the alphabet size. The referees' searches (arXiv, Mathematics Stack Exchange, Chinese-language sources, general web search) found neither a proof nor a counterexample; the SeqFan mailing-list archive could not be searched directly.
+
+We therefore report the result as new. We stress that it is elementary. Once one knows that $S(n,\cdot)$ is a polynomial of degree at most $n$ (which Guo notes), its coefficient of $x^n$ equals $\lim_{x\to\infty}S(n,x)/x^n$, and a uniformly random word of length $n$ has pairwise distinct letters with probability $x(x-1)\cdots(x-n+1)/x^n\to1$; such a word has $n(n+1)/2$ distinct factors (Lemma~\ref{lem:nodup}). Specialists may regard the statement as evident; we found no recorded proof.
+The Lean proof establishes Theorem~\ref{thm:main}, including the existence of the polynomial, and on the way the formula of Proposition~\ref{prop:formula}. Remark~\ref{rem:entry} is proved on paper only.
+
+\section{Statement}\label{sec:statement}
+
+The COMMENTS section of A341761 \cite{A341761} reads, in part (verbatim):
+\begin{quote}
+{\small\raggedright\texttt{S(n,x) is the sum of subword complexities (number of nonempty distinct subwords) of all words of length n and an alphabet with size x.}\\
+\texttt{[\dots]}\\
+\texttt{Conjecture: the coefficient of x\^{}n in S(n,x) is n*(n+1)/2.}\par}
+\end{quote}
+These lines carry no separate signature; they belong to the original submission, whose author line reads \texttt{\_Shiyao Guo\_, Feb 19 2021}.
+
+\begin{theorem}\label{thm:main}
+For every $n\ge0$ there is a polynomial $P_n\in\Q[X]$ with $P_n(x)=S(n,x)$ for every $x\in\N$, and the coefficient of $X^n$ in $P_n$ is $n(n+1)/2$.
+\end{theorem}
+Such a polynomial is unique, since two polynomials over $\Q$ that agree on $\N$ are equal (\decl{poly_unique} below); so Theorem~\ref{thm:main} is a statement about \emph{the} polynomial $S(n,x)$.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A341761.lean}, reviewed for fidelity, and frozen (SHA-256 \texttt{827988f4\ldots faf23}) before any proof attempt. Its definitions and the statement read (verbatim; header, import, docstrings, proofs, one helper lemma and the data-check declarations omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A341761
+open Polynomial
+def factors {α : Type*} [DecidableEq α] (w : List α) : Finset (List α) :=
+  (w.tails.flatMap fun t => t.inits.tail).toFinset
+theorem mem_factors {α : Type*} [DecidableEq α] (w u : List α) :
+    u ∈ factors w ↔ u ≠ [] ∧ u <:+: w
+def complexity {α : Type*} [DecidableEq α] (w : List α) : ℕ := (factors w).card
+def S (n x : ℕ) : ℕ := ∑ w : Fin n → Fin x, complexity (List.ofFn w)
+theorem poly_unique (P Q : ℚ[X]) (h : ∀ x : ℕ, P.eval (x : ℚ) = Q.eval (x : ℚ)) : P = Q
+def statement : Prop :=
+  ∀ n : ℕ, ∃ P : ℚ[X], (∀ x : ℕ, P.eval (x : ℚ) = (S n x : ℚ)) ∧
+    P.coeff n = (n : ℚ) * (n + 1) / 2
+end Math0.Statements.A341761
+\end{lstlisting}
+The encoding is as follows.
+\begin{enumerate}
+\item \emph{Factors.} \texttt{factors w} is the set of nonempty prefixes of the suffixes of $w$, and \decl{mem_factors} proves that it consists exactly of the nonempty lists $u$ that are contiguous infixes of $w$ (\texttt{<:+:} is Mathlib's infix relation). ``Subword'' in the entry means a contiguous factor: the entry's example lists the complexities $3,5,5,5,5,5,5,3$ of the binary words of length~$3$, and $c(aba)=5$ excludes the scattered subsequence $aa$. \texttt{complexity w} is the number of these factors, i.e.\ $c(w)$.
+\item \emph{$S(n,x)$.} The words of length $n$ over an alphabet of size $x$ are the maps $\mathtt{Fin}\ n\to\mathtt{Fin}\ x$, turned into lists by \texttt{List.ofFn}; thus $S(0,x)=0$ (the empty word has complexity $0$) and $S(n,0)=0$ for $n\ge1$, consistent with the entry.
+\item \emph{The polynomial.} ``The coefficient of $x^n$ in $S(n,x)$'' is read as the coefficient of $X^n$ in a polynomial $P\in\Q[X]$ that agrees with $S(n,\cdot)$ on $\N$. By \decl{poly_unique}, two polynomials over $\Q$ agreeing on $\N$ are equal, so such a $P$ is unique, and the existential quantifier adds only the polynomiality that the entry asserts. Coefficients are rational, so no integrality is assumed; $n(n+1)/2$ is computed in $\Q$.
+\end{enumerate}
+
+\subsection*{Check against the OEIS data}
+The statement file also defines the triangle and checks it against the entry, through the following declarations (verbatim; proofs, auxiliary lemmas, and the definitions of \decl{interp}, \decl{a}, and of the list \texttt{words x n} of all words of length $n$ over \texttt{Fin x} omitted):
+\begin{lstlisting}
+def Sw (n x : ℕ) : ℕ := ((words x n).map complexity).sum
+theorem S_eq_Sw : S = Sw
+def row (n : ℕ) : List ℚ := interp ((List.range (n + 1)).map fun x => (S n x : ℚ))
+theorem rows_data : (List.range 6).map row =
+    [[0], [0, 1], [0, -1, 3], [0, 0, -3, 6], [0, -1, 1, -6, 10], [0, 2, -6, 4, -10, 15]]
+theorem a_data : (List.range 21).map (fun i => a (i + 0)) =
+    [0, 0, 1, 0, -1, 3, 0, 0, -3, 6, 0, -1, 1, -6, 10, 0, 2, -6, 4, -10, 15]
+\end{lstlisting}
+Here \decl{interp} computes, by Newton's forward-difference formula $P(x)=\sum_{k\le n}\Delta^kv_0\binom xk$ over $\Q$, the coefficients of the polynomial of degree at most $n$ through the values $v_x=S(n,x)$, $x=0,\dots,n$; this recovers the coefficients of $S(n,x)$ given the entry's claim that its degree is $n$, and \decl{a} reads the rows in order (offset $0$). Through \decl{S_eq_Sw}, \decl{rows_data} is proved by \texttt{decide +kernel}: the kernel enumerates all $x^n$ words for $x\le n\le5$, computes their complexities and interpolates (about 90 seconds of CPU time); \decl{a_data} then confirms the first $21$ terms of the OEIS data. The theorem we prove refers only to $S$; the data check anchors the definition of $S$ to the entry independently of the conjecture. Outside Lean, the formula of Proposition~\ref{prop:formula}, evaluated over all equality patterns with $n\le10$, reproduces all $66$ terms of the OEIS data section (rows $0$--$10$).
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A341761.lean}; Lean names are given in brackets. \emph{Notation.} For $n\in\N$ let $[n]=\{0,1,\dots,n-1\}$. A word of length $n$ over a set $A$ is a map $w\colon[n]\to A$, identified with the list $w(0)w(1)\cdots w(n-1)$. We write $\Fac(u)$ for the set of distinct nonempty factors of a word $u$, so $c(u)=|\Fac(u)|$. For a map $f\colon A\to B$, $f(u)$ denotes the letterwise image of $u$. For $x,k\in\N$ let $\ff xk=x(x-1)\cdots(x-k+1)$ (\texttt{Nat.descFactorial}; it is $0$ if $k>x$), and let $\ff Xk=X(X-1)\cdots(X-k+1)\in\Q[X]$ (\texttt{descPochhammer ℚ k}).
+
+\subsection{Equality patterns}
+
+\begin{definition}[\decl{pat}]
+For $w\colon[n]\to A$ and $i\in[n]$ let $\pi_w(i)=\min\{j\in[n]: w(j)=w(i)\}$, the first position carrying the letter $w(i)$. A map $p\colon[n]\to[n]$ is a \emph{pattern} if $\pi_p=p$. For a pattern $p$ let $\Fix(p)=\{i: p(i)=i\}$ and $k(p)=|\Fix(p)|$ (\decl{nfix}).
+\end{definition}
+
+\begin{lemma}[\decl{pat_spec}, \decl{pat_eq_iff}, \decl{pat_congr}, \decl{pat_pat}, \decl{pat_idem_apply}, \decl{pat_id}]\label{lem:pat}
+Let $w\colon[n]\to A$.
+\begin{enumerate}
+\item $w(\pi_w(i))=w(i)$ for all $i$.
+\item $\pi_w(i)=\pi_w(j)$ if and only if $w(i)=w(j)$.
+\item If $v\colon[n]\to B$ satisfies $w(i)=w(j)\Leftrightarrow v(i)=v(j)$ for all $i,j$, then $\pi_v=\pi_w$.
+\item $\pi_w$ is a pattern.
+\item If $p$ is a pattern, then $p(p(i))=p(i)$ for all $i$. The identity map of $[n]$ is a pattern.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) The minimum is taken over a set that contains $i$, and it belongs to that set.
+(2) If $\pi_w(i)=\pi_w(j)$, then $w(i)=w(\pi_w(i))=w(\pi_w(j))=w(j)$ by (1). If $w(i)=w(j)$, the two sets whose minima define $\pi_w(i)$ and $\pi_w(j)$ coincide.
+(3) For each $i$ the sets $\{j:w(j)=w(i)\}$ and $\{j:v(j)=v(i)\}$ coincide.
+(4) By (2), $\pi_w$ and $w$ satisfy the hypothesis of (3), so $\pi_{\pi_w}=\pi_w$.
+(5) Applying (1) to $w=p$ gives $p(\pi_p(i))=p(i)$, and $\pi_p=p$. For the identity, (1) gives $\pi_{\mathrm{id}}(i)=\mathrm{id}(\pi_{\mathrm{id}}(i))=\mathrm{id}(i)=i$.
+\end{proof}
+
+\subsection{Complexity depends only on the pattern}
+
+\begin{lemma}[\decl{complexity_map}, \decl{map_injOn_lists}]\label{lem:map}
+Let $u$ be a word over $A$ and let $f\colon A\to B$ be injective on the set of letters of $u$. Then $c(f(u))=c(u)$.
+\end{lemma}
+
+\begin{proof}
+We show that $v\mapsto f(v)$ is a bijection from $\Fac(u)$ onto $\Fac(f(u))$. The image $f(v)$ of a factor $v$ of $u$ is a factor of $f(u)$, nonempty if $v$ is. Conversely, every factor of $f(u)$ has the form $f(v)$ for a factor $v$ of $u$ (Mathlib's \texttt{List.infix\_map\_iff}), and $v$ is nonempty if $f(v)$ is. So $\Fac(f(u))=\{f(v):v\in\Fac(u)\}$. The letters of every $v\in\Fac(u)$ are letters of $u$. If $f(v)=f(v')$ for $v,v'\in\Fac(u)$, then $v$ and $v'$ have the same length and, $f$ being injective on the letters of $u$, the same letter at each position; so $v=v'$ (by induction on the lists in Lean).
+\end{proof}
+
+\begin{lemma}[\decl{complexity_pat}]\label{lem:cpat}
+For every word $w\colon[n]\to A$, $c(w)=c(\pi_w)$, where $\pi_w$ is regarded as a word over $[n]$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:pat}(1), $w=w\circ\pi_w$; that is, the word $w$ is the letterwise image of the word $\pi_w$ under the map $w\colon[n]\to A$. The letters of $\pi_w$ are the positions $\pi_w(i)$, and $w$ is injective on them: if $w(\pi_w(i))=w(\pi_w(j))$, then $w(i)=w(j)$ by Lemma~\ref{lem:pat}(1), hence $\pi_w(i)=\pi_w(j)$ by Lemma~\ref{lem:pat}(2). Now apply Lemma~\ref{lem:map}.
+\end{proof}
+
+\subsection{Counting the words with a given pattern}
+
+\begin{lemma}[\decl{fiberEquiv}, \decl{card_fiber}]\label{lem:fiber}
+Let $x\in\N$ and let $p\colon[n]\to[n]$.
+\begin{enumerate}
+\item If $p$ is a pattern, the number of words $w\colon[n]\to[x]$ with $\pi_w=p$ is $\ff x{k(p)}$.
+\item If $p$ is not a pattern, there is no word $w$ with $\pi_w=p$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) Let $W_p=\{w\colon[n]\to[x] : \pi_w=p\}$ and let $E$ be the set of injective maps $\Fix(p)\to[x]$. For $w\in W_p$ let $\rho(w)$ be the restriction of $w$ to $\Fix(p)$. It is injective: if $i,j\in\Fix(p)$ and $w(i)=w(j)$, then $p(i)=\pi_w(i)=\pi_w(j)=p(j)$ by Lemma~\ref{lem:pat}(2), so $i=p(i)=p(j)=j$. For $e\in E$ let $\sigma(e)=e\circ p$, which is defined because $p(i)\in\Fix(p)$ by Lemma~\ref{lem:pat}(5). Since $e$ is injective, $\sigma(e)(i)=\sigma(e)(j)$ if and only if $p(i)=p(j)$, so $\pi_{\sigma(e)}=\pi_p=p$ by Lemma~\ref{lem:pat}(3); thus $\sigma(e)\in W_p$. The maps are mutually inverse: $\sigma(\rho(w))(i)=w(p(i))=w(\pi_w(i))=w(i)$ by Lemma~\ref{lem:pat}(1), and $\rho(\sigma(e))(i)=e(p(i))=e(i)$ for $i\in\Fix(p)$. Hence $|W_p|=|E|$, and the number of injections from a $k$-element set into an $x$-element set is $\ff xk$ (Mathlib's \texttt{Fintype.card\_embedding\_eq}).
+(2) If $\pi_w=p$, then $\pi_p=\pi_{\pi_w}=\pi_w=p$ by Lemma~\ref{lem:pat}(4).
+\end{proof}
+
+\begin{proposition}[\decl{S_eq}]\label{prop:formula}
+For all $n,x\in\N$,
+\[
+  S(n,x)=\sum_{p\ \text{pattern}} c(p)\,\ff x{k(p)},
+\]
+the sum running over the patterns $p\colon[n]\to[n]$.
+\end{proposition}
+
+\begin{proof}
+Partition the words $w\colon[n]\to[x]$ according to $\pi_w$ (\texttt{Finset.sum\_fiberwise}). By Lemma~\ref{lem:cpat}, every word $w$ with $\pi_w=p$ has $c(w)=c(p)$. So the words with $\pi_w=p$ contribute $c(p)$ times their number, which is $\ff x{k(p)}$ if $p$ is a pattern and $0$ otherwise, by Lemma~\ref{lem:fiber}.
+\end{proof}
+
+For example, the five patterns for $n=3$ correspond to $aaa,aab,aba,abb,abc$, with $(k,c)=(1,3),(2,5),(2,5),(2,5),(3,6)$, so $S(3,x)=3x+15\,x(x-1)+6\,x(x-1)(x-2)=6x^3-3x^2$, which is row $3$ of the triangle.
+
+\subsection{Words with distinct letters}
+
+\begin{lemma}[\decl{complexity_nodup}, \decl{card_inits_tail}]\label{lem:nodup}
+If $u$ is a word of length $m$ with pairwise distinct letters, then $c(u)=m(m+1)/2$.
+\end{lemma}
+
+\begin{proof}
+We prove $2c(u)=m(m+1)$ by induction on $u$. The empty word has no nonempty factors. Let $u=au'$ where $a$ does not occur in $u'$, the letters of $u'$ are pairwise distinct, and $u'$ has length $m'$. Since the suffixes of $u$ are $u$ itself and the suffixes of $u'$, the definition of \texttt{factors} gives $\Fac(u)=\Pi\cup\Fac(u')$, where $\Pi$ is the set of nonempty prefixes of $u$. The union is disjoint: every element of $\Pi$ begins with $a$, while every factor of $u'$ consists of letters of $u'$. The $m'+1$ nonempty prefixes of $u$ have different lengths, so $|\Pi|=m'+1$. Hence $2c(u)=2(m'+1)+m'(m'+1)=(m'+1)(m'+2)$.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:main}}
+Fix $n$ and set
+\[
+  P_n=\sum_{p\ \text{pattern}} c(p)\,\ff X{k(p)}\in\Q[X].
+\]
+(In Lean the sum runs over all $p\colon\mathtt{Fin}\ n\to\mathtt{Fin}\ n$, with summand $0$ when $p$ is not a pattern.) For $x\in\N$ we have $\ff Xk(x)=\ff xk$ (\texttt{descPochhammer\_eval\_eq\_descFactorial}), so $P_n(x)=S(n,x)$ by Proposition~\ref{prop:formula}.
+
+For the coefficient of $X^n$, recall that $\ff Xk$ is monic of degree $k$ (\texttt{monic\_descPochhammer}, \texttt{descPochhammer\_natDegree}). If $p$ is a pattern other than the identity, then $p(i)\ne i$ for some $i$, so $\Fix(p)$ is a proper subset of $[n]$, $k(p)<n$, and $\ff X{k(p)}$ has coefficient $0$ at $X^n$. The identity is a pattern (Lemma~\ref{lem:pat}(5)) with $k=n$, and $\ff Xn$ has coefficient $1$ at $X^n$. Hence (\texttt{Finset.sum\_eq\_single})
+\[
+  [X^n]\,P_n=c(0\,1\,\cdots\,(n-1)).
+\]
+The word $0\,1\cdots(n-1)$ has pairwise distinct letters, so by Lemma~\ref{lem:nodup} this equals $n(n+1)/2$. \qed
+
+\begin{remark}[not formalized]\label{rem:entry}
+Each $\ff Xk$ has integer coefficients, and for $n\ge1$ every pattern fixes $0$ (as $\pi_p(0)=0$), so $k(p)\ge1$ and $X$ divides $\ff X{k(p)}$. Hence, for $n\ge1$, $P_n\in\Z[X]$ has degree exactly $n$ and constant coefficient $0$, as the entry states, and its coefficients in the basis $\ff X0,\dots,\ff Xn$ are the nonnegative integers $\sum_{k(p)=k}c(p)$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in \path{lean/Math0/Frontier/OEIS/A341761.lean} in the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A341761.lean} and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A341761.result}, of type \decl{Math0.Statements.A341761.statement}; the private auxiliary declarations are named as in Section~\ref{sec:proof}, plus two small list lemmas (\decl{toFinset_map'}, \decl{card_inits}). The pattern map and the start of the main proof, which supplies $P_n$, read (verbatim excerpts; the last line is our summary of the omitted rest):
+\begin{lstlisting}
+private def pat {n : ℕ} {α : Type*} [DecidableEq α] (w : Fin n → α) (i : Fin n) : Fin n :=
+  (univ.filter fun j => w j = w i).min' ⟨i, by simp⟩
+private def nfix {n : ℕ} (p : Fin n → Fin n) : ℕ := (univ.filter fun i => p i = i).card
+theorem result : statement := by
+  intro n
+  refine ⟨∑ p : Fin n → Fin n, if pat p = p then
+      C (complexity (List.ofFn p) : ℚ) * descPochhammer ℚ (nfix p) else 0, ?_, ?_⟩
+  -- (evaluation at x : ℕ via S_eq; coefficient of X^n via Finset.sum_eq_single id)
+\end{lstlisting}
+Neither file uses \texttt{sorry}, \texttt{native\_decide} or custom axioms.
+
+\subsection*{Audit}
+The file ends with the command \texttt{\#math0\_settles} applied to \decl{result} and \decl{statement}. This command, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (so no \texttt{sorry}, \texttt{native\_decide} or custom axiom); and (3) the type of \decl{result} is syntactically \decl{statement} or $\neg$\,\decl{statement}, up to metadata annotations, with no unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A341761.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A341761.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A341761.result' proves 'Math0.Statements.A341761.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; formal-conjectures \cite{FC} is pinned at commit \texttt{c77fdd4} but not used here, as the statement is a math0 formalization of an OEIS conjecture.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, rebuilds all math0 results (re-running every audit command) and checks that the pinned dependencies are unmodified. The proof file alone is checked by \texttt{lake env lean Math0/Frontier/OEIS/A341761.lean} in \path{lean/} (about $15$ seconds of CPU time once the statement file is built).
+
+{\footnotesize
+\begin{thebibliography}{99}
+
+\bibitem{AW}
+L.~Ahmadi and M.~D. Ward, \emph{Asymptotic analysis of the $k$th subword complexity}, Entropy \textbf{22} (2020), no.~2, 207, \url{https://doi.org/10.3390/e22020207}.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171 [cs.AI], 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{GW}
+I.~Gheorghiciuc and M.~D. Ward, \emph{On correlation polynomials and subword complexity}, in: 2007 Conference on Analysis of Algorithms (AofA 07), Discrete Math. Theor. Comput. Sci. Proc. \textbf{AH} (2007), 1--18, \url{https://doi.org/10.46298/dmtcs.3553}.
+
+\bibitem{Guo}
+S.~Guo (Mivik), \emph{On the expected subword complexity of random words}, blog post, January~30, 2021, updated March~26, 2026, \url{https://mivik.moe/2021/research/expected-subword-complexity-en/} (Chinese version: \texttt{.../expected-subword-complexity/}); linked from A341761 via \texttt{mivik.gitee.io}.
+
+\bibitem{Ivanko}
+E.~E. Ivanko, \emph{Exact approximation of average subword complexity of finite random words over finite alphabet}, Trudy Inst. Mat. i Mekh. UrO RAN \textbf{14} (2008), no.~4, 185--189.
+
+\bibitem{JLS}
+S.~Janson, S.~Lonardi, and W.~Szpankowski, \emph{On average sequence complexity}, Theoret. Comput. Sci. \textbf{326} (2004), 213--227.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A340885}
+The OEIS Foundation Inc., \emph{Sum of subword complexity (number of nonempty distinct subwords) of all binary strings of length $n$}, entry A340885 (S.~Guo, 2021) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A340885}.
+
+\bibitem{A341761}
+The OEIS Foundation Inc., \emph{Triangle read by rows in which row $n$ is the coefficients of the subword complexity polynomial $S(n,x)$}, entry A341761 (S.~Guo, 2021) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A341761}; revision \#33, March~20, 2024.
+
+\end{thebibliography}
+}
+
+\end{document}
