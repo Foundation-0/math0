@@ -26,6 +26,10 @@ Referees: I did not query oeis.org; OEIS entries were read from the local mirror
 - Checked and not relevant: S. Fried, "Further proofs of conjectures from the OEIS", arXiv:2607.24832 (A350900 is not among its sequences); D. Himane, NNTDM 31 (2025) (a different Schulte conjecture, about A006472).
 No prior proof or counterexample of the A350900 conjecture was found.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

@@ -26,6 +26,10 @@ Referees: I found no earlier proof or counterexample for either A334595 conjectu
 - Paul D. Hanna's XOR binomial transform entries (OEIS A099884, A099900, A099902): note that the transform is self-inverse.
 These are the known ingredients that make the result elementary. Web searches of SeqFan, arXiv, MathOverflow and Math StackExchange found no resolution.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

@@ -23,6 +23,10 @@ Y. N. Aliyev, "Digits of powers of 2 in ternary numeral system", Notes Number Th
 Also standard textbook material (2 is a primitive root mod 3^k; e.g. LeVeque, Rosen) and the A008776 comment (J. Song, 2021).
 OEIS A265210 itself (rev. #18, Dec 2015) still lists the statement as a conjecture and has no proof note. The single-column least-period refinement is not stated explicitly in these sources, but it is a short elementary consequence of the same facts.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

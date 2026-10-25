@@ -1,0 +1,359 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw,ext},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℂ}{{$\mathbb{C}$}}1 {∀}{{$\forall$}}1 {→}{{$\to$}}1
+    {←}{{$\leftarrow$}}1 {∧}{{$\wedge$}}1 {≤}{{$\le$}}1 {∑}{{$\sum$}}1 {∈}{{$\in$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {∣}{{$\mid$}}1 {ζ}{{$\zeta$}}1 {•}{{$\bullet$}}1
+    {·}{{$\cdot$}}1 {↑}{{$\uparrow$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{ζ}{\ensuremath{\zeta}}
+\newunicodechar{•}{\ensuremath{\bullet}}
+\newunicodechar{↑}{\ensuremath{\uparrow}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\idf}{\mathrm{id}}
+\newcommand{\A}[1]{\mathrm{A#1}}
+
+\title[Schulte's gcd-ratio double sum (OEIS A350900)]{The sum of $f(\gcd(i,n)/\gcd(i,k,n))$ over $1\le i,k\le n$ is the Dirichlet convolution of $f\varphi$ and A057660 (Schulte's conjecture in OEIS A350900)}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 24, 2026}
+
+\begin{document}
+\begin{abstract}
+For an arithmetic function $f$ and $n\ge1$ let $a(f;n)$ be the sum of $f(\gcd(i,n)/\gcd(i,k,n))$ over $1\le i,k\le n$.
+We prove the conjecture recorded by Werner Schulte in OEIS A350900 in 2022: $a(f;n)$ is the Dirichlet convolution of $f\varphi$ with A057660, where $\A{057660}(m)=\sum_{k=1}^{m}m/\gcd(m,k)$; consequently $a(f;\cdot)$ is multiplicative whenever $f$ is, and the row sums of the triangle A350900 are the Dirichlet convolution of $\A{002618}(n)=n\varphi(n)$ and A057660.
+The proof is elementary and rests on Ces\`aro's classical identity.
+To our knowledge no proof has been published, and the OEIS still lists the statement as a conjecture, although the row-sum formula had been recorded without proof in A373059; we classify the result as new, but a specialist would regard the argument as routine.
+The theorem is verified in Lean~4 with Mathlib against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry, whose definitions are checked by the kernel against the OEIS data.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+The OEIS entry A350900 \cite{A350900}, contributed by Werner Schulte on January~21, 2022, is the triangle
+\[
+  T(n,k)=\sum_{i=1}^{n}\frac{\gcd(i,n)}{\gcd(\gcd(i,k),n)}\qquad(1\le k\le n),
+\]
+read by rows: $1;\ 3,2;\ 5,5,3;\ 8,5,8,4;\ \dots$. In the COMMENTS section Schulte replaces the ratio $\gcd(i,n)/\gcd(\gcd(i,k),n)$ by its image under an arbitrary arithmetic function $f$ and sums over both indices, defining
+\begin{equation}\label{eq:aF}
+  a(f;n)=\sum_{i=1}^{n}\sum_{k=1}^{n}f\!\left(\frac{\gcd(i,n)}{\gcd(\gcd(i,k),n)}\right)\qquad(n\ge1).
+\end{equation}
+He conjectured that $a(f;n)$ is the Dirichlet convolution of $f\varphi$ with A057660 \cite{A057660}, the sequence $\A{057660}(m)=\sum_{k=1}^{m}m/\gcd(m,k)$; that $a(f;\cdot)$ is multiplicative when $f$ is; and, in the FORMULA section, that the row sums of the triangle are the Dirichlet convolution of $\A{002618}(n)=n\varphi(n)$ \cite{A002618} and A057660. The exact text is quoted in Section~\ref{sec:statement}. We prove all of it (Theorem~\ref{thm:main}).
+
+\emph{Method.} With $g=\gcd(i,n)$ we have $\gcd(\gcd(i,k),n)=\gcd(g,k)$, which has period $g\mid n$ in $k$. Grouping $k$ by $\gcd(g,k)$ within one period, and $i$ by $\gcd(i,n)$, uses Ces\`aro's identity
+\begin{equation}\label{eq:cesaro}
+  \sum_{k=1}^{n}F(\gcd(k,n))=\sum_{d\mid n}F(d)\,\varphi(n/d),
+\end{equation}
+see formula~(22) in Section~2 of T\'oth's survey \cite{To} and Lemma~1 of Bordell\`es \cite{Bo}. The result is $a(f;n)=\bigl((f\varphi)*\mathbf 1*(\idf\varphi)\bigr)(n)$, and the same identity gives $\A{057660}=\mathbf 1*(\idf\varphi)$.
+
+\subsection*{Status and prior work}
+In A350900 (revision \#13, May~24, 2024, read from a local OEIS mirror of October~17, 2026, and still the current revision on oeis.org on October~25, 2026) both statements are still labeled ``Conjecture''.
+The row sums form A373059 \cite{A373059} (S.~Manyama, May~21, 2024), whose FORMULA section states, without proof and without a conjecture label, $\sum_{d\mid n}\varphi(n/d)(n/d)\,\sigma_2(d^2)/\sigma(d^2)$; since $\A{057660}(d)=\sigma_2(d^2)/\sigma(d^2)$ (a formula of Labos Elemer, 2001, recorded in A057660), this is part~(4) of Theorem~\ref{thm:main}. A.~Eldar added there (May~27, 2024) the values at prime powers and the Dirichlet series $\zeta(s)\zeta(s-2)^2/\zeta(s-1)^2$, which also follows from part~(4) (Remark~\ref{rem:dgf}).
+Schulte's A350156 \cite{A350156} makes the analogous statement for $f(n/\gcd(\gcd(i,k),n))$, and Manyama's sequences such as A373060 \cite{A373060} (May~2024) concern sums of $\gcd(x_1,n)/\gcd(x_1,\dots,x_r,n)$ over $1\le x_1,\dots,x_r\le n$ (here $r=3$); the OEIS gives formulas for these sequences without proof.
+Multivariable generalizations of \eqref{eq:cesaro} are studied by Bordell\`es \cite{Bo} and in a note of P.~Bala attached to A368743 \cite{Bala}. Bala states $\sum_{k_1,\dots,k_r=1}^{n}f(n/\gcd(k_1,\dots,k_r,n))=\sum_{d\mid n}f(d)J_r(d)$, with $J_r$ Jordan's totient, and proves it for $r=2$, remarking that this case is Schulte's statement in A350156. The case $r=1$, which he records as the companion of \eqref{eq:cesaro}, is $\sum_{k=1}^{g}f(g/\gcd(k,g))=\sum_{e\mid g}f(e)\varphi(e)$. This is the computation in Step~3 of Lemma~\ref{lem:core}, and Bala lists A057660 as its case $f=\idf$ (Lemma~\ref{lem:A057660}). His note does not treat the ratio $\gcd(i,n)/\gcd(i,k,n)$ or A350900.
+The math0 referees found no proof or counterexample in the OEIS, on arXiv (Fried's paper \cite{Fr} proving OEIS conjectures does not treat A350900), on SeqFan, the OEIS wiki, or in the gcd-sum literature \cite{To,Bo,Bala}; the statement is not in formal-conjectures \cite{FC} at the commit we use.
+We therefore classify the result as new, with two caveats: part~(4) was already asserted in A373059, and parts~(1)--(2) follow from \eqref{eq:cesaro} in a few lines, so they may well be known to specialists.
+
+\section{Statement}\label{sec:statement}
+
+An \emph{arithmetic function} with values in a commutative semiring $R$ is a map $f\colon\N\to R$ with $f(0)=0$ (Mathlib's convention; the value at $0$ never enters \eqref{eq:aF}, since the argument of $f$ there is at least $1$). The \emph{Dirichlet convolution} is $(f*g)(n)=\sum_{de=n}f(d)g(e)$, so $(f*g)(0)=0$; the \emph{pointwise product} is $(fg)(n)=f(n)g(n)$; $f$ is \emph{multiplicative} if $f(1)=1$ and $f(mn)=f(m)f(n)$ whenever $\gcd(m,n)=1$. We write $\mathbf 1$ for the function with $\mathbf 1(n)=1$ for $n\ge1$, $\idf(n)=n$, and $\varphi$ for Euler's totient. We extend \eqref{eq:aF} by $a(f;0)=0$, so that $a(f;\cdot)$ is an arithmetic function.
+
+The COMMENTS and FORMULA sections of A350900 \cite{A350900} contain, verbatim:
+\begin{quote}\footnotesize\raggedright
+\texttt{Conjecture: Let f be an arbitrary arithmetic function. Define for n > 0 the sequence a(f; n) = Sum\_\char`\{i=1..n, k=1..n{\char`\}} f(gcd(i,n)/gcd(gcd(i,k),n)); a(f; n) equals Dirichlet convolution of f(n)*A000010(n) and A057660(n); if f is multiplicative, then a(f; n) is multiplicative; row sums of this triangle use f(n) = n (see formula section).}
+
+\texttt{Conjecture: Row sums equal Dirichlet convolution of A002618 and A057660.}
+\end{quote}
+Neither line carries its own attribution; both date from the entry's creation by Werner Schulte on January~21, 2022 (its author line). Here A000010 is $\varphi$.
+
+\begin{theorem}\label{thm:main}
+Let $\A{057660}(m)=\sum_{k=1}^{m}m/\gcd(m,k)$ and $\A{002618}(m)=m\varphi(m)$.
+\begin{enumerate}
+\item For every arithmetic function $f\colon\N\to\C$ and every $n\ge1$,
+\[ a(f;n)=\bigl((f\varphi)*\A{057660}\bigr)(n)=\sum_{d\mid n}f(d)\varphi(d)\,\A{057660}(n/d). \]
+\item If $f\colon\N\to\C$ is multiplicative, then so is $a(f;\cdot)$.
+\item For every $n\ge1$, $\sum_{k=1}^{n}T(n,k)=a(\idf;n)$.
+\item For every $n\ge1$, $\sum_{k=1}^{n}T(n,k)=(\A{002618}*\A{057660})(n)$.
+\end{enumerate}
+\end{theorem}
+Part~(3) is the reading of ``row sums of this triangle use f(n) = n''; it is immediate, but it is part of the conjecture's text.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A350900.lean}, reviewed for fidelity, and frozen (SHA-256 \texttt{814a4e45\ldots 9fb09b}) before any proof attempt. Its definitions and the statement read as follows (verbatim; the copyright comment, the import, the module docstring, docstrings, section headers, blank lines, the sequence \decl{a} with its index map \decl{pos}, the test function \decl{fTest} and all theorems are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A350900
+open ArithmeticFunction
+def T (n k : ℕ) : ℕ :=
+  ∑ i ∈ Finset.Icc 1 n, Nat.gcd i n / Nat.gcd (Nat.gcd i k) n
+def phi : ArithmeticFunction ℕ := ⟨Nat.totient, Nat.totient_zero⟩
+def A057660 (m : ℕ) : ℕ := ∑ k ∈ Finset.Icc 1 m, m / Nat.gcd m k
+def A057660Fn : ArithmeticFunction ℕ := ⟨A057660, by simp [A057660]⟩
+def A002618 (n : ℕ) : ℕ := n * Nat.totient n
+def A002618Fn : ArithmeticFunction ℕ := ⟨A002618, by simp [A002618]⟩
+def aF {R : Type*} [AddCommMonoid R] (f : ArithmeticFunction R) (n : ℕ) : R :=
+  ∑ i ∈ Finset.Icc 1 n, ∑ k ∈ Finset.Icc 1 n, f (Nat.gcd i n / Nat.gcd (Nat.gcd i k) n)
+def aFun {R : Type*} [AddCommMonoid R] (f : ArithmeticFunction R) : ArithmeticFunction R :=
+  ⟨aF f, by simp [aF]⟩
+def statement : Prop :=
+  (∀ f : ArithmeticFunction ℂ, ∀ n : ℕ, 0 < n →
+      aF f n = (f.pmul (phi : ArithmeticFunction ℂ) * (A057660Fn : ArithmeticFunction ℂ)) n) ∧
+  (∀ f : ArithmeticFunction ℂ, f.IsMultiplicative → (aFun f).IsMultiplicative) ∧
+  (∀ n : ℕ, 0 < n →
+      ((∑ k ∈ Finset.Icc 1 n, T n k : ℕ) : ℂ) =
+        aF ((ArithmeticFunction.id : ArithmeticFunction ℕ) : ArithmeticFunction ℂ) n) ∧
+  (∀ n : ℕ, 0 < n → ∑ k ∈ Finset.Icc 1 n, T n k = (A002618Fn * A057660Fn) n)
+end Math0.Statements.A350900
+\end{lstlisting}
+The four conjuncts are parts (1)--(4) of Theorem~\ref{thm:main}.
+\decl{ArithmeticFunction R} is Mathlib's type of maps $\N\to R$ vanishing at $0$, with Dirichlet convolution \texttt{*}, pointwise product \decl{pmul} and \decl{IsMultiplicative} as defined above; an ascription such as \texttt{(phi : ArithmeticFunction ℂ)} applies the coercion $g\mapsto(n\mapsto(g(n):\C))$. The division in \decl{T} and \decl{aF} is exact, since $\gcd(\gcd(i,k),n)$ divides $\gcd(i,n)$, and \decl{T}, \decl{A057660} and \decl{A002618} transcribe the NAME lines of the three OEIS entries, not conjectured formulas. Reading ``arbitrary arithmetic function'' as complex-valued is the most general natural reading; the proof works over any commutative semiring (Lemma~\ref{lem:main}).
+The statement file checks the encoding against the OEIS data by evaluation in the kernel (\texttt{decide +kernel}): \decl{T_data} reproduces the $12$ listed rows of the triangle, \decl{a_data} the $78$ listed terms of A350900 read by rows (offset $1$), \decl{A057660_data} the $52$ listed terms of A057660, and \decl{A002618_data} the first $20$ terms of A002618. Two further sanity checks confirm part~(4) for $n\le12$ (\decl{statement_check_rows}) and the identity of part~(1) for $n\le12$ with the non-multiplicative test function $f(m)=2m+(m\bmod 3)$ computed in $\N$ (\decl{statement_check_aF}).
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A350900.lean}; the corresponding Lean declaration is named with each step. Throughout, $M$ is a commutative additive monoid, $R$ a commutative semiring, and for $c\in\N$, $x\in M$ we write $c\cdot x$ for the $c$-fold sum. We use $\gcd(0,n)=n$.
+
+\begin{lemma}[\decl{sum_Icc_eq_sum_range}]\label{lem:shift}
+Let $F\colon\N\to M$ and $n\ge0$ with $F(0)=F(n)$. Then $\sum_{k=1}^{n}F(k)=\sum_{k=0}^{n-1}F(k)$.
+\end{lemma}
+
+\begin{proof}
+Both sides are empty for $n=0$. For $n=m+1$, the left side is $\sum_{k=0}^{m-1}F(k+1)+F(m+1)$ and the right side is $F(0)+\sum_{k=0}^{m-1}F(k+1)$.
+\end{proof}
+
+\begin{lemma}[Ces\`aro; \decl{sum_range_gcd}]\label{lem:cesaro}
+Let $n\ge1$ and $G\colon\N\to M$. Then
+\[ \sum_{i=0}^{n-1}G(\gcd(n,i))=\sum_{d\mid n}\varphi(n/d)\cdot G(d). \]
+\end{lemma}
+
+\begin{proof}
+Group the terms by the value of $\gcd(n,i)$, a divisor of $n$ (\decl{Finset.sum_fiberwise_of_maps_to}). For $d\mid n$, the $i\in[0,n)$ with $\gcd(n,i)=d$ are the $i=dj$ with $0\le j<n/d$ and $\gcd(n/d,j)=1$, since $\gcd(n,dj)=d\gcd(n/d,j)$; there are $\varphi(n/d)$ of them (\decl{Nat.totient_div_of_dvd}).
+\end{proof}
+
+\begin{lemma}[periodicity; \decl{sum_range_mul_gcd}]\label{lem:period}
+Let $g,m\ge0$ and $F\colon\N\to M$. Then $\sum_{k=0}^{gm-1}F(\gcd(g,k))=m\cdot\sum_{k=0}^{g-1}F(\gcd(g,k))$.
+\end{lemma}
+
+\begin{proof}
+Induction on $m$; the case $m=0$ is trivial. Split $[0,g(m+1))$ into $[0,gm)$ and $gm+[0,g)$ and use $\gcd(g,gm+k)=\gcd(g,k)$ (\decl{Nat.gcd_mul_left_add_right}).
+\end{proof}
+
+\begin{lemma}[\decl{A057660Fn_eq}, \decl{A057660Fn_mult}]\label{lem:A057660}
+As arithmetic functions, $\A{057660}=\mathbf 1*(\idf\varphi)$, that is, $\A{057660}(m)=\sum_{d\mid m}d\varphi(d)$ for $m\ge1$ (as recorded in \cite{A057660}). In particular $\A{057660}$ is multiplicative.
+\end{lemma}
+
+\begin{proof}
+At $m=0$ both sides vanish. Let $m\ge1$ and $F(k)=m/\gcd(m,k)$; then $F(0)=m/m=F(m)$, so Lemma~\ref{lem:shift} and then Lemma~\ref{lem:cesaro} with $G(d)=m/d$ give
+\[ \A{057660}(m)=\sum_{k=0}^{m-1}\frac{m}{\gcd(m,k)}=\sum_{d\mid m}\varphi(m/d)\,\frac md=\sum_{e\mid m}\varphi(e)\,e, \]
+where the last step re-indexes by the involution $d\mapsto m/d$ of the divisors of $m$ (\decl{Nat.sum_div_divisors}). The right side is $(\mathbf 1*(\idf\varphi))(m)$ (\decl{zeta_mul_apply}). Since $\mathbf 1$, $\idf$ and $\varphi$ are multiplicative and pointwise products and Dirichlet convolutions of multiplicative functions are multiplicative, so is A057660.
+\end{proof}
+
+\begin{lemma}[\decl{aF_eq}]\label{lem:core}
+Let $f\colon\N\to R$ and $n\ge1$. Then
+\[ a(f;n)=\sum_{g\mid n}\varphi(n/g)\cdot\Bigl(\frac ng\cdot\sum_{e\mid g}\varphi(e)\cdot f(e)\Bigr). \]
+\end{lemma}
+
+\begin{proof}
+\emph{Step 1: both indices run over $[0,n)$.} For fixed $i$, the summand of \eqref{eq:aF} has the same value at $k=0$ and $k=n$, as $\gcd(\gcd(i,0),n)=\gcd(i,n)=\gcd(\gcd(i,n),n)$; the inner sum has the same value at $i=0$ and $i=n$, as $\gcd(0,n)=n=\gcd(n,n)$ and $\gcd(\gcd(0,k),n)=\gcd(k,n)=\gcd(\gcd(n,k),n)$. Applying Lemma~\ref{lem:shift} to both sums, and rewriting $\gcd(\gcd(i,k),n)=\gcd(\gcd(n,i),k)$ (\decl{Nat.gcd_right_comm}), we obtain
+\[ a(f;n)=\sum_{i=0}^{n-1}\sum_{k=0}^{n-1}f\!\left(\frac{\gcd(n,i)}{\gcd(\gcd(n,i),k)}\right). \]
+\emph{Step 2: grouping $i$.} The inner sum depends on $i$ only through $g=\gcd(n,i)$, so Lemma~\ref{lem:cesaro} with $G(g)=\sum_{k=0}^{n-1}f(g/\gcd(g,k))$ gives
+\[ a(f;n)=\sum_{g\mid n}\varphi(n/g)\cdot\sum_{k=0}^{n-1}f\!\left(\frac{g}{\gcd(g,k)}\right). \]
+\emph{Step 3: the sum over $k$.} Fix $g\mid n$; then $g\ge1$ and $n=g\cdot(n/g)$. Lemma~\ref{lem:period} with $m=n/g$ and $F(d)=f(g/d)$, then Lemma~\ref{lem:cesaro} for $g$ with $G(d)=f(g/d)$, then the involution $d\mapsto g/d$ give
+\[ \sum_{k=0}^{n-1}f\!\left(\frac{g}{\gcd(g,k)}\right)=\frac ng\cdot\sum_{k=0}^{g-1}f\!\left(\frac{g}{\gcd(g,k)}\right)=\frac ng\cdot\sum_{d\mid g}\varphi(g/d)\cdot f(g/d)=\frac ng\cdot\sum_{e\mid g}\varphi(e)\cdot f(e).\qedhere \]
+\end{proof}
+
+\begin{lemma}[\decl{main}]\label{lem:main}
+Let $f\colon\N\to R$ be an arithmetic function and $n\ge1$. Then $a(f;n)=\bigl((f\varphi)*\A{057660}\bigr)(n)$, where $\varphi$ and A057660 are mapped into $R$ by the canonical map $\N\to R$.
+\end{lemma}
+
+\begin{proof}
+The canonical map from $\N$-valued to $R$-valued arithmetic functions respects Dirichlet convolution (\decl{natCoe_mul}), so Lemma~\ref{lem:A057660} gives $\A{057660}=\mathbf 1*(\idf\varphi)$ over $R$. By associativity of Dirichlet convolution,
+\[ (f\varphi)*\A{057660}=\bigl((f\varphi)*\mathbf 1\bigr)*(\idf\varphi), \]
+and, since $((f\varphi)*\mathbf 1)(g)=\sum_{e\mid g}f(e)\varphi(e)$ (\decl{coe_mul_zeta_apply}) and $(P*Q)(n)=\sum_{g\mid n}P(g)Q(n/g)$ (\decl{Nat.sum_divisorsAntidiagonal}),
+\[ \bigl((f\varphi)*\A{057660}\bigr)(n)=\sum_{g\mid n}\Bigl(\sum_{e\mid g}f(e)\varphi(e)\Bigr)\frac ng\,\varphi\Bigl(\frac ng\Bigr). \]
+By commutativity of $R$ this equals the right side of Lemma~\ref{lem:core}.
+\end{proof}
+
+\begin{lemma}[\decl{rowsum_eq}]\label{lem:rowsum}
+For every $n\ge0$, $\sum_{k=1}^{n}T(n,k)=a(\idf;n)$, computed in $\N$.
+\end{lemma}
+
+\begin{proof}
+Exchange the two finite sums in $\sum_{k=1}^{n}T(n,k)$ (\decl{Finset.sum_comm}) and compare with \eqref{eq:aF}.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main} (\decl{result})]
+(1) is Lemma~\ref{lem:main} with $R=\C$.
+
+(2) The arithmetic functions $a(f;\cdot)$ and $(f\varphi)*\A{057660}$ over $\C$ agree at $0$, where both vanish, and at every $n\ge1$ by part~(1). If $f$ is multiplicative, so is $f\varphi$, as $\varphi$ (and its image in $\C$) is; A057660 and its image in $\C$ are multiplicative by Lemma~\ref{lem:A057660}; and Dirichlet convolution preserves multiplicativity (\decl{IsMultiplicative.pmul}, \decl{IsMultiplicative.mul}, \decl{IsMultiplicative.natCast}).
+
+(3) By Lemma~\ref{lem:rowsum}, and because the map $\N\to\C$ commutes with finite sums and sends $\idf(m)$ to $m$.
+
+(4) By Lemma~\ref{lem:rowsum} and Lemma~\ref{lem:main} with $R=\N$ and $f=\idf$, $\sum_{k=1}^{n}T(n,k)=\bigl((\idf\varphi)*\A{057660}\bigr)(n)$; for $R=\N$ the canonical map is the identity (\decl{natCoe_nat}), and $\idf\varphi=\A{002618}$.
+\end{proof}
+
+\begin{remark}\label{rem:dgf}
+For $\operatorname{Re}s>3$ the Dirichlet series of $\A{002618}=\idf\varphi$ is $\zeta(s-2)/\zeta(s-1)$ and, by Lemma~\ref{lem:A057660}, that of A057660 is $\zeta(s)\zeta(s-2)/\zeta(s-1)$. Part~(4) therefore gives the Dirichlet series $\zeta(s)\zeta(s-2)^2/\zeta(s-1)^2$ for the row sums, as recorded by Eldar in A373059 \cite{A373059}. This consequence is not formalized.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in \path{lean/Math0/Frontier/OEIS/A350900.lean} in the math0 repository, \url{https://github.com/Foundation-0/math0}; it imports the frozen statement file and \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A350900.result}, of type \decl{Math0.Statements.A350900.statement}. The private lemmas are named in Section~\ref{sec:proof}, plus \decl{sum_Icc_eq_sum_range_succ}, \decl{phi_apply} and \decl{phi_mult}. The statement of \decl{main} and the end of the file are, verbatim except that the proof of \decl{main}, docstrings, blank lines and the last 14 lines of the proof of \decl{result} (marked \texttt{-{}- ...}; the three remaining parts, as in Section~\ref{sec:proof}) are omitted:
+\begin{lstlisting}
+private lemma main {R : Type*} [CommSemiring R] (f : ArithmeticFunction R) (n : ℕ)
+    (hn : 0 < n) :
+    aF f n = (f.pmul (phi : ArithmeticFunction R) * (A057660Fn : ArithmeticFunction R)) n
+theorem result : statement := by
+  refine ⟨fun f n hn => main f n hn, fun f hf => ?_, fun n _ => ?_, fun n hn => ?_⟩ -- ...
+end Math0.Frontier.A350900
+#math0_settles Math0.Frontier.A350900.result Math0.Statements.A350900.statement
+\end{lstlisting}
+The proof file uses no \texttt{decide}, \texttt{native\_decide} or \texttt{set\_option}; it involves no finite computation and does not use the data checks of the statement file.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (i) \decl{statement} is a definition of type \texttt{Prop} without universe parameters; (ii) \decl{statement} and \decl{result} depend on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (excluding \decl{sorryAx}, \decl{Lean.ofReduceBool} from \texttt{native\_decide}, and custom axioms); and (iii) the type of \decl{result} is syntactically \decl{statement} or its negation, up to metadata, with no unfolding. It reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A350900.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A350900.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A350900.result' proves 'Math0.Statements.A350900.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, not used here.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib cache, builds all math0 results with \texttt{lake build} (re-running every audit), checks that the pinned dependencies are unmodified, and reports the number of passed statement checks. The single file is checked by \texttt{lake env lean Math0/Frontier/OEIS/A350900.lean} in \path{lean/} (under a minute on our machine, once the statement file is built).
+
+{\footnotesize
+\begin{thebibliography}{99}
+
+\bibitem{Bala}
+P.~Bala, \emph{GCD sum theorems. Two multivariable Ces\`aro type identities}, note attached to OEIS A368743, January 2024, \url{https://oeis.org/A368743/a368743.pdf}.
+
+\bibitem{Bo}
+O.~Bordell\`es, \emph{A multidimensional Ces\`aro type identity and applications}, J. Integer Seq.\ \textbf{18} (2015), Article~15.3.7.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Fr}
+S.~Fried, \emph{Further proofs of conjectures from the OEIS}, arXiv:2607.24832, 2026.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput.\ Sci.\ \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{To}
+L.~T\'oth, \emph{A survey of gcd-sum functions}, J. Integer Seq.\ \textbf{13} (2010), Article~10.8.1.
+
+\bibitem{A002618}
+The OEIS Foundation Inc., \url{https://oeis.org/A002618} ($n\varphi(n)$), entry by N.~J.~A. Sloane.
+
+\bibitem{A057660}
+The OEIS Foundation Inc., \url{https://oeis.org/A057660}, entry by H.~Gould (2000).
+
+\bibitem{A350156}
+The OEIS Foundation Inc., \url{https://oeis.org/A350156}, entry by W.~Schulte (January~19, 2022).
+
+\bibitem{A350900}
+The OEIS Foundation Inc., \url{https://oeis.org/A350900}, entry and conjecture by W.~Schulte (January~21, 2022); revision \#13, May~24, 2024.
+
+\bibitem{A373059}
+The OEIS Foundation Inc., \url{https://oeis.org/A373059} (row sums of A350900), entry by S.~Manyama (May~21, 2024), with formulas by A.~Eldar (May~27, 2024); revision \#19.
+
+\bibitem{A373060}
+The OEIS Foundation Inc., \url{https://oeis.org/A373060}, entry by S.~Manyama (May~21, 2024).
+
+\end{thebibliography}
+}
+
+\end{document}

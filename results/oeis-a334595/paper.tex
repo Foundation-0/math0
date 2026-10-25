@@ -1,0 +1,353 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw,apply},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1
+    {↔}{{$\leftrightarrow$}}1 {¬}{{$\neg$}}1 {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {→}{{$\to$}}1
+    {←}{{$\leftarrow$}}1 {≤}{{$\le$}}1 {≥}{{$\ge$}}1 {≠}{{$\ne$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {·}{{$\cdot$}}1 {▸}{{$\triangleright$}}1 {∈}{{$\in$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{▸}{\ensuremath{\triangleright}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\rev}{\operatorname{rev}}
+\newcommand{\hd}{\operatorname{hd}}
+\newcommand{\lst}{\operatorname{last}}
+\newcommand{\tl}{\operatorname{tail}}
+\newcommand{\len}[1]{\lvert #1\rvert}
+
+\title[The value $1$ and the records of OEIS A334595]{Right diagonals of binary XOR-triangles: OEIS A334595 takes the value $1$ exactly at the powers of two, and its records occur exactly at $1$ and at $2^k+1$}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 24, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $a(n)$ be the number whose binary digits, most significant first, are the entries on the right side of the XOR-triangle whose top row is the binary expansion of $n$, read downwards from the upper right corner (OEIS A334595).
+We prove the two conjectures that Peter Kagey recorded in this entry in 2020: for $n\ge1$, $a(n)=1$ if and only if $n$ is a power of two, and the record positions of $a$ are exactly $1$ and the numbers $2^k+1$ with $k\ge1$, where $a(2^k+1)=2^{k+1}-2$.
+The proof rests on the classical fact that the binomial transform over $\mathrm{GF}(2)$ is an involution; we found no earlier proof of either conjecture and classify the result as new, although the argument is elementary.
+The theorem is verified in Lean~4 with Mathlib against a statement that math0 formalized from the OEIS entry, reviewed for fidelity and frozen before any proof attempt, whose definitions are checked by the kernel against the $70$ terms listed in the entry.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+An \emph{XOR-triangle} is an inverted $0$--$1$ triangle obtained by choosing a top row and letting every entry of each later row be the XOR of the two entries above it (the rule that generates Pascal's triangle modulo~$2$).
+The OEIS sequence A334595 \cite{A334595}, contributed by Peter Kagey on May~7, 2020, takes as top row the binary expansion of $n$ and reads the right side of the triangle, from the upper right corner downwards, as a binary number $a(n)$. For $n=19=10011_2$ the rows are $10011$, $1010$, $111$, $00$, $0$, the right side is $10100$, and $a(19)=20$. The sequence begins $1,1,2,1,6,3,4,1,14,4,11,2,13,7,8,1,30,\dots$ (offset $1$).
+The entry states two conjectures, without separate attribution and hence due to its author: the records of $a$ occur at $1$ and at $2^n+1$, and $a(n)=1$ if and only if $n$ is a power of two.
+We prove both (Theorem~\ref{thm:main}).
+
+Since XOR is commutative, the right side of the triangle of a row is the left side of the triangle of the reversed row. So the binary digits of $a(n)$, most significant first, are the letters of $D(c)$, where $c$ lists the binary digits of $n$, least significant first, and $D$ sends a word to the left side of its XOR-triangle. This $D$ is the binomial transform over $\mathrm{GF}(2)$, and it is an involution (Proposition~\ref{prop:inv}). Hence $a$ is injective on numbers with a fixed number $L$ of binary digits, and three explicit computations of $D$, together with the bound $a(n)<2^L$, settle both conjectures.
+
+\subsection*{Status and prior work}
+In the copy of the OEIS data that we used, A334595 is at revision \#18 (May~9, 2020), and both statements are still labeled ``Conjecture''; it is still the current revision in October 2026.
+The entry links a MathOverflow question of user DSM \cite{MO}, which is also linked from A334556 and A334596 \cite{A334556,A334596} (Kagey, 2020), the entries that list and count the numbers generating rotationally symmetric XOR-triangles.
+According to the math0 referees, the answers to that question (by YCor and by Ilya Bogdanov) study a linear operator $\varphi_k$ over $\mathrm{GF}(2)$ taking the top row of a triangle to one of its sides, with $\varphi_k^3=1$, in order to count rotationally symmetric triangles; they do not address the records of A334595 or the set where $a(n)=1$.
+The ingredient that makes the result elementary is classical: Paul D.~Hanna's entry A099884 \cite{A099884} (2004) defines the ``XOR binomial transform'' of a sequence as the diagonal of its XOR difference triangle and states that it is self-inverse, and in the sibling entry A334727 \cite{A334727} Rémy Sigrist (May~9, 2020) notes that the analogous sequence for the \emph{left} diagonal is a self-inverse permutation of the nonnegative integers, which is the same involution, applied to the digits read from the most significant end.
+The math0 referees found no proof or counterexample for either conjecture in the OEIS, on MathOverflow, Mathematics Stack Exchange, arXiv, or the SeqFan list. To our knowledge the result is therefore new, but it is an easy consequence of known facts.
+
+\section{Statement}\label{sec:statement}
+
+For $n\ge1$ let $L=L(n)$ be the number of binary digits of $n$ and $T_0=b_0b_1\cdots b_{L-1}$ its binary expansion, most significant bit first. For $1\le r<L$ let $T_r$ be the word of length $L-r$ whose $i$-th letter is the XOR of the letters $i$ and $i+1$ of $T_{r-1}$, and let $d_r$ be the last letter of $T_r$. Then $a(n)=\sum_{r=0}^{L-1} d_r\,2^{L-1-r}$.
+A position $n\ge1$ is a \emph{record} if $a(m)<a(n)$ for all $1\le m<n$.
+
+\begin{theorem}\label{thm:main}
+\begin{enumerate}
+\item[(a)] The record positions of $a$ are exactly $1$ and the numbers $2^k+1$ with $k\ge1$, that is, $1,3,5,9,17,33,\dots$. The record values are $a(1)=1$ and $a(2^k+1)=2^{k+1}-2$.
+\item[(b)] For $n\ge1$, $a(n)=1$ if and only if $n=2^k$ for some $k\ge0$.
+\end{enumerate}
+\end{theorem}
+
+The formal statement contains the record positions, but not the record values $1,2,6,14,30,\dots$.
+
+\subsection*{The OEIS conjectures}
+The entry A334595 \cite{A334595}, authored by \emph{Peter Kagey, May 07 2020}, has offset $1$ and is named ``\texttt{Binary interpretation of the right diagonal of the XOR-triangle with first row generated from the binary expansion of n.}'' Its COMMENTS section defines XOR-triangles as above and contains, verbatim,
+\begin{quote}\small\texttt{Conjecture: Records occur at 1 and at 2\^{}n + 1.}\\
+\texttt{Conjecture: a(n) = 1 if and only if n is a power of two.}\end{quote}
+Theorem~\ref{thm:main}(a) is the first conjecture, with the exponent ($n$ in the entry, $k$ here) ranging over $k\ge1$: $k=0$ would give $2$, which is not a record since $a(2)=a(1)=1$, and the position $1$ is listed separately. Theorem~\ref{thm:main}(b) is the second conjecture, with $1=2^0$ counted as a power of two.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A334595.lean}, reviewed for fidelity and frozen (SHA-256 \texttt{2bee9004\ldots ebc74}) before any proof attempt. Its definitions and statement read (verbatim; the import, docstrings, blank lines and the three data theorems are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A334595
+def binExp (n : ℕ) : List ℕ := (Nat.digits 2 n).reverse
+def xorRow (row : List ℕ) : List ℕ := List.zipWith (fun x y => x ^^^ y) row row.tail
+def triangle (row : List ℕ) : List (List ℕ) :=
+  (List.range row.length).map (fun r => xorRow^[r] row)
+def rightDiag (row : List ℕ) : List ℕ := (triangle row).map (fun r => r.getLastD 0)
+def a (n : ℕ) : ℕ := Nat.ofDigits 2 (rightDiag (binExp n)).reverse
+def IsRecord (n : ℕ) : Prop :=
+  1 ≤ n ∧ ∀ m : ℕ, 1 ≤ m → m < n → a m < a n
+def statement_records : Prop :=
+  ∀ n : ℕ, IsRecord n ↔ (n = 1 ∨ ∃ k : ℕ, 1 ≤ k ∧ n = 2 ^ k + 1)
+def statement_powTwo : Prop :=
+  ∀ n : ℕ, 1 ≤ n → (a n = 1 ↔ ∃ k : ℕ, n = 2 ^ k)
+def statement : Prop :=
+  statement_records ∧ statement_powTwo
+end Math0.Statements.A334595
+\end{lstlisting}
+Here \texttt{Nat.digits 2 n} lists the binary digits of $n$, least significant first, so \decl{binExp} is the expansion $T_0$; \texttt{Nat.ofDigits 2 l} is $\sum_i l_i2^i$; and \texttt{\^{}\^{}\^{}} is bitwise XOR on $\N$, which is XOR on $\{0,1\}$. Thus \decl{triangle} lists the rows $T_0,\dots,T_{L-1}$ (all nonempty, so the default $0$ of \decl{getLastD} is never used), \decl{rightDiag} is $d_0\cdots d_{L-1}$, and \decl{a} reverses it so that $d_0$ is the most significant bit, exactly as the PARI program of the entry (by Michel Marcus) does. The value \texttt{a 0 = 0} is not a term and is excluded by the hypotheses $1\le n$, $1\le m$; \decl{IsRecord} is the strict record notion over the offset-$1$ range.
+The statement file also proves, by \texttt{decide +kernel}, the data checks \decl{triangle_19} and \decl{a_19} (the rows of the triangle of $19$, its right diagonal \texttt{[1, 0, 1, 0, 0]} and \texttt{a 19 = 20}, as in the worked example of the entry) and \decl{a_data}, which states that \texttt{(List.range 70).map (fun i => a (i + 1))} equals the list of the $70$ terms given in the entry. With \texttt{decide +kernel} the kernel itself evaluates these equalities of lists of natural numbers, without trusting compiled code. The checks are not used in the proof; they guard against a mis-encoded definition.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows \path{lean/Math0/Frontier/OEIS/A334595.lean}; we give the Lean name of each step.
+
+\subsection*{Notation}
+A \emph{word} is a finite list $w=w_0w_1\cdots w_{\ell-1}$ of natural numbers, of length $\len w=\ell$; $\varepsilon$ is the empty word, juxtaposition is concatenation, and $x^m$ consists of $m$ copies of $x$. We write $\hd(w)=w_0$ and $\lst(w)=w_{\ell-1}$ for $\ell\ge1$, $\tl(w)=w_1\cdots w_{\ell-1}$ (with $\tl(\varepsilon)=\varepsilon$), and $\rev(w)=w_{\ell-1}\cdots w_0$. A \emph{bit word} has all letters in $\{0,1\}$.
+Let $\oplus$ be bitwise XOR on $\N$. We use only that $\oplus$ is commutative and associative, that $x\oplus x=0$ and $0\oplus x=x$, and that $x\oplus y\in\{0,1\}$ for $x,y\in\{0,1\}$ (\decl{Nat.xor_lt_two_pow}).
+Let $\nu(w)=\sum_{i<\len w}w_i2^i$ (\texttt{Nat.ofDigits 2}), let $c(n)$ be the binary digits of $n$, least significant first (\texttt{Nat.digits 2 n}), and $L(n)=\len{c(n)}$. Then $c(n)$ is a bit word, $\nu(c(n))=n$ (\decl{Nat.ofDigits_digits}), and $c(n)$ is empty for $n=0$ and ends with $1$ for $n\ge1$. We use the following facts from Mathlib:
+(F1) if $w$ is a bit word whose last letter (if any) is nonzero, then $c(\nu(w))=w$ (\decl{Nat.digits_ofDigits});
+(F2) if $w$ is a bit word, then $\nu(w)<2^{\len w}$ (\decl{Nat.ofDigits_lt_base_pow_length});
+(F3) if $v,w$ are bit words with $\len v=\len w$ and $\nu(v)=\nu(w)$, then $v=w$ (\decl{Nat.ofDigits_inj_of_len_eq});
+(F4) $i<L(n)\iff 2^i\le n$, and $L(n)\le i\iff n<2^i$ (\decl{Nat.lt_digits_length_iff}, \decl{Nat.digits_length_le_iff}).
+
+\begin{definition}\label{def:ops}
+For a word $w$ of length $\ell$ let $\Delta w$ (\decl{xorRow}) be the word of length $\max(\ell-1,0)$ with letters $(\Delta w)_i=w_i\oplus w_{i+1}$. Thus $\Delta\varepsilon=\Delta x=\varepsilon$ and $\Delta(xyu)=(x\oplus y)\,\Delta(yu)$ for letters $x,y$ and a word $u$. For $r<\ell$ the word $\Delta^rw$ has length $\ell-r\ge1$, and we put
+\[
+  R(w)=\lst(w)\,\lst(\Delta w)\cdots\lst(\Delta^{\ell-1}w),\qquad
+  D(w)=\hd(w)\,\hd(\Delta w)\cdots\hd(\Delta^{\ell-1}w),
+\]
+the right side (\decl{rightDiag}) and the left side (the private definition \decl{D}) of the XOR-triangle with top row $w$, read from the top. Both have length $\ell$ (\decl{length_D}).
+\end{definition}
+
+In this notation the statement file defines $a(n)=\nu\bigl(\rev R(\rev c(n))\bigr)$.
+
+\subsection{Reversal}
+
+\begin{lemma}[\decl{xorRow_reverse}, \decl{rightDiag_reverse}, \decl{a_eq}]\label{lem:rev}
+For every word $w$, $\Delta(\rev w)=\rev(\Delta w)$ and $R(\rev w)=D(w)$. Consequently $a(n)=\nu\bigl(\rev D(c(n))\bigr)$ for every $n\in\N$.
+\end{lemma}
+
+\begin{proof}
+Let $\ell=\len w$. Both $\Delta(\rev w)$ and $\rev(\Delta w)$ have length $\ell-1$, and for $i<\ell-1$ their $i$-th letters are $w_{\ell-1-i}\oplus w_{\ell-2-i}$ and $(\Delta w)_{\ell-2-i}=w_{\ell-2-i}\oplus w_{\ell-1-i}$, which agree since $\oplus$ is commutative. By induction on $r$, $\Delta^r(\rev w)=\rev(\Delta^rw)$ (\decl{iterate_xorRow_reverse}), so the last letter of $\Delta^r(\rev w)$ is the first letter of $\Delta^rw$ for every $r<\ell$. Hence $R(\rev w)=D(w)$. The last claim follows with $w=c(n)$.
+\end{proof}
+
+
+\subsection{The involution}
+
+\begin{lemma}[\decl{D_cons}, \decl{tail_xorRow}]\label{lem:rec}
+\begin{enumerate}
+\item[(i)] $D(\varepsilon)=\varepsilon$, and $D(xu)=x\,D(\Delta(xu))$ for every letter $x$ and word $u$.
+\item[(ii)] $\tl(\Delta w)=\Delta(\tl w)$ for every word $w$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) Since $\len{\Delta(xu)}=\len u$, both sides have length $1+\len u$. The first letter of $D(xu)$ is $\hd(xu)=x$, and for $r<\len u$ its letter number $r+1$ is $\hd(\Delta^{r+1}(xu))=\hd(\Delta^r(\Delta(xu)))$, which is letter number $r$ of $D(\Delta(xu))$.
+(ii) If $\len w\le1$, both sides are empty. If $w=xyu$, then $\Delta w=(x\oplus y)\Delta(yu)$, so $\tl(\Delta w)=\Delta(yu)=\Delta(\tl w)$.
+\end{proof}
+
+\begin{lemma}[\decl{xorRow_D}]\label{lem:key}
+For every word $w$, $\Delta(D(w))=D(\tl w)$.
+\end{lemma}
+
+\begin{proof}
+By induction on $\len w$. If $w=\varepsilon$, both sides are $\varepsilon$. If $w=x$ is a single letter, then $D(x)=x\,D(\Delta x)=x\,D(\varepsilon)=x$ by Lemma~\ref{lem:rec}(i), so $\Delta(D(x))=\varepsilon=D(\varepsilon)=D(\tl x)$.
+Let $w=xyu$ with letters $x,y$. Since $\Delta w=(x\oplus y)\,\Delta(yu)$, two applications of Lemma~\ref{lem:rec}(i) give $D(w)=x\,D(\Delta w)=x\,(x\oplus y)\,D(\Delta^2w)$. Applying the definition of $\Delta$ to this word of length at least $2$ and then Lemma~\ref{lem:rec}(i) again,
+\[
+  \Delta(D(w))=\bigl(x\oplus(x\oplus y)\bigr)\,\Delta\bigl((x\oplus y)\,D(\Delta^2w)\bigr)=y\,\Delta(D(\Delta w)),
+\]
+where $x\oplus(x\oplus y)=(x\oplus x)\oplus y=0\oplus y=y$. The word $\Delta w$ is shorter than $w$, so by the induction hypothesis and Lemma~\ref{lem:rec}(ii), $\Delta(D(\Delta w))=D(\tl(\Delta w))=D(\Delta(yu))$. Hence, by Lemma~\ref{lem:rec}(i),
+$\Delta(D(w))=y\,D(\Delta(yu))=D(yu)=D(\tl w)$.
+\end{proof}
+
+\begin{proposition}[\decl{D_D}]\label{prop:inv}
+$D$ is an involution: $D(D(w))=w$ for every word $w$.
+\end{proposition}
+
+\begin{proof}
+By induction on $\len w$; the case $w=\varepsilon$ is clear. Let $w=xu$. By Lemma~\ref{lem:rec}(i), $D(w)=x\,D(\Delta w)$, and then, by Lemma~\ref{lem:rec}(i) again and Lemma~\ref{lem:key},
+\[
+  D(D(w))=x\,D\bigl(\Delta(x\,D(\Delta w))\bigr)=x\,D(\Delta(D(w)))=x\,D(D(\tl w))=x\,D(D(u))=xu,
+\]
+using the induction hypothesis for $u$.
+\end{proof}
+
+\begin{remark}
+For a bit word $w$, letter $r$ of $D(w)$ is $\sum_j\binom rj w_j\bmod 2$, so Proposition~\ref{prop:inv} is the identity $P^2=I$ for $P=(\binom rj\bmod2)_{r,j<\ell}$ over $\mathrm{GF}(2)$, the self-inverse property of the XOR binomial transform noted in \cite{A099884}. This description is not formalized; the proof above needs neither binomial coefficients nor the restriction to bits.
+\end{remark}
+
+\subsection{Consequences for \texorpdfstring{$a$}{a}}
+
+\begin{lemma}[\decl{xorRow_lt_two}, \decl{D_lt_two}, \decl{a_lt}, \decl{a_ofDigits}]\label{lem:basic}
+\begin{enumerate}
+\item[(i)] If $w$ is a bit word, then so are $\Delta^rw$ for all $r$, and $D(w)$.
+\item[(ii)] $a(n)<2^{L(n)}$ for every $n\in\N$.
+\item[(iii)] If $w$ is a bit word whose last letter (if any) is nonzero, then $a(\nu(w))=\nu(\rev D(w))$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) $\Delta$ preserves bit words since $x\oplus y\in\{0,1\}$ for $x,y\in\{0,1\}$, and the letters of $D(w)$ are letters of the words $\Delta^rw$.
+(ii) By (i), $\rev D(c(n))$ is a bit word of length $L(n)$, so $a(n)=\nu(\rev D(c(n)))<2^{L(n)}$ by Lemma~\ref{lem:rev} and (F2).
+(iii) By (F1), $c(\nu(w))=w$; apply Lemma~\ref{lem:rev}.
+\end{proof}
+
+\begin{lemma}[\decl{eq_ofDigits_of_a_eq}]\label{lem:inj}
+Let $n\in\N$ and let $w$ be a bit word with $\len w=L(n)$ and $a(n)=\nu(\rev D(w))$. Then $n=\nu(w)$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:rev}, $\nu(\rev D(c(n)))=\nu(\rev D(w))$. Both $\rev D(c(n))$ and $\rev D(w)$ are bit words of length $L(n)$ (Lemma~\ref{lem:basic}(i)), so they are equal by (F3). Hence $D(c(n))=D(w)$, and Proposition~\ref{prop:inv} gives $c(n)=D(D(c(n)))=D(D(w))=w$. Therefore $n=\nu(c(n))=\nu(w)$.
+\end{proof}
+
+
+\begin{lemma}[\decl{xorRow_e}, \decl{D_e}, \decl{xorRow_rep}, \decl{D_rep0}, \decl{D_rep1}, \decl{xorRow_f}, \decl{D_f}]\label{lem:words}
+For all $k,m,j\ge0$:
+\begin{enumerate}
+\item[(a)] $\Delta(0^{k+1}1)=0^k1$ and $D(0^k1)=0^k1$;
+\item[(b)] $\Delta(x^{m+1})=0^m$ for every $x\in\N$, $D(0^m)=0^m$, $D(1^{m+1})=10^m$, and $D(10^m)=1^{m+1}$;
+\item[(c)] $\Delta(10^{j+1}1)=10^j1$ and $D(10^j1)=1^{j+1}0$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Using $\Delta(xyu)=(x\oplus y)\Delta(yu)$ and Lemma~\ref{lem:rec}(i), we prove (a), the first two claims of (b) and the last claim of (c) by induction; the rest follows directly.
+
+(a) $\Delta(01)=0\oplus1=1$, and $\Delta(0\,0\,0^k1)=(0\oplus0)\,\Delta(0^{k+1}1)=0\,0^k1$. Next, $D(1)=1\,D(\varepsilon)=1$ and $D(0^{k+1}1)=0\,D(\Delta(0^{k+1}1))=0\,D(0^k1)=0^{k+1}1$.
+
+(b) $\Delta(x)=\varepsilon$ and $\Delta(x\,x\,x^m)=(x\oplus x)\,\Delta(x^{m+1})=0\,0^m$. Next, $D(\varepsilon)=\varepsilon$ and $D(0^{m+1})=0\,D(\Delta(0^{m+1}))=0\,D(0^m)=0^{m+1}$. Then $D(1^{m+1})=1\,D(\Delta(1^{m+1}))=1\,D(0^m)=10^m$, and by Proposition~\ref{prop:inv}, $D(10^m)=D(D(1^{m+1}))=1^{m+1}$.
+
+(c) $\Delta(1\,0\,0^j1)=(1\oplus0)\,\Delta(0^{j+1}1)=1\,0^j1$ by (a). For the second claim, $D(11)=1\,D(\Delta(11))=1\,D(0)=10$, and $D(10^{j+1}1)=1\,D(\Delta(10^{j+1}1))=1\,D(10^j1)=1\,1^{j+1}0$.
+\end{proof}
+
+\begin{corollary}[\decl{a_two_pow}, \decl{a_two_pow_add_one}, \decl{pow_of_a_eq_one}, \decl{a_ne_all_ones}]\label{cor:values}\leavevmode
+\begin{enumerate}
+\item[(i)] $a(2^k)=1$ for every $k\ge0$.
+\item[(ii)] $a(2^{j+1}+1)=2^{j+2}-2$ for every $j\ge0$.
+\item[(iii)] If $n\ge1$ and $a(n)=1$, then $n=2^{L(n)-1}$.
+\item[(iv)] If $n\ge2$, then $a(n)\ne2^{L(n)}-1$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+We have $\nu(0^k1)=2^k$ (\decl{ofDigits_e}), $\nu(10^k)=1$ (\decl{ofDigits_e_rev}), $\nu(10^j1)=1+2\cdot2^j=2^{j+1}+1$, and $\nu(1^m)=2^m-1$ (\decl{ofDigits_rep1}, by induction from $\nu(1u)=1+2\nu(u)$). The words $0^k1$, $10^j1$ and $10^m$ are bit words, and the first two end with $1$.
+
+(i) By Lemma~\ref{lem:basic}(iii) and Lemma~\ref{lem:words}(a), $a(2^k)=a(\nu(0^k1))=\nu(\rev(0^k1))=\nu(10^k)=1$.
+
+(ii) By Lemma~\ref{lem:basic}(iii) and Lemma~\ref{lem:words}(c), $a(2^{j+1}+1)=a(\nu(10^j1))=\nu(\rev(1^{j+1}0))=\nu(0\,1^{j+1})=2\,(2^{j+1}-1)$.
+
+(iii) Since $n\ge1$, (F4) gives $L(n)\ge1$; write $L(n)=k+1$. The bit word $w=0^k1$ has length $L(n)$ and $\nu(\rev D(w))=\nu(10^k)=1=a(n)$ by Lemma~\ref{lem:words}(a). Lemma~\ref{lem:inj} gives $n=\nu(0^k1)=2^k$.
+
+(iv) Since $n\ge1$, write $L(n)=m+1$, and suppose $a(n)=2^{m+1}-1$. The bit word $w=10^m$ has length $L(n)$, and by Lemma~\ref{lem:words}(b), $\nu(\rev D(w))=\nu(1^{m+1})=2^{m+1}-1=a(n)$. Lemma~\ref{lem:inj} gives $n=\nu(10^m)=1$, contradicting $n\ge2$.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:main}}
+
+\begin{proof}[Proof of (b)]
+If $n=2^k$, then $a(n)=1$ by Corollary~\ref{cor:values}(i). Conversely, if $n\ge1$ and $a(n)=1$, then $n$ is a power of two by Corollary~\ref{cor:values}(iii).
+\end{proof}
+
+\begin{proof}[Proof of (a), \textup{\texttt{records}}]
+Note that $a(1)=a(2^0)=1$.
+
+\emph{Every record position is $1$ or of the form $2^k+1$ with $k\ge1$.} Let $n$ be a record position with $n\ne1$; then $n\ge2$, so $L(n)\ge2$ by (F4). Write $L(n)=j+2$; then $2^{j+1}\le n$ by (F4). We show $n=2^{j+1}+1$, which is of the required form with $k=j+1\ge1$.
+\begin{itemize}
+\item If $n<2^{j+1}+1$, then $n=2^{j+1}$. Taking $m=1$ (so $1\le m<n$) in the record property gives $1=a(1)<a(n)=a(2^{j+1})=1$ by Corollary~\ref{cor:values}(i), a contradiction.
+\item If $n>2^{j+1}+1$, take $m=2^{j+1}+1$, so that $1\le m<n$. The record property and Corollary~\ref{cor:values}(ii) give $a(n)>a(m)=2^{j+2}-2$, and Lemma~\ref{lem:basic}(ii) gives $a(n)<2^{L(n)}=2^{j+2}$. Hence $a(n)=2^{j+2}-1=2^{L(n)}-1$, which contradicts Corollary~\ref{cor:values}(iv).
+\end{itemize}
+
+\emph{These positions are records.} The position $n=1$ is a record because there is no $m$ with $1\le m<1$. Let $n=2^k+1$ with $k\ge1$ and write $k=j+1$. Then $a(n)=2^{j+2}-2=2\cdot2^{j+1}-2\ge2^{j+1}\ge2$ by Corollary~\ref{cor:values}(ii), since $2^{j+1}\ge2$. Let $1\le m<n$. If $m<2^{j+1}$, then $L(m)\le j+1$ by (F4), so $a(m)<2^{L(m)}\le2^{j+1}\le a(n)$ by Lemma~\ref{lem:basic}(ii). Otherwise $m=2^{j+1}$, and $a(m)=1<2\le a(n)$ by Corollary~\ref{cor:values}(i).
+
+The record values $a(1)=1$ and $a(2^k+1)=2^{k+1}-2$ are Corollary~\ref{cor:values}(i) and (ii).
+\end{proof}
+
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in \path{lean/Math0/Frontier/OEIS/A334595.lean} in the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is the theorem \decl{Math0.Frontier.A334595.result}, of type \decl{Math0.Statements.A334595.statement}; its proof pairs the private lemma \decl{records} (part (a)) with \decl{pow_of_a_eq_one} and \decl{a_two_pow} (the two directions of part (b)). All other declarations are private and carry the names given in Section~\ref{sec:proof}; for example, $D$ is \texttt{D c := (List.range c.length).map (fun r => (xorRow\^{}[r] c).headD 0)}, whose default value $0$ is never used. The proof file uses no \texttt{decide}, \texttt{native\_decide} or \texttt{set\_option}.
+
+\subsection*{Audit}
+The file ends with the command \texttt{\#math0\_settles}, applied to \decl{result} and \decl{statement}. This command, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a definition of type \texttt{Prop} without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, which rejects \decl{sorryAx}, the axiom \decl{Lean.ofReduceBool} introduced by \texttt{native\_decide}, and any custom axiom; and (3) the type of \decl{result} is syntactically the constant \decl{statement} or its negation, up to metadata, with no unfolding. Running \texttt{lake env lean Math0/Frontier/OEIS/A334595.lean} in the directory \path{lean} prints
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A334595.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A334595.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A334595.result' proves 'Math0.Statements.A334595.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The single file is checked by the command above in about two minutes.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{MO}
+MathOverflow user DSM, \emph{Number triangle}, MathOverflow question 359138 (May~2, 2020), \url{https://mathoverflow.net/q/359138}.
+
+\bibitem{A099884}
+The OEIS Foundation Inc., \url{https://oeis.org/A099884}, entry by P.~D. Hanna (October~28, 2004).
+
+\bibitem{A334556}
+The OEIS Foundation Inc., \url{https://oeis.org/A334556}, entry by P.~Kagey (May~6, 2020).
+
+\bibitem{A334595}
+The OEIS Foundation Inc., \url{https://oeis.org/A334595}, entry by P.~Kagey (May~7, 2020), PARI program by M.~Marcus; revision \#18, May~9, 2020.
+
+\bibitem{A334596}
+The OEIS Foundation Inc., \url{https://oeis.org/A334596}, entry by P.~Kagey (May~7, 2020).
+
+\bibitem{A334727}
+The OEIS Foundation Inc., \url{https://oeis.org/A334727}, entry by R.~Sigrist (May~9, 2020).
+
+\end{thebibliography}
+}
+
+\end{document}

@@ -24,6 +24,10 @@ Referees: I found no prior resolution, only computation and partial bounds:
 - Related entries A278211, A278213 and A278214 contain no proof.
 - Searches of arXiv, MathOverflow, Math StackExchange, Puzzling, SeqFan and Google Scholar-style queries found no general proof or counterexample.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

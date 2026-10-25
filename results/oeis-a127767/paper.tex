@@ -1,0 +1,328 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\small, columns=fullflexible, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+\allowdisplaybreaks
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\def\UrlFont{\normalfont\ttfamily}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\ib}[1]{[\,#1\,]}
+\newcommand{\diag}{\operatorname{diag}}
+
+% Unicode inside listings is mapped via `literate` (listings splits multi-byte characters).
+\lstset{keepspaces=true, literate={ℕ}{{$\mathbb{N}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {ℤ}{{$\mathbb{Z}$}}1
+  {→}{{$\to$}}1 {↔}{{$\leftrightarrow$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {∈}{{$\in$}}1
+  {∑}{{$\sum$}}1 {∧}{{$\wedge$}}1 {≤}{{$\le$}}1 {⁻¹}{{$^{-1}$}}2}
+
+\title[Integrality of the inverse Catalan band triangle]{The inverse of the triangle $\ib{k\le n\le 2k}/C_n$ has integer entries: a proof of Barry's conjecture in OEIS A127767}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 24, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $C_n$ be the Catalan numbers and let $A$ be the infinite lower-triangular matrix with $A(n,k)=1/C_n$ if $k\le n\le 2k$ and $A(n,k)=0$ otherwise. We prove that every entry $T(n,k)$, $0\le k\le n$, of the inverse matrix $T=A^{-1}$ is an integer; the proof shows that it is in fact an integer multiple of $C_k$. This settles a conjecture that Paul Barry recorded in OEIS entry A127767 in 2007 and that is still listed there as open. We classify the result as new, but the proof is elementary: it amounts to the factorization $A=\diag(1/C_n)\,M$ with $M$ a unitriangular $0/1$ matrix, the same idea as a 2021 formula of R.~J.~Mathar for a sibling triangle. The theorem is verified in Lean~4 against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry; in that statement $T$ is defined by forward substitution, proved to invert every finite truncation of $A$, and checked by the kernel against all $66$ listed terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Let $C_n=\frac1{n+1}\binom{2n}{n}$ be the $n$-th Catalan number (A000108 \cite{A000108}). In January 2007 Paul Barry added to the OEIS a family of number triangles, each the inverse of a lower-triangular matrix supported on the band $k\le n\le 2k$ whose nonzero entries in row $n$ all equal $1/d(n)$ for some positive arithmetic function $d$: for example $d(n)=n+1$ (A127710 \cite{A127710}), the Fibonacci number $F_{n+1}$ (A127711 \cite{A127711}), $2n+1$ (A127749 \cite{A127749}), $n!$ (A127755 \cite{A127755}), $C_n$ (A127767 \cite{A127767}), Euler's totient $\varphi(n+1)$ (A127771 \cite{A127771}) and $\lfloor (n+2)/2\rfloor$ (A127793 \cite{A127793}). For most of these he recorded the conjecture that the inverse has integer entries. This note concerns the Catalan case, A127767. Its entry is named
+\begin{quote}\raggedright
+\texttt{Inverse of number triangle A(n,k) = 1/C(n) if k <= n <= 2k, 0 otherwise, where C(n) = A000108(n).}
+\end{quote}
+and its comment line reads, verbatim,
+\begin{quote}\raggedright
+\texttt{It is conjectured that all elements of the triangle are integers.}
+\end{quote}
+The entry was submitted by Paul Barry on January~28, 2007. In its current revision (\#11, September~30, 2018) the statement is still labelled a conjecture. The entry has no formula section; besides the data, the examples and cross-references it contains only a PARI program (Michel Marcus, 2018) that computes the rows by inverting a finite matrix. We prove the conjecture (Theorem~\ref{thm:main}), with a Lean proof of the full statement.
+
+\subsection*{Prior work and status}
+The math0 literature review found the following related work and no prior resolution of the conjecture in A127767.
+\begin{itemize}
+\item The $0/1$ triangle $M(n,k)=\ib{k\le n\le 2k}$ is A101688 \cite{A101688}, read as a triangle, and its inverse is A111967 \cite{A111967} (P.~Barry, 2005). Since $M$ is lower unitriangular with integer entries, A111967 is an integer triangle. The identity $T(n,k)=C_k\cdot\mathrm{A111967}(n,k)$, which we prove as Corollary~\ref{cor:A111967}, settles A127767; it does not appear in either entry.
+\item In A127749 (the case $d(n)=2n+1$), R.~J.~Mathar added on April~21, 2021 the formula $T(n,k)=(2k+1)\cdot\mathrm{A111967}(n,k)$ \cite{A127749}. This is the same factorization applied to a sibling triangle, and it is the closest prior use of the method. A127749 itself carries no integrality conjecture, and the factorization was not recorded for A127767 or stated as a general principle.
+\item For A127793 (the case $d(n)=\lfloor(n+2)/2\rfloor$) the integrality conjecture was proved by FUNG Cheok Yin (comment in the entry, September 2022) and by S.~Fried \cite{Fried}, who also gave an explicit formula for the entries. Fried's paper treats only A127793 and does not state a general factorization.
+\item The conjectures in A127710, A127711, A127755 and A127771 are, like A127767, still listed as open in the OEIS; the argument of this note settles them as well (Remark~\ref{rem:siblings}). A search of arXiv, MathOverflow, Mathematics Stack Exchange and the SeqFan list found nothing on A127767.
+\end{itemize}
+We therefore classify Theorem~\ref{thm:main} as a \emph{new result}, with the caveat that it is an elementary observation rather than a substantive theorem: once $A$ is written as $\diag(1/C_n)\,M$, integrality is a one-line consequence.
+
+\section{Statement}\label{sec:statement}
+
+Infinite lower-triangular matrices over $\Q$, indexed by $\N\times\N$, form a ring: entries of a product are finite sums. A lower-triangular matrix with nonzero diagonal entries has a unique two-sided inverse in this ring, and the inverse is again lower triangular. Moreover, the $N\times N$ leading truncation of a product of lower-triangular matrices is the product of the truncations, so $T$ is the inverse of $A$ if and only if, for every $N$, the truncation $T_N$ is the inverse of the truncation $A_N$.
+
+\begin{theorem}\label{thm:main}
+Let $A$ be the lower-triangular matrix with entries
+\[
+  A(n,k)=\begin{cases}1/C_n & \text{if } k\le n\le 2k,\\ 0 & \text{otherwise,}\end{cases}\qquad n,k\ge0,
+\]
+and let $T=A^{-1}$. Then $T(n,k)\in\Z$ for all $0\le k\le n$.
+\end{theorem}
+
+Since $T$ is lower triangular, $T(n,k)=0$ for $k>n$, so every entry of $T$ is an integer. The proof gives more: $T(n,k)\in C_k\Z$ for all $n,k$ (Proposition~\ref{prop:mult}).
+
+The rows $n=0,\dots,4$ of $T$ are $(1)$, $(0,1)$, $(0,-1,2)$, $(0,1,-2,5)$, $(0,0,0,-5,14)$.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A127767.lean}, reviewed for fidelity, and frozen (SHA-256 \texttt{e61b7ad2\ldots 9dce}) before any proof attempt. Its definitions and the statement read as follows. The listing is verbatim, except that we omit the import, comments, blank lines, all theorems, and the definitions \decl{rowOf} and \decl{a} (reading the triangle by rows) and \decl{Amat}, \decl{Tmat} (the $N\times N$ truncations of \texttt{A} and \texttt{T}, as matrices \texttt{Matrix (Fin N) (Fin N) ℚ}).
+\begin{lstlisting}
+namespace Math0.Statements.A127767
+open Finset
+def cat : ℕ → ℕ
+  | 0 => 1
+  | n + 1 => cat n * (2 * (2 * n + 1)) / (n + 2)
+def A (n k : ℕ) : ℚ := if k ≤ n ∧ n ≤ 2 * k then 1 / (cat n : ℚ) else 0
+def nextRow (rs : List (List ℚ)) : List ℚ :=
+  (List.range (rs.length + 1)).map fun k =>
+    (cat rs.length : ℚ) * ((if rs.length = k then 1 else 0) -
+      ∑ j ∈ range rs.length, A rs.length j * (rs.getD j []).getD k 0)
+def rows : ℕ → List (List ℚ)
+  | 0 => []
+  | n + 1 => rows n ++ [nextRow (rows n)]
+def T (n k : ℕ) : ℚ := ((rows (n + 1)).getD n []).getD k 0
+def statement : Prop := ∀ n k : ℕ, k ≤ n → ∃ z : ℤ, T n k = z
+end Math0.Statements.A127767
+\end{lstlisting}
+
+\emph{How the definitions encode the entry.} The function \texttt{cat} computes $C_n$ by the product recursion $C_{n+1}=C_n\cdot 2(2n+1)/(n+2)$, in which the natural-number division is exact; the file proves \decl{cat_eq_catalan}: \texttt{cat n = catalan n} (Mathlib's Catalan numbers) and \decl{cat_pos}: \texttt{0 < cat n}, so \texttt{1 / (cat n : ℚ)} never divides by zero. The rational number \texttt{A n k} is $A(n,k)$, exactly as in the name of the entry. The rows of $T$ are built one at a time: if \texttt{rs} holds rows $0,\dots,n-1$ (so \texttt{rs.length} $=n$), then \texttt{nextRow rs} is the list of the numbers
+\begin{equation}\label{eq:fs}
+  T(n,k)=C_n\Bigl(\ib{n=k}-\sum_{j<n}A(n,j)\,T(j,k)\Bigr),\qquad 0\le k\le n,
+\end{equation}
+where \texttt{(rs.getD j []).getD k 0} reads $T(j,k)$, with value $0$ when $k>j$. This is forward substitution for the equations $\sum_{j\le n}A(n,j)T(j,k)=\ib{n=k}$, using $A(n,n)=1/C_n$. The values are rationals; integrality is not built into the types. That \texttt{T} is the inverse of \texttt{A} is proved, not assumed. The file proves the following, with proofs omitted here:
+\begin{lstlisting}
+theorem T_spec (n k : ℕ) :
+    T n k = if k ≤ n then
+      (cat n : ℚ) * ((if n = k then 1 else 0) - ∑ j ∈ range n, A n j * T j k) else 0
+theorem inv_Amat (N : ℕ) : (Amat N)⁻¹ = Tmat N
+theorem statement_iff_matrix :
+    statement ↔ ∀ (N : ℕ) (i j : Fin N), ∃ z : ℤ, (Amat N)⁻¹ i j = z
+\end{lstlisting}
+Here \decl{T_spec} is \eqref{eq:fs} together with $T(n,k)=0$ for $k>n$, and \texttt{(Amat N)⁻¹} is Mathlib's matrix inverse. The proof of \decl{inv_Amat} shows $\sum_{x<N}A(n,x)T(x,k)=\ib{n=k}$ for $n<N$ (\decl{sum_A_mul_T}): the terms with $x>n$ vanish, and the term $x=n$ is $T(n,k)/C_n$, which \decl{T_spec} identifies. Hence $A_NT_N=1$, and a right inverse of a square matrix is its inverse (\texttt{Matrix.inv\_eq\_right\_inv}). By the remark at the start of this section, \decl{statement} is exactly the assertion of Theorem~\ref{thm:main}; the entries with $k>n$, which are not part of the statement, are $0$ (\decl{T_eq_zero_of_lt}). By \decl{statement_iff_matrix} it is also equivalent to the integrality of every finite inverse $A_N^{-1}$.
+
+\emph{Data checks.} The file defines the triangle read by rows, \texttt{a m = T n k} for $m=n(n+1)/2+k$, $0\le k\le n$, with offset $0$ as in the entry. Two theorems proved by \texttt{decide +kernel} check that \texttt{a} reproduces all $66$ terms of the OEIS data (\decl{a_data}) and that \texttt{rows 11} is the list of rows $0,\dots,10$ (\decl{rows_data}). Here the Lean kernel itself evaluates \texttt{cat}, \texttt{A} and \texttt{rows} with exact rational arithmetic and compares the result with the literal list. A script confirmed that this list equals the \texttt{\%S}, \texttt{\%T}, \texttt{\%U} lines of the entry. These checks anchor the definitions to the entry independently of the conjecture; the proof below does not use them.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows \path{lean/Math0/Frontier/OEIS/A127767.lean}. It works directly with the recursion \decl{T_spec} and does not use matrices. Write
+\[
+  M(n,j)=\ib{j\le n\le 2j}\in\{0,1\},\qquad\text{so that}\qquad A(n,j)=M(n,j)/C_n .
+\]
+From the statement file we use only $C_n>0$ (\decl{cat_pos}) and the following form of \decl{T_spec}: for all $n,k$,
+\begin{equation}\label{eq:spec}
+  T(n,k)=\begin{cases} C_n\bigl(\ib{n=k}-\sum_{j<n}A(n,j)\,T(j,k)\bigr) & \text{if } k\le n,\\ 0 & \text{if } k>n.\end{cases}
+\end{equation}
+
+\begin{proposition}[\decl{T_eq_int_mul_cat}]\label{prop:mult}
+For all $n,k\in\N$ there is $z\in\Z$ with $T(n,k)=z\,C_k$.
+\end{proposition}
+
+\begin{proof}
+By strong induction on $n$, for all $k$ simultaneously. Fix $n$ and $k$, and assume that for every $j<n$ there is $z_j\in\Z$ with $T(j,k)=z_jC_k$. (In Lean, \texttt{choose!} turns this hypothesis into a function $f\colon\N\to\Z$ with $T(j,k)=f(j)\,C_k$ for all $j<n$; we write $z_j=f(j)$.)
+
+If $k>n$, then $T(n,k)=0=0\cdot C_k$ by \eqref{eq:spec}.
+
+Let $k\le n$. For $j<n$,
+\[
+  A(n,j)\,T(j,k)=\frac{M(n,j)}{C_n}\,z_jC_k=\frac{C_k}{C_n}\,M(n,j)\,z_j
+\]
+(in Lean, both cases of the definition of $A$ are closed by \texttt{push\_cast} and \texttt{ring}). Summing over $j<n$,
+\[
+  \sum_{j<n}A(n,j)\,T(j,k)=\frac{C_k}{C_n}\,W,\qquad W=\sum_{j<n}M(n,j)\,z_j\in\Z .
+\]
+By \eqref{eq:spec}, and since $C_n\neq0$,
+\[
+  T(n,k)=C_n\ib{n=k}-C_k\,W .
+\]
+If $n=k$, then $C_n\ib{n=k}=C_k$; if $n\ne k$, then $C_n\ib{n=k}=0=C_k\ib{n=k}$. In both cases $C_n\ib{n=k}=C_k\ib{n=k}$, and therefore
+\[
+  T(n,k)=C_k\bigl(\ib{n=k}-W\bigr).
+\]
+So the claim holds with $z=\ib{n=k}-\sum_{j<n}M(n,j)\,z_j\in\Z$; this is the witness given in Lean, where the two cases $n=k$ and $n\neq k$ are closed by \texttt{field\_simp} (and \texttt{ring}).
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $k\le n$. By Proposition~\ref{prop:mult}, $T(n,k)=z\,C_k$ for some $z\in\Z$, and $zC_k$ is an integer since $C_k\in\N$. This is \decl{result}: \texttt{statement}, whose Lean proof gives the witness $z\cdot C_k$ (with \texttt{cat k} cast to $\Z$) and checks $T(n,k)=zC_k$ by \texttt{push\_cast} and \texttt{ring}.
+\end{proof}
+
+The rest of this section is not formalized.
+
+\begin{corollary}\label{cor:A111967}
+$T(n,k)=C_k\cdot M^{-1}(n,k)$ for all $n,k$, where $M^{-1}$ is the inverse of the triangle $M(n,k)=\ib{k\le n\le2k}$, that is, A111967. Equivalently, $A^{-1}=M^{-1}\diag(C_k)$.
+\end{corollary}
+
+\begin{proof}
+Let $U(n,k)=T(n,k)/C_k$, so $U(n,k)=0$ for $k>n$. Multiplying \eqref{eq:spec} out, using $C_nA(n,j)=M(n,j)$ and $C_n\ib{n=k}=C_k\ib{n=k}$, and dividing by $C_k$, we get for $k\le n$
+\[
+  U(n,k)=\ib{n=k}-\sum_{j<n}M(n,j)\,U(j,k).
+\]
+As $M$ is lower unitriangular, this is exactly the forward-substitution recursion that determines $M^{-1}(n,k)$ for $k\le n$, so $U=M^{-1}$. Equivalently, $A=D M$ with $D=\diag(1/C_n)$, and $A^{-1}=M^{-1}D^{-1}$.
+\end{proof}
+
+The witnesses $z$ in the proof of Proposition~\ref{prop:mult} are therefore the entries of A111967. In an exact computation for $n<60$ (not part of the proof), every entry of $M^{-1}$ lies in $\{-1,0,1\}$, so each $T(n,k)$ in that range is $0$ or $\pm C_k$, as in the listed data. We do not claim this in general. The identity of Corollary~\ref{cor:A111967}, $\mathrm{A127767}(n,k)=\mathrm{A000108}(k)\cdot\mathrm{A111967}(n,k)$, would be a natural formula line for the entry.
+
+\begin{remark}[the sibling triangles]\label{rem:siblings}
+The argument uses nothing about $C_n$ except that it is a nonzero integer. For any sequence $d(n)$ of nonzero integers, the inverse of the triangle $\ib{k\le n\le 2k}/d(n)$ is $M^{-1}\diag(d(k))$, whose $(n,k)$ entry is $d(k)\,\mathrm{A111967}(n,k)\in\Z$. This proves the integrality conjectures of A127710 ($d(n)=n+1$), A127711 ($d(n)=F_{n+1}$), A127755 ($d(n)=n!$) and A127771 ($d(n)=\varphi(n+1)$). It also gives another proof of the integrality in A127793 ($d(n)=\lfloor(n+2)/2\rfloor$), which Fung and Fried \cite{Fried} established earlier, and for A127749 ($d(n)=2n+1$) it gives Mathar's formula. We have not formalized these consequences.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in \path{lean/Math0/Frontier/OEIS/A127767.lean} in the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A127767.lean} and the audit commands in \path{lean/Math0/Audit.lean}. It consists of the private theorem \decl{T_eq_int_mul_cat} (Proposition~\ref{prop:mult}), the main declaration \decl{Math0.Frontier.A127767.result} \texttt{: statement}, and the command
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A127767.result Math0.Statements.A127767.statement
+\end{lstlisting}
+From the statement file the proof uses \decl{T_spec} and \decl{cat_pos}. Neither file uses \texttt{sorry}, \texttt{native\_decide}, custom axioms or \texttt{set\_option}. The proof file uses no \texttt{decide}; the only kernel evaluations are the data checks of the statement file, which the proof does not use.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles} (in \path{lean/Math0/Audit.lean}, for statements that math0 formalizes itself) fails unless all of the following hold:
+\begin{itemize}
+\item \decl{statement} is a \texttt{Prop}-valued definition without universe parameters;
+\item \decl{statement} and \decl{result} depend on no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, which rejects \decl{sorryAx}, \decl{Lean.ofReduceBool} (from \texttt{native\_decide}) and custom axioms;
+\item the type of \decl{result} is syntactically \decl{statement} or $\neg$\,\decl{statement}, up to metadata, with no unfolding.
+\end{itemize}
+Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A127767.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A127767.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A127767.result' proves 'Math0.Statements.A127767.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}. The repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}; this result does not use it, since its statement is math0's own formalization of the OEIS entry. To reproduce, run \path{scripts/verify.sh} from the repository root. The script fetches the Mathlib cache, builds all math0 results with \texttt{lake build} (which re-runs every audit command), and checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified. To check this file alone, run \texttt{lake env lean Math0/Frontier/OEIS/A127767.lean} in \path{lean/}. Once the statement module is built, this takes well under a minute of CPU time on our machine, most of it spent loading Mathlib.
+
+{\footnotesize
+\begin{thebibliography}{99}
+
+\bibitem{Fried}
+S.~Fried, \emph{On the inverse of a certain triangular matrix and its connection to the largest odd divisor}, Notes on Number Theory and Discrete Mathematics \textbf{32}(2) (2026), 255--262, \url{https://doi.org/10.7546/nntdm.2026.32.2.255-262}.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A000108}
+The OEIS Foundation Inc., \emph{Catalan numbers: $C(n)=\binom{2n}{n}/(n+1)=(2n)!/(n!(n+1)!)$}, entry A000108 in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A000108}.
+
+\bibitem{A101688}
+The OEIS Foundation Inc., \emph{Once 1, once 0, repeat, twice 1, twice 0, repeat, thrice 1, thrice 0, \ldots\ and so on}, entry A101688 (R.~Stephan, 2004) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A101688}.
+
+\bibitem{A111967}
+The OEIS Foundation Inc., \emph{Inverse of number triangle A101688}, entry A111967 (P.~Barry, 2005) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A111967}.
+
+\bibitem{A127710}
+The OEIS Foundation Inc., \emph{Inverse of the triangle $A(n,k)=\mathrm{if}(k\le n,\mathrm{if}(n\le 2k,1/(n+1),0),0)$}, entry A127710 (P.~Barry, 2007) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A127710}.
+
+\bibitem{A127711}
+The OEIS Foundation Inc., \emph{Inverse of the triangle $A(n,k)=1/F(n+1)$ if $k\le n\le 2k$, $0$ otherwise}, entry A127711 (P.~Barry, 2007) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A127711}.
+
+\bibitem{A127749}
+The OEIS Foundation Inc., \emph{Inverse of number triangle $A(n,k)=1/(2n+1)$ if $k\le n\le 2k$, $0$ otherwise}, entry A127749 (P.~Barry, 2007; formula by R.~J. Mathar, April~21, 2021) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A127749}.
+
+\bibitem{A127755}
+The OEIS Foundation Inc., \emph{Inverse of number triangle $A(n,k)=1/n!$ if $k\le n\le 2k$, $0$ otherwise}, entry A127755 (P.~Barry, 2007) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A127755}.
+
+\bibitem{A127767}
+The OEIS Foundation Inc., \emph{Inverse of number triangle $A(n,k)=1/C(n)$ if $k\le n\le 2k$, $0$ otherwise, where $C(n)=\mathrm{A000108}(n)$}, entry A127767 (P.~Barry, January~28, 2007) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A127767}; revision \#11, September~30, 2018.
+
+\bibitem{A127771}
+The OEIS Foundation Inc., \emph{Inverse of number triangle $A(n,k)=1/\mathrm{Euler\_phi}(n+1)$ if $k\le n\le 2k$, $0$ otherwise}, entry A127771 (P.~Barry, 2007) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A127771}.
+
+\bibitem{A127793}
+The OEIS Foundation Inc., \emph{Inverse of number triangle $t(n,k)=1/\lfloor (n+2)/2\rfloor$ if $k\le n\le 2k$, $0$ otherwise}, entry A127793 (P.~Barry, 2007; comments by FUNG Cheok Yin, 2022, and S.~Fried, 2025) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A127793}.
+
+\end{thebibliography}
+}
+
+\end{document}

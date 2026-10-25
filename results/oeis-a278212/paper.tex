@@ -1,0 +1,398 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+\usepackage{booktabs}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {∀}{{$\forall$}}1
+    {¬}{{$\neg$}}1 {→}{{$\to$}}1 {≤}{{$\le$}}1 {∈}{{$\in$}}1 {∉}{{$\notin$}}1
+    {∧}{{$\wedge$}}1 {∑}{{$\sum$}}1 {∨}{{$\vee$}}1
+    {×}{{$\times$}}1 {ˢ}{{$^{\mathrm{s}}$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{ˢ}{\ensuremath{^{\mathrm{s}}}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+\setlength{\textfloatsep}{12pt plus 2pt minus 4pt}
+\lstset{aboveskip=6pt,belowskip=6pt}
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\mob}{\operatorname{mob}}
+\newcommand{\DB}{\mathcal{D}_{\mathrm B}}
+\newcommand{\DQ}{\mathcal{D}_{\mathrm Q}}
+
+\title[Maximal mobility of bishops and queens]{Maximal mobility of same-colored bishops and queens: a proof of Kagey's conjecture $\mathrm{A278212}(n)=\lfloor\mathrm{A275815}(n)/2\rfloor$}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 24, 2026}
+
+
+\begin{document}
+\begin{abstract}
+Let $a(n)$ (OEIS A278212) and $q(n)$ (OEIS A275815) be the maximum total number of moves that any number of bishops, respectively queens, of one color can make on an $n\times n$ board.
+We prove Peter Kagey's 2016 conjecture $a(n)=\lfloor q(n)/2\rfloor$ for all $n\ge1$.
+We also determine $a(n)=4(n-2)^2$ for $n\ge6$ and $q(n)=8(n-2)^2$ for $n\ge7$; the latter proves Alec Jones's 2016 conjecture on A275815 for $n\ge7$. The upper bounds come from flow certificates, which are dual solutions of a linear programming relaxation, together with short case splits on small boards.
+To our knowledge this is a new result. It is verified in Lean~4 against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry, and the Lean kernel checks every finite certificate.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Place any number of pieces of one color on an $n\times n$ board. A piece cannot capture or jump over a piece of its own color. It may move along one of its lines to an empty square, provided every square it passes is empty. Peter Kagey defined the maximum total number of such moves for queens as A275815 \cite{A275815}, for rooks as A278211 \cite{A278211}, and for bishops as A278212 \cite{A278212}, all in November 2016. A275815 contains \texttt{Conjecture: a(n) = 8(n-2)\^{}2 for n >= 6. - \_Alec Jones\_, Nov 16 2016}, and A278212 contains Kagey's conjecture, quoted in Section~\ref{sec:statement}.
+
+\subsection*{Prior work}
+Chai Wah Wu (November 2016) placed pieces on the $4n-4$ border squares to get $q(n)\ge8(n-2)^2$ and $a(n)\ge4(n-2)^2$. He also noted $q(n)\le8n^2$ and $a(n)\le4n^2$ \cite{A275815,A278212}. Andrew Howroyd (October 2023) proved $a(n)\le4(n-2)^2+4$ by bounding the moves on each diagonal \cite{A278212}. Michael S. Branicky computed $a(6)=64$ and $q(6)=128$ (2021) \cite{A275815,A278212}. Jim Randell computed $q(7),\dots,q(32)$ with MiniZinc \cite{A275815,Randell}, and Christian Sievers computed $a(7),\dots,a(50)$ with an integer linear program \cite{A278212,A278214}. All these values agree with both conjectures. Randell's page \cite{Randell} is about Enigma~69 from \emph{New Scientist} (1980). That puzzle asserts without proof that the border placement is optimal for queens on the $8\times8$ board, and asks for the $4\times4$ board. Randell states the general border formula only conditionally; in its comments he verifies by computer that $q(6)=128$ (2017) and reports MiniZinc checks of boards up to $64\times64$ (2020, 2025). These are finite computations, not a general proof. We found no general proof or counterexample in the related entries A278211, A278213 and A278214, or in searches of arXiv, MathOverflow, Mathematics Stack Exchange, Puzzling Stack Exchange and the SeqFan list. Both conjectures are still marked as conjectures in the current revisions of the entries (A278212 \#36, 2023; A275815 \#43, 2021).
+
+\subsection*{Results}
+\begin{theorem}\label{thm:main}
+For every $n\ge1$, $a(n)=\lfloor q(n)/2\rfloor$.
+\end{theorem}
+
+\begin{theorem}\label{thm:values}
+\textup{(1)} $a(1),\dots,a(5)=0,2,8,20,38$, and $a(n)=4(n-2)^2$ for $n\ge6$.
+\textup{(2)} $q(1),q(2),q(3)=0,4,17$; $40\le q(4)\le41$, $76\le q(5)\le77$, $128\le q(6)\le129$; and $q(n)=8(n-2)^2$ for $n\ge7$.
+\end{theorem}
+
+Part~(2) proves Jones's conjecture for $n\ge7$. With the computed value $q(6)=128$ (Randell \cite{Randell}, Branicky \cite{A275815}) the conjecture holds for all $n\ge6$, but our proof alone gives only $128\le q(6)\le129$. Likewise the known values $q(4)=40$, $q(5)=76$ are not reproved; the floor absorbs the remaining unit.
+
+The upper bounds use flows along each direction whose terms telescope (Proposition~\ref{prop:key}), i.e.\ weak duality for a linear programming (LP) relaxation; an LP solver found the flows and the Lean kernel checks them.
+
+\section{Statement}\label{sec:statement}
+
+Let $\Omega_n=\{0,\dots,n-1\}^2\subset\Z^2$. A \emph{placement} is a subset $S\subseteq\Omega_n$, and a square $c$ is \emph{empty} if $c\in\Omega_n\setminus S$. Let $\DB=\{(\pm1,\pm1)\}$ and $\DQ=\DB\cup\{(\pm1,0),(0,\pm1)\}$. For $p\in S$ and a direction $d$, let $r_S(p,d)$ be the number of $k\ge1$ such that $p+d,\dots,p+kd$ are all empty. Let $\mob_{\mathcal D}(S)=\sum_{p\in S}\sum_{d\in\mathcal D}r_S(p,d)$. Then $a(n)=\max_{S}\mob_{\DB}(S)$ and $q(n)=\max_S\mob_{\DQ}(S)$, where $S$ runs over all subsets of $\Omega_n$.
+
+A278212 \cite{A278212} (``Maximum total number of possible moves that any number of bishops of the same color can make on an n X n chessboard'') and A275815 \cite{A275815} (the same for queens) both have offset~$1$. The author line of A278212 reads \texttt{\_Peter Kagey\_, Nov 15 2016}, and its COMMENTS section contains, verbatim,
+\begin{quote}\raggedright
+\texttt{Conjecture: a(n) = floor(A275815(n)/2). - \_Peter Kagey\_, Nov 24 2016}
+\end{quote}
+which is Theorem~\ref{thm:main}.
+
+\subsection*{Lean formalization}
+math0 formalized the statement in \path{lean/Math0/Statements/OEIS/A278212.lean}. The file was reviewed for fidelity and frozen (SHA-256 \texttt{590fb1aa\ldots 07b9}) before any proof attempt. Verbatim, with the header, import, docstrings, blank lines, witnesses and theorems omitted:
+\begin{lstlisting}
+namespace Math0.Statements.A278212
+def board (n : ℕ) : Finset (ℕ × ℕ) := Finset.range n ×ˢ Finset.range n
+def isEmptySquare (n : ℕ) (S : Finset (ℕ × ℕ)) (x y : ℤ) : Bool :=
+  decide (0 ≤ x ∧ x < n ∧ 0 ≤ y ∧ y < n ∧ (x.toNat, y.toNat) ∉ S)
+def rayMoves (n : ℕ) (S : Finset (ℕ × ℕ)) (p : ℕ × ℕ) (d : ℤ × ℤ) : ℕ :=
+  ((List.range' 1 n).takeWhile fun t =>
+    isEmptySquare n S (p.1 + t * d.1) (p.2 + t * d.2)).length
+def bishopDirs : List (ℤ × ℤ) := [(1, 1), (1, -1), (-1, 1), (-1, -1)]
+def queenDirs : List (ℤ × ℤ) :=
+  [(1, 1), (1, -1), (-1, 1), (-1, -1), (1, 0), (-1, 0), (0, 1), (0, -1)]
+def totalMoves (dirs : List (ℤ × ℤ)) (n : ℕ) (S : Finset (ℕ × ℕ)) : ℕ :=
+  ∑ p ∈ S, (dirs.map (rayMoves n S p)).sum
+def a (n : ℕ) : ℕ := (board n).powerset.sup (totalMoves bishopDirs n)
+def queenMax (n : ℕ) : ℕ := (board n).powerset.sup (totalMoves queenDirs n)
+def border (n : ℕ) : Finset (ℕ × ℕ) :=
+  (board n).filter fun p => p.1 = 0 ∨ p.1 = n - 1 ∨ p.2 = 0 ∨ p.2 = n - 1
+def statement : Prop := ∀ n : ℕ, 1 ≤ n → a n = queenMax n / 2
+end Math0.Statements.A278212
+\end{lstlisting}
+Here \texttt{board n} is $\Omega_n$. \texttt{rayMoves n S p d} is the length of the longest initial run of $t=1,\dots,n$ for which $p+td\in\Z^2$ is an empty square. This equals $r_S(p,d)$, because $p+td\notin\Omega_n$ for $t\ge n$. \texttt{totalMoves} is $\mob_{\mathcal D}$; \texttt{a} and \texttt{queenMax} are suprema in $\N$ over all placements, i.e.\ maxima; \texttt{/} is floor division; and $n\ge1$ is the common offset. ``Same color'' refers to the pieces, not to square colors: the entry's $5\times5$ example has bishops on A1 and B1, which have different colors.
+
+The statement file checks the definitions against the OEIS data by \texttt{decide +kernel}. The theorems \decl{a_data} and \decl{queenMax_data} evaluate the exhaustive definitions to $a(1),a(2),a(3)=0,2,8$ and $q(1),q(2),q(3)=0,4,17$. The theorems \decl{a_ge_data} and \decl{queenMax_ge_data} show that the listed terms for $4\le n\le10$ are lower bounds, using explicit placements \decl{bishopWitness} and \decl{queenWitness} whose mobility the kernel computes. For $n\ge6$ these are the border, and for bishops with $n=5$ the entry's example.
+
+\section{Proof}\label{sec:proof}
+
+We follow \path{lean/Math0/Frontier/OEIS/A278212.lean}, with the names of its lemmas in brackets. Fix $n$, a placement $S$, and a set $\mathcal D\subseteq\{-1,0,1\}^2\setminus\{0\}$. For $c\in\Z^2$, let $x(c)=1$ if $c\in S$ and $x(c)=0$ otherwise.
+
+\subsection{Moves counted at their targets}
+For $d\in\mathcal D$ and $c\in\Z^2$, let $Y_d(c)=1$ if there is a $k\ge0$ such that $c-(k+1)d\in S$ and $c,c-d,\dots,c-kd$ are empty, and let $Y_d(c)=0$ otherwise. Such a $k$ is unique: if $k<k'$ both work, then $c-(k+1)d$ is both occupied and empty (\decl{Y}, \decl{Y_le_one}).
+
+\begin{lemma}[\decl{sum_ray_eq}]\label{lem:target}
+$\sum_{p\in S}r_S(p,d)=\sum_{c\in\Omega_n}Y_d(c)$.
+\end{lemma}
+\begin{proof}
+Fix $k\ge0$. The map $p\mapsto p+(k+1)d$ is a bijection from the pieces $p$ for which $p+d,\dots,p+(k+1)d$ are empty onto the squares $c$ whose condition holds with this $k$. Now sum over $k$.
+\end{proof}
+
+\begin{lemma}[\decl{Y_eq_zero_of_not_E}, \decl{Y_rec}, \decl{Y_first}]\label{lem:Y}
+For $c\in\Omega_n$:
+\textup{(a)} $Y_d(c)\le1-x(c)$;
+\textup{(b)} $Y_d(c)\le x(c-d)+Y_d(c-d)$;
+\textup{(c)} $Y_d(c)=0$ if $c-d\notin\Omega_n$.
+\end{lemma}
+\begin{proof}
+(a) A reached square is empty. (b) If $Y_d(c)=1$ with witness $k$, then $c-d\in S$ when $k=0$, and $c-d$ is reached with witness $k-1$ when $k\ge1$. (c) In both cases $c-d\in\Omega_n$.
+\end{proof}
+
+\subsection{Flow certificates}
+
+\begin{definition}\label{def:cert}
+A \emph{flow certificate} for $(n,\mathcal D)$ is an integer $D>0$ together with functions $G_d\colon\Z^2\to\Z_{\ge0}$, one for each $d\in\mathcal D$, such that
+(F1) $G_d(c)=0$ unless $c,c-d\in\Omega_n$, and
+(F2) $G_d(c)\le D+G_d(c+d)$ whenever $c,c-d\in\Omega_n$.
+Let $\alpha_d(c)=D+G_d(c+d)-G_d(c)\ge0$ if $c-d\in\Omega_n$, and $\alpha_d(c)=0$ otherwise. The \emph{empty weight} of $c$ is $A(c)=\sum_{d}\alpha_d(c)$, and its \emph{occupied weight} is $B(c)=\sum_dG_d(c+d)$.
+\end{definition}
+
+\begin{lemma}[\decl{dir_ineq}]\label{lem:dir}
+For each $d\in\mathcal D$,
+$D\sum_{p\in S}r_S(p,d)\le\sum_{c\in\Omega_n}\bigl(\alpha_d(c)(1-x(c))+G_d(c+d)\,x(c)\bigr)$.
+\end{lemma}
+
+\begin{proof}
+Write $G=G_d$, $Y=Y_d$ and $\alpha=\alpha_d$. For every $c\in\Omega_n$,
+\begin{equation}\label{eq:cell}
+D\,Y(c)+G(c+d)\,Y(c)\le\alpha(c)(1-x(c))+G(c)\,x(c-d)+G(c)\,Y(c-d).
+\end{equation}
+Indeed, the right-hand side is nonnegative, which settles the case $Y(c)=0$. If $c-d\notin\Omega_n$, then $Y(c)=0$ by Lemma~\ref{lem:Y}(c). If $c-d\in\Omega_n$ and $Y(c)=1$, then $x(c)=0$ and $x(c-d)+Y(c-d)\ge1$ by Lemma~\ref{lem:Y}, so the right-hand side is at least $\alpha(c)+G(c)=D+G(c+d)$.
+
+By (F1), the substitution $c\mapsto c+d$ gives $\sum_{c\in\Omega_n}G(c+d)g(c)=\sum_{c\in\Omega_n}G(c)g(c-d)$ for every function $g$ (\decl{shift_sum}). Sum \eqref{eq:cell} over $\Omega_n$. With $g=Y$, the terms $G(c+d)Y(c)$ and $G(c)Y(c-d)$ cancel. With $g=x$, $\sum G(c)x(c-d)$ becomes $\sum G(c+d)x(c)$. Lemma~\ref{lem:target} finishes the proof.
+\end{proof}
+
+\begin{proposition}[\decl{key}]\label{prop:key}
+For every flow certificate, summing Lemma~\ref{lem:dir} over $d\in\mathcal D$ gives
+$D\cdot\mob_{\mathcal D}(S)\le\sum_{c\in S}B(c)+\sum_{c\in\Omega_n\setminus S}A(c)\le\sum_{c\in\Omega_n}\max(A(c),B(c))$.
+\end{proposition}
+
+\begin{corollary}[\decl{leaf}]\label{cor:leaf}
+Let $I,O\subseteq\Omega_n$ and $T\in\N$. Set $\beta(c)=B(c)$ for $c\in I$, $\beta(c)=A(c)$ for $c\in O\setminus I$, and $\beta(c)=\max(A(c),B(c))$ otherwise. If $\sum_{c\in\Omega_n}\beta(c)<D(T+1)$, then $\mob_{\mathcal D}(S)\le T$ for every placement $S$ with $I\subseteq S$ and $O\cap S=\emptyset$, since $D\mob_{\mathcal D}(S)\le\sum\beta$ by Proposition~\ref{prop:key}.
+\end{corollary}
+
+In Lean, a certificate is a table $\tau$ of natural numbers, with $G_d(c)=\tau(d,c)$ if $c,c-d\in\Omega_n$ and $G_d(c)=0$ otherwise (\decl{Gt}); so (F1) holds. Condition (F2) (\decl{checkA}) and the inequality $\sum\beta<D(T+1)$ (with $\sum\beta$ computed by \decl{bndSum}) are decidable computations over the board, and \texttt{decide +kernel} evaluates them in the kernel.
+
+\begin{remark}\label{rem:lp}
+When $c-d\in\Omega_n$, inequality \eqref{eq:cell} is $\alpha(c)$ times Lemma~\ref{lem:Y}(a) plus $G(c)$ times Lemma~\ref{lem:Y}(b), since $\alpha(c)+G(c)=D+G(c+d)$. So \eqref{eq:cell}, and with it $D\sum_{d,c}Y_d(c)\le\sum_c\bigl(x(c)B(c)+(1-x(c))A(c)\bigr)\le\sum_c\max(A(c),B(c))$, holds for any real $0\le x\le1$ and $Y_d\ge0$ satisfying (a)--(c) of Lemma~\ref{lem:Y}. Hence $\sum_c\max(A,B)/D\ge\lambda(n)$, the LP maximum of $\sum_{d,c}Y_d(c)$ under these constraints. Numerically (not part of the proof), $\lambda=a(n)$ for bishops with $n=4,\dots,7$, while for queens $\lambda=45,\,82.5,\,132.8$ for $n=4,5,6$.
+\end{remark}
+
+\subsection{Lower bounds}
+
+\begin{lemma}[\decl{total_border}]\label{lem:border}
+Let $n\ge2$, and let $\partial_n$ be the set of $c\in\Omega_n$ with $c_1\in\{0,n-1\}$ or $c_2\in\{0,n-1\}$. Then $\mob_{\mathcal D}(\partial_n)=|\mathcal D|\,(n-2)^2$.
+\end{lemma}
+\begin{proof}
+By Lemma~\ref{lem:target} it suffices to show that $Y_d(c)=1$ exactly for the interior squares $c\in\{1,\dots,n-2\}^2$. Border squares are occupied, so they are never reached. For interior $c$, let $k\ge0$ be least such that $c-(k+1)d$ is not interior. Such a $k$ exists because a coordinate in which $d$ is nonzero leaves $\{1,\dots,n-2\}$ within $n-2$ steps. Then $c,\dots,c-kd$ are interior and therefore empty. The square $c-(k+1)d$ is a unit step from an interior square, so it lies in $\Omega_n$, and as it is not interior it lies in $\partial_n=S$.
+\end{proof}
+
+So $a(n)\ge4(n-2)^2$ and $q(n)\ge8(n-2)^2$ for $n\ge2$ (\decl{a_border}, \decl{q_border}). The witnesses of Section~\ref{sec:statement} give $a(4)\ge20$, $a(5)\ge38$, $q(4)\ge40$ and $q(5)\ge76$.
+
+\subsection{Upper bounds for \texorpdfstring{$n\ge8$}{n >= 8}}
+For $0\le x\le n-1$ define the position class $\kappa_3(x)=x$ if $x<3$, $\kappa_3(x)=6-(n-1-x)$ if $n-1-x<3\le x$, and $\kappa_3(x)=3$ otherwise. Define $\kappa_4$ in the same way with $3,6$ replaced by $4,8$. So the class records the distance to the nearer side, up to a cut-off. For $n\ge8$, $\kappa_4$ takes each value in $E=\{0,1,2,3,5,6,7,8\}$ exactly once and the value $4$ exactly $n-8$ times. A \emph{class table} $L\colon\{0,\dots,6\}^2\times\mathcal D\to\N$ defines the flow $G_d(c)=L(\kappa_3(c_1),\kappa_3(c_2),d)$ if $c,c-d\in\Omega_n$, and $G_d(c)=0$ otherwise (\decl{Gc}). The Lean file contains a table \decl{LQ} for queens with $D=2$ (124 nonzero entries) and a table \decl{LB} for bishops with $D=1$ (52 nonzero entries), both found by linear programming.
+
+\begin{lemma}[\decl{cls3_shift}, \decl{ok4_iff}, \decl{Af_ty}, \decl{Bf_ty}]\label{lem:classes}
+Let $n\ge8$, $0\le x\le n-1$ and $\delta\in\{-1,0,1\}$. Then $\kappa_4(x)$ and $\delta$ determine whether $0\le x+\delta\le n-1$, and if so they determine $\kappa_3(x+\delta)$. Hence, for a class table, $A(c)=A^*(\kappa_4(c_1),\kappa_4(c_2))$ and $B(c)=B^*(\kappa_4(c_1),\kappa_4(c_2))$ for functions $A^*,B^*$ on $\{0,\dots,8\}^2$ computed from $L$ and $D$. Also, (F2) follows from a check over all $9\times9$ class pairs and all $d$ \textup{(\decl{checkTy})}.
+\end{lemma}
+\begin{proof}
+Let $v=\kappa_4(x)$. If $v\le3$, then $x=v$, so $x+\delta\le4<n$. Further $x+\delta\ge0$ unless $(v,\delta)=(0,-1)$, and $\kappa_3(x+\delta)=\min(x+\delta,3)$ because $n-1-(x+\delta)\ge3$. If $v=4$, then $x+\delta\in[3,n-4]$, so $\kappa_3(x+\delta)=3$. The case $v\ge5$ is symmetric. Finally, $A(c)$ and $B(c)$ involve only the membership of $c\pm d$ in $\Omega_n$ and the values of $\kappa_3$ at $c$ and $c+d$.
+\end{proof}
+
+\begin{lemma}[\decl{sum_cls4}]\label{lem:count}
+For $n\ge8$ and every $M\colon\{0,\dots,8\}^2\to\Z$,
+\begin{multline*}
+\textstyle\sum_{c\in\Omega_n}M(\kappa_4(c_1),\kappa_4(c_2))\\
+\textstyle=\sum_{v,w\in E}M(v,w)+(n-8)\sum_{v\in E}\bigl(M(v,4)+M(4,v)\bigr)+(n-8)^2M(4,4).
+\end{multline*}
+\end{lemma}
+\begin{proof}
+Along each coordinate the classes are $0,\dots,3$, then $4$ repeated $n-8$ times, then $5,\dots,8$.
+\end{proof}
+
+\begin{table}[tb]
+\centering\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{c|ccccc}
+\multicolumn{6}{c}{Queens, $D=2$}\\
+$v\backslash w$&0&1&2&3&4\\\hline
+0&6&10&10&12&14\\
+1&10&8&7&9&10\\
+2&10&7&6&7&8\\
+3&12&9&7&14&16\\
+4&14&10&8&16&16
+\end{tabular}
+\qquad\qquad
+\begin{tabular}{c|ccccc}
+\multicolumn{6}{c}{Bishops, $D=1$}\\
+$v\backslash w$&0&1&2&3&4\\\hline
+0&1&2&2&2&2\\
+1&2&1&2&4&4\\
+2&2&2&2&2&2\\
+3&2&4&2&4&4\\
+4&2&4&2&4&4
+\end{tabular}
+\caption{The cell bounds $M(v,w)=\max(A^*(v,w),B^*(v,w))$ of the tables \texttt{LQ} and \texttt{LB} for $n\ge8$, where $v=\kappa_4(c_1)$ and $w=\kappa_4(c_2)$. $M$ is invariant under $v\mapsto8-v$, $w\mapsto8-w$ and $(v,w)\mapsto(w,v)$, so only $v,w\le4$ are shown. We recomputed these values independently from the Lean tables. In the middle class $(4,4)$, $(A^*,B^*)$ is $(16,8)$ for queens and $(4,0)$ for bishops.}
+\label{tab:classes}
+\end{table}
+
+\begin{proposition}[\decl{general}, \decl{queen_ge8}, \decl{bishop_ge8}]\label{prop:large}
+For $n\ge8$, $q(n)\le8(n-2)^2$ and $a(n)\le4(n-2)^2$.
+\end{proposition}
+\begin{proof}
+The kernel checks (F2) for \decl{LQ} and \decl{LB} on all class pairs. It also evaluates the three quantities $\sum_{v,w\in E}M(v,w)$, $\sum_{v\in E}(M(v,4)+M(4,v))$ and $M(4,4)$ for $M=\max(A^*,B^*)$ (Table~\ref{tab:classes}). They are $576,192,16$ for queens and $144,48,4$ for bishops. Put $m=n-8$. By Lemmas~\ref{lem:classes} and~\ref{lem:count}, $\sum_c\max(A(c),B(c))$ equals $576+192m+16m^2=2\cdot8(n-2)^2$ for queens and $144+48m+4m^2=4(n-2)^2$ for bishops. Proposition~\ref{prop:key} then applies to every placement.
+\end{proof}
+
+\subsection{Upper bounds for \texorpdfstring{$6\le n\le7$}{6 <= n <= 7} and for small boards}\label{sec:small}
+For queens with $n=7$ and bishops with $n=6,7$ we evaluate the same class flows directly on the board and apply Corollary~\ref{cor:leaf} with $I=O=\emptyset$ (\decl{queen7}, \decl{bishop6}, \decl{bishop7}). The kernel checks (F2) in each case. For queens with $n=7$ ($D=2$) we get $\sum_c\max(A,B)=400<2\cdot201$. For bishops ($D=1$) we get $64<65$ for $n=6$ and $100<101$ for $n=7$. Hence $q(7)\le200$, $a(6)\le64$ and $a(7)\le100$. For bishops with $n=4,5$, one certificate each (\decl{bishop4_t0}, \decl{bishop5_t0}, $D=1$) gives $20<21$ and $38<39$, so $a(4)\le20$ and $a(5)\le38$.
+
+For queens with $n=4,5,6$ no single certificate suffices (Remark~\ref{rem:lp}), so we split into cases on whether certain squares are occupied, and close each leaf with its own certificate by Corollary~\ref{cor:leaf}. Table~\ref{tab:leaves} lists all $7+10+4=21$ leaves. At every node the two branches are complementary, so the leaves cover all placements. This gives $q(4)\le41$, $q(5)\le77$ and $q(6)\le129$ (\decl{queen4_le}, \decl{queen5_le}, \decl{queen6_le}).
+
+\begin{table}[tb]
+\centering\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}[t]{@{}llrr@{}}
+\toprule
+$I$ & $O$ & $D$ & $\sum\beta$\\\midrule
+\multicolumn{4}{@{}l}{$n=4$, $T=41$}\\
+01, 20 & --- & 3 & 125\\
+01, 02 & 20 & 2 & 82\\
+01 & 02, 20 & 1 & 41\\
+02, 31 & 01 & 2 & 83\\
+31 & 01, 02 & 1 & 41\\
+02 & 01, 31 & 1 & 41\\
+--- & 01, 02, 31 & 2 & 83\\\midrule
+\multicolumn{4}{@{}l}{$n=6$, $T=129$}\\
+01, 15 & --- & 8 & 1039\\
+01 & 15 & 4 & 519\\
+40 & 01 & 4 & 519\\
+--- & 01, 40 & 4 & 519\\\bottomrule
+\end{tabular}
+\qquad
+\begin{tabular}[t]{@{}llrr@{}}
+\toprule
+$I$ & $O$ & $D$ & $\sum\beta$\\\midrule
+\multicolumn{4}{@{}l}{$n=5$, $T=77$}\\
+10, 34, 41 & --- & 8 & 623\\
+10, 41 & 34 & 6 & 467\\
+10, 14 & 41 & 16 & 1247\\
+10 & 14, 41 & 8 & 623\\
+03, 43 & 10 & 16 & 1247\\
+30, 43 & 03, 10 & 1 & 77\\
+43 & 03, 10, 30 & 2 & 155\\
+21 & 10, 43 & 2 & 155\\
+03 & 10, 21, 43 & 1 & 77\\
+--- & 03, 10, 21, 43 & 2 & 155\\\bottomrule
+\end{tabular}
+\caption{The leaves of the case splits for queens; row $k+1$ of a block is certificate \texttt{queen$n$\_t$k$}. A square $(i,j)$ is written $ij$; the squares $I$ are occupied and those in $O$ are empty. Each certificate, with scale $D$, satisfies $\sum_c\beta(c)\le D(T+1)-1$ (Corollary~\ref{cor:leaf}); this is kernel-checked, and we recomputed every entry.}
+\label{tab:leaves}
+\end{table}
+
+\begin{proof}[Proof of Theorems~\ref{thm:values} and~\ref{thm:main} \textup{(\decl{result})}]
+For $n\le3$, \decl{a_data} and \decl{queenMax_data} give the values, and $0=\lfloor0/2\rfloor$, $2=\lfloor4/2\rfloor$, $8=\lfloor17/2\rfloor$. For $n=4,5,6$, the bounds above give $a(n)=20,38,64$ and $q(n)\in\{40,41\},\{76,77\},\{128,129\}$, so in each case $a(n)=\lfloor q(n)/2\rfloor$. For $n=7$ we have $a(7)=100$ and $q(7)=200$. For $n\ge8$, Lemma~\ref{lem:border} and Proposition~\ref{prop:large} give $a(n)=4(n-2)^2=\lfloor8(n-2)^2/2\rfloor=\lfloor q(n)/2\rfloor$. In Lean, \decl{a_le} and \decl{q_le} turn bounds for all placements into bounds for the suprema, and \texttt{omega} closes each case.
+\end{proof}
+
+\section{Machine verification}\label{sec:lean}
+
+The file \path{lean/Math0/Frontier/OEIS/A278212.lean} of the math0 repository (\url{https://github.com/Foundation-0/math0}) proves \texttt{theorem result : statement} in namespace \decl{Math0.Frontier.A278212}; the auxiliary declarations of this file named above are private. Neither this file nor the statement file uses \texttt{sorry}, \texttt{native\_decide}, custom axioms or \texttt{set\_option}. Every finite check (Proposition~\ref{prop:large}, the class flows for $n=6,7$, the $2+21$ small-board certificates, the data checks) uses \texttt{decide +kernel}, which makes the kernel reduce the \texttt{Decidable} instance to \texttt{isTrue} with its built-in numeral arithmetic; no compiled code is trusted and no axiom is added. The certificates were found with an LP solver in Python; the proof does not depend on that code.
+
+The file ends with the audit command \texttt{\#math0\_settles} of \path{lean/Math0/Audit.lean}. It fails unless \decl{statement} is a universe-monomorphic \texttt{Prop}-valued definition, both \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (so \decl{sorryAx}, \decl{Lean.ofReduceBool} from \texttt{native\_decide}, and custom axioms are rejected), and the type of \decl{result} is syntactically \decl{statement} or its negation. Its output:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A278212.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A278212.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A278212.result' proves 'Math0.Statements.A278212.statement'
+\end{lstlisting}
+The toolchain is Lean~4 \cite{Lean4} \texttt{v4.33.1} with Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}. The repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}; it is not used here, since the statement is a math0 formalization. To reproduce, run \path{scripts/verify.sh} from the repository root; it builds all results with \texttt{lake build}, re-running every audit, and checks that the pinned dependencies are unmodified. Checking this file alone with \texttt{lake env lean} takes several minutes.
+
+{\footnotesize
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171 [cs.AI], 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A275815}
+The OEIS Foundation Inc., entry A275815 (P.~Kagey, 2016), The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A275815}; revision \#43, July~11, 2021.
+
+\bibitem{A278211}
+The OEIS Foundation Inc., entry A278211 (P.~Kagey, 2016), The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A278211}.
+
+\bibitem{A278212}
+The OEIS Foundation Inc., entry A278212 (P.~Kagey, 2016), The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A278212}; revision \#36, November~19, 2023.
+
+\bibitem{A278214}
+The OEIS Foundation Inc., entry A278214 (P.~Kagey, 2016; links C.~Sievers's Python/PuLP program), The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A278214}.
+
+\bibitem{Randell}
+J.~Randell, \emph{Enigma 69: Maximum Queen moves}, Enigmatic Code (blog), March~10, 2013, with comments through 2025, \url{https://enigmaticcode.wordpress.com/2013/03/10/enigma-69-maximum-queen-moves/}.
+
+\end{thebibliography}
+}
+
+\end{document}

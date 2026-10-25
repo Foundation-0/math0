@@ -25,6 +25,10 @@ Referees: - OEIS A127767 (P. Barry, Jan 28 2007). Local mirror and current GitHu
 - Siblings with the same still-open integrality conjecture, all settled by the same argument: A127710, A127711, A127755, A127771.
 - No relevant hits on arXiv, MathOverflow/MSE or SeqFan for A127767.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

@@ -1,0 +1,399 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw,at},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1
+    {↔}{{$\leftrightarrow$}}1 {¬}{{$\neg$}}1 {→}{{$\to$}}1 {≤}{{$\le$}}1 {∧}{{$\wedge$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {·}{{$\cdot$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\len}{\operatorname{len}}
+
+\title[Columns of the ternary digits of $2^n$]{The base-$3$ digit of $2^n$ at a fixed place: least period $2\cdot3^{k-1}$ and equidistribution (Conjecture~1 of OEIS A265210)}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 24, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $T(n,k)$ be the base-$3$ digit of $2^n$ at the place $3^{k-1}$; for fixed $k$, the sequence $n\mapsto T(n,k)$ over the rows $n$ with $3^{k-1}\le 2^n$ is column $k$ of the triangle OEIS A265210.
+We prove that column $k$ has least period $2\cdot3^{k-1}$ for every $k\ge1$, and that for $k\ge2$ each of the digits $0,1,2$ occurs exactly $2\cdot3^{k-2}$ times in every block of $2\cdot3^{k-1}$ consecutive entries; this is Conjecture~1 of the entry (L.~Edson Jeffery, 2015).
+The result follows quickly from the classical fact that $2$ is a primitive root modulo $3^k$, and its periodicity and equidistribution parts are immediate from results of de~Faria and Tresser (2013) and of Aliyev (2023) on the last $k$ ternary digits of $2^n$, so we classify it as the first formal proof of a known result; the least period of a single column, which we did not find stated explicitly, is a short consequence of the same facts.
+Our proof avoids multiplicative orders and unit groups and uses three explicit congruences obtained by lifting the exponent.
+It is verified in Lean~4 against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry, whose definitions are checked by the kernel against the $84$ listed terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Write $2^n$ in base $3$ and list its digits from the least significant one: row $n$ of the irregular triangle A265210 of the OEIS \cite{A265210} is this list (rows $0$--$5$ are $1;\ 2;\ 1,1;\ 2,2;\ 1,2,1;\ 2,1,0,1$). Column $k$ of the triangle consists of the $k$-th entries of the rows that have at least $k$ entries, read from top to bottom; its entry in row $n$ is the digit $T(n,k)=\lfloor 2^n/3^{k-1}\rfloor \bmod 3$ of $2^n$ at the place $3^{k-1}$. Column~$1$ is $1,2,1,2,\dots$, column~$2$ starts in row~$2$ with $1,2,2,1,0,0,1,2,2,1,0,0,\dots$, and column~$3$ starts in row~$4$ with $1,0,1,2,1,2,2,2,2,1,2,1,0,1,0,0,0,0,1,0,\dots$.
+The entry was submitted by L.~Edson Jeffery on December~4, 2015, together with a conjecture that column $k$ is periodic with period $2\cdot3^{k-1}$ and, for $k>1$, equidistributed among the digits $0,1,2$ (Section~\ref{sec:statement}). When we checked it in October 2026, the entry was still at revision \#18 (December~6, 2015); it labels the statement a conjecture and contains no proof note. We prove it in the form of Theorem~\ref{thm:main}, with $2\cdot3^{k-1}$ the \emph{least} period.
+
+\subsection*{Prior work and status}
+The mathematics is classical, and we credit it as follows.
+\begin{itemize}
+\item It is well known that $2$ is a primitive root modulo $3^k$ for every $k\ge1$: the residues $2^n \bmod 3^k$ have least period $\varphi(3^k)=2\cdot3^{k-1}$ and run through all units modulo $3^k$ (de~Faria and Tresser cite \cite[p.~81]{LeV} for this). Lagarias uses this in the proof of his Theorem~1.4 \cite[eq.~(3.3)]{Lag}.
+\item De~Faria and Tresser \cite[\S3.1, Lemma~3 and the paragraph following it]{dFT} state that $2^n \bmod 3^k$ has minimum period $2\cdot3^{k-1}$ and that in any full minimum period each of the $2\cdot3^{k-1}$ ternary strings of length $k$ not ending in $0$ occurs exactly once as the string of the last $k$ digits of $2^n$. Since for $k\ge2$ exactly $2\cdot3^{k-2}$ of these strings have a given digit at the place $3^{k-1}$, the equidistribution and the period $2\cdot3^{k-1}$ of column $k$ follow at once. Their preprint (July 2013) predates the conjecture.
+\item Aliyev \cite[Lemmas~3.1--3.3, the Note after Lemma~3.2, and Observation~I]{Ali} proves that $3^k$ exactly divides $2^{3^{k-1}}+1$, deduces that the order of $2$ modulo $3^{n+1}$ is $2\cdot3^n$, and shows that the last $k$ ternary digits of $2^n$ are periodic and run through all endings that do not end in $0$. His Lemma~3.1 is a weaker form of our Lemma~\ref{lem:key}.
+\item A comment of Jianing Song (2021) in A008776 \cite{A008776} (the sequence $2\cdot3^n$) records that $2\cdot3^n$ is the order modulo $3^{n+1}$ of every integer congruent to $2$ or $5$ modulo $9$.
+\end{itemize}
+The one part we did not find stated explicitly is that a single column (rather than the block of the last $k$ digits) has \emph{least} period exactly $2\cdot3^{k-1}$. For $k\ge2$ it follows in a few lines from the congruences $2^{3^{k-1}}\equiv-1$ and $2^{2\cdot3^{k-2}}\equiv 1+3^{k-1} \pmod{3^k}$ (Corollary~\ref{cor:E}), which is not a new idea. We therefore classify the result as the \emph{first formal proof of a known result}. (One math0 referee classified it as settling the OEIS conjecture; the other, whose literature search produced the references above, judged it known; we follow the second.) All of Theorem~\ref{thm:main} is proved in Lean, without multiplicative orders or unit groups; only Remark~\ref{rem:primroot} is not formalized.
+
+\section{Statement}\label{sec:statement}
+
+\subsection{The OEIS entry}
+The name of A265210 \cite{A265210} is \texttt{Irregular triangle read by rows in which row n lists the base 3 digits of 2\^{}n in reverse order, n >= 0} (offset $0$; $84$ terms listed, rows $0$ to $15$). The COMMENTS section contains, verbatim,
+\begin{quote}
+{\small\raggedright\texttt{Conjecture 1: The sequence in column k is periodic, with period p(k) = 2*3\^{}(k-1) = A008776(k-1), k >= 1, and in which the numbers 0,1,2 appear with equal frequency, for each k>1.}\par}
+\end{quote}
+The comment is unsigned. The entry's author line reads \texttt{\_L. Edson Jeffery\_, Dec 04 2015}, and the revision history of the entry shows that he wrote the comment on that day (revisions \#2--\#5), so we attribute the conjecture to him, as the math0 statement file does.
+
+\subsection{The theorem}
+For $n\ge0$ and $k\ge1$ let $T(n,k)=\lfloor 2^n/3^{k-1}\rfloor \bmod 3$, let $C_k=\{n\ge0: 3^{k-1}\le 2^n\}$ be the set of rows having an entry in column $k$ (an up-set of $\N$), and let $p(k)=2\cdot3^{k-1}$.
+
+\begin{theorem}\label{thm:main}
+Let $k\ge1$.
+\begin{enumerate}
+\item[(i)] $T(n+p(k),k)=T(n,k)$ for every $n\in C_k$; and for every integer $q$ with $0<q<p(k)$ there is $n\in C_k$ with $T(n+q,k)\ne T(n,k)$.
+\item[(ii)] If $k\ge2$, then for every $m\in C_k$ and every $d\in\{0,1,2\}$,
+\[
+  \#\{\,n : m\le n< m+p(k),\ T(n,k)=d\,\}=2\cdot3^{k-2}.
+\]
+\end{enumerate}
+\end{theorem}
+
+Theorem~\ref{thm:main} is equivalent to the formal statement of Section~\ref{sec:statement}. Part~(i) says that $p(k)$ is a period of column $k$ and that no $q$ with $0<q<p(k)$ is one. In part~(ii) the formal statement asserts only that the three counts are equal; since every $T(n,k)$ lies in $\{0,1,2\}$, the three counts add up to $p(k)=3\cdot2\cdot3^{k-2}$, so they are equal if and only if each of them is $2\cdot3^{k-2}$.
+The Lean proof establishes the periodicity in (i) and the counts in (ii) for all $n,m\ge0$, not only for rows of the column (for $n\notin C_k$ the value $T(n,k)$ is $0$).
+
+\subsection{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A265210.lean}, reviewed for fidelity against the OEIS entry, and frozen (SHA-256 \texttt{56201c4b\ldots fca62}) before any proof attempt. Its definitions, the statement, and the main data check read as follows (verbatim, except that the data list of \decl{a_data} is abbreviated by ``\ldots''; the header, import, docstrings, blank lines and the other data checks are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A265210
+def row (n : ℕ) : List ℕ := Nat.digits 3 (2 ^ n)
+def a (m : ℕ) : ℕ := ((List.range (m + 1)).flatMap row).getD m 0
+theorem a_data : (List.range 84).map (fun i => a (i + 0)) =
+    [1, 2, 1, 1, 2, 2, 1, 2, 1, 2, 1, 0, 1, 1, 0, 1, 2, 2, 0, 2, 1, 1, ..., 2, 2, 1, 1] := by
+  decide +kernel
+def T (n k : ℕ) : ℕ := (row n).getD (k - 1) 0
+def IsColPeriod (k q : ℕ) : Prop :=
+  ∀ n : ℕ, k ≤ (row n).length → T (n + q) k = T n k
+def p (k : ℕ) : ℕ := 2 * 3 ^ (k - 1)
+def statement : Prop :=
+  ∀ k : ℕ, 1 ≤ k →
+    (IsColPeriod k (p k) ∧ ∀ q : ℕ, 0 < q → q < p k → ¬ IsColPeriod k q) ∧
+    (2 ≤ k → ∀ m : ℕ, k ≤ (row m).length → ∀ d e : ℕ, d < 3 → e < 3 →
+      ((Finset.Ico m (m + p k)).filter (fun n => T n k = d)).card =
+        ((Finset.Ico m (m + p k)).filter (fun n => T n k = e)).card)
+end Math0.Statements.A265210
+\end{lstlisting}
+
+\emph{Encoding.} \texttt{Nat.digits 3 x} lists the base-$3$ digits of $x$, least significant first, so \texttt{row n} is row $n$ of the triangle. \texttt{a m} is entry $m$ (offset $0$) of the concatenation of rows $0,\dots,m$, which has more than $m$ entries since every row is nonempty, so the default $0$ of \texttt{getD} is never used. \texttt{T n k} is entry $k$ of row $n$ (with default $0$), which is an actual entry of the triangle exactly when \texttt{k ≤ (row n).length}. Row lengths are nondecreasing, so the rows with an entry in column $k$ are $n_0,n_0+1,\dots$ for some $n_0=n_0(k)$, and \texttt{IsColPeriod k q} says exactly that the column, read as the sequence $c(i)=T(n_0+i,k)$, satisfies $c(i+q)=c(i)$ for all $i\ge0$. \texttt{p k} is $2\cdot3^{k-1}$, with no truncated subtraction since $k\ge1$ wherever it is used.
+
+\emph{Reading choices.} (1) ``Periodic, with period $p(k)$'' is read as ``$p(k)$ is the least positive period'': every multiple of a period is a period, so naming one value refers to the least one. (2) ``Appear with equal frequency'' is read as equal counts of $0,1,2$ in every block of $p(k)$ consecutive entries; given periodicity, this is equivalent to equal counts in one period and to asymptotic frequencies $1/3$, so the truth value does not depend on this choice. Periodicity is asserted for $k\ge1$ and equidistribution for $k\ge2$, as in the conjecture (column~$1$ contains no $0$). Both math0 referees judged the statement faithful.
+
+\emph{Data checks.} The definitions are anchored to the entry by lemmas proved with \texttt{decide +kernel}: \decl{a_data} reproduces all $84$ listed terms (rows $0$--$15$), \decl{row_example} the example rows $13$--$15$, and \decl{col1_data}, \decl{col2_data}, \decl{col3_data} the first terms of columns $1,2,3$ and the rows where columns $2,3$ start; \decl{sanity_small_columns} checks the periods $6$ and $18$ on the first $40$ rows of columns $2,3$ and the counts $(2,2,2)$, $(6,6,6)$ in their first periods. The proof does not use these checks.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A265210.lean}; Lean names are given in brackets. Throughout, for $j\ge0$ we write
+\[
+  B=3^{j+1},\qquad M=3^{j+2}=3B,\qquad r=2\cdot3^j,\qquad P=2B=3r=p(j+2),
+\]
+and $d(n)=\lfloor 2^n/B\rfloor \bmod 3$, $s(n)=2^n \bmod 3$. Column $j+2$ is the case $k=j+2\ge2$.
+
+\subsection{Digits and lengths}
+
+\begin{lemma}[\decl{T_eq}, \decl{len_iff}]\label{lem:digit}
+For all $n\ge0$ and $k\ge1$, $T(n,k)$ as defined in Lean equals $\lfloor 2^n/3^{k-1}\rfloor \bmod 3$, and \texttt{k ≤ (row n).length} holds if and only if $3^{k-1}\le 2^n$. In particular $T(n,j+2)=d(n)$.
+\end{lemma}
+
+\begin{proof}
+For $b\ge2$, entry $i$ (counting from $0$, with default $0$) of the digit list of $x$ in base $b$ is $\lfloor x/b^i\rfloor \bmod b$ (\texttt{Nat.getD\_digits}); this includes the case where $i$ is at least the length of the list, since then $x<b^i$ and both sides are $0$. Also, the list has length at most $i$ if and only if $x<b^i$ (\texttt{Nat.digits\_length\_le\_iff}). Take $b=3$, $x=2^n$, $i=k-1$.
+\end{proof}
+
+\subsection{Lifting the exponent}
+
+\begin{lemma}[\decl{key}]\label{lem:key}
+For every $j\ge0$ there is an integer $t\equiv1\pmod3$ with $2^{3^j}=3^{j+1}t-1$.
+\end{lemma}
+
+\begin{proof}
+Induction on $j$. For $j=0$ take $t=1$. If $2^{3^j}=3^{j+1}t-1$, then
+\[
+  2^{3^{j+1}}=(3^{j+1}t-1)^3=3^{j+2}\bigl(3^{2j+1}t^3-3^{j+1}t^2+t\bigr)-1,
+\]
+and $t'=3(3^{2j}t^3-3^jt^2)+t\equiv t\equiv1\pmod 3$.
+\end{proof}
+
+\begin{corollary}[\decl{E1}, \decl{E2}, \decl{E3}]\label{cor:E}
+For every $j\ge0$:
+\[
+ \text{(E1)}\ \ 2^{2B}\equiv1,\qquad \text{(E2)}\ \ 2^{B}\equiv M-1,\qquad \text{(E3)}\ \ 2^{r}\equiv1+B \pmod M.
+\]
+\end{corollary}
+
+\begin{proof}
+By Lemma~\ref{lem:key} at $j+1$, $2^B=Mt-1$ for some integer $t$. Then $2^{2B}-1=M(Mt^2-2t)$ and $(M-1)-2^B=M(1-t)$, which gives (E1) and (E2). By Lemma~\ref{lem:key} at $j$, $2^{3^j}=Bt-1$ with $t=3s+1$, and $2^r=(Bt-1)^2$. Since $1+2t=3(1+2s)$ and $B=3\cdot3^j$,
+\[
+  (1+B)-(Bt-1)^2=B\,(1+2t-Bt^2)=M\,(1+2s-3^jt^2),
+\]
+which gives (E3).
+\end{proof}
+
+\subsection{Consequences for the digits}
+
+\begin{lemma}[\decl{dig_congr}]\label{lem:congr}
+If $a\equiv b\pmod M$ then $\lfloor a/B\rfloor \bmod 3=\lfloor b/B\rfloor \bmod 3$.
+\end{lemma}
+
+\begin{proof}
+$\lfloor a/B\rfloor \bmod 3=\lfloor (a \bmod 3B)/B\rfloor$ (\texttt{Nat.mod\_mul\_right\_div\_self}), and $3B=M$.
+\end{proof}
+
+\begin{lemma}[\decl{per}, \decl{shift}, \decl{two_pow_mod_three}, \decl{mod_three_shift}]\label{lem:shift}
+For every $n\ge0$:
+\begin{enumerate}
+\item[(a)] $d(n+P)=d(n)$;
+\item[(b)] $d(n+r)=\bigl(d(n)+s(n)\bigr)\bmod 3$;
+\item[(c)] $s(n)\in\{1,2\}$ and $s(n+r)=s(n)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) $2^{n+P}=2^n\cdot2^{2B}\equiv2^n\pmod M$ by (E1); apply Lemma~\ref{lem:congr}.
+(b) By (E3), $2^{n+r}\equiv 2^n(1+B)=2^n+2^nB\pmod M$, and $2^nB\equiv s(n)B\pmod{3B}$ because $2^n\equiv s(n)\pmod 3$. Hence $2^{n+r}\equiv 2^n+s(n)B\pmod M$, and by Lemma~\ref{lem:congr}, $d(n+r)=\lfloor (2^n+s(n)B)/B\rfloor \bmod 3=(\lfloor2^n/B\rfloor+s(n))\bmod 3=(d(n)+s(n))\bmod 3$.
+(c) $s(0)=1$ and $s(n+1)=2s(n)\bmod 3$, so $s(n)\in\{1,2\}$ by induction. Since $2^r=4^{3^j}\equiv1\pmod 3$, $s(n+r)=s(n)$.
+\end{proof}
+
+\begin{lemma}[\decl{digit_flip}]\label{lem:flip}
+If $2^n\equiv1\pmod M$, then $d(n)=0$ and $d(n+B)=2$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:congr}, $d(n)=\lfloor1/B\rfloor \bmod 3=0$, since $B\ge3$. By the hypothesis and (E2), $2^{n+B}\equiv M-1=3B-1\pmod M$, so $d(n+B)=\lfloor(3B-1)/B\rfloor \bmod 3=2$.
+\end{proof}
+
+\begin{lemma}[\decl{proper_dvd}]\label{lem:dvd}
+If $g\mid 2\cdot3^{j+1}$ and $g<2\cdot3^{j+1}$, then $g\mid 3^{j+1}$ or $g\mid 2\cdot3^j$.
+\end{lemma}
+
+\begin{proof}
+Write $g=y\cdot3^b$ with $y\mid2$ and $b\le j+1$. If $y=1$ then $g\mid3^{j+1}$. If $y=2$ then $2\cdot3^b<2\cdot3^{j+1}$ forces $b\le j$, so $g\mid2\cdot3^j$.
+\end{proof}
+
+\begin{lemma}[\decl{count_three}]\label{lem:count}
+Let $f:\N\to\N$ and $\rho\ge0$ satisfy $f(x)+f(x+\rho)+f(x+2\rho)=1$ for all $x$. Then $\sum_{x=m}^{m+3\rho-1}f(x)=\rho$ for every $m\ge0$.
+\end{lemma}
+
+\begin{proof}
+Split $[m,m+3\rho)$ into $[m,m+\rho)$, $[m+\rho,m+2\rho)$ and $[m+2\rho,m+3\rho)$ and shift the last two to the first: the sum becomes $\sum_{x=m}^{m+\rho-1}\bigl(f(x)+f(x+\rho)+f(x+2\rho)\bigr)=\rho$.
+\end{proof}
+
+\begin{lemma}[\decl{col_one}]\label{lem:col1}
+Part~(i) of Theorem~\ref{thm:main} holds for $k=1$ (and part~(ii) is vacuous).
+\end{lemma}
+
+\begin{proof}
+Here $p(1)=2$ and $T(n,1)=2^n\bmod 3$ by Lemma~\ref{lem:digit}. Since $2^{n+2}=4\cdot2^n\equiv2^n\pmod3$, $2$ is a period. The only $q$ with $0<q<2$ is $q=1$, and row $0$ lies in $C_1$ with $T(1,1)=2\ne1=T(0,1)$.
+\end{proof}
+
+\subsection{Columns \texorpdfstring{$k\ge2$}{k >= 2}}
+Fix $j\ge0$ and let $k=j+2$, so that $C_k=\{n: B\le 2^n\}$ by Lemma~\ref{lem:digit}. Call $x\ge0$ a \emph{column period} [\decl{Per}] if $d(n+x)=d(n)$ for all $n\in C_k$. By Lemma~\ref{lem:digit}, $q$ is a column period exactly when \texttt{IsColPeriod (j+2) q} holds.
+
+\begin{lemma}[\decl{Per_mul}, \decl{Per_gcd}]\label{lem:per}
+(a) If $x$ is a column period, so is $xt$ for every $t\ge0$.
+(b) If $q$ and $Q$ are column periods and $g=\gcd(q,Q)<Q$, then $g$ is a column period.
+\end{lemma}
+
+\begin{proof}
+(a) Induction on $t$. If $n\in C_k$ then $n+xt\in C_k$, since $C_k$ is an up-set, so $d(n+x(t+1))=d((n+xt)+x)=d(n+xt)=d(n)$.
+(b) Since $g<Q$, there is $c\ge0$ with $qc\bmod Q=g$ (\texttt{Nat.exists\_mul\_mod\_eq\_gcd}), so $qc=Qu+g$ with $u=\lfloor qc/Q\rfloor$. For $n\in C_k$ we have $n+g\in C_k$, and by (a) applied to $Q$ at $n+g$ and to $q$ at $n$,
+$d(n+g)=d(n+g+Qu)=d(n+qc)=d(n)$.
+\end{proof}
+
+\begin{proposition}[\decl{col_ge_two}]\label{prop:ge2}
+For $k=j+2$:
+(a) $T(n+p(k),k)=T(n,k)$ for all $n\ge0$;
+(b) no $q$ with $0<q<p(k)$ is a column period;
+(c) for all $m\ge0$ and $e\in\{0,1,2\}$, $\#\{n\in[m,m+p(k)): T(n,k)=e\}=2\cdot3^j$.
+\end{proposition}
+
+\begin{proof}
+Recall $T(n,k)=d(n)$ and $p(k)=P$.
+(a) is Lemma~\ref{lem:shift}(a).
+
+(b) Suppose $0<q<P$ is a column period. By (a), $P$ is a column period, and $g=\gcd(q,P)\le q<P$, so $g$ is a column period by Lemma~\ref{lem:per}(b). As $g\mid P=2\cdot3^{j+1}$ and $g<P$, Lemma~\ref{lem:dvd} gives $g\mid B$ or $g\mid r$, and by Lemma~\ref{lem:per}(a) $B$ or $r$ is a column period.
+
+\emph{$B$ is not a column period.} Let $n=PB$. Then $n\in C_k$, since $B<2^B\le2^{PB}$, and $2^{n}=(2^{P})^{B}\equiv1\pmod M$ by (E1). Lemma~\ref{lem:flip} gives $d(n)=0\ne2=d(n+B)$.
+
+\emph{$r$ is not a column period.} Let $n=B$, which lies in $C_k$ since $B<2^B$. By Lemma~\ref{lem:shift}(b),(c), $d(B+r)=(d(B)+s(B))\bmod3$ with $s(B)\in\{1,2\}$, so $d(B+r)\ne d(B)$. This proves (b).
+
+(c) Fix $e<3$ and let $f(x)=1$ if $d(x)=e$ and $f(x)=0$ otherwise. For $x\ge0$ put $a=d(x)$ and $s=s(x)\in\{1,2\}$. By Lemma~\ref{lem:shift}(b) at $x$ and at $x+r$, and (c),
+\[
+  d(x+r)=(a+s)\bmod3,\qquad d(x+2r)=\bigl((a+s)\bmod3+s\bigr)\bmod3=(a+2s)\bmod 3 .
+\]
+Since $s\not\equiv0\pmod3$, the residues $a,a+s,a+2s$ are distinct modulo $3$, so exactly one of $d(x),d(x+r),d(x+2r)$ equals $e$, i.e.\ $f(x)+f(x+r)+f(x+2r)=1$. Since $P=3r$, Lemma~\ref{lem:count} with $\rho=r$ gives the count $r=2\cdot3^j$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+[\decl{result}] For $k=1$ use Lemma~\ref{lem:col1}. For $k=j+2\ge2$, Proposition~\ref{prop:ge2}(a),(b) is part~(i), and (c) is part~(ii), since $2\cdot3^j=2\cdot3^{k-2}$; in particular the three counts are equal, as the formal statement asserts.
+\end{proof}
+
+\begin{remark}[not formalized]\label{rem:primroot}
+Theorem~\ref{thm:main} implies that $2$ is a primitive root modulo $3^k$. Indeed, the order $o$ of $2$ modulo $3^k$ is a period of column $k$, since $T(n,k)$ depends only on $2^n\bmod3^k$. If $g=\gcd(o,p(k))$ were less than $p(k)$, then $g$ would be a period of column $k$ by the argument of Lemma~\ref{lem:per}(b) (which works for every $k\ge1$), contradicting Theorem~\ref{thm:main}(i) since $0<g<p(k)$. Hence $p(k)\mid o$, while $o\mid\varphi(3^k)=p(k)$ by Euler's theorem. The classical route goes the other way: since $2$ is a primitive root, $2^n\bmod3^k$ runs once through all units modulo $3^k$ in each period \cite{dFT,Lag}, and one counts the units by their digit at the place $3^{k-1}$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in \path{lean/Math0/Frontier/OEIS/A265210.lean} in the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A265210.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A265210.result}, of type \decl{Math0.Statements.A265210.statement}; the auxiliary declarations, all private, are the ones named in brackets in Section~\ref{sec:proof} (plus \decl{T_eq'}, the case $k=j+2$ of \decl{T_eq}, and the definition \decl{dig} of $d$). The final theorem and the audit command read as follows (verbatim, except that the docstring and a blank line are omitted):
+\begin{lstlisting}
+theorem result : statement := by
+  intro k hk
+  rcases Nat.lt_or_ge k 2 with hk2 | hk2
+  · obtain rfl : k = 1 := by omega
+    exact ⟨col_one, fun h => absurd h (by norm_num)⟩
+  · obtain ⟨j, rfl⟩ : ∃ j, k = j + 2 := ⟨k - 2, by omega⟩
+    obtain ⟨h1, h2⟩ := col_ge_two j
+    refine ⟨h1, fun _ m _ d e hd he => ?_⟩
+    rw [h2 m d hd, h2 m e he]
+end Math0.Frontier.A265210
+#math0_settles Math0.Frontier.A265210.result Math0.Statements.A265210.statement
+\end{lstlisting}
+Neither file uses \texttt{sorry}, \texttt{native\_decide}, custom axioms or \texttt{set\_option}.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles} (in \path{lean/Math0/Audit.lean}, for statements that math0 formalizes itself) fails unless (1) \decl{statement} is a universe-monomorphic \texttt{Prop}-valued definition; (2) \decl{statement} and \decl{result} depend on no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, which rejects \decl{sorryAx}, \decl{Lean.ofReduceBool} (from \texttt{native\_decide}) and custom axioms; and (3) the type of \decl{result} is syntactically \decl{statement} or $\neg$\,\decl{statement}, up to metadata, with no unfolding. It reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A265210.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A265210.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A265210.result' proves 'Math0.Statements.A265210.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use (the statement is math0's own formalization of the OEIS conjecture).
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib cache, runs \texttt{lake build} on all math0 results (re-running every audit), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The single file is checked by \texttt{lake env lean Math0/Frontier/OEIS/A265210.lean} in \path{lean} (about $17$\,s on our machine).
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{Ali}
+Y.~N. Aliyev, \emph{Digits of powers of 2 in ternary numeral system}, Notes Number Theory Discrete Math.\ \textbf{29} (2023), no.~3, 474--485, \url{https://doi.org/10.7546/nntdm.2023.29.3.474-485}.
+
+\bibitem{dFT}
+E.~de~Faria and C.~Tresser, \emph{On Sloane's persistence problem}, Exp.\ Math.\ \textbf{23} (2014), no.~4, 363--382, \url{https://doi.org/10.1080/10586458.2014.910849}; arXiv:1307.1188 (July 2013), whose numbering we use.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Lag}
+J.~C. Lagarias, \emph{Ternary expansions of powers of 2}, J. Lond.\ Math.\ Soc.\ (2) \textbf{79} (2009), no.~3, 562--588, \url{https://doi.org/10.1112/jlms/jdn080}; arXiv:math/0512006 (v4, July 2008), whose numbering we use.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{LeV}
+W.~LeVeque, \emph{Fundamentals of Number Theory}, Addison-Wesley, Reading, Massachusetts, 1977.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{A008776}
+The OEIS Foundation Inc., \emph{Pisot sequences $E(2,6)$, $L(2,6)$, $P(2,6)$, $T(2,6)$} (the numbers $2\cdot3^n$), entry A008776 (N.~J.~A. Sloane and D.~W. Wilson) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A008776}.
+
+\bibitem{A265210}
+The OEIS Foundation Inc., \emph{Irregular triangle read by rows in which row $n$ lists the base $3$ digits of $2^n$ in reverse order, $n\ge0$}, entry A265210 (L.~E. Jeffery, 2015) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A265210}; revision \#18, December~6, 2015.
+
+\end{thebibliography}
+}
+
+\end{document}
