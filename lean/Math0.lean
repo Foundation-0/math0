@@ -44,6 +44,7 @@ import Math0.ErdosProblems.Erdos816_erdos_816_variants_complete_bipartite
 import Math0.ErdosProblems.Erdos834_erdos_834_parts_ii
 import Math0.ErdosProblems.Erdos835_johnsonGraph_18_9_chromaticNumber
 import Math0.Frontier.OEIS.A005590
+import Math0.Frontier.OEIS.A022445
 import Math0.Frontier.OEIS.A057566
 import Math0.Frontier.OEIS.A060693
 import Math0.Frontier.OEIS.A062887
@@ -67,9 +68,11 @@ import Math0.Frontier.OEIS.A120069
 import Math0.Frontier.OEIS.A121750
 import Math0.Frontier.OEIS.A124526
 import Math0.Frontier.OEIS.A127752
+import Math0.Frontier.OEIS.A127755
 import Math0.Frontier.OEIS.A127767
 import Math0.Frontier.OEIS.A129455
 import Math0.Frontier.OEIS.A141412
+import Math0.Frontier.OEIS.A144637
 import Math0.Frontier.OEIS.A160848
 import Math0.Frontier.OEIS.A172164
 import Math0.Frontier.OEIS.A175385
@@ -101,6 +104,7 @@ import Math0.Frontier.OEIS.A326602
 import Math0.Frontier.OEIS.A328202
 import Math0.Frontier.OEIS.A332010
 import Math0.Frontier.OEIS.A333650
+import Math0.Frontier.OEIS.A334592
 import Math0.Frontier.OEIS.A334595
 import Math0.Frontier.OEIS.A334603
 import Math0.Frontier.OEIS.A335012
@@ -109,6 +113,7 @@ import Math0.Frontier.OEIS.A341761
 import Math0.Frontier.OEIS.A342992
 import Math0.Frontier.OEIS.A344710
 import Math0.Frontier.OEIS.A348484
+import Math0.Frontier.OEIS.A350557
 import Math0.Frontier.OEIS.A350900
 import Math0.Frontier.OEIS.A351743
 import Math0.Frontier.OEIS.A354571
@@ -122,6 +127,7 @@ import Math0.Frontier.OEIS.A363609
 import Math0.Frontier.OEIS.A367119
 import Math0.Frontier.OEIS.A369366
 import Math0.Frontier.OEIS.A373345
+import Math0.Frontier.OEIS.A373359
 import Math0.Frontier.OEIS.A375522
 import Math0.Frontier.OEIS.A386538
 import Math0.Frontier.OEIS.A386655

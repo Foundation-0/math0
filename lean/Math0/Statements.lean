@@ -2,6 +2,7 @@
 Copyright 2026 The math0 Authors. Licensed under the Apache License, Version 2.0.
 -/
 import Math0.Statements.OEIS.A005590
+import Math0.Statements.OEIS.A022445
 import Math0.Statements.OEIS.A057566
 import Math0.Statements.OEIS.A060693
 import Math0.Statements.OEIS.A062887
@@ -25,9 +26,11 @@ import Math0.Statements.OEIS.A120069
 import Math0.Statements.OEIS.A121750
 import Math0.Statements.OEIS.A124526
 import Math0.Statements.OEIS.A127752
+import Math0.Statements.OEIS.A127755
 import Math0.Statements.OEIS.A127767
 import Math0.Statements.OEIS.A129455
 import Math0.Statements.OEIS.A141412
+import Math0.Statements.OEIS.A144637
 import Math0.Statements.OEIS.A160848
 import Math0.Statements.OEIS.A172164
 import Math0.Statements.OEIS.A175385
@@ -62,6 +65,7 @@ import Math0.Statements.OEIS.A326602
 import Math0.Statements.OEIS.A328202
 import Math0.Statements.OEIS.A332010
 import Math0.Statements.OEIS.A333650
+import Math0.Statements.OEIS.A334592
 import Math0.Statements.OEIS.A334595
 import Math0.Statements.OEIS.A334603
 import Math0.Statements.OEIS.A335012
@@ -70,6 +74,7 @@ import Math0.Statements.OEIS.A341761
 import Math0.Statements.OEIS.A342992
 import Math0.Statements.OEIS.A344710
 import Math0.Statements.OEIS.A348484
+import Math0.Statements.OEIS.A350557
 import Math0.Statements.OEIS.A350900
 import Math0.Statements.OEIS.A351743
 import Math0.Statements.OEIS.A354571
@@ -84,6 +89,7 @@ import Math0.Statements.OEIS.A367119
 import Math0.Statements.OEIS.A368846
 import Math0.Statements.OEIS.A369366
 import Math0.Statements.OEIS.A373345
+import Math0.Statements.OEIS.A373359
 import Math0.Statements.OEIS.A375522
 import Math0.Statements.OEIS.A386538
 import Math0.Statements.OEIS.A386655

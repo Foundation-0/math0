@@ -927,6 +927,29 @@
    "date": "2026-10-18"
   },
   {
+   "id": "OEIS-frontier/A022445",
+   "slug": "oeis-a022445",
+   "title": "The generating function of A022445 (closed self-avoiding walks in the strip {0,1,2} x Z)",
+   "area": "Discrete geometry",
+   "source": "OEIS A022445",
+   "source_url": "https://oeis.org/A022445",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A022445.lean",
+    "decl": "Math0.Statements.A022445.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A022445.lean",
+   "our_decl": "Math0.Frontier.A022445.result",
+   "summary": "Let a(n) be the number of closed walks of length 2n in the square lattice that start and end at the origin (a vertex of the boundary column 0), stay in the strip {0,1,2} x Z, and visit no vertex twice except that the endpoint equals the start (a(0) = 1; length-2 walks that retrace their edge are excluded, so a(1) = 0). Then\nsum_{n>=0} a(n) x^n = (1 - 4x + 10x^2 - 14x^3 + 27x^4 - 18x^5 + 10x^6 - 6x^7) / ((1 + x^2)^2 (1 - 2x)^2).\nIn Lean this is stated in Z[[X]] with the denominator cleared.",
+   "notes": "Conjecture as stated in OEIS: %F A022445 G.f.: (-6*x^7+10*x^6-18*x^5+27*x^4-14*x^3+10*x^2-4*x+1) / ((1+x^2)^2*(1-2*x)^2) (conjectured). - _Ralf Stephan_, Apr 28 2004\n\nReferees: OEIS A022445 (local mirror and current github.com/oeis/oeisdata, %I #10 May 16 2019): GF marked \"(conjectured). - Ralf Stephan, Apr 28 2004\". Sister entry A022444: GF also still conjectured. Related entries A038578 and A038579 have rooted area GFs credited to Labelle by E. Deutsch (Apr 29 2004). Other related entries: A007825, A038577, A302408. J. Labelle, \"Self-avoiding walks and polyominoes in strips\", Bull. ICA 23 (1998) 88-98; full text not accessible, so I cannot rule out that it has the perimeter GF, but the OEIS has kept it \"conjectured\" since 2004. M. von Thaden, \"Self-avoiding polygons on a three-row square-lattice strip\", arXiv:2607.27397 (Jul 2026): unrooted polygon counts on Z×{0,1,2}, does not mention A022445. M. Bousquet-Mélou & R. Brak, \"Exactly solved models\", and A. J. Guttmann & I. Jensen, \"Polygons in strips\", both in Polygons, Polyominoes and Polycubes, LNP 775 (2009): unrooted polygon GFs only. Not relevant to this GF: Batchelor–Yung 1994 (transfer-matrix SAWs across strips); Dyhr–Gilbert–Kennedy arXiv:1008.4321; Zeilberger arXiv:math/9506214 and Benjamin, Fib. Quart. 44 (2006) (two-row strip). jOEIS programs for A022444/A022445 use brute-force enumeration. I found no prior proof of the A022445 GF in any of these sources.",
+   "date": "2026-10-26"
+  },
+  {
    "id": "OEIS-frontier/A057566",
    "slug": "oeis-a057566",
    "title": "Layman's floor formula for collinear triples in a 3 × n grid (A057566), as printed until its October 2026 correction, fails at n = 24",
@@ -1456,6 +1479,29 @@
    "date": "2026-10-25"
   },
   {
+   "id": "OEIS-frontier/A127755",
+   "slug": "oeis-a127755",
+   "title": "The inverse of the triangle 1/n! [k ≤ n ≤ 2k] is an integer triangle",
+   "area": "Discrete geometry",
+   "source": "OEIS A127755",
+   "source_url": "https://oeis.org/A127755",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A127755.lean",
+    "decl": "Math0.Statements.A127755.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A127755.lean",
+   "our_decl": "Math0.Frontier.A127755.result",
+   "summary": "Let A(n,k) = 1/n! if k ≤ n ≤ 2k and A(n,k) = 0 otherwise (n, k ≥ 0), viewed as an infinite lower-triangular matrix over Q. Let T be its inverse, computed by forward substitution: T(n,k) = n!·([n = k] − Σ_{j<n} A(n,j) T(j,k)) for k ≤ n, and T(n,k) = 0 for k > n. Then T(n,k) is an integer for all 0 ≤ k ≤ n. This was conjectured by Paul Barry in OEIS A127755.",
+   "notes": "Conjecture as stated in OEIS: %C A127755 It is conjectured that this is an integer triangle. Row sums are A127756. (_Paul Barry_, Jan 28 2007)\n\nReferees: I found no prior proof or counterexample for A127755. Sources checked:\n- Local mirror and current GitHub oeisdata entry for A127755 (revision #5, Sep 29 2018), still marked conjectured.\n- Related OEIS entries: A127756; A101688 (the 0/1 triangle [k<=n<=2k]); A111967 (its inverse, by Barry, 2005), with A127755(n,k) = k!·A111967(n,k).\n- A127749: R. J. Mathar (Apr 21 2021) gives T(n,k) = (2k+1)·A111967(n,k), the same diagonal-scaling argument applied to the 1/(2n+1) sibling.\n- A127793: FUNG Cheok Yin (Sep 2022) gives a formula implying integrality for the 1/floor((n+2)/2) sibling. Sela Fried, \"On the inverse of a certain triangular matrix and its connection to the largest odd divisor\", Notes Num. Theor. Disc. Math. 32(2) (2026) 255-262, doi:10.7546/nntdm.2026.32.2.255-262, proves it; the paper does not mention A127755.\n- Sibling integrality conjectures that are also still open in OEIS: A127710, A127711, A127771.\n- Web searches (OEIS/SeqFan/arXiv/MathOverflow/MSE-style queries) found nothing more.",
+   "date": "2026-10-26"
+  },
+  {
    "id": "OEIS-frontier/A127767",
    "slug": "oeis-a127767",
    "title": "The inverse of the 1/Catalan band triangle (A127767) has integer entries",
@@ -1523,6 +1569,29 @@
    "summary": "Let P(0,x)=1 and P(n+1,x) = (-1)^(n+1)/(n+2) + x * sum_{i=0}^{n} (-1)^i/(i+1) * P(n-i,x) over Q, and let c(n,k) = [x^k] P(n,x) (computed by the matching recursion c in the statement file). Let T(n,k) be the reduced denominator of c(n,k), and let d(n,k) be the reduced denominator of |s(n,k)| * k!/n!, where |s(n,k)| is the unsigned Stirling number of the first kind (Nat.stirlingFirst). Then T(n,k) = d(n+1,k+1) for every 0 <= k <= n. The proof gives this for all n and k.",
    "notes": "Conjecture as stated in OEIS: \"Conjecture: T(n, k) = d(n+1, k+1), with d(n,k) = denominator(A000254(n, k)*k!/n!) where A000254 are the unsigned Stirling numbers of the 1st kind. See d(n,k) in Farhi link. - _Michel Marcus_, Oct 18 2018\"\n\nReferees: P. Flajolet, X. Gourdon and B. Salvy, \"Sur une famille de polynômes issus de l'analyse numérique\", Gazette des Mathématiciens 55 (1993) 67-78, also INRIA Research Report RR-1857 (Feb 1993), https://inria.hal.science/inria-00074815/document. Eq. (3) is the generating function log(1+z)/(z(1-x·log(1+z))), and eq. (6) is P_n(x) = (-1)^n/(n+1)! Σ_k s_{n+1,k+1}(k+1)!(-x)^k, which gives the conjecture at once. This paper is cited in A141412's own %D line. The OEIS records the same identity in A140749 %F (Paul Curtz, Jul 17 2008, numerators = those of A048594(n+1,k+1)/(n+1)!) and A141412 %F (G. C. Greubel, Oct 24 2023, \"Equals denominators of A048594(n+1,k+1)/(n+1)!\"), with A048594's column e.g.f. log(1+x)^k. Farhi's d(n,k) comes from B. Farhi, arXiv:1810.07560 (Funct. Approx. Comment. Math. 61 (2019)). I found no earlier formal proof.",
    "date": "2026-10-20"
+  },
+  {
+   "id": "OEIS-frontier/A144637",
+   "slug": "oeis-a144637",
+   "title": "A144637: (1/18) 6^n a(n)/n! is odd iff n = 2^k with k >= 1",
+   "area": "Discrete geometry",
+   "source": "OEIS A144637",
+   "source_url": "https://oeis.org/A144637",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A144637.lean",
+    "decl": "Math0.Statements.A144637.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A144637.lean",
+   "our_decl": "Math0.Frontier.A144637.result",
+   "summary": "Let S(n,k) be A144385: the number of partitions of {1,...,k} into exactly n blocks, each of size 1, 2 or 3. Let T = A144633 be the transpose of the inverse of the upper unitriangular matrix M(i,j) = S(i,j). Let a(n) = T(n,2), and y(n) = (1/18) 6^n a(n) / n!. Then for every n >= 0, y(n) is an odd integer if and only if n = 2^k for some k >= 1.",
+   "notes": "Conjecture as stated in OEIS: Conjecture: (1/18)*6^(n)*a(n)/n! is odd iff n = 2^k for k >= 1. (End) - _Peter Bala_, Feb 19 2026\n\nReferees: OEIS A144637 (Bala conjecture, Feb 19 2026; entry revision #25, Mar 14 2026; no proof recorded). The companion conjecture in OEIS A144636 (Bala, Feb 16 2026) is also unresolved. OEIS A144633 and A144385 give the definitions. Checked with nothing found on either conjecture: S. Fried, \"Proofs of Ten Conjectures From the OEIS\", J. Integer Sequences 29 (2026), Art. 26.1.8; S. Fried, \"Further proofs of conjectures from the OEIS\", arXiv:2607.24832 (full text grepped); Epoch AI, \"OEIS Open\", arXiv:2608.11941 and github.com/epoch-research/LeanOpenProblems (no A14463x file); Engbers–Galvin–Smyth, \"Restricted Stirling and Lah number matrices and their inverses\", JCTA 2019 (integrality of inverses, not parity). No prior proof or counterexample found.",
+   "date": "2026-10-26"
   },
   {
    "id": "OEIS-frontier/A160848",
@@ -2238,6 +2307,29 @@
    "date": "2026-10-19"
   },
   {
+   "id": "OEIS-frontier/A334592",
+   "slug": "oeis-a334592",
+   "title": "Records of the XOR-triangle zero count A334592 are exactly the powers of two",
+   "area": "Discrete geometry",
+   "source": "OEIS A334592",
+   "source_url": "https://oeis.org/A334592",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A334592.lean",
+    "decl": "Math0.Statements.A334592.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A334592.lean",
+   "our_decl": "Math0.Frontier.A334592.result",
+   "summary": "Let a(n) be the number of zeros in the XOR-triangle whose top row is the binary expansion of n, with the most significant bit first. Each later row is the XOR of adjacent pairs in the row above, down to a row of length 1. Then n is a record position (n >= 1 and a(m) < a(n) for all 1 <= m < n) if and only if n = 2^k for some k >= 0.",
+   "notes": "Conjecture as stated in OEIS: %C A334592 Conjecture: Records occur at powers of two. (entry by _Peter Kagey_, May 07 2020)\n\nReferees: The key fact is published. H. Harborth, \"Solution of Steinhaus's problem with plus and minus signs\", J. Combin. Theory Ser. A 12 (1972) 253-259, is credited with observing that the minimum weight of a nonzero binary Steinhaus triangle of size n is n. J. M. Brunat and M. Maureso prove it in \"Small and large weights in Steinhaus triangles\" (arXiv:1707.06698, 2017), Theorem 4.4: for n >= 4, w1 = n and W1 = {1^n, 10^(n-1), 0^(n-1)1}. Their extended abstract is \"Extreme weights in Steinhaus triangles\", Electron. Notes Discrete Math. 54 (2016) 349-354. The A334592 record conjecture is an immediate corollary: a(n) <= T(L) - L = T(L-1) = a(2^(L-1)). The OEIS entries A334592 and A334593 (local mirror, still at #19 / #22 from May 2020) have no %E note marking the conjecture resolved. The MathOverflow thread q/359138 linked from the entry could not be fetched. Other sources seen: arXiv:1702.03236 (Chappelon, periodic balanced binary triangles) and arXiv:2508.05159 (balanced Steinhaus triangles, which mentions Chang 1983 on the smallest weights).",
+   "date": "2026-10-26"
+  },
+  {
    "id": "OEIS-frontier/A334595",
    "slug": "oeis-a334595",
    "title": "A334595: a(n) = 1 iff n is a power of two, and the records occur exactly at 1 and 2^k + 1",
@@ -2420,6 +2512,29 @@
    "summary": "For every n >= 1, let a(n) be the largest number of squares you can choose on an n x n board so that no two chosen squares are exactly two steps apart in the same row or in the same column. Then a(n) = n^2/2 if n ≡ 0 (mod 4), a(n) = (n^2+1)/2 if n is odd, and a(n) = n^2/2 + 2 if n ≡ 2 (mod 4). (This is Yang Hong's conjecture in OEIS A348484.)",
    "notes": "Conjecture as stated in OEIS: %F A348484 Conjectures: a(n) = n^2/2 for n == 0 (mod 4). a(n) = (n^2 + 1)/2 for n == 1 or 3 (mod 4). a(n) = n^2/2 + 2 for n == 2 (mod 4).  (Entry by _Yang Hong_, Oct 20 2021; last edit #33, Dec 06 2022.)\n\nReferees: OEIS A348484 (Yang Hong, Oct 20 2021; latest revision #33, Dec 06 2022) still marks the formulas as \"Conjectures\". R. J. Mathar's Dec 2022 comment gives a 2×2-block checkerboard construction. Its g.f. -x(1+2x-2x^2+2x^3+x^4)/((1+x)(1+x^2)(x-1)^3) matches the conjectured values, but he states it only as a lower bound. Cross-reference: A048716 (the 1-D row condition, k AND 4k = 0). I found no published or online proof of the upper bound on arXiv, Math StackExchange, MathOverflow, SeqFan or general web search. The result does follow directly from the standard fact that a grid graph P_a□P_b has independence number ⌈ab/2⌉, because the \"two apart\" graph is a disjoint union of four such grids.",
    "date": "2026-10-18"
+  },
+  {
+   "id": "OEIS-frontier/A350557",
+   "slug": "oeis-a350557",
+   "title": "Signed A350557 is the matrix inverse of A350512, proved",
+   "area": "Discrete geometry",
+   "source": "OEIS A350557",
+   "source_url": "https://oeis.org/A350557",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A350557.lean",
+    "decl": "Math0.Statements.A350557.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A350557.lean",
+   "our_decl": "Math0.Frontier.A350557.result",
+   "summary": "Let T be the A350557 triangle: T(n,0) = (2n)!/(2^n n!) = (2n-1)!!, and for 1 ≤ k ≤ n, T(n,k) = (2n-1)!! · Σ_{i=k}^{n} C(i-1,k-1)/(2i-1)!!. Set T(n,k) = 0 for k > n. Let L be the A350512 triangle: L(n,0) = 1, and for 1 ≤ k ≤ n, L(n,k) = C(n-1,k-1)(2k(n-k)+n)/k. Set L(n,k) = 0 for k > n. Define M(n,k) = (-1)^(n-k) T(n,k). Then M and L are inverse lower-triangular matrices: for all n, j ≥ 0, Σ_{k=0}^{n} L(n,k) M(k,j) = [n=j] and Σ_{k=0}^{n} M(n,k) L(k,j) = [n=j]. This is Werner Schulte's 2022 conjecture.",
+   "notes": "Conjecture as stated in OEIS: %F A350557 Conjecture: M(n,k) = (-1)^(n-k) * T(n,k) is matrix inverse of A350512. (Werner Schulte, entry author, Jan 2022)\n\nReferees: No prior resolution found. Sources checked:\n(1) OEIS A350557 and A350512, in both the local mirror and the current raw.githubusercontent oeisdata. The conjecture is still marked open, there are no %E lines, and neither entry has been edited since Jan 18 2022. Across the full mirror, no other entry cross-references A350557 or A350512. I also read A286286, A249349 and A103450.\n(2) google-deepmind/formal-conjectures (local checkout from Oct 2026): neither sequence is formalized.\n(3) google-deepmind/alphaproof-nexus-results (Tsoukalas et al., arXiv:2605.22763): A350557 is not among the APNOutputs/OEIS files, and the paper does not mention it.\n(4) Adamczewski, \"OEIS Open\" (arXiv:2608.11941): its appendix of resolved conjectures does not include A350557.\n(5) \"Further proofs of conjectures from the OEIS\" (arXiv:2607.24832) and S. Fried, \"Proofs of some conjectures from the OEIS\" (arXiv:2410.07237): A350557 is not mentioned in either.\n(6) Web searches for the A-numbers, the defining formulas, the column g.f. (1+2kx)x^k/(1-x)^(k+1), and Schulte together with the inverse: the only hit is the OEIS page, which still states the claim as a conjecture.\nThe result is mathematically elementary (a recurrence plus binomial inversion), but there is no published or recorded proof, so I classify it as a new result.",
+   "date": "2026-10-26"
   },
   {
    "id": "OEIS-frontier/A350900",
@@ -2719,6 +2834,29 @@
    "summary": "Let A371176 be the increasing sequence of positive integers k whose binary weight (number of ones) is at most the ruler function v2(2k), i.e. at most one more than the index of the lowest set bit. Equivalently, these are the encodings sum 2^(s-1) of the finite Schreier sets S, meaning nonempty sets of positive integers with |S| <= min S. Row n of A373345 is the Schreier set encoded by A371176(n). Claim: for every n >= 1, row n has exactly as many elements as the Zeckendorf representation of n has terms. In the formal statement, (T n).length = (Nat.zeckendorf n).length.",
    "notes": "Conjecture as stated in OEIS: %Y A373345 Cf. A007895 (conjectured row lengths) ... (Paolo Xausa, Jun 01 2024). Likewise %Y A373557 Cf. ... A007895 (conjectured row lengths) (Paolo Xausa, Jun 09 2024).\n\nReferees: OEIS A371176 (Mikhail Kurkov, 2024): the formula a(n) = b(n)*A001316(b(n))/2 with b(n) = A048679(n), and the recursion a(n) = 2^(A072649(n)-1) + [c(n)>0]*2*a(c(n)), were present by Apr 20 2024 (oeisdata commit 6ea59dd), before the A373345 conjecture of Jun 1 2024. Both were stated without proof and imply popcount(A371176(n)) = A007895(n). Kurkov's comment of Oct 21 2024 states the explicit Zeckendorf-rewriting description of A371176(n).\nH. V. Chu, \"The Fibonacci Sequence and Schreier-Zeckendorf Sets\", J. Integer Sequences 22 (2019), Art. 19.6.5 (arXiv:1906.10962), Theorem 3: a cardinality-preserving bijection between Schreier sets and Zeckendorf sets, which also preserves colex/binary order.\nGitHub issue the-omega-institute/trureturing #9050 (\"Research: full Schreier-Zeckendorf row-length identity (OEIS A373345)\", by AlyciaBHZ, Sep 20 2026; confirmed when the manuscript was checked) presents the identity as an elementary consequence of Chu's bijection, as paper mathematics with no Lean formalization.\nBackground only: A. Bird, \"Jozef Schreier, Schreier sets and the Fibonacci sequence\", Out Of The Norm blog, 2012, gives the binary ordering and the R/S block recursion but does not mention Zeckendorf. H. V. Chu, arXiv:2606.21865 (2026), is a survey and does not state the identity.\nNo prior Lean formalization found.",
    "date": "2026-10-25"
+  },
+  {
+   "id": "OEIS-frontier/A373359",
+   "slug": "oeis-a373359",
+   "title": "A373359: Schreier-set row lengths equal the Zeckendorf weight A007895",
+   "area": "Discrete geometry",
+   "source": "OEIS A373359",
+   "source_url": "https://oeis.org/A373359",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A373359.lean",
+    "decl": "Math0.Statements.A373359.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A373359.lean",
+   "our_decl": "Math0.Frontier.A373359.result",
+   "summary": "Let A371176 be the increasing sequence of positive integers k with popcount(k) <= v_2(2k), i.e. popcount(k) <= (index of the lowest 1-bit of k) + 1. These are the binary codes of the Schreier sets X (|X| <= min X). Row n of A373359 is the set of 1-based positions of the 1-bits of A371176(n). For every n >= 1, row n has as many elements as there are terms in the Zeckendorf representation of n. Equivalently, popcount(A371176(n)) = A007895(n).",
+   "notes": "Conjecture as stated in OEIS: %Y A373359 Cf. A007895 (conjectured row lengths), A373346 (row sums), A373347. (_Paolo Xausa_, Jun 04 2024; the same 'conjectured row lengths' cross-reference appears in A373345 and A373579)\n\nReferees: - OEIS A373359 and A373345 (Paolo Xausa, Jun 2024): \"A007895 (conjectured row lengths)\". Local mirror and upstream are unchanged.\n- OEIS A371176 (Mikhail Kurkov, Mar 14 2024):\n  - formula a(n) = 2^(A072649(n)-1) + [c(n)>0]*2*a(c(n)) with c = A066628;\n  - formula a(n) = b(n)*A001316(b(n))/2 with b = A048679;\n  - Kurkov comment of Oct 21 2024: A371176(n) is the Zeckendorf representation of n with the 01->1 rewrite and k-1 zeros appended. Each implies popcount(A371176(n)) = A007895(n).\n- A007895 formula a(n) = A000120(A003714(n)) (Zumkeller 2005).\n- GitHub issue the-omega-institute/trureturing #9050 (Sep 20 2026): https://github.com/the-omega-institute/trureturing/issues/9050. An informal proof of the A373345/A373359 row-length identity, via Chu's bijection plus order preservation and via Bird's recursive blocks.\n- H. V. Chu, \"The Fibonacci Sequence and Schreier-Zeckendorf Sets\", J. Integer Seq. 22 (2019), Art. 19.6.5 (arXiv:1906.10962): the bijection between Schreier sets and Zeckendorf sets.\n- A. Bird, \"Jozef Schreier, Schreier sets and the Fibonacci sequence\", Out Of The Norm blog, May 13 2012: binary ordering of Schreier sets and |M_n| = F_n.\n- H. V. Chu, arXiv:2606.21865 (2026), a survey that does not state the binary-rank theorem.\n- I found no prior Lean or other formal proof.",
+   "date": "2026-10-26"
   },
   {
    "id": "OEIS-frontier/A375522",

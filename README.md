@@ -28,7 +28,7 @@ Two kinds of statement are used (see [Two tracks](#two-tracks)):
 ## Highlights
 
 <!-- HIGHLIGHTS:START -->
-**131 verified results.** 57 new results, 50 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
+**137 verified results.** 61 new results, 52 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
 
 New results (OEIS conjectures settled; each checked by the Lean kernel, and no earlier proof or counterexample was found by an independent novelty referee):
 
@@ -37,6 +37,7 @@ New results (OEIS conjectures settled; each checked by the Lean kernel, and no e
 * [A090905: every row ends at twice the largest prime of the previous row (Murthy's conjecture proved)](results/oeis-a090905/README.md) ([paper](results/oeis-a090905/paper.pdf))
 * [A106505: common sides of A/2A primitive triangles are periodic mod 8, so a(n+5) = a(n) + 8](results/oeis-a106505/README.md) ([paper](results/oeis-a106505/paper.pdf))
 * [A127752 mod 2 is the first Feigenbaum symbolic sequence A035263](results/oeis-a127752/README.md) ([paper](results/oeis-a127752/paper.pdf))
+* [A144637: (1/18) 6^n a(n)/n! is odd iff n = 2^k with k >= 1](results/oeis-a144637/README.md)
 * [A172164: the second differences of the Theodorus-spiral turns are always 18, 19, 20 or 21](results/oeis-a172164/README.md) ([paper](results/oeis-a172164/paper.pdf))
 * [A178295: collinear 4-subsets of {0,...,4}^n number 9^n/2 + 3*7^n/2 - 2*5^n (Mathar's conjecture, all three formulas)](results/oeis-a178295/README.md) ([paper](results/oeis-a178295/paper.pdf))
 * [A223395: walks on the 4 x 4 grid graph satisfy Hardin's recurrence, Barker's g.f. and closed form](results/oeis-a223395/README.md) ([paper](results/oeis-a223395/paper.pdf))
@@ -61,9 +62,12 @@ New results (OEIS conjectures settled; each checked by the Lean kernel, and no e
 * [OEIS A350900: Schulte's gcd-ratio double sum is a Dirichlet convolution](results/oeis-a350900/README.md) ([paper](results/oeis-a350900/paper.pdf))
 * [Prime-Minesweeper on the A060734 array: a(n) < 6, and a(n) = 5 only at n = 6](results/oeis-a326407/README.md) ([paper](results/oeis-a326407/paper.pdf))
 * [Schulte's conjectures on A281000, T(n,k) = C(2n+1,2k+1)·Cat(n-k): antidiagonal sums and matrix inverse](results/oeis-a281000/README.md) ([paper](results/oeis-a281000/paper.pdf))
+* [Signed A350557 is the matrix inverse of A350512, proved](results/oeis-a350557/README.md)
 * [Stephan's conjectured g.f. for A242396 is false (first failure at n = 97)](results/oeis-a242396/README.md) ([paper](results/oeis-a242396/paper.pdf))
 * [The Golomb-row triangle A113676 and Levine's sequence A014644](results/oeis-a113676/README.md) ([paper](results/oeis-a113676/paper.pdf))
+* [The generating function of A022445 (closed self-avoiding walks in the strip {0,1,2} x Z)](results/oeis-a022445/README.md)
 * [The inverse of the 1/Catalan band triangle (A127767) has integer entries](results/oeis-a127767/README.md) ([paper](results/oeis-a127767/paper.pdf))
+* [The inverse of the triangle 1/n! [k ≤ n ≤ 2k] is an integer triangle](results/oeis-a127755/README.md)
 * [The least number of inequivalent cells of a (6k+5)-iamond is 3(k+1)](results/oeis-a369366/README.md) ([paper](results/oeis-a369366/paper.pdf))
 * [The row-LCM of denominators of the cube of the mean matrix is n · lcm(1..n)²](results/oeis-a119936/README.md) ([paper](results/oeis-a119936/paper.pdf))
 * [The subword complexity polynomial S(n,x) has leading coefficient n(n+1)/2 (A341761, Guo's conjecture)](results/oeis-a341761/README.md) ([paper](results/oeis-a341761/paper.pdf))
