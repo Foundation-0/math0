@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: Conjecture: Column sums are A000245. - _Gus Wisema
 
 Referees: OEIS A388724 (rev #12, Oct 06 2025; the conjecture is still listed and no %E resolution is recorded). M. Archibald, A. Blecher, S. Elizalde, A. Knopfmacher, "Subdiagonal and superdiagonal partitions", Afrika Matematika 36:77 (2025), doi:10.1007/s13370-025-01282-0. Theorem 2.3 and its proof give a bijection from superdiagonal weakly increasing partitions with largest part m to pairs (P in D_m, 0 ≤ h < final E-run length of P), plus the generating function for fixed largest part. Theorem 2.2's proof gives a bijection from partitions with k parts and largest part s to the ballot paths B_{k-1,s}. Combined with the shift y_i -> y_i - 1 and the classical identity sum over D_m of final descent length = A000245(m) (E. Deutsch, "Dyck path enumeration", Discrete Math. 204 (1999); the A000245 comment by Homberger on total returns), or with Catalan-triangle row sums (A009766, which has A000245 as a diagonal), this yields the conjecture immediately. No explicit prior statement or proof of the column-sum identity was found on OEIS, arXiv, MathOverflow, Math StackExchange or the web.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

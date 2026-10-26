@@ -1,0 +1,381 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+\usepackage{booktabs}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,noncomputable},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1
+    {∈}{{$\in$}}1 {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {⊆}{{$\subseteq$}}1 {×}{{$\times$}}1
+    {ˢ}{{$^{\mathrm{s}}$}}1 {⁻}{{$^{-}$}}1 {¹}{{$^{1}$}}1
+    {⟦}{{$[\![$}}1 {⟧}{{$]\!]$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+\newunicodechar{ˢ}{\ensuremath{^{\mathrm{s}}}}
+\newunicodechar{⟦}{\ensuremath{[\![}}
+\newunicodechar{⟧}{\ensuremath{]\!]}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+\allowdisplaybreaks
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\def\UrlFont{\normalfont\ttfamily}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\ib}[1]{[\,#1\,]}
+\newcommand{\Til}{\operatorname{Til}}
+\newcommand{\cnt}{\operatorname{cnt}}
+\newcommand{\rest}{\operatorname{rest}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cG}{\mathcal{G}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\one}{\mathbf{1}}
+
+\title[Domino tilings of $(4k+1)\times5$ boards with a central hole]{The generating function for domino tilings of $(4k+1)\times 5$ boards with a central hole: a formal proof of Mathar's conjecture in OEIS A270668}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 25, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $c_k$ be the number of domino tilings of the $(4k+1)\times5$ board with its central cell removed.
+We prove that $\sum_{k\ge0}c_kx^k$ equals the rational function with denominator $(x-1)(x^2-7x+1)(x^2-23x+1)(x^4-161x^3+576x^2-161x+1)$ that R.~J.~Mathar conjectured in 2016 for column~3 of the OEIS triangle A270668. The proof writes $c_{k+1}$ as a bilinear form in two vectors built from a $32$-state row transfer matrix, whose entries satisfy an order-$4$ recurrence, and derives the order-$9$ recurrence of the denominator for the products.
+The entry still calls the formula conjectured, but a transfer-matrix note by Mathar, linked from the entry and dated three weeks later, derives exactly this rational function, so we classify our result as the first formal proof of a known result.
+It is verified in Lean~4 against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry; there the tiling count is defined from first principles and checked by the kernel against all $36$ listed terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For $0\le m\le n$ let $T(n,m)$ be the number of domino tilings of the $(2n+1)\times(2m+1)$ board with its central cell removed. Tilings that differ by a rotation or reflection of the board are distinct. This is the triangle A270668 of the OEIS \cite{A270668}, created by R.~J.~Mathar on March~21, 2016, with more terms by A.~P.~Heinz ($36$ terms, rows $0$ to $7$). Its diagonal is A143659 \cite{A143659}, the odd square with a central unit hole, studied by Ciucu \cite{Ciucu}. The checkerboard colouring shows that $T(n,m)=0$ when $n+m$ is odd. The four corners have the same colour, so the board has one extra cell of that colour, and the centre has that colour exactly when $n+m$ is even.
+
+On March~23, 2016, Mathar added a ``Conjectured g.f.\ for column 3'' (quoted in Section~\ref{sec:statement}). Column~3 is the third column, $m=2$ (boards of width $5$). Its nonzero terms are $T(2k,2)$, and the conjecture gives $\sum_{k\ge0}T(2k,2)x^k$ as an explicit rational function. We prove it (Theorem~\ref{thm:main}).
+
+\emph{Prior work and status.} The entry links a five-page note by Mathar, \emph{A270668: Domino tilings with one monomer in the center} \cite{MatharNote}, dated April~13, 2016, the date of the entry's latest revision. (The math0 referees saw it only through search-engine extracts; we read the full note for this manuscript.) It counts the tilings of the $5\times(2m+1)$ board with a central monomer by the transfer-matrix method, with $50$ states of the front line. Drawing the board with $5$ rows, it distinguishes nine configurations of the dominoes covering the two cells directly above and below the central cell, five of which contribute. For each of these it combines the counts of the two halves of the board on either side of the central cell by a Hadamard product of rational series, which is again rational (the note cites \cite{EC1} for this). Its final section sums the five contributions and states the generating function
+\[
+  \frac{1+4x-543x^2+6238x^3-17032x^4+6238x^5-543x^6+4x^7+x^8}{(1-x)(x^2-7x+1)(x^2-23x+1)(x^4-161x^3+576x^2-161x+1)}
+  =1+196x+31329x^2+\cdots,
+\]
+which is the conjectured one with the numerator and the factor $x-1$ both negated. The note gives the generating functions of the halves and of their Hadamard products without the computations behind them. So Mathar derived the column-$3$ generating function three weeks after conjecturing it, although the entry still says ``Conjectured''. The quartic $t^4-15t^3+32t^2-15t+1$ that drives our proof is the characteristic polynomial of the recurrence of A006238 (spanning trees of the $3\times n$ grid) \cite{A006238}. Evaluated at $x^2$, it is, up to sign, also the denominator of the generating function of A189003 \cite{A189003}; in $z^5$ it is the denominator of the half-board series in \cite{MatharNote}. Other work on domino tilings with holes includes Tenner's parity results, which cover squares with a central square hole \cite{Tenner}, and the divisibility and parity results of Byun and Goddard for one-hole tilings of squares and rectangles \cite{BG}. According to the referees, neither these papers nor \cite{Ciucu} treat this column, and they found no earlier formalization. We therefore classify our result as the \emph{first formal proof of a known result}. Our argument has the same overall shape as the note's: split the board at the hole and combine the two halves by products of sequences that satisfy linear recurrences. The details differ. We use a $32$-state row transfer matrix and its symmetry instead of front-line states and centre configurations. We also prove the order-$9$ recurrence for products of solutions of an order-$4$ recurrence as a polynomial identity, instead of computing Hadamard products of generating functions.
+
+\section{Statement}\label{sec:statement}
+
+The FORMULA section of A270668 \cite{A270668} contains, verbatim, the line
+\begin{lstlisting}[language={},frame=none,basicstyle=\ttfamily\footnotesize]
+Conjectured g.f. for column 3: ( -1 -4*x +543*x^2 -6238*x^3 +17032*x^4 -6238*x^5 +543*x^6 -4*x^7 -x^8 ) / ( (x-1) *(x^2-7*x+1) *(x^2-23*x+1) *(x^4 -161*x^3 +576*x^2 -161*x +1) ). - _R. J. Mathar_, Mar 23 2016
+\end{lstlisting}
+
+\begin{theorem}\label{thm:main}
+For $k\ge0$ let $c_k=T(2k,2)$ be the number of domino tilings of the $(4k+1)\times5$ board with its central cell (row $2k$, column $2$, counting from $0$) removed. Then $\sum_{k\ge0}c_kx^k=N(x)/D(x)$ in $\Q[[x]]$, where
+\begin{align*}
+  N(x)&=-1-4x+543x^2-6238x^3+17032x^4-6238x^5+543x^6-4x^7-x^8,\\
+  D(x)&=(x-1)(x^2-7x+1)(x^2-23x+1)(x^4-161x^3+576x^2-161x+1).
+\end{align*}
+\end{theorem}
+
+The series is $1+196x+31329x^2+4941729x^3+777852100x^4+\cdots$. The coefficients of $x,x^2,x^3$ are the listed $T(2,2)$, $T(4,2)$, $T(6,2)$. The constant term is $T(0,2)=1$, for the $1\times5$ strip minus its middle cell. That board lies outside the triangle ($m>n$) but is covered by the same definition. Expanding, $D(x)=\sum_{j=0}^{9}d_jx^j$ with
+\begin{equation}\label{eq:den}
+  (d_0,\dots,d_9)=(-1,192,-5760,49283,-147264,147264,-49283,5760,-192,1).
+\end{equation}
+As $D(0)=-1$, the theorem is equivalent to $\bigl(\sum_kc_kx^k\bigr)D(x)=N(x)$, i.e.\ to
+\begin{equation}\label{eq:coeff}
+  \textstyle\sum_{j=0}^{\min(n,9)}d_j\,c_{n-j}=\nu_n\qquad(n\ge0),
+\end{equation}
+where $\nu_n$ is the coefficient of $x^n$ in $N$ ($\nu_n=0$ for $n\ge9$).
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A270668.lean}, reviewed for fidelity, and frozen (SHA-256 \texttt{6dac026f\ldots c55939}) before any proof attempt. Its definitions and statement read as follows. They are quoted verbatim, except that we omit the import, comments, docstrings, blank lines, all theorems, the computable evaluator described below, and the auxiliary definitions used only in proofs (such as \decl{cnt} in Section~\ref{sec:proof}).
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+namespace Math0.Statements.A270668
+open Finset
+abbrev Cell := ℕ × ℕ
+def IsDomino (d : Finset Cell) : Prop :=
+  ∃ i j : ℕ, d = {(i, j), (i, j + 1)} ∨ d = {(i, j), (i + 1, j)}
+def IsTiling (S : Finset Cell) (D : Finset (Finset Cell)) : Prop :=
+  (∀ d ∈ D, IsDomino d ∧ d ⊆ S) ∧ ∀ x ∈ S, ∃! d, d ∈ D ∧ x ∈ d
+def board (r c : ℕ) : Finset Cell := range r ×ˢ range c
+def region (n m : ℕ) : Finset Cell := (board (2 * n + 1) (2 * m + 1)).erase (n, m)
+noncomputable def T (n m : ℕ) : ℕ := {D | IsTiling (region n m) D}.ncard
+open PowerSeries
+noncomputable def num : ℚ⟦X⟧ :=
+  -1 - 4 * X + 543 * X ^ 2 - 6238 * X ^ 3 + 17032 * X ^ 4 - 6238 * X ^ 5 + 543 * X ^ 6 -
+    4 * X ^ 7 - X ^ 8
+noncomputable def den : ℚ⟦X⟧ :=
+  (X - 1) * (X ^ 2 - 7 * X + 1) * (X ^ 2 - 23 * X + 1) *
+    (X ^ 4 - 161 * X ^ 3 + 576 * X ^ 2 - 161 * X + 1)
+def statement : Prop :=
+  PowerSeries.mk (fun k => (T (2 * k) 2 : ℚ)) = num * den⁻¹
+end Math0.Statements.A270668
+\end{lstlisting}
+A cell $(i,j)$ lies in row $i$ and column $j$; a domino is $\{(i,j),(i,j+1)\}$ or $\{(i,j),(i+1,j)\}$ over $\N$, so nothing wraps around. A tiling of $S$ is a set of dominoes inside $S$ covering every cell of $S$ exactly once, so rotated or reflected tilings are distinct, as the entry requires. \texttt{region n m} is the board minus its central cell $(n,m)$. \texttt{T n m} counts its tilings; the set of tilings is finite (\decl{tilings_finite}), so \texttt{ncard} is not a junk value. \texttt{T} is defined for all $n,m$, so it covers $T(0,2)$. Since \texttt{den} has constant coefficient $-1$, \texttt{den⁻¹} is its true inverse, and \decl{statement_iff} shows that the statement is equivalent to \texttt{mk (fun k => T (2k) 2) * den = num}.
+
+\emph{Data checks.} The file defines a computable evaluator \decl{Tc} (Lemma~\ref{lem:init}) and proves \decl{T_eq_Tc}: $T(n,m)=\texttt{Tc}(n,m)$ for all $n,m$. It also proves that the triangle \decl{a} read by rows with offset $0$ satisfies $a(n(n+1)/2+m)=T(n,m)$ for $m\le n$ (\decl{a_spec}). \decl{a_data} checks by \texttt{decide +kernel} that $a(0),\dots,a(35)$ are the $36$ terms of the entry. Column $m=1$ and column $m=3$ ($75272,135663392,\dots$) do not match the conjectured series, which confirms that $m=2$ is the intended reading of ``column 3''.
+
+\section{Proof}\label{sec:proof}
+
+We follow \path{lean/Math0/Frontier/OEIS/A270668.lean}; Lemmas~\ref{lem:step} and~\ref{lem:cnt} are proved in the statement file. We write $\ib{P}$ for $1$ if $P$ holds and $0$ otherwise, and $\Til(F)$ for the set of domino tilings of a finite set of cells $F$.
+
+\begin{lemma}[\decl{ncard_tilings_step}, \decl{ncard_tilings_le}]\label{lem:step}
+Let $p$ be the lexicographically least cell of a finite set of cells $F\neq\emptyset$. Let $\mathrm{rt}(i,j)=(i,j+1)$ and $\mathrm{dn}(i,j)=(i+1,j)$. Then
+$\#\Til(F)=\ib{\mathrm{rt}\,p\in F}\,\#\Til(F\setminus\{p,\mathrm{rt}\,p\})+\ib{\mathrm{dn}\,p\in F}\,\#\Til(F\setminus\{p,\mathrm{dn}\,p\})$.
+Also $\Til(\emptyset)=\{\emptyset\}$, and $\#\Til(F)\le2^{\lfloor|F|/2\rfloor}$ for all finite $F$.
+\end{lemma}
+
+\begin{proof}
+The domino of a tiling that contains $p$ has its other cell in $F$, so that cell does not precede $p$; hence the domino is $\{p,\mathrm{rt}\,p\}$ or $\{p,\mathrm{dn}\,p\}$. For a domino $d\subseteq F$, removing $d$ is a bijection from the tilings of $F$ containing $d$ onto $\Til(F\setminus d)$. The bound follows by induction on $|F|$.
+\end{proof}
+
+\subsection{States}
+Fix $K\ge0$. Then $c_{K+1}=T(2K+2,2)$ is the number of tilings of the board with rows $0,\dots,4K+4$ and columns $0,\dots,4$, minus the cell $(2K+2,2)$. We number cell $(i,j)$ as $5i+j$. There are $N=20K+25$ cells, the hole has index $h=10K+12$, and we put $S=\{x<N:x\ne h\}$. A \emph{mask} is a finite set $M\subseteq\N$. In Lean it is the natural number $\sum_{s\in M}2^s$, and the masks $M\subseteq\{0,\dots,4\}$ are the numbers $M<32$. For $k\in\N$ let
+\[
+  F_k(M)=\{x\in S:\ x\ge k,\ \neg(x<k+5\wedge x\bmod5\in M)\}\ \text{(as cells)},\qquad \cnt_k(M)=\#\Til(F_k(M))
+\]
+(Lean: \decl{G}, \decl{Fs}, \decl{cnt}). Thus $M$ records which cells of the window $k,\dots,k+4$ are already covered. As $F_0(\emptyset)$ is the region (\decl{region_eq}), $c_{K+1}=\cnt_0(\emptyset)$ (\decl{T_eq_vv}).
+
+\begin{lemma}[\decl{cnt_end}, \decl{cnt_of_set}, \decl{cnt_of_notS}, \decl{cnt_of_free}]\label{lem:cnt}
+Let $s=k\bmod5$. (a) If $k\ge N$ then $\cnt_k(M)=1$. (b) If $s\in M$ then $\cnt_k(M)=\cnt_{k+1}(M\setminus\{s\})$. (c) If $s\notin M$ and $k\notin S$ then $\cnt_k(M)=\cnt_{k+1}(M)$. (d) If $s\notin M$ and $k\in S$ then
+\[\cnt_k(M)=\ib{s\le3,\ k+1\in S,\ s+1\notin M}\cnt_{k+1}(M\cup\{s+1\})+\ib{k+5\in S}\cnt_{k+1}(M\cup\{s\}).\]
+\end{lemma}
+
+\begin{proof}
+In (a), $F_k(M)=\emptyset$. In (b) and (c), the cell $k$ is not free. The only cell that enters the window is $k+5$, which has residue $s$ and in both states is free iff it lies in $S$, so $F_k(M)=F_{k+1}(M\setminus\{s\})$, resp.\ $F_{k+1}(M)$. In (d), $k$ is the least free cell. Its right neighbour is cell $k+1$ when $s\le3$ (otherwise it is off the board), and it is free iff $k+1\in S$ and $s+1\notin M$. The cell below it is $k+5$, which is free iff $k+5\in S$. Removing $\{k,k+1\}$, resp.\ $\{k,k+5\}$, gives $F_{k+1}(M\cup\{s+1\})$, resp.\ $F_{k+1}(M\cup\{s\})$ (\decl{G_right}, \decl{G_down}). Now apply Lemma~\ref{lem:step}.
+\end{proof}
+
+\subsection{Row operators}
+Let $V$ be the $\Z$-module of functions from masks to $\Z$. For $s\le4$ and flags $a,b,d\in\{0,1\}$, the operator $\cC^{s}_{a,b,d}\colon V\to V$ (\decl{cellF}) is
+\[
+  (\cC^s_{a,b,d} f)(M)=\begin{cases}
+  f(M\setminus\{s\}) & s\in M,\\
+  b\,\ib{s\le3,\ s+1\notin M}\,f(M\cup\{s+1\})+d\,f(M\cup\{s\}) & s\notin M,\ a=1,\\
+  f(M) & s\notin M,\ a=0,
+  \end{cases}
+\]
+and for $a,b,d\in\{0,1\}^5$ we set $\cR_{a,b,d}=\cC^0_{a_0,b_0,d_0}\circ\cdots\circ\cC^4_{a_4,b_4,d_4}$ (\decl{rowF}). With $v_k=\cnt_k(\cdot)$, Lemma~\ref{lem:cnt} says that $v_k=\cC^{s}_{a,b,d}v_{k+1}$ with $s=k\bmod5$ and flags $\ib{k\in S}$, $\ib{k+1\in S}$, $\ib{k+5\in S}$ (\decl{vv_cell}). Hence $v_{5r}=\cR_{a,b,d}\,v_{5r+5}$ with $a_j=\ib{5r+j\in S}$, $b_j=\ib{5r+j+1\in S}$ and $d_j=\ib{5r+j+5\in S}$ (\decl{vv_row}). Only four flag patterns occur (\decl{row_gen}, \decl{row_above}, \decl{row_hole}, \decl{row_last}; $b_4$ is irrelevant):
+\begin{center}\small
+\begin{tabular}{llllll}
+\toprule
+rows $r$ & $a_j$ & $b_j$ & $d_j$ & operator & Lean\\
+\midrule
+$0\le r\le2K$ and $2K+3\le r\le4K+3$ & $1$ & $1$ & $1$ & $\cA$ & \texttt{G0}\\
+$r=2K+1$ (above the hole) & $1$ & $1$ & $\ib{j\ne2}$ & $\cG_1$ & \texttt{G1}\\
+$r=2K+2$ (the hole row) & $\ib{j\ne2}$ & $\ib{j\ne1}$ & $1$ & $\cG_2$ & \texttt{G2}\\
+$r=4K+4$ (the last row) & $1$ & $\ib{j\ne4}$ & $0$ & $\cG_3$ & \texttt{G3}\\
+\bottomrule
+\end{tabular}
+\end{center}
+By Lemma~\ref{lem:cnt}(a), $v_N=\one$ (the constant $1$). Induction over the rows gives (\decl{rows_gen}, \decl{vv_zero})
+\begin{equation}\label{eq:rows}
+  v_0=\cA^{2K+1}\,\cG_1\,\cG_2\,\cA^{2K+1}\,\cG_3\,\one .
+\end{equation}
+
+\subsection{Matrices}
+For $M<32$, the value $(\cC^s_{a,b,d}f)(M)$ involves only values $f(M')$ with $M'<32$ (\decl{cellF_loc}). The operators are $\Z$-linear (\decl{cellL}, \decl{rowL}). So, with $\rest f=(f(M))_{M<32}$, every row operator satisfies $\rest(\cR f)=[\cR]\rest f$, where $[\cR]_{M,M'}=(\cR\delta_{M'})(M)$ and $\delta_{M'}$ is the indicator of $M'$ (\decl{rep}, \decl{toMat}). Let $A=[\cA]$, $P=[\cG_1][\cG_2]$, $e_0=\rest\delta_\emptyset$ and $x_n=A^ne_0$.
+
+\begin{lemma}[\decl{G0_symm}, \decl{last_row_eq}, \decl{krylov_check}]\label{lem:kernel}
+\textup{(i)} $A^{\mathsf T}=A$. \textup{(ii)} $\rest(\cG_3\one)=Ae_0$. \textup{(iii)} $x_8-15x_6+32x_4-15x_2+x_0=0$, i.e.\ $p(A^2)e_0=0$ with $p(t)=t^4-15t^3+32t^2-15t+1$.
+\end{lemma}
+
+\begin{proof}
+Each claim is a finite conjunction of integer identities indexed by masks below $32$. Each is proved by \texttt{decide +kernel}: the kernel unfolds \decl{cellF} and \decl{rowF} and evaluates $\cA\delta_{M'}$ and $\cG_3\one$ at all $M<32$. For (iii), the iterates are materialized as lists of $32$ integers, $\mathtt{itG}(n+1)=((\cA\,\mathrm{tab}(\mathtt{itG}(n)))(M))_{M<32}$, so the kernel never re-expands nested compositions. Locality gives $\mathrm{tab}(\mathtt{itG}(n))=x_n$ on masks below $32$ (\decl{itG_spec}, \decl{x_eq_tab}). The matrix forms are \decl{A_symm} and \decl{x_base}.
+\end{proof}
+
+The formal proof does not need the following explanation of (i) and (ii). From state $M$ to state $M'$, the cells of $M$ are covered from above and those of $M'$ by dominoes hanging down, and the remaining cells are covered horizontally. So $A_{M,M'}=1$ if $M\cap M'=\emptyset$ and $\{0,\dots,4\}\setminus(M\cup M')$ is a disjoint union of pairs $\{j,j+1\}$, and $A_{M,M'}=0$ otherwise. In (ii), both sides count the fillings of a row outside $M$ by horizontal dominoes.
+
+\begin{proposition}[\decl{vv_formula}]\label{prop:bilinear}
+For all $K\ge0$, $c_{K+1}=\sum_{j<32}(x_{2K+1})_j\,(P\,x_{2K+2})_j$.
+\end{proposition}
+
+\begin{proof}
+Applying $\rest$ to \eqref{eq:rows} and using Lemma~\ref{lem:kernel}(ii) gives $\rest v_0=A^{2K+1}PA^{2K+1}Ae_0=A^{2K+1}Px_{2K+2}$. Its entry at $\emptyset$ is $c_{K+1}=\sum_j(A^{2K+1})_{0j}(Px_{2K+2})_j$, and $(A^{2K+1})_{0j}=(A^{2K+1})_{j0}=(x_{2K+1})_j$ by Lemma~\ref{lem:kernel}(i).
+\end{proof}
+
+\subsection{Recurrences}
+A sequence $u\colon\N\to\Z$ satisfies $(\mathrm{R}_4)$ if $u(n+4)=15u(n+3)-32u(n+2)+15u(n+1)-u(n)$ for all $n$. It satisfies $(\mathrm{R}_9)$ if $\sum_{i=0}^{9}d_{9-i}\,u(n+i)=0$ for all $n$, i.e.
+\[
+  u(n)-192u(n+1)+5760u(n+2)-\cdots+192u(n+8)-u(n+9)=0 .
+\]
+
+\begin{lemma}[\decl{x_rec}, \decl{rec4_x_odd}, \decl{rec4_Px_even}]\label{lem:rec4}
+For each $j<32$, the sequences $n\mapsto(x_{2n+1})_j$ and $n\mapsto(Px_{2n+2})_j$ satisfy $(\mathrm{R}_4)$.
+\end{lemma}
+
+\noindent Indeed, multiplying Lemma~\ref{lem:kernel}(iii) by $A^m$ gives $x_{m+8}=15x_{m+6}-32x_{m+4}+15x_{m+2}-x_m$; take $m=2n+1$, resp.\ $m=2n+2$ and apply $P$.
+
+\begin{lemma}[\decl{rec9_mul}]\label{lem:prod}
+If $u$ and $w$ satisfy $(\mathrm{R}_4)$, then $n\mapsto u(n)w(n)$ satisfies $(\mathrm{R}_9)$.
+\end{lemma}
+
+\begin{proof}
+Fix $n$. By $(\mathrm{R}_4)$, each of $u(n+4),\dots,u(n+9)$ is an explicit integer combination of $u(n),\dots,u(n+3)$, and Lean derives these one after another by \texttt{linear\_combination}. For example,
+$u(n+9)=-382590\,u(n)+5708352\,u(n+1)-11787840\,u(n+2)+4799171\,u(n+3)$.
+The same holds for $w$. After substitution, the left side of $(\mathrm{R}_9)$ for $uw$ is a bilinear form in $(u(n),\dots,u(n+3))$ and $(w(n),\dots,w(n+3))$, and \texttt{ring} verifies that it is identically zero.
+\end{proof}
+
+\begin{remark}[why $(\mathrm{R}_9)$; not used in Lean]\label{rem:roots}
+We have $p(t)=t^2q(t+t^{-1})$ with $q(y)=y^2-15y+30$, so the roots of $p$ are $\rho_1^{\pm1}$ and $\rho_2^{\pm1}$, where $y_i=\rho_i+\rho_i^{-1}$ are the roots of $q$. These four roots are distinct ($\rho_1\approx0.0797$, $\rho_2\approx0.5464$). A product of two solutions of $(\mathrm{R}_4)$ is therefore a combination of $(\rho\rho')^n$, and the products $\rho\rho'$ take nine values: $1$; $\rho_i^{\pm2}$, the roots of $x^4-161x^3+576x^2-161x+1$ (note $161=y_1^2+y_2^2-4$); and $(\rho_1\rho_2)^{\pm1}$ and $(\rho_1/\rho_2)^{\pm1}$, the roots of $x^2-23x+1$ and $x^2-7x+1$. For the latter, the two sums $\rho_1\rho_2+(\rho_1\rho_2)^{-1}$ and $\rho_1/\rho_2+\rho_2/\rho_1$ add up to $y_1y_2=30$. Their difference squared is $(y_1^2-4)(y_2^2-4)=256$, so the sums are $23$ and $7$. These nine numbers are the roots of $D$. Since $t^9D(1/t)=-D(t)$, they are also the roots of the characteristic polynomial of $(\mathrm{R}_9)$.
+\end{remark}
+
+\begin{corollary}[\decl{rec9_sum}, \decl{rec9_T}]\label{cor:rec9}
+The sequence $K\mapsto c_{K+1}$ satisfies $(\mathrm{R}_9)$, since by Proposition~\ref{prop:bilinear} and Lemmas~\ref{lem:rec4} and~\ref{lem:prod} it is a finite sum of solutions of the linear recurrence $(\mathrm{R}_9)$.
+\end{corollary}
+
+\subsection{Initial values and the end of the proof}
+
+\begin{lemma}[\decl{Tc_val0}, \dots, \decl{Tc_val9}]\label{lem:init}
+The first ten values $c_0,\dots,c_9$ are
+\[
+\begin{gathered}
+1,\ 196,\ 31329,\ 4941729,\ 777852100,\ 122398521025,\ 19259046351169,\\ 3030333168565444,\ 476810204277773601,\ 75024073162168851681.
+\end{gathered}
+\]
+\end{lemma}
+
+\begin{proof}
+By \decl{T_eq_Tc}, $c_k=\texttt{Tc}(2k,2)$, and \texttt{decide +kernel} computes these ten values. The evaluator \texttt{Tc}$(n,m)$ runs the recursion of Lemma~\ref{lem:cnt} (stated in the file for $2m+1$ columns) over the cells $N-1,\dots,0$ of the $(2n+1)\times(2m+1)$ board, where $N=(2n+1)(2m+1)$. It packs the vector $(\cnt_k(M))_{M<2^{2m+1}}$ into a single natural number, with entry $M$ in the $W=\lfloor N/2\rfloor+1$ bits starting at bit $MW$. Each cell step (\decl{stepP}) uses only bitwise \textsc{and}, shifts and additions of such numbers. Its correctness is \decl{dig_stepP} and \decl{dig_vecP}; no entry overflows, because $\cnt_k(M)\le2^{\lfloor N/2\rfloor}<2^W$ by Lemma~\ref{lem:step} (\decl{cnt_lt}). The largest board, for $c_9$, has $185$ cells.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+By \decl{statement_iff} it suffices to prove \eqref{eq:coeff}. The coefficient of $x^n$ in $\bigl(\sum_kc_kx^k\bigr)D$ is $\sum_{j\le9}d_j\ib{j\le n}c_{n-j}$ (\decl{coeff_mul_den}), and that of $N(x)$ is $\nu_n$ (\decl{coeff_num}). For $n\le9$, \eqref{eq:coeff} is a numerical identity in the values of Lemma~\ref{lem:init}; for instance $-196+192=-4=\nu_1$ and $-31329+192\cdot196-5760=543=\nu_2$. Lean closes these ten cases with \texttt{simp} and \texttt{norm\_num}. For $n=K+10$, the left side of \eqref{eq:coeff} is $-c_{K+10}+192c_{K+9}-\dots-192c_{K+2}+c_{K+1}$. This is $(\mathrm{R}_9)$ for $u(K)=c_{K+1}$, so it vanishes by Corollary~\ref{cor:rec9} (\decl{cq_rec}), and $\nu_n=0$.
+\end{proof}
+
+\begin{remark}[not proved]
+Numerically, $c_k=s_k^2$ for $0\le k\le12$, where $s_k=a(k+1)-a(k)$ with $a=\mathrm{A006238}$ \cite{A006238} and $a(0)=0$, i.e.\ $(s_k)=1,14,177,2223,\dots$. We have not proved this, and the proof does not need it.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\emph{Files and declarations.} The proof is in \path{lean/Math0/Frontier/OEIS/A270668.lean} in the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file and the audit commands (\path{lean/Math0/Audit.lean}). Its main theorem \decl{Math0.Frontier.A270668.result} \texttt{: statement} is audited by \texttt{\#math0\_settles} against \decl{Math0.Statements.A270668.statement}. Neither file uses \texttt{sorry}, \texttt{native\_decide}, \texttt{implemented\_by}, custom axioms or \texttt{set\_option} (so no \texttt{maxHeartbeats} override). The kernel computations (Lemmas~\ref{lem:kernel} and~\ref{lem:init}) use \texttt{decide +kernel}, which, unlike \texttt{native\_decide}, adds no axiom.
+
+\emph{Audit.} The command \texttt{\#math0\_settles}, for statements formalized by math0, fails unless \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (which rules out \decl{sorryAx}, \decl{Lean.ofReduceBool} and custom axioms); and the type of \decl{result} is syntactically \decl{statement} or $\neg$\,\decl{statement}, up to metadata. Here it reports:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A270668.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A270668.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A270668.result' proves 'Math0.Statements.A270668.statement'
+\end{lstlisting}
+
+\emph{Toolchain and reproduction.} We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}. The repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh}~\texttt{-{}-clean} from the repository root: it fetches the Mathlib cache, deletes the math0 build outputs, rebuilds all math0 results with \texttt{lake build} (re-running every audit), and checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified. To check this file alone, run \texttt{lake env lean Math0/Frontier/OEIS/A270668.lean} in \path{lean/}; on our shared four-core machine this took between about $45$ seconds and $2.5$ minutes, depending on load.
+
+{\footnotesize
+\begin{thebibliography}{99}
+
+\bibitem{A006238}
+The OEIS Foundation Inc., \emph{Number of spanning trees in the $3\times n$ grid graph}, OEIS A006238, \url{https://oeis.org/A006238}.
+
+\bibitem{A143659}
+The OEIS Foundation Inc., \emph{Number of perfect matchings of the $(2n+1)\times(2n+1)$ grid $H_n$ with a central unit hole}, OEIS A143659, \url{https://oeis.org/A143659}.
+
+\bibitem{A189003}
+The OEIS Foundation Inc., \emph{Number of domino tilings of the $5\times n$ grid with upper left corner removed iff $n$ is odd}, OEIS A189003, \url{https://oeis.org/A189003}.
+
+\bibitem{A270668}
+The OEIS Foundation Inc., \emph{Triangle read by rows: The number of domino tilings of the $(2n+1)\times(2m+1)$ board with a central free square}, entry A270668 (R.~J. Mathar, 2016) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A270668}, revision \#23.
+
+\bibitem{BG}
+S.~H. Byun and W.~Goddard, \emph{A note on one-hole domino tilings of squares and rectangles}, arXiv:2502.05918, 2025.
+
+\bibitem{Ciucu}
+M.~Ciucu, \emph{Symmetry classes of spanning trees of Aztec diamonds and perfect matchings of odd squares with a unit hole}, J. Algebraic Combin. \textbf{27} (2008), 493--538; arXiv:0710.4500.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{MatharNote}
+R.~J. Mathar, \emph{A270668: Domino tilings with one monomer in the center}, note dated April~13, 2016, linked from OEIS A270668, \url{https://oeis.org/A270668/a270668.pdf}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{EC1}
+R.~P. Stanley, \emph{Enumerative Combinatorics, Volume 1}, 2nd ed., Cambridge Studies in Advanced Mathematics \textbf{49}, Cambridge University Press, 2012.
+
+\bibitem{Tenner}
+B.~E. Tenner, \emph{Tiling parity results and the holey square solution}, Electron. J. Combin. \textbf{11}(2) (2004--2005), \#R17; arXiv:math/0409105.
+
+\end{thebibliography}
+}
+
+\end{document}

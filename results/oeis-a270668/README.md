@@ -21,6 +21,10 @@ Conjecture as stated in OEIS: %F A270668 Conjectured g.f. for column 3: ( -1 -4*
 
 Referees: R. J. Mathar, "A270668: Domino tilings with one monomer in the center", PDF linked from OEIS A270668 (https://oeis.org/A270668/a270668.pdf), dated Apr 13 2016. It counts the 5 x (2m+1) floor with a central monomer by the transfer-matrix method: 50 states, nine centre configurations, and left/right Hadamard products of rational g.f.s in x = z^5. It appears to derive the column-3 g.f. that Mathar had conjectured on Mar 23 2016 in OEIS A270668 (still labelled "Conjectured" there). I saw its content only through search-engine extracts; the full PDF could not be downloaded. Related but not resolving: OEIS A143659 / M. Ciucu arXiv:0710.4500 (diagonal); A189003/A189006 (5xn corner-removed, same characteristic polynomial t^4-15t^3+32t^2-15t+1); A003775, A006238; B. E. Tenner, EJC 11(2) R17 (2005); Byun-Goddard arXiv:2502.05918; Stanley EC1 section 4.2.5 (Hadamard products of rational series). No prior Lean or other formalization found.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

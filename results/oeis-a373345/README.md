@@ -23,6 +23,10 @@ GitHub issue the-omega-institute/trureturing #9050 ("Research: full Schreier-Zec
 Background only: A. Bird, "Jozef Schreier, Schreier sets and the Fibonacci sequence", Out Of The Norm blog, 2012, gives the binary ordering and the R/S block recursion but does not mention Zeckendorf. H. V. Chu, arXiv:2606.21865 (2026), is a survey and does not state the identity.
 No prior Lean formalization found.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex

@@ -19,6 +19,10 @@ Conjecture as stated in OEIS: %F A328202 a(n) = A014963(n) * A014963(n - 1) (con
 
 Referees: G. Kaplan and D. Levy, "GCD of truncated rows in Pascal's triangle", Integers 4 (2004), #A14 (https://math.colgate.edu/~integers/e14/e14.pdf). Theorem 4 with Theorem 7 at t=1 (h(n,1)=1 for n>=4), or equivalently Theorem 9, gives g(n,2) = lcm(g(n-1,1), g(n,1)) = A014963(n)*A014963(n-1). This proves the A328202 formula in 2004, before the 2019 OEIS conjecture, and the paper's Table 2 matches the sequence data. Also relevant: H. Joris, C. Oestreicher and J. Steinig, "The greatest common divisor of certain sets of binomial coefficients", J. Number Theory 21 (1985) 101-119, which gives a general formula for gcd{C(n,k): r<=k<=s} (not checked directly). Background: Ram (1909) for the g(n,1) case. The OEIS entry (rev #46, Oct 10 2026) still labels the formula "(conjecture)" and does not cite these papers.
 
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
 ## Citation
 
 ```bibtex
