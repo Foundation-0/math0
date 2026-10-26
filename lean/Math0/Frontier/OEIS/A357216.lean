@@ -642,6 +642,7 @@ private lemma y0_E (a : ℝ) : y0 n (E (a * (2 * ph n))) = Yr n a := by
   field_simp
   ring
 
+omit hn in
 /-- Rotating vertex `i` back by vertex `C`. -/
 private lemma conj_vertex_mul (C i : ℕ) :
     (starRingEnd ℂ) (vertex n C) * vertex n i = E (((i : ℝ) - C) * (2 * ph n)) := by
@@ -649,11 +650,11 @@ private lemma conj_vertex_mul (C i : ℕ) :
 
 /-- Frame `x`-coordinate of a vertex. -/
 private lemma fx_vertex (C i : ℕ) : fx n C (vertex n i) = Xr n ((i : ℝ) - C) := by
-  unfold fx; rw [conj_vertex_mul hn, x0_E hn]
+  unfold fx; rw [conj_vertex_mul, x0_E hn]
 
 /-- Frame `y`-coordinate of a vertex. -/
 private lemma fy_vertex (C i : ℕ) : fy n C (vertex n i) = Yr n ((i : ℝ) - C) := by
-  unfold fy; rw [conj_vertex_mul hn, y0_E hn]
+  unfold fy; rw [conj_vertex_mul, y0_E hn]
 
 end frames
 
@@ -751,10 +752,13 @@ private lemma Xr_shift (a : ℝ) (q : ℤ) : Xr n (a + q * n) = Xr n a :=
 private lemma Yr_shift (a : ℝ) (q : ℤ) : Yr n (a + q * n) = Yr n a :=
   (Yr_periodic hn).int_mul q a
 
+omit hn in
 /-- The corner itself: `x = 0`. -/
 private lemma Xr_zero : Xr n 0 = 0 := by simp [Xr]
+omit hn in
 /-- The corner itself: `y = 0`. -/
 private lemma Yr_zero : Yr n 0 = 0 := by simp [Yr]
+omit hn in
 /-- The next vertex: `x = 0`. -/
 private lemma Xr_one : Xr n 1 = 0 := by simp [Xr]
 /-- The next vertex: `y = 1`. -/
@@ -768,6 +772,7 @@ private lemma Xr_neg_one : Xr n (-1) = 1 := by
   rw [show ((-1 : ℝ) - 1) * ph n = -(2 * ph n) by ring, show (-1 : ℝ) * ph n = -(ph n) by ring,
     Real.sin_neg, Real.sin_neg]
   field_simp
+omit hn in
 /-- The previous vertex: `y = 0`. -/
 private lemma Yr_neg_one : Yr n (-1) = 0 := by simp [Yr]
 /-- The vertex two steps ahead: `x = 1`. -/
@@ -781,6 +786,7 @@ private lemma Yr_neg_two : Yr n (-2) = 1 := by
   rw [show ((-2 : ℝ) + 1) * ph n = -(ph n) by ring, show (-2 : ℝ) * ph n = -(2 * ph n) by ring,
     Real.sin_neg, Real.sin_neg]
   field_simp
+omit hn in
 /-- The vertex two steps ahead: `y = W`. -/
 private lemma Yr_two_eq : Yr n 2 = Xr n (-2) := by
   unfold Xr Yr
@@ -896,16 +902,16 @@ private lemma Y_pos_range (ρ : ℤ) (h1 : -(n : ℤ) ≤ ρ) (h2 : ρ ≤ n) (h
 /-- All vertices have nonnegative frame coordinates. -/
 private lemma XY_nonneg (ρ : ℤ) (h1 : -(n : ℤ) ≤ ρ) (h2 : ρ ≤ n) : 0 ≤ Xr n ρ ∧ 0 ≤ Yr n ρ := by
   by_cases h0 : ρ = 0
-  · subst h0; simp [Xr_zero hn, Yr_zero hn]
+  · subst h0; simp [Xr_zero, Yr_zero]
   by_cases h3 : ρ = n
   · subst h3
     rw [show ((n : ℤ) : ℝ) = (0 : ℝ) + ((1 : ℤ) : ℝ) * n by push_cast; ring, Xr_shift hn,
-      Yr_shift hn, Xr_zero hn, Yr_zero hn]
+      Yr_shift hn, Xr_zero, Yr_zero]
     simp
   by_cases h4 : ρ = -n
   · subst h4
     rw [show ((-(n : ℤ) : ℤ) : ℝ) = (0 : ℝ) + ((-1 : ℤ) : ℝ) * n by push_cast; ring, Xr_shift hn,
-      Yr_shift hn, Xr_zero hn, Yr_zero hn]
+      Yr_shift hn, Xr_zero, Yr_zero]
     simp
   have h := XY_range hn ρ h1 h2 h0 h3 h4
   exact ⟨h.1, h.2.1⟩
@@ -992,14 +998,14 @@ private lemma interior_pos (j : ℕ) (hj : j < n) {z : ℂ} (hz : z ∈ interior
       rw [show z + (e : ℂ) * (vertex n (j + 1) - vertex n j) =
         z + (e : ℂ) * (vertex n (j + 1) - vertex n j) from rfl, fx_aff, fx_vertex hn, fx_vertex hn,
         show ((j + 1 : ℕ) : ℝ) - ((j + 1 : ℕ) : ℝ) = 0 by ring,
-        show ((j : ℕ) : ℝ) - ((j + 1 : ℕ) : ℝ) = -1 by push_cast; ring, Xr_zero hn, Xr_neg_one hn]
+        show ((j : ℕ) : ℝ) - ((j + 1 : ℕ) : ℝ) = -1 by push_cast; ring, Xr_zero, Xr_neg_one hn]
       ring
     · intro w hw; exact (polygon_sub hn j hj hw).1
   · apply key (vertex n (j + 1) - vertex n (j + 2)) (fy n (j + 1)) (fy_cont n (j + 1))
     · intro e
       rw [fy_aff, fy_vertex hn, fy_vertex hn,
         show ((j + 1 : ℕ) : ℝ) - ((j + 1 : ℕ) : ℝ) = 0 by ring,
-        show ((j + 2 : ℕ) : ℝ) - ((j + 1 : ℕ) : ℝ) = 1 by push_cast; ring, Yr_zero hn, Yr_one hn]
+        show ((j + 2 : ℕ) : ℝ) - ((j + 1 : ℕ) : ℝ) = 1 by push_cast; ring, Yr_zero, Yr_one hn]
       ring
     · intro w hw; exact (polygon_sub hn j hj hw).2
 
@@ -1042,11 +1048,11 @@ private lemma interior_nonempty : (interior (polygon n)).Nonempty := by
       ((1 / 3 : ℝ) : ℂ) * (vertex n 2 - vertex n 1) = (vertex n 1 + ((1 / 3 : ℝ) : ℂ) *
         (vertex n 0 - vertex n 1)) + ((1 / 3 : ℝ) : ℂ) * (vertex n 2 - vertex n 1) from rfl,
       fx_aff, fx_aff, fx_vertex hn, fx_vertex hn, fx_vertex hn]
-    norm_num [Xr_zero hn, Xr_one hn, Xr_neg_one hn]
+    norm_num [Xr_zero, Xr_one, Xr_neg_one hn]
   have hy : fy n (0 + 1) z = 1 / 3 := by
     simp only [z]
     rw [fy_aff, fy_aff, fy_vertex hn, fy_vertex hn, fy_vertex hn]
-    norm_num [Yr_zero hn, Yr_one hn, Yr_neg_one hn]
+    norm_num [Yr_zero, Yr_one hn, Yr_neg_one]
   exact ⟨z, tri_interior hn 0 (by rw [hx]; norm_num) (by rw [hy]; norm_num)
     (by rw [hx, hy]; norm_num)⟩
 
@@ -1141,7 +1147,7 @@ private lemma fx_gam (k j m : ℕ) (r : ℝ) : fx n (j + 1) (gam n k j m r) = (1
   unfold gam
   rw [fx_aff, divPt_eq, divPt_eq, fx_aff, fx_aff, fxv hn _ j (-1) (by push_cast; ring),
     fxv hn _ (j + 1) 0 (by push_cast; ring), fxv hn _ (j + 1 + 1) 1 (by push_cast; ring),
-    Xr_neg_one hn, Xr_zero hn, Xr_one hn]
+    Xr_neg_one hn, Xr_zero, Xr_one]
   ring
 
 /-- Frame `y`-coordinate along the chord. -/
@@ -1149,7 +1155,7 @@ private lemma fy_gam (k j m : ℕ) (r : ℝ) : fy n (j + 1) (gam n k j m r) = tt
   unfold gam
   rw [fy_aff, divPt_eq, divPt_eq, fy_aff, fy_aff, fyv hn _ j (-1) (by push_cast; ring),
     fyv hn _ (j + 1) 0 (by push_cast; ring), fyv hn _ (j + 1 + 1) 1 (by push_cast; ring),
-    Yr_neg_one hn, Yr_zero hn, Yr_one hn]
+    Yr_neg_one, Yr_zero, Yr_one hn]
   ring
 
 /-- The chord lies on its line. -/
@@ -1192,6 +1198,7 @@ private lemma line_inter {k j m : ℕ} (hj : j < n) (hm : m < k) {z : ℂ} (hz :
     push_cast
     ring
 
+omit hn in
 /-- The chord as the image of `gam` on `[0, 1]`. -/
 private lemma chord_eq (k : ℕ) (c : Fin n × Fin k) :
     chord n k c = gam n k c.1 c.2 '' Icc 0 1 := by
@@ -1203,7 +1210,7 @@ private lemma chord_eq (k : ℕ) (c : Fin n × Fin k) :
 /-- Inside the open polygon, a point is on a chord iff it is on its line. -/
 private lemma mem_chord_iff {k : ℕ} (c : Fin n × Fin k) {z : ℂ} (hz : z ∈ interior (polygon n)) :
     z ∈ chord n k c ↔ Fl n k c.1 c.2 z = 0 := by
-  rw [chord_eq hn]
+  rw [chord_eq]
   constructor
   · rintro ⟨r, _, rfl⟩; exact Fl_gam hn _ _ _ _
   · intro h
@@ -1256,16 +1263,17 @@ private lemma Fv_m2 (s : ℝ) : Fv n s (-2) = s * Xr n (-2) + (1 - s) ^ 2 := by
   unfold Fv; rw [Yr_neg_two hn]; ring
 /-- `Fv` one step back. -/
 private lemma Fv_m1 (s : ℝ) : Fv n s (-1) = s ^ 2 := by
-  unfold Fv; rw [Xr_neg_one hn, Yr_neg_one hn]; ring
+  unfold Fv; rw [Xr_neg_one hn, Yr_neg_one]; ring
+omit hn in
 /-- `Fv` at the corner. -/
 private lemma Fv_0 (s : ℝ) : Fv n s 0 = -(s * (1 - s)) := by
-  unfold Fv; rw [Xr_zero hn, Yr_zero hn]; ring
+  unfold Fv; rw [Xr_zero, Yr_zero]; ring
 /-- `Fv` one step ahead. -/
 private lemma Fv_1 (s : ℝ) : Fv n s 1 = (1 - s) ^ 2 := by
-  unfold Fv; rw [Xr_one hn, Yr_one hn]; ring
+  unfold Fv; rw [Xr_one, Yr_one hn]; ring
 /-- `Fv` two steps ahead. -/
 private lemma Fv_2 (s : ℝ) : Fv n s 2 = s ^ 2 + (1 - s) * Xr n (-2) := by
-  unfold Fv; rw [Xr_two hn, Yr_two_eq hn]; ring
+  unfold Fv; rw [Xr_two hn, Yr_two_eq]; ring
 
 /-- Every vertex other than the corner lies strictly on the far side of the line. -/
 private lemma Fv_pos_int (s : ℝ) (hs0 : 0 < s) (hs1 : s < 1) (ρ : ℤ) (h1 : -(n : ℤ) ≤ ρ) (h2 : ρ ≤ n)
@@ -1281,7 +1289,7 @@ private lemma Fv_pos_int (s : ℝ) (hs0 : 0 < s) (hs1 : s < 1) (ρ : ℤ) (h1 : 
 private lemma pair_same (k j m m' : ℕ) (r : ℝ) :
     Fl n k j m' (gam n k j m r) = (tt k m - tt k m') * (r - tt k m') := by
   rw [Fl_gam_master hn, show (j : ℝ) - (j + 1) = -1 by ring, sub_self,
-    show (j : ℝ) + 1 - j = 1 by ring, Fv_m1 hn, Fv_0 hn, Fv_1 hn]
+    show (j : ℝ) + 1 - j = 1 by ring, Fv_m1 hn, Fv_0, Fv_1 hn]
   ring
 
 /-- A chord and a line at the next corner. -/
@@ -1295,11 +1303,11 @@ private lemma pair_next (k j m m' : ℕ) (_hj : j < n) (r : ℝ) :
     rw [show (j : ℝ) - (((0 : ℕ) : ℝ) + 1) = -2 + ((1 : ℤ) : ℝ) * n by push_cast; linarith,
       show (j : ℝ) - ((0 : ℕ) : ℝ) = -1 + ((1 : ℤ) : ℝ) * n by push_cast; linarith,
       show (j : ℝ) + 1 - ((0 : ℕ) : ℝ) = 0 + ((1 : ℤ) : ℝ) * n by push_cast; linarith,
-      Fv_shift hn, Fv_shift hn, Fv_shift hn, Fv_m2 hn, Fv_m1 hn, Fv_0 hn]
+      Fv_shift hn, Fv_shift hn, Fv_shift hn, Fv_m2 hn, Fv_m1 hn, Fv_0]
     unfold aP; ring
   · rw [show (j : ℝ) - (((j + 1 : ℕ) : ℝ) + 1) = -2 by push_cast; ring,
       show (j : ℝ) - ((j + 1 : ℕ) : ℝ) = -1 by push_cast; ring,
-      show (j : ℝ) + 1 - ((j + 1 : ℕ) : ℝ) = 0 by push_cast; ring, Fv_m2 hn, Fv_m1 hn, Fv_0 hn]
+      show (j : ℝ) + 1 - ((j + 1 : ℕ) : ℝ) = 0 by push_cast; ring, Fv_m2 hn, Fv_m1 hn, Fv_0]
     unfold aP; ring
 
 /-- A chord and a line at the previous corner. -/
@@ -1313,11 +1321,11 @@ private lemma pair_prev (k j' m m' : ℕ) (_hj' : j' < n) (r : ℝ) :
     rw [show ((0 : ℕ) : ℝ) - ((j' : ℝ) + 1) = 0 + ((-1 : ℤ) : ℝ) * n by push_cast; linarith,
       show ((0 : ℕ) : ℝ) - (j' : ℝ) = 1 + ((-1 : ℤ) : ℝ) * n by push_cast; linarith,
       show ((0 : ℕ) : ℝ) + 1 - (j' : ℝ) = 2 + ((-1 : ℤ) : ℝ) * n by push_cast; linarith,
-      Fv_shift hn, Fv_shift hn, Fv_shift hn, Fv_0 hn, Fv_1 hn, Fv_2 hn]
+      Fv_shift hn, Fv_shift hn, Fv_shift hn, Fv_0, Fv_1 hn, Fv_2 hn]
     unfold bM; ring
   · rw [show ((j' + 1 : ℕ) : ℝ) - ((j' : ℝ) + 1) = 0 by push_cast; ring,
       show ((j' + 1 : ℕ) : ℝ) - (j' : ℝ) = 1 by push_cast; ring,
-      show ((j' + 1 : ℕ) : ℝ) + 1 - (j' : ℝ) = 2 by push_cast; ring, Fv_0 hn, Fv_1 hn, Fv_2 hn]
+      show ((j' + 1 : ℕ) : ℝ) + 1 - (j' : ℝ) = 2 by push_cast; ring, Fv_0, Fv_1 hn, Fv_2 hn]
     unfold bM; ring
 
 /-- Lines at corners two or more steps away do not meet the closed chord. -/
@@ -1561,6 +1569,7 @@ include hn
 private lemma fyvi (C i : ℕ) (ρ : ℤ) (h : (i : ℤ) - C = ρ) : fy n C (vertex n i) = Yr n ρ := by
   rw [fy_vertex hn, ← h]; push_cast; ring_nf
 
+omit hn in
 /-- The division points with a general index. -/
 private lemma divPt_eq' (k σ μ : ℕ) :
     divPt n k σ μ = vertex n σ +
@@ -1577,8 +1586,8 @@ private lemma divPt_inj {k σ σ' μ μ' : ℕ} (hσ : σ < n) (hσ' : σ' < n) 
     rw [div_lt_one hk]; have : (μ' : ℝ) ≤ k := by exact_mod_cast hμ2
     linarith
   have hfy : fy n (σ + 1) (divPt n k σ μ) = 0 := by
-    rw [divPt_eq' hn, fy_aff, fyv hn _ σ (-1) (by push_cast; ring),
-      fyv hn _ (σ + 1) 0 (by push_cast; ring), Yr_neg_one hn, Yr_zero hn]
+    rw [divPt_eq', fy_aff, fyv hn _ σ (-1) (by push_cast; ring),
+      fyv hn _ (σ + 1) 0 (by push_cast; ring), Yr_neg_one, Yr_zero]
     ring
   have hσeq : σ = σ' := by
     by_contra hne
@@ -1586,7 +1595,7 @@ private lemma divPt_inj {k σ σ' μ μ' : ℕ} (hσ : σ < n) (hσ' : σ' < n) 
     have e : fy n (σ + 1) (divPt n k σ' μ') =
         (1 - (μ' : ℝ) / ((k : ℝ) + 1)) * Yr n ((ρ - 1 : ℤ) : ℝ) +
           (μ' : ℝ) / ((k : ℝ) + 1) * Yr n (ρ : ℝ) := by
-      rw [divPt_eq' hn, fy_aff, fyvi hn _ σ' (ρ - 1) (by push_cast; omega),
+      rw [divPt_eq', fy_aff, fyvi hn _ σ' (ρ - 1) (by push_cast; omega),
         fyvi hn _ (σ' + 1) ρ (by push_cast; omega)]
       ring
     have hY0 := (XY_nonneg hn (ρ - 1) (by omega) (by omega)).2
@@ -1606,8 +1615,8 @@ private lemma divPt_inj {k σ σ' μ μ' : ℕ} (hσ : σ < n) (hσ' : σ' < n) 
   refine ⟨rfl, ?_⟩
   have hfx : ∀ μ'' : ℕ, fx n (σ + 1) (divPt n k σ μ'') = 1 - (μ'' : ℝ) / ((k : ℝ) + 1) := by
     intro μ''
-    rw [divPt_eq' hn, fx_aff, fxv hn _ σ (-1) (by push_cast; ring),
-      fxv hn _ (σ + 1) 0 (by push_cast; ring), Xr_neg_one hn, Xr_zero hn]
+    rw [divPt_eq', fx_aff, fxv hn _ σ (-1) (by push_cast; ring),
+      fxv hn _ (σ + 1) 0 (by push_cast; ring), Xr_neg_one hn, Xr_zero]
     ring
   have h1 := congrArg (fx n (σ + 1)) h
   rw [hfx, hfx] at h1
@@ -1646,7 +1655,7 @@ private theorem no_nonsimple {n : ℕ} (hn5 : n = 5 ∨ 7 ≤ n) (k : ℕ) : ¬ 
   · have endpt : ∀ c : Fin n × Fin k, p ∈ chord n k c →
         p = divPt n k c.1 ((c.2 : ℕ) + 1) ∨ p = divPt n k (nx n c.1) ((c.2 : ℕ) + 1) := by
       intro c hc
-      rw [chord_eq hn] at hc
+      rw [chord_eq] at hc
       obtain ⟨r, ⟨hr0, hr1⟩, rfl⟩ := hc
       rcases eq_or_lt_of_le hr0 with rfl | hr0'
       · left; simp [gam]
@@ -1705,7 +1714,7 @@ private lemma triple_exists {n k m₁ m₂ m₃ : ℕ} (hn : 3 ≤ n) (h1 : m₁
   · intro h; apply hne; have := congrArg (fun c => (c.2 : ℕ)) h; simpa [c₁, c₂] using this
   · intro h; have := congrArg (fun c => (c.1 : ℕ)) h; simp [c₁, c₃] at this
   · intro h; have := congrArg (fun c => (c.1 : ℕ)) h; simp [c₂, c₃] at this
-  · rw [chord_eq hn]; exact ⟨tt k m₂, ⟨(tt_pos k m₂).le, (tt_lt_one h2).le⟩, rfl⟩
+  · rw [chord_eq]; exact ⟨tt k m₂, ⟨(tt_pos k m₂).le, (tt_lt_one h2).le⟩, rfl⟩
   · rw [mem_chord_iff hn _ hpi]; show Fl n k 0 m₂ (gam n k 0 m₁ (tt k m₂)) = 0
     rw [pair_same hn]; ring
   · rw [mem_chord_iff hn _ hpi]
@@ -1914,7 +1923,7 @@ private theorem regions_formula {n : ℕ} (hn5 : n = 5 ∨ 7 ≤ n) (k : ℕ) : 
     refine ⟨vertex n (i % n + 1), ?_⟩
     show Fl n k (i % n) (i / n) (vertex n (i % n + 1)) ≠ 0
     unfold Fl
-    rw [fxv hn _ _ 0 (by ring), fyv hn _ _ 0 (by ring), Xr_zero hn, Yr_zero hn]
+    rw [fxv hn _ _ 0 (by ring), fyv hn _ _ 0 (by ring), Xr_zero, Yr_zero]
     have := tt_pos k (i / n)
     have := tt_lt_one hm
     nlinarith

@@ -1,6 +1,6 @@
 # A351743: from n = 139 the sequence is affine in 42-blocks, which proves Sycamore's, Sigrist's and the A355149 conjectures
 
-**Classification:** New result (open problem settled)  
+**Classification:** New result (conjecture settled; no earlier resolution found)  
 **Area:** Sequences and series  
 **Source problem:** OEIS A351743  
 **Date:** 2026-10-20
@@ -15,7 +15,7 @@ Let a(1)=1 and let a(n+1) be the greatest divisor of s(n)=a(1)+...+a(n) that is 
 
 ## Verification
 
-The statement was formalized by math0 from the conjecture in [OEIS A351743](https://oeis.org/A351743) as [`Math0.Statements.A351743.statement`](../../lean/Math0/Statements/OEIS/A351743.lean). Its definitions are checked by the kernel against the OEIS data, and it was reviewed for fidelity and frozen before any proof attempt. The Lean file [`lean/Math0/Frontier/OEIS/A351743.lean`](../../lean/Math0/Frontier/OEIS/A351743.lean) proves it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
+The statement was formalized by math0 (not by a third party) from the conjecture in [OEIS A351743](https://oeis.org/A351743) as [`Math0.Statements.A351743.statement`](../../lean/Math0/Statements/OEIS/A351743.lean). Its definitions are checked by the kernel against the OEIS data. A separate agent reviewed it for fidelity to the OEIS text and froze it (by hash) before any proof attempt. The statement and its frozen hash were committed together with the proof, so the order (freeze, then proof) is recorded only in the pipeline's logs, not in the git history. Its fidelity to the OEIS text is a judgement, not a machine check, so the conjecture as stated in OEIS is quoted in the notes below for comparison. The Lean file [`lean/Math0/Frontier/OEIS/A351743.lean`](../../lean/Math0/Frontier/OEIS/A351743.lean) proves it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
 
 ## Notes
 

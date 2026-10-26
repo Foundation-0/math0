@@ -1,6 +1,6 @@
 # 3 × 3 lower triangles with neighbours differing by at most two: a(n) = 1047 n - 1459 for n > 2 (A195249)
 
-**Classification:** New result (open problem settled)  
+**Classification:** New result (conjecture settled; no earlier resolution found)  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A195249  
 **Date:** 2026-10-20
@@ -11,7 +11,7 @@ Let a(n) be the number of fillings (x0,...,x5) of the six cells of the lower tri
 
 ## Verification
 
-The statement was formalized by math0 from the conjecture in [OEIS A195249](https://oeis.org/A195249) as [`Math0.Statements.A195249.statement`](../../lean/Math0/Statements/OEIS/A195249.lean). Its definitions are checked by the kernel against the OEIS data, and it was reviewed for fidelity and frozen before any proof attempt. The Lean file [`lean/Math0/Frontier/OEIS/A195249.lean`](../../lean/Math0/Frontier/OEIS/A195249.lean) proves it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
+The statement was formalized by math0 (not by a third party) from the conjecture in [OEIS A195249](https://oeis.org/A195249) as [`Math0.Statements.A195249.statement`](../../lean/Math0/Statements/OEIS/A195249.lean). Its definitions are checked by the kernel against the OEIS data. A separate agent reviewed it for fidelity to the OEIS text and froze it (by hash) before any proof attempt. The statement and its frozen hash were committed together with the proof, so the order (freeze, then proof) is recorded only in the pipeline's logs, not in the git history. Its fidelity to the OEIS text is a judgement, not a machine check, so the conjecture as stated in OEIS is quoted in the notes below for comparison. The Lean file [`lean/Math0/Frontier/OEIS/A195249.lean`](../../lean/Math0/Frontier/OEIS/A195249.lean) proves it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
 
 ## Notes
 

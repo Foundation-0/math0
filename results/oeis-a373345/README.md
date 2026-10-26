@@ -11,7 +11,7 @@ Let A371176 be the increasing sequence of positive integers k whose binary weigh
 
 ## Verification
 
-The statement was formalized by math0 from the conjecture in [OEIS A373345](https://oeis.org/A373345) as [`Math0.Statements.A373345.statement`](../../lean/Math0/Statements/OEIS/A373345.lean). Its definitions are checked by the kernel against the OEIS data, and it was reviewed for fidelity and frozen before any proof attempt. The Lean file [`lean/Math0/Frontier/OEIS/A373345.lean`](../../lean/Math0/Frontier/OEIS/A373345.lean) proves it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
+The statement was formalized by math0 (not by a third party) from the conjecture in [OEIS A373345](https://oeis.org/A373345) as [`Math0.Statements.A373345.statement`](../../lean/Math0/Statements/OEIS/A373345.lean). Its definitions are checked by the kernel against the OEIS data. A separate agent reviewed it for fidelity to the OEIS text and froze it (by hash) before any proof attempt. The statement and its frozen hash were committed together with the proof, so the order (freeze, then proof) is recorded only in the pipeline's logs, not in the git history. Its fidelity to the OEIS text is a judgement, not a machine check, so the conjecture as stated in OEIS is quoted in the notes below for comparison. The Lean file [`lean/Math0/Frontier/OEIS/A373345.lean`](../../lean/Math0/Frontier/OEIS/A373345.lean) proves it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
 
 ## Notes
 
@@ -19,7 +19,7 @@ Conjecture as stated in OEIS: %Y A373345 Cf. A007895 (conjectured row lengths) .
 
 Referees: OEIS A371176 (Mikhail Kurkov, 2024): the formula a(n) = b(n)*A001316(b(n))/2 with b(n) = A048679(n), and the recursion a(n) = 2^(A072649(n)-1) + [c(n)>0]*2*a(c(n)), were present by Apr 20 2024 (oeisdata commit 6ea59dd), before the A373345 conjecture of Jun 1 2024. Both were stated without proof and imply popcount(A371176(n)) = A007895(n). Kurkov's comment of Oct 21 2024 states the explicit Zeckendorf-rewriting description of A371176(n).
 H. V. Chu, "The Fibonacci Sequence and Schreier-Zeckendorf Sets", J. Integer Sequences 22 (2019), Art. 19.6.5 (arXiv:1906.10962), Theorem 3: a cardinality-preserving bijection between Schreier sets and Zeckendorf sets, which also preserves colex/binary order.
-A referee search also reported a GitHub issue (the-omega-institute/trureturing #9050, Sep 2026) giving an informal proof of this identity; we could not independently check that link.
+GitHub issue the-omega-institute/trureturing #9050 ("Research: full Schreier-Zeckendorf row-length identity (OEIS A373345)", by AlyciaBHZ, Sep 20 2026; confirmed when the manuscript was checked) presents the identity as an elementary consequence of Chu's bijection, as paper mathematics with no Lean formalization.
 Background only: A. Bird, "Jozef Schreier, Schreier sets and the Fibonacci sequence", Out Of The Norm blog, 2012, gives the binary ordering and the R/S block recursion but does not mention Zeckendorf. H. V. Chu, arXiv:2606.21865 (2026), is a survey and does not state the identity.
 No prior Lean formalization found.
 

@@ -1,6 +1,6 @@
 # Convergents of [1; 1/2, 1/3, ..., 1/n]: numerator + denominator = 2^(v2(n!) + v2((n+1)!)) (A092054)
 
-**Classification:** New result (open problem settled)  
+**Classification:** New result (conjecture settled; no earlier resolution found)  
 **Area:** Number theory  
 **Source problem:** OEIS A092054  
 **Date:** 2026-10-21
@@ -11,7 +11,7 @@ For every n >= 1, write the convergent [1; 1/2, 1/3, ..., 1/n] = 1 + 1/(1/2 + 1/
 
 ## Verification
 
-The statement was formalized by math0 from the conjecture in [OEIS A092054](https://oeis.org/A092054) as [`Math0.Statements.A092054.statement`](../../lean/Math0/Statements/OEIS/A092054.lean). Its definitions are checked by the kernel against the OEIS data, and it was reviewed for fidelity and frozen before any proof attempt. The Lean file [`lean/Math0/Frontier/OEIS/A092054.lean`](../../lean/Math0/Frontier/OEIS/A092054.lean) proves it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
+The statement was formalized by math0 (not by a third party) from the conjecture in [OEIS A092054](https://oeis.org/A092054) as [`Math0.Statements.A092054.statement`](../../lean/Math0/Statements/OEIS/A092054.lean). Its definitions are checked by the kernel against the OEIS data. A separate agent reviewed it for fidelity to the OEIS text and froze it (by hash) before any proof attempt. The statement and its frozen hash were committed together with the proof, so the order (freeze, then proof) is recorded only in the pipeline's logs, not in the git history. Its fidelity to the OEIS text is a judgement, not a machine check, so the conjecture as stated in OEIS is quoted in the notes below for comparison. The Lean file [`lean/Math0/Frontier/OEIS/A092054.lean`](../../lean/Math0/Frontier/OEIS/A092054.lean) proves it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
 
 ## Notes
 

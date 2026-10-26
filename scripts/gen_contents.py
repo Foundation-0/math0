@@ -34,7 +34,7 @@ def has_paper(slug):
 
 
 CLASS_LABEL = {
-    "new-result": "New result (open problem settled)",
+    "new-result": "New result (conjecture settled; no earlier resolution found)",
     "known-result-first-formalization": "First formal proof of a known result",
     "known-result-already-formalized": "Independent formal proof (an implying Lean proof already exists elsewhere)",
     "misformalization": "Misformalization found (upstream statement does not match the problem)",
@@ -66,13 +66,28 @@ def upstream_link(e):
     return f"[`{u['decl']}`]({FC_URL}/blob/{u['commit']}/{u['file']})"
 
 
+LEGACY_FREEZE = set(open(os.path.join(ROOT, "lean", "Math0", "Statements", "FROZEN_WITH_PROOF.txt")).read().split())
+
+
+def freeze_text(e):
+    rel = os.path.relpath(e["upstream"]["file"], "lean/Math0/Statements")
+    if rel in LEGACY_FREEZE:
+        return ("The statement and its frozen hash were committed together with the proof, so the order "
+                "(freeze, then proof) is recorded only in the pipeline's logs, not in the git history.")
+    return ("The statement and its frozen hash were committed before the proof, and CI checks that this "
+            "order holds and that the frozen hash never changes.")
+
+
 def verification_text(e):
     u = e["upstream"]
     if e.get("statement_origin") == "math0":
         return (
-            f"The statement was formalized by math0 from the conjecture in [{e['source']}]({e['source_url']}) "
-            f"as [`{u['decl']}`](../../{u['file']}). Its definitions are checked by the kernel against the OEIS data, "
-            "and it was reviewed for fidelity and frozen before any proof attempt. The Lean file "
+            f"The statement was formalized by math0 (not by a third party) from the conjecture in "
+            f"[{e['source']}]({e['source_url']}) as [`{u['decl']}`](../../{u['file']}). Its definitions are checked "
+            "by the kernel against the OEIS data. A separate agent reviewed it for fidelity to the OEIS text and "
+            f"froze it (by hash) before any proof attempt. {freeze_text(e)} Its fidelity to the OEIS text is a "
+            "judgement, not a machine check, so the conjecture as stated in OEIS is quoted in the notes below "
+            "for comparison. The Lean file "
             f"[`{e['lean_file']}`](../../{e['lean_file']}) {VERB[e['mode']]} it; the final command `#math0_settles` checks that "
             "our theorem's type is exactly the statement or its negation and that both use no axioms beyond "
             "`propext`, `Classical.choice` and `Quot.sound`."
@@ -147,7 +162,7 @@ def write_highlights(entries, counts):
         + ", ".join(f"{v} {SHORT[k]}" for k, v in counts.items() if v)
         + ". Full list: [CONTENTS.md](CONTENTS.md).",
         "",
-        "New results (open problems settled; each checked by the Lean kernel and judged new by an independent novelty referee):",
+        "New results (OEIS conjectures settled; each checked by the Lean kernel, and no earlier proof or counterexample was found by an independent novelty referee):",
         "",
     ]
     for e in entries:
@@ -171,7 +186,11 @@ def main():
     out = [
         "# Contents",
         "",
-        f"**{len(entries)} results, every one checked by the Lean kernel against a statement published by a third party.**",
+        f"**{len(entries)} results, every one checked by the Lean kernel against a fixed statement:** "
+        f"{sum(e.get('statement_origin') != 'math0' for e in entries)} against statements published by a third party "
+        "(formal-conjectures), and "
+        f"{sum(e.get('statement_origin') == 'math0' for e in entries)} against statements that math0 formalized from "
+        "OEIS and froze before the proof.",
         "",
         "| Classification | Count |",
         "|---|---|",

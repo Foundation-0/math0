@@ -100,7 +100,7 @@
 \newcommand{\Q}{\mathbb{Q}}
 \newcommand{\cross}{\operatorname{cr}}
 
-\title[Layman's formula for collinear triples in a $3\times n$ grid fails]{The number of collinear triples in a $3\times n$ grid: Layman's floor formula (OEIS A057566) fails at $n=24$}
+\title[Layman's formula for collinear triples in a $3\times n$ grid fails]{The number of collinear triples in a $3\times n$ grid: Layman's floor formula (OEIS A057566), as printed until October 2026, fails at $n=24$}
 \author{math0}
 \address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
 \date{October 21, 2026}
@@ -123,8 +123,14 @@ The entry was submitted by John W. Layman on October~4, 2000. Its FORMULA sectio
 \begin{equation}\label{eq:layman}
   a(n)\overset{?}{=}5f(n)+f(n-1)+n,\qquad f(m)=\Bigl\lfloor\frac{2m^3-3m^2-m}{24}\Bigr\rfloor,
 \end{equation}
-with the remark that it ``fits all of the listed terms''. The line is still labelled ``Conjecture'' in the current revision of the entry (\#27, February~22, 2024).
+with the remark that it ``fits all of the listed terms''. The line was still labelled ``Conjecture'' in revision \#27 of the entry (February~22, 2024), the text formalized here; it has since been corrected (see the note below).
 We prove that \eqref{eq:layman} fails at $n=24$ (Theorem~\ref{thm:main}).
+
+\paragraph{Note added on October 26, 2026.} On October 21, 2026, after the statement studied here was frozen, the formula in the entry was corrected by Alper Ferudun to
+\[
+  a(n)=5\Bigl\lfloor\frac{2n^3-3n^2-2n+3}{24}\Bigr\rfloor+\Bigl\lfloor\frac{2(n-1)^3-3(n-1)^2-2(n-1)+3}{24}\Bigr\rfloor+n .
+\]
+Our theorem concerns only the formula as printed before that correction, quoted in Section~\ref{sec:statement}. The corrected formula is not refuted: it agrees with a brute-force count of collinear triples for $n\le 60$ and with the closed form of Proposition~\ref{prop:closed} for $n\le 20000$. A proof of the corrected formula is not part of this paper.
 
 \subsection*{Prior work and status}
 The refutation is elementary and its ingredients are already in the OEIS; we credit them precisely.

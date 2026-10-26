@@ -1,6 +1,6 @@
 # A363609: a(k^3) = 6k(k+2), the cube is the optimal polycube of k^3 dice
 
-**Classification:** New result (open problem settled)  
+**Classification:** New result (conjecture settled; no earlier resolution found)  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A363609  
 **Date:** 2026-10-19
@@ -11,7 +11,7 @@ Each standard die has opposite faces summing to 7, all dice have the same chiral
 
 ## Verification
 
-The statement was formalized by math0 from the conjecture in [OEIS A363609](https://oeis.org/A363609) as [`def statement`](../../lean/Math0/Statements/OEIS/A363609.lean). Its definitions are checked by the kernel against the OEIS data, and it was reviewed for fidelity and frozen before any proof attempt. The Lean file [`lean/Math0/Frontier/OEIS/A363609.lean`](../../lean/Math0/Frontier/OEIS/A363609.lean) proves it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
+The statement was formalized by math0 (not by a third party) from the conjecture in [OEIS A363609](https://oeis.org/A363609) as [`def statement`](../../lean/Math0/Statements/OEIS/A363609.lean). Its definitions are checked by the kernel against the OEIS data. A separate agent reviewed it for fidelity to the OEIS text and froze it (by hash) before any proof attempt. The statement and its frozen hash were committed together with the proof, so the order (freeze, then proof) is recorded only in the pipeline's logs, not in the git history. Its fidelity to the OEIS text is a judgement, not a machine check, so the conjecture as stated in OEIS is quoted in the notes below for comparison. The Lean file [`lean/Math0/Frontier/OEIS/A363609.lean`](../../lean/Math0/Frontier/OEIS/A363609.lean) proves it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
 
 ## Notes
 

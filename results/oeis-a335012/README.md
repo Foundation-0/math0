@@ -1,6 +1,6 @@
 # Repunit residues: a(n) = n - 1 exactly for long period primes
 
-**Classification:** New result (open problem settled)  
+**Classification:** New result (conjecture settled; no earlier resolution found)  
 **Area:** Number theory  
 **Source problem:** OEIS A335012  
 **Date:** 2026-10-18
@@ -11,7 +11,7 @@ For n >= 1 let a(n) be the number of distinct values R_k mod n for 1 <= k <= n, 
 
 ## Verification
 
-The statement was formalized by math0 from the conjecture in [OEIS A335012](https://oeis.org/A335012) as [`Math0.Statements.A335012.statement`](../../lean/Math0/Statements/OEIS/A335012.lean). Its definitions are checked by the kernel against the OEIS data, and it was reviewed for fidelity and frozen before any proof attempt. The Lean file [`lean/Math0/Frontier/OEIS/A335012.lean`](../../lean/Math0/Frontier/OEIS/A335012.lean) proves it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
+The statement was formalized by math0 (not by a third party) from the conjecture in [OEIS A335012](https://oeis.org/A335012) as [`Math0.Statements.A335012.statement`](../../lean/Math0/Statements/OEIS/A335012.lean). Its definitions are checked by the kernel against the OEIS data. A separate agent reviewed it for fidelity to the OEIS text and froze it (by hash) before any proof attempt. The statement and its frozen hash were committed together with the proof, so the order (freeze, then proof) is recorded only in the pipeline's logs, not in the git history. Its fidelity to the OEIS text is a judgement, not a machine check, so the conjecture as stated in OEIS is quoted in the notes below for comparison. The Lean file [`lean/Math0/Frontier/OEIS/A335012.lean`](../../lean/Math0/Frontier/OEIS/A335012.lean) proves it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
 
 ## Notes
 

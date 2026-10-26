@@ -1,6 +1,6 @@
 # A106505: common sides of A/2A primitive triangles are periodic mod 8, so a(n+5) = a(n) + 8
 
-**Classification:** New result (open problem settled)  
+**Classification:** New result (conjecture settled; no earlier resolution found)  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A106505  
 **Date:** 2026-10-19
@@ -11,7 +11,7 @@ Let IsSide(c) mean there are natural numbers x, y such that x, y, c are the side
 
 ## Verification
 
-The statement was formalized by math0 from the conjecture in [OEIS A106505](https://oeis.org/A106505) as [`Math0.Statements.A106505.statement`](../../lean/Math0/Statements/OEIS/A106505.lean). Its definitions are checked by the kernel against the OEIS data, and it was reviewed for fidelity and frozen before any proof attempt. The Lean file [`lean/Math0/Frontier/OEIS/A106505.lean`](../../lean/Math0/Frontier/OEIS/A106505.lean) proves it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
+The statement was formalized by math0 (not by a third party) from the conjecture in [OEIS A106505](https://oeis.org/A106505) as [`Math0.Statements.A106505.statement`](../../lean/Math0/Statements/OEIS/A106505.lean). Its definitions are checked by the kernel against the OEIS data. A separate agent reviewed it for fidelity to the OEIS text and froze it (by hash) before any proof attempt. The statement and its frozen hash were committed together with the proof, so the order (freeze, then proof) is recorded only in the pipeline's logs, not in the git history. Its fidelity to the OEIS text is a judgement, not a machine check, so the conjecture as stated in OEIS is quoted in the notes below for comparison. The Lean file [`lean/Math0/Frontier/OEIS/A106505.lean`](../../lean/Math0/Frontier/OEIS/A106505.lean) proves it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
 
 ## Notes
 

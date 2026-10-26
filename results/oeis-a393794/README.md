@@ -1,6 +1,6 @@
 # The 1089-trick map has two 9-digit fixed points (A393794 uniqueness conjecture is false)
 
-**Classification:** New result (open problem settled)  
+**Classification:** New result (conjecture settled; no earlier resolution found)  
 **Area:** Sequences and series  
 **Source problem:** OEIS A393794  
 **Date:** 2026-10-18
@@ -11,7 +11,7 @@ Let rev(m) be the decimal reversal of m (leading zeros dropped), and let T(x) = 
 
 ## Verification
 
-The statement was formalized by math0 from the conjecture in [OEIS A393794](https://oeis.org/A393794) as [`Math0.Statements.A393794.statement`](../../lean/Math0/Statements/OEIS/A393794.lean). Its definitions are checked by the kernel against the OEIS data, and it was reviewed for fidelity and frozen before any proof attempt. The Lean file [`lean/Math0/Frontier/OEIS/A393794.lean`](../../lean/Math0/Frontier/OEIS/A393794.lean) refutes (proves the negation of) it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
+The statement was formalized by math0 (not by a third party) from the conjecture in [OEIS A393794](https://oeis.org/A393794) as [`Math0.Statements.A393794.statement`](../../lean/Math0/Statements/OEIS/A393794.lean). Its definitions are checked by the kernel against the OEIS data. A separate agent reviewed it for fidelity to the OEIS text and froze it (by hash) before any proof attempt. The statement and its frozen hash were committed together with the proof, so the order (freeze, then proof) is recorded only in the pipeline's logs, not in the git history. Its fidelity to the OEIS text is a judgement, not a machine check, so the conjecture as stated in OEIS is quoted in the notes below for comparison. The Lean file [`lean/Math0/Frontier/OEIS/A393794.lean`](../../lean/Math0/Frontier/OEIS/A393794.lean) refutes (proves the negation of) it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
 
 ## Notes
 

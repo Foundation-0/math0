@@ -1,15 +1,15 @@
 # Contents
 
-**131 results, every one checked by the Lean kernel against a statement published by a third party.**
+**131 results, every one checked by the Lean kernel against a fixed statement:** 43 against statements published by a third party (formal-conjectures), and 88 against statements that math0 formalized from OEIS and froze before the proof.
 
 | Classification | Count |
 |---|---|
-| New result (open problem settled) | 57 |
+| New result (conjecture settled; no earlier resolution found) | 57 |
 | First formal proof of a known result | 50 |
 | Independent formal proof (an implying Lean proof already exists elsewhere) | 18 |
 | Misformalization found (upstream statement does not match the problem) | 6 |
 
-## New result (open problem settled)
+## New result (conjecture settled; no earlier resolution found)
 
 | # | Result | Area | Upstream statement | Lean |
 |---|---|---|---|---|
@@ -100,7 +100,7 @@
 | 23 | [Fixed polyominoes with n cells and width n-2: T(n,n-2) = 8n^2 - 51n + 86 (A308359)](results/oeis-a308359/README.md) | Discrete geometry | [`Math0.Statements.A308359.statement`](lean/Math0/Statements/OEIS/A308359.lean) (math0, from OEIS A308359) | [A308359.lean](lean/Math0/Frontier/OEIS/A308359.lean) |
 | 24 | [Goodman–Goodman covering theorem for balls in ℝ^d (Erdős 1121, higher-dimensional variant)](results/erdos1121-erdos-1121-variants-higher-dimension/README.md) | Discrete geometry | [`Erdos1121.erdos_1121.variants.higher_dimension`](https://github.com/google-deepmind/formal-conjectures/blob/c77fdd446d23539302aa73bcfae4a9fa962b8382/FormalConjectures/ErdosProblems/1121.lean) | [Erdos1121_erdos_1121_variants_higher_dimension.lean](lean/Math0/ErdosProblems/Erdos1121_erdos_1121_variants_higher_dimension.lean) |
 | 25 | [Hanna's conjecture A124418(n,k) = k! * A124526(n,k) (partitions with k mixed-parity blocks) proved](results/oeis-a124526/README.md) | Discrete geometry | [`Math0.Statements.A124526.statement`](lean/Math0/Statements/OEIS/A124526.lean) (math0, from OEIS A124526) | [A124526.lean](lean/Math0/Frontier/OEIS/A124526.lean) |
-| 26 | [Layman's floor formula for collinear triples in a 3 × n grid (A057566) fails at n = 24](results/oeis-a057566/README.md) | Discrete geometry | [`Math0.Statements.A057566.statement`](lean/Math0/Statements/OEIS/A057566.lean) (math0, from OEIS A057566) | [A057566.lean](lean/Math0/Frontier/OEIS/A057566.lean) |
+| 26 | [Layman's floor formula for collinear triples in a 3 × n grid (A057566), as printed until its October 2026 correction, fails at n = 24](results/oeis-a057566/README.md) | Discrete geometry | [`Math0.Statements.A057566.statement`](lean/Math0/Statements/OEIS/A057566.lean) (math0, from OEIS A057566) | [A057566.lean](lean/Math0/Frontier/OEIS/A057566.lean) |
 | 27 | [Mathar's generating function for column 3 of A270668 (domino tilings of (4k+1)x5 boards with central hole)](results/oeis-a270668/README.md) | Discrete geometry | [`Math0.Statements.A270668.statement`](lean/Math0/Statements/OEIS/A270668.lean) (math0, from OEIS A270668) | [A270668.lean](lean/Math0/Frontier/OEIS/A270668.lean) |
 | 28 | [No primitive Heronian triangle has integer circumradius](results/oeis-a392943/README.md) | Discrete geometry | [`Math0.Statements.A392943.statement`](lean/Math0/Statements/OEIS/A392943.lean) (math0, from OEIS A392943) | [A392943.lean](lean/Math0/Frontier/OEIS/A392943.lean) |
 | 29 | [Perimeters of primitive Heronian isosceles triangles: A308222(n) = 2 · A096033(n + 2)](results/oeis-a308222/README.md) | Discrete geometry | [`Math0.Statements.A308222.statement`](lean/Math0/Statements/OEIS/A308222.lean) (math0, from OEIS A308222) | [A308222.lean](lean/Math0/Frontier/OEIS/A308222.lean) |

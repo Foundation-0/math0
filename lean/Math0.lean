@@ -2,6 +2,7 @@
 Copyright 2026 The math0 Authors. Licensed under the Apache License, Version 2.0.
 -/
 import Math0.Audit
+import Math0.Statements
 import Math0.Arxiv.Arxiv_0805_3777_isMaxRank_le_two_mul_isGenericRank
 import Math0.Arxiv.Arxiv_1609_08688_maximalLength_ge_of_isSquare
 import Math0.Arxiv.Arxiv_1609_08688_maximalLength_pow

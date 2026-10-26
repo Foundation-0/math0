@@ -1,6 +1,6 @@
 # The only fixed points of reverse(x) - maxdigit(x) are 0 and 89
 
-**Classification:** New result (open problem settled)  
+**Classification:** New result (conjecture settled; no earlier resolution found)  
 **Area:** Sequences and series  
 **Source problem:** OEIS A097154  
 **Date:** 2026-10-19
@@ -11,7 +11,7 @@ For a natural number x, let rev(x) be its decimal reversal (rev 0 = 0, trailing 
 
 ## Verification
 
-The statement was formalized by math0 from the conjecture in [OEIS A097154](https://oeis.org/A097154) as [`Math0.Statements.A097154.statement`](../../lean/Math0/Statements/OEIS/A097154.lean). Its definitions are checked by the kernel against the OEIS data, and it was reviewed for fidelity and frozen before any proof attempt. The Lean file [`lean/Math0/Frontier/OEIS/A097154.lean`](../../lean/Math0/Frontier/OEIS/A097154.lean) proves it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
+The statement was formalized by math0 (not by a third party) from the conjecture in [OEIS A097154](https://oeis.org/A097154) as [`Math0.Statements.A097154.statement`](../../lean/Math0/Statements/OEIS/A097154.lean). Its definitions are checked by the kernel against the OEIS data. A separate agent reviewed it for fidelity to the OEIS text and froze it (by hash) before any proof attempt. The statement and its frozen hash were committed together with the proof, so the order (freeze, then proof) is recorded only in the pipeline's logs, not in the git history. Its fidelity to the OEIS text is a judgement, not a machine check, so the conjecture as stated in OEIS is quoted in the notes below for comparison. The Lean file [`lean/Math0/Frontier/OEIS/A097154.lean`](../../lean/Math0/Frontier/OEIS/A097154.lean) proves it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
 
 ## Notes
 

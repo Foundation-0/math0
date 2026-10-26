@@ -10,11 +10,29 @@ jobs:
   build:
     name: Build and audit every result
     runs-on: ubuntu-latest
+    timeout-minutes: 330
     steps:
       - uses: actions/checkout@v4
-      - name: Statements formalized by math0 are unchanged since their fidelity review
-        run: cd lean/Math0/Statements && sha256sum -c FROZEN.sha256
-      - name: Build Math0 (fails on any sorry, non-standard axiom, or statement mismatch)
+        with:
+          fetch-depth: 0  # the freeze check reads the history of FROZEN.sha256
+      - name: Frozen statements are unchanged, append-only, and committed before their proofs
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || github.event.before }}
+          ORDER: ${{ github.event_name == 'pull_request' && '--order' || '' }}
+        run: |
+          if [ -n "$BASE" ]; then python3 scripts/check_freeze.py --base "$BASE" $ORDER
+          else python3 scripts/check_freeze.py; fi
+      - name: Install Lean and fetch Mathlib's prebuilt cache
         uses: leanprover/lean-action@v1
         with:
           lake-package-directory: lean
+          # No GitHub cache: every math0 module (and every formal-conjectures module it imports)
+          # is elaborated and checked by the kernel again on every run, never replayed.
+          use-github-cache: false
+          build: false
+      - name: Rebuild every result from scratch and re-run every audit
+        run: |
+          expected=$(python3 -c 'import json; print(len(json.load(open("catalog.json"))["results"]))')
+          scripts/verify.sh --clean --expect "$expected"
+      - name: The audit commands reject what they should
+        run: scripts/test_audit.sh

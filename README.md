@@ -7,22 +7,30 @@ Anthropic. It adds one rule that natural-language manuscripts cannot meet on the
 
 > A result is listed here only if a complete Lean 4 proof of it exists, compiled against
 > Mathlib, using no axioms beyond `propext`, `Classical.choice` and `Quot.sound`, **and the
-> statement it proves was written by someone else.**
+> statement it proves either was written by someone else, or was formalized by math0 and frozen
+> before the proof, and is shown next to its source text.**
 
-The statements come from Google DeepMind's
-[formal-conjectures](https://github.com/google-deepmind/formal-conjectures) repository. It is a
-public, independently curated collection of formalized open problems: Erdős problems, Ben Green's
-100 open problems, OEIS conjectures, Wikipedia lists, problems from papers and books. math0
-imports that repository at a pinned commit. Each math0 proof then states its theorem as *the type
-of the upstream declaration* and is checked against it syntactically. A proof therefore cannot
-quietly prove an easier statement than the one the problem's curators wrote down.
+Two kinds of statement are used (see [Two tracks](#two-tracks)):
+
+* **Written by someone else** (the formal-conjectures track). These come from Google DeepMind's
+  [formal-conjectures](https://github.com/google-deepmind/formal-conjectures) repository, a public,
+  independently curated collection of formalized open problems: Erdős problems, Ben Green's 100
+  open problems, OEIS conjectures, Wikipedia lists, problems from papers and books. math0 imports
+  that repository at a pinned commit. Each math0 proof states its theorem as *the type of the
+  upstream declaration* and is checked against it syntactically, so it cannot quietly prove an
+  easier statement than the one the problem's curators wrote down.
+* **Formalized by math0** (the frontier track). Here math0 writes the statement itself, from a
+  conjecture in an OEIS entry. Its definitions are checked by the kernel against the OEIS data,
+  but its fidelity to the OEIS text rests on a separate reviewing agent and on you. So every
+  result page quotes the OEIS conjecture next to the formal statement, each statement is frozen by
+  hash before the proof, and CI rejects any change to a frozen statement.
 
 ## Highlights
 
 <!-- HIGHLIGHTS:START -->
 **131 verified results.** 57 new results, 50 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
 
-New results (open problems settled; each checked by the Lean kernel and judged new by an independent novelty referee):
+New results (OEIS conjectures settled; each checked by the Lean kernel, and no earlier proof or counterexample was found by an independent novelty referee):
 
 * [3 × 3 lower triangles with neighbours differing by at most two: a(n) = 1047 n - 1459 for n > 2 (A195249)](results/oeis-a195249/README.md) ([paper](results/oeis-a195249/paper.pdf))
 * [3^(3^18) + 2 is divisible by 31^2, so Hilliard's squarefree conjecture (A083020) fails](results/oeis-a083020/README.md) ([paper](results/oeis-a083020/paper.pdf))
@@ -99,6 +107,18 @@ New results (open problems settled; each checked by the Lean kernel and judged n
    it (by hash) before a third agent attempts a proof or counterexample, which is checked with
    `#math0_settles`.
 
+   Frozen statements are listed in
+   [`lean/Math0/Statements/FROZEN.sha256`](lean/Math0/Statements/FROZEN.sha256), and CI enforces
+   three rules. Each file must still match its hash. The list is append-only: a frozen line can
+   never be edited or removed, even together with its statement. And from 26 October 2026, each
+   new statement is committed, in its own commit, before the proof that settles it, so the order
+   is visible in the git history and the statement can be reviewed on its own. The statements
+   frozen before that date were committed together with their proofs; they are listed in
+   [`FROZEN_WITH_PROOF.txt`](lean/Math0/Statements/FROZEN_WITH_PROOF.txt), and for them the
+   freeze order is recorded only in the pipeline's logs. Statements that are frozen but not yet
+   settled are compiled by CI too, through
+   [`lean/Math0/Statements.lean`](lean/Math0/Statements.lean).
+
 ## Why verification first
 
 Proof-shaped text is cheap to produce and expensive to check, whether a human or a model wrote
@@ -118,8 +138,12 @@ manuscript only explains why.
 
 Results are classified honestly, after independent referees have tried to refute them:
 
-* **New result:** the upstream problem was open, the formal statement is faithful, and the
-  proof settles it.
+* **New result (conjecture settled; no earlier resolution found):** the conjecture was stated as
+  open in its source, the formal statement is faithful, the proof settles it, and an independent
+  novelty referee found no earlier proof or counterexample. This says nothing about difficulty:
+  many of the OEIS conjectures settled here yield to short, elementary arguments, and some
+  counterexamples refute the conjecture only as literally stated. The result pages say so where
+  it applies.
 * **First formal proof of a known result:** the mathematics was known, but no machine-checked
   proof of it existed.
 * **Independent formal proof:** a Lean proof of an implying statement already exists elsewhere.
@@ -148,11 +172,21 @@ Each command fails the build unless:
 2. `Lean.collectAxioms` reports nothing beyond `propext`, `Classical.choice` and `Quot.sound`.
    This rejects `sorry`, `native_decide` (`Lean.ofReduceBool`) and any custom axiom.
 
-CI ([`.github/workflows/lean.yml`](.github/workflows/lean.yml)) rebuilds everything from a clean
-checkout. Locally:
+CI ([`.github/workflows/lean.yml`](.github/workflows/lean.yml)) runs on every push and pull
+request. It uses no build cache other than Mathlib's prebuilt oleans, so every math0 module (and
+every formal-conjectures module it imports) is elaborated and checked by the kernel again, never
+replayed. It then checks that exactly one statement check ran per catalogue entry, checks the
+frozen statements ([`scripts/check_freeze.py`](scripts/check_freeze.py)), and runs the audit's
+own tests in [`tests/audit/`](tests/audit): files that the audit must reject (a `sorry`,
+`native_decide`, a custom axiom, a weaker or merely definitionally equal statement, a statement
+hiding a `sorry`, the wrong polarity) and a file it must accept. A weekly workflow
+([`kernel-replay.yml`](.github/workflows/kernel-replay.yml)) also replays every declaration of
+every math0 module through the kernel with `leanchecker`, and runs the independent
+[axiom-audit](https://github.com/leanprover-community/axiom-audit). Locally:
 
 ```sh
-scripts/verify.sh        # needs elan; fetches the Mathlib cache and builds every result
+scripts/verify.sh --clean   # needs elan; fetches the Mathlib cache and rebuilds every result
+scripts/test_audit.sh       # the audit's own tests
 ```
 
 ## How the results were produced
@@ -182,7 +216,8 @@ catalog.json       machine-readable list of every claim math0 makes
 history.md         release log
 results/<slug>/    per-result README, manuscript (paper.tex, paper.pdf), citation
 lean/              Lake project: Math0/Audit.lean, Math0/<Source>/<Result>.lean
-scripts/           verify.sh, gen_contents.py, build_papers.sh
+scripts/           verify.sh, test_audit.sh, check_freeze.py, gen_contents.py, gen_root.py
+tests/audit/       files the audit must reject (fail/) or accept (pass/)
 ```
 
 ## License

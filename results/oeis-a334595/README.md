@@ -1,6 +1,6 @@
 # A334595: a(n) = 1 iff n is a power of two, and the records occur exactly at 1 and 2^k + 1
 
-**Classification:** New result (open problem settled)  
+**Classification:** New result (conjecture settled; no earlier resolution found)  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A334595  
 **Date:** 2026-10-24
@@ -13,7 +13,7 @@ Let a(n) be the number obtained as follows. Write n in binary, most significant 
 
 ## Verification
 
-The statement was formalized by math0 from the conjecture in [OEIS A334595](https://oeis.org/A334595) as [`Math0.Statements.A334595.statement`](../../lean/Math0/Statements/OEIS/A334595.lean). Its definitions are checked by the kernel against the OEIS data, and it was reviewed for fidelity and frozen before any proof attempt. The Lean file [`lean/Math0/Frontier/OEIS/A334595.lean`](../../lean/Math0/Frontier/OEIS/A334595.lean) proves it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
+The statement was formalized by math0 (not by a third party) from the conjecture in [OEIS A334595](https://oeis.org/A334595) as [`Math0.Statements.A334595.statement`](../../lean/Math0/Statements/OEIS/A334595.lean). Its definitions are checked by the kernel against the OEIS data. A separate agent reviewed it for fidelity to the OEIS text and froze it (by hash) before any proof attempt. The statement and its frozen hash were committed together with the proof, so the order (freeze, then proof) is recorded only in the pipeline's logs, not in the git history. Its fidelity to the OEIS text is a judgement, not a machine check, so the conjecture as stated in OEIS is quoted in the notes below for comparison. The Lean file [`lean/Math0/Frontier/OEIS/A334595.lean`](../../lean/Math0/Frontier/OEIS/A334595.lean) proves it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
 
 ## Notes
 
