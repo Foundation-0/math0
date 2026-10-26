@@ -13,6 +13,10 @@ on:
     paths:
       - .github/workflows/kernel-replay.yml
 
+concurrency:
+  group: kernel-replay-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   leanchecker:
     name: leanchecker (shard ${{ matrix.shard }} of 4)
