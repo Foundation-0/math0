@@ -26,12 +26,23 @@ jobs:
       fail-fast: false
       matrix:
         shard: [0, 1, 2, 3]
+    env:
+      LEAN_NUM_THREADS: "2"
     steps:
       - uses: actions/checkout@v4
+      - name: Add swap (single proof files need up to 8 GB; the runner has 16 GB)
+        run: |
+          swap=/mnt/math0.swap
+          if [ ! -d /mnt ] || [ "$(df --output=avail -BG /mnt | tail -1 | tr -dc 0-9)" -lt 30 ]; then swap=/math0.swap; fi
+          sudo fallocate -l 20G "$swap" && sudo chmod 600 "$swap" && sudo mkswap "$swap" >/dev/null && sudo swapon "$swap"
+          free -h
       - uses: leanprover/lean-action@v1
         with:
           lake-package-directory: lean
           use-github-cache: false
+          build: false
+      - name: Build every module, two at a time
+        run: scripts/verify.sh --clean
       - name: Replay this shard's modules through the kernel
         working-directory: lean
         env:
@@ -44,10 +55,27 @@ jobs:
     name: axiom-audit
     runs-on: ubuntu-latest
     timeout-minutes: 330
+    env:
+      LEAN_NUM_THREADS: "2"
     steps:
       - uses: actions/checkout@v4
+      - name: Add swap (single proof files need up to 8 GB; the runner has 16 GB)
+        run: |
+          swap=/mnt/math0.swap
+          if [ ! -d /mnt ] || [ "$(df --output=avail -BG /mnt | tail -1 | tr -dc 0-9)" -lt 30 ]; then swap=/math0.swap; fi
+          sudo fallocate -l 20G "$swap" && sudo chmod 600 "$swap" && sudo mkswap "$swap" >/dev/null && sudo swapon "$swap"
+          free -h
       - uses: leanprover/lean-action@v1
         with:
           lake-package-directory: lean
           use-github-cache: false
+          build: false
+      - name: Build every module, two at a time
+        run: scripts/verify.sh --clean
+      - name: Audit axioms (leanprover-community/axiom-audit)
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: lean
+          use-github-cache: false
+          build: false
           axiom-audit: true
