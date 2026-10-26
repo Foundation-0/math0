@@ -1,6 +1,7 @@
 # Signed A350557 is the matrix inverse of A350512, proved
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A350557  
 **Date:** 2026-10-26
@@ -8,6 +9,14 @@
 ## Result
 
 Let T be the A350557 triangle: T(n,0) = (2n)!/(2^n n!) = (2n-1)!!, and for 1 ≤ k ≤ n, T(n,k) = (2n-1)!! · Σ_{i=k}^{n} C(i-1,k-1)/(2i-1)!!. Set T(n,k) = 0 for k > n. Let L be the A350512 triangle: L(n,0) = 1, and for 1 ≤ k ≤ n, L(n,k) = C(n-1,k-1)(2k(n-k)+n)/k. Set L(n,k) = 0 for k > n. Define M(n,k) = (-1)^(n-k) T(n,k). Then M and L are inverse lower-triangular matrices: for all n, j ≥ 0, Σ_{k=0}^{n} L(n,k) M(k,j) = [n=j] and Σ_{k=0}^{n} M(n,k) L(k,j) = [n=j]. This is Werner Schulte's 2022 conjecture.
+
+## Assessment
+
+The proof brings in a bidiagonal matrix A with entries 1 and 2n-1. Then A*M = B, where B is a shifted signed Pascal matrix, and this is just the recurrence for T already stated in the A350557 entry. B*L = A follows from a one-line Pascal decomposition of A350512 plus ordinary binomial inversion. Cancelling the unitriangular A gives M*L = I, and L*M = I follows because the matrices are square. That is about a page of standard triangle and binomial-inversion manipulation, and it uses formulas already in the two entries. No new idea is needed, and the referees themselves call it elementary.
+
+*Follows from:* The recurrence T(n,k) = C(n-1,k-1) + (2n-1)T(n-1,k), already listed as a formula in A350557, together with A350512's column g.f. (1+2kx)x^k/(1-x)^(k+1) (equivalently L(n+1,j) = (2j+1)C(n,j) + C(n,j-1)) and standard binomial (Pascal) inversion.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

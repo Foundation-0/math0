@@ -956,7 +956,16 @@
    "our_decl": "Math0.Frontier.A022445.result",
    "summary": "Let a(n) be the number of closed walks of length 2n in the square lattice that start and end at the origin (a vertex of the boundary column 0), stay in the strip {0,1,2} x Z, and visit no vertex twice except that the endpoint equals the start (a(0) = 1; length-2 walks that retrace their edge are excluded, so a(1) = 0). Then\nsum_{n>=0} a(n) x^n = (1 - 4x + 10x^2 - 14x^3 + 27x^4 - 18x^5 + 10x^6 - 6x^7) / ((1 + x^2)^2 (1 - 2x)^2).\nIn Lean this is stated in Z[[X]] with the denominator cleared.",
    "notes": "Conjecture as stated in OEIS: %F A022445 G.f.: (-6*x^7+10*x^6-18*x^5+27*x^4-14*x^3+10*x^2-4*x+1) / ((1+x^2)^2*(1-2*x)^2) (conjectured). - _Ralf Stephan_, Apr 28 2004\n\nReferees: OEIS A022445 (local mirror and current github.com/oeis/oeisdata, %I #10 May 16 2019): GF marked \"(conjectured). - Ralf Stephan, Apr 28 2004\". Sister entry A022444: GF also still conjectured. Related entries A038578 and A038579 have rooted area GFs credited to Labelle by E. Deutsch (Apr 29 2004). Other related entries: A007825, A038577, A302408. J. Labelle, \"Self-avoiding walks and polyominoes in strips\", Bull. ICA 23 (1998) 88-98; full text not accessible, so I cannot rule out that it has the perimeter GF, but the OEIS has kept it \"conjectured\" since 2004. M. von Thaden, \"Self-avoiding polygons on a three-row square-lattice strip\", arXiv:2607.27397 (Jul 2026): unrooted polygon counts on Z×{0,1,2}, does not mention A022445. M. Bousquet-Mélou & R. Brak, \"Exactly solved models\", and A. J. Guttmann & I. Jensen, \"Polygons in strips\", both in Polygons, Polyominoes and Polycubes, LNP 775 (2009): unrooted polygon GFs only. Not relevant to this GF: Batchelor–Yung 1994 (transfer-matrix SAWs across strips); Dyhr–Gilbert–Kennedy arXiv:1008.4321; Zeilberger arXiv:math/9506214 and Benjamin, Fib. Quart. 44 (2006) (two-row strip). jOEIS programs for A022444/A022445 use brute-force enumeration. I found no prior proof of the A022445 GF in any of these sources.",
-   "date": "2026-10-26"
+   "date": "2026-10-26",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Standard transfer-matrix / row-by-row decomposition of self-avoiding polygons in a strip of fixed width (e.g. Stanley, EC1 Sec. 4.7). In a 3-column strip every horizontal cut meets the polygon in 0 or 2 vertical edges, so the polygons are row-convex with three row states. The same method gives the area generating function of the same objects, A038579, credited to Labelle (Bull. ICA 23, 1998) and cited in the entry.",
+    "justification": "The proof rests on one observation: a self-avoiding polygon in the strip {0,1,2} x Z crosses each horizontal cut in an even number of distinct columns, at most three, so in 0 or 2 of them. The polygon is therefore two strands, with three possible states per row, and its perimeter series comes from a 3-state transfer matrix (in Lean, a linear recursion for half-strip excursions), with rooting handled by marking column-0 vertices; clearing denominators is then algebra. This is the textbook transfer-matrix method for polygons in narrow strips; it fits in about a page and is the same calculation that gave the area version (A038579) attributed to Labelle. The Lean formalization is long, but the mathematical idea is standard.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A057566",
@@ -1634,7 +1643,16 @@
    "our_decl": "Math0.Frontier.A127755.result",
    "summary": "Let A(n,k) = 1/n! if k ≤ n ≤ 2k and A(n,k) = 0 otherwise (n, k ≥ 0), viewed as an infinite lower-triangular matrix over Q. Let T be its inverse, computed by forward substitution: T(n,k) = n!·([n = k] − Σ_{j<n} A(n,j) T(j,k)) for k ≤ n, and T(n,k) = 0 for k > n. Then T(n,k) is an integer for all 0 ≤ k ≤ n. This was conjectured by Paul Barry in OEIS A127755.",
    "notes": "Conjecture as stated in OEIS: %C A127755 It is conjectured that this is an integer triangle. Row sums are A127756. (_Paul Barry_, Jan 28 2007)\n\nReferees: I found no prior proof or counterexample for A127755. Sources checked:\n- Local mirror and current GitHub oeisdata entry for A127755 (revision #5, Sep 29 2018), still marked conjectured.\n- Related OEIS entries: A127756; A101688 (the 0/1 triangle [k<=n<=2k]); A111967 (its inverse, by Barry, 2005), with A127755(n,k) = k!·A111967(n,k).\n- A127749: R. J. Mathar (Apr 21 2021) gives T(n,k) = (2k+1)·A111967(n,k), the same diagonal-scaling argument applied to the 1/(2n+1) sibling.\n- A127793: FUNG Cheok Yin (Sep 2022) gives a formula implying integrality for the 1/floor((n+2)/2) sibling. Sela Fried, \"On the inverse of a certain triangular matrix and its connection to the largest odd divisor\", Notes Num. Theor. Disc. Math. 32(2) (2026) 255-262, doi:10.7546/nntdm.2026.32.2.255-262, proves it; the paper does not mention A127755.\n- Sibling integrality conjectures that are also still open in OEIS: A127710, A127711, A127771.\n- Web searches (OEIS/SeqFan/arXiv/MathOverflow/MSE-style queries) found nothing more.",
-   "date": "2026-10-26"
+   "date": "2026-10-26",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Factor A = D^{-1}·B, where D = diag(n!) and B is the 0/1 unitriangular triangle A101688. Then A^{-1} = B^{-1}·D, so T(n,k) = k!·A111967(n,k). A111967 is the inverse of B (cross-referenced), and the inverse of a unitriangular integer matrix has integer entries. The forward-substitution recursion shows the same thing directly, because n!·A(n,j) is 0 or 1.",
+    "justification": "The conjecture follows in a few lines. Multiplying row n by n! turns A into the 0/1 lower-unitriangular matrix A101688. Its inverse (A111967) is therefore an integer matrix, and A^{-1} is that inverse with column k scaled by k!. R. J. Mathar already gave the same diagonal-scaling argument for the sibling entry A127749, and the Lean proof is just a strong induction on the forward-substitution recursion. No new idea was needed, so the result is routine, even though it had stayed formally open since 2007.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A127767",
@@ -1744,7 +1762,16 @@
    "our_decl": "Math0.Frontier.A144637.result",
    "summary": "Let S(n,k) be A144385: the number of partitions of {1,...,k} into exactly n blocks, each of size 1, 2 or 3. Let T = A144633 be the transpose of the inverse of the upper unitriangular matrix M(i,j) = S(i,j). Let a(n) = T(n,2), and y(n) = (1/18) 6^n a(n) / n!. Then for every n >= 0, y(n) is an odd integer if and only if n = 2^k for some k >= 1.",
    "notes": "Conjecture as stated in OEIS: Conjecture: (1/18)*6^(n)*a(n)/n! is odd iff n = 2^k for k >= 1. (End) - _Peter Bala_, Feb 19 2026\n\nReferees: OEIS A144637 (Bala conjecture, Feb 19 2026; entry revision #25, Mar 14 2026; no proof recorded). The companion conjecture in OEIS A144636 (Bala, Feb 16 2026) is also unresolved. OEIS A144633 and A144385 give the definitions. Checked with nothing found on either conjecture: S. Fried, \"Proofs of Ten Conjectures From the OEIS\", J. Integer Sequences 29 (2026), Art. 26.1.8; S. Fried, \"Further proofs of conjectures from the OEIS\", arXiv:2607.24832 (full text grepped); Epoch AI, \"OEIS Open\", arXiv:2608.11941 and github.com/epoch-research/LeanOpenProblems (no A14463x file); Engbers–Galvin–Smyth, \"Restricted Stirling and Lah number matrices and their inverses\", JCTA 2019 (integrality of inverses, not parity). No prior proof or counterexample found.",
-   "date": "2026-10-26"
+   "date": "2026-10-26",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Bala's formula in the entry: (1/18)A(6x) satisfies 36y^3 + 3y^2 + (1+6x)y = x^2 (this follows from Jovovic's e.g.f. B(x)^2/2, where B is the series reversion of x + x^2/2 + x^3/6, as given in A144636).",
+    "justification": "The entry already gives the algebraic equation 36y^3 + 3y^2 + (1+6x)y = x^2 for y(x) = A(6x)/18. Rewritten as y = x^2 - 6xy - 3y^2 - 36y^3 with y(0) = 0, it determines each coefficient from earlier ones using only integer arithmetic, so every coefficient is an integer. Reducing mod 2 gives y = x^2 + y^2 over F_2, and the Frobenius map then forces y = sum over k >= 1 of x^(2^k). The whole argument takes a few lines and uses standard tricks. The Lean proof is long only because it also has to derive the cubic from the matrix-inverse definition.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A160848",
@@ -2903,7 +2930,16 @@
    "our_decl": "Math0.Frontier.A350557.result",
    "summary": "Let T be the A350557 triangle: T(n,0) = (2n)!/(2^n n!) = (2n-1)!!, and for 1 ≤ k ≤ n, T(n,k) = (2n-1)!! · Σ_{i=k}^{n} C(i-1,k-1)/(2i-1)!!. Set T(n,k) = 0 for k > n. Let L be the A350512 triangle: L(n,0) = 1, and for 1 ≤ k ≤ n, L(n,k) = C(n-1,k-1)(2k(n-k)+n)/k. Set L(n,k) = 0 for k > n. Define M(n,k) = (-1)^(n-k) T(n,k). Then M and L are inverse lower-triangular matrices: for all n, j ≥ 0, Σ_{k=0}^{n} L(n,k) M(k,j) = [n=j] and Σ_{k=0}^{n} M(n,k) L(k,j) = [n=j]. This is Werner Schulte's 2022 conjecture.",
    "notes": "Conjecture as stated in OEIS: %F A350557 Conjecture: M(n,k) = (-1)^(n-k) * T(n,k) is matrix inverse of A350512. (Werner Schulte, entry author, Jan 2022)\n\nReferees: No prior resolution found. Sources checked:\n(1) OEIS A350557 and A350512, in both the local mirror and the current raw.githubusercontent oeisdata. The conjecture is still marked open, there are no %E lines, and neither entry has been edited since Jan 18 2022. Across the full mirror, no other entry cross-references A350557 or A350512. I also read A286286, A249349 and A103450.\n(2) google-deepmind/formal-conjectures (local checkout from Oct 2026): neither sequence is formalized.\n(3) google-deepmind/alphaproof-nexus-results (Tsoukalas et al., arXiv:2605.22763): A350557 is not among the APNOutputs/OEIS files, and the paper does not mention it.\n(4) Adamczewski, \"OEIS Open\" (arXiv:2608.11941): its appendix of resolved conjectures does not include A350557.\n(5) \"Further proofs of conjectures from the OEIS\" (arXiv:2607.24832) and S. Fried, \"Proofs of some conjectures from the OEIS\" (arXiv:2410.07237): A350557 is not mentioned in either.\n(6) Web searches for the A-numbers, the defining formulas, the column g.f. (1+2kx)x^k/(1-x)^(k+1), and Schulte together with the inverse: the only hit is the OEIS page, which still states the claim as a conjecture.\nThe result is mathematically elementary (a recurrence plus binomial inversion), but there is no published or recorded proof, so I classify it as a new result.",
-   "date": "2026-10-26"
+   "date": "2026-10-26",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The recurrence T(n,k) = C(n-1,k-1) + (2n-1)T(n-1,k), already listed as a formula in A350557, together with A350512's column g.f. (1+2kx)x^k/(1-x)^(k+1) (equivalently L(n+1,j) = (2j+1)C(n,j) + C(n,j-1)) and standard binomial (Pascal) inversion.",
+    "justification": "The proof brings in a bidiagonal matrix A with entries 1 and 2n-1. Then A*M = B, where B is a shifted signed Pascal matrix, and this is just the recurrence for T already stated in the A350557 entry. B*L = A follows from a one-line Pascal decomposition of A350512 plus ordinary binomial inversion. Cancelling the unitriangular A gives M*L = I, and L*M = I follows because the matrices are square. That is about a page of standard triangle and binomial-inversion manipulation, and it uses formulas already in the two entries. No new idea is needed, and the referees themselves call it elementary.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A350900",
