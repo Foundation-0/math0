@@ -1,0 +1,2 @@
+# full entry lists are Markus Grassl's tables: regenerate locally with census.py --csv, do not commit
+*.csv
