@@ -1,6 +1,7 @@
 # OEIS A362086: every denominator of 1/(2-3/(3-4/(...(n-1)-n/(-3)))) except 9 is 1 or a prime
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Number theory  
 **Source problem:** OEIS A362086  
 **Date:** 2026-10-18
@@ -8,6 +9,14 @@
 ## Result
 
 For n >= 3 let a(n) be the reduced denominator of 1/(2 - 3/(3 - 4/(4 - ... ((n-1) - n/(-3))))), evaluated in Q from the inside out. Then for every n >= 3 with a(n) != 9, a(n) is 1 or a prime. (Mohammed Bouras's conjecture; the value 9 occurs at n = 5.)
+
+## Assessment
+
+The closed form for the unreduced fraction is essentially the gcd formula already listed in the entry. It reduces the denominator to N/gcd(N, 3(n-1)(n-3)!) with N = n^2+n-3, which is roughly n^2. The rest is the standard template from the solved sibling sequences: a prime p up to n-3 that survives in the denominator must divide N to a higher power than it divides (n-3)!, and this is impossible because of size, apart from a small N = 3p^2 case. Prime factors above n must be at least n+1, so at most one fits, and the cases n < 36 are a finite check. The argument is about a page and a direct adaptation of known proofs, with no new idea, so it is routine.
+
+*Follows from:* The entry's own formula a(n) = (n^2+n-3)/gcd(n^2+n-3, 3*A051403(n-3) + n*A051403(n-4)), with A051403 written in left factorials (its %F), combined with the factorial-valuation and size argument already used for the sibling conjectures A363102 (Adamczewski, arXiv:2608.11941, Appendix A), A356247 (Cloitre) and A363482.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

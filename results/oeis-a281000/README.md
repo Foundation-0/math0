@@ -1,6 +1,7 @@
 # Schulte's conjectures on A281000, T(n,k) = C(2n+1,2k+1)·Cat(n-k): antidiagonal sums and matrix inverse
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A281000  
 **Date:** 2026-10-25
@@ -11,6 +12,14 @@ Let T(n,k) = C(2n+1,2k+1)·C(2n-2k,n-k)/(n+1-k) = C(2n+1,2k+1)·Cat(n-k) for 0 �
 (1) for every n ≥ 0, Σ_{k=0..⌊n/2⌋} T(n-k,k) = s(n+1);
 (2) (corrected reading) for every n ≥ 0, Σ_{k=0..n} T(n,k)(2k+1)Cat(k)·b(k+1) = 0^n;
 (3) for every N, the inverse over ℚ of the N×N leading block of T is the N×N leading block of U(n,k) = T(n,k)·b(n+1-k).
+
+## Assessment
+
+The inverse in (3) is immediate once you see that T and the Narayana triangle are both diagonal conjugates of the same Toeplitz matrix built from c(j) = 1/(j!(j+1)!). Inverting that Toeplitz matrix is exactly the reciprocal power series that Hanna's g.f. in A103365 already records. Conjecture (2), read as its evidently intended column-0 case, is just the first column of T*T^{-1} = I. Conjecture (1) takes about a page, either with Vandermonde's identity and Cloitre's Narayana formula for A001003 or with the Motzkin bivariate g.f. that Barry's A097610 comment points to. The paper itself calls the result routine, and none of these steps needs a new idea.
+
+*Follows from:* The scaling T(n,k) = (2n+1)!/(2k+1)! * c(n-k) with c(j) = 1/(j!(j+1)!), together with P. D. Hanna's g.f. in A103365 (A(x) = 1/B(x), B(x) = Sum x^n/[n!(n+1)!/2^n]), gives (3) at once; T. Copeland's inverse-pair comment in A238390 (Jan 30 2016) gives the same. (2) is the first column of (3). (1) follows from P. Barry's comment in A097610 (diagonal sums of the Motzkin triangle are the aerated large Schroeder numbers) plus a short g.f. parity argument, or from a Vandermonde/Narayana binomial identity.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

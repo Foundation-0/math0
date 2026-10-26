@@ -1,6 +1,7 @@
 # Domino towers of height 2 and of height n-1, n-2, n-3 (A333650): all four Kagey/Luschny conjectures
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A333650  
 **Date:** 2026-10-19
@@ -12,6 +13,14 @@ Let T(n,k) count domino towers (brick-wall pattern: a brick of layer i has a lef
 (2) for n ≥ 2, T(n,n-1) = A339252(n-2), where a(0)=1, a(1)=4, a(2)=11, a(m+3)=4a(m+2)-4a(m+1);
 (3) for n ≥ 3, T(n,n-2) = A339254(n-3), where a(0..4)=1,7,24,70,193 and a(m+5)=6a(m+4)-12a(m+3)+8a(m+2);
 (4) for n ≥ 4, T(n,n-3) = A339029(n-4), the coefficients of (1+4x-20x^2+8x^3+33x^4-4x^5-33x^6)/(1-2x)^4.
+
+## Assessment
+
+The height-2 conjecture comes down to one observation: the second-row bricks pick distinct positions among the b+1 positions above a base of b bricks. That gives a diagonal binomial sum, which is a textbook Fibonacci identity. For heights n-1, n-2 and n-3 the excess over one brick per row is at most 3. Then only 13 translation-normalized row states can occur, and a single brick over a single brick always has exactly 2 placements. So the count is a finite transfer-matrix recursion whose solutions are 2^h times polynomials of degree at most 3, checked by induction against a finite table. These are standard enumerative techniques that need no new idea, and once the state space is written down the proof is a finite computation matched to closed forms already recorded in the cross-referenced entries.
+
+*Follows from:* Height 2: a diagonal binomial sum, T(n,2) = sum_b C(b+1, n-b), which equals F(n+2)-1 by the standard Fibonacci identity (Luschny already noted the binomial-triangle link in A339494). Near-diagonals: the standard row-by-row transfer-matrix recursion on translation-normalized rows, compared with the closed forms 2^h times a polynomial already recorded in A339252, A339254 and A339029.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

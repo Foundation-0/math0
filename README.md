@@ -30,8 +30,9 @@ Two kinds of statement are used (see [Two tracks](#two-tracks)):
 <!-- HIGHLIGHTS:START -->
 **137 verified results.** 61 new results, 52 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
 
-New results (OEIS conjectures settled; each checked by the Lean kernel, and no earlier proof or counterexample was found by an independent novelty referee):
+New results: OEIS conjectures settled, each checked by the Lean kernel, with no earlier proof or counterexample found by an independent novelty referee. An independent assessor judged the difficulty of each of these: 1 substantial and 56 routine (a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search); 4 not yet assessed. Most of these conjectures had stayed open for lack of attention, not because they were hard; each result page gives the assessor's reasons.
 
+* [Kagey's conjecture for A278212: a(n) = floor(A275815(n)/2), via exact bishop and queen maxima from flow (LP-dual) certificates](results/oeis-a278212/README.md) (substantial) ([paper](results/oeis-a278212/paper.pdf))
 * [3 × 3 lower triangles with neighbours differing by at most two: a(n) = 1047 n - 1459 for n > 2 (A195249)](results/oeis-a195249/README.md) ([paper](results/oeis-a195249/paper.pdf))
 * [3^(3^18) + 2 is divisible by 31^2, so Hilliard's squarefree conjecture (A083020) fails](results/oeis-a083020/README.md) ([paper](results/oeis-a083020/paper.pdf))
 * [A090905: every row ends at twice the largest prime of the previous row (Murthy's conjecture proved)](results/oeis-a090905/README.md) ([paper](results/oeis-a090905/paper.pdf))
@@ -57,7 +58,6 @@ New results (OEIS conjectures settled; each checked by the Lean kernel, and no e
 * [Domino towers of height 2 and of height n-1, n-2, n-3 (A333650): all four Kagey/Luschny conjectures](results/oeis-a333650/README.md) ([paper](results/oeis-a333650/paper.pdf))
 * [Even and odd legs with odd prime factors ≡ 3 (mod 4): a(n)/n → π (A354571, A354570)](results/oeis-a354571/README.md) ([paper](results/oeis-a354571/paper.pdf))
 * [Internal n-gons in a regular n-gon: triple points occur only for n = 3, 4, 6, and otherwise there are n k^2 + 1 regions (Shannon's A357216 conjecture)](results/oeis-a357216/README.md) ([paper](results/oeis-a357216/paper.pdf))
-* [Kagey's conjecture for A278212: a(n) = floor(A275815(n)/2), via exact bishop and queen maxima from flow (LP-dual) certificates](results/oeis-a278212/README.md) ([paper](results/oeis-a278212/paper.pdf))
 * [Mathar's order-6 recurrence for A121750 (even-length columns in deco polyominoes) holds for all n >= 7](results/oeis-a121750/README.md) ([paper](results/oeis-a121750/paper.pdf))
 * [OEIS A350900: Schulte's gcd-ratio double sum is a Dirichlet convolution](results/oeis-a350900/README.md) ([paper](results/oeis-a350900/paper.pdf))
 * [Prime-Minesweeper on the A060734 array: a(n) < 6, and a(n) = 5 only at n = 6](results/oeis-a326407/README.md) ([paper](results/oeis-a326407/paper.pdf))

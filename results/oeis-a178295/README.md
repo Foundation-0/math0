@@ -1,6 +1,7 @@
 # A178295: collinear 4-subsets of {0,...,4}^n number 9^n/2 + 3*7^n/2 - 2*5^n (Mathar's conjecture, all three formulas)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A178295  
 **Date:** 2026-10-24
@@ -8,6 +9,14 @@
 ## Result
 
 Let a(n) be the number of 4-element subsets of the grid {0,...,4}^n whose points lie on one line. Collinearity means that all 2x2 minors of the difference vectors vanish. Then three things hold. (1) a(n) = 9^n/2 + 3*7^n/2 - 2*5^n for every n >= 0. (2) a(n) = 21 a(n-1) - 143 a(n-2) + 315 a(n-3) for every n >= 3. (3) As formal power series over Q, sum a(n) x^n = x(-5+41x) / ((9x-1)(7x-1)(5x-1)).
+
+## Assessment
+
+Any line meeting {0,...,4}^n in 4 or more points has a primitive direction in {0,±1}^n, because a coordinate step of 2 or more allows at most 3 points. So a collinear 4-set is either 4 consecutive points on such a line, which Golomb-Hales word counting gives as (9^n-5^n)/2 (9 choices per coordinate, not all constant, up to reversal), or one of the 3 non-consecutive 4-subsets of a full 5-point line, giving 3(7^n-5^n)/2. The recurrence and generating function then follow mechanically from the closed form. This is a standard argument of under a page, an easy variant of the classical count; the manuscript itself calls it short and elementary. The formalized route through a finite classification of columns is formalization engineering, not a new mathematical idea.
+
+*Follows from:* The classical tic-tac-toe line count ((k+2)^n - k^n)/2 for the grid {0,...,k-1}^n (Erdos-Selfridge 1973; Golomb-Hales 2002, Theorem 1; Moser's word-counting proof). With k=5 this gives the (7^n-5^n)/2 full lines, which is OEIS A081200. The same word-counting method gives (9^n-5^n)/2 runs of four consecutive collinear points.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

@@ -1,6 +1,7 @@
 # A363609: a(k^3) = 6k(k+2), the cube is the optimal polycube of k^3 dice
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A363609  
 **Date:** 2026-10-19
@@ -8,6 +9,14 @@
 ## Result
 
 Each standard die has opposite faces summing to 7, all dice have the same chirality, and each die may take any of its 24 rotations. Build a face-connected polycube from n dice. A face is visible when the neighbouring cell is empty; faces underneath and faces facing an internal cavity also count. a(n) is the least possible number of visible pips. Claim: for every k > 1, a(k^3) = 6(k+2)k.
+
+## Assessment
+
+The value 6k(k+2) splits as surface area 6k^2 plus 12k. That second term counts the pairs of perpendicular exposed faces on the cube. The proof matches this split. First it checks a finite inequality for one die: the pips shown are at least the number of exposed faces plus the number of exposed perpendicular pairs. Then it bounds the faces by projections and Loomis-Whitney, as in the known surface-area result (A193416). It bounds the perpendicular pairs by taking an extreme cell in each slice, then uses |P| <= l1*l2*l3 and AM-GM. The edge term is a neat observation, but it is a direct analogue of the standard projection argument. The whole proof fits in about a page and uses only standard tools, so a competent mathematician working on the problem would likely find it quickly.
+
+*Follows from:* Discrete Loomis-Whitney inequality (Loomis and Whitney 1949), the standard projection bound behind A193416's a(n^3)=6n^2, and AM-GM, together with a 64-case finite check per die
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

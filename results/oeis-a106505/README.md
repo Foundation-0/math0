@@ -1,6 +1,7 @@
 # A106505: common sides of A/2A primitive triangles are periodic mod 8, so a(n+5) = a(n) + 8
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A106505  
 **Date:** 2026-10-19
@@ -8,6 +9,14 @@
 ## Result
 
 Let IsSide(c) mean there are natural numbers x, y such that x, y, c are the sides of a non-degenerate triangle in which the angle opposite y is twice the angle opposite x, and gcd(x, y, c) = 1. Let a(n) be the n-th smallest such c (1-indexed): 5, 7, 9, 11, 13, 15, 16, 17, ... Then a(n+5) = a(n) + 8 for every n > 2 (Ralf Stephan's conjecture in OEIS A106505).
+
+## Assessment
+
+The proof works out the set of common sides. A coprime difference of squares s^2 - r^2 is either odd or divisible by 8. Two one-line families of triangles realize every odd c >= 5 and every multiple of 8 from 16 on, and the small cases are checked by hand. Since the set is periodic mod 8 with five residues per period, the recurrence follows at once. This is about half a page of elementary number theory, using the formula already given in the entry, and the cross-referenced A321499 already contains the same set characterization. The Lean work (deriving y^2 = x(x+c) from the arccos definition, plus the counting with Nat.nth) is formalization effort and adds no mathematical depth.
+
+*Follows from:* The entry's own %F formula: the terms are the values s^2 - r^2 with r < s < 2r and gcd(r,s) = 1 (classical parametrization of A/2A triangles, Luthar 1984; A343063). With that formula, a parity argument mod 8 plus the families (m, m+1) and (2j+1, 2j+3) give the set {odd >= 5} together with {8m : m >= 2}. Cross-reference A321499 (Hasler) already proves the same set with 3 added and records a(n+5) = a(n) + 8 there.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

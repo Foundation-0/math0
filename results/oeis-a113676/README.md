@@ -1,6 +1,7 @@
 # The Golomb-row triangle A113676 and Levine's sequence A014644
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A113676  
 **Date:** 2026-10-20
@@ -8,6 +9,14 @@
 ## Result
 
 Let G be Golomb's sequence A001462 (G(1)=1, G(2)=G(3)=2, G(4)=G(5)=3, ...; n occurs G(n) times, nondecreasing). Let H be G with one 2 removed: H(1)=1 and H(j)=G(j+1) for j>=2. Cut H into consecutive rows: row 1 is [H(1)], and row n+2 has as many terms as the sum of row n+1. Let a(n) be the length of row n. Levine's array has row 1 = [1,1], and row k+1 lists 1 c_1 times, 2 c_2 times, ..., where row k = [c_1, c_2, ...]. A014644(k) is the last term of Levine row k. Claim (both conjectures of van Lamoen and Hanna, 2005): (1) for every n>=2, a(n) = A014644(n+2) - A014644(n+1); (2) the last term of row 1 is A014644(1), and for every n>=2 the last term of row n is A014644(n+1).
+
+## Assessment
+
+The one real idea is that each Levine row from row 2 on is a prefix of Golomb's sequence, so its sum is the length of the next row. That is immediate from Golomb's self-describing property and is already known: A014643 hints at it and Claes and Miyamoto state it. Everything else is a telescoping sum and a short induction showing that the triangle's rows are the blocks of G between consecutive Levine row lengths; both conjectures then follow. The whole argument fits in about a page of elementary steps, and the manuscript itself calls the result "a short consequence" of known facts.
+
+*Follows from:* The fact that from row 2 on, the rows of Levine's array (A014643) are initial segments of Golomb's sequence A001462. A014643's cross-reference note "Rows converge to A001462" points to this, and Claes and Miyamoto, arXiv:2602.10992, p. 3, eqs. (3)-(4) state it: the Levine step maps the first n Golomb terms to the first A001463(n) terms. Golomb's self-describing property gives it at once.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

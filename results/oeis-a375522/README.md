@@ -1,6 +1,7 @@
 # A375522: S2(n) - S1(n) = 1 fails at n = 42 (the difference is 5)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Number theory  
 **Source problem:** OEIS A375522  
 **Date:** 2026-10-18
@@ -8,6 +9,14 @@
 ## Result
 
 Let p_k be the k-th prime. Define s(0) = 0 and s(k) = s(k-1) + 1/(p_k b(k)), where b(k) = 1 + floor(1/((1 - s(k-1)) p_k)) (this is A375781). Write s(n) = S1(n)/S2(n) in lowest terms (S2 = A375522, S1 = A375521). Sigrist and Sloane conjectured that S2(n) - S1(n) = 1 for every n >= 1 except n = 4 and n = 6. This is false: S2(42) - S1(42) = 5. Lean: theorem result : ¬ statement.
+
+## Assessment
+
+The conjecture is refuted by one computed value: S2(42) - S1(42) = 5. Note that S2(42) has about 4*10^11 digits, so it cannot be computed directly. The only idea needed is a standard one. The difference S2(n) - S1(n) is the small numerator of the remainder 1 - s(n), and it depends only on the huge denominator modulo small numbers, so you track that denominator modulo a large smooth modulus and account for the precision lost when you cancel the gcd at each step. That bookkeeping lemma takes about a page and is elementary. Once it is set up, the result is a finite computation, so the work is routine, although the counterexample is real and was out of reach of the authors' direct computation up to n = 34.
+
+*Follows from:* The entry's own recursion (its Maple/Mathematica programs), run as a finite computation modulo a smooth modulus such as (190!)^2. If 1 - s(n-1) = 1/D, then 1 - s(n) = m/(D(D+m)) with m = p_n - (D mod p_n).
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

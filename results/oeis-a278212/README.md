@@ -1,6 +1,7 @@
 # Kagey's conjecture for A278212: a(n) = floor(A275815(n)/2), via exact bishop and queen maxima from flow (LP-dual) certificates
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** substantial  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A278212  
 **Date:** 2026-10-24
@@ -8,6 +9,12 @@
 ## Result
 
 For every n >= 1, let a(n) be the largest total number of moves that same-colored bishops can make on an n x n board, and queenMax(n) the same for queens. A piece can only move to an empty square, and every square it passes must be empty. Then a(n) = floor(queenMax(n)/2). More precisely, the proof shows the following. For bishops, a(4) = 20, a(5) = 38 and a(n) = 4(n-2)^2 for n >= 6. For queens, queenMax(4) is 40 or 41, queenMax(5) is 76 or 77, queenMax(6) is 128 or 129, and queenMax(n) = 8(n-2)^2 for n >= 7. That last formula also settles Alec Jones's conjecture on A275815 for n >= 7. The cases n <= 3 come from the listed values.
+
+## Assessment
+
+The bishop half is routine. Andrew Howroyd's per-diagonal bound of 4(n-2)^2+4, given in the entry, drops to 4(n-2)^2 for n>=6 with a short corner argument: the 8 squares on the length-2 diagonals are exactly the endpoints of the four length-(n-1) diagonals. The conjecture also needs the queen bound A275815(n) <= 8(n-2)^2+1, which is essentially Alec Jones's conjecture, open since 2016. Counting moves line by line does not give that bound; it leaves a slack that grows linearly in n. The proof gets it from a linear-programming dual (flow) certificate found by computer, built on distance-to-edge classes so that one finite table covers every n>=8, and it needs 21 separately certified cases for n=4,5,6. That construction is not standard and does not follow from anything in the entries, so the result as a whole is substantial, though the bishop part on its own is not.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **substantial**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material. A second assessor, asked to show it is routine, agreed it is substantial. (2026-10-26)
 
 ## Verification
 

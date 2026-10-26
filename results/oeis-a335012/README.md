@@ -1,6 +1,7 @@
 # Repunit residues: a(n) = n - 1 exactly for long period primes
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Number theory  
 **Source problem:** OEIS A335012  
 **Date:** 2026-10-18
@@ -8,6 +9,14 @@
 ## Result
 
 For n >= 1 let a(n) be the number of distinct values R_k mod n for 1 <= k <= n, where R_k = (10^k - 1)/9 is the k-th repunit. Then a(n) = n - 1 if and only if n is a long period prime (A006883): n is prime and either n = 2 or the multiplicative order of 10 modulo n is n - 1.
+
+## Assessment
+
+The proof is an elementary argument of about a page. If n is even or a multiple of 5, every repunit is odd, or is 1 mod 5, so too few residues are hit. For gcd(n,10)=1 the residues are purely periodic with period L = min{k : n | R_k}. When 3 does not divide n, L = ord_n(10) <= phi(n), and L = n-1 forces n to be prime. When 3 divides n, R_k ≡ k (mod 3) forces 3 | L, while n-1 ≡ 2 (mod 3). The main case, gcd(n,30)=1, is essentially Israel's comment in the entry, and the cases of multiples of 2, 3 and 5 are quick standard observations, so a competent number theorist would find the whole proof quickly.
+
+*Follows from:* Robert Israel's comment in A335012 itself, a(n) = A084680(n) (the order of 10 mod n) when gcd(n,30)=1, together with ord_n(10) <= phi(n) <= n-1 (equality forcing n prime), and the standard congruence R_k ≡ k (mod 3).
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

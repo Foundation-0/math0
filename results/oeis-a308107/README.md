@@ -1,6 +1,7 @@
 # A308107: Barker's rational generating function and order-15 recurrence for the sum of smallest sides of scalene integer triangles
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A308107  
 **Date:** 2026-10-24
@@ -8,6 +9,14 @@
 ## Result
 
 Let a(n) be the sum of the smallest side k over all integer triples k < i < j with j < k + i and k + i + j = n, i.e. over all scalene integer triangles of perimeter n. Then (1) sum_{n>=0} a(n) x^n = x^9 (2 + 2x + 2x^2 + x^3) / ((1-x)^4 (1+x)^3 (1+x^2)^2 (1+x+x^2)^2) as formal power series over Q, and (2) for every n > 15, a(n) = -a(n-1) + 2a(n-3) + 4a(n-4) + 2a(n-5) - a(n-6) - 5a(n-7) - 5a(n-8) - a(n-9) + 2a(n-10) + 4a(n-11) + 2a(n-12) - a(n-14) - a(n-15).
+
+## Assessment
+
+The proof writes each scalene integer triangle with three positive parameters in one linear relation, 2u+4v+3w=n, with smallest side v+w. Summing this linear weight over the parameters gives the rational generating function in a few lines by a standard MacMahon-type calculation. The order-15 recurrence then follows directly from the denominator. The paper itself calls the argument elementary and a routine computation. The Lean proof's chain of shift bijections is only formalization effort, not a new idea.
+
+*Follows from:* Standard parametrization of integer triangles (as in Alcuin's sequence A005044 / Andrews-Paule-Riese k-gon partitions): scalene triangles of perimeter n are (k,i,j)=(v+w, v+w+u, 2v+w+u) with u,v,w>=1 and 2u+4v+3w=n, so the g.f. is sum (v+w) x^(2u+4v+3w) = x^9(2-x^3-x^4)/((1-x^2)(1-x^3)^2(1-x^4)^2). Alternatively, Cuculiere's bijection in A005044 reduces it to A307686.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

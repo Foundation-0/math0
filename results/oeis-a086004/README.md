@@ -1,6 +1,7 @@
 # There are no 5-Rotation Cycle Primes (A086004, Conjecture 2)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Sequences and series  
 **Source problem:** OEIS A086004  
 **Date:** 2026-10-19
@@ -8,6 +9,14 @@
 ## Result
 
 Let rot be the rotation of A086002. For a number n with d decimal digits, rot(n) swaps the block of the first floor(d/2) digits with the block of the last floor(d/2) digits; when d is odd, the centre digit stays where it is. Let f(n) = n + rot(n). Then no prime p has f(p), f^2(p), f^3(p), f^4(p) and f^5(p) all prime.
+
+## Assessment
+
+The proof is a one-page argument about decimal digits. It reuses Mathar's factorization for even digit counts and Wu's setup from A261458, where the first four iterates must keep the same odd number of digits. On top of that it makes one simple observation: the centre digit M becomes 2M mod 10, and if M is at most 4 then f(n) is fixed by the rotation, so the next iterate is 2f(n) and cannot be prime. A five-case check on the centre digit (it must run 9, 8, 6, 2) then finishes the proof. Wu stopped at six steps in 2015, but the extra step uses a short and standard idea that a competent mathematician working from the material in the entry and its cross-references would find quickly.
+
+*Follows from:* Mathar's factorization f(n) = (10^k+1)(a+b) for even digit counts (A086004 comment) and Wu's no-carry, fixed-digit-length argument in A261458, together with the elementary block decomposition f(n) = 10^(m+1)S + 2M*10^m + S
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

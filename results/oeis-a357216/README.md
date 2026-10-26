@@ -1,6 +1,7 @@
 # Internal n-gons in a regular n-gon: triple points occur only for n = 3, 4, 6, and otherwise there are n k^2 + 1 regions (Shannon's A357216 conjecture)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A357216  
 **Date:** 2026-10-18
@@ -10,6 +11,14 @@
 Take the regular n-gon with vertices V_j = exp(2πij/n). Divide each side into k+1 equal parts. For m = 1..k, the m-th internal n-gon joins the m-th division points of consecutive sides. Its side (j, m-1) is the segment from the m-th division point of side j to the m-th division point of side j+1. The statement has two parts.
 (1) For n >= 3, some k gives a point lying on three distinct drawn sides if and only if n is 3, 4 or 6.
 (2) For n = 5 and for every n >= 7 and every k >= 0, the open polygon minus all n*k drawn sides has exactly n*k^2 + 1 connected components.
+
+## Assessment
+
+The proof first notes that two chords can only cross if they cut off the same corner or adjacent corners. So any triple point involves just four consecutive vertices, and in an affine frame these depend only on u = 2cos(2*pi/n). With every chord parameter rational, the condition for three chords to meet is linear in u with a nonzero rational coefficient, so u would be rational, which Niven's theorem rules out for n = 5 and n >= 7. Explicit rational triple points for n = 3, 4, 6, and the standard count (a chord crossed at p distinct interior points adds p + 1 regions) giving n*k^2 + 1, complete the proof. The whole argument is about a page of elementary coordinate geometry plus a classical theorem. The long Lean file reflects the effort of formalizing the topology, not a hard mathematical idea.
+
+*Follows from:* Niven's theorem (cos(2*pi/n) is rational only for n = 1, 2, 3, 4, 6), combined with the Euler-formula count of regions already cited in the entry's %F line (T = edges - vertices + 1).
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

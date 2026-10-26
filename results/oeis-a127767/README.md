@@ -1,6 +1,7 @@
 # The inverse of the 1/Catalan band triangle (A127767) has integer entries
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A127767  
 **Date:** 2026-10-24
@@ -8,6 +9,14 @@
 ## Result
 
 Let C(n) be the Catalan numbers. Let A be the infinite lower-triangular matrix with A(n,k) = 1/C(n) if k ≤ n ≤ 2k and A(n,k) = 0 otherwise. Let T be its inverse, which is also lower triangular. Then every entry T(n,k) with 0 ≤ k ≤ n is an integer. In the frozen statement, T is defined by forward substitution: T(n,k) = C(n)·([n=k] − Σ_{j<n} A(n,j)·T(j,k)) for k ≤ n, and T(n,k) = 0 for k > n.
+
+## Assessment
+
+The conjecture follows from one observation. Every nonzero entry in row n of A equals 1/C(n), so A is the 0/1 band matrix [k<=n<=2k] with each row scaled by 1/C(n). That band matrix is lower unitriangular, so its inverse has integer entries. Inverting A then just multiplies column k of that integer inverse by C(k). This is standard linear algebra that fits in a few lines. The method was already used for the sibling triangle A127749, and the manuscript itself calls the result an elementary observation. The integrality conjecture was meant literally, and the proof settles it as stated.
+
+*Follows from:* The factorization A = diag(1/C_n) * M, where M(n,k) = [k <= n <= 2k] is the lower unitriangular 0/1 triangle A101688. Its inverse is the integer triangle A111967, so T = M^{-1} * diag(C_k), that is, T(n,k) = C_k * A111967(n,k). The same factorization appears in R. J. Mathar's 2021 formula for the sibling triangle A127749.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

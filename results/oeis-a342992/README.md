@@ -1,6 +1,7 @@
 # Every n not divisible by 5 has a multiple with only prime digits (A342992)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Sequences and series  
 **Source problem:** OEIS A342992  
 **Date:** 2026-10-20
@@ -8,6 +9,14 @@
 ## Result
 
 For every integer n >= 1 with 5 not dividing n, there is some k such that k*n is positive and every decimal digit of k*n is prime (in {2,3,5,7}). Equivalently, a(n) > 0 for A342992 (Sariyar's conjecture).
+
+## Assessment
+
+Write n = 2^e m with m odd and coprime to 10. Take a block of L = phi(m)(e+1) digits from {2,3} that is divisible by 2^L; this is the textbook digit-by-digit induction recorded in A053316. Concatenating m copies of the block gives a number divisible by both 2^e and m, by Euler's theorem. Both steps are standard olympiad techniques and the whole argument fits in well under a page. The work is not new mathematics; it is mainly noticing that these known pieces apply directly to Sariyar's conjecture.
+
+*Follows from:* The classical block lemma (OEIS A053316, Bottomley 2000; a {2,3} variant of the 1971 All-Union Olympiad problem A053312): for every j there is a j-digit number with digits 2 and 3 that is divisible by 2^j. Combine it with Euler's theorem 10^phi(m) ≡ 1 (mod m) for m coprime to 10, and repeat the block m times, as in the IMO Shortlist 1994 N7 solution.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

@@ -1,6 +1,7 @@
 # A262957: Israel's b(n), c(n) are coprime integers and a(n) = b(n)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Number theory  
 **Source problem:** OEIS A262957  
 **Date:** 2026-10-18
@@ -8,6 +9,14 @@
 ## Result
 
 Let cf(n) be the value of 1 - 1/(2 + 1/(3 - 1/(4 + ... (n+1) + (-1)^(n+1)/1))), where the integers 1, ..., n+1 are used, the sign after k is (-1)^k, and the innermost tail is 1. Let a(n) be the numerator of cf(n) in lowest terms. Robert Israel defined b and c by b(1)=2, b(2)=3, c(1)=3, c(2)=5 and, for both, x(n+1) = (((-1)^n(n-1) + n(n+2)) x(n) - (1 + (-1)^n(n+1)) x(n-1)) / (n - (-1)^n). Claim (Israel's conjecture, OEIS A262957): for every n >= 1, b(n) and c(n) are integers with gcd(b(n), c(n)) = 1, and a(n) = b(n).
+
+## Assessment
+
+The n-th iterate is a finite continued fraction with integer partial denominators and numerators ±1. Its value is therefore (P_n ± P_{n-1})/(Q_n ± Q_{n-1}) for the standard convergents, and that numerator and denominator are coprime by the textbook determinant identity. The only remaining step is to check that these sums satisfy Israel's recurrence. That is a polynomial identity in two cases by parity, which a computer-algebra system or ring normalisation settles mechanically. Spotting that Israel's b, c are just the convergent numerators and denominators is the one small insight, and it is the obvious guess, so the whole argument is well under a page of standard continued-fraction theory.
+
+*Follows from:* The classical fundamental recurrence and determinant identity for continued-fraction convergents, P_k Q_{k-1} - P_{k-1} Q_k = ±1 (e.g. Lorentzen-Waadeland), applied to the finite continued fraction 1 - 1/(2 + 1/(3 - ...)) whose last partial denominator is (n+1) ± 1.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

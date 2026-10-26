@@ -1,6 +1,7 @@
 # Even and odd legs with odd prime factors ≡ 3 (mod 4): a(n)/n → π (A354571, A354570)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A354571  
 **Date:** 2026-10-20
@@ -8,6 +9,14 @@
 ## Result
 
 A354571 lists the even legs k of primitive Pythagorean triangles in increasing order, each repeated once per triangle. A leg is included when every odd prime factor of k is ≡ 3 (mod 4) and k has at least one odd prime factor. A354570 lists the odd legs k in the same way, for k whose prime factors are all ≡ 3 (mod 4). Selle's conjecture says that a(n)/n → π for A354571 and A354570(n)/n → π. The formal `statement` is the conjunction of these two limits, with each sequence read as the n-th term of the list where k appears #legTriangles(k) times.
+
+## Assessment
+
+The proof counts primitive triangles with a given leg using coprime factorizations, which gives the classical multiplicity 2^(omega-1). That reduces both counting functions to the summatory function of a multiplicative weight g, whose Dirichlet series is (1-2^-s)zeta(s)/L(s,chi_4). The Wiener–Ikehara (or Delange) theorem, together with L(1,chi_4) = pi/4 and the fact that L(s,chi_4) has no zeros on Re s = 1, then gives S(N) ~ 2N/pi. A short dyadic summation and the inversion from the counting function to the n-th term finish the proof. Each step is a textbook application of standard analytic number theory, and the manuscript itself calls it routine. Most of the work went into formalization: Wiener–Ikehara had to be proved from scratch in Lean. That effort does not make the mathematics substantial.
+
+*Follows from:* Classical count of primitive Pythagorean triangles with a given leg (2^(omega-1) coprime factorizations), combined with the Wiener–Ikehara / Delange Tauberian theorem applied to sum_{m odd, all p|m ≡ 3 mod 4} 2^omega(m) m^-s = (1-2^-s) zeta(s)/L(s,chi_4), with L(1,chi_4) = pi/4 and L(s,chi_4) ≠ 0 on Re s = 1.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

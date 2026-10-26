@@ -1,6 +1,7 @@
 # The subword complexity polynomial S(n,x) has leading coefficient n(n+1)/2 (A341761, Guo's conjecture)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A341761  
 **Date:** 2026-10-24
@@ -8,6 +9,14 @@
 ## Result
 
 For a word w, complexity(w) is the number of distinct nonempty factors (contiguous subwords) of w. Let S(n,x) be the sum of complexity(w) over all x^n words w of length n on an alphabet of x letters. For every n >= 0 there is a polynomial P in Q[X] with P(x) = S(n,x) for every natural number x, and the coefficient of x^n in P is n(n+1)/2.
+
+## Assessment
+
+The proof groups words by which positions carry equal letters, so S(n,x) becomes a sum of c(p) times falling factorials of x, and only the pattern with all letters distinct reaches degree n. A word with n distinct letters has n(n+1)/2 distinct factors, which settles it. Put another way, once S(n,x) is known to be a polynomial of degree at most n (as Guo already noted), its leading coefficient is the limit of the expected complexity as x grows, and almost every word then has distinct letters. This is a standard argument of a few lines that a competent combinatorialist would find right away, and the paper itself calls it elementary. Proving the conjecture as stated is what the author intended, so the result is not literal-only.
+
+*Follows from:* Standard grouping of words by equality pattern (set partition of positions), giving S(n,x) = sum over patterns p of c(p)·x(x-1)...(x-k(p)+1). This is the same falling-factorial reasoning behind Guo's own remark in his linked blog post that S(n,x) is a polynomial of degree at most n.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

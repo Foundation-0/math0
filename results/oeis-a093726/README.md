@@ -1,6 +1,7 @@
 # Imaginary parts of the convergents of [1+i; 1+i, 1+i, ...] are A317974(n+1)/A138573(n)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Number theory  
 **Source problem:** OEIS A093726  
 **Date:** 2026-10-24
@@ -8,6 +9,14 @@
 ## Result
 
 Let c_n = (1+i) + 1/((1+i) + ... + 1/(1+i)) be the continued fraction with n partial quotients 1+i, so c_1 = 1+i and c_{n+1} = (1+i) + 1/c_n. Write c_n = (A093725(n) + a(n) i)/A093727(n) in Mathematica's Numerator/Denominator form (A093727(n) = lcm of the denominators of Re c_n and Im c_n). Let A317974 be 0,0,1,1 and A138573 be 0,1,2,5, both continued by u(n) = 2(u(n-1)+u(n-2)+u(n-3)) - u(n-4). Then for every n >= 1, a(n)/A093727(n) = A317974(n+1)/A138573(n) as rational numbers.
+
+## Assessment
+
+The convergent is c_n = U(n+1)/U(n) = U(n+1)conj(U(n))/|U(n)|^2 for the Gaussian continuants U. A138573 already records that the denominator |U(n)|^2 equals A138573(n). The numerator's imaginary part Q(n) = Im(U(n+1)conj U(n)) is built from the same characteristic roots, so it satisfies the same order-4 recurrence. Matching four initial values identifies it with A317974(n+1). The whole argument is standard continued-fraction and linear-recurrence bookkeeping, plus a short check that a(n)/A093727(n) is just Im c_n. It fits in well under a page and leans mainly on a formula already in a cross-referenced entry.
+
+*Follows from:* The classical continuant formula c_n = U(n+1)/U(n) for U(n) = (1+i)U(n-1) + U(n-2), together with Peter Bala's 2014 formula in A138573: A138573(n) = |U(n)|^2, and the o.g.f. as a Hadamard product of x/(1-(1+i)x-x^2) and x/(1-(1-i)x-x^2). The same Hadamard-product argument puts Im(U(n+1) conj U(n)) in the signature-(2,2,2,-1) recurrence space, so four initial values match it with A317974(n+1).
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

@@ -1,6 +1,7 @@
 # 3^(3^18) + 2 is divisible by 31^2, so Hilliard's squarefree conjecture (A083020) fails
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A083020  
 **Date:** 2026-10-21
@@ -8,6 +9,14 @@
 ## Result
 
 The conjecture (Cino Hilliard, 2003, OEIS A083020) says that 3^(3^n) + 2 is squarefree for every n ≥ 0. We prove it is false: 31^2 = 961 divides 3^(3^18) + 2, so that number is not squarefree.
+
+## Assessment
+
+The refutation is a single explicit counterexample: 31^2 divides 3^(3^18)+2. To find it you reduce 3^n modulo φ(p^2) for small primes p and check whether 3^(3^n) ≡ -2 (mod p^2). This is a short modular-exponentiation search, and a few lines of code find (n, p) = (18, 31) at once. Checking it only needs Euler's theorem and the congruence 3^159 ≡ -2 (mod 961). No new idea or construction was needed, and the counterexample is a genuine failure of the conjecture as its author meant it, not a degenerate case.
+
+*Follows from:* Euler's theorem (3^930 ≡ 1 mod 31^2) plus a direct search for a prime p and an n with p^2 | 3^(3^n)+2
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

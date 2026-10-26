@@ -1,6 +1,7 @@
 # Alexandersson's recurrence for the row polynomials of A395454 holds (rows counted from 1)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A395454  
 **Date:** 2026-10-24
@@ -10,6 +11,14 @@
 Let E2(j,i) be the second-order Eulerian numbers (A201637): E2(0,0)=1, E2(0,i)=0 for i>=1, and E2(j+1,i) = (2j+1-i)E2(j,i-1) + (i+1)E2(j,i). Let T(n,k) = sum_{j=0}^n (-1)^{n-j} C(n,j) E2(j,n-k), the triangle A395454, and let P_m(t) = sum_{k=0}^m T(m,k) t^k be its row polynomials in the entry's numbering (P_0 = 1, P_1 = 0, P_2 = 2t, ...). Then for every m >= 2, in Z[t],
 P_m = (m-1)(1+t) P_{m-1} + (t - t^2) P'_{m-1} + 2(m-1) t P_{m-2}.
 Equivalently, with the rows counted from 1 (P1(n) = P_{n-1}), for every n >= 3: P1(n) = (n - 2t + nt - 2) P1(n-1) + (t - t^2) P1'(n-1) + t(2n-4) P1(n-2). This is Alexandersson's conjecture in the form fixed by the frozen statement.
+
+## Assessment
+
+The proof takes the standard recurrence for the reversed second-order Eulerian polynomials, applies it inside the alternating binomial transform (Pascal's rule and k*C(n,k) = n*C(n-1,k-1)), and then compares coefficients term by term. Altogether this is about a page of index bookkeeping, and the paper itself calls the argument routine. The result proves the reading the author evidently meant, with rows counted from 1 (an off-by-one in the indexing). That reading reduces at t=1 to the A053871 recurrence. The literal offset-0 reading fails trivially at n=2. No new idea or construction was needed.
+
+*Follows from:* The standard differential recurrence for second-order Eulerian polynomials, E_{j+1}(x) = (1+2jx)E_j(x) + x(1-x)E_j'(x). This is a direct reformulation of the triangle recurrence in A201637 and Graham-Knuth-Patashnik Section 6.2. It is pushed through the alternating binomial transform that defines A395454 using Pascal's rule.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

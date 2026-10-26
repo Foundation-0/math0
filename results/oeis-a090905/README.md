@@ -1,6 +1,7 @@
 # A090905: every row ends at twice the largest prime of the previous row (Murthy's conjecture proved)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A090905  
 **Date:** 2026-10-20
@@ -13,6 +14,14 @@ Claim: for every n > 4,
 - group n-1 has a largest prime p,
 - the last term of group n is 2p,
 - p = B_{n-1}.
+
+## Assessment
+
+Take consecutive Bertrand primes b < a < c, so that row n is [2b+1, 2a]. The prime c lies in row n, and the first multiple of c after 2a is 2c, so the next row must reach 2c. Ending at 2c is enough because (2a)!^2 divides (2b)!(2c)!, which follows from a short Legendre-formula check on floor functions plus a small prime-power case. The only deep input is a known prime-gap bound (Nagura 1952), and the first rows are checked by computer. The whole argument is elementary and fits in about a page; the scouting pass found it straight away. The long Lean file mostly reproves Nagura's bound with Chebyshev weights, which is formalization work, not a new idea.
+
+*Follows from:* Nagura's theorem (1952: a prime in (x, 6x/5) for x >= 25), which gives the ratio bounds 5/3 between consecutive Bertrand primes (A006992), combined with Legendre's formula for the factorial divisibility (2a)!^2 | (2b)!(2c)! and a finite computer check of the first rows
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

@@ -1,6 +1,7 @@
 # A249151(k) = k exactly when k + 1 is prime (Karttunen's conjecture, A249434/A249151)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A249434  
 **Date:** 2026-10-25
@@ -8,6 +9,14 @@
 ## Result
 
 Let P(k) = prod_{j=0..k} C(k,j) be the product of row k of Pascal's triangle. For every k >= 0, k is the largest m with m! | P(k) if and only if k+1 is prime. Equivalently, A249151(k) = k iff k+1 is prime, so A006093 = {k : A249151(k) = k}.
+
+## Assessment
+
+The prime case takes one line: v_p(C(p,j)) = 1 for 0<j<p, so p^(p-1) exactly divides P(p). For composite n = k+1 the proof uses the standard row-product formula in A001142 to write v_q(P(k)/k!) as a sum over j < n. Splitting that sum by powers of q gives a closed form, q^e f(u) - R s(u) + e. A short digit-sum inequality, (q-1) f(u) >= s(u) whenever f(u) >= 1, then shows the excess is either negative or greater than e. All of this is about a page of elementary p-adic valuation bookkeeping (Legendre/Kummer-type sums) that someone fluent in such calculations would find quickly, so it is routine. The fact that the conjecture stayed open in the OEIS reflects lack of attention, not hidden difficulty.
+
+*Follows from:* A001142's product formula P(k) = prod_{j=1..k} j^(2j-1-k), giving P(k)/k! = prod_{j<n} j^(2j-n-1) with n = k+1, together with Legendre's formula. Lagarias–Mehta (arXiv:1409.4145) also give closed forms for ord_p of the row product.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

@@ -1,6 +1,7 @@
 # A326602: a(n) is odd iff n is a square
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Sequences and series  
 **Source problem:** OEIS A326602  
 **Date:** 2026-10-18
@@ -8,6 +9,14 @@
 ## Result
 
 Let A(x) = Sum_{n>=0} (x^(2n-1)+1)^n x^n / (1+x^(2n+1))^(n+1) in Z[[x]] (the n=0 summand is 1/(1+x)), and let a(n) = [x^(2n)] A(x). Then for every n >= 0, a(n) is odd if and only if n is a perfect square (n = k^2 for some k >= 0, so 0 counts as a square).
+
+## Assessment
+
+The proof expands each summand using the binomial theorem and the series for (1+y)^-(n+1). Modulo 2 it rewrites the coefficient of x^N as a sum of trinomial coefficients T(n,m,i) over triples with n+m+2nm = N+2i. Both the weight and the condition are symmetric in n and m, so the off-diagonal terms cancel in pairs. Each diagonal term is a multiple of a central binomial coefficient, so it is even except when i = n, which forces N = 2n^2. The whole argument fits in about a page, and it is a direct adaptation of the involution proof for the cross-referenced entry A323557, which that entry already cites; the manuscript itself calls it a fairly routine adaptation.
+
+*Follows from:* The involution/parity method already used for the cross-referenced sibling A323557: Ralf Stephan's comment of Jun 01 2026 in that entry, the AlphaProof Nexus Lean file, and Adamczewski, arXiv:2608.11941, Appendix A. Fried's proof for A325046 uses the same idea. The new proof also uses the standard fact that the central binomial coefficient C(2k,k) is even for k >= 1.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

@@ -1,6 +1,7 @@
 # Odd terms of A323695 occur only at n = k(k+2)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Sequences and series  
 **Source problem:** OEIS A323695  
 **Date:** 2026-10-18
@@ -8,6 +9,14 @@
 ## Result
 
 Let a(N) be the coefficient of x^N in Sum_{m>=0} x^m (1 - x^(m+1))^m / (1 + x^(m+1))^(m+1) (OEIS A323695, offset 0). If a(n) is odd, then n = k(k+2) for some natural number k. Equivalently, if a(n) is odd then n + 1 is a perfect square.
+
+## Assessment
+
+The proof reduces the generating function modulo 2. There the numerator and denominator of each summand have the same base, so the m-th summand cancels down to x^m/(1+x^(m+1)). The sum is then the classical Lambert series for the divisor function, so a(n) is congruent mod 2 to d(n+1), and d(n+1) is odd exactly when n+1 is a square, by pairing each divisor d with N/d. This is a few lines of standard reasoning that a competent mathematician would find almost at once; the manuscript itself calls the result elementary. Unlike the sibling entries A323557 and A325046, nothing fails to cancel here, and the conjecture is the intended statement, not a degenerate reading of it.
+
+*Follows from:* Reduce the entry's own g.f. modulo 2. Since 1 - x^(m+1) = 1 + x^(m+1) mod 2, each summand becomes x^m/(1+x^(m+1)), and the series becomes the standard Lambert series Sum_m x^m/(1-x^(m+1)) = Sum_n d(n+1) x^n. The classical fact that d(N) is odd iff N is a perfect square finishes the proof.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

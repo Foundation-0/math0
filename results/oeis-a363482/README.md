@@ -1,6 +1,7 @@
 # OEIS A363482: apart from 49, every denominator of 1/(2-3/(3-4/(...(n-1)-n/(-5)))) is 1 or a prime
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Number theory  
 **Source problem:** OEIS A363482  
 **Date:** 2026-10-18
@@ -8,6 +9,14 @@
 ## Result
 
 For n >= 3 let t_n = -5 and t_k = k - (k+1)/t_{k+1} for k = n-1, ..., 2. Let a(n) be the denominator, in lowest terms, of 1/t_2 = 1/(2-3/(3-4/(...(n-1)-n/(-5)))). Then for every n >= 3, either a(n) = 49, or a(n) = 1, or a(n) is prime. This is Bouras' conjecture (2023). The value 49 occurs only at n = 6.
+
+## Assessment
+
+The closed form for the reduced denominator, a(n) = N/gcd(N, 5(n-1)(n-3)!) with N = n^2+3n-5, is essentially the formula already in the entry, and it comes from a standard convergent recurrence. From there the proof is about a page of elementary number theory, and it is the same argument already published for the sibling sequence A363102 (endpoint -2) and its relatives. If a prime p <= n-3 divides a(n), Legendre's bound forces a high power of p to divide N, which is too big except in a small case (N = 3p^2) that is easy to handle. Any prime factor above n-3 is in fact at least n+2, because N + c factors for c = 0, 1, 5, 7, and since N < (n+2)^2 there is room for only one such factor. The cases n <= 35 are a finite check. The manuscript itself says it adapts the existing template, so no new idea was needed.
+
+*Follows from:* The entry's own formula a(n) = (n^2+3n-5)/gcd(n^2+3n-5, 5*A051403(n-3)+n*A051403(n-4)), which reduces to N/gcd(N, 5(n-1)(n-3)!), combined with the p-adic/Legendre-bound template of Adamczewski's proof of the sibling conjecture A363102 (arXiv:2608.11941, Appendix A, linked from cross-reference A363102).
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

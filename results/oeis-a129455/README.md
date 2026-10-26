@@ -1,6 +1,7 @@
 # The triple-gcd Pascal triangle A129455: T(n,k) is an integer, divisible by C(n,k), and T(n,k)/C(n,k) is a sixth power
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A129455  
 **Date:** 2026-10-25
@@ -8,6 +9,14 @@
 ## Result
 
 Let G(m) = A129454(m+1) = prod_{i,j,k=1..m} gcd(i,j,k), so G(0) = 1. For all 0 <= k <= n: (1) G(k)·G(n-k) divides G(n), so T(n,k) = G(n)/(G(k)G(n-k)) is an integer; (2) the binomial coefficient C(n,k) divides T(n,k); (3) T(n,k)/C(n,k) = m^6 for some natural number m. This is Peter Bala's 2007 conjecture from OEIS A129455, with the Lean T defined by natural-number division as in the frozen statement.
+
+## Assessment
+
+Counting multiples of each prime power gives the Legendre-type formula v_p(G(n)) = sum_t floor(n/p^t)^3, which A129454 already points to and which is published in general form. With A = floor(k/p^t), B = floor((n-k)/p^t) and a carry c in {0,1}, the identity (A+B+c)^3 = A^3+B^3+c+3[AB(A+B)+c(A+B)(A+B+1)] has an even bracket. By Kummer's theorem the carries c add up to v_p(C(n,k)), so all three claims follow at once. The whole argument is under a page of standard elementary number theory and needs no new idea. Bala's comment itself says integrality would follow from the factorization.
+
+*Follows from:* The prime factorization v_p(A129454(n+1)) = sum_t floor(n/p^t)^3 conjectured in A129454 (cubic analogue of the A092287 formula Greathouse confirmed; stated for general q in Ma, arXiv:2509.13354), together with Legendre's formula and Kummer's carry theorem for v_p(C(n,k)).
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

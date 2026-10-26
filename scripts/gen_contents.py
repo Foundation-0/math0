@@ -101,12 +101,34 @@ def verification_text(e):
     )
 
 
+ROUTINE_MEANS = ("a short or standard argument, a consequence of material already in the OEIS entry, its "
+                 "cross-references or the literature, or a finite search")
+
+
+def assessment_text(a):
+    out = a["justification"]
+    if a["follows_from"]:
+        out += f"\n\n*Follows from:* {a['follows_from']}"
+    if a["literal_only"] and a["intended_status"]:
+        out += f"\n\n*Literal reading:* {a['intended_status']}"
+    out += ("\n\n*How this was judged:* an independent assessor agent, asked to judge the difficulty of the "
+            f"mathematics and not to inflate it, rated it **{a['depth']}**. Routine means {ROUTINE_MEANS}; "
+            "substantial means a non-standard idea or a long argument that does not follow readily from such material. "
+            + ("A second assessor, asked to show it is routine, " + ("agreed it is substantial." if a["depth"] == "substantial" else "found it routine.")
+               if a["challenged"] else "")
+            + f" ({a['date']})")
+    return out
+
+
 def result_readme(e):
     u = e["upstream"]
     lines = [
         f"# {e['title']}",
         "",
         f"**Classification:** {CLASS_LABEL[e['classification']]}  ",
+    ] + ([f"**Difficulty (independent assessment):** {e['assessment']['depth']}"
+          + (", settles the conjecture only as literally stated" if e['assessment']['literal_only'] else "") + "  "]
+         if e.get("assessment") else []) + [
         f"**Area:** {e['area']}  ",
         f"**Source problem:** {e['source']}  ",
         f"**Date:** {e['date']}",
@@ -115,6 +137,10 @@ def result_readme(e):
         "",
         e["summary"],
         "",
+    ]
+    if e.get("assessment"):
+        lines += ["## Assessment", "", assessment_text(e["assessment"]), ""]
+    lines += [
         "## Verification",
         "",
         verification_text(e),
@@ -149,6 +175,16 @@ SHORT = {
 }
 
 
+def assessment_summary(group):
+    sub = sum(1 for e in group if e.get("assessment", {}).get("depth") == "substantial")
+    rou = sum(1 for e in group if e.get("assessment", {}).get("depth") == "routine")
+    pend = len(group) - sub - rou
+    return (f"An independent assessor judged the difficulty of each of these: {sub} substantial and {rou} routine "
+            f"({ROUTINE_MEANS})" + (f"; {pend} not yet assessed" if pend else "") + ". "
+            "Most of these conjectures had stayed open for lack of attention, not because they were hard; "
+            "each result page gives the assessor's reasons.")
+
+
 def write_highlights(entries, counts):
     """Refresh the generated block between the HIGHLIGHTS markers in README.md."""
     path = os.path.join(ROOT, "README.md")
@@ -162,13 +198,18 @@ def write_highlights(entries, counts):
         + ", ".join(f"{v} {SHORT[k]}" for k, v in counts.items() if v)
         + ". Full list: [CONTENTS.md](CONTENTS.md).",
         "",
-        "New results (OEIS conjectures settled; each checked by the Lean kernel, and no earlier proof or counterexample was found by an independent novelty referee):",
+        "New results: OEIS conjectures settled, each checked by the Lean kernel, with no earlier proof or "
+        "counterexample found by an independent novelty referee. "
+        + assessment_summary([e for e in entries if e["classification"] == "new-result"]),
         "",
     ]
-    for e in entries:
-        if e["classification"] == "new-result":
-            paper = f" ([paper](results/{e['slug']}/paper.pdf))" if has_paper(e["slug"]) else ""
-            lines.append(f"* [{e['title']}](results/{e['slug']}/README.md){paper}")
+    new = [e for e in entries if e["classification"] == "new-result"]
+    new.sort(key=lambda e: e.get("assessment", {}).get("depth") != "substantial")
+    for e in new:
+        paper = f" ([paper](results/{e['slug']}/paper.pdf))" if has_paper(e["slug"]) else ""
+        depth = e.get("assessment", {}).get("depth")
+        tag = " (substantial)" if depth == "substantial" else ""
+        lines.append(f"* [{e['title']}](results/{e['slug']}/README.md){tag}{paper}")
     lines.append(end)
     pre, rest = text.split(start, 1)
     post = rest.split(end, 1)[1]
@@ -199,11 +240,17 @@ def main():
         group = [e for e in entries if e["classification"] == k]
         if not group:
             continue
-        out += [f"## {CLASS_LABEL[k]}", "", "| # | Result | Area | Upstream statement | Lean |", "|---|---|---|---|---|"]
+        assessed = k == "new-result"
+        out += [f"## {CLASS_LABEL[k]}", ""]
+        if assessed:
+            out += [assessment_summary(group), ""]
+        out += ["| # | Result | Area | Upstream statement | Lean |" + (" Difficulty |" if assessed else ""),
+                "|---|---|---|---|---|" + ("---|" if assessed else "")]
         for i, e in enumerate(group, 1):
             out.append(
                 f"| {i} | [{e['title']}](results/{e['slug']}/README.md) | {e['area']} | {upstream_link(e)} "
                 f"| [{os.path.basename(e['lean_file'])}]({e['lean_file']}) |"
+                + (f" {e['assessment']['depth'] if e.get('assessment') else 'not yet assessed'} |" if assessed else "")
             )
         out.append("")
     open(os.path.join(ROOT, "CONTENTS.md"), "w").write("\n".join(out))

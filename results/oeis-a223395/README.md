@@ -1,6 +1,7 @@
 # A223395: walks on the 4 x 4 grid graph satisfy Hardin's recurrence, Barker's g.f. and closed form
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A223395  
 **Date:** 2026-10-24
@@ -8,6 +9,14 @@
 ## Result
 
 Let a(n) be the number of walks with n vertices in the 4 x 4 grid graph P4 x P4 (the number of n x 1 arrays over the nodes 0..15 where vertically adjacent entries are adjacent nodes). Then (1) a(n) = 3a(n-1) + 2a(n-2) - 4a(n-3) for all n >= 4 (in Z); (2) (1 - x)(1 - 2x - 4x^2) * sum_{n>=1} a(n) x^n = 8x(2 - 3x^2) as formal power series over Z; (3) a(n) = (8 + (11 - 5 sqrt5)(1 - sqrt5)^n + (1 + sqrt5)^n (11 + 5 sqrt5)) / 5 for all n >= 1 (in R).
+
+## Assessment
+
+The sequence counts walks in a fixed 16-vertex graph, so it equals 1^T A^(n-1) 1. Its recurrence therefore comes from the polynomial of least degree that annihilates the all-ones vector under A. The proof checks the identity A^3·1 + 4·1 = 3A^2·1 + 2A·1 directly at every vertex, which comes down to three small symmetric 4x4 arrays, and then applies A repeatedly to get the identity for all n. The generating function and the closed form follow from the recurrence and the first three terms by routine algebra. This is a textbook transfer-matrix or main-eigenvalue argument plus a finite computation, and the manuscript itself calls it routine.
+
+*Follows from:* The transfer-matrix method, a(n) = 1^T A^(n-1) 1 for the adjacency matrix A of P4 x P4, together with standard main-eigenvalue theory (Cvetkovic-Doob-Sachs). The main eigenvalues of P4 x P4 are 1+sqrt5, 1 and 1-sqrt5, which are the roots of (x-1)(x^2-2x-4). In practice everything reduces to the finite check A^3·1 + 4·1 = 3A^2·1 + 2A·1 on 16 vertices.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

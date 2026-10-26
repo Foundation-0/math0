@@ -1,6 +1,7 @@
 # A386655 modulo 6 is eventually periodic with pattern [1, 0, 3, 0, 3, 2]
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Sequences and series  
 **Source problem:** OEIS A386655  
 **Date:** 2026-10-24
@@ -8,6 +9,14 @@
 ## Result
 
 Let a(n) = sum_{k=0..n} C(n,k) 2^(k(k+1)) (2^k - (n-k))^(n-k-1), where the k = n term is read as 2^(n^2) and 0^0 = 1. Then for every n >= 6, a(n) mod 6 equals the entry with index (n-6) mod 6 of [1, 0, 3, 0, 3, 2]. Equivalently, a(n) mod 6 = 1, 0, 3, 0, 3, 2 for n ≡ 0, 1, 2, 3, 4, 5 (mod 6). (Paul D. Hanna's conjecture, OEIS A386655.)
+
+## Assessment
+
+The proof starts from the explicit sum formula already given in the entry and works modulo 2 and modulo 3 separately. Modulo 2 only the k=0 term survives, which is immediate. Modulo 3, writing 2 = -1 and using Fermat's little theorem makes each summand a 6-periodic function of n-k. Such a function can be written with C(m,j), j <= 2, and (-1)^m, and a standard binomial-transform identity then gives a(n) = 1-n^2 or n^2-n mod 3; CRT finishes. This is an elementary argument of about a page, the kind of residue computation a competent mathematician would carry out quickly, so it is routine. The scout had already outlined it before the proof attempt.
+
+*Follows from:* The entry's explicit formula a(n) = Sum_{k=0..n} C(n,k) 2^(k(k+1)) (2^k-(n-k))^(n-k-1), combined with Fermat's little theorem mod 2 and mod 3 and the standard identity Sum_m C(n,m) C(m,j) x^m = C(n,j) x^j (1+x)^(n-j).
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

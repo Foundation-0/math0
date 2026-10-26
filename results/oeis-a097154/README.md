@@ -1,6 +1,7 @@
 # The only fixed points of reverse(x) - maxdigit(x) are 0 and 89
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Sequences and series  
 **Source problem:** OEIS A097154  
 **Date:** 2026-10-19
@@ -8,6 +9,14 @@
 ## Result
 
 For a natural number x, let rev(x) be its decimal reversal (rev 0 = 0, trailing zeros are dropped) and maxdig(x) its largest decimal digit (maxdig 0 = 0). Let f(x) = rev(x) - maxdig(x). Then f(x) = x if and only if x = 0 or x = 89.
+
+## Assessment
+
+A fixed point satisfies rev(x) = x + maxdig(x). Reversal keeps the digit sum, so maxdig(x) must be divisible by 9, which leaves only rev(x) = x + 9. Comparing the leading and units digits mod 10 and bounding the middle block then gives x = 10a + (a+1), and the largest-digit condition picks out 89. That is under a page of textbook digit arithmetic that a competent mathematician would find quickly. The entry itself carries the keyword 'easy', and the length of the Lean proof reflects formalization effort, not mathematical depth.
+
+*Follows from:* The standard fact that a number is congruent to its digit sum mod 9, so rev(x) ≡ x (mod 9). This forces maxdig(x) = 9 at a nonzero fixed point. A units-digit comparison mod 10 and a size bound then finish it.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

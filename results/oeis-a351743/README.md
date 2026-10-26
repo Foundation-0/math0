@@ -1,6 +1,7 @@
 # A351743: from n = 139 the sequence is affine in 42-blocks, which proves Sycamore's, Sigrist's and the A355149 conjectures
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Sequences and series  
 **Source problem:** OEIS A351743  
 **Date:** 2026-10-20
@@ -12,6 +13,14 @@ Let a(1)=1 and let a(n+1) be the greatest divisor of s(n)=a(1)+...+a(n) that is 
 (2) a(2(n+21)-1) = a(2n-1) for all n >= 70 (Sigrist).
 (3) There is a 21-periodic integer sequence b with a(2(n+21)) = 3645 a(2n) + b(n) for all n >= 70 (Sigrist).
 (4) There is a 42-periodic integer sequence c with s(n+42) = 3645 s(n) + c(n) for all n >= 138 (A355149 conjecture).
+
+## Assessment
+
+The proof writes a and s on each 42-term block as affine functions of Y_m = (3645^m-1)/3644. The 42 coefficient rows come from the computed data, and Sigrist's conjectures already describe this shape. Each of the 42 steps of the recursion is then shown to hold for every value of the parameter, using two elementary gcd lemmas and a finite check of small divisibility and coprimality facts. Together with a direct computation of the first 139 terms, this proves all four conjectures. This is the standard way to certify an eventually periodic or affine pattern in a recursively defined sequence, and once the ansatz is set up it reduces to a finite computation. No new idea was needed, even though the conjectures had stayed open since 2022.
+
+*Follows from:* Sigrist's own conjectured formulas in A351743 (%F) and A355149 (%F), which already describe the block structure; the proof makes that structure an explicit affine ansatz in Y_m = (3645^m-1)/3644 and checks it by a finite computation.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

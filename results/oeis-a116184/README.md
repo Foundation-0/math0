@@ -1,6 +1,7 @@
 # A116184: Adamchuk's conjectures on 37^3 dividing the numerator of sum_{k=1}^{36} 1/k^n
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Number theory  
 **Source problem:** OEIS A116184  
 **Date:** 2026-10-19
@@ -8,6 +9,14 @@
 ## Result
 
 Let H(n) = sum_{k=1}^{36} 1/k^n, a rational number. Claim (a): for every k >= 0, 37^3 divides the numerator of H(3 + 36k). Claim (b): if p > 37 is a prime and 37^3 divides the numerator of H(p), then p = 37k - 1 for some natural number k, that is, p ≡ -1 (mod 37).
+
+## Assessment
+
+Both claims are about one fixed modulus, 37^3, and the denominator of H(36,n) is prime to 37. By Euler's theorem, whether n is a term depends only on n mod 49284. Both conjectures therefore reduce to a finite computation over one period. For (b), a prime above 37 is coprime to 49284, so only the residues coprime to 49284 need checking. The manuscript's truncated binomial expansion only makes this check cheaper. Its alternative derivation also takes just a few lines from Sun's power-sum congruence, Kummer's congruences and the irregular pair (37,32). No new idea was needed.
+
+*Follows from:* Euler's theorem: since 37 does not divide k for 1 <= k <= 36, whether 37^3 divides the numerator of H(36,n) depends only on n mod phi(37^3) = 49284, so both claims reduce to checking one period. Alternatively, it follows from the classical power-sum congruence of Glaisher/Sun, S_m = p B_m + (p^2/2) m B_{m-1} + ... (mod p^3), together with Kummer's congruences and the fact that (37,32) is the only irregular pair of 37.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

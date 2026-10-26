@@ -1,6 +1,7 @@
 # Lang's conjecture a(n) = A250400(n+1)/(n+1) for A294512 fails at n = 164
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Sequences and series  
 **Source problem:** OEIS A294512  
 **Date:** 2026-10-18
@@ -8,6 +9,14 @@
 ## Result
 
 Let V(n) = sum_{k=0}^{n} 1/((k+1)(3k+1)) and let a(n) be the denominator of V(n) in lowest terms (OEIS A294512). Let A250400(m) be the numerator, in lowest terms, of the harmonic mean m / sum_{j=1}^{m} 1/(j(3j-2)) of the first m octagonal numbers. Lang's conjecture (A294512, FORMULA, 2017) says that A250400(n+1)/(n+1) = a(n) in Q for every n >= 0. This is false. The first failure is at n = 164, where A250400(165)/165 = a(164)/11.
+
+## Assessment
+
+Since the harmonic mean is (n+1)/V(n), the conjecture holds exactly when n+1 is coprime to the numerator of V(n). Checking that condition with exact rational arithmetic finds the first failure at n = 164, where 11 divides both 165 and num V(164). The Lean proof confirms the identity 11*A250400(165) = 165*a(164) by kernel evaluation. The paper's hand argument for why 11 divides the numerator is a nice touch but not needed: the result is a direct finite search, and the relevant value was already in Barker's A250400 table. This is a genuine counterexample to the conjecture as intended, not a degenerate case.
+
+*Follows from:* A harmonic-mean identity that follows straight from the definitions in A294512/A250400: H(n+1) = (n+1)/V(n), so A250400(n+1) = (n+1)*a(n)/gcd(n+1, numerator V(n)). Barker's b-file for A250400 (m <= 1000) already lists A250400(165) = 15*a(164).
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

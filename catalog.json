@@ -924,7 +924,16 @@
    "our_decl": "Math0.Frontier.A005590.result",
    "summary": "Let a : N -> Z be given by a(0)=0, a(1)=1, a(2n)=a(n), a(2n+1)=a(n+1)-a(n) (OEIS A005590). Then for every n >= 0, a(3n)=0 if and only if n is fibbinary (OEIS A003714), i.e. the binary representation of n has no two adjacent 1 bits. This is Ralf Stephan's 2003 conjecture.",
    "notes": "Conjecture as stated in OEIS: Conjecture: a(3n)=0 iff n in A003714. - _Ralf Stephan_, May 02 2003\n\nReferees: I found no prior resolution.\n- OEIS A005590 (local mirror, rev #97, Nov 2025) still marks Stephan's 2003 claim as a conjecture.\n- Related OEIS entries: A003714, A277335 (= 3·A003714, the zero set of A005590, not cross-linked to it), A290258.\n- R. Stephan, arXiv:math/0409509: the conjecture is not listed. R. Stephan, arXiv:math/0307027: lists A005590 only in a table.\n- J.-P. Allouche and J. Shallit, 'The ring of k-regular sequences', TCS 98 (1992): Example 7 shows 2-regularity only.\n- J.-P. Allouche and M. Mendès France, arXiv:1202.0211: links A005590 to Thue–Morse, nothing on zeros.\n- No hits in S. Northshield, arXiv:1503.03433; C. Defant, arXiv:1506.07824; B. Reznick, arXiv:math/0610601; or S. Fried, arXiv:2607.24832 (abstract only).\n- Not in the OEIS Open / Tsoukalas et al. 492-conjecture set (arXiv:2608.11941, 2605.22763) and not in google-deepmind/formal-conjectures.\n- Not checked: B. Reznick, 'A new sequence with many properties', Abstracts AMS 5 (1984) 16. Its scan is on oeis.org, which is rate-limited here.",
-   "date": "2026-10-18"
+   "date": "2026-10-18",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The defining recursion read as a 2-regular linear representation: (a(2m),a(2m+1)) and (a(2m+1),a(2m+2)) are fixed linear images of (a(m),a(m+1)). This is the standard way to handle zero sets of 2-regular sequences (Allouche-Shallit), and the entry already notes that the sequence is 2-regular.",
+    "justification": "The proof follows the pair (a(m), a(m+1)) along the binary digits of m. The pair stays at (0,1) or (1,1) while the digits form blocks 0 and 11. As soon as a 0 is read in state (1,1), the pair lands on (1,0), and from then on a one-line sign invariant (x>0 and y<x, or x<0 and x<y) is preserved and forces a(m) to be nonzero. A short induction on n mod 4 then shows that 3n reaches state 0 exactly when n is fibbinary. This is a standard automaton-plus-invariant argument for a 2-regular sequence, about a page long with elementary case checks, so a competent mathematician would find it quickly. The conjecture stood for a long time only because nobody seems to have tried, not because it needed a new idea.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A022445",
@@ -1016,7 +1025,16 @@
    "our_decl": "Math0.Frontier.A062887.result",
    "summary": "Call a positive integer N admissible if all of its decimal digits are odd and, reading from left to right, each digit is 2 less (mod 10) than the one before it. Examples are 975, 75, 319 and 9753197. Let a(n) be the smallest admissible multiple of 2n+1, or 0 if there is none. Then for every n ≥ 0, a(n) = 0 if and only if 125 divides 2n+1.",
    "notes": "Conjecture as stated in OEIS: \"Conjecture: The only numbers n for which a(n)=0 are those for which 2*n+1 is divisible by 125. - _Sean A. Irvine_, Apr 14 2023\"\n\nReferees: OEIS A062887 (Amarnath Murthy, 2001; conjecture added by Sean A. Irvine, Apr 14 2023; entry unchanged as of revision #12, checked in the local mirror dated 2026-10-17 and upstream oeisdata). Related: OEIS A062886 (Nathaniel Johnston, May 2011: zeros match 25 | 2n+1 for n ≤ 500, observed but not proved); OEIS A062885 (even-digit analogue: John W. Layman's argument for a(25) = −1, plus a Don Reble analysis file a062885.txt that I could not retrieve). Web searches (OEIS, MSE/MO-style queries, phrases about repeated 31975/97531 blocks and divisibility by 125) found no prior proof or counterexample.",
-   "date": "2026-10-19"
+   "date": "2026-10-19",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Standard facts: an integer is congruent mod 125 to its last three digits, and Euler's theorem (every number coprime to 10 divides some number made of a repeated decimal block, the usual repunit argument). The sibling entry A062886 already uses the same last-digits argument with modulus 25.",
+    "justification": "One direction is a finite check. Every admissible number either has at most two digits or ends in 975, 753, 531, 319 or 197, and none of these is divisible by 125. The other direction repeats the admissible block 31975 (which is divisible by 25) q times with q = phi(99999 m'). This is the textbook argument that a number coprime to 10 divides a suitable repunit. The whole proof takes under a page and uses only standard elementary number theory, so it is routine, even though the Lean formalization took real work.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A071685",
@@ -1062,7 +1080,16 @@
    "our_decl": "Math0.Frontier.A073642.result",
    "summary": "Let a(n) be the sum of the positions of the 1-bits of n (if n = 2^b + 2^c + ... with distinct exponents, then a(n) = b + c + ...). Let A011371(n) = n - s(n), where s(n) is the number of 1's in the binary expansion of n; by Legendre's formula this equals v2(n!). Let A007814(k) = v2(k), the 2-adic valuation. Then for every n > 0, a(n) = (3*A011371(n) - Sum_{k=1..n} A007814(k)^2)/2, with the right-hand side computed exactly in Q.",
    "notes": "Conjecture as stated in OEIS: A073642 (if n = 2^b+2^c+..., a(n)=b+c+...): \"Conjecture: a(n) = (3*A011371(n) - Sum_{k=1..n} A007814(k)^2)/2 for n > 0. - _Velin Yanev_, Sep 09 2017\". Siblings: A059906: \"Conjecture: a(n) = n - (1/2)*Sum_{k=1..n} (sqrt(2)^A007814(k) + (-sqrt(2))^A007814(k)) = -Sum_{k=1..n} (-1)^k * 2^floor(k/2) * floor(n/2^k). - _Velin Yanev_, Dec 01 2016\". A048702: \"Conjecture: a(n) = 2^floor(log_2(n)) * Sum_{i=1..n} 1/(2^v_2(i))\" and \"Conjecture: a(n) = n*2^floor(log_2(n)) - Sum_{i=1..floor(log_2(n))} 2^(floor(log_2(n)) - i)*floor(n/(2^i)).\"\n\nReferees: I found no prior resolution.\n- **OEIS entry.** A073642 (#121, Jul 05 2026) still lists \"Conjecture ... Velin Yanev, Sep 09 2017\", with no proof note or %E edit about it.\n- **Related OEIS entries.** A011371, A007814, A029931, A115364, A198192 and A198193 contain no such identity, and no OEIS sequence holds the partial sums of A007814(k)^2.\n- **Fried, \"Proofs of some conjectures of Yanev\" (2025).** This OEIS attachment covers only A000188, A001157 and A006519, and A073642 does not link to it.\n- **Fried's OEIS papers.** None of these mentions A073642: arXiv:2410.07237, JIS 28 (2025) Art. 25.4.3, JIS 29 (2026) Art. 26.1.8, and arXiv:2607.24832.\n- **Formalization datasets.** A073642 is not in google-deepmind/formal-conjectures, in Epoch's OEIS Open / LeanOpenProblems (arXiv:2608.11941), or in alphaproof-nexus-results.\n- **Ingredients of the proof.** These are classical: Legendre's formula v2(n!) = n - s2(n), and Sum_{k<=n} f(v2(k)) = Sum_j (f(j)-f(j-1)) floor(n/2^j). The identity also follows from Gutkovskiy's 2019 g.f. in the entry.",
-   "date": "2026-10-20"
+   "date": "2026-10-20",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Gutkovskiy's g.f. in the entry, (1/(1-x)) * Sum_{k>=1} k*x^(2^k)/(1+x^(2^k)), together with Legendre's formula A011371(n) = Sum_j floor(n/2^j) and the classical count Sum_{k<=n} f(v2(k)) = Sum_j (f(j)-f(j-1)) floor(n/2^j). Alternatively it follows directly from the binary-increment step n -> n+1 (Stephan's recursion in the entry gives the same thing).",
+    "justification": "The identity is equivalent to the local step 2a(n+1) + v2(n+1)^2 = 2a(n) + 3*v2(n+1). This is immediate: if n ends in t one-bits, then adding 1 clears bit positions 0..t-1 and sets bit t, so a(n+1) = a(n) - t(t-1)/2 + t. Summing this step over n is the whole proof. You can also get it in a few lines by writing both sides as Sum_j c_j*floor(n/2^j), using Legendre's formula and the standard count of multiples of 2^j, or by reading it off Gutkovskiy's g.f. in the entry. It takes a few lines of classical bit-counting, and the manuscript itself says it claims no new method.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A075855",
@@ -1131,7 +1158,16 @@
    "our_decl": "Math0.Frontier.A083020.result",
    "summary": "The conjecture (Cino Hilliard, 2003, OEIS A083020) says that 3^(3^n) + 2 is squarefree for every n ≥ 0. We prove it is false: 31^2 = 961 divides 3^(3^18) + 2, so that number is not squarefree.",
    "notes": "Conjecture as stated in OEIS: %C A083020 Conjecture: These numbers have no repeating factors or 3^(3^n) + 2 is squarefree. (entry by Cino Hilliard, May 31 2003)\n\nReferees: I found no prior resolution. Sources checked: the OEIS A083020 entry (local mirror and https://raw.githubusercontent.com/oeis/oeisdata/main/seq/A083/A083020.seq, revision #20 of Jan 04 2026, which still states the conjecture with no refutation), cross-referenced/related entries A055777, A129290, A129291, A113913, A140331 and A061678, R. Stephan's \"Prove or Disprove. 100 Conjectures from the OEIS\" (arXiv:math/0409509, which does not contain A083020), and primepuzzles.net Conjecture 107 (unrelated). I also ran web searches for \"3^(3^n)+2 squarefree\", \"Cino Hilliard 3^3^n+2 seqfan\" and \"3^{3^n}+2 squarefree mathoverflow/stackexchange\". None of these reported a counterexample or a proof.",
-   "date": "2026-10-21"
+   "date": "2026-10-21",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Euler's theorem (3^930 ≡ 1 mod 31^2) plus a direct search for a prime p and an n with p^2 | 3^(3^n)+2",
+    "justification": "The refutation is a single explicit counterexample: 31^2 divides 3^(3^18)+2. To find it you reduce 3^n modulo φ(p^2) for small primes p and check whether 3^(3^n) ≡ -2 (mod p^2). This is a short modular-exponentiation search, and a few lines of code find (n, p) = (18, 31) at once. Checking it only needs Euler's theorem and the congruence 3^159 ≡ -2 (mod 961). No new idea or construction was needed, and the counterexample is a genuine failure of the conjecture as its author meant it, not a degenerate case.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A086004",
@@ -1154,7 +1190,16 @@
    "our_decl": "Math0.Frontier.A086004.result",
    "summary": "Let rot be the rotation of A086002. For a number n with d decimal digits, rot(n) swaps the block of the first floor(d/2) digits with the block of the last floor(d/2) digits; when d is odd, the centre digit stays where it is. Let f(n) = n + rot(n). Then no prime p has f(p), f^2(p), f^3(p), f^4(p) and f^5(p) all prime.",
    "notes": "Conjecture as stated in OEIS: \"Conjecture 2: There are no 5-Rotation Cycle Primes.\" (A086004, entry by _Chuck Seggelin_, Jul 07 2003. Conjecture 1 was settled by R. J. Mathar in 2009. Chai Wah Wu added on Aug 20 2015 that 4-rotation cycle primes exist (A261458), and in A261458 he proved there are none surviving 6 applications.)\n\nReferees: I found no prior resolution. OEIS A086004 (Seggelin 2003, last edited Jun 2025) still lists Conjecture 2 as open. OEIS A261458 (Chai Wah Wu, Aug 2015) proves the weaker statement that no chain of 6 steps exists, using a leading-digit/carry argument, and gives 4-step examples such as 10010905789. Mathar's 2009 comment on A086004 proves Conjecture 1 (even digit counts) only. Web searches (OEIS-indexed pages, arXiv, StackExchange-style queries, primepuzzles) found nothing on the 5-step case. The SeqFan archive could not be reached from here, so it was not checked.",
-   "date": "2026-10-19"
+   "date": "2026-10-19",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Mathar's factorization f(n) = (10^k+1)(a+b) for even digit counts (A086004 comment) and Wu's no-carry, fixed-digit-length argument in A261458, together with the elementary block decomposition f(n) = 10^(m+1)S + 2M*10^m + S",
+    "justification": "The proof is a one-page argument about decimal digits. It reuses Mathar's factorization for even digit counts and Wu's setup from A261458, where the first four iterates must keep the same odd number of digits. On top of that it makes one simple observation: the centre digit M becomes 2M mod 10, and if M is at most 4 then f(n) is fixed by the rotation, so the next iterate is 2f(n) and cannot be prime. A five-case check on the centre digit (it must run 9, 8, 6, 2) then finishes the proof. Wu stopped at six steps in 2015, but the extra step uses a short and standard idea that a competent mathematician working from the material in the entry and its cross-references would find quickly.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A090905",
@@ -1177,7 +1222,16 @@
    "our_decl": "Math0.Frontier.A090905.result",
    "summary": "Split 1, 2, 3, ... into consecutive groups. Group 1 is (1). Group n+1 starts right after group n. Its length is the least k ≥ len(n) such that the product of group n divides the product of group n+1. Let B_k be the Bertrand primes A006992: B_1 = 2, and B_{k+1} is the largest prime below 2B_k.\n\nClaim: for every n > 4,\n- group n-1 has a largest prime p,\n- the last term of group n is 2p,\n- p = B_{n-1}.",
    "notes": "Conjecture as stated in OEIS: %C Conjecture: For n > 4 the last term of the n-th group is 2p where p is the largest prime in the (n-1)th group. And these are the Bertrand primes. (Amarnath Murthy, Dec 13 2003)\n\nReferees: I found no prior proof or refutation.\n- OEIS A090904, A090905, A090906 and A090907 (Murthy, Dec 2003; last edited Dec 2016) state the claim only as a conjecture. A090907 adds \"verified for 4<n<21\".\n- A090906 has an unproved %F by M. Bouayoun (Mar 2004) giving the row lengths as 2*(A006992(n)-A006992(n-1)). It is off by one index.\n- A381901 (A. Niedermaier, Mar 2025) defines the same triangle with no bound on row length and asserts a(n) = 2*A006992(n-1) for n >= 5, without proof.\n- Related: A113117 and A113118 (L. Quet, 2006), A093911 (Murthy's variant), and A006992 (Bertrand primes).\n- The key analytic input is Nagura's theorem (J. Nagura, Proc. Japan Acad. 28 (1952) 177-181: for x >= 25 there is a prime between x and 6x/5). The Lean development reproves the form it needs (a prime in (5x/3, 2x) for x >= 83) from scratch.\n- Searches of arXiv, MathOverflow/MSE, SeqFan-style queries and the formal-conjectures repository found no prior resolution and no prior formalization.",
-   "date": "2026-10-20"
+   "date": "2026-10-20",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Nagura's theorem (1952: a prime in (x, 6x/5) for x >= 25), which gives the ratio bounds 5/3 between consecutive Bertrand primes (A006992), combined with Legendre's formula for the factorial divisibility (2a)!^2 | (2b)!(2c)! and a finite computer check of the first rows",
+    "justification": "Take consecutive Bertrand primes b < a < c, so that row n is [2b+1, 2a]. The prime c lies in row n, and the first multiple of c after 2a is 2c, so the next row must reach 2c. Ending at 2c is enough because (2a)!^2 divides (2b)!(2c)!, which follows from a short Legendre-formula check on floor functions plus a small prime-power case. The only deep input is a known prime-gap bound (Nagura 1952), and the first rows are checked by computer. The whole argument is elementary and fits in about a page; the scouting pass found it straight away. The long Lean file mostly reproves Nagura's bound with Chebyshev weights, which is formalization work, not a new idea.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A091817",
@@ -1223,7 +1277,16 @@
    "our_decl": "Math0.Frontier.A092054.result",
    "summary": "For every n >= 1, write the convergent [1; 1/2, 1/3, ..., 1/n] = 1 + 1/(1/2 + 1/(1/3 + ... + 1/(1/n))) in lowest terms as p/q. Then p + q is a power of 2, namely p + q = 2^a(n). Here a(n) is the base-2 logarithm, and a(n) = Sum_{k=1..n} A001511(floor((k+1)/2)) = 2n + 1 - s2(n) - s2(n+1) = A011371(n) + A011371(n+1). In these formulas A001511 is the ruler function, s2 = A000120 is the binary digit sum, and A011371(m) = m - s2(m).",
    "notes": "Conjecture as stated in OEIS: It appears that a(n) = Sum_{k=1..n} A001511(floor((k+1)/2)). Equivalently, a(n) = 2n + 1 - A000120(n) - A000120(n+1) = A011371(n) + A011371(n+1). - _Franklin T. Adams-Watters_, Feb 02 2006\n\nReferees: No prior explicit proof of A092054's conjectured formula found. Relevant partial or adjacent sources:\n- OEIS A092054 (#43, Aug 09 2026): the formula is still marked \"It appears\".\n- M. A. Suchenek, \"Elementary Yet Precise Worst-Case Analysis of Floyd's Heap-Construction Program\", Fundamenta Informaticae 120 (2012) 75-92, doi:10.3233/FI-2012-751. It proves 2N-2s2(N)-e2(N) for heap construction, which is algebraically equivalent to the conjectured formula. It does not prove the continued-fraction statement; the link to A092054 rests only on an OEIS comment.\n- OEIS A001901: reduced Wallis numerators, \"Subsequence of A000079\" (powers of 2). Ordowski (2024): A001901(n) = numerator of [1;1,1/2,...,1/n].\n- OEIS A056982 (Weisstein): 4^A005187(n) = denominator of prod_{k<=n}(1-1/(4k^2)). This gives the even-index exponent.\n- OEIS A001902 and A092053 (Hanna 2004): the convergent numerators are the Wallis denominators.\n- N. A. Draim, \"Pi in the form of a continued fraction with infinite terms\", Fibonacci Quarterly 7.3 (1969) 275-276, https://www.mathstat.dal.ca/FQ/Scanned/7-3/draim.pdf: Wallis partial products equal the convergents of a continued fraction with partial numerators (n-1)n.\n- Kummer/Legendre: v2(C(2m,m)) = s2(m), v2(m!) = m - s2(m).",
-   "date": "2026-10-21"
+   "date": "2026-10-21",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The cross-referenced entries already link the convergents to the partial Wallis products (A001902 and A092053 comments; Ordowski's [1;1,1/2,...,1/n] formula in A001901/A001902; Draim 1969), and A001901 is recorded as a subsequence of the powers of 2. Combine this with the closed form W(2m) = 16^m/((2m+1)·C(2m,m)^2), Kummer's theorem v2(C(2m,m)) = s2(m) (also in A056982 for even n), and Legendre's formula v2(m!) = m - s2(m).",
+    "justification": "The proof writes the convergents as P(n)/Q(n) using a three-term recurrence and checks closed forms for P and P+Q by a short induction. The odd parts of the factorials divide the odd double factorial because C(2m,m) is an integer, and Legendre's formula gives the exponent. Each step is standard: the link to Wallis products and the power-of-2 property are already recorded in the cross-referenced entries, and the manuscript itself calls the result a short consequence of classical facts. The informal argument is about a page; most of the work went into the Lean formalization.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A093726",
@@ -1246,7 +1309,16 @@
    "our_decl": "Math0.Frontier.A093726.result",
    "summary": "Let c_n = (1+i) + 1/((1+i) + ... + 1/(1+i)) be the continued fraction with n partial quotients 1+i, so c_1 = 1+i and c_{n+1} = (1+i) + 1/c_n. Write c_n = (A093725(n) + a(n) i)/A093727(n) in Mathematica's Numerator/Denominator form (A093727(n) = lcm of the denominators of Re c_n and Im c_n). Let A317974 be 0,0,1,1 and A138573 be 0,1,2,5, both continued by u(n) = 2(u(n-1)+u(n-2)+u(n-3)) - u(n-4). Then for every n >= 1, a(n)/A093727(n) = A317974(n+1)/A138573(n) as rational numbers.",
    "notes": "Conjecture as stated in OEIS: Conjecture: a(n)/A093727(n) = A317974(n+1)/A138573(n). - _Zhuorui He_, Jun 16 2026\n\nReferees: OEIS A093726 rev #13 (Jun 20 2026): the formula is still marked \"Conjecture: a(n)/A093727(n) = A317974(n+1)/A138573(n). - Zhuorui He, Jun 16 2026\"; there is no later %E edit recording a proof. Related prior work: Peter Bala's 2014 formula in OEIS A138573 that A138573(n) = |U(n)|^2 for the Gaussian Lucas sequence U(n) = (1+i)U(n-1) + U(n-2), which covers the denominator part only. A317974 (rev #35, Jun 30 2026) has no relevant formula. Not covered by S. Fried, \"Further proofs of conjectures from the OEIS\", arXiv:2607.24832 (Jul 2026); I checked its full text for the A-numbers. Fried's earlier papers (arXiv:2410.07237; JIS 2025 and 2026) predate the conjecture. No MathOverflow, Math StackExchange, SeqFan or arXiv resolution found. Sources: https://raw.githubusercontent.com/oeis/oeisdata/main/seq/A093/A093726.seq, https://arxiv.org/abs/2607.24832",
-   "date": "2026-10-24"
+   "date": "2026-10-24",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The classical continuant formula c_n = U(n+1)/U(n) for U(n) = (1+i)U(n-1) + U(n-2), together with Peter Bala's 2014 formula in A138573: A138573(n) = |U(n)|^2, and the o.g.f. as a Hadamard product of x/(1-(1+i)x-x^2) and x/(1-(1-i)x-x^2). The same Hadamard-product argument puts Im(U(n+1) conj U(n)) in the signature-(2,2,2,-1) recurrence space, so four initial values match it with A317974(n+1).",
+    "justification": "The convergent is c_n = U(n+1)/U(n) = U(n+1)conj(U(n))/|U(n)|^2 for the Gaussian continuants U. A138573 already records that the denominator |U(n)|^2 equals A138573(n). The numerator's imaginary part Q(n) = Im(U(n+1)conj U(n)) is built from the same characteristic roots, so it satisfies the same order-4 recurrence. Matching four initial values identifies it with A317974(n+1). The whole argument is standard continued-fraction and linear-recurrence bookkeeping, plus a short check that a(n)/A093727(n) is just Im c_n. It fits in well under a page and leans mainly on a formula already in a cross-referenced entry.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A097154",
@@ -1269,7 +1341,16 @@
    "our_decl": "Math0.Frontier.A097154.result",
    "summary": "For a natural number x, let rev(x) be its decimal reversal (rev 0 = 0, trailing zeros are dropped) and maxdig(x) its largest decimal digit (maxdig 0 = 0). Let f(x) = rev(x) - maxdig(x). Then f(x) = x if and only if x = 0 or x = 89.",
    "notes": "Conjecture as stated in OEIS: \"a(89)=-1 because 89 is the first number that will not reach zero: 98-9=89. It is conjectured that 0 and 89 are the only fixed points of f.\" (A097154, entry by _Jason Earls_, Aug 01 2004. The same sentence appears in A097155 and A097157.)\n\nReferees: **OEIS (local mirror, cross-checked against the current raw GitHub oeisdata files).**\n- A097154 (#4, Dec 15 2017), A097155 (#11, last edited Aug 29 2025) and A097157 (#3) all still say \"It is conjectured that 0 and 89 are the only fixed points of f\".\n- None has an %E line, comment, formula or link recording a proof or counterexample. A097155's only %E is a 2011 data correction by Harvey P. Dale.\n- The cross-referenced entries A097153, A097156 and A097158 (Earls, Aug 2004; extensions by Robert G. Wilson v and Klaus Brockhaus) are purely computational.\n- A grep of the whole local oeisdata mirror finds no other entry that references A097153 through A097158.\n\n**Web searches.** Queries covered the exact map text, \"reversal minus largest digit\", SeqFan 2004, Math StackExchange/MathOverflow-style phrasing, and an extended search. None found a proof.\n- Hits were only the OEIS pages themselves.\n- Unrelated digit-reversal work also came up: arXiv 2410.11784 (1089 attractor), arXiv 2404.06656 (reverse divisors), arXiv math/0511366, and OEIS A393794 (fixed points of the 1089-trick map, Havenaar 2026, a different map).\n- A GMAT forum problem covers only the two-digit equation reverse(n) = n + 9, which has eight solutions (12, ..., 89). That is a different condition and does not address this conjecture.\n\nNo prior resolution was found, so this appears to be the first written proof, and it is Lean-verified.",
-   "date": "2026-10-19"
+   "date": "2026-10-19",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The standard fact that a number is congruent to its digit sum mod 9, so rev(x) ≡ x (mod 9). This forces maxdig(x) = 9 at a nonzero fixed point. A units-digit comparison mod 10 and a size bound then finish it.",
+    "justification": "A fixed point satisfies rev(x) = x + maxdig(x). Reversal keeps the digit sum, so maxdig(x) must be divisible by 9, which leaves only rev(x) = x + 9. Comparing the leading and units digits mod 10 and bounding the middle block then gives x = 10a + (a+1), and the largest-digit condition picks out 89. That is under a page of textbook digit arithmetic that a competent mathematician would find quickly. The entry itself carries the keyword 'easy', and the length of the Lean proof reflects formalization effort, not mathematical depth.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A106505",
@@ -1292,7 +1373,16 @@
    "our_decl": "Math0.Frontier.A106505.result",
    "summary": "Let IsSide(c) mean there are natural numbers x, y such that x, y, c are the sides of a non-degenerate triangle in which the angle opposite y is twice the angle opposite x, and gcd(x, y, c) = 1. Let a(n) be the n-th smallest such c (1-indexed): 5, 7, 9, 11, 13, 15, 16, 17, ... Then a(n+5) = a(n) + 8 for every n > 2 (Ralf Stephan's conjecture in OEIS A106505).",
    "notes": "Conjecture as stated in OEIS: \"Conjecture: for n>2, a(n+5) = a(n) + 8. - _Ralf Stephan_, Nov 16 2010.\" Also: \"Empirical g.f.: ... - _Colin Barker_, Oct 05 2013\"\n\nReferees: No earlier proof found. OEIS A106505 (GitHub oeisdata main, rev #21, Apr 23 2021) still states it as a conjecture (Ralf Stephan, Nov 16 2010), with an empirical g.f. by Colin Barker (2013). OEIS A321499 (M. F. Hasler, Nov 2018; rev #24, Feb 2025) proves that {d²(2m+d)} = odd numbers > 1 together with multiples of 8 > 8, and records a(n+5) = a(n) + 8 for A321499 (D. A. Corneth). It still says \"Cf. A106505 (conjectured to be the sequence without the 3)\". The closely related A321501 complement analysis (Hasler) is also there. Related OEIS entries: A343063 and A343064 (B. Schott, 2021), which give the parametrization a = m² − k², b = mk, c = k² with gcd(m,k) = 1 and k < m < 2k, but no set characterization; and A229849, which says A106505 \"seems\" to give those values. Parametrization background: M. N. Deshpande, Math. Gazette (2002); K. Zelator, arXiv 1208.0497; R. S. Luthar (1984). None of these addresses the conjecture. Not covered in S. Fried, arXiv 2410.07237 or arXiv 2607.24832, nor in Adamczewski's OEIS Open benchmark (arXiv 2608.11941), which uses the Tsoukalas et al. dataset in epoch-research/LeanOpenProblems; also absent from google-deepmind/formal-conjectures.",
-   "date": "2026-10-19"
+   "date": "2026-10-19",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The entry's own %F formula: the terms are the values s^2 - r^2 with r < s < 2r and gcd(r,s) = 1 (classical parametrization of A/2A triangles, Luthar 1984; A343063). With that formula, a parity argument mod 8 plus the families (m, m+1) and (2j+1, 2j+3) give the set {odd >= 5} together with {8m : m >= 2}. Cross-reference A321499 (Hasler) already proves the same set with 3 added and records a(n+5) = a(n) + 8 there.",
+    "justification": "The proof works out the set of common sides. A coprime difference of squares s^2 - r^2 is either odd or divisible by 8. Two one-line families of triangles realize every odd c >= 5 and every multiple of 8 from 16 on, and the small cases are checked by hand. Since the set is periodic mod 8 with five residues per period, the recurrence follows at once. This is about half a page of elementary number theory, using the formula already given in the entry, and the cross-referenced A321499 already contains the same set characterization. The Lean work (deriving y^2 = x(x+c) from the arccos definition, plus the counting with Nat.nth) is formalization effort and adds no mathematical depth.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A113676",
@@ -1315,7 +1405,16 @@
    "our_decl": "Math0.Frontier.A113676.result",
    "summary": "Let G be Golomb's sequence A001462 (G(1)=1, G(2)=G(3)=2, G(4)=G(5)=3, ...; n occurs G(n) times, nondecreasing). Let H be G with one 2 removed: H(1)=1 and H(j)=G(j+1) for j>=2. Cut H into consecutive rows: row 1 is [H(1)], and row n+2 has as many terms as the sum of row n+1. Let a(n) be the length of row n. Levine's array has row 1 = [1,1], and row k+1 lists 1 c_1 times, 2 c_2 times, ..., where row k = [c_1, c_2, ...]. A014644(k) is the last term of Levine row k. Claim (both conjectures of van Lamoen and Hanna, 2005): (1) for every n>=2, a(n) = A014644(n+2) - A014644(n+1); (2) the last term of row 1 is A014644(1), and for every n>=2 the last term of row n is A014644(n+1).",
    "notes": "Conjecture as stated in OEIS: %C Conjecture: a(n) for n>1 gives first differences of Lionel Levine's sequence A014644(n) for n>=3. %C Conjecture: Final elements of the rows form A014644 except for duplicate 2. (Floor van Lamoen and Paul D. Hanna, Nov 06 2005)\n\nReferees: No prior proof found.\n- OEIS A113676 (van Lamoen & Hanna, Nov 2005; rev #9, Mar 2025) still lists both conjectures.\n- OEIS A001462 has van Lamoen's related conjecture (Nov 06 2005), still unresolved in the Aug 2026 revision.\n- OEIS A014643 has the %Y note \"Rows converge to A001462\".\n- J. Claes and R. Miyamoto, \"Golombic and Levine sequences\", arXiv:2602.10992 [math.CO] (Feb 2026), p. 3, eqs. (3)–(4). It observes that Γ maps the first n Golomb terms to the first A001463(n) terms (so the A014643 rows are Golomb prefixes), and that |a| = #Γa and #a = (Γa)(|a|). These are the key ingredients, but the paper does not mention A113676 or prove its conjectures.\n- Cross-checked entries: A014644, A014643, A011784, A012257, A001463, A113722, A113724, A113730 and A304679. None records a resolution.",
-   "date": "2026-10-20"
+   "date": "2026-10-20",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The fact that from row 2 on, the rows of Levine's array (A014643) are initial segments of Golomb's sequence A001462. A014643's cross-reference note \"Rows converge to A001462\" points to this, and Claes and Miyamoto, arXiv:2602.10992, p. 3, eqs. (3)-(4) state it: the Levine step maps the first n Golomb terms to the first A001463(n) terms. Golomb's self-describing property gives it at once.",
+    "justification": "The one real idea is that each Levine row from row 2 on is a prefix of Golomb's sequence, so its sum is the length of the next row. That is immediate from Golomb's self-describing property and is already known: A014643 hints at it and Claes and Miyamoto state it. Everything else is a telescoping sum and a short induction showing that the triangle's rows are the blocks of G between consecutive Levine row lengths; both conjectures then follow. The whole argument fits in about a page of elementary steps, and the manuscript itself calls the result \"a short consequence\" of known facts.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A115026",
@@ -1361,7 +1460,16 @@
    "our_decl": "Math0.Frontier.A116184.result",
    "summary": "Let H(n) = sum_{k=1}^{36} 1/k^n, a rational number. Claim (a): for every k >= 0, 37^3 divides the numerator of H(3 + 36k). Claim (b): if p > 37 is a prime and 37^3 divides the numerator of H(p), then p = 37k - 1 for some natural number k, that is, p ≡ -1 (mod 37).",
    "notes": "Conjecture as stated in OEIS: Conjecture: All terms of the arithmetic progression 3+36k belong to a(n). ... It appears that all primes in a(n) that are greater than 37 are of the form 37k-1. (Alexander Adamchuk, Apr 08 2007)\n\nReferees: No explicit prior resolution of the A116184 conjecture found. OEIS A116184 is unchanged (rev #6, Feb 16 2025) with no %E line or resolving comment, and no other mirror entry cross-references it. Classical ingredients that make it an easy corollary:\n- J.W.L. Glaisher, Q. J. Math. 31 (1900) 321-353: H(p-1,m) ≡ -m(m+1)/(2(m+2))·p^2·B_{p-2-m} (mod p^3) for odd m ≤ p-3.\n- Z.-H. Sun, \"Congruences concerning Bernoulli numbers and Bernoulli polynomials\", Discrete Appl. Math. 105 (2000) 193-223: Thm 5.1(a) (k ≤ p-4) and the power-sum formula S_k ≡ pB_k + (p^2/2)kB_{k-1} + (p^3/6)k(k-1)B_{k-2} (mod p^3), as quoted in C. Levaillant, arXiv:2005.09434, Results 2 and 4.\n- J. Zhao, arXiv:math/0301252: (p, p-2n-1) is irregular iff H(p-1, 2n-1) ≡ 0 (mod p^3) for p ≥ 2n+3.\n- Kummer congruences, plus (37,32) being an irregular pair.\n- R. Meštrović, arXiv:1111.3057, eq. (22).\n- OEIS A007408 comment (Adamchuk 2006): 37^3 | numerator of H(36,3), i.e. the k=0 case.",
-   "date": "2026-10-19"
+   "date": "2026-10-19",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Euler's theorem: since 37 does not divide k for 1 <= k <= 36, whether 37^3 divides the numerator of H(36,n) depends only on n mod phi(37^3) = 49284, so both claims reduce to checking one period. Alternatively, it follows from the classical power-sum congruence of Glaisher/Sun, S_m = p B_m + (p^2/2) m B_{m-1} + ... (mod p^3), together with Kummer's congruences and the fact that (37,32) is the only irregular pair of 37.",
+    "justification": "Both claims are about one fixed modulus, 37^3, and the denominator of H(36,n) is prime to 37. By Euler's theorem, whether n is a term depends only on n mod 49284. Both conjectures therefore reduce to a finite computation over one period. For (b), a prime above 37 is coprime to 49284, so only the residues coprime to 49284 need checking. The manuscript's truncated binomial expansion only makes this check cheaper. Its alternative derivation also takes just a few lines from Sun's power-sum congruence, Kummer's congruences and the irregular pair (37,32). No new idea was needed.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A119936",
@@ -1384,7 +1492,16 @@
    "our_decl": "Math0.Frontier.A119936.result",
    "summary": "Let A be the lower-triangular matrix with A(i,j) = 1/i for j ≤ i and 0 otherwise. Its cube has entries r(n,m) = (1/n) Σ_{m ≤ l ≤ k ≤ n} 1/(k l) for 1 ≤ m ≤ n. Let a(n) be the lcm, over m = 1..n, of the reduced denominators of r(n,m). Then for every n ≥ 1, a(n)/n³ = A002944(n)² = (lcm(1..n)/n)². Equivalently, a(n) = n · lcm(1,…,n)². This is the equation that OEIS A119936 (Wolfdieter Lang, 2006) labels a conjecture.",
    "notes": "Conjecture as stated in OEIS: %F A119936 a(n)/n^3 = A027451(n) = A002944(n)^2 (the second equation is a conjecture). (Wolfdieter Lang, Jul 20 2006)\n\nReferees: I found no prior proof or counterexample.\n- OEIS A119936 (Lang 2006, edit #22 Nov 2019) still calls a(n)/n^3 = A002944(n)^2 a conjecture.\n- A027451 states (lcm(1..n)/n)^2 as a formula (Meijer, 2009) without proof. Detlefs' comment there begins \"It appears\".\n- A120078 and A120079 say \"conjectured to be A027451\".\n- Crowley, arXiv:1207.1126, says only that a denominator \"appears to be\" A119936.\n- Fried's OEIS-conjecture series does not mention A119936 or the related sequences: arXiv:2410.07237 / JIS 25.4.3, JIS 26.1.8, arXiv:2606.09913, arXiv:2607.24832.\n- Sloane, math/0409509: no mention.\n- Web, MSE/MO and SeqFan searches turned up nothing.",
-   "date": "2026-10-24"
+   "date": "2026-10-24",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The standard p-adic argument in which a sum has a single term of minimal valuation, the same idea as the classical proof that the harmonic numbers H_n are not integers (Taeisinger/Kürschák), applied to the explicit formula r(n,m) = (1/n) Σ_{m≤l≤k≤n} 1/(kl) and to v_p(lcm(1..n)) = floor(log_p n).",
+    "justification": "The divisibility a(n) | n·lcm(1..n)^2 is immediate, because each product kl divides lcm(1..n)^2. For the reverse divisibility, take each prime p separately and use the column m equal to the largest multiple of p^e that is at most n, where p^e ≤ n < p^{e+1}. In that column, k = l = m is the only term whose valuation reaches -2e, so the full p-power survives in the denominator. This is the textbook unique-minimal-valuation trick used for harmonic sums. The whole argument fits in under a page, and the scout record set it out almost in full before any formalization, so it is a short, standard proof and not a new idea.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A120069",
@@ -1430,7 +1547,16 @@
    "our_decl": "Math0.Frontier.A121750.result",
    "summary": "Let a(n) be the total number of columns of even length over all deco polyominoes of height n (OEIS A121750). The polyominoes are encoded as column lists, as in the statement file. Then for every n >= 7:\na(n) - (n+2)a(n-1) + (-n^2+4n-2)a(n-2) + (n^3-3n^2-4n+11)a(n-3) - (n-1)(n^2-11n+26)a(n-4) + (-n^3+5n^2+7n-43)a(n-5) + (n-3)(n-5)^2 a(n-6) = 0.",
    "notes": "Conjecture as stated in OEIS: %F Conjecture D-finite with recurrence a(n) +(-n-2)*a(n-1) +(-n^2+4*n-2)*a(n-2) +(n^3-3*n^2-4*n+11)*a(n-3) -(n-1)*(n^2-11*n+26)*a(n-4) +(-n^3+5*n^2+7*n-43)*a(n-5) +(n-3)*(n-5)^2*a(n-6)=0. - R. J. Mathar, Jul 26 2022\n\nReferees: I found no published proof of this recurrence. Sources checked:\n- OEIS A121750, local mirror and upstream raw oeisdata (revision #13, 2024-08-20, still says 'Conjecture'). Cross-references A121748, A121747, A121749, A121751 also contain no proof.\n- E. Barcucci, S. Brunetti, F. Del Ristoro, 'Succession rules and deco polyominoes', RAIRO ITA 34 (2000) 1-14. Full text read; it does not treat even-length columns.\n- E. Barcucci, A. Del Lungo, R. Pinzani, TCS 159 (1996) 29-42.\n- E. Deutsch, E. Pergola, R. Pinzani, 'Six bijections between deco polyominoes and permutations', arXiv:0810.2876. It gives the definition of directed height and has no even-column results.\n- S. B. Ekhad, X. Yang, D. Zeilberger, arXiv:1707.04654. It predates the 2022 conjecture.\n- S. Fried, arXiv:2410.07237; JIS 28 (2025) Art. 25.4.3; JIS vol. 29 fried21; arXiv:2607.24832. None covers A121750.\n- T. Niu, arXiv:2605.15500, 2605.04369, 2605.08444, 2605.16553 (2026). None covers A121750.\n- M. Kauers, C. Koutschan, arXiv:2303.02793. Does not cover A121750.\n\nNote: the order-6 recurrence would follow routinely from Deutsch's first-order recurrence in the same entry (holonomic closure). That recurrence is stated in the entry without proof.",
-   "date": "2026-10-24"
+   "date": "2026-10-24",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Deutsch's first-order recurrence in the same entry, a(n) = n*a(n-1) + d(n-1) + (n-1)!*floor((n-1)/2), together with the closure properties of D-finite sequences (Stanley 1980). The row-polynomial recurrence for Q[n] in the cross-referenced A121748 gives the same route. Both are stated in OEIS without proof.",
+    "justification": "The proof splits each deco polyomino at its first column, the standard recursive decomposition, and uses the fact that shifting columns does not change the count. This gives a small first-order system for the counts and even-column totals. The order-6 recurrence then follows by unrolling the system six steps in each parity class and expanding a polynomial identity, which is a mechanical computation. The manuscript itself says the recurrence follows by routine closure arguments from Deutsch's first-order recurrence in the same entry. The new part is deriving that first-order relation from the definition, which takes about a page of standard combinatorics and needs no new idea.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A124526",
@@ -1476,7 +1602,16 @@
    "our_decl": "Math0.Frontier.A127752.result",
    "summary": "Let A(n,k) = 1/(3n+1) if k <= n <= 2k and 0 otherwise (n, k >= 0), and let a(n) be the row sums of the inverse of this lower-triangular matrix. Equivalently, a is defined by forward substitution: a(n) = 3n+1 - sum_{j<n, n<=2j} a(j). Let A035263 be the trajectory of 1 under the morphism 0 -> 11, 1 -> 10 (offset 1). Then for every n >= 0, a(n) mod 2 = A035263(n+1). This is Paul Barry's 2007 conjecture.",
    "notes": "Conjecture as stated in OEIS: a(n) mod 2 is first Feigenbaum symbolic sequence A035263 (conjecture). (Paul Barry, Jan 28 2007; checked to 2048 terms by Antti Karttunen, Sep 29 2018)\n\nReferees: OEIS A127752 (P. Barry, Jan 28 2007; current version #11, Feb 11 2021) still says \"(conjecture)\", with A. Karttunen's 2018 check of the first 2048 terms. A127751 (#5) still calls it conjectural, and the related A127750, A127749 and A111967 conjectures (Fredholm-Rueppel parity for the 1/(2n+1) triangle) remain open. Checked and not relevant: S. Fried, \"On the inverse of a certain triangular matrix and its connection to the largest odd divisor\", NNTDM 32(2) (2026) 255-262, which covers A127793 and A000265, not A127752; S. Fried, JIS 28 (2025) Art. 25.4.3 and JIS 29 (2026) Art. 26.1.8; S. Fried, arXiv:2607.24832. No prior proof or counterexample found, and no existing formalization in formal-conjectures.",
-   "date": "2026-10-25"
+   "date": "2026-10-25",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The row-n equation of the lower-triangular system A s = 1, i.e. sum_{ceil(n/2)<=j<=n} s(j) = 3n+1. Taking differences of consecutive rows gives s(0)=1, s(2m+2)=3 and s(2m+1)=s(m)+3. Compare this with the formula a(2n)=1-a(n), a(2n+1)=1 already listed in A035263 (equivalently, the parity of the 2-adic valuation of 2n).",
+    "justification": "The whole argument is to write row n of A s = 1 as a window sum, sum_{j=ceil(n/2)}^{n} s(j) = 3n+1, and subtract consecutive rows. This gives s(2m+2)=3 and s(2m+1)=s(m)+3, which also yields a closed form in terms of the 2-adic valuation of n+1. Parity then follows by a one-line induction against the recursion a(2n)=1-a(n), a(2n+1)=1, which is already listed in A035263. This is a half-page, standard telescoping argument that a competent mathematician would find within minutes. Most of the effort went into the formalization (morphic-word indexing, matrix-inverse link), not into new mathematics.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A127755",
@@ -1522,7 +1657,16 @@
    "our_decl": "Math0.Frontier.A127767.result",
    "summary": "Let C(n) be the Catalan numbers. Let A be the infinite lower-triangular matrix with A(n,k) = 1/C(n) if k ≤ n ≤ 2k and A(n,k) = 0 otherwise. Let T be its inverse, which is also lower triangular. Then every entry T(n,k) with 0 ≤ k ≤ n is an integer. In the frozen statement, T is defined by forward substitution: T(n,k) = C(n)·([n=k] − Σ_{j<n} A(n,j)·T(j,k)) for k ≤ n, and T(n,k) = 0 for k > n.",
    "notes": "Conjecture as stated in OEIS: %C It is conjectured that all elements of the triangle are integers. (Paul Barry, Jan 28 2007)\n\nReferees: - OEIS A127767 (P. Barry, Jan 28 2007). Local mirror and current GitHub oeisdata, #11 Sep 30 2018: the conjecture is still marked as conjectured, with no proof or formula. Cross-references: A127768, A127769, A127770, A000108.\n- OEIS A101688: the 0/1 triangle [k<=n<=2k].\n- OEIS A111967: inverse of A101688. It is an integer triangle because A101688 is unitriangular. T(n,k) = A000108(k)·A111967(n,k) is the identity that settles A127767.\n- OEIS A127749, R. J. Mathar, Apr 21 2021: T(n,k) = (2k+1)·A111967(n,k). This is the same factorisation applied to a sibling triangle. It is the closest prior use of the method, but it does not resolve A127767.\n- OEIS A127793: the integrality conjecture for the 1/floor((n+2)/2) sibling was proved by FUNG Cheok Yin (Sep 2022) and by S. Fried, \"On the inverse of a certain triangular matrix and its connection to the largest odd divisor\", Notes Num. Theor. Disc. Math. 32(2) (2026) 255-262, doi:10.7546/nntdm.2026.32.2.255-262 (https://nntdm.net/papers/nntdm-32/NNTDM-32-2-255-262.pdf). This covers A127793 only; there is no general remark that would cover A127767.\n- Siblings with the same still-open integrality conjecture, all settled by the same argument: A127710, A127711, A127755, A127771.\n- No relevant hits on arXiv, MathOverflow/MSE or SeqFan for A127767.",
-   "date": "2026-10-24"
+   "date": "2026-10-24",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The factorization A = diag(1/C_n) * M, where M(n,k) = [k <= n <= 2k] is the lower unitriangular 0/1 triangle A101688. Its inverse is the integer triangle A111967, so T = M^{-1} * diag(C_k), that is, T(n,k) = C_k * A111967(n,k). The same factorization appears in R. J. Mathar's 2021 formula for the sibling triangle A127749.",
+    "justification": "The conjecture follows from one observation. Every nonzero entry in row n of A equals 1/C(n), so A is the 0/1 band matrix [k<=n<=2k] with each row scaled by 1/C(n). That band matrix is lower unitriangular, so its inverse has integer entries. Inverting A then just multiplies column k of that integer inverse by C(k). This is standard linear algebra that fits in a few lines. The method was already used for the sibling triangle A127749, and the manuscript itself calls the result an elementary observation. The integrality conjecture was meant literally, and the proof settles it as stated.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A129455",
@@ -1545,7 +1689,16 @@
    "our_decl": "Math0.Frontier.A129455.result",
    "summary": "Let G(m) = A129454(m+1) = prod_{i,j,k=1..m} gcd(i,j,k), so G(0) = 1. For all 0 <= k <= n: (1) G(k)·G(n-k) divides G(n), so T(n,k) = G(n)/(G(k)G(n-k)) is an integer; (2) the binomial coefficient C(n,k) divides T(n,k); (3) T(n,k)/C(n,k) = m^6 for some natural number m. This is Peter Bala's 2007 conjecture from OEIS A129455, with the Lean T defined by natural-number division as in the frozen statement.",
    "notes": "Conjecture as stated in OEIS: It appears that the T(n,k) are always integers. This would follow from the conjectured prime factorization given in A129454. Calculation suggests that the binomial coefficients C(n,k) divide T(n,k) and that T(n,k)/C(n,k) are perfect sixth powers. (Peter Bala, Apr 16 2007)\n\nReferees: OEIS A129455, A129454 and A129453: the local mirror matches GitHub oeisdata (revisions #9, #8 and #9, Feb 2024), and all three still state the claims as conjectures. OEIS A092287: Greathouse (Apr 2013) confirmed the square-case prime factorization. Wanli Ma, \"Generalized factorials characterized by Dirichlet convolution\", arXiv:2509.13354 (Sept 2025), Section 2.2 and Theorems 2.5-2.6: proves that the q-tuple gcd product equals prod_p p^{sum floor(n/p^i)^q}, and that the generalized binomial coefficients for superadditive x are integers. With q=3 this implies only the integrality part of A129455; the paper does not mention A129454/A129455, C(n,k) divisibility or sixth powers. A.B. Mingarelli, \"Abstract factorials\", arXiv:0705.4299 / NNTDM 19 (2013): general framework, no gcd products. A224479/A224497 (Forgues, Luschny 2013): square-case formulas G2(n) = n!*A224479(n)^2, the analogue of the perfect-square property of A129453, but nothing for the cubic case. I found no source proving that C(n,k) divides T(n,k) or that T(n,k)/C(n,k) is a sixth power for A129455.",
-   "date": "2026-10-25"
+   "date": "2026-10-25",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The prime factorization v_p(A129454(n+1)) = sum_t floor(n/p^t)^3 conjectured in A129454 (cubic analogue of the A092287 formula Greathouse confirmed; stated for general q in Ma, arXiv:2509.13354), together with Legendre's formula and Kummer's carry theorem for v_p(C(n,k)).",
+    "justification": "Counting multiples of each prime power gives the Legendre-type formula v_p(G(n)) = sum_t floor(n/p^t)^3, which A129454 already points to and which is published in general form. With A = floor(k/p^t), B = floor((n-k)/p^t) and a carry c in {0,1}, the identity (A+B+c)^3 = A^3+B^3+c+3[AB(A+B)+c(A+B)(A+B+1)] has an even bracket. By Kummer's theorem the carries c add up to v_p(C(n,k)), so all three claims follow at once. The whole argument is under a page of standard elementary number theory and needs no new idea. Bala's comment itself says integrality would follow from the factorization.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A141412",
@@ -1614,7 +1767,16 @@
    "our_decl": "Math0.Frontier.A160848.result",
    "summary": "Let a(n) be the number of lines in the plane through at least 2 points of the 8 x n grid {0..n-1} x {0..7} (OEIS A160848). Then for every n > 21: a(n) = -a(n-2) + a(n-5) + a(n-6) + 2a(n-7) + a(n-8) + a(n-9) - a(n-11) - a(n-12) - 2a(n-13) - a(n-14) - a(n-15) + a(n-18) + a(n-20) (Colin Barker's 2017 conjecture).",
    "notes": "Conjecture as stated in OEIS: Conjectures from _Colin Barker_, Dec 25 2017: \"a(n) = -a(n-2) + a(n-5) + a(n-6) + 2*a(n-7) + a(n-8) + a(n-9) - a(n-11) - a(n-12) - 2*a(n-13) - a(n-14) - a(n-15) + a(n-18) + a(n-20) for n>21\", with g.f. denominator (1-x)^3(1+x)(1-x+x^2)(1+x^2)(1+x+x^2)(1+...+x^4)(1+...+x^6).\n\nReferees: - OEIS A160848 (local mirror, revision #13 of Dec 25 2017): Barker's g.f. and order-20 recurrence are labelled \"Conjectures from Colin Barker, Dec 25 2017\", with no later %E. Siblings A160845, A160846, A160847, A160849 and A160850 are likewise still conjectural or empirical; A295707 is the parent array.\n- S. Mustonen, \"On lines and their intersection points in a rectangular grid of points\", http://www.survo.fi/papers/PointsInGrid.pdf (2009). Section 3 proves L(m,n) = ½[f(m,n,1) - f(m,n,2)]. Appendix 2, eq. (38), gives the second-difference recursion L(m,n) = 2L(m,n-1) - L(m,n-2) + 2ψ1 + 2ψ4 with periodic residuals, supported by a heuristic \"bearing points\" argument and numerical checks; that recursion is the basis of the Mathematica code in the OEIS entry.\n- P. Haukkanen and J. K. Merikoski, arXiv:1108.1041 (2011), Remark 2: for n1 ≠ n2, \"Mustonen [5] conjectured a recursive formula\", and the question is \"more difficult\".\n- A.-M. Ernvall-Hytönen, K. Matomäki, P. Haukkanen and J. K. Merikoski, \"Formulas for the number of gridlines\", Monatsh. Math. 164 (2011) 157-170: proves Mustonen's recursions only for n×n and (n-1)×n grids.\n- S. Mustonen, \"On lines through a given number of points in a rectangular grid of points\", LinesInGrid2.pdf: covers square grids only.\n\nNo prior proof or counterexample of Barker's A160848 recurrence was found.",
-   "date": "2026-10-24"
+   "date": "2026-10-24",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The entry's own formula a(n) = (1/2)(f(8,n,1) - f(8,n,2)), with f(m,n,k) = Sum (n-|kx|)(m-|ky|) over coprime (x,y), proved by Mustonen (PointsInGrid.pdf, Section 3) and repeated in the parent array A295707. Taking the second difference in n gives a periodic residual, which is Mustonen's eq. (38) for m=8.",
+    "justification": "The conjecture follows readily from the slope-sum formula already in the entry. With 8 rows, y ranges over a bounded set, and for each fixed y the second difference in n of Sum_x (n-|kx|)[gcd(x,y)=1] is a gcd indicator that is periodic with period at most 7 (at most 6 for the k=2 term). So the second difference of a(n) is eventually a combination of sequences with periods 1..7. That means a(n) is annihilated by (1-x)^2 times lcm(1-x^q : q<=7), which is exactly Barker's denominator (1-x)^3 Phi_2...Phi_7. The manuscript re-derives the counting formula via \"first pairs\" and checks the period-420 identity by kernel computation, but the underlying idea is a standard half-page quasi-polynomial argument.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A172164",
@@ -1637,7 +1799,16 @@
    "our_decl": "Math0.Frontier.A172164.result",
    "summary": "Let S(k) = sum_{i=1}^{k} arctan(1/sqrt i) be the total central angle of the first k triangles of the spiral of Theodorus. Triangle i covers the angular sector [S(i-1), S(i)], and turn n is the angle range [2pi(n-1), 2pi n]. Let c(n) be the number of triangles i >= 1 that lie entirely inside turn n, that is, with 2pi(n-1) <= S(i-1) and S(i) <= 2pi n. Then for every n >= 2, the difference a(n) = c(n) - c(n-1) is one of 18, 19, 20, 21. This is Dumortier's conjecture in OEIS A172164.",
    "notes": "Conjecture as stated in OEIS: \"Conjecture : The terms are only 18,19,20,21 (From the first thousand turns, there are 2,3% of 18, 36,5% of 19, 46,2% of 20 and 15% of 21). No period found. Probably due to Pi transcendence.\" (Sebastien Dumortier, Jan 27 2010)\n\nReferees: I found no prior proof or counterexample.\n\nOEIS entries (local mirror, identical to the raw GitHub copy):\n- A172164 (Dumortier, 2010): the conjecture, with numerical frequency checks by R. G. Wilson v (1e5 turns) and H. Kociemba (1e7 turns), 2013. Still listed as a conjecture at edit #25, Aug 2026.\n- A137515: \"the number added grows by 18, 19, 20 or 21 (tested up to 5000 terms)\"; restated by H. P. Dale in 2019 with no proof.\n- A072895: Kociemba's comment that floor((pi n + c)^2 - 1/6) with c = -K/2 = 1.0788914983... differs from A072895(n) by at most 1, and equals it for n < 1e9 (numerical only).\n- A105459: Hlawka's Schneckenkonstante K, with the formula Sum_{x<n} arctan(1/sqrt x) = 2 sqrt n + K + o(1).\n- A296179, A296181, A295338, A295339 (W. Lang): related revolution counts; nothing on this bound.\n\nBackground sources for the asymptotics:\n- E. Hlawka, \"Gleichverteilung und Quadratwurzelschnecke\", Monatsh. Math. 89 (1980) 19-44.\n- P. J. Davis, \"Spirals: From Theodorus to Chaos\" (1993).\n- D. Brink, Amer. Math. Monthly 119 (2012) 779-786.\n- J. Waldvogel, \"Analytic Continuation of the Theodorus Spiral\" (2008).\n- Kociemba, \"The Spiral of Theodorus\" (kociemba.org/themen/spirale/theodorus.html): unreachable, seen only through search snippets, which cover the asymptotics and turn counts but no proof of the 18–21 bound.\n\nUnrelated papers checked: arXiv 2403.20207 (Stouten, about hypotenuses on a common line; withdrawn) and arXiv 2407.07109 (the Fibonacci–Theodorus spiral).\n\nThe result follows from effective versions of the Hlawka/Davis asymptotics, but no source I found writes the bound down.",
-   "date": "2026-10-24"
+   "date": "2026-10-24",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Hlawka's asymptotic Sum_{x<n} arctan(1/sqrt x) = 2 sqrt n + K + o(1) (A105459 %F; Hlawka 1980, Davis 1993), made effective, together with Kociemba's form K_n ~ (pi n - K/2)^2 - 1/6 in A072895 and the elementary fact that the second difference of floor(y_n) is within 2 of the second difference of y_n, where 2 pi^2 = 19.74.",
+    "justification": "The heuristic is immediate: the turn boundaries are roughly floor((pi n + c)^2), whose second differences are within 2 of 2 pi^2 = 19.74, which leaves only 18..21 with about 0.26 of slack. The proof turns this into an effective argument in a standard way. Two elementary one-step inequalities show that S(k) - 2 sqrt k is nonincreasing and that S(k) - 2 sqrt k - 2/sqrt k is nondecreasing (the usual sum-versus-integral comparison). A squeeze over three consecutive turns then gives |a(n) - 2 pi^2| < 2.13 for n >= 71, and a finite interval computation covers n <= 70. This is about a page of standard effective asymptotics plus a finite check, and the scout's own plan (Euler-Maclaurin plus a check of small n) already calls every step standard. The Lean work, including the kernel-evaluated interval certificate, was heavy, but that is formalization effort and not new mathematics.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A175385",
@@ -1706,7 +1877,16 @@
    "our_decl": "Math0.Frontier.A178295.result",
    "summary": "Let a(n) be the number of 4-element subsets of the grid {0,...,4}^n whose points lie on one line. Collinearity means that all 2x2 minors of the difference vectors vanish. Then three things hold. (1) a(n) = 9^n/2 + 3*7^n/2 - 2*5^n for every n >= 0. (2) a(n) = 21 a(n-1) - 143 a(n-2) + 315 a(n-3) for every n >= 3. (3) As formal power series over Q, sum a(n) x^n = x(-5+41x) / ((9x-1)(7x-1)(5x-1)).",
    "notes": "Conjecture as stated in OEIS: Conjecture: a(n) = 9^n/2+3*7^n/2-2*5^n. a(n)= +21*a(n-1) -143*a(n-2) +315*a(n-3). G.f.: x*(-5+41*x)/((9*x-1)*(7*x-1)*(5*x-1)). [_R. J. Mathar_, May 24 2010]\n\nReferees: No published resolution of the A178295 formula was found. Local mirror oeisdata seq/A178/A178295.seq (%I #15, Jul 22 2025): the formula is still labelled \"Conjecture [R. J. Mathar, May 24 2010]\", with no %E lines and no cross-references to it.\n\nRelated sources:\n- **R. J. Mathar, \"Points on a line in the finite d-dimensional simple cubic lattice\"** (oeis.org/A178294/a178294.pdf). Its abstract calls it a \"mostly speculative summary\", fitting Hardin's tables to Ehrhart polynomials. I saw only search snippets and an independent report, not the full text: the mirror has only an LFS pointer, and oeis.org and the Wayback Machine were inaccessible.\n- **the-omega-institute/trureturing, GitHub issue #7376 (Sep 12–13, 2026).** A Lean proof of sibling A178294 (triples in the 4^n grid). Its literature check found \"no proof or refutation as of 2026-09-13\" and says the Mathar PDF gives the formula only as a fit. It does not mention A178295.\n- **Classical full-line count ((k+2)^n - k^n)/2**, which gives the (7^n-5^n)/2 ingredient (A081200, itself still labelled a Hardin conjecture in OEIS):\n  - P. Erdős and J. L. Selfridge, J. Combin. Theory Ser. A 14 (1973) 298-301.\n  - S. W. Golomb and A. W. Hales, \"Hypercube Tic-Tac-Toe\", MSRI Publ. 42 (2002), Theorem 1.\n  - L. Moser's proof, via Honsberger.\n  - O. Patashnik, Math. Mag. 53 (1980).\n- **Same-batch siblings, still labelled conjectures:** A081199, A081200, A081201, A178294, A178296-A178299.\n- **Checked, no relevant result:** arXiv:2609.25133 (Kudriashov, Sep 2026), arXiv:2404.02369, arXiv:1107.0327.",
-   "date": "2026-10-24"
+   "date": "2026-10-24",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The classical tic-tac-toe line count ((k+2)^n - k^n)/2 for the grid {0,...,k-1}^n (Erdos-Selfridge 1973; Golomb-Hales 2002, Theorem 1; Moser's word-counting proof). With k=5 this gives the (7^n-5^n)/2 full lines, which is OEIS A081200. The same word-counting method gives (9^n-5^n)/2 runs of four consecutive collinear points.",
+    "justification": "Any line meeting {0,...,4}^n in 4 or more points has a primitive direction in {0,±1}^n, because a coordinate step of 2 or more allows at most 3 points. So a collinear 4-set is either 4 consecutive points on such a line, which Golomb-Hales word counting gives as (9^n-5^n)/2 (9 choices per coordinate, not all constant, up to reversal), or one of the 3 non-consecutive 4-subsets of a full 5-point line, giving 3(7^n-5^n)/2. The recurrence and generating function then follow mechanically from the closed form. This is a standard argument of under a page, an easy variant of the classical count; the manuscript itself calls it short and elementary. The formalized route through a finite classification of columns is formalization engineering, not a new mathematical idea.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A195249",
@@ -1729,7 +1909,16 @@
    "our_decl": "Math0.Frontier.A195249.result",
    "summary": "Let a(n) be the number of fillings (x0,...,x5) of the six cells of the lower triangle of a 3 × 3 array (rows of lengths 1, 2, 3) with entries in {0,...,n}, such that any two king-adjacent cells (horizontal, vertical or diagonal neighbours) have entries differing by at most 2. The adjacent pairs are 0-1, 0-2, 1-2, 1-3, 2-3, 1-4, 2-4, 3-4, 2-5, 4-5. Then a(n) = 1047 n - 1459 for every n > 2. This is Hardin's empirical formula from OEIS A195249.",
    "notes": "Conjecture as stated in OEIS: %F Empirical: a(n) = 1047*n - 1459 for n>2. (R. H. Hardin, Sep 13 2011); %F Conjectures from Colin Barker, May 06 2018: G.f.: x*(64 + 601*x + 288*x^2 + 94*x^3) / (1 - x)^2. a(n) = 2*a(n-1) - a(n-2) for n>4.\n\nReferees: I found no prior proof of A195249 or of row 3 of A195248. The local OEIS mirror entries for A195249, A195248 and A195214 have no %E lines and still mark the formulas 'Empirical'. The closest prior work is Robert Israel's comment (Nov 21 2017) on the sibling sequence OEIS A195232 ('one or less' variant), which proves the analogous linearity in k with the same span argument; this is a direct template for the current proof. Israel's Ehrhart-polynomial comment on A195220 (Oct 06 2019) is related. Hardin's own 'Generalizing' note on A195248 gives no proof. Searches I checked that turned up nothing relevant: Dougherty-Bliss & Kauers, 'Hardinian Arrays', Electron. J. Combin. 31(2) P9 (arXiv:2309.00487), which treats a different Hardin family; Ekhad-Yang-Zeilberger arXiv:1707.04654, which treats Mathar's conjectures; and web, arXiv and MathOverflow searches for the formula, the A-numbers and the entry's name text.",
-   "date": "2026-10-20"
+   "date": "2026-10-20",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The standard bounded-span (translation) argument, written down by Robert Israel (Nov 21 2017) for the sibling table A195232: any two cells of the triangle are joined by at most two neighbouring steps, so every valid filling spans at most 4. Hence a(n) = sum over s of N_s*(n+1-s), which is linear in n once n >= 3. A finite count of shapes (or of T(8,4) = 1047 plus a(3..7)) fixes the constants. This is also Hardin's 'Generalizing' remark in A195248 (slope = A195214(3)).",
+    "justification": "The proof uses one standard observation. Every entry lies within 4 of the apex, so fillings are translates of finitely many shapes. That makes a(n) affine in n beyond a small threshold, and a finite computation (T(8,4) = 1047 and a(3) to a(7)) supplies the slope and intercept. The manuscript itself says this is essentially Israel's bounded-span argument from the sibling sequence A195232. No new idea is needed: it is a short argument plus a direct computation, and the work beyond that is formalization.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A201060",
@@ -1844,7 +2033,16 @@
    "our_decl": "Math0.Frontier.A223395.result",
    "summary": "Let a(n) be the number of walks with n vertices in the 4 x 4 grid graph P4 x P4 (the number of n x 1 arrays over the nodes 0..15 where vertically adjacent entries are adjacent nodes). Then (1) a(n) = 3a(n-1) + 2a(n-2) - 4a(n-3) for all n >= 4 (in Z); (2) (1 - x)(1 - 2x - 4x^2) * sum_{n>=1} a(n) x^n = 8x(2 - 3x^2) as formal power series over Z; (3) a(n) = (8 + (11 - 5 sqrt5)(1 - sqrt5)^n + (1 + sqrt5)^n (11 + 5 sqrt5)) / 5 for all n >= 1 (in R).",
    "notes": "Conjecture as stated in OEIS: \"Empirical: a(n) = 3*a(n-1) + 2*a(n-2) - 4*a(n-3).\" and \"Conjectures from _Colin Barker_, Aug 20 2018: G.f.: 8*x*(2 - 3*x^2) / ((1 - x)*(1 - 2*x - 4*x^2)) ...\"\n\nReferees: OEIS sources (local mirror):\n- A223395 (R. H. Hardin, Mar 19 2013; Barker's conjectures added Aug 20 2018; rev #7). The recurrence is still \"Empirical\" and the g.f. and closed form are still \"Conjectures\"; there are no %E lines.\n- A223402 (rev #8, Oct 03 2025). The column k=1 recurrence is still listed as empirical.\n- A223372 (the 3x3 analogue, also empirical).\n- A081057 (P. D. Hanna 2003; g.f. and recurrence by M. Somos and V. Jovovic, Mar 2003; R. J. Mathar, Oct 2010: \"apparently\" counts walks from a corner of the 4x4 board; D. Scambler, Oct 2010: decomposition into independent horizontal and vertical walks, giving a binomial convolution of Fibonacci numbers; I. M. Gessel 2022). It has the same signature (3,2,−4), but for corner-start walks only. I observed that A223395(n) = 2(A081057(n) + A081057(n+1)); this identity is not recorded anywhere.\n- A052899 (same signature; R. Jehn's Oct 2024 comment on walks leaving a 4x4 board).\n\nGeneral theory (implies the result routinely but does not state it):\n- D. Cvetković, M. Doob, H. Sachs, Spectra of Graphs (1980), Thm 1.11: the generating function of total walk counts, in terms of the characteristic polynomials of G and its complement.\n- P. Rowlinson, \"The main eigenvalues of a graph: a survey\", Appl. Anal. Discrete Math. 1 (2007) 455–471.\n- The classical spectrum of P_m□P_n, {2cos(iπ/(m+1)) + 2cos(jπ/(n+1))}.\n\nChecked and not relevant (they concern a different Hardin family):\n- R. Dougherty-Bliss & M. Kauers, \"Hardinian Arrays\", arXiv:2309.00487.\n- G. Spahn & R. Dougherty-Bliss, \"Rectangular Hardinian Arrays\" (2024).\n\nWeb searches (arXiv, MathOverflow/MSE, general) found no explicit prior proof of the A223395 recurrence, g.f. or closed form.",
-   "date": "2026-10-24"
+   "date": "2026-10-24",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The transfer-matrix method, a(n) = 1^T A^(n-1) 1 for the adjacency matrix A of P4 x P4, together with standard main-eigenvalue theory (Cvetkovic-Doob-Sachs). The main eigenvalues of P4 x P4 are 1+sqrt5, 1 and 1-sqrt5, which are the roots of (x-1)(x^2-2x-4). In practice everything reduces to the finite check A^3·1 + 4·1 = 3A^2·1 + 2A·1 on 16 vertices.",
+    "justification": "The sequence counts walks in a fixed 16-vertex graph, so it equals 1^T A^(n-1) 1. Its recurrence therefore comes from the polynomial of least degree that annihilates the all-ones vector under A. The proof checks the identity A^3·1 + 4·1 = 3A^2·1 + 2A·1 directly at every vertex, which comes down to three small symmetric 4x4 arrays, and then applies A repeatedly to get the identity for all n. The generating function and the closed form follow from the recurrence and the first three terms by routine algebra. This is a textbook transfer-matrix or main-eigenvalue argument plus a finite computation, and the manuscript itself calls it routine.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A229159",
@@ -1890,7 +2088,16 @@
    "our_decl": "Math0.Frontier.A242396.result",
    "summary": "Let a(n) be the number of rows (closed horizontal strips j*sqrt(3)/2 <= y <= (j+1)*sqrt(3)/2) of the unit equilateral-triangle tiling that meet the circle of radius n. Stephan's conjecture says that sum_{n>=1} a(n) x^n * (x^14 - x^13 - x + 1) = -2x^14 + 4x^13 + 2x^12 + 2x^11 + 2x^10 + 2x^9 + 2x^8 + 4x^7 + 2x^6 + 2x^5 + 2x^4 + 2x^3 + 2x^2 + 4x in Z[[x]]. We prove that this identity is false.",
    "notes": "Conjecture as stated in OEIS: G.f., conjectured: (-2*x^14 + 4*x^13 + 2*x^12 + 2*x^11 + 2*x^10 + 2*x^9 + 2*x^8 + 4*x^7 + 2*x^6 + 2*x^5 + 2*x^4 + 2*x^3 + 2*x^2 + 4*x)/(x^14 - x^13 - x + 1). - _Ralf Stephan_, May 18 2014  (also: Asymptotics from g.f.: a(n) ~ 30/13 * n. - _Ralf Stephan_, May 18 2014)\n\nReferees: Sources checked:\n- The OEIS A242396 entry, from the local mirror and https://raw.githubusercontent.com/oeis/oeisdata/main/seq/A242/A242396.seq. Both show revision #18 (May 31, 2014), and the g.f. is still marked \"conjectured\" with no correction.\n- The cross-referenced entries A242394 and A242395.\n- A mirror search for the sequences ⌊2n/√3⌋ and 2⌊2n/√3⌋+2. The only match was A242396 itself.\n- Ralf Stephan's conjecture list at ark.in-berlin.de/conj.txt, which covers only the 2004–2005 list.\n- Four papers on proving OEIS conjectures, none of which mention A242396:\n  - arXiv:2607.24832, \"Further proofs of conjectures from the OEIS\"\n  - arXiv:2410.07237\n  - S. Fried, JIS vol. 28 (fried15)\n  - S. Fried, JIS vol. 29 (fried21)\n- General web searches (arXiv, MathOverflow/Math StackExchange, SeqFan). These found no counterexample or refutation of Stephan's g.f. for A242396.\n\nNo prior resolution was found.",
-   "date": "2026-10-21"
+   "date": "2026-10-21",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Elementary closed form a(n) = 2*floor(2n/sqrt(3)) + 2, which is what the entry's own Small Basic program computes, together with direct evaluation of a(83), a(84), a(96), a(97) and comparison of the x^97 coefficient after clearing the denominator (1-x)(1-x^13).",
+    "justification": "A row meets the circle exactly when its vertical extent overlaps [-n, n]. That gives a(n) = 2*floor(2n/sqrt(3)) + 2, which is also what the entry's own program computes for n up to 100. A rational g.f. with denominator (1-x)(1-x^13) would force a(n+13) - a(n) = 30 for every n. Because the slope 4/sqrt(3) is irrational, this cannot hold for all n, and a direct computation of four values gives the first failure at n = 97 (226 instead of 224). The refutation needs only this short argument and a finite check: Stephan's g.f. was a fit to the 61 listed terms, and no new idea was required. The counterexample is a real failure of the g.f. for the sequence as defined, not a degenerate or excluded case.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A249434",
@@ -1913,7 +2120,16 @@
    "our_decl": "Math0.Frontier.A249434.result",
    "summary": "Let P(k) = prod_{j=0..k} C(k,j) be the product of row k of Pascal's triangle. For every k >= 0, k is the largest m with m! | P(k) if and only if k+1 is prime. Equivalently, A249151(k) = k iff k+1 is prime, so A006093 = {k : A249151(k) = k}.",
    "notes": "Conjecture as stated in OEIS: %C A249434 It seems that A006093 gives all those k for which A249151(k) = k. If that is true, then this is a disjoint union of A006093 and A249429. (_Antti Karttunen_, Nov 02 2014; the same claim appears in A249151: 'A006093 seems to give all such k, that a(k) = k', and %Y A249434 'Subsequences: A006093 (conjectured)')\n\nReferees: OEIS A249434, A249151, A249431 (Antti Karttunen, Oct/Nov 2014; latest revisions Aug–Sep 2025 still say \"seems\"/\"conjectured\"; no %E proof record). J. C. Lagarias and H. Mehta, \"Products of binomial coefficients and unreduced Farey fractions\", arXiv:1409.4145 (Int. J. Number Theory 2016): formulas for ord_p of the row product G_n, including ord_p(G_n) = 0 iff n = a·p^k − 1 with 1 ≤ a ≤ p−1. This is a related ingredient, but the paper does not state or prove the conjecture. L. Du and J. C. Lagarias, arXiv:2006.15439, and Du–Lagarias–Yangjit, arXiv:2112.14422: related, but they do not address the conjecture. The conjecture is not in the AlphaProof Nexus / formal-conjectures auto_oeis set of 492 (Tsoukalas et al., arXiv:2605.22763) or in OEIS Open (Adamczewski, arXiv:2608.11941). No MathOverflow, Math StackExchange or SeqFan resolution was found.",
-   "date": "2026-10-25"
+   "date": "2026-10-25",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "A001142's product formula P(k) = prod_{j=1..k} j^(2j-1-k), giving P(k)/k! = prod_{j<n} j^(2j-n-1) with n = k+1, together with Legendre's formula. Lagarias–Mehta (arXiv:1409.4145) also give closed forms for ord_p of the row product.",
+    "justification": "The prime case takes one line: v_p(C(p,j)) = 1 for 0<j<p, so p^(p-1) exactly divides P(p). For composite n = k+1 the proof uses the standard row-product formula in A001142 to write v_q(P(k)/k!) as a sum over j < n. Splitting that sum by powers of q gives a closed form, q^e f(u) - R s(u) + e. A short digit-sum inequality, (q-1) f(u) >= s(u) whenever f(u) >= 1, then shows the excess is either negative or greater than e. All of this is about a page of elementary p-adic valuation bookkeeping (Legendre/Kummer-type sums) that someone fluent in such calculations would find quickly, so it is routine. The fact that the conjecture stayed open in the OEIS reflects lack of attention, not hidden difficulty.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A262957",
@@ -1936,7 +2152,16 @@
    "our_decl": "Math0.Frontier.A262957.result",
    "summary": "Let cf(n) be the value of 1 - 1/(2 + 1/(3 - 1/(4 + ... (n+1) + (-1)^(n+1)/1))), where the integers 1, ..., n+1 are used, the sign after k is (-1)^k, and the innermost tail is 1. Let a(n) be the numerator of cf(n) in lowest terms. Robert Israel defined b and c by b(1)=2, b(2)=3, c(1)=3, c(2)=5 and, for both, x(n+1) = (((-1)^n(n-1) + n(n+2)) x(n) - (1 + (-1)^n(n+1)) x(n-1)) / (n - (-1)^n). Claim (Israel's conjecture, OEIS A262957): for every n >= 1, b(n) and c(n) are integers with gcd(b(n), c(n)) = 1, and a(n) = b(n).",
    "notes": "Conjecture as stated in OEIS: Conjecture: b(n) and c(n) are coprime for all n, so that a(n) = b(n). I have verified this for n <= 10000. - _Robert Israel_, Dec 22 2015 [b(1)=2, b(2)=3, c(1)=3, c(2)=5, b(n+1) = (((-1)^n*(n-1)+n*(n+2))*b(n) - (1+(-1)^n*(n+1))*b(n-1))/(n-(-1)^n), same recurrence for c]\n\nReferees: OEIS A262957 (local mirror, rev #80, Mar 2025): Robert Israel's comment of Dec 22 2015 states the conjecture, verified for n <= 10000, and it is still listed as open. Peter Bala, \"A note on A262957 and A263295\" (Dec 24 2015, linked from the OEIS entry): proves the simple continued fraction expansion [0;1,1,2,1,3,4,1,5,6,...] of the limit, but not Israel's recurrence or the coprimality. The cross-referenced entries A263295, A346590, A244279 and A244280 contain no proof. A262957 is absent from Tom Adamczewski, \"OEIS Open: How many conjectures can language models turn into theorems?\", arXiv:2608.11941 (2026), and from the epoch-research/LeanOpenProblems and LeanOpenProblems-results repositories. Web searches of arXiv, MathOverflow, Math StackExchange and SeqFan found no prior resolution. The proof uses the classical determinant identity for continued-fraction convergents (p_{k+1}q_k - p_k q_{k+1} = ±1).",
-   "date": "2026-10-18"
+   "date": "2026-10-18",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The classical fundamental recurrence and determinant identity for continued-fraction convergents, P_k Q_{k-1} - P_{k-1} Q_k = ±1 (e.g. Lorentzen-Waadeland), applied to the finite continued fraction 1 - 1/(2 + 1/(3 - ...)) whose last partial denominator is (n+1) ± 1.",
+    "justification": "The n-th iterate is a finite continued fraction with integer partial denominators and numerators ±1. Its value is therefore (P_n ± P_{n-1})/(Q_n ± Q_{n-1}) for the standard convergents, and that numerator and denominator are coprime by the textbook determinant identity. The only remaining step is to check that these sums satisfy Israel's recurrence. That is a polynomial identity in two cases by parity, which a computer-algebra system or ring normalisation settles mechanically. Spotting that Israel's b, c are just the convergent numerators and denominators is the one small insight, and it is the obvious guess, so the whole argument is well under a page of standard continued-fraction theory.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A265210",
@@ -2005,7 +2230,16 @@
    "our_decl": "Math0.Frontier.A278212.result",
    "summary": "For every n >= 1, let a(n) be the largest total number of moves that same-colored bishops can make on an n x n board, and queenMax(n) the same for queens. A piece can only move to an empty square, and every square it passes must be empty. Then a(n) = floor(queenMax(n)/2). More precisely, the proof shows the following. For bishops, a(4) = 20, a(5) = 38 and a(n) = 4(n-2)^2 for n >= 6. For queens, queenMax(4) is 40 or 41, queenMax(5) is 76 or 77, queenMax(6) is 128 or 129, and queenMax(n) = 8(n-2)^2 for n >= 7. That last formula also settles Alec Jones's conjecture on A275815 for n >= 7. The cases n <= 3 come from the listed values.",
    "notes": "Conjecture as stated in OEIS: \"Conjecture: a(n) = floor(A275815(n)/2). - _Peter Kagey_, Nov 24 2016\" (also A275815: \"Conjecture: a(n) = 8(n-2)^2 for n >= 6. - _Alec Jones_, Nov 16 2016\")\n\nReferees: I found no prior resolution, only computation and partial bounds:\n- OEIS A278212 (#36, Nov 19 2023): Kagey's 2016 conjecture is still listed as open. It records Chai Wah Wu's bounds 4(n-2)² ≤ a(n) ≤ 4n² (Nov 2016), Andrew Howroyd's a(n) ≤ 4(n-2)²+4 (Oct 2023), and terms a(7)–a(50) computed by Christian Sievers with an ILP (PuLP), after M. S. Branicky's a(6).\n- OEIS A275815 (#43, Jul 2021): Alec Jones's conjecture a(n)=8(n-2)² for n≥6 is still a conjecture, with keyword \"more\". It records Wu's bounds 8(n-2)² ≤ a(n) ≤ 8n² and terms a(7)–a(32) computed by Jim Randell with MiniZinc.\n- Jim Randell, Enigma 69 \"Maximum queen moves\" (enigmaticcode.wordpress.com, 2013, comments through 2025): the 6×6 case is verified by computer and the border formula is called \"presumed\". There is no general proof.\n- Related entries A278211, A278213 and A278214 contain no proof.\n- Searches of arXiv, MathOverflow, Math StackExchange, Puzzling, SeqFan and Google Scholar-style queries found no general proof or counterexample.",
-   "date": "2026-10-24"
+   "date": "2026-10-24",
+   "assessment": {
+    "depth": "substantial",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "",
+    "justification": "The bishop half is routine. Andrew Howroyd's per-diagonal bound of 4(n-2)^2+4, given in the entry, drops to 4(n-2)^2 for n>=6 with a short corner argument: the 8 squares on the length-2 diagonals are exactly the endpoints of the four length-(n-1) diagonals. The conjecture also needs the queen bound A275815(n) <= 8(n-2)^2+1, which is essentially Alec Jones's conjecture, open since 2016. Counting moves line by line does not give that bound; it leaves a slack that grows linearly in n. The proof gets it from a linear-programming dual (flow) certificate found by computer, built on distance-to-edge classes so that one finite table covers every n>=8, and it needs 21 separately certified cases for n=4,5,6. That construction is not standard and does not follow from anything in the entries, so the result as a whole is substantial, though the bishop part on its own is not.",
+    "challenged": true,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A281000",
@@ -2028,7 +2262,16 @@
    "our_decl": "Math0.Frontier.A281000.result",
    "summary": "Let T(n,k) = C(2n+1,2k+1)·C(2n-2k,n-k)/(n+1-k) = C(2n+1,2k+1)·Cat(n-k) for 0 ≤ k ≤ n, and T(n,k) = 0 for k > n. Let N(n,j) = C(n-1,j-1)·C(n,j-1)/j be the Narayana numbers, s = A001003 the little Schröder numbers, with s(0) = 1 and s(n) = Σ_{j=1..n} 2^{j-1} N(n,j) for n ≥ 1, and b = A103365 the first column of the inverse of the lower-unitriangular Narayana matrix, so that Σ_{j=1..n} N(n,j) b(j) = [n = 1]. Then:\n(1) for every n ≥ 0, Σ_{k=0..⌊n/2⌋} T(n-k,k) = s(n+1);\n(2) (corrected reading) for every n ≥ 0, Σ_{k=0..n} T(n,k)(2k+1)Cat(k)·b(k+1) = 0^n;\n(3) for every N, the inverse over ℚ of the N×N leading block of T is the N×N leading block of U(n,k) = T(n,k)·b(n+1-k).",
    "notes": "Conjecture as stated in OEIS: %F A281000 Conjectures: (1) Antidiagonal sums equal A001003(n+1); (2) Sum_{k=0..n} (-1)^k*T(n,k)*(2*k+1)*A000108(k)*A103365(k) = A000007(n); (3) Matrix inverse equals T(n,k)*A103365(n+1-k). (Werner Schulte, Jan 12 2017)\n\nReferees: No prior resolution found. Sources checked:\n- Local OEIS mirror: A281000 (#17, Nov 25 2018), A280580, A103365, A103364, A238390, A097610, A001003, A006318, A126120, A180874. No entry other than A281000 itself mentions A281000.\n- arXiv 2607.24832 and 2410.07237 (Sela Fried, proofs of OEIS conjectures); no mention.\n- arXiv 2608.11941 (Adamczewski, \"OEIS Open\") and the epoch-research/LeanOpenProblems-results repo; A281000 is not among its conjectures.\n- Web searches on arXiv, MathOverflow, the OEIS wiki and SeqFan; no hits.\n\nClosest prior material, which makes the result routine without explicitly resolving it:\n- T. Copeland, comment in A238390 (Jan 30 2016): the inverse pair C(n,k)·A126120(n−k) ↔ C(n,k)·m(n−k), with m(2j) = (−1)^j·A238390(j). Its odd–odd block gives conjecture (3).\n- V. Kotesovec, Mathematica in A103365 (2014), and P. D. Hanna's g.f. (2009): link A103365 to x/BesselJ(1,2x), so (−1)^j·A238390(j) = Cat(j)·A103365(j+1).\n- P. Bala, A103364 (2013): generalized Riordan array (1/E(y), y).\n- P. Barry, A097610 (Apr 2010): diagonal sums of the Motzkin triangle are the aerated large Schröder numbers. Restricting to an odd number of level steps gives half of that, which is conjecture (1).",
-   "date": "2026-10-25"
+   "date": "2026-10-25",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The scaling T(n,k) = (2n+1)!/(2k+1)! * c(n-k) with c(j) = 1/(j!(j+1)!), together with P. D. Hanna's g.f. in A103365 (A(x) = 1/B(x), B(x) = Sum x^n/[n!(n+1)!/2^n]), gives (3) at once; T. Copeland's inverse-pair comment in A238390 (Jan 30 2016) gives the same. (2) is the first column of (3). (1) follows from P. Barry's comment in A097610 (diagonal sums of the Motzkin triangle are the aerated large Schroeder numbers) plus a short g.f. parity argument, or from a Vandermonde/Narayana binomial identity.",
+    "justification": "The inverse in (3) is immediate once you see that T and the Narayana triangle are both diagonal conjugates of the same Toeplitz matrix built from c(j) = 1/(j!(j+1)!). Inverting that Toeplitz matrix is exactly the reciprocal power series that Hanna's g.f. in A103365 already records. Conjecture (2), read as its evidently intended column-0 case, is just the first column of T*T^{-1} = I. Conjecture (1) takes about a page, either with Vandermonde's identity and Cloitre's Narayana formula for A001003 or with the Motzkin bivariate g.f. that Barry's A097610 comment points to. The paper itself calls the result routine, and none of these steps needs a new idea.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A294512",
@@ -2051,7 +2294,16 @@
    "our_decl": "Math0.Frontier.A294512.result : ¬ Math0.Statements.A294512.statement",
    "summary": "Let V(n) = sum_{k=0}^{n} 1/((k+1)(3k+1)) and let a(n) be the denominator of V(n) in lowest terms (OEIS A294512). Let A250400(m) be the numerator, in lowest terms, of the harmonic mean m / sum_{j=1}^{m} 1/(j(3j-2)) of the first m octagonal numbers. Lang's conjecture (A294512, FORMULA, 2017) says that A250400(n+1)/(n+1) = a(n) in Q for every n >= 0. This is false. The first failure is at n = 164, where A250400(165)/165 = a(164)/11.",
    "notes": "Conjecture as stated in OEIS: A294512 (Denominators of partial sums of the reciprocals of octagonal numbers), FORMULA: \"a(n) = A250400(n+1)/(n+1), n >= 0. [conjecture].\" (entry by _Wolfdieter Lang_, Nov 01 2017). Companion A294513 (Lang, Nov 02 2017): \"a(n) = 2*A250327(n+1)/(n+1) [conjecture].\"\n\nReferees: OEIS A294512 (W. Lang, Nov 01 2017; history #1-#13, last edit Nov 12 2017, formula \"a(n) = A250400(n+1)/(n+1), n >= 0. [conjecture]\" still present). OEIS A250401 (C. Barker 2014; Lang comment Nov 01 2017 conditional on \"n+1 divides A250400(n+1)\", still present, history #1-#19). OEIS A250400 (C. Barker, Nov 21 2014, b-file n=1..1000, which contains A250400(165) = 15*a(164)). Sibling Lang conjectures in A294513, A294515 are unresolved there too. Not in google-deepmind/formal-conjectures (FormalConjectures/OEIS); not in Tsoukalas et al. / Epoch OEIS Open (arXiv 2608.11941; github.com/epoch-research/LeanOpenProblems-results; SeqFan thread \"Language models resolving OEIS conjectures\", Aug 2026). No SeqFan, MathOverflow, MSE or arXiv discussion found. Independent check: the failures for n < 3000 are exactly n = 164 (gcd 11) and n = 2413 (gcd 17).",
-   "date": "2026-10-18"
+   "date": "2026-10-18",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "A harmonic-mean identity that follows straight from the definitions in A294512/A250400: H(n+1) = (n+1)/V(n), so A250400(n+1) = (n+1)*a(n)/gcd(n+1, numerator V(n)). Barker's b-file for A250400 (m <= 1000) already lists A250400(165) = 15*a(164).",
+    "justification": "Since the harmonic mean is (n+1)/V(n), the conjecture holds exactly when n+1 is coprime to the numerator of V(n). Checking that condition with exact rational arithmetic finds the first failure at n = 164, where 11 divides both 165 and num V(164). The Lean proof confirms the identity 11*A250400(165) = 165*a(164) by kernel evaluation. The paper's hand argument for why 11 divides the numerator is a nice touch but not needed: the result is a direct finite search, and the relevant value was already in Barker's A250400 table. This is a genuine counterexample to the conjecture as intended, not a degenerate case.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A300789",
@@ -2097,7 +2349,16 @@
    "our_decl": "Math0.Frontier.A308107.result",
    "summary": "Let a(n) be the sum of the smallest side k over all integer triples k < i < j with j < k + i and k + i + j = n, i.e. over all scalene integer triangles of perimeter n. Then (1) sum_{n>=0} a(n) x^n = x^9 (2 + 2x + 2x^2 + x^3) / ((1-x)^4 (1+x)^3 (1+x^2)^2 (1+x+x^2)^2) as formal power series over Q, and (2) for every n > 15, a(n) = -a(n-1) + 2a(n-3) + 4a(n-4) + 2a(n-5) - a(n-6) - 5a(n-7) - 5a(n-8) - a(n-9) + 2a(n-10) + 4a(n-11) + 2a(n-12) - a(n-14) - a(n-15).",
    "notes": "Conjecture as stated in OEIS: %F A308107 Conjectures from Colin Barker, May 13 2019: (Start) G.f.: x^9*(2 + 2*x + 2*x^2 + x^3) / ((1 - x)^4*(1 + x)^3*(1 + x^2)^2*(1 + x + x^2)^2). a(n) = -a(n-1) + 2*a(n-3) + ... - a(n-15) for n>15. (End)\n\nReferees: The OEIS entry A308107 (local mirror and current GitHub oeisdata, version #14 of Sep 12 2021) still marks Barker's May 13 2019 g.f. and recurrence as conjectures, with no proof note or %E edit. Its cross-reference A307686 and the related entries A308108, A308109 and A308158 also leave their Barker conjectures unproved. A005044 has Roger Cuculière's comment that scalene triangles of perimeter n+6 correspond to all triangles of perimeter n; this gives a reduction, not a proof. Sela Fried's proofs of OEIS conjectures (arXiv:2410.07237; JIS 28, 2025, Art. 25.4.3; JIS 29, 2026, Art. 26.1.8; arXiv:2607.24832) do not cover A308107 or any triangle sequence near it. Andrews–Paule–Riese (MacMahon's Partition Analysis IX, k-gon partitions), Hirschhorn on k-gon partitions, and arXiv:2308.01912 on Alcuin's sequence treat only the unweighted triangle count. I found no prior proof or counterexample.",
-   "date": "2026-10-24"
+   "date": "2026-10-24",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Standard parametrization of integer triangles (as in Alcuin's sequence A005044 / Andrews-Paule-Riese k-gon partitions): scalene triangles of perimeter n are (k,i,j)=(v+w, v+w+u, 2v+w+u) with u,v,w>=1 and 2u+4v+3w=n, so the g.f. is sum (v+w) x^(2u+4v+3w) = x^9(2-x^3-x^4)/((1-x^2)(1-x^3)^2(1-x^4)^2). Alternatively, Cuculiere's bijection in A005044 reduces it to A307686.",
+    "justification": "The proof writes each scalene integer triangle with three positive parameters in one linear relation, 2u+4v+3w=n, with smallest side v+w. Summing this linear weight over the parameters gives the rational generating function in a few lines by a standard MacMahon-type calculation. The order-15 recurrence then follows directly from the denominator. The paper itself calls the argument elementary and a routine computation. The Lean proof's chain of shift bijections is only formalization effort, not a new idea.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A308121",
@@ -2120,7 +2381,16 @@
    "our_decl": "Math0.Frontier.A308121.result",
    "summary": "Let T(n,k) = b_n·k − a_n·r_k(n), where r_1(n) < ... < r_φ(n)(n) are the totatives of n and a_n/b_n is φ(n)/n in lowest terms (A076512/A109395). Row n is (T(n,1), ..., T(n,φ(n))). Claim (Charlie Neder's conjecture): for every odd n > 1, row n splits into two halves A, B of equal length with row n = A ++ B, and row 2n = B ++ A.",
    "notes": "Conjecture as stated in OEIS: Conjecture: If n is odd, then row 2n can be obtained from row n by interchanging the first and second halves. (Charlie Neder, Jun 05 2019)\n\nReferees: - OEIS A308121 (Jamie Morken, May 13 2019; last edited Aug 05 2019, revision #47). Charlie Neder's conjecture of Jun 05 2019 is still marked \"Conjecture,\" with no %E or comment recording a proof.\n- The two entries that cite it, A307964 and A309497, do not resolve it.\n- The cross-referenced entries A109395, A076512, A038566 and A076511 contain nothing about the conjecture.\n- The classical background is phi(2n) = phi(n) for odd n and the bijection between totatives of n and of 2n; see arXiv 0907.1689, which treats a related map as a routine exercise.\n- A308121 is absent from google-deepmind/formal-conjectures, and so from the OEIS Open benchmark (arXiv 2608.11941).\n- Web searches (arXiv, MSE/MO, OEIS wiki) found no prior proof or counterexample. The SeqFan archive could not be reached (503 / connection reset).",
-   "date": "2026-10-25"
+   "date": "2026-10-25",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The classical fact that for odd n, phi(2n) = phi(n) and the totatives of 2n are the odd residues coprime to n. They are 2r-n for the totatives r > n/2, followed by n+2r for the totatives r < n/2. The symmetry r -> n-r (implicit in the entry's x+y = A109395(n) comment) shows that each half contains phi(n)/2 totatives.",
+    "justification": "For odd n, the totatives of 2n are 2r-n for the totatives r of n above n/2, followed by n+2r for those below n/2. The symmetry r -> n-r puts exactly half of the totatives on each side of n/2. The reduced form of phi(2n)/(2n) is (a_n/2)/b_n, and after substituting both facts the identity T(2n,k) = T(n,k±phi(n)/2) is two lines of algebra using a_n n = b_n phi(n). This is a short, standard elementary argument, about a page, and a competent number theorist would find it quickly. The manuscript itself calls the argument elementary. The length of the Lean proof reflects list bookkeeping, not mathematical depth.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A308222",
@@ -2189,7 +2459,16 @@
    "our_decl": "Math0.Frontier.A323695.result",
    "summary": "Let a(N) be the coefficient of x^N in Sum_{m>=0} x^m (1 - x^(m+1))^m / (1 + x^(m+1))^(m+1) (OEIS A323695, offset 0). If a(n) is odd, then n = k(k+2) for some natural number k. Equivalently, if a(n) is odd then n + 1 is a perfect square.",
    "notes": "Conjecture as stated in OEIS: A323695 (G.f.: Sum_{n>=0} x^n (1 - x^(n+1))^n/(1 + x^(n+1))^(n+1)): \"Odd terms occur only at n = k*(k+2) for k >= 0 (conjecture);\" (_Paul D. Hanna_, Feb 23 2019). A324300 (G.f.: Sum_{n>=0} x^n (x^(n+1)+i)^n/(1 + i x^(n+1))^(n+1)): \"Odd terms occur only at n = k*(k+2) for k >= 0 (conjecture);\" (Hanna, Feb 21 2019).\n\nReferees: OEIS A323695 (Hanna, Feb 23 2019; still labeled \"(conjecture)\" at rev #24, Dec 15 2024; history checked) and its cross-references A323696, A324300 (same conjecture for an i-variant, also unproved), A323675 and A323680. Sibling results proved by others, which do not cover A323695: A325046, odd terms iff N = m(m+1), in S. Fried, \"Further proofs of conjectures from the OEIS\", arXiv:2607.24832 (Thm 50), also in google-deepmind/alphaproof-nexus-results; A323557, odd terms at r(r+1), in T. Adamczewski, \"OEIS Open\", arXiv:2608.11941 and AlphaProof Nexus (Tsoukalas et al.). A323695 is in neither google-deepmind/formal-conjectures nor epoch-research/LeanOpenProblems. It is not mentioned in Fried's arXiv:2410.07237 (JIS 25.4.3), JIS 26.1.8 or arXiv:2606.09913. MathOverflow, Math StackExchange and SeqFan searches found nothing.",
-   "date": "2026-10-18"
+   "date": "2026-10-18",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Reduce the entry's own g.f. modulo 2. Since 1 - x^(m+1) = 1 + x^(m+1) mod 2, each summand becomes x^m/(1+x^(m+1)), and the series becomes the standard Lambert series Sum_m x^m/(1-x^(m+1)) = Sum_n d(n+1) x^n. The classical fact that d(N) is odd iff N is a perfect square finishes the proof.",
+    "justification": "The proof reduces the generating function modulo 2. There the numerator and denominator of each summand have the same base, so the m-th summand cancels down to x^m/(1+x^(m+1)). The sum is then the classical Lambert series for the divisor function, so a(n) is congruent mod 2 to d(n+1), and d(n+1) is odd exactly when n+1 is a square, by pairing each divisor d with N/d. This is a few lines of standard reasoning that a competent mathematician would find almost at once; the manuscript itself calls the result elementary. Unlike the sibling entries A323557 and A325046, nothing fails to cancel here, and the conjecture is the intended statement, not a degenerate reading of it.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A326407",
@@ -2212,7 +2491,16 @@
    "our_decl": "Math0.Frontier.A326407.result",
    "summary": "Write the positive integers into the square array A060734. The cell in row r, column c (both counted from 0) holds val(r,c) = (c+1)^2 - r if r <= c, and r^2 + 1 + c if r > c. Every positive integer appears in exactly one cell. Set a(n) = -1 if n is prime. Otherwise a(n) is the number of primes in the king-move neighbouring cells of n's cell. There are up to 8 such cells, 5 on row 0 or column 0, and 3 at the corner (0,0). Claim: for every n >= 1 we have a(n) < 6, and a(n) = 5 holds exactly when n = 6.",
    "notes": "Conjecture as stated in OEIS: %C a(n) < 6 (conjectured). %C a(n) = 5 for n={6} (conjectured). %C Set of n such that a(n) = 4 is unbounded (conjectured). (Witold Tatkiewicz, Oct 02 2019)\n\nReferees: OEIS A326407 (Tatkiewicz, Oct 2019; last edit #27, Mar 20 2020) still lists \"a(n) < 6\" and \"a(n) = 5 for n={6}\" as conjectured, with no %E edits or proof links. OEIS A327893 (hexagonal spiral, De Vlieger 2019) records Tatkiewicz's parity argument bounding its terms by 4. That is the same technique applied to a different grid, not a proof for A326407. OEIS A326408 and A326409 state \"a(n) < 5\" without \"(conjectured)\" but give no proof. A326405, A326406, A326410, A060734, A136626 and A136627 contain nothing relevant. Web searches (arXiv, MathOverflow/Math StackExchange, SeqFan, general) found no prior proof or counterexample for A326407.",
-   "date": "2026-10-18"
+   "date": "2026-10-18",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Checkerboard parity of the A060734 array: val(i,j) is congruent to i+j+1 mod 2. This is the same parity technique that the OEIS records in A327893 (Tatkiewicz's comment bounding the hexagonal-spiral Minesweeper terms by 4), applied to this grid.",
+    "justification": "The whole proof rests on one observation: in A060734 the entry in cell (i,j) has the parity of i+j+1. So for any interior cell, either its four orthogonal neighbours or its four diagonal neighbours hold even numbers, and only the cell of 2 can break this. That gives at most 4 primes everywhere except the cell of 6, which is next to 2. The edge cells and the few cells near 2 take a short parity check or direct evaluation. This is a standard argument of well under a page, and the OEIS already uses the same parity method for the sibling hexagonal entry A327893. The conjectures are settled as they were intended. The third conjecture, that a(n)=4 for infinitely many n, is not touched and remains open.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A326602",
@@ -2235,7 +2523,16 @@
    "our_decl": "Math0.Frontier.A326602.result",
    "summary": "Let A(x) = Sum_{n>=0} (x^(2n-1)+1)^n x^n / (1+x^(2n+1))^(n+1) in Z[[x]] (the n=0 summand is 1/(1+x)), and let a(n) = [x^(2n)] A(x). Then for every n >= 0, a(n) is odd if and only if n is a perfect square (n = k^2 for some k >= 0, so 0 counts as a square).",
    "notes": "Conjecture as stated in OEIS: A326602 (G.f.: Sum_{n>=0} (x^(2n-1)+1)^n x^n/(1+x^(2n+1))^(n+1), an even function; a(n) = [x^(2n)]): \"a(n) is odd iff n is square (conjecture).\" (_Paul D. Hanna_, Aug 08 2019). Same family: A323689 (Sum (x^n+i)^n/(1+i x^n)^(n+1)): \"Odd terms occur only at n = k^2 for k >= 0 (conjecture);\" (Hanna, Feb 14 2019); A323675 (Sum x^n (x^n+i)^n/(1+i x^(n+1))^(n+1)): \"It appears that odd terms occur only at n*(n+1)\" (Hanna, Feb 10 2019); A323690 (Sum (x^(n+1)+i)^n/(1+i x^n)^(n+1)): \"the first column consists of all the odd terms\" (triangle rows start at n(n+1)) (Hanna, Feb 13 2019).\n\nReferees: No prior resolution of A326602 found.\n- OEIS A326602 (local mirror and upstream oeisdata) is still at revision #19, Aug 11 2019, and still says \"a(n) is odd iff n is square (conjecture)\". No later edits or proof links.\n\nClosest prior work (same involution or parity method, different sequences):\n- A323557 (odd terms only at n(n+1)): proved by AlphaProof Nexus (github.com/google-deepmind/alphaproof-nexus-results, APNOutputs/OEIS/oeis_323557_conjecture_0.lean) and in T. Adamczewski, \"OEIS Open: How many conjectures can language models turn into theorems?\", arXiv:2608.11941, Appendix A. Also R. Stephan's comment of Jun 01 2026 on A323557.\n- A325046: S. Fried, \"Proof of a conjecture stated in A325046\" (OEIS a325046.pdf, 2025), and \"Further proofs of conjectures from the OEIS\", arXiv:2607.24832, Sec. 3.8 / Thm 50.\n\nNeither arXiv paper mentions A326602, and A326602 is absent from google-deepmind/formal-conjectures, so it was not in the Tsoukalas et al. or OEIS Open benchmark sets.",
-   "date": "2026-10-18"
+   "date": "2026-10-18",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The involution/parity method already used for the cross-referenced sibling A323557: Ralf Stephan's comment of Jun 01 2026 in that entry, the AlphaProof Nexus Lean file, and Adamczewski, arXiv:2608.11941, Appendix A. Fried's proof for A325046 uses the same idea. The new proof also uses the standard fact that the central binomial coefficient C(2k,k) is even for k >= 1.",
+    "justification": "The proof expands each summand using the binomial theorem and the series for (1+y)^-(n+1). Modulo 2 it rewrites the coefficient of x^N as a sum of trinomial coefficients T(n,m,i) over triples with n+m+2nm = N+2i. Both the weight and the condition are symmetric in n and m, so the off-diagonal terms cancel in pairs. Each diagonal term is a multiple of a central binomial coefficient, so it is even except when i = n, which forces N = 2n^2. The whole argument fits in about a page, and it is a direct adaptation of the involution proof for the cross-referenced entry A323557, which that entry already cites; the manuscript itself calls it a fairly routine adaptation.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A328202",
@@ -2281,7 +2578,16 @@
    "our_decl": "Math0.Frontier.A332010.result : Math0.Statements.A332010.statement",
    "summary": "For every n ≥ 2, take the derangements of {1, ..., n} (in one-line notation) that have exactly one descent. The average of their first letters, written in lowest terms, has denominator 2^(n-2). This is Kagey's conjecture T(n,1) = 2^(n-2) in OEIS A332010.",
    "notes": "Conjecture as stated in OEIS: \"Conjecture: T(n, 1) = 2^(n-2).\" (A332010, entry by Peter Kagey, Feb 04 2020)\n\nReferees: No prior resolution found.\n- OEIS A332010 and A332009 (Peter Kagey, Feb 04 2020; last edits Mar 30 2024) still state \"Conjecture: T(n,1) = 2^(n-2)\" and \"Conjecture: T(n,1) = A083329(n-1)\", with no proof recorded in comments or %E lines. I checked both the local mirror and raw.githubusercontent oeisdata.\n- Related known facts:\n  - A219836 (Callan 2012; links to Fu–Lin–Zeng arXiv:1507.05184 and Alexandersson arXiv:2609.07325) gives a recurrence implying there are 2^(n-2) derangements with one descent. That is only the unreduced denominator.\n  - M. Conger, arXiv math/0508112, proves E[π(1) | des = k] = k+1 over all permutations; this is the analogue for all permutations that the A332010 comment cites.\n  - Kagey, arXiv:2112.05281, treats expected π(1) given k-cycles and does not address derangements by descents.\n  - Eriksen–Freij–Wästlund, arXiv:0811.1925 / EJC 16 (2009) R32, and Han–Xin (2007) cover derangements with prescribed descent sets, with no first-letter averages.\n- Searches of Math StackExchange, arXiv and SeqFan found nothing. MathOverflow was not reachable through the search tool.",
-   "date": "2026-10-19"
+   "date": "2026-10-19",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Standard fact that a permutation with one descent is an increasing word on a set A followed by an increasing word on its complement (a Grassmannian permutation). A219836 already implies the count 2^(n-2).",
+    "justification": "A permutation with exactly one descent is sorted(A) followed by sorted(complement of A). Checking fixed points run by run shows it is a derangement exactly when 1 is not in A and n is in A. That gives 2^(n-2) such derangements, and their first letter is min A. Summing min A over these sets gives 3*2^(n-2) - 1, which is odd, so the reduced denominator is 2^(n-2). This is a half-page counting argument built on a textbook description of one-descent permutations, and the count itself already follows from A219836. It needs no new idea.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A333650",
@@ -2304,7 +2610,16 @@
    "our_decl": "Math0.Frontier.A333650.result",
    "summary": "Let T(n,k) count domino towers (brick-wall pattern: a brick of layer i has a left end ≡ i mod 2 in half-brick units; the bottom layer is a contiguous row of b ≥ 1 bricks, normalised to start at 0; each brick above the base overlaps a brick below by at least half a brick) with n bricks and k layers. Then:\n(1) for n > 1, T(n,2) = A000071(n+2) = F(n+2) - 1;\n(2) for n ≥ 2, T(n,n-1) = A339252(n-2), where a(0)=1, a(1)=4, a(2)=11, a(m+3)=4a(m+2)-4a(m+1);\n(3) for n ≥ 3, T(n,n-2) = A339254(n-3), where a(0..4)=1,7,24,70,193 and a(m+5)=6a(m+4)-12a(m+3)+8a(m+2);\n(4) for n ≥ 4, T(n,n-3) = A339029(n-4), the coefficients of (1+4x-20x^2+8x^3+33x^4-4x^5-33x^6)/(1-2x)^4.",
    "notes": "Conjecture as stated in OEIS: %C A333650 Conjecture: For n > 1, T(n,2) = A000071(n+2).  [entry author _Peter Kagey_, Mar 31 2020]; Conjecture: T(n,n-1) = A339252(n-2). - _Peter Kagey_, Nov 21 2020; Conjecture: T(n,n-2) = A339254(n-3). - _Peter Luschny_, Nov 29 2020; Conjecture: T(n,n-3) = A339029(n-4). - _Peter Luschny_, Dec 01 2020 (summarised by Luschny as T(2n+k, n+k) = d_n(n+k-1), k>=1, 0<=n<=3).\n\nReferees: OEIS A333650 (Kagey, Mar 2020; conjectures by Kagey Nov 21 2020 and Luschny Nov 29 / Dec 1 2020; still marked Conjecture as of revision #68, Aug 12 2022). A339494 (Luschny, Dec 2020): unproved remark that towers of height <=2 by base size form the binomial triangle C(k,n-k) (A030528), whose row sums are Fibonacci numbers, which is essentially the height-2 argument. A339495 assumes the height-2 formula. A339252, A339254, A339029: closed forms of the target sequences only. Definition of domino towers: A264746, A320314; Bona, Handbook of Enumerative Combinatorics, pp. 25-27; Gouyou-Beauchamps & Viennot 1988; Bétréma & Penaud 1993; Zeilberger arXiv:1208.2258. Related papers with no height enumeration: Ekhad & Zeilberger arXiv:1212.4105; T. M. Brown, Convex Domino Towers (JIS 2017, arXiv:1608.01562) and k-omino towers (arXiv:1608.01563); A. Haupt, S-omino towers (JIS 2021, arXiv:1810.10428); Ardila arXiv:1409.2562. Math StackExchange 2949131 and 3659431 (Kagey): symmetric towers and the 4^(n-1) variant only. No prior proof or counterexample of any of the four conjectures found.",
-   "date": "2026-10-19"
+   "date": "2026-10-19",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Height 2: a diagonal binomial sum, T(n,2) = sum_b C(b+1, n-b), which equals F(n+2)-1 by the standard Fibonacci identity (Luschny already noted the binomial-triangle link in A339494). Near-diagonals: the standard row-by-row transfer-matrix recursion on translation-normalized rows, compared with the closed forms 2^h times a polynomial already recorded in A339252, A339254 and A339029.",
+    "justification": "The height-2 conjecture comes down to one observation: the second-row bricks pick distinct positions among the b+1 positions above a base of b bricks. That gives a diagonal binomial sum, which is a textbook Fibonacci identity. For heights n-1, n-2 and n-3 the excess over one brick per row is at most 3. Then only 13 translation-normalized row states can occur, and a single brick over a single brick always has exactly 2 placements. So the count is a finite transfer-matrix recursion whose solutions are 2^h times polynomials of degree at most 3, checked by induction against a finite table. These are standard enumerative techniques that need no new idea, and once the state space is written down the proof is a finite computation matched to closed forms already recorded in the cross-referenced entries.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A334592",
@@ -2350,7 +2665,16 @@
    "our_decl": "Math0.Frontier.A334595.result",
    "summary": "Let a(n) be the number obtained as follows. Write n in binary, most significant bit first. Build the XOR-triangle whose first row is that bit string; each later row is the pairwise XOR of adjacent entries of the row above. Read the right side of the triangle from the top-right corner downward, and interpret it as a binary numeral with the first entry as the most significant bit. Then:\n(1) For n >= 1, a(n) = 1 if and only if n is a power of two.\n(2) The record positions are exactly {1} together with {2^k + 1 : k >= 1}. Here n >= 1 is a record position when a(n) > a(m) for every 1 <= m < n.",
    "notes": "Conjecture as stated in OEIS: Conjecture: Records occur at 1 and at 2^n + 1.  /  Conjecture: a(n) = 1 if and only if n is a power of two. (_Peter Kagey_, May 07 2020)\n\nReferees: I found no earlier proof or counterexample for either A334595 conjecture.\n- OEIS A334595 (Peter Kagey, May 2020): unchanged since revision #18 (May 09 2020), with both statements still labeled \"Conjecture\".\n- MathOverflow 359138, \"Number triangle\" (user DSM, with answers by YCor and Ilya Bogdanov): treats the boundary operator φ_k with φ_k^3 = 1 and counts rotationally symmetric triangles (A334556/A334596). It does not address records or a(n) = 1.\n- OEIS A334727 (Rémy Sigrist, 2020): states that the left-diagonal map is a self-inverse permutation.\n- Paul D. Hanna's XOR binomial transform entries (OEIS A099884, A099900, A099902): note that the transform is self-inverse.\nThese are the known ingredients that make the result elementary. Web searches of SeqFan, arXiv, MathOverflow and Math StackExchange found no resolution.",
-   "date": "2026-10-24"
+   "date": "2026-10-24",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The classical fact that the binomial transform over GF(2) (the Pascal matrix mod 2) is an involution. This is the self-inverse XOR binomial transform of A099884, and also the self-inverse permutation stated in the sibling entry A334727, which gives the left-diagonal version of A334595. Reading the right diagonal of a row is the same as reading the left diagonal of the reversed row.",
+    "justification": "Reverse the row, so that the right diagonal becomes the left diagonal. The digits of a(n) are then the GF(2) binomial transform of the bits of n. That transform is a classical involution, and A334727 already records it for this family. So a is a bijection on L-bit strings with a(n) < 2^L. Both conjectures then come down to working out three explicit preimages, of 1, of 2^L-1 and of 2^L-2, which takes about a page of elementary argument. No new idea was needed. The length of the Lean formalization does not make the mathematics substantial.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A334603",
@@ -2396,7 +2720,16 @@
    "our_decl": "Math0.Frontier.A335012.result",
    "summary": "For n >= 1 let a(n) be the number of distinct values R_k mod n for 1 <= k <= n, where R_k = (10^k - 1)/9 is the k-th repunit. Then a(n) = n - 1 if and only if n is a long period prime (A006883): n is prime and either n = 2 or the multiplicative order of 10 modulo n is n - 1.",
    "notes": "Conjecture as stated in OEIS: Conjecture: a(n) = n-1 if and only if n is a long period prime (A006883), that is, n is a prime and the decimal expansion of 1/n has period n-1. (entry by _Sen-Peng Eu_, May 19 2020)\n\nReferees: OEIS A335012 (Sen-Peng Eu, May 19 2020): the current revision #31 (Mar 12 2026) still lists this as a conjecture, with no %E line recording a resolution. In the same entry, Robert Israel's comment (Jun 25 2020) gives a(n) = A084680(n), the order of 10 mod n, when gcd(n,30) = 1. That implicitly settles the coprime-to-30 case but not n divisible by 2, 3 or 5. Cross-references: A006883 (long period primes, including 2) and A084680; neither mentions a proof. Background only: https://en.wikipedia.org/wiki/Repunit (pigeonhole argument that some repunit is a multiple of n; R_k ≡ k mod 3), https://en.wikipedia.org/wiki/Full_reptend_prime, https://mathworld.wolfram.com/FullReptendPrime.html. Web searches of arXiv, MathOverflow, Math StackExchange, SeqFan and the Google index found no earlier proof or counterexample.",
-   "date": "2026-10-18"
+   "date": "2026-10-18",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Robert Israel's comment in A335012 itself, a(n) = A084680(n) (the order of 10 mod n) when gcd(n,30)=1, together with ord_n(10) <= phi(n) <= n-1 (equality forcing n prime), and the standard congruence R_k ≡ k (mod 3).",
+    "justification": "The proof is an elementary argument of about a page. If n is even or a multiple of 5, every repunit is odd, or is 1 mod 5, so too few residues are hit. For gcd(n,10)=1 the residues are purely periodic with period L = min{k : n | R_k}. When 3 does not divide n, L = ord_n(10) <= phi(n), and L = n-1 forces n to be prime. When 3 divides n, R_k ≡ k (mod 3) forces 3 | L, while n-1 ≡ 2 (mod 3). The main case, gcd(n,30)=1, is essentially Israel's comment in the entry, and the cases of multiples of 2, 3 and 5 are quick standard observations, so a competent number theorist would find the whole proof quickly.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A338885",
@@ -2419,7 +2752,16 @@
    "our_decl": "Math0.Frontier.A338885.result : ¬ Math0.Statements.A338885.statement",
    "summary": "Kagey's conjecture in OEIS A338885 says that for every n ≥ 2, the smallest k for which a diagonal lattice rectangle (integer vertices, no side parallel to the x-axis) lies in the n X k box [0,n]×[0,k] and touches all four of its sides is A228286(n) = min{x + y*z : x, y, z ≥ 1, x*y + z = n}. This is false. For n = 655, the value k = 104 is in the row, but A228286(655) = 115 ≥ 105. So A228286(655) is not the least element of row 655.",
    "notes": "Conjecture as stated in OEIS: \"Conjecture: The smallest number in the n-th row is A228286(n).\" (entry by _Peter Kagey_, Nov 14 2020; a second conjecture in the same entry, \"The largest number in the n-th row is A033638(n)\", is true; see approach)\n\nReferees: I found no prior resolution.\n- OEIS A338885 (Kagey, Nov 14 2020): I checked both the local mirror and the latest raw oeisdata version (rev #22, Sep 11 2021). The conjecture is still listed, with no counterexample noted, and the b-file covers only rows 2..101.\n- Cross-references (local mirror): A228286, A228287, A228288, A338886, A338887, A033638, A085582, A113751. None of them mentions a resolution.\n- Code Golf SE question 213754 \"Rectangles in rectangles\", read via the Stack Exchange API: neither the answers nor the comments mention the conjecture.\n- Web searches (OEIS/A338885, Kagey, SeqFan, the min x+yz / ab+cd formulations, ARML 2013) turned up nothing relevant.\n- Independent computation: n = 655 is the smallest counterexample (row min 104 vs A228286 = 115). Further counterexamples are at n = 845, 909 and 1019 for n <= 1200.",
-   "date": "2026-10-18"
+   "date": "2026-10-18",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Finite computer search, using the elementary parametrization that k is in row n iff n = a+b, k = c+d and ab = cd for positive a, b, c, d (the explicit rectangle with vertices (4,0),(655,42),(651,104),(0,62); 4*651 = 42*62 = 2604)",
+    "justification": "The conjecture is refuted by one counterexample, n = 655, found by a direct search. The row minimum there is 104, from an explicit lattice rectangle, while A228286(655) = 115; the lower bound is a finite check over about 2400 pairs (x, y). The only setup is the observation that the side vectors' coordinates satisfy a+b = n, c+d = k and ab = cd, which takes a few lines, and after that the search is mechanical (I reproduced it independently: counterexamples at n = 655, 845, 909 and 1019 below 1100). The counterexample is an ordinary row of the triangle and falls within the conjecture's intended meaning, so the result is not literal-only, but no new mathematical idea was needed.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A341761",
@@ -2442,7 +2784,16 @@
    "our_decl": "Math0.Frontier.A341761.result",
    "summary": "For a word w, complexity(w) is the number of distinct nonempty factors (contiguous subwords) of w. Let S(n,x) be the sum of complexity(w) over all x^n words w of length n on an alphabet of x letters. For every n >= 0 there is a polynomial P in Q[X] with P(x) = S(n,x) for every natural number x, and the coefficient of x^n in P is n(n+1)/2.",
    "notes": "Conjecture as stated in OEIS: Conjecture: the coefficient of x^n in S(n,x) is n*(n+1)/2. (Shiyao Guo, entry author, Feb 19 2021)\n\nReferees: OEIS A341761 (Shiyao Guo, 2021; still labelled \"Conjecture\" in rev #33, Mar 2024), cross-referenced with OEIS A340885. Shiyao Guo (Mivik), \"On the Expected Subword Complexity of Random Words\", https://mivik.moe/2021/research/expected-subword-complexity-en/, and the Chinese version https://mivik.moe/2021/research/expected-subword-complexity/ (updated 2026-03-26, still calls it an unproven conjecture). Related work that does not settle it: S. Janson, S. Lonardi, W. Szpankowski, \"On average sequence complexity\", TCS 326 (2004); I. Gheorghiciuc, M. D. Ward, \"On correlation polynomials and subword complexity\", DMTCS Proc. AH (AofA 2007), https://dmtcs.episciences.org/3553; Ahmadi and Ward, \"Asymptotic Analysis of the kth Subword Complexity\" (Entropy, 2020); Ivanko (Trudy IMM UrO RAN, 2008). I found no prior proof.",
-   "date": "2026-10-24"
+   "date": "2026-10-24",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Standard grouping of words by equality pattern (set partition of positions), giving S(n,x) = sum over patterns p of c(p)·x(x-1)...(x-k(p)+1). This is the same falling-factorial reasoning behind Guo's own remark in his linked blog post that S(n,x) is a polynomial of degree at most n.",
+    "justification": "The proof groups words by which positions carry equal letters, so S(n,x) becomes a sum of c(p) times falling factorials of x, and only the pattern with all letters distinct reaches degree n. A word with n distinct letters has n(n+1)/2 distinct factors, which settles it. Put another way, once S(n,x) is known to be a polynomial of degree at most n (as Guo already noted), its leading coefficient is the limit of the expected complexity as x grows, and almost every word then has distinct letters. This is a standard argument of a few lines that a competent combinatorialist would find right away, and the paper itself calls it elementary. Proving the conjecture as stated is what the author intended, so the result is not literal-only.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A342992",
@@ -2465,7 +2816,16 @@
    "our_decl": "Math0.Frontier.A342992.result",
    "summary": "For every integer n >= 1 with 5 not dividing n, there is some k such that k*n is positive and every decimal digit of k*n is prime (in {2,3,5,7}). Equivalently, a(n) > 0 for A342992 (Sariyar's conjecture).",
    "notes": "Conjecture as stated in OEIS: \"Conjecture: a(n) > 0 for all n that are not divisible by 5.\" (A342992, entry by _Metin Sariyar_, Apr 13 2021. Corneth added that a(625k) = 0.)\n\nReferees: No prior explicit proof of the A342992 conjecture was found. The entry still lists it as a conjecture (#60, Apr 22 2021) with no later %E edits.\n\nClosest prior material:\n(1) OEIS A078239 (Murthy 2002; Robert Israel, Feb 2018). Comment: \"Besides multiples of 10, 625 and its odd multiples have a(n)=0\". Its Maple program implicitly assumes a prime-digit multiple exists for every n with 10∤n and 625∤n. This is an unproved assertion. A078250 (Howroyd, 2024) repeats the comment.\n(2) OEIS A053316 (Henry Bottomley, Mar 2000; formula corrected by Israel, 2019): an n-digit number with digits 2 and 3 that is divisible by 2^n. This is exactly the proof's block lemma. The digits-{1,2} version is A053312, the 1971 All-Union olympiad problem (cut-the-knot.org/arithmetic/DivisibilityFromSovietMO.shtml).\n(3) IMO Shortlist 1994 N7, \"wobbly numbers\" (prase.cz/kalva/short/soln/sh94n7.html): the same technique of combining a 2-power block with the coprime-to-10 part by repetition.\n(4) Galperin & Reid, \"Multiples Without Large Digits\", Amer. Math. Monthly 126 (2019), as cited by John D. Cook (johndcook.com/blog/2025/12/16/multiples-with-no-large-digits/), with the citation's page numbers disputed by a reader comment. It covers digits 1–5 and does not imply this result.\n(5) C. W. Wu, \"Pigeonholes and repunits\", Amer. Math. Monthly 121 (2014): the related {0,1} case.\n\nThe result is elementary and folklore-adjacent, but no source states or proves it for prime digits or for digits {2,3}.",
-   "date": "2026-10-20"
+   "date": "2026-10-20",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The classical block lemma (OEIS A053316, Bottomley 2000; a {2,3} variant of the 1971 All-Union Olympiad problem A053312): for every j there is a j-digit number with digits 2 and 3 that is divisible by 2^j. Combine it with Euler's theorem 10^phi(m) ≡ 1 (mod m) for m coprime to 10, and repeat the block m times, as in the IMO Shortlist 1994 N7 solution.",
+    "justification": "Write n = 2^e m with m odd and coprime to 10. Take a block of L = phi(m)(e+1) digits from {2,3} that is divisible by 2^L; this is the textbook digit-by-digit induction recorded in A053316. Concatenating m copies of the block gives a number divisible by both 2^e and m, by Euler's theorem. Both steps are standard olympiad techniques and the whole argument fits in well under a page. The work is not new mathematics; it is mainly noticing that these known pieces apply directly to Sariyar's conjecture.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A344710",
@@ -2511,7 +2871,16 @@
    "our_decl": "Math0.Frontier.A348484.result",
    "summary": "For every n >= 1, let a(n) be the largest number of squares you can choose on an n x n board so that no two chosen squares are exactly two steps apart in the same row or in the same column. Then a(n) = n^2/2 if n ≡ 0 (mod 4), a(n) = (n^2+1)/2 if n is odd, and a(n) = n^2/2 + 2 if n ≡ 2 (mod 4). (This is Yang Hong's conjecture in OEIS A348484.)",
    "notes": "Conjecture as stated in OEIS: %F A348484 Conjectures: a(n) = n^2/2 for n == 0 (mod 4). a(n) = (n^2 + 1)/2 for n == 1 or 3 (mod 4). a(n) = n^2/2 + 2 for n == 2 (mod 4).  (Entry by _Yang Hong_, Oct 20 2021; last edit #33, Dec 06 2022.)\n\nReferees: OEIS A348484 (Yang Hong, Oct 20 2021; latest revision #33, Dec 06 2022) still marks the formulas as \"Conjectures\". R. J. Mathar's Dec 2022 comment gives a 2×2-block checkerboard construction. Its g.f. -x(1+2x-2x^2+2x^3+x^4)/((1+x)(1+x^2)(x-1)^3) matches the conjectured values, but he states it only as a lower bound. Cross-reference: A048716 (the 1-D row condition, k AND 4k = 0). I found no published or online proof of the upper bound on arXiv, Math StackExchange, MathOverflow, SeqFan or general web search. The result does follow directly from the standard fact that a grid graph P_a□P_b has independence number ⌈ab/2⌉, because the \"two apart\" graph is a disjoint union of four such grids.",
-   "date": "2026-10-18"
+   "date": "2026-10-18",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The matching lower bound is already in the entry: R. J. Mathar's comment gives the 2x2-block checkerboard construction and a g.f. whose coefficients are the conjectured values. The upper bound follows from the standard fact that the grid graph P_r x P_s has independence number ceil(rs/2), which is proved by tiling it with dominoes plus at most one monomino. Split the cells by (i mod 2, j mod 2). The \"two steps apart\" graph is then a disjoint union of four grid graphs whose sides are ceil(n/2) or floor(n/2).",
+    "justification": "The proof needs two observations. First, split the cells by row and column parity, so the \"two apart\" graph becomes four ordinary grid graphs. Second, use the textbook fact that an r x s grid graph has independence number ceil(rs/2): a checkerboard gives the lower bound and a domino tiling with at most one monomino gives the upper bound. Adding up the four grids gives the conjectured values directly. The lower-bound construction was already in the entry as Mathar's comment, and the whole argument fits in well under a page. The manuscript itself calls the result elementary. Writing the pairing as an involution on the board is a convenience for the Lean proof, not a new mathematical idea.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A350557",
@@ -2557,7 +2926,16 @@
    "our_decl": "Math0.Frontier.A350900.result",
    "summary": "Let a(f; n) = Sum_{i=1..n} Sum_{k=1..n} f(gcd(i,n)/gcd(gcd(i,k),n)). Then: (1) for every complex arithmetic function f and every n > 0, a(f; n) = ((f·φ) * A057660)(n), where f·φ is the pointwise product with Euler's totient, * is Dirichlet convolution, and A057660(m) = Sum_{k=1..m} m/gcd(m,k). (2) If f is multiplicative, so is a(f; ·). (3) For n > 0, the row sum Sum_{k=1..n} T(n,k) of the A350900 triangle T(n,k) = Sum_{i=1..n} gcd(i,n)/gcd(gcd(i,k),n) equals a(id; n). (4) For n > 0, that row sum equals (A002618 * A057660)(n), where A002618(n) = n·φ(n).",
    "notes": "Conjecture as stated in OEIS: Conjecture: Let f be an arbitrary arithmetic function. Define for n > 0 the sequence a(f; n) = Sum_{i=1..n, k=1..n} f(gcd(i,n)/gcd(gcd(i,k),n)); a(f; n) equals Dirichlet convolution of f(n)*A000010(n) and A057660(n); if f is multiplicative, then a(f; n) is multiplicative; row sums of this triangle use f(n) = n (see formula section). Also %F: Conjecture: Row sums equal Dirichlet convolution of A002618 and A057660. (Werner Schulte, Jan 21 2022)\n\nReferees: I did not query oeis.org; OEIS entries were read from the local mirror dated 2026-10-17.\n- A350900 (Werner Schulte, Jan 21 2022; last edit #13, May 24 2024): both claims are still labeled \"Conjecture\", and no %E line records a proof.\n- A373059 (Seiichi Manyama, May 21 2024; \"Row sums of A350900\"): states a(n) = Sum_{d|n} phi(n/d)(n/d) sigma_2(d^2)/sigma(d^2) = (A002618*A057660)(n) without proof or conjecture label. Amiram Eldar (May 27 2024) added the multiplicative formula and the Dirichlet g.f. zeta(s)zeta(s-2)^2/zeta(s-1)^2. This is a prior unproved assertion of part 4.\n- Related OEIS identities, also without proof: A350156 (Schulte, the analogous claim for f(n/gcd(i,k,n))); A371492, A371628, A373060, A373061, A372962, A372964, A372968 (Manyama, May 2024; sums of gcd(x_1,n)/gcd(x_1,...,x_k,n)).\n- A057660 (= Sum_{d|n} d*phi(d)).\n- Classical background: Cesaro's identity; L. Toth, \"A survey of gcd-sum functions\", JIS 13 (2010) 10.8.1; O. Bordelles, \"A Multidimensional Cesaro Type Identity and Applications\", JIS 18 (2015) 15.3.7; P. Bala, \"GCD sum theorems. Two Multivariable Cesaro Type Identities\" (A368743 attachment; I could not retrieve its text).\n- Checked and not relevant: S. Fried, \"Further proofs of conjectures from the OEIS\", arXiv:2607.24832 (A350900 is not among its sequences); D. Himane, NNTDM 31 (2025) (a different Schulte conjecture, about A006472).\nNo prior proof or counterexample of the A350900 conjecture was found.",
-   "date": "2026-10-24"
+   "date": "2026-10-24",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Cesàro's identity Sum_{k=1..n} F(gcd(k,n)) = Sum_{d|n} F(d) phi(n/d) (Tóth's gcd-sum survey, JIS 2010), together with the formula A057660(n) = Sum_{d|n} d*phi(d), which is already in cross-referenced entry A057660. Part (4) was already stated as a formula in A373059.",
+    "justification": "Set g = gcd(i,n). The summand depends on i only through g, and its dependence on k has period g. Apply Cesàro's identity once to group the i, use periodicity to collapse the k-sum to one period, apply Cesàro's identity again, and re-index the divisors. This gives a(f;n) = ((f*phi) * 1 * (id*phi))(n), and 1 * (id*phi) is A057660 by its own %F line. Multiplicativity then follows from standard closure properties, and the row-sum parts follow by exchanging the sums and taking f = id. The whole argument fits in under a page of standard gcd-sum manipulation, and the manuscript itself calls it routine.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A351743",
@@ -2580,7 +2958,16 @@
    "our_decl": "Math0.Frontier.A351743.result",
    "summary": "Let a(1)=1 and let a(n+1) be the greatest divisor of s(n)=a(1)+...+a(n) that is prime to a(n) (OEIS A351743; s is A355149). Then:\n(1) a(n)=1 for infinitely many n, and a(n)=2 for infinitely many n (Sycamore).\n(2) a(2(n+21)-1) = a(2n-1) for all n >= 70 (Sigrist).\n(3) There is a 21-periodic integer sequence b with a(2(n+21)) = 3645 a(2n) + b(n) for all n >= 70 (Sigrist).\n(4) There is a 42-periodic integer sequence c with s(n+42) = 3645 s(n) + c(n) for all n >= 138 (A355149 conjecture).",
    "notes": "Conjecture as stated in OEIS: A351743 (a(1)=1; a(n+1) = greatest divisor of s(n) prime to a(n), s = partial sums): \"Conjecture: a(n)=1 occurs infinitely many times, and therefore so does a(n)=2.\" (_David James Sycamore_, Jun 07 2022) and \"Conjectures from _Rémy Sigrist_, Jun 20 2022: (Start) - a(2*(n+21)-1) = a(2*n-1) for n >= 70, - a(2*(n+21)) = 3645*a(2*n) + b(n) for n >= 70 (where b is 21-periodic). (End)\". A355149 (partial sums of A351743): \"Conjecture: a(n + 42) = 3645*a(n) + b(n) for n >= 138 (where b is 42-periodic).\"\n\nReferees: OEIS A351743 (David James Sycamore, Jun 07 2022) states the conjecture that 1 and 2 occur infinitely often. Its formula section, from Rémy Sigrist on Jun 20 2022, adds the conjectures a(2(n+21)-1) = a(2n-1) and a(2(n+21)) = 3645 a(2n) + b(n), both for n >= 70. OEIS A355149 (De Vlieger, Sigrist and Sycamore, Jun 21 2022; last edit #11 Nov 17 2022) states the conjecture s(n+42) = 3645 s(n) + b(n) for n >= 138. Both entries still list these as open conjectures in the current oeisdata. The only other entry that cites them is A357735, which has nothing on them. I searched the full text of S. Fried's OEIS-conjecture papers (arXiv:2410.07237; J. Integer Seq. 28 (2025) 25.4.3; J. Integer Seq. 29 (2026) 26.1.8; arXiv:2607.24832) and none mentions these sequences. Searches of the web, arXiv, MathOverflow/MSE and SeqFan found no proof or counterexample.",
-   "date": "2026-10-20"
+   "date": "2026-10-20",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Sigrist's own conjectured formulas in A351743 (%F) and A355149 (%F), which already describe the block structure; the proof makes that structure an explicit affine ansatz in Y_m = (3645^m-1)/3644 and checks it by a finite computation.",
+    "justification": "The proof writes a and s on each 42-term block as affine functions of Y_m = (3645^m-1)/3644. The 42 coefficient rows come from the computed data, and Sigrist's conjectures already describe this shape. Each of the 42 steps of the recursion is then shown to hold for every value of the parameter, using two elementary gcd lemmas and a finite check of small divisibility and coprimality facts. Together with a direct computation of the first 139 terms, this proves all four conjectures. This is the standard way to certify an eventually periodic or affine pattern in a recursively defined sequence, and once the ansatz is set up it reduces to a finite computation. No new idea was needed, even though the conjectures had stayed open since 2022.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A354571",
@@ -2603,7 +2990,16 @@
    "our_decl": "Math0.Frontier.A354571.result",
    "summary": "A354571 lists the even legs k of primitive Pythagorean triangles in increasing order, each repeated once per triangle. A leg is included when every odd prime factor of k is ≡ 3 (mod 4) and k has at least one odd prime factor. A354570 lists the odd legs k in the same way, for k whose prime factors are all ≡ 3 (mod 4). Selle's conjecture says that a(n)/n → π for A354571 and A354570(n)/n → π. The formal `statement` is the conjunction of these two limits, with each sequence read as the n-th term of the list where k appears #legTriangles(k) times.",
    "notes": "Conjecture as stated in OEIS: \"Conjecture: lim_{n->oo} a(n)/n = Pi. Also, lim_{n->oo} A354570(n)/n = Pi.\" (Lothar Selle, Jun 04 2022; same text in A354570)\n\nReferees: No prior resolution found.\n- OEIS A354571 and A354570 (Lothar Selle, Jun 2022; last edited Aug 2022) still state lim a(n)/n = Pi as a conjecture. Checked in the local mirror and in upstream raw.githubusercontent.com/oeis/oeisdata.\n- Selle, \"Kleines Handbuch Pythagoreische Zahlentripel\" (BoD 2022), ch. 2.3.10, is cited only for the equality of the two limits; I could not access the book.\n- Related unproved Selle conjectures appear in A120427, A120890 and A354569.\n- Web searches (arXiv, MathOverflow, Math.SE, SeqFan) found no proof or counterexample.\n- The underlying asymptotic is a standard consequence of Wiener–Ikehara/Delange applied to (1-2^-s)zeta(s)/L(s,chi4), using L(1,chi4) = pi/4. D. N. Lehmer (Amer. J. Math. 22, 1900) treats similar Pythagorean counting asymptotics, but not this restricted case.",
-   "date": "2026-10-20"
+   "date": "2026-10-20",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Classical count of primitive Pythagorean triangles with a given leg (2^(omega-1) coprime factorizations), combined with the Wiener–Ikehara / Delange Tauberian theorem applied to sum_{m odd, all p|m ≡ 3 mod 4} 2^omega(m) m^-s = (1-2^-s) zeta(s)/L(s,chi_4), with L(1,chi_4) = pi/4 and L(s,chi_4) ≠ 0 on Re s = 1.",
+    "justification": "The proof counts primitive triangles with a given leg using coprime factorizations, which gives the classical multiplicity 2^(omega-1). That reduces both counting functions to the summatory function of a multiplicative weight g, whose Dirichlet series is (1-2^-s)zeta(s)/L(s,chi_4). The Wiener–Ikehara (or Delange) theorem, together with L(1,chi_4) = pi/4 and the fact that L(s,chi_4) has no zeros on Re s = 1, then gives S(N) ~ 2N/pi. A short dyadic summation and the inversion from the counting function to the n-th term finish the proof. Each step is a textbook application of standard analytic number theory, and the manuscript itself calls it routine. Most of the work went into formalization: Wiener–Ikehara had to be proved from scratch in Lean. That effort does not make the mathematics substantial.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A355076",
@@ -2649,7 +3045,16 @@
    "our_decl": "Math0.Frontier.A355339.result",
    "summary": "Let T(n,k) be the knight-move triangle A355320. It is defined by T(0,0)=1, with zero entries outside |k| <= 2n, and T(n,k) = T(n-1,k-2) + T(n-1,k+2) + T(n-2,k-1) + T(n-2,k+1). Let a(n) be the length of the maximal block of consecutive even entries of row n that contains the centre k=0. It is 0 if T(n,0) is odd, and a(0)=0. Then for every n >= 0, a(n) = 1 if and only if n > 0 and n = 2^m - 2 for some m >= 0 (equivalently, n+2 = 2^{t+2} for some t >= 0).",
    "notes": "Conjecture as stated in OEIS: %F Conjecture: a(n) = 1 iff n > 0 and n belongs to A000918. (Rémy Sigrist, Jun 29 2022)\n\nReferees: - OEIS A355339 (Rémy Sigrist, Jun 29 2022): the conjecture is in %F and is still unresolved at revision #10, with no %E extensions (checked in the local mirror and upstream oeisdata on GitHub).\n- OEIS A355320 (the triangle; its %F gives T(n,0)=A096609(n) and T(n,1)=A096610(n), but nothing on parity).\n- OEIS A096608–A096612 (Kimberling 2004, Catalan knight paths in the right half-plane), A096587, A361292, A000918, A002605: no parity results.\n- J.-L. Baril, N. Hassler, S. Kirgizov, J. L. Ramírez, \"Grand zigzag knight's paths\", arXiv:2402.04851 (ECA 2024): its only parity remark (Remark 3.2) concerns zigzag path counts being even when n ≡ k (mod 2), not this conjecture.\n- J.-L. Baril, J. L. Ramírez, \"Knight's paths towards Catalan numbers\", arXiv:2206.12087: nothing on parity.\n- Web searches of arXiv, MathOverflow/MSE, SeqFan and general sources found no prior proof or counterexample.\n- No formalization in google-deepmind formal-conjectures.",
-   "date": "2026-10-19"
+   "date": "2026-10-19",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The row-polynomial recurrence R_{n+1}=(1+X^4)R_n+(X^3+X^5)R_{n-1} given in A355320 (%F and PARI code), reduced mod 2 using 1+X^4=(1+X^2)^2, combined with Lucas's theorem for p=2.",
+    "justification": "By symmetry, the claim reduces to two parity facts: T(n,0) is even for n>=1, and T(n,1) is odd exactly when n+2 is a power of 2. Both come out of a standard technique. Reduce the row recurrence already stated in A355320 modulo 2. There 1+X^4=(1+X^2)^2 and X^3+X^5=X^3(1+X^2), so the recurrence has an explicit binomial closed form (a sum over compositions of n). The coefficient parities then follow from Lucas's theorem (equivalently, Kummer's carry criterion) by a short carry argument. The whole argument is about a page of elementary mod-2 polynomial algebra and binomial parity, the kind of thing a competent combinatorialist would find quickly. The conjecture most likely stayed open because the entry is obscure, not because it is hard.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A356360",
@@ -2672,7 +3077,16 @@
    "our_decl": "Math0.Frontier.A356360.result",
    "summary": "For n >= 3, let a(n) be the denominator, in lowest terms, of the continued fraction 1/(2 - 3/(3 - 4/(4 - ... ((n-1) - n/(n+1))))). Then every a(n) is 1 or a prime. This is the conjecture Mohammed Bouras stated in OEIS A356360 (2022).",
    "notes": "Conjecture as stated in OEIS: A356360: \"Conjecture: The sequence contains only 1's and the primes.\" (_Mohammed Bouras_, Oct 15 2022). The same sentence appears in A369797 (Feb 2024), A370726 (Feb 2024) and A372763 ('Conjecture 1', May 2024). A372761: \"Conjecture 1: Except for 4, the sequence contains only 1's and the primes.\" A362086: \"Conjecture: Except for 9, every term of this sequence is either a prime or 1.\" A363482: \"Conjecture: Except for 49, every term of this sequence is either a prime or 1.\" (all by Bouras)\n\nReferees: OEIS A356360 (mirror 2026-10-17, rev #31 Aug 2024): still marked \"Conjecture\". It has an unproved comment \"Same as A128059(n), A145737(n-1), A097302(n-2) for n>5\", and its formula \"a(n)=2n-1 if prime else 1 (n != 5)\" is labeled \"From the conjecture\". M. Bouras, \"The Distribution Of Prime Numbers And The Continued Fractions\", Zenodo doi:10.5281/zenodo.7212512 (2022; also viXra 2209.0101): proves only the closed form (Thm 1.1) and states Conjecture 3.1, verified to n=10000. M. Bouras, \"A New Primes-Generating Sequence\", arXiv:2509.09745 (2025), Table 2 (k=1 row = A356360): observation only, no proof. Bouras slides, Zenodo 10992128: \"Conjecture 2\", no proof. AlphaProof Nexus results / formal-conjectures auto_oeis THEOREM_MAPPING and T. Adamczewski, \"OEIS Open\", arXiv:2608.11941: A356360 is not included; only the sibling A372761 Conj. 2 was resolved. Related but distinct: A356247 conjectures proved by B. Cloitre (2025, OEIS attachment). No prior proof or counterexample found.",
-   "date": "2026-10-20"
+   "date": "2026-10-20",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The closed form and gcd formula already in the entry, a(n) = (2n-1)/gcd(2n-1, A051403(n-2)+A051403(n-3)), proved as Theorem 1.1 of Bouras's linked paper. Combined with A051403(j) = (j+2)*A003422(j+1)/2, this reduces the question to the elementary fact that an odd composite 2m+3 with m >= 4 divides m!. The same denominator-of-factorial pattern appears in A145737 (Detlefs: a(n) = denominator(n!*3n(n+1)/(2(2n+1))) = 2n+1 if prime, else 1).",
+    "justification": "The gcd formula already in the entry gives a(n) | 2n-1 at once, so the prime case is immediate. The composite case needs only that an odd composite c = 2m+3 with m >= 4 divides m!, a textbook Wilson-style lemma with a short case split on whether c = p^2. Together with checking n = 3, 4, 5 directly, the whole argument fits in under a page and uses no new idea. The longer Lean development is formalization effort and does not make the mathematics deeper.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A357216",
@@ -2695,7 +3109,16 @@
    "our_decl": "Math0.Frontier.A357216.result",
    "summary": "Take the regular n-gon with vertices V_j = exp(2πij/n). Divide each side into k+1 equal parts. For m = 1..k, the m-th internal n-gon joins the m-th division points of consecutive sides. Its side (j, m-1) is the segment from the m-th division point of side j to the m-th division point of side j+1. The statement has two parts.\n(1) For n >= 3, some k gives a point lying on three distinct drawn sides if and only if n is 3, 4 or 6.\n(2) For n = 5 and for every n >= 7 and every k >= 0, the open polygon minus all n*k drawn sides has exactly n*k^2 + 1 connected components.",
    "notes": "Conjecture as stated in OEIS: %C Conjecture: the only n-gons that contain non-simple intersections are the 3-gon (triangle), 4-gon (square), and 6-gon (hexagon). %F Conjectured formula for all columns for n >= 7: T(n,k) = n*k^2 + 1. %F Conjectured formula for all rows except for n = 3, 4, 6: T(n,k) = n*k^2 + 1. (Scott R. Shannon, Sep 18 2022; the same conjecture appears in A357235 (vertices n*k^2+n) and A357254 (edges 2n*k^2+n))\n\nReferees: I found no prior resolution. The OEIS entries A357216, A357235 and A357254 (Scott R. Shannon, Sep 2022, last revised Sep 21 2022, no %E lines) still list both claims as conjectures, in the local mirror and the current GitHub oeisdata. The related entries for the triangle (A356984, with Talmon Silver's classification for n = 3 only), the square (A357058) and the hexagon (A357196) give no general proof. arXiv API searches for \"A357216\" and \"internal n-gons\" returned nothing. Web searches covering MathOverflow, Math StackExchange, SeqFan and Google-Scholar-style queries found only the OEIS entries themselves. Sela Fried, \"Proofs of some Conjectures from the OEIS\" (arXiv:2410.07237) is unrelated. The key tool, Niven's theorem (cos(2*pi/n) is rational only for n = 1, 2, 3, 4, 6), is classical.",
-   "date": "2026-10-18"
+   "date": "2026-10-18",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Niven's theorem (cos(2*pi/n) is rational only for n = 1, 2, 3, 4, 6), combined with the Euler-formula count of regions already cited in the entry's %F line (T = edges - vertices + 1).",
+    "justification": "The proof first notes that two chords can only cross if they cut off the same corner or adjacent corners. So any triple point involves just four consecutive vertices, and in an affine frame these depend only on u = 2cos(2*pi/n). With every chord parameter rational, the condition for three chords to meet is linear in u with a nonzero rational coefficient, so u would be rational, which Niven's theorem rules out for n = 5 and n >= 7. Explicit rational triple points for n = 3, 4, 6, and the standard count (a chord crossed at p distinct interior points adds p + 1 regions) giving n*k^2 + 1, complete the proof. The whole argument is about a page of elementary coordinate geometry plus a classical theorem. The long Lean file reflects the effort of formalizing the topology, not a hard mathematical idea.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A362086",
@@ -2718,7 +3141,16 @@
    "our_decl": "Math0.Frontier.A362086.result",
    "summary": "For n >= 3 let a(n) be the reduced denominator of 1/(2 - 3/(3 - 4/(4 - ... ((n-1) - n/(-3))))), evaluated in Q from the inside out. Then for every n >= 3 with a(n) != 9, a(n) is 1 or a prime. (Mohammed Bouras's conjecture; the value 9 occurs at n = 5.)",
    "notes": "Conjecture as stated in OEIS: Conjecture: Except for 9, every term of this sequence is either a prime or 1. (Mohammed Bouras, May 28 2023)\n\nReferees: OEIS A362086 (local mirror, revision #35, May 09 2024): \"Conjecture: Except for 9, every term of this sequence is either a prime or 1.\" No proof is recorded. Related prior work, none of which settles A362086:\n- M. Bouras, \"A New Primes-Generating Sequence\", arXiv:2509.09745 (2025). Lists A362086 in its Table 1 family; the primality property is stated only as a conjecture.\n- B. Cloitre, \"On the sequence A356247\" (2025), OEIS attachment a356247_1.pdf. Proves Conjectures 1-3 for the innermost -1 analogue, A356247.\n- T. Adamczewski, \"OEIS Open: How many conjectures can language models turn into theorems?\", arXiv:2608.11941 (2026), together with the AlphaProof Nexus Lean files oeis_363347_conjecture_2.lean and oeis_a363102_conjecture_1.lean. Proves the analogues for innermost -2 (A363102) and -4 (A363347).\nA362086 appears in neither the alphaproof-nexus-results repository nor the epoch-research LeanOpenProblems and LeanOpenProblems-results repositories. Searches of arXiv, MathOverflow and Math StackExchange found no proof or counterexample.",
-   "date": "2026-10-18"
+   "date": "2026-10-18",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The entry's own formula a(n) = (n^2+n-3)/gcd(n^2+n-3, 3*A051403(n-3) + n*A051403(n-4)), with A051403 written in left factorials (its %F), combined with the factorial-valuation and size argument already used for the sibling conjectures A363102 (Adamczewski, arXiv:2608.11941, Appendix A), A356247 (Cloitre) and A363482.",
+    "justification": "The closed form for the unreduced fraction is essentially the gcd formula already listed in the entry. It reduces the denominator to N/gcd(N, 3(n-1)(n-3)!) with N = n^2+n-3, which is roughly n^2. The rest is the standard template from the solved sibling sequences: a prime p up to n-3 that survives in the denominator must divide N to a higher power than it divides (n-3)!, and this is impossible because of size, apart from a small N = 3p^2 case. Prime factors above n must be at least n+1, so at most one fits, and the cases n < 36 are a finite check. The argument is about a page and a direct adaptation of known proofs, with no new idea, so it is routine.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A363482",
@@ -2741,7 +3173,16 @@
    "our_decl": "Math0.Frontier.A363482.result",
    "summary": "For n >= 3 let t_n = -5 and t_k = k - (k+1)/t_{k+1} for k = n-1, ..., 2. Let a(n) be the denominator, in lowest terms, of 1/t_2 = 1/(2-3/(3-4/(...(n-1)-n/(-5)))). Then for every n >= 3, either a(n) = 49, or a(n) = 1, or a(n) is prime. This is Bouras' conjecture (2023). The value 49 occurs only at n = 6.",
    "notes": "Conjecture as stated in OEIS: Conjecture: Except for 49, every term of this sequence is either a prime or 1. (Mohammed Bouras, Jun 04 2023; 'The conjecture holds through n=10000' - Bill McEachen, Jul 08 2025)\n\nReferees: No prior resolution of A363482 found. Sources checked:\n- OEIS A363482 (local mirror, identical to upstream oeisdata #29, Jul 13 2025): conjecture plus a numerical check to n = 10000 (McEachen), no proof.\n- Bouras, \"A New Primes-Generating Sequence\", arXiv:2509.09745 (2025): lists A363482 as the k=5 case of n^2+(k-2)n-k, with observations only.\n- Epoch OEIS Open benchmark (github.com/epoch-research/LeanOpenProblems-results, metadata/oeis/conjectures.json): A363482 is absent.\n- google-deepmind/formal-conjectures: no A363482 file.\n- google-deepmind/alphaproof-nexus-results: no A363482 file.\n\nRelated prior results on sibling sequences:\n- A363102 (endpoint -2) proved: T. Adamczewski, \"OEIS Open: How many conjectures can language models turn into theorems?\", arXiv:2608.11941 (2026), Appendix A; also AlphaProof Nexus oeis_a363102_conjecture_1.lean.\n- A356247 (endpoint -1) proved: B. Cloitre, \"On the sequence A356247\" (2025, OEIS-hosted PDF a356247_1.pdf; not readable here).\n- A363347 (endpoint -4) conjectures 1-2 proved: AlphaProof Nexus oeis_363347_conjecture_2.lean; Adamczewski, arXiv:2608.11941.\n\nThe proof here follows the same template as the A363102 proof.",
-   "date": "2026-10-18"
+   "date": "2026-10-18",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The entry's own formula a(n) = (n^2+3n-5)/gcd(n^2+3n-5, 5*A051403(n-3)+n*A051403(n-4)), which reduces to N/gcd(N, 5(n-1)(n-3)!), combined with the p-adic/Legendre-bound template of Adamczewski's proof of the sibling conjecture A363102 (arXiv:2608.11941, Appendix A, linked from cross-reference A363102).",
+    "justification": "The closed form for the reduced denominator, a(n) = N/gcd(N, 5(n-1)(n-3)!) with N = n^2+3n-5, is essentially the formula already in the entry, and it comes from a standard convergent recurrence. From there the proof is about a page of elementary number theory, and it is the same argument already published for the sibling sequence A363102 (endpoint -2) and its relatives. If a prime p <= n-3 divides a(n), Legendre's bound forces a high power of p to divide N, which is too big except in a small case (N = 3p^2) that is easy to handle. Any prime factor above n-3 is in fact at least n+2, because N + c factors for c = 0, 1, 5, 7, and since N < (n+2)^2 there is room for only one such factor. The cases n <= 35 are a finite check. The manuscript itself says it adapts the existing template, so no new idea was needed.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A363609",
@@ -2764,7 +3205,16 @@
    "our_decl": "Math0.Frontier.A363609.result",
    "summary": "Each standard die has opposite faces summing to 7, all dice have the same chirality, and each die may take any of its 24 rotations. Build a face-connected polycube from n dice. A face is visible when the neighbouring cell is empty; faces underneath and faces facing an internal cavity also count. a(n) is the least possible number of visible pips. Claim: for every k > 1, a(k^3) = 6(k+2)k.",
    "notes": "Conjecture as stated in OEIS: %F A363609 Conjecture: a(k^3) = 6*(k+2)*k for k > 1.  (Unattributed formula line. Entry by _Matt Donahoe_, Jun 11 2023; last edit #45, Sep 03 2023.)\n\nReferees: I found no prior resolution.\n- OEIS A363609, by Matt Donahoe, Jun 11 2023 (revision #45, Sep 03 2023): the local mirror is identical to oeis/oeisdata main on GitHub, and it still states the formula as \"Conjecture: a(k^3) = 6*(k+2)*k for k > 1\".\n- Michael S. Branicky's formulas in the same entry, Jun 11 and Jun 15 2023: these give only upper bounds and loose bounds.\n- Donahoe's program, https://github.com/mdonahoe/oeis/blob/main/A363609/dice.py, with its out.txt: a heuristic search over box-plus-slab layouts, with no optimality proof.\n- OEIS A193416, minimum surface area of polycubes: the unweighted analogue, a(n^3) = 6n^2.\n- AMC 10A 2002 Problem 18 (https://artofproblemsolving.com/wiki/index.php/2002_AMC_10A_Problems/Problem_18): computes the minimum for the 3x3x3 cube alone, 90. It does not show that the cube is optimal among all polycubes.\n- Loomis and Whitney, Bull. AMS 55 (1949) 961-962: the classical inequality behind the projection step.\n- Searches of arXiv, MathOverflow, Math StackExchange, Puzzling and SeqFan turned up no proof and no counterexample.",
-   "date": "2026-10-19"
+   "date": "2026-10-19",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Discrete Loomis-Whitney inequality (Loomis and Whitney 1949), the standard projection bound behind A193416's a(n^3)=6n^2, and AM-GM, together with a 64-case finite check per die",
+    "justification": "The value 6k(k+2) splits as surface area 6k^2 plus 12k. That second term counts the pairs of perpendicular exposed faces on the cube. The proof matches this split. First it checks a finite inequality for one die: the pips shown are at least the number of exposed faces plus the number of exposed perpendicular pairs. Then it bounds the faces by projections and Loomis-Whitney, as in the known surface-area result (A193416). It bounds the perpendicular pairs by taking an extreme cell in each slice, then uses |P| <= l1*l2*l3 and AM-GM. The edge term is a neat observation, but it is a direct analogue of the standard projection argument. The whole proof fits in about a page and uses only standard tools, so a competent mathematician working on the problem would likely find it quickly.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A367119",
@@ -2810,7 +3260,16 @@
    "our_decl": "Math0.Frontier.A369366.result",
    "summary": "For every k >= 0, the least number of inequivalent cells over all polyiamonds with n = 6k+5 cells is 3(k+1). Two cells of P are equivalent when a symmetry of the triangular grid maps P onto itself and one cell to the other. This is Exley's conjecture in OEIS A369366, a(6k+5) = 3(k+1).",
    "notes": "Conjecture as stated in OEIS: %C A369366 Conjecture: a(6k+5) = 3(k+1) for all k >= 0. Observed for k = 0, 1, 2 (n = 5, 11, 17). The next test case is a(23), predicted to be 12.  (From _Peter Exley_, Apr 07 2026)\n\nReferees: OEIS A369366 (local mirror revision #14, Apr 14 2026, identical to oeisdata main): Exley's comment of Apr 07 2026 states the conjecture and already proves the lower bound a(6k+5) >= 3(k+1) (no rotations are possible when n = 6k+5, so |G_max| = 2). No upper-bound construction or full proof appears in the entry or its %E history. Cross-references checked: A369365, A369367, A369363, A369364, A367758, A367759, A373637, A376798, A376799. The only related proof is Mason and von Brömssen's formula proof for the polyomino analog A367758 (square lattice, a different problem). Exley's linked GitHub repo github.com/pexley-math/oeis-A369366 and the account page return 404 and could not be inspected. Web searches (arXiv, general web) found no prior resolution.",
-   "date": "2026-10-20"
+   "date": "2026-10-20",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Exley's own comment in A369366, which already sketches the lower bound a(6k+5) >= ceiling(n/2) = 3(k+1) (an odd n rules out half-turns, and n = 2 mod 3 rules out 3-fold rotations). The matching upper bound comes from the straight row of 6k+5 triangles, which has one mirror symmetry.",
+    "justification": "The lower bound was already argued in the entry's own comment. The only missing part was a polyiamond that reaches the bound. The obvious candidate works: a straight row of 2m+1 triangles is symmetric under the mirror through its middle cell, so it has at most m+1 classes, which is 3(k+1) when n = 6k+5. Both halves are a few lines of elementary symmetry counting, and the paper itself calls them elementary. The Lean work is careful, but the mathematics needed no new idea.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A373345",
@@ -2879,7 +3338,16 @@
    "our_decl": "Math0.Frontier.A375522.result",
    "summary": "Let p_k be the k-th prime. Define s(0) = 0 and s(k) = s(k-1) + 1/(p_k b(k)), where b(k) = 1 + floor(1/((1 - s(k-1)) p_k)) (this is A375781). Write s(n) = S1(n)/S2(n) in lowest terms (S2 = A375522, S1 = A375521). Sigrist and Sloane conjectured that S2(n) - S1(n) = 1 for every n >= 1 except n = 4 and n = 6. This is false: S2(42) - S1(42) = 5. Lean: theorem result : ¬ statement.",
    "notes": "Conjecture as stated in OEIS: The differences S2(n) - S1(n) are surprisingly small: for n = 1,2,...,34 the values S2(n) - S1(n) are: 1, 1, 1, 2, 1, 2, 1, 1, ..., 1 suggesting the conjecture that they are always 1 except for n = 4 and 6 (compare the Theorem in A374983). (Rémy Sigrist and N. J. A. Sloane, Aug 30 2024)\n\nReferees: The conjecture is in OEIS A375522 (R. Sigrist and N. J. A. Sloane, Aug 30 2024; comment added Aug 31 2024; current revision #25, Apr 22 2025). It is restated as still open (\"it seems\") in A375528 (Sloane, Sep/Oct 2024). Related: A375521, A375781, A374983/A375516 (harmonic analogue, proved by Sigrist), and Sloane, \"A Nasty Surprise in a Sequence and Other OEIS Stories\", Rutgers Experimental Math Seminar, Oct 10 2024 (slides list these sequences and a general Conjecture 4, with no counterexample). Sigrist and Sloane, \"Dampening Down a Divergent Series\", is still cited on OEIS as a manuscript in preparation. No prior counterexample or proof turned up in the OEIS histories, arXiv (e.g. Fried arXiv:2607.24832 does not cover it), web searches, or google-deepmind/formal-conjectures. The SeqFan archive could not be reached.",
-   "date": "2026-10-18"
+   "date": "2026-10-18",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The entry's own recursion (its Maple/Mathematica programs), run as a finite computation modulo a smooth modulus such as (190!)^2. If 1 - s(n-1) = 1/D, then 1 - s(n) = m/(D(D+m)) with m = p_n - (D mod p_n).",
+    "justification": "The conjecture is refuted by one computed value: S2(42) - S1(42) = 5. Note that S2(42) has about 4*10^11 digits, so it cannot be computed directly. The only idea needed is a standard one. The difference S2(n) - S1(n) is the small numerator of the remainder 1 - s(n), and it depends only on the huge denominator modulo small numbers, so you track that denominator modulo a large smooth modulus and account for the precision lost when you cancel the gcd at each step. That bookkeeping lemma takes about a page and is elementary. Once it is set up, the result is a finite computation, so the work is routine, although the counterexample is real and was out of reach of the authors' direct computation up to n = 34.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A386538",
@@ -2902,7 +3370,16 @@
    "our_decl": "Math0.Frontier.A386538.result : ¬ Math0.Statements.A386538.statement",
    "summary": "Conjecture (OEIS A386538, Felix Huber): for every n ≥ 0, the largest area of a polygon with vertices on Z^2 inside the closed disk of radius n is the same whether the disk's center is a grid point or any point of the plane. In the frozen encoding: for all n : ℕ, ⨆_{c ∈ ℝ²} vol(conv(Z² ∩ B(c, n))) = vol(conv(Z² ∩ B(0, n))). We prove the negation. At n = 7 with center c0 = (5/12, 5/24), the convex hull of the lattice points in B(c0, 7) has area at least 277/2 = 138.5. The convex hull for the center 0 has area at most 3457/25 = 138.28; its true value is 138 = a(7).",
    "notes": "Conjecture as stated in OEIS: \"Conjecture: The maximum possible area of a polygon within the circle would be the same if only the vertices but not the center were fixed on grid points.\" (entry by _Felix Huber_, Aug 05 2025). The same conjecture appears for ellipses in A386539, which has T(n,n) = A386538(n).\n\nReferees: Sources checked:\n- Local OEIS mirror and raw.githubusercontent.com/oeis/oeisdata, A386538: #23, Aug 19 2025, no %E lines. A386539: #19, Aug 19 2025.\n- Entries that cite A386538/A386539: A398490, A396223, A391113. None addresses the conjecture.\n- Cross-references read: A066643, A123690, A125228, A288247, A322106, A322107, A357577, A108126. None resolves it. A123690 and A295344 concern lattice-point counts with an off-grid center, not polygon areas.\n- Web searches for the A386538 number, the entry's wording, Felix Huber plus counterexample, SeqFan, and MathOverflow/Math.SE on convex hulls of lattice points in a shifted disk.\n\nRelated but not resolving:\n- J. Zhao, \"The Largest Circle Enclosing n Lattice Points\", https://arxiv.org/abs/2505.06234, and its sequel https://arxiv.org/pdf/2609.16081\n- Bárány–Larman and Balog–Deshouillers on the integer convex hull of a disk (vertex counts, origin-centered only), e.g. https://www.renyi.hu/~barany/cikkek/73.pdf\n\nNo prior proof or counterexample found.",
-   "date": "2026-10-18"
+   "date": "2026-10-18",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Direct finite search: exact convex-hull area computation of the lattice points in disks of radius n around rational centres, compared with a(7)=138 from the entry's own data.",
+    "justification": "The conjecture is refuted by one explicit counterexample. With radius 7 and centre (5/12, 5/24), the lattice points in the disk have a convex hull of area 281/2, which beats a(7) = 138. Finding it took only a search over rational centres with exact hull areas, and checking it means comparing the areas of two explicit lattice polygons, a 12-gon and a 15-gon. No new idea was needed, and the extra work in Lean (trapezoid decompositions and measure-theory bookkeeping) does not change that. This is the conjecture as the author meant it, not a degenerate case, so it is genuinely settled, but the mathematics is routine.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A386655",
@@ -2925,7 +3402,16 @@
    "our_decl": "Math0.Frontier.A386655.result",
    "summary": "Let a(n) = sum_{k=0..n} C(n,k) 2^(k(k+1)) (2^k - (n-k))^(n-k-1), where the k = n term is read as 2^(n^2) and 0^0 = 1. Then for every n >= 6, a(n) mod 6 equals the entry with index (n-6) mod 6 of [1, 0, 3, 0, 3, 2]. Equivalently, a(n) mod 6 = 1, 0, 3, 0, 3, 2 for n ≡ 0, 1, 2, 3, 4, 5 (mod 6). (Paul D. Hanna's conjecture, OEIS A386655.)",
    "notes": "Conjecture as stated in OEIS: A386655 (E.g.f.: Sum_{n>=0} (2^n*x + LambertW(x))^n / n!): \"Conjecture: for n >= 6, a(n) (mod 6) equals [1, 0, 3, 0, 3, 2] repeating.\" (_Paul D. Hanna_, Aug 23 2025). Analogues: A386656 (q=3) [4,3,2,1,0,1], A386657 (q=4) [1,2,3,2,3,4], A386658 (q=5) [4,3,0,3,0,5].\n\nReferees: I found no earlier resolution.\n- OEIS A386655 (local mirror and current GitHub oeisdata, revision #14, Aug 24 2025) still states the mod-6 claim as a conjecture by Paul D. Hanna, with no %E edit or proof note.\n- The cross-referenced sister entries A386656, A386657 and A386658 (q = 3, 4, 5) state analogous mod-6 conjectures, none marked proved. The related entry A386648 also has an open mod-6 conjecture.\n- Web searches turned up only OEIS pages (e.g. https://oeis.org/A386648, https://oeis.org/A136524) and no paper, arXiv preprint, MathOverflow/Math StackExchange post or SeqFan message proving or refuting the A386655 conjecture.\n- The classical tool used is the expansion e^(cW(x)) = Sum_k c(c-k)^(k-1) x^k/k! (the tree-function/Lambert W identity), together with Fermat's little theorem and the binomial-transform identity Sum_m C(n,m)C(m,j)x^m = C(n,j)x^j(1+x)^(n-j).",
-   "date": "2026-10-24"
+   "date": "2026-10-24",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The entry's explicit formula a(n) = Sum_{k=0..n} C(n,k) 2^(k(k+1)) (2^k-(n-k))^(n-k-1), combined with Fermat's little theorem mod 2 and mod 3 and the standard identity Sum_m C(n,m) C(m,j) x^m = C(n,j) x^j (1+x)^(n-j).",
+    "justification": "The proof starts from the explicit sum formula already given in the entry and works modulo 2 and modulo 3 separately. Modulo 2 only the k=0 term survives, which is immediate. Modulo 3, writing 2 = -1 and using Fermat's little theorem makes each summand a 6-periodic function of n-k. Such a function can be written with C(m,j), j <= 2, and (-1)^m, and a standard binomial-transform identity then gives a(n) = 1-n^2 or n^2-n mod 3; CRT finishes. This is an elementary argument of about a page, the kind of residue computation a competent mathematician would carry out quickly, so it is routine. The scout had already outlined it before the proof attempt.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A388724",
@@ -2994,7 +3480,16 @@
    "our_decl": "Math0.Frontier.A393794.result",
    "summary": "Let rev(m) be the decimal reversal of m (leading zeros dropped), and let T(x) = D + rev(D) with D = |x - rev(x)|. Havenaar's conjecture in A393794 says that for every n >= 1, a(n) = 110*(10^(n+1) - 1) is the only fixed point of T with exactly n+4 decimal digits. This is false. For n = 5, x = 108910890 has 9 digits and satisfies T(x) = x, but x is not a(5) = 109999890.",
    "notes": "Conjecture as stated in OEIS: \"a(n) is the unique fixed point of the 1089-trick map T among all (n+4)-digit numbers (verified exhaustively for n = 1..4; conjectured for all n >= 1).\" (comment in A393794, entry by _Remco Havenaar_, Feb 27 2026; the entry names the sequence 'Fixed points of the 1089-trick map' and gives a(n) = 110*(10^(n+1)-1))\n\nReferees: OEIS A393794 (Havenaar, Feb 27 2026; #19, Mar 10 2026, no correction as of GitHub oeisdata mirror). OEIS A001232 (numbers k with 9k = rev k; includes non-primitive 10891089; structure theorem by D. W. Wilson 1997 and M. F. Hasler 2022), from which 10*A001232 ⊂ Fix(T) follows trivially. R. Havenaar, SYNTRIAD/digit-dynamics GitHub repo (initial commit 2026-03-09): papers/paper_A.tex still states the uniqueness conjecture, while data/results_export.json experiment id 10 (truc_1089, 7-digit domain, 2026-02-25) lists 108910890 among T's fixed points without remark. Neither source states the contradiction. Y. Almirantis and W. Li, arXiv:2408.02527 and arXiv:2410.11784 (Fibonacci Quart. 64 (2026) 281-310) study the related two-option reversal map Phi, with Phi(Phi(x)) = T(x) in the relevant range; arXiv:2410.11784, which predates the conjecture, lists 108910890 twice: in Table 2 as part of the 2-cycle {10891089, 108910890} of Phi, and in Appendix A.2 among the outputs of the two-step 1089 trick on eight-digit numbers; it does not consider the fixed points of T. OEIS A124074 (S. Dumortier, 2006) studies a variant of Phi whose example already shows the 2-cycle 1089 -> 10890 -> 1089. No published refutation found: this is the first explicit refutation, and it is mathematically elementary.",
-   "date": "2026-10-18"
+   "date": "2026-10-18",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "The counterexample answers the conjecture as its author meant it. 108910890 is an ordinary 9-digit positive fixed point of T, which is exactly the uniqueness the conjecture claims. Nothing in the entry sets numbers of this kind apart.",
+    "follows_from": "The entry's own proof that T(a(n)) = a(n) works for any k with 9k = rev(k): rev(10k) = 9k, so D = k and T(10k) = 10k. Cross-reference A001232 lists such k, including the non-primitive term 10891089 (its 5th term; Hasler's comment there describes the concatenated terms 1089 0...0 1089). This gives 10*10891089 = 108910890, a second 9-digit fixed point. A direct exhaustive search of 9-digit numbers also finds it.",
+    "justification": "The refutation is one explicit 9-digit number whose fixed-point property is checked by a few lines of arithmetic. Where it comes from is immediate from the entry itself: the entry's proof uses only 9k = rev(k), and it points to A001232, whose listed data includes the non-primitive term 10891089. Extending this to every n >= 5 (using 1089 0...0 1089) is equally elementary. The number had also already appeared in the conjecturer's own computational output and in Almirantis-Li. No new idea was needed, so this is routine.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A394981",
@@ -3017,7 +3512,16 @@
    "our_decl": "Math0.Frontier.A394981.result",
    "summary": "Let a(n) be the number of tilings, counted up to the symmetries of the rectangle, of the rows(n) x cols(n) rectangle by the n bars 1x1, 1x2, ..., 1xn, each used exactly once. Here rows(n) = floor((n+1)/2) and cols(n) = (n(n+1)/2)/rows(n). For n = 2m+1 the rectangle is (m+1) x (2m+1), and for n = 2m+2 it is (m+1) x (2m+3). In Lean, a(n) is the frozen bitmask-search definition: it sums the stabilizer sizes of all tilings found by the search and divides by the order of the symmetry group (Burnside). Claim (A394981 conjecture, read for odd n >= 3): for every odd n >= 3, a(n+1) = 4 a(n). The literal case n = 1 fails, a(2) = 1 != 4 = 4 a(1), and the statement excludes it.",
    "notes": "Conjecture as stated in OEIS: %F A394981 Conjecture: If n is odd, then a(n+1) = 4*a(n).  (Unattributed formula line. Entry by _Gary Yane_, Apr 08 2026; a(1)-a(2) corrected by _Pontus von Brömssen_, May 13 2026.)\n\nReferees: The OEIS A394981 entry (Gary Yane, Apr 08 2026; a(1)-a(2) corrected by Pontus von Brömssen, May 13 2026; revision #42, May 16 2026, the same in the local mirror and upstream oeisdata) still states the identity as a conjecture, with keyword \"more\" and no proof reference. No other OEIS entry cites it. Cross-references A254414/A254458/A254607/A329279 are unrelated counts. Searches found no proof or counterexample on arXiv, MathOverflow, Math StackExchange, SeqFan or the general web. Nearest work, all on a different problem: arXiv:2606.05439, Blanco, Dougherty-Bliss, Ter-Saakov and Zeilberger, \"In How Many Ways can a Rectangle be Rectangled?\" (tilings by bars of any length); arXiv:2607.29369, Martinez (L-tetromino tilings).",
-   "date": "2026-10-20"
+   "date": "2026-10-20",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "",
+    "justification": "The proof is short and elementary, about a page of informal argument. Because all bar lengths differ, no tiling has a nontrivial symmetry, so a(n) is a quarter of the raw tiling count. Every bar longer than half the width must lie horizontally, and these bars take one row each, so they all cover the middle column. A case split on where bar m+1 sits divides the larger rectangle's tilings into four classes. Deleting one or two middle or edge columns gives a bijection from each class to the tilings of the smaller rectangle. This pigeonhole and column-deletion argument would come quickly to a competent combinatorialist. The 2400-line Lean file reflects the work of formalizing it, not the difficulty of the mathematics. The proof needs the hypothesis n >= 3 because the identity fails at n = 1. That case is a degenerate exception, and the intended conjecture is fully settled.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A395454",
@@ -3040,7 +3544,16 @@
    "our_decl": "Math0.Frontier.A395454.result",
    "summary": "Let E2(j,i) be the second-order Eulerian numbers (A201637): E2(0,0)=1, E2(0,i)=0 for i>=1, and E2(j+1,i) = (2j+1-i)E2(j,i-1) + (i+1)E2(j,i). Let T(n,k) = sum_{j=0}^n (-1)^{n-j} C(n,j) E2(j,n-k), the triangle A395454, and let P_m(t) = sum_{k=0}^m T(m,k) t^k be its row polynomials in the entry's numbering (P_0 = 1, P_1 = 0, P_2 = 2t, ...). Then for every m >= 2, in Z[t],\nP_m = (m-1)(1+t) P_{m-1} + (t - t^2) P'_{m-1} + 2(m-1) t P_{m-2}.\nEquivalently, with the rows counted from 1 (P1(n) = P_{n-1}), for every n >= 3: P1(n) = (n - 2t + nt - 2) P1(n-1) + (t - t^2) P1'(n-1) + t(2n-4) P1(n-2). This is Alexandersson's conjecture in the form fixed by the frozen statement.",
    "notes": "Conjecture as stated in OEIS: %F A395454 Conjecture: Let P(n) be the generating polynomial (in t) of row n. Then P(n) = (n - 2*t + n*t - 2)*P(n-1) + (t - t^2)*P'(n-1) + t*(2*n-4)*P(n-2). - Per W. Alexandersson, Jun 27 2026\n\nReferees: No earlier resolution found. Closest related work:\n- S.-M. Ma and Y.-N. Yeh, \"Eulerian polynomials, Stirling permutations of the second kind and perfect matchings,\" Electron. J. Combin. 24(4) (2017) #P4.27, arXiv:1607.01311. Its Thm 17 is an analogous recurrence for Stirling-derangement polynomials by cycle ascent plateaus (a different family). Its Cor 18 is the A053871 row-sum recurrence. Its Prop 9 implies that A395454 row n is the distribution of n - casc over Stirling derangements.\n- G.-H. Duh, Y.-C. R. Lin, S.-M. Ma and Y.-N. Yeh, arXiv:1612.07391 (2016).\n- S.-M. Ma, S. Kitaev, J. Yeh and Y.-N. Yeh, arXiv:2601.20665 (2026).\n- S. Fried, \"Further proofs of conjectures from the OEIS,\" arXiv:2607.24832 (2026). Does not cover A395454.\n\nOEIS A395454 (#30, Oct 14 2026; Luschny's entry, Alexandersson's conjecture of Jun 27 2026) still lists the formula as a conjecture, with no proof recorded in any comment, %E line or link. Read with the entry's offset-0 numbering the formula is false; read with rows counted from 1 it holds.",
-   "date": "2026-10-24"
+   "date": "2026-10-24",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The standard differential recurrence for second-order Eulerian polynomials, E_{j+1}(x) = (1+2jx)E_j(x) + x(1-x)E_j'(x). This is a direct reformulation of the triangle recurrence in A201637 and Graham-Knuth-Patashnik Section 6.2. It is pushed through the alternating binomial transform that defines A395454 using Pascal's rule.",
+    "justification": "The proof takes the standard recurrence for the reversed second-order Eulerian polynomials, applies it inside the alternating binomial transform (Pascal's rule and k*C(n,k) = n*C(n-1,k-1)), and then compares coefficients term by term. Altogether this is about a page of index bookkeeping, and the paper itself calls the argument routine. The result proves the reading the author evidently meant, with rows counted from 1 (an off-by-one in the indexing). That reading reduces at t=1 to the A053871 recurrence. The literal offset-0 reading fails trivially at n=2. No new idea or construction was needed.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A397315",

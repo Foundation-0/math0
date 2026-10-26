@@ -1,6 +1,7 @@
 # A356360: the continued-fraction denominators are 1 or prime
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Number theory  
 **Source problem:** OEIS A356360  
 **Date:** 2026-10-20
@@ -8,6 +9,14 @@
 ## Result
 
 For n >= 3, let a(n) be the denominator, in lowest terms, of the continued fraction 1/(2 - 3/(3 - 4/(4 - ... ((n-1) - n/(n+1))))). Then every a(n) is 1 or a prime. This is the conjecture Mohammed Bouras stated in OEIS A356360 (2022).
+
+## Assessment
+
+The gcd formula already in the entry gives a(n) | 2n-1 at once, so the prime case is immediate. The composite case needs only that an odd composite c = 2m+3 with m >= 4 divides m!, a textbook Wilson-style lemma with a short case split on whether c = p^2. Together with checking n = 3, 4, 5 directly, the whole argument fits in under a page and uses no new idea. The longer Lean development is formalization effort and does not make the mathematics deeper.
+
+*Follows from:* The closed form and gcd formula already in the entry, a(n) = (2n-1)/gcd(2n-1, A051403(n-2)+A051403(n-3)), proved as Theorem 1.1 of Bouras's linked paper. Combined with A051403(j) = (j+2)*A003422(j+1)/2, this reduces the question to the elementary fact that an odd composite 2m+3 with m >= 4 divides m!. The same denominator-of-factorial pattern appears in A145737 (Detlefs: a(n) = denominator(n!*3n(n+1)/(2(2n+1))) = 2n+1 if prime, else 1).
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

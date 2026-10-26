@@ -1,6 +1,7 @@
 # Stephan's conjectured g.f. for A242396 is false (first failure at n = 97)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A242396  
 **Date:** 2026-10-21
@@ -8,6 +9,14 @@
 ## Result
 
 Let a(n) be the number of rows (closed horizontal strips j*sqrt(3)/2 <= y <= (j+1)*sqrt(3)/2) of the unit equilateral-triangle tiling that meet the circle of radius n. Stephan's conjecture says that sum_{n>=1} a(n) x^n * (x^14 - x^13 - x + 1) = -2x^14 + 4x^13 + 2x^12 + 2x^11 + 2x^10 + 2x^9 + 2x^8 + 4x^7 + 2x^6 + 2x^5 + 2x^4 + 2x^3 + 2x^2 + 4x in Z[[x]]. We prove that this identity is false.
+
+## Assessment
+
+A row meets the circle exactly when its vertical extent overlaps [-n, n]. That gives a(n) = 2*floor(2n/sqrt(3)) + 2, which is also what the entry's own program computes for n up to 100. A rational g.f. with denominator (1-x)(1-x^13) would force a(n+13) - a(n) = 30 for every n. Because the slope 4/sqrt(3) is irrational, this cannot hold for all n, and a direct computation of four values gives the first failure at n = 97 (226 instead of 224). The refutation needs only this short argument and a finite check: Stephan's g.f. was a fit to the 61 listed terms, and no new idea was required. The counterexample is a real failure of the g.f. for the sequence as defined, not a degenerate or excluded case.
+
+*Follows from:* Elementary closed form a(n) = 2*floor(2n/sqrt(3)) + 2, which is what the entry's own Small Basic program computes, together with direct evaluation of a(83), a(84), a(96), a(97) and comparison of the x^97 coefficient after clearing the denominator (1-x)(1-x^13).
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

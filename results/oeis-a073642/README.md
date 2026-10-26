@@ -1,6 +1,7 @@
 # Yanev's identity for A073642 (sum of the positions of the 1-bits)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Sequences and series  
 **Source problem:** OEIS A073642  
 **Date:** 2026-10-20
@@ -8,6 +9,14 @@
 ## Result
 
 Let a(n) be the sum of the positions of the 1-bits of n (if n = 2^b + 2^c + ... with distinct exponents, then a(n) = b + c + ...). Let A011371(n) = n - s(n), where s(n) is the number of 1's in the binary expansion of n; by Legendre's formula this equals v2(n!). Let A007814(k) = v2(k), the 2-adic valuation. Then for every n > 0, a(n) = (3*A011371(n) - Sum_{k=1..n} A007814(k)^2)/2, with the right-hand side computed exactly in Q.
+
+## Assessment
+
+The identity is equivalent to the local step 2a(n+1) + v2(n+1)^2 = 2a(n) + 3*v2(n+1). This is immediate: if n ends in t one-bits, then adding 1 clears bit positions 0..t-1 and sets bit t, so a(n+1) = a(n) - t(t-1)/2 + t. Summing this step over n is the whole proof. You can also get it in a few lines by writing both sides as Sum_j c_j*floor(n/2^j), using Legendre's formula and the standard count of multiples of 2^j, or by reading it off Gutkovskiy's g.f. in the entry. It takes a few lines of classical bit-counting, and the manuscript itself says it claims no new method.
+
+*Follows from:* Gutkovskiy's g.f. in the entry, (1/(1-x)) * Sum_{k>=1} k*x^(2^k)/(1+x^(2^k)), together with Legendre's formula A011371(n) = Sum_j floor(n/2^j) and the classical count Sum_{k<=n} f(v2(k)) = Sum_j (f(j)-f(j-1)) floor(n/2^j). Alternatively it follows directly from the binary-increment step n -> n+1 (Stephan's recursion in the entry gives the same thing).
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

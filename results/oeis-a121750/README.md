@@ -1,6 +1,7 @@
 # Mathar's order-6 recurrence for A121750 (even-length columns in deco polyominoes) holds for all n >= 7
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A121750  
 **Date:** 2026-10-24
@@ -9,6 +10,14 @@
 
 Let a(n) be the total number of columns of even length over all deco polyominoes of height n (OEIS A121750). The polyominoes are encoded as column lists, as in the statement file. Then for every n >= 7:
 a(n) - (n+2)a(n-1) + (-n^2+4n-2)a(n-2) + (n^3-3n^2-4n+11)a(n-3) - (n-1)(n^2-11n+26)a(n-4) + (-n^3+5n^2+7n-43)a(n-5) + (n-3)(n-5)^2 a(n-6) = 0.
+
+## Assessment
+
+The proof splits each deco polyomino at its first column, the standard recursive decomposition, and uses the fact that shifting columns does not change the count. This gives a small first-order system for the counts and even-column totals. The order-6 recurrence then follows by unrolling the system six steps in each parity class and expanding a polynomial identity, which is a mechanical computation. The manuscript itself says the recurrence follows by routine closure arguments from Deutsch's first-order recurrence in the same entry. The new part is deriving that first-order relation from the definition, which takes about a page of standard combinatorics and needs no new idea.
+
+*Follows from:* Deutsch's first-order recurrence in the same entry, a(n) = n*a(n-1) + d(n-1) + (n-1)!*floor((n-1)/2), together with the closure properties of D-finite sequences (Stanley 1980). The row-polynomial recurrence for Q[n] in the cross-referenced A121748 gives the same route. Both are stated in OEIS without proof.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

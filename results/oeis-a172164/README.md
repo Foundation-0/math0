@@ -1,6 +1,7 @@
 # A172164: the second differences of the Theodorus-spiral turns are always 18, 19, 20 or 21
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A172164  
 **Date:** 2026-10-24
@@ -8,6 +9,14 @@
 ## Result
 
 Let S(k) = sum_{i=1}^{k} arctan(1/sqrt i) be the total central angle of the first k triangles of the spiral of Theodorus. Triangle i covers the angular sector [S(i-1), S(i)], and turn n is the angle range [2pi(n-1), 2pi n]. Let c(n) be the number of triangles i >= 1 that lie entirely inside turn n, that is, with 2pi(n-1) <= S(i-1) and S(i) <= 2pi n. Then for every n >= 2, the difference a(n) = c(n) - c(n-1) is one of 18, 19, 20, 21. This is Dumortier's conjecture in OEIS A172164.
+
+## Assessment
+
+The heuristic is immediate: the turn boundaries are roughly floor((pi n + c)^2), whose second differences are within 2 of 2 pi^2 = 19.74, which leaves only 18..21 with about 0.26 of slack. The proof turns this into an effective argument in a standard way. Two elementary one-step inequalities show that S(k) - 2 sqrt k is nonincreasing and that S(k) - 2 sqrt k - 2/sqrt k is nondecreasing (the usual sum-versus-integral comparison). A squeeze over three consecutive turns then gives |a(n) - 2 pi^2| < 2.13 for n >= 71, and a finite interval computation covers n <= 70. This is about a page of standard effective asymptotics plus a finite check, and the scout's own plan (Euler-Maclaurin plus a check of small n) already calls every step standard. The Lean work, including the kernel-evaluated interval certificate, was heavy, but that is formalization effort and not new mathematics.
+
+*Follows from:* Hlawka's asymptotic Sum_{x<n} arctan(1/sqrt x) = 2 sqrt n + K + o(1) (A105459 %F; Hlawka 1980, Davis 1993), made effective, together with Kociemba's form K_n ~ (pi n - K/2)^2 - 1/6 in A072895 and the elementary fact that the second difference of floor(y_n) is within 2 of the second difference of y_n, where 2 pi^2 = 19.74.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

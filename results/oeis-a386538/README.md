@@ -1,6 +1,7 @@
 # A386538: moving the circle's center off the grid enlarges the max lattice polygon (counterexample at n = 7)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A386538  
 **Date:** 2026-10-18
@@ -8,6 +9,14 @@
 ## Result
 
 Conjecture (OEIS A386538, Felix Huber): for every n ≥ 0, the largest area of a polygon with vertices on Z^2 inside the closed disk of radius n is the same whether the disk's center is a grid point or any point of the plane. In the frozen encoding: for all n : ℕ, ⨆_{c ∈ ℝ²} vol(conv(Z² ∩ B(c, n))) = vol(conv(Z² ∩ B(0, n))). We prove the negation. At n = 7 with center c0 = (5/12, 5/24), the convex hull of the lattice points in B(c0, 7) has area at least 277/2 = 138.5. The convex hull for the center 0 has area at most 3457/25 = 138.28; its true value is 138 = a(7).
+
+## Assessment
+
+The conjecture is refuted by one explicit counterexample. With radius 7 and centre (5/12, 5/24), the lattice points in the disk have a convex hull of area 281/2, which beats a(7) = 138. Finding it took only a search over rational centres with exact hull areas, and checking it means comparing the areas of two explicit lattice polygons, a 12-gon and a 15-gon. No new idea was needed, and the extra work in Lean (trapezoid decompositions and measure-theory bookkeeping) does not change that. This is the conjecture as the author meant it, not a degenerate case, so it is genuinely settled, but the mathematics is routine.
+
+*Follows from:* Direct finite search: exact convex-hull area computation of the lattice points in disks of radius n around rational centres, compared with a(7)=138 from the entry's own data.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

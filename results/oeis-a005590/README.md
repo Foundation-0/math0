@@ -1,6 +1,7 @@
 # Zeros of a(3n) for the signed Stern sequence A005590 are exactly the fibbinary numbers
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Number theory  
 **Source problem:** OEIS A005590  
 **Date:** 2026-10-18
@@ -8,6 +9,14 @@
 ## Result
 
 Let a : N -> Z be given by a(0)=0, a(1)=1, a(2n)=a(n), a(2n+1)=a(n+1)-a(n) (OEIS A005590). Then for every n >= 0, a(3n)=0 if and only if n is fibbinary (OEIS A003714), i.e. the binary representation of n has no two adjacent 1 bits. This is Ralf Stephan's 2003 conjecture.
+
+## Assessment
+
+The proof follows the pair (a(m), a(m+1)) along the binary digits of m. The pair stays at (0,1) or (1,1) while the digits form blocks 0 and 11. As soon as a 0 is read in state (1,1), the pair lands on (1,0), and from then on a one-line sign invariant (x>0 and y<x, or x<0 and x<y) is preserved and forces a(m) to be nonzero. A short induction on n mod 4 then shows that 3n reaches state 0 exactly when n is fibbinary. This is a standard automaton-plus-invariant argument for a 2-regular sequence, about a page long with elementary case checks, so a competent mathematician would find it quickly. The conjecture stood for a long time only because nobody seems to have tried, not because it needed a new idea.
+
+*Follows from:* The defining recursion read as a 2-regular linear representation: (a(2m),a(2m+1)) and (a(2m+1),a(2m+2)) are fixed linear images of (a(m),a(m+1)). This is the standard way to handle zero sets of 2-regular sequences (Allouche-Shallit), and the entry already notes that the sequence is 2-regular.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

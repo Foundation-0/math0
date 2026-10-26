@@ -1,6 +1,7 @@
 # Odd descending-by-2 multiples exist exactly when 125 does not divide 2n+1 (A062887)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Sequences and series  
 **Source problem:** OEIS A062887  
 **Date:** 2026-10-19
@@ -8,6 +9,14 @@
 ## Result
 
 Call a positive integer N admissible if all of its decimal digits are odd and, reading from left to right, each digit is 2 less (mod 10) than the one before it. Examples are 975, 75, 319 and 9753197. Let a(n) be the smallest admissible multiple of 2n+1, or 0 if there is none. Then for every n ≥ 0, a(n) = 0 if and only if 125 divides 2n+1.
+
+## Assessment
+
+One direction is a finite check. Every admissible number either has at most two digits or ends in 975, 753, 531, 319 or 197, and none of these is divisible by 125. The other direction repeats the admissible block 31975 (which is divisible by 25) q times with q = phi(99999 m'). This is the textbook argument that a number coprime to 10 divides a suitable repunit. The whole proof takes under a page and uses only standard elementary number theory, so it is routine, even though the Lean formalization took real work.
+
+*Follows from:* Standard facts: an integer is congruent mod 125 to its last three digits, and Euler's theorem (every number coprime to 10 divides some number made of a repeated decimal block, the usual repunit argument). The sibling entry A062886 already uses the same last-digits argument with modulus 25.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

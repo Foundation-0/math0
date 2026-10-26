@@ -1,6 +1,7 @@
 # OEIS A350900: Schulte's gcd-ratio double sum is a Dirichlet convolution
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A350900  
 **Date:** 2026-10-24
@@ -8,6 +9,14 @@
 ## Result
 
 Let a(f; n) = Sum_{i=1..n} Sum_{k=1..n} f(gcd(i,n)/gcd(gcd(i,k),n)). Then: (1) for every complex arithmetic function f and every n > 0, a(f; n) = ((f·φ) * A057660)(n), where f·φ is the pointwise product with Euler's totient, * is Dirichlet convolution, and A057660(m) = Sum_{k=1..m} m/gcd(m,k). (2) If f is multiplicative, so is a(f; ·). (3) For n > 0, the row sum Sum_{k=1..n} T(n,k) of the A350900 triangle T(n,k) = Sum_{i=1..n} gcd(i,n)/gcd(gcd(i,k),n) equals a(id; n). (4) For n > 0, that row sum equals (A002618 * A057660)(n), where A002618(n) = n·φ(n).
+
+## Assessment
+
+Set g = gcd(i,n). The summand depends on i only through g, and its dependence on k has period g. Apply Cesàro's identity once to group the i, use periodicity to collapse the k-sum to one period, apply Cesàro's identity again, and re-index the divisors. This gives a(f;n) = ((f*phi) * 1 * (id*phi))(n), and 1 * (id*phi) is A057660 by its own %F line. Multiplicativity then follows from standard closure properties, and the row-sum parts follow by exchanging the sums and taking f = id. The whole argument fits in under a page of standard gcd-sum manipulation, and the manuscript itself calls it routine.
+
+*Follows from:* Cesàro's identity Sum_{k=1..n} F(gcd(k,n)) = Sum_{d|n} F(d) phi(n/d) (Tóth's gcd-sum survey, JIS 2010), together with the formula A057660(n) = Sum_{d|n} d*phi(d), which is already in cross-referenced entry A057660. Part (4) was already stated as a formula in A373059.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

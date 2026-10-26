@@ -1,6 +1,7 @@
 # Bar tilings of the smallest-perimeter rectangle: a(n+1) = 4 a(n) for odd n >= 3 (A394981)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A394981  
 **Date:** 2026-10-20
@@ -8,6 +9,12 @@
 ## Result
 
 Let a(n) be the number of tilings, counted up to the symmetries of the rectangle, of the rows(n) x cols(n) rectangle by the n bars 1x1, 1x2, ..., 1xn, each used exactly once. Here rows(n) = floor((n+1)/2) and cols(n) = (n(n+1)/2)/rows(n). For n = 2m+1 the rectangle is (m+1) x (2m+1), and for n = 2m+2 it is (m+1) x (2m+3). In Lean, a(n) is the frozen bitmask-search definition: it sums the stabilizer sizes of all tilings found by the search and divides by the order of the symmetry group (Burnside). Claim (A394981 conjecture, read for odd n >= 3): for every odd n >= 3, a(n+1) = 4 a(n). The literal case n = 1 fails, a(2) = 1 != 4 = 4 a(1), and the statement excludes it.
+
+## Assessment
+
+The proof is short and elementary, about a page of informal argument. Because all bar lengths differ, no tiling has a nontrivial symmetry, so a(n) is a quarter of the raw tiling count. Every bar longer than half the width must lie horizontally, and these bars take one row each, so they all cover the middle column. A case split on where bar m+1 sits divides the larger rectangle's tilings into four classes. Deleting one or two middle or edge columns gives a bijection from each class to the tilings of the smaller rectangle. This pigeonhole and column-deletion argument would come quickly to a competent combinatorialist. The 2400-line Lean file reflects the work of formalizing it, not the difficulty of the mathematics. The proof needs the hypothesis n >= 3 because the identity fails at n = 1. That case is a degenerate exception, and the intended conjecture is fully settled.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

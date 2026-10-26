@@ -1,6 +1,7 @@
 # A332010: the average first letter of one-descent derangements has denominator 2^(n-2)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A332010  
 **Date:** 2026-10-19
@@ -8,6 +9,14 @@
 ## Result
 
 For every n ≥ 2, take the derangements of {1, ..., n} (in one-line notation) that have exactly one descent. The average of their first letters, written in lowest terms, has denominator 2^(n-2). This is Kagey's conjecture T(n,1) = 2^(n-2) in OEIS A332010.
+
+## Assessment
+
+A permutation with exactly one descent is sorted(A) followed by sorted(complement of A). Checking fixed points run by run shows it is a derangement exactly when 1 is not in A and n is in A. That gives 2^(n-2) such derangements, and their first letter is min A. Summing min A over these sets gives 3*2^(n-2) - 1, which is odd, so the reduced denominator is 2^(n-2). This is a half-page counting argument built on a textbook description of one-descent permutations, and the count itself already follows from A219836. It needs no new idea.
+
+*Follows from:* Standard fact that a permutation with one descent is an increasing word on a set A followed by an increasing word on its complement (a Grassmannian permutation). A219836 already implies the count 2^(n-2).
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

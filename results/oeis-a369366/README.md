@@ -1,6 +1,7 @@
 # The least number of inequivalent cells of a (6k+5)-iamond is 3(k+1)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A369366  
 **Date:** 2026-10-20
@@ -8,6 +9,14 @@
 ## Result
 
 For every k >= 0, the least number of inequivalent cells over all polyiamonds with n = 6k+5 cells is 3(k+1). Two cells of P are equivalent when a symmetry of the triangular grid maps P onto itself and one cell to the other. This is Exley's conjecture in OEIS A369366, a(6k+5) = 3(k+1).
+
+## Assessment
+
+The lower bound was already argued in the entry's own comment. The only missing part was a polyiamond that reaches the bound. The obvious candidate works: a straight row of 2m+1 triangles is symmetric under the mirror through its middle cell, so it has at most m+1 classes, which is 3(k+1) when n = 6k+5. Both halves are a few lines of elementary symmetry counting, and the paper itself calls them elementary. The Lean work is careful, but the mathematics needed no new idea.
+
+*Follows from:* Exley's own comment in A369366, which already sketches the lower bound a(6k+5) >= ceiling(n/2) = 3(k+1) (an odd n rules out half-turns, and n = 2 mod 3 rules out 3-fold rotations). The matching upper bound comes from the straight row of 6k+5 triangles, which has one mirror symmetry.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 
