@@ -13,9 +13,10 @@ on:
     paths:
       - .github/workflows/kernel-replay.yml
 
+# A replay takes over an hour; let a running one finish, and queue at most one newer run behind it.
 concurrency:
   group: kernel-replay-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   leanchecker:
