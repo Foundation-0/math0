@@ -1,0 +1,391 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8, upquote=true,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {∀}{{$\forall$}}1
+    {→}{{$\to$}}1 {≤}{{$\le$}}1 {×}{{$\times$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+\newcommand{\li}{\lstinline[basicstyle=\ttfamily]}
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\cj}[1]{\overline{#1}}
+\newcommand{\seq}[1]{\mathrm{A#1}}
+\DeclareMathOperator{\re}{Re}
+\DeclareMathOperator{\im}{Im}
+\DeclareMathOperator{\den}{den}
+\DeclareMathOperator{\num}{num}
+
+\title[Convergents of $\lbrack1+i;1+i,1+i,\dots\rbrack$]{The imaginary parts of the convergents of
+$\lbrack1+i;\,1+i,\,1+i,\dots\rbrack$ are $\mathrm{A317974}(n+1)/\mathrm{A138573}(n)$}
+\hypersetup{pdftitle={The imaginary parts of the convergents of [1+i; 1+i, 1+i, ...] are A317974(n+1)/A138573(n)},
+  pdfauthor={math0}}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 24, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $c_n$ be the $n$-th convergent of the continued fraction $(1+i)+1/((1+i)+1/((1+i)+\cdots))$ and write $c_n=(\seq{093725}(n)+\seq{093726}(n)\,i)/\seq{093727}(n)$, where $\seq{093727}(n)$ is the least positive integer $d$ with $dc_n\in\Z[i]$.
+We prove Zhuorui He's 2026 conjecture from OEIS A093726 that $\seq{093726}(n)/\seq{093727}(n)=\seq{317974}(n+1)/\seq{138573}(n)$ for all $n\ge1$, i.e.\ $\im c_n=\seq{317974}(n+1)/\seq{138573}(n)$, where both sequences satisfy $u(n)=2(u(n-1)+u(n-2)+u(n-3))-u(n-4)$.
+The proof writes $c_n=U(n+1)/U(n)$ for the Gaussian continuants $U$ and identifies $|U(n)|^2$ (as observed by P.~Bala for A138573) and $\im\bigl(U(n+1)\cj{U(n)}\bigr)$ with the two recurrence sequences.
+We know of no earlier proof, so we classify the result as new, although the argument is elementary.
+The theorem is verified in Lean~4 against the frozen, fidelity-reviewed math0 formalization of the conjecture, whose definitions are checked by the kernel against the OEIS data.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+OEIS A093726 \cite{A093726}, contributed by Robert G.~Wilson~v on March~11, 2004, lists the numerators of the imaginary parts of the convergents of the periodic Gaussian continued fraction
+\[
+(1+i)+\cfrac{1}{(1+i)+\cfrac{1}{(1+i)+\cdots}}\,;
+\]
+its companions A093725 and A093727 \cite{A093725} list the numerators of the real parts and the common denominators. The convergents begin $1+i$, $(3+i)/2$, $(8+4i)/5$, $(6+3i)/4$, $(23+11i)/15$. On June~16, 2026, Zhuorui He corrected the definition of A093726, extended its data to $30$ terms, added these worked examples, and added the conjecture
+\[
+\seq{093726}(n)/\seq{093727}(n)=\seq{317974}(n+1)/\seq{138573}(n)\qquad(n\ge1),
+\]
+in which A317974 \cite{A317974} (N.~J.~A. Sloane, 2018) and A138573 \cite{A138573} (B.~Cloitre, 2008) are the solutions of the recurrence with signature $(2,2,2,-1)$,
+\begin{equation}\label{eq:rec}
+u(n)=2u(n-1)+2u(n-2)+2u(n-3)-u(n-4)\qquad(n\ge4),
+\end{equation}
+with initial terms $0,0,1,1$ and $0,1,2,5$ respectively. We prove the conjecture (Theorem~\ref{thm:main}).
+
+\subsection*{Prior work and status}
+In A138573, Peter Bala (March~4, 2014) noted that $\seq{138573}(n)=|U(n)|^2$ for the Lucas sequence $U(0)=0$, $U(1)=1$, $U(n)=(1+i)U(n-1)+U(n-2)$ in the Gaussian integers \cite{A138573}. Since $U(n)$ is the $n$-th continuant of the continued fraction, this explains the denominators $\seq{138573}(n)$ in the conjecture. We found no statement, in OEIS or elsewhere, connecting A317974 with these convergents; besides its recurrence and programs, the entry A317974 contains a generating function (C.~Barker), a growth rate (A.~H.~M. Smeets) and links to Coxeter's paper on loxodromic sequences of tangent spheres \cite{Cox} and to MathWorld. As of revision~\#13 of A093726 (June~20, 2026) the formula is still marked as a conjecture, and no later edit records a proof. The math0 referees searched arXiv, MathOverflow, Mathematics Stack Exchange and the SeqFan archives and found no proof or counterexample; the recent collection of proofs of OEIS conjectures by S.~Fried \cite{Fried} does not treat A093726, A093727, A317974 or A138573. We therefore classify the result as new. It is elementary: the new ingredient, beyond the classical continuant formula $c_n=U(n+1)/U(n)$ and Bala's observation, is the identification of $\im\bigl(U(n+1)\cj{U(n)}\bigr)$ with $\seq{317974}(n+1)$.
+
+\subsection*{Method}
+Put $S(n)=|U(n)|^2$ and $P(n)+iQ(n)=U(n+1)\cj{U(n)}$. Then $c_n=(P(n)+iQ(n))/S(n)$ for $n\ge1$. Three integer identities relating $P,Q,S$ at $n$ and $n+1$ drive an induction for this closed form, and imply that $S$ and $Q$ satisfy \eqref{eq:rec}; comparing four initial values gives $S(n)=\seq{138573}(n)$ and $Q(n)=\seq{317974}(n+1)$. Finally, the left-hand side of the conjecture is exactly $\im c_n$.
+
+\section{Statement}\label{sec:statement}
+
+For $x\in\Q$ let $\num x\in\Z$ and $\den x\ge1$ be its numerator and denominator in lowest terms. For a Gaussian rational $z=x+yi$ ($x,y\in\Q$) let
+\[
+\den z=\operatorname{lcm}(\den x,\den y),\qquad \num z=(\den z)\,z\in\Z[i].
+\]
+Thus $\den z$ is the least positive integer $d$ with $dz\in\Z[i]$; this is the convention of Mathematica's \texttt{Numerator} and \texttt{Denominator} for Gaussian rationals.
+
+\begin{definition}\label{def:seq}
+Let $c_1=1+i$ and $c_{n+1}=(1+i)+1/c_n$ for $n\ge1$, so that $c_n=[1+i;1+i,\dots,1+i]$ has $n$ partial quotients. (This is well defined: if $\re c_n\ge1$ then $\re(1/c_n)=\re c_n/|c_n|^2>0$, so $\re c_{n+1}\ge1$.) Set
+\[
+\seq{093725}(n)=\re\num c_n,\qquad a(n)=\seq{093726}(n)=\im\num c_n,\qquad \seq{093727}(n)=\den c_n.
+\]
+Let $\seq{317974}$ and $\seq{138573}$ be the sequences (offset $0$) satisfying \eqref{eq:rec} with initial terms $0,0,1,1$ and $0,1,2,5$.
+\end{definition}
+
+For example, $c_4=\frac32+\frac34 i=(6+3i)/4$, so $\seq{093725}(4)=6$, $a(4)=3$, $\seq{093727}(4)=4$, as in the examples of A093726.
+The FORMULA section of A093726 reads, verbatim:
+\begin{quote}
+{\small\raggedright\texttt{Conjecture: a(n)/A093727(n) = A317974(n+1)/A138573(n). - \_Zhuorui He\_, Jun 16 2026}\par}
+\end{quote}
+
+\begin{theorem}\label{thm:main}
+For every $n\ge1$,
+\[
+\frac{a(n)}{\seq{093727}(n)}=\frac{\seq{317974}(n+1)}{\seq{138573}(n)}
+\]
+as rational numbers.
+\end{theorem}
+
+In the proof (Section~\ref{sec:proof}) we show that both sides equal $\im c_n$.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A093726.lean}, reviewed for fidelity, and frozen (SHA-256 \texttt{5d599ac4\ldots 08f83a0ba}) before any proof attempt. Its definitions and the statement read as follows (verbatim; docstrings and the data theorems are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A093726
+def gadd (z w : ℚ × ℚ) : ℚ × ℚ := (z.1 + w.1, z.2 + w.2)
+def ginv (z : ℚ × ℚ) : ℚ × ℚ :=
+  (z.1 / (z.1 * z.1 + z.2 * z.2), -z.2 / (z.1 * z.1 + z.2 * z.2))
+def cfValue : List (ℚ × ℚ) → ℚ × ℚ
+  | [] => (0, 0)
+  | [x] => x
+  | x :: xs => gadd x (ginv (cfValue xs))
+def conv (n : ℕ) : ℚ × ℚ := cfValue (List.replicate n (1, 1))
+def gden (z : ℚ × ℚ) : ℕ := Nat.lcm z.1.den z.2.den
+def gnumIm (z : ℚ × ℚ) : ℤ := z.2.num * ((gden z / z.2.den : ℕ) : ℤ)
+def a (n : ℕ) : ℤ := gnumIm (conv n)
+def A093727 (n : ℕ) : ℕ := gden (conv n)
+def A317974 : ℕ → ℤ
+  | 0 => 0
+  | 1 => 0
+  | 2 => 1
+  | 3 => 1
+  | n + 4 => 2 * (A317974 (n + 3) + A317974 (n + 2) + A317974 (n + 1)) - A317974 n
+def A138573 : ℕ → ℤ
+  | 0 => 0
+  | 1 => 1
+  | 2 => 2
+  | 3 => 5
+  | n + 4 => 2 * A138573 (n + 3) + 2 * A138573 (n + 2) + 2 * A138573 (n + 1) - A138573 n
+def statement : Prop :=
+  ∀ n : ℕ, 1 ≤ n →
+    (a n : ℚ) / (A093727 n : ℚ) = (A317974 (n + 1) : ℚ) / (A138573 n : ℚ)
+\end{lstlisting}
+
+\subsection*{How the definitions encode the entry}
+A Gaussian rational $x+yi$ is the pair $(x,y)\in\Q\times\Q$; \decl{gadd} is addition and \decl{ginv} is $1/(x+yi)=(x-yi)/(x^2+y^2)$ (Lean's division by $0$ returns $0$, but \decl{ginv} is only ever applied to nonzero values here). \decl{cfValue} evaluates $x_1+1/(x_2+\dots+1/x_n)$, like Mathematica's \texttt{FromContinuedFraction}, and \li|conv n| follows the entry's program \decl|Table[Im[Numerator[FromContinuedFraction[Table[1+I,{n}]]]],{n,30}]|. Since \li|List.replicate (n+2) (1, 1)| is $(1,1)$ followed by a nonempty list, \li|conv (n + 2)| unfolds to \li|gadd (1, 1) (ginv (conv (n + 1)))|, and \li|conv 1 = (1, 1)|; so \li|conv n| is $c_n$ for $n\ge1$. \decl{gden} is $\den z$, and since $\den y\mid\den z$ the natural-number quotient in \decl{gnumIm} is exact, so \li|gnumIm z| $=\num y\cdot(\den z/\den y)=\im\num z$. The sequences A317974 and A138573 are their defining recurrences, with offset $0$; A093726 and A093727 have offset $1$, matching the hypothesis $1\le n$. The statement is an equality in $\Q$, and both denominators are positive.
+
+The file checks in the kernel (\texttt{decide +kernel}) that \decl{a} reproduces all $30$ listed terms of A093726, \decl{A093727} all $28$ listed terms of A093727, and \decl{A317974}, \decl{A138573} their first $20$ listed terms (theorems \decl{a_data}, \decl{A093727_data}, \decl{A317974_data}, \decl{A138573_data}). No instance of the conjecture is checked in the statement file.
+
+\begin{remark}[Reading of the name]\label{rem:reading}
+The name of A093726 (``the numerator of the imaginary part of the convergents'') could also be read as $\num(\im c_n)$. The formalization uses $\im\num c_n$, which is what the entry's program computes and what its examples use (``(6+3*i)/4, so A093725(4)=6, a(4)=3 and A093727(4)=4''). The two readings agree on all listed terms but first differ at $n=42$ (computer check, not formalized): $\im c_{42}=18854485653829/25378408048970$ in lowest terms, while $\seq{093727}(42)=329919304636610=13\cdot25378408048970$, so $a(42)=13\cdot18854485653829$. Under the other reading the left side of the conjecture would be $\im c_{42}/13$, and the conjecture would fail at $n=42$.
+\end{remark}
+
+\section{Proof}\label{sec:proof}
+
+We follow the Lean proof in \path{lean/Math0/Frontier/OEIS/A093726.lean}; the names of its (private) lemmas are given in brackets.
+
+\subsection{Continuants}
+Define Gaussian integers $U(n)$, stored in Lean as integer pairs, by
+\[
+U(0)=0,\qquad U(1)=1,\qquad U(k+2)=(1+i)\,U(k+1)+U(k)
+\]
+(\decl{U}, \decl{step}), and put
+\[
+S(n)=|U(n)|^2,\qquad P(n)+iQ(n)=W(n):=U(n+1)\,\cj{U(n)}\qquad(P(n),Q(n)\in\Z)
+\]
+(\decl{S}, \decl{P}, \decl{Q}). In coordinates, if $U(n)=x_0+y_0i$ and $U(n+1)=x_1+y_1i$, then $P(n)=x_1x_0+y_1y_0$ and $Q(n)=y_1x_0-x_1y_0$. The first values are
+\[
+\begin{array}{c|ccccccc}
+n&0&1&2&3&4&5&6\\\hline
+U(n)&0&1&1+i&1+2i&4i&-3+6i&-9+7i\\
+S(n)&0&1&2&5&16&45&130\\
+P(n)&0&1&3&8&24&69&199\\
+Q(n)&0&1&1&4&12&33&97
+\end{array}
+\]
+
+\begin{lemma}\label{lem:step}
+For every $n\ge0$:
+\begin{enumerate}
+\item[(a)] $P(n+1)=S(n+1)+P(n)$;
+\item[(b)] $Q(n+1)=S(n+1)-Q(n)$;
+\item[(c)] $P(n)^2+Q(n)^2=S(n)\,S(n+1)$;
+\item[(d)] $S(n+2)=2S(n+1)+S(n)+2P(n)-2Q(n)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+We have
+$W(n+1)=\bigl((1+i)U(n+1)+U(n)\bigr)\cj{U(n+1)}=(1+i)S(n+1)+\cj{W(n)}$; its real and imaginary parts give (a) and (b). (c) is $|W(n)|^2=|U(n+1)|^2|U(n)|^2$. For (d), expand, using $|1+i|^2=2$,
+$S(n+2)=|(1+i)U(n+1)+U(n)|^2=2S(n+1)+S(n)+2\re\bigl((1+i)W(n)\bigr)$ and use $\re((1+i)(P+iQ))=P-Q$.
+In Lean, (a) and (b) are proved inside \decl{conv_eq} by unfolding $U(n+2)$ through \decl{step} and normalizing with \texttt{ring}, and (c) by \texttt{ring} (the Lagrange identity $(x_1x_0+y_1y_0)^2+(y_1x_0-x_1y_0)^2=(x_0^2+y_0^2)(x_1^2+y_1^2)$), in the instances needed there. Identity (d) is used only in our derivation by hand of Lemma~\ref{lem:rec}; the Lean proof does not need it.
+\end{proof}
+
+\begin{lemma}[\decl{S_rec}, \decl{Q_rec}]\label{lem:rec}
+$S$ and $Q$ satisfy \eqref{eq:rec}: for every $n\ge0$,
+\begin{align*}
+S(n+4)&=2S(n+3)+2S(n+2)+2S(n+1)-S(n),\\
+Q(n+4)&=2Q(n+3)+2Q(n+2)+2Q(n+1)-Q(n).
+\end{align*}
+\end{lemma}
+
+\begin{proof}
+In Lean, $U(n+2),\dots,U(n+5)$ are unfolded through \decl{step} into integer-linear expressions in the four coordinates $x_0,y_0,x_1,y_1$ of $U(n)$ and $U(n+1)$; both identities then become polynomial identities in $x_0,y_0,x_1,y_1$, which \texttt{ring} verifies. We give a derivation by hand from Lemma~\ref{lem:step}.
+
+Put $D(n)=P(n)-Q(n)$. By (a) and (b), $D(n+1)=P(n)+Q(n)$, and hence
+$D(n+2)=P(n+1)+Q(n+1)=2S(n+1)+D(n)$. By (d), $2D(n)=T(n)$ with $T(n)=S(n+2)-2S(n+1)-S(n)$. Therefore $T(n+2)=2D(n+2)=4S(n+1)+T(n)$, that is,
+\[
+S(n+4)-2S(n+3)-S(n+2)=4S(n+1)+S(n+2)-2S(n+1)-S(n),
+\]
+which is the recurrence for $S$. For $Q$, let $R(n)=Q(n+4)-2Q(n+3)-2Q(n+2)-2Q(n+1)+Q(n)$. By (b), $Q(m)+Q(m+1)=S(m+1)$ for all $m\ge0$, so $R(n)+R(n+1)$ is the recurrence expression for $S$ at $n+1$, which vanishes. Hence $R(n)=(-1)^nR(0)$, and $R(0)=12-2\cdot4-2\cdot1-2\cdot1+0=0$.
+\end{proof}
+
+\begin{lemma}[\decl{S_eq_Q_eq}]\label{lem:ident}
+For every $n\ge0$, $S(n)=\seq{138573}(n)$ and $Q(n)=\seq{317974}(n+1)$.
+\end{lemma}
+
+\begin{proof}
+The Lean proof shows by induction on $n$ that the four equalities $S(n+j)=\seq{138573}(n+j)$, $j=0,1,2,3$, and the four equalities $Q(n+j)=\seq{317974}(n+j+1)$, $j=0,1,2,3$, hold. For $n=0$ these say that $S(0),\dots,S(3)$ are $0,1,2,5$ and that $Q(0),\dots,Q(3)$ are $0,1,1,4$, i.e.\ $\seq{317974}(1),\dots,\seq{317974}(4)$; the kernel evaluates both sides (\texttt{decide}). For the step, the window shifts by one and the new value is supplied by Lemma~\ref{lem:rec} and the recurrence~\eqref{eq:rec}, which $\seq{138573}$ and $n\mapsto\seq{317974}(n+1)$ both satisfy.
+\end{proof}
+
+\begin{lemma}[\decl{A138573_mono}, \decl{A138573_pos}, \decl{S_pos}]\label{lem:pos}
+$\seq{138573}$ is nonnegative and nondecreasing, and $\seq{138573}(n)\ge1$ for $n\ge1$. Hence $S(n)\ne0$ for $n\ge1$.
+\end{lemma}
+
+\begin{proof}
+Write $u=\seq{138573}$. We show $0\le u(n)\le u(n+1)\le u(n+2)\le u(n+3)$ by induction on $n$; for $n=0$ this is $0\le0\le1\le2\le5$. For the step, $0\le u(n+1)$ follows from $0\le u(n)\le u(n+1)$, and
+\[
+u(n+4)-u(n+3)=\bigl(u(n+3)-u(n)\bigr)+2u(n+2)+2u(n+1)\ge0.
+\]
+Since $u(1)=1$, monotonicity gives $u(n)\ge1$ for $n\ge1$, and $S(n)=u(n)$ by Lemma~\ref{lem:ident}.
+\end{proof}
+
+\subsection{The convergents}
+
+\begin{lemma}[\decl{alg}]\label{lem:alg}
+Let $p,q,s,s'\in\Q$ with $s,s'\ne0$ and $p^2+q^2=ss'$. Then
+\[
+(1+i)+\frac{1}{(p+qi)/s}=\frac{(s'+p)+(s'-q)\,i}{s'}.
+\]
+\end{lemma}
+
+\begin{proof}
+We have $(p/s)^2+(q/s)^2=s'/s\neq0$, so $1/((p+qi)/s)=(p-qi)/s\cdot s/s'=(p-qi)/s'$, and $(1+i)+(p-qi)/s'=((s'+p)+(s'-q)i)/s'$. In Lean the statement reads \li|gadd (1, 1) (ginv (p / s, q / s)) = ((s' + p) / s', (s' - q) / s')|, and its proof derives $(p/s)^2+(q/s)^2=s'/s$ by \texttt{field\_simp} and \texttt{linear\_combination}, then closes the two coordinates by \texttt{field\_simp} and \texttt{ring}.
+\end{proof}
+
+\begin{proposition}[\decl{conv_eq}]\label{prop:conv}
+For every $n\ge1$,
+\[
+c_n=\frac{P(n)+Q(n)\,i}{S(n)}=\frac{U(n+1)}{U(n)}.
+\]
+In particular $\im c_n=Q(n)/S(n)=\seq{317974}(n+1)/\seq{138573}(n)$.
+\end{proposition}
+
+\begin{proof}
+Induction on $n$. For $n=1$: $P(1)=Q(1)=S(1)=1$ (checked by \texttt{decide}) and $c_1=1+i$. Suppose the claim holds for $n\ge1$. Put $p=P(n)$, $q=Q(n)$, $s=S(n)$, $s'=S(n+1)$. Then $s,s'\ne0$ by Lemma~\ref{lem:pos} and $p^2+q^2=ss'$ by Lemma~\ref{lem:step}(c), so Lemma~\ref{lem:alg} gives
+\[
+c_{n+1}=(1+i)+\frac1{c_n}=\frac{(S(n+1)+P(n))+(S(n+1)-Q(n))\,i}{S(n+1)}=\frac{P(n+1)+Q(n+1)\,i}{S(n+1)}
+\]
+by Lemma~\ref{lem:step}(a),(b). The second form of $c_n$ follows from $W(n)/S(n)=U(n+1)\cj{U(n)}/|U(n)|^2$ (it is not needed in Lean); the last statement follows from Lemma~\ref{lem:ident}.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:main}}
+Let $n\ge1$ and $c_n=x+yi$, and put $L=\den c_n=\operatorname{lcm}(\den x,\den y)$, which is positive. Since $\den y\mid L$,
+\[
+\frac{a(n)}{\seq{093727}(n)}=\frac{\num y\cdot(L/\den y)}{L}=\frac{\num y}{\den y}=y=\im c_n.
+\]
+In Lean this is the step \texttt{hl} of \decl{result}, using \decl{Nat.dvd_lcm_right}, \decl{Nat.cast_div} and \decl{Rat.num_div_den}. By Proposition~\ref{prop:conv}, $\im c_n=\seq{317974}(n+1)/\seq{138573}(n)$. \qed
+
+\begin{remark}[Consequences, not formalized]
+(i) Lemma~\ref{lem:step}(b) and Lemma~\ref{lem:ident} give $\seq{317974}(n)+\seq{317974}(n+1)=\seq{138573}(n)$ for $n\ge0$; this also follows directly from the generating functions $x^2(1-x)/(1-2x-2x^2-2x^3+x^4)$ and $x(1-x)(1+x)/(1-2x-2x^2-2x^3+x^4)$ recorded in the two entries.
+(ii) By Lemma~\ref{lem:step}(a) and $P(0)=0$, $\re c_n=P(n)/S(n)=\bigl(\sum_{k=1}^n\seq{138573}(k)\bigr)/\seq{138573}(n)$.
+(iii) With $g_n=\gcd(P(n),Q(n),S(n))$, one has $\seq{093727}(n)=S(n)/g_n$ (because $dc_n\in\Z[i]$ iff $S(n)\mid dP(n)$ and $S(n)\mid dQ(n)$, iff $S(n)/g_n\mid d$), $a(n)=Q(n)/g_n$ and $\seq{093725}(n)=P(n)/g_n$. For example $g_4=4$, $g_5=3$, and $g_{42}=15457$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and audit}
+The proof is the file \path{lean/Math0/Frontier/OEIS/A093726.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. The main declaration is \decl{Math0.Frontier.A093726.result}, of type \decl{Math0.Statements.A093726.statement}; the auxiliary definitions \decl{step}, \decl{U}, \decl{S}, \decl{P}, \decl{Q} and the lemmas \decl{S_rec}, \decl{Q_rec}, \decl{S_eq_Q_eq}, \decl{A138573_mono}, \decl{A138573_pos}, \decl{S_pos}, \decl{alg}, \decl{conv_eq} are private. The file uses no \texttt{sorry}, \texttt{native\_decide}, \texttt{axiom} or \texttt{set\_option}; the only finite computations are the base cases, closed by \texttt{decide}, which the kernel checks. The frozen statement file was not modified. The proof file ends with
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+#math0_settles Math0.Frontier.A093726.result Math0.Statements.A093726.statement
+\end{lstlisting}
+a command defined in \path{lean/Math0/Audit.lean} for statements formalized by math0. It fails unless \decl{statement} is a \texttt{Prop}-valued definition without universe parameters, the type of \decl{result} is syntactically \decl{statement} or its negation (up to metadata, without unfolding), and both depend only on the axioms \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (which excludes \decl{sorryAx}, \texttt{native\_decide} and custom axioms). Compiling the file with \texttt{lake env lean} reports:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize,belowskip=0pt]
+math0 audit: 'Math0.Statements.A093726.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A093726.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A093726.result' proves 'Math0.Statements.A093726.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use (the statement is math0's own formalization). To reproduce, run \path{scripts/verify.sh}: it fetches the Mathlib cache, builds the library with \texttt{lake build} (re-running every audit), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and counts the passed statement checks.
+
+{\footnotesize\raggedright
+\begin{thebibliography}{99}
+
+\bibitem{Cox}
+H.~S.~M. Coxeter, \emph{Loxodromic sequences of tangent spheres}, Aequationes Math.\ \textbf{1} (1968), 104--121.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Fried}
+S.~Fried, \emph{Further proofs of conjectures from the OEIS}, arXiv:2607.24832, 2026.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput.\ Sci.\ \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A093725}
+The OEIS Foundation Inc., A093725 and A093727 (R.~G. Wilson~v, Mar.~11, 2004), \url{https://oeis.org/A093725}, \url{https://oeis.org/A093727}.
+
+\bibitem{A093726}
+The OEIS Foundation Inc., A093726 (R.~G. Wilson~v, Mar.~11, 2004; definition corrected and conjecture added by Z.~He, Jun.~16, 2026), \url{https://oeis.org/A093726}.
+
+\bibitem{A138573}
+The OEIS Foundation Inc., A138573 (B.~Cloitre, May~12, 2008; formulas by P.~Bala, Mar.~4, 2014), \url{https://oeis.org/A138573}.
+
+\bibitem{A317974}
+The OEIS Foundation Inc., A317974 (N.~J.~A. Sloane, Sep.~3, 2018), \url{https://oeis.org/A317974}.
+
+\end{thebibliography}
+}
+
+\end{document}

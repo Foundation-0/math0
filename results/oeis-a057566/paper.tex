@@ -1,0 +1,361 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw,at},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {∀}{{$\forall$}}1
+    {↔}{{$\leftrightarrow$}}1 {¬}{{$\neg$}}1 {→}{{$\to$}}1 {≤}{{$\le$}}1 {∈}{{$\in$}}1
+    {×}{{$\times$}}1 {ˢ}{{$^{\mathrm{s}}$}}1 {⌊}{{$\lfloor$}}1 {⌋}{{$\rfloor$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{ˢ}{\ensuremath{^{\mathrm{s}}}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\cross}{\operatorname{cr}}
+
+\title[Layman's formula for collinear triples in a $3\times n$ grid fails]{The number of collinear triples in a $3\times n$ grid: Layman's floor formula (OEIS A057566), as printed until October 2026, fails at $n=24$}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 21, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $a(n)$ be the number of $3$-element collinear subsets of the grid $\{0,1,2\}\times\{0,\dots,n-1\}$ (OEIS A057566).
+The OEIS entry, submitted by John W. Layman in October 2000, records the conjecture $a(n)=5\lfloor(2n^3-3n^2-n)/24\rfloor+\lfloor(2(n-1)^3-3(n-1)^2-(n-1))/24\rfloor+n$.
+We show that this identity is false for $n=24$: the $3\times 24$ grid has $6360$ collinear triples, while the formula gives $6365$.
+The falsity is not new in substance, since $a(24)=6360$ is listed in the entry's own data and a proved closed form for $a(n)$ follows from an argument recorded in OEIS A262402; we know of no explicit published refutation, and this is the first formal proof of the known result.
+The refutation is verified in Lean~4 against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry, whose definition of $a$ is checked by the kernel against the first $25$ listed terms $a(0),\dots,a(24)$.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For $n\ge0$ let $G_n=\{0,1,2\}\times\{0,1,\dots,n-1\}\subset\Z^2$ be the $3\times n$ grid of lattice points, and let $a(n)$ be the number of $3$-element subsets of $G_n$ whose points lie on a common line.
+This is the sequence A057566 of the OEIS \cite{A057566}, ``Number of collinear triples in a 3 X n rectangular grid'', with offset $0$ and first terms $0, 1, 2, 8, 20, 43, 78, 130, 200, 293, 410,\dots$
+The entry was submitted by John W. Layman on October~4, 2000. Its FORMULA section contains the conjecture
+\begin{equation}\label{eq:layman}
+  a(n)\overset{?}{=}5f(n)+f(n-1)+n,\qquad f(m)=\Bigl\lfloor\frac{2m^3-3m^2-m}{24}\Bigr\rfloor,
+\end{equation}
+with the remark that it ``fits all of the listed terms''. The line was still labelled ``Conjecture'' in revision \#27 of the entry (February~22, 2024), the text formalized here; it has since been corrected (see the note below).
+We prove that \eqref{eq:layman} fails at $n=24$ (Theorem~\ref{thm:main}).
+
+\paragraph{Note added on October 26, 2026.} On October 21, 2026, after the statement studied here was frozen, the formula in the entry was corrected by Alper Ferudun to
+\[
+  a(n)=5\Bigl\lfloor\frac{2n^3-3n^2-2n+3}{24}\Bigr\rfloor+\Bigl\lfloor\frac{2(n-1)^3-3(n-1)^2-2(n-1)+3}{24}\Bigr\rfloor+n .
+\]
+Our theorem concerns only the formula as printed before that correction, quoted in Section~\ref{sec:statement}. The corrected formula is not refuted: it agrees with a brute-force count of collinear triples for $n\le 60$ and with the closed form of Proposition~\ref{prop:closed} for $n\le 20000$. A proof of the corrected formula is not part of this paper.
+
+\subsection*{Prior work and status}
+The refutation is elementary and its ingredients are already in the OEIS; we credit them precisely.
+\begin{itemize}
+\item The data section of A057566 lists $a(0),\dots,a(42)$, including $a(24)=6360$, and the entry links a table of $a(n)$ for $n\le10000$ by Paolo Xausa \cite{A057566}. Formula \eqref{eq:layman} gives $6365$ at $n=24$, so the remark ``fits all of the listed terms'' is contradicted by the entry's own data. We do not know how many terms were listed in 2000; the formula agrees with $a(n)$ for $3\le n\le 23$.
+\item On May~23, 2010, R.~J. Mathar added to A057566 the closed form $a(n)=n^3/2-n^2+n+(1-(-1)^n)/4$, the linear recurrence with signature $(3,-2,-2,3,-1)$ and the generating function $x(1-x+4x^2+2x^3)/((1+x)(x-1)^4)$ \cite{A057566}. The entry states these without proof.
+\item In OEIS A262402 \cite{A262402} (triangles with vertices in a $3\times n$ grid), N.~J.~A. Sloane gave on December~16, 2017 a proof of a formula of Jared Nash; see also Nash's note linked there \cite{Nash}. The proof shows that the number of collinear triples with one point in each row of the $3\times n$ grid is $n+2\lfloor(n-1)^2/4\rfloor$. Together with the $3\binom n3$ triples inside a single row (a triple with exactly two points in one row is never collinear), this gives a proof of $a(n)=3\binom n3+n+2\lfloor(n-1)^2/4\rfloor$, which equals Mathar's closed form and gives $a(24)=6360$.
+\item The triangle A334704 \cite{A334704} (N.~J.~A. Sloane, 2020, with rows $6$ onwards from Tom Duff, who computed the values for grids up to $50\times50$) counts collinear triples in $n\times k$ grids ($1\le k\le n$); in the full symmetric array of which it is the lower half, row~$3$ (the $3\times k$ grids, $k\ge1$) is A057566, as the entry notes.
+\end{itemize}
+The math0 referees found no explicit statement, in the OEIS or elsewhere (arXiv and general web searches), that Layman's conjecture is false. Comparing \eqref{eq:layman} with the listed term $a(24)$, or with Mathar's closed form, is a one-line computation, so we classify the result as the \emph{first formal proof of a known result}, not as a new result.
+
+\subsection*{What is proved formally}
+The Lean proof shows that the identity \eqref{eq:layman} does not hold for all $n\ge3$, by exhibiting $n=24$. It does not formalize the closed form for $a(n)$ (Proposition~\ref{prop:closed}) or the fact that \eqref{eq:layman} fails for every $n\ge24$ (Remark~\ref{rem:all}); both are proved here on paper only.
+
+\section{Statement}\label{sec:statement}
+
+The FORMULA section of A057566 \cite{A057566} contains, verbatim, the unsigned line
+\begin{quote}
+{\small\raggedright\texttt{Conjecture: a(n) = 5*floor((2n\^{}3 - 3n\^{}2 - n)/24) + floor((2(n-1)\^{}3 - 3(n-1)\^{}2 - (n-1))/24) + n, which fits all of the listed terms.}\par}
+\end{quote}
+It is the first FORMULA line of the entry, whose author line reads \texttt{\_John W. Layman\_, Oct 04 2000}; we attribute the conjecture to him, as the math0 statement file does.
+
+\begin{theorem}\label{thm:main}
+Let $a(n)$ be the number of collinear $3$-element subsets of $\{0,1,2\}\times\{0,\dots,n-1\}$, and let $f(m)=\lfloor(2m^3-3m^2-m)/24\rfloor$ for $m\in\Z$. Then
+\[
+  a(24)=6360\ne 6365=5f(24)+f(23)+24 .
+\]
+In particular, it is false that $a(n)=5f(n)+f(n-1)+n$ for all $n\ge3$.
+\end{theorem}
+
+\subsection*{\texorpdfstring{The range of $n$}{The range of n}}
+The conjecture names no range for $n$, and the sequence has offset $0$. For $n\le2$ some of the arguments of the floors are negative: $(2m^3-3m^2-m)/24$ equals $-4/24$ at $m=-1$ and $-2/24$ at $m=1$. With true floors, \eqref{eq:layman} gives $-1,-4,1$ at $n=0,1,2$ instead of $0,1,2$; with rounding toward zero it gives exactly $0,1,2$, and then agrees with $a(0),\dots,a(23)$. A refutation at $n\le2$ would thus rest on a rounding convention at degenerate grid sizes. For $n\ge3$ both arguments are nonnegative ($2m^3-3m^2-m=m\bigl(m(2m-3)-1\bigr)>0$ for $m\ge2$), so every reading of ``floor'' gives the same claim. The math0 statement therefore asserts \eqref{eq:layman} for $n\ge3$ only. This is the weakest faithful reading, and refuting it refutes every reading; the literal reading for all $n\ge0$ is recorded separately as \decl{statement_all}, with a proof that it implies \decl{statement}.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A057566.lean}, reviewed for fidelity, and frozen (SHA-256 \texttt{218f1d78\ldots 6ec5}) before any proof attempt. The definitions and the statement read as follows (verbatim; the copyright header, the import, docstrings, blank lines, the fast evaluator of Section~\ref{sec:proof} with its auxiliary multiset predicate \decl{Q}, all theorems, and the variant \decl{statement_all}, which is \decl{statement} without the hypothesis \texttt{3 ≤ n}, are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A057566
+def grid (n : ℕ) : Finset (ℕ × ℕ) := Finset.range 3 ×ˢ Finset.range n
+def cross (p q r : ℕ × ℕ) : ℤ :=
+  ((q.1 : ℤ) - p.1) * ((r.2 : ℤ) - p.2) - ((q.2 : ℤ) - p.2) * ((r.1 : ℤ) - p.1)
+def IsCollinear (s : Finset (ℕ × ℕ)) : Prop := ∀ p ∈ s, ∀ q ∈ s, ∀ r ∈ s, cross p q r = 0
+instance : DecidablePred IsCollinear := fun s => by unfold IsCollinear; infer_instance
+def a (n : ℕ) : ℕ := ((grid n).powersetCard 3 |>.filter IsCollinear).card
+def statement : Prop :=
+  ∀ n : ℕ, 3 ≤ n → (a n : ℤ) =
+    5 * ⌊(2 * (n : ℚ) ^ 3 - 3 * (n : ℚ) ^ 2 - (n : ℚ)) / 24⌋
+      + ⌊(2 * ((n : ℚ) - 1) ^ 3 - 3 * ((n : ℚ) - 1) ^ 2 - ((n : ℚ) - 1)) / 24⌋ + n
+end Math0.Statements.A057566
+\end{lstlisting}
+A point is a pair (row, column) of natural numbers, and \texttt{grid n} is $G_n$. For points $p,q,r$ the integer
+\[
+  \cross(p,q,r)=(q_1-p_1)(r_2-p_2)-(q_2-p_2)(r_1-p_1)
+\]
+is twice the signed area of the triangle $pqr$, so it vanishes exactly when $p,q,r$ lie on a common line. A finite set is \decl{IsCollinear} if $\cross$ vanishes on every three of its points (repetitions allowed), and \texttt{a n} is the number of $3$-element subsets of \texttt{grid n} with this property, i.e.\ the number of collinear triples. The floors are \texttt{Int.floor} of rational numbers, and $n-1$ is computed in $\Q$, so it is not truncated at $0$. Among other lemmas, the statement file proves (statements shown, proofs omitted):
+\begin{lstlisting}
+theorem isCollinear_triple (p q r : ℕ × ℕ) :
+    IsCollinear {p, q, r} ↔ cross p q r = 0
+theorem a_eq_fastA (n : ℕ) : a n = fastA n
+theorem a_data : (List.range 25).map (fun i => a (i + 0)) =
+    [0, 1, 2, 8, 20, 43, 78, 130, 200, 293, 410, 556, 732, 943, 1190, 1478, 1808, 2185,
+      2610, 3088, 3620, 4211, 4862, 5578, 6360]
+theorem statement_all_imp : statement_all → statement
+theorem statement_iff_ediv : statement ↔ ∀ n : ℕ, 3 ≤ n → (a n : ℤ) =
+    5 * ((2 * (n : ℤ) ^ 3 - 3 * (n : ℤ) ^ 2 - (n : ℤ)) / 24)
+      + ((2 * ((n : ℤ) - 1) ^ 3 - 3 * ((n : ℤ) - 1) ^ 2 - ((n : ℤ) - 1)) / 24) + n
+\end{lstlisting}
+The lemma \decl{isCollinear_triple} shows that for a $3$-element set the collinearity condition is the single equation $\cross(p,q,r)=0$. The data check \decl{a_data}, proved by \texttt{decide +kernel} through \decl{a_eq_fastA}, confirms that the definition reproduces the first $25$ terms of the OEIS data, $a(0),\dots,a(24)$; this anchors the definition to the entry independently of the conjecture.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A057566.lean}. It has two steps: the left-hand side $a(24)$ is computed by the kernel through a verified fast counter, and the right-hand side is evaluated by integer arithmetic.
+
+\subsection{Counting the triples: a verified evaluator}
+The definition of \decl{a} enumerates the $3$-element subsets of a finset, which is too slow for evaluation in the kernel. The statement file therefore also defines a list-based counter (verbatim, docstrings omitted):
+\begin{lstlisting}
+def collB (p q r : ℕ × ℕ) : Bool :=
+  Nat.beq (q.1 * r.2 + q.2 * p.1 + p.2 * r.1) (q.2 * r.1 + q.1 * p.2 + p.1 * r.2)
+def cnt2 (p q : ℕ × ℕ) : List (ℕ × ℕ) → ℕ
+  | [] => 0
+  | r :: l => cnt2 p q l + (if collB p q r then 1 else 0)
+def cnt1 (p : ℕ × ℕ) : List (ℕ × ℕ) → ℕ
+  | [] => 0
+  | q :: l => cnt1 p l + cnt2 p q l
+def cnt : List (ℕ × ℕ) → ℕ
+  | [] => 0
+  | p :: l => cnt l + cnt1 p l
+def pts (n : ℕ) : List (ℕ × ℕ) := List.range 3 ×ˢ List.range n
+def fastA (n : ℕ) : ℕ := cnt (pts n)
+\end{lstlisting}
+Thus $\mathrm{cnt}(\ell)$ is the number of triples of positions $i<j<k$ in the list $\ell$ whose entries $p,q,r$ satisfy \decl{collB}, and \texttt{pts n} lists the $3n$ points of $G_n$, each once.
+
+\begin{lemma}[\decl{collB_iff}, \decl{isCollinear_triple}, \decl{Q_triple}]\label{lem:coll}
+For points $p,q,r\in\N^2$, $\mathtt{collB}(p,q,r)$ is true if and only if $\cross(p,q,r)=0$; and the finset $\{p,q,r\}$ (respectively the multiset with elements $p,q,r$) satisfies \decl{IsCollinear} (respectively its multiset analogue \decl{Q}, with the same definition) if and only if $\cross(p,q,r)=0$.
+\end{lemma}
+
+\begin{proof}
+Expanding,
+$\cross(p,q,r)=(q_1r_2+q_2p_1+p_2r_1)-(q_2r_1+q_1p_2+p_1r_2)$,
+and both brackets are natural numbers; \decl{collB} tests their equality. For the second claim, one direction is the instance $(p,q,r)$ of the definition. Conversely, $\cross$ vanishes whenever two of its arguments are equal and changes at most its sign under a permutation of its arguments, so $\cross(p,q,r)=0$ implies $\cross(x,y,z)=0$ for all $x,y,z\in\{p,q,r\}$. The argument is the same for the finset and the multiset; in Lean the $27$ cases are closed by \texttt{ring1} or \texttt{linear\_combination}~$\pm h$.
+\end{proof}
+
+\begin{lemma}[\decl{a_eq_fastA}]\label{lem:fast}
+For every $n\ge0$, $a(n)=\mathtt{fastA}(n)$.
+\end{lemma}
+
+\begin{proof}
+The finset \texttt{grid n} has underlying multiset equal to the list \texttt{pts n} (\decl{grid_val}, by \texttt{rfl}), and \texttt{a n} counts the elements of its powerset of size $3$ that are collinear. Under the coercion from lists to multisets, the $3$-element sub-multisets of a list $\ell$ are the images of the sublists of $\ell$ of length $3$, \texttt{List.sublistsLen 3 $\ell$} (\texttt{Multiset.powersetCard\_coe}, together with \texttt{Finset.map\_val\_val\_powersetCard} to pass from finsets to multisets). So $a(n)$ is the number of length-$3$ sublists of \texttt{pts n} that are collinear. The recursion
+\[
+  \mathtt{sublistsLen}\,(k+1)\,(p::\ell)=\mathtt{sublistsLen}\,(k+1)\,\ell\ \mathbin{+\!\!+}\ \mathtt{map}\,(p::\cdot)\,(\mathtt{sublistsLen}\,k\,\ell)
+\]
+(\texttt{List.sublistsLen\_succ\_cons}) splits the sublists by whether they use the head $p$. By induction on $\ell$ this identifies the number of collinear sublists of length $3$, of length $2$ preceded by $p$, and of length $1$ preceded by $p,q$ with $\mathrm{cnt}(\ell)$, $\mathrm{cnt1}(p,\ell)$ and $\mathrm{cnt2}(p,q,\ell)$ respectively (\decl{countP_three}, \decl{countP_two}, \decl{countP_one}). Collinearity of a sub-multiset is tested by \decl{Q}, and at the innermost level, in \decl{countP_one}, the test on the multiset $[p,q,r]$ is $\cross(p,q,r)=0$ by \decl{Q_triple}, i.e.\ \decl{collB} by Lemma~\ref{lem:coll}.
+\end{proof}
+
+\begin{lemma}[\decl{a_24}]\label{lem:a24}
+$a(24)=6360$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:fast}, $a(24)=\mathtt{fastA}(24)$. The equation $\mathtt{fastA}(24)=6360$ between natural numbers is decidable, and \texttt{decide +kernel} asks the Lean kernel to reduce the decision procedure \texttt{Nat.decEq (fastA 24) 6360} to \texttt{isTrue}. The kernel does so by evaluating the nested recursion over the $\binom{72}{3}=59640$ triples of points of $G_{24}$, with built-in arithmetic on natural-number literals (including \texttt{Nat.beq}). No compiled code is trusted and no axiom is added; the certificate is the evaluation itself.
+\end{proof}
+
+For the reader we also give a short proof of the value $6360$, and of the closed form, which the Lean proof does not use.
+
+\begin{proposition}[not formalized]\label{prop:closed}
+For every $n\ge0$,
+\[
+  a(n)=3\binom n3+\Bigl\lceil\frac n2\Bigr\rceil^2+\Bigl\lfloor\frac n2\Bigr\rfloor^2
+      =\frac{n^3}{2}-n^2+n+\frac{1-(-1)^n}{4}.
+\]
+\end{proposition}
+
+\begin{proof}
+Classify a $3$-element subset of $G_n$ by the rows of its points. If all three points lie in one row, they are collinear; this gives $3\binom n3$ triples. If two points $p\ne q$ lie in row $i$ and the third point $r$ in row $i'\ne i$, then $\cross(p,q,r)=-(q_2-p_2)(i'-i)\ne0$, so the triple is not collinear. If the points are $(0,x)$, $(1,y)$, $(2,z)$, then $\cross=(z-x)-2(y-x)=x+z-2y$, so the triple is collinear if and only if $y=(x+z)/2$. Such a $y$ exists exactly when $x\equiv z\pmod2$, and then $0\le y\le n-1$ automatically. Hence these triples correspond bijectively to the pairs $(x,z)\in\{0,\dots,n-1\}^2$ of equal parity, of which there are $\lceil n/2\rceil^2+\lfloor n/2\rfloor^2=(n^2+[n\text{ odd}])/2$. Adding $3\binom n3=(n^3-3n^2+2n)/2$ gives the second expression.
+\end{proof}
+
+At $n=24$ this gives $a(24)=3\cdot2024+144+144=6360$, in agreement with Lemma~\ref{lem:a24}, with the OEIS data, and with the formula $3\binom n3+n+2\lfloor(n-1)^2/4\rfloor$ that follows from Sloane's argument in A262402 \cite{A262402}.
+
+\subsection{The right-hand side}
+
+\begin{lemma}[\decl{statement_iff_ediv}]\label{lem:ediv}
+For every integer $N$, $\lfloor N/24\rfloor$ (the floor of the rational number $N/24$) equals the integer quotient $N\,\mathtt{/}\,24$ in Lean. Consequently \decl{statement} is equivalent to the same identity with the two floors replaced by integer division by $24$.
+\end{lemma}
+
+\begin{proof}
+For a positive divisor, Lean's integer division \texttt{/} on $\Z$ rounds toward $-\infty$, so it agrees with the floor of the rational quotient (\texttt{Rat.floor\_intCast\_div\_natCast}). Apply this to $N=2m^3-3m^2-m$ with $m=n$ and $m=n-1$, after moving the casts from $\Q$ to $\Z$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Suppose the identity held for all $n\ge3$. Write $N_m=2m^3-3m^2-m$ and $x\operatorname{div}24$ for the integer quotient. By Lemma~\ref{lem:ediv}, at $n=24$ the identity reads
+\[
+  a(24)=5\,(N_{24}\operatorname{div}24)+(N_{23}\operatorname{div}24)+24 .
+\]
+Here $N_{24}=2\cdot24^3-3\cdot24^2-24=27648-1728-24=25896=24\cdot1079$, so $f(24)=1079$, and $N_{23}=2\cdot23^3-3\cdot23^2-23=24334-1587-23=22724=24\cdot946+20$, so $f(23)=946$. The right-hand side is $5\cdot1079+946+24=6365$, whereas $a(24)=6360$ by Lemma~\ref{lem:a24}. This contradiction proves the theorem. In Lean, after rewriting with \decl{statement_iff_ediv} and \decl{a_24}, the hypothesis at $n=24$ is an equation between closed integer expressions, $6360=5\cdot(N_{24}\,\mathtt{/}\,24)+(N_{23}\,\mathtt{/}\,24)+24$ with $N_{24}$ and $N_{23}$ written out as above, which \texttt{norm\_num} evaluates to $6360=6365$ and hence to \texttt{False}.
+\end{proof}
+
+\begin{remark}[failure for all $n\ge24$; not formalized]\label{rem:all}
+Write $L(n)=5f(n)+f(n-1)+n$ and $\{t\}=t-\lfloor t\rfloor$. Expanding,
+\[
+  \frac{5(2n^3-3n^2-n)+\bigl(2(n-1)^3-3(n-1)^2-(n-1)\bigr)}{24}+n=\frac{n^3}{2}-n^2+\frac{5n}{4}-\frac16,
+\]
+so by Proposition~\ref{prop:closed}
+\[
+  L(n)-a(n)=\frac n4-\frac16-\frac{1-(-1)^n}{4}-5\theta_n-\theta_{n-1},\qquad \theta_m=\Bigl\{\frac{2m^3-3m^2-m}{24}\Bigr\}\in[0,1).
+\]
+Hence $n/4-20/3<L(n)-a(n)\le n/4-1/6$, so $L(n)>a(n)$ for all $n\ge27$, and $L(n)-a(n)=n/4+O(1)$. Together with the values $L(n)-a(n)=5,1,5$ at $n=24,25,26$, this shows that \eqref{eq:layman} fails for every $n\ge24$. It holds for $3\le n\le23$ (a finite check, which we did by computer), so $n=24$ is the least counterexample with $n\ge3$. The failure is therefore not a rounding artefact: the cubic and quadratic terms of \eqref{eq:layman} are correct, but its linear term $5n/4$ should be $n$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in \path{lean/Math0/Frontier/OEIS/A057566.lean} in the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A057566.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A057566.result}, of type $\neg$\,\decl{Math0.Statements.A057566.statement}; the only auxiliary declaration is the private lemma \decl{a_24}. The proof reads, verbatim (header, imports, module docstring and docstrings omitted):
+\begin{lstlisting}
+namespace Math0.Frontier.A057566
+open Math0.Statements.A057566
+private theorem a_24 : a 24 = 6360 := by
+  rw [a_eq_fastA]
+  decide +kernel
+theorem result : ¬ statement := by
+  rw [statement_iff_ediv]
+  intro h
+  have h24 := h 24 (by norm_num)
+  rw [a_24] at h24
+  norm_num at h24
+end Math0.Frontier.A057566
+#math0_settles Math0.Frontier.A057566.result Math0.Statements.A057566.statement
+\end{lstlisting}
+Neither file uses \texttt{sorry}, \texttt{native\_decide}, custom axioms or \texttt{set\_option}.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, \decl{Lean.ofReduceBool} from \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically \decl{statement} or $\neg$\,\decl{statement}, up to metadata annotations, with no unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A057566.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A057566.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A057566.result' refutes 'Math0.Statements.A057566.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use, since the statement is a math0 formalization of an OEIS conjecture and not part of formal-conjectures.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A057566.lean} in the directory \path{lean}; on our machine this took about one minute of CPU time (user and system), including loading Mathlib and the kernel evaluation of Lemma~\ref{lem:a24}.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171 [cs.AI], 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Nash}
+J.~Nash, \emph{Formula for number of triangles in a 3 X n grid}, note linked from OEIS A262402, \url{https://oeis.org/A262402/a262402.pdf}.
+
+\bibitem{A057566}
+The OEIS Foundation Inc., \emph{Number of collinear triples in a $3\times n$ rectangular grid}, entry A057566 (J.~W. Layman, 2000) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A057566}; revision \#27, February~22, 2024.
+
+\bibitem{A262402}
+The OEIS Foundation Inc., \emph{Number of triangles that can be formed from the points of a $3\times n$ grid}, entry A262402 (R.~Pan, 2015; revised by N.~J.~A. Sloane, 2017) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A262402}.
+
+\bibitem{A334704}
+The OEIS Foundation Inc., \emph{Triangle read by rows: number of ways to choose three collinear points from an $n\times k$ grid of points}, entry A334704 (N.~J.~A. Sloane and T.~Duff, 2020) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A334704}.
+
+\end{thebibliography}
+}
+
+\end{document}

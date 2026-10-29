@@ -1,0 +1,386 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,noncomputable,rw,constructor,by_contra,push_cast,exact_mod_cast},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\scriptsize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {∈}{{$\in$}}1
+    {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {¬}{{$\neg$}}1 {→}{{$\to$}}1 {←}{{$\leftarrow$}}1
+    {↔}{{$\leftrightarrow$}}1 {≤}{{$\le$}}1 {≥}{{$\ge$}}1 {≠}{{$\ne$}}1 {≡}{{$\equiv$}}1 {∣}{{$\mid$}}1
+    {×}{{$\times$}}1 {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {·}{{$\cdot$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\F}{\mathbb{F}_2}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\tsub}{\mathbin{\dot{-}}}
+\newcommand{\co}[2]{[X^{#1}]\,#2}
+
+\title[Sigrist's conjecture for OEIS A355339]{The central block of even entries in row $n$ of the knight-move triangle has length one exactly when $n=2^m-2$ with $m\ge2$: a proof of Sigrist's conjecture for OEIS A355339}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 19, 2026}
+
+
+\begin{document}
+\begin{abstract}
+Let $T(n,k)$ be the number of lattice paths from $(0,0)$ to $(n,k)$ with steps $(1,\pm2)$ and $(2,\pm1)$, so that row $n$ of the triangle A355320 of the OEIS is $T(n,-2n),\dots,T(n,2n)$, and let $a(n)$ (A355339) be the length of the maximal block of consecutive even entries of row $n$ containing $T(n,0)$, with $a(0)=0$.
+We prove the conjecture recorded by R\'emy Sigrist in A355339 in 2022 that $a(n)=1$ if and only if $n=2^m-2$ for some $m\ge2$.
+To do so we show that $T(n,0)$ is even for every $n\ge1$ and that $T(n,1)$ is odd exactly when $n+2$ is a power of $2$ at least $4$, using a closed form for the row polynomials over $\F$ and Lucas's theorem; to our knowledge this is the first proof of the conjecture.
+The theorem is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, reviewed for fidelity and frozen before the proof attempt, whose definitions are checked by the kernel against the $91$ listed terms of A355320 and the $77$ listed terms of A355339.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+A \emph{Catalan knight} in the sense of Kimberling \cite{A096587} moves from $(x,y)$ to one of $(x+1,y\pm2)$, $(x+2,y\pm1)$. For $n\ge0$ and $k\in\Z$ let $T(n,k)$ be the number of Catalan knight paths from $(0,0)$ to $(n,k)$; in the terminology of Baril, Hassler, Kirgizov and Ram\'irez \cite{BHKR} these are the grand knight's paths of size $n$ and altitude $k$. Since $|y|\le 2x$ along such a path, $T(n,k)=0$ for $|k|>2n$, and decomposing a path according to its last step gives $T(0,0)=1$ and
+\begin{equation}\label{eq:rec}
+  T(n,k)=T(n-1,k-2)+T(n-1,k+2)+T(n-2,k-1)+T(n-2,k+1)\qquad(n\ge1),
+\end{equation}
+where $T(-1,\cdot)=0$. Kimberling's triangle A096608 \cite{A096608} (2004) lists the right halves $0\le k\le 2n$ of the rows, and Sigrist's triangle A355320 \cite{A355320} (June~28, 2022) lists the full rows $-2n\le k\le 2n$, defined directly by \eqref{eq:rec}.
+
+On June~29, 2022, Sigrist contributed A355339 \cite{A355339}: $a(n)$ is the number of central even terms in row $n$ of A355320, that is, the size of the maximal block of consecutive even entries $T(n,k)$ containing $k=0$ (and $0$ if $T(n,0)$ is odd), with $a(0)=0$. For example, row $4$ is $1,0,0,3,4,3,1,\mathbf{6},\mathbf{8},\mathbf{6},1,3,4,3,0,0,1$, so $a(4)=3$.
+The entry conjectures that $a(n)=1$ if and only if $n>0$ and $n$ belongs to A000918 \cite{A000918}, the sequence $2^m-2$; that is, the central block is a single entry exactly for $n=2,6,14,30,62,\dots$. We prove this (Theorem~\ref{thm:main}). The proof rests on the following parity facts.
+
+\begin{theorem}\label{thm:parity}
+For all $n\ge0$ and $k\in\Z$: \textup{(1)} $T(n,-k)=T(n,k)$; \textup{(2)} if $n\ge1$, then $T(n,0)$ is even; \textup{(3)} $T(n,1)$ is odd if and only if $n+2=2^{j}$ for some $j\ge2$.
+\end{theorem}
+
+Part (1) is recorded in A355320, and (2), (3) concern $T(n,0)=\text{A096609}(n)$ and $T(n,1)=\text{A096610}(n)$. By (2) and (1), for $n\ge1$ the central block is a single entry if and only if $T(n,1)$ is odd.
+To prove (2) and (3), we reduce row $n$ modulo $2$ to a polynomial $F_n\in\F[X]$ and show that $F_n=\sum_{p+q=n}\binom pq X^{3q}(1+X^2)^{2p-q}$. For $T(n,0)$ only central binomial coefficients occur, and these are even; for $T(n,1)$, Lucas's theorem \cite{Lucas} shows that only the term $p=q$ can be odd.
+
+\subsection*{Status and prior work}
+The statement is still marked ``Conjecture'' in A355339, whose current revision (\#10, June~29, 2022) dates from the day the entry was created (we read it in math0's copy of the OEIS database; the referees also checked the upstream OEIS data repository). The related entries A355320, A096587, A096608--A096612, A361292, A000918 and A002605 contain no parity results for $T(n,0)$ or $T(n,1)$.
+Baril and Ram\'irez \cite{BR} showed that zigzag knight's paths (whose steps alternate up and down) of a given length ending on the $x$-axis are counted by Catalan numbers, and Baril, Hassler, Kirgizov and Ram\'irez \cite{BHKR} studied grand zigzag knight's paths. The only parity statement in \cite{BHKR} that we are aware of, Remark~3.2, says that the number of grand zigzag knight's paths ending at $(n,k)\ne(0,0)$ with $n\equiv k\pmod2$ is even; zigzag paths form a proper subfamily of the paths counted by $T(n,k)$, so this does not bear on the conjecture.
+The referees' web searches (arXiv, MathOverflow, Mathematics Stack Exchange, the SeqFan list and general search engines) found no proof or counterexample, and the statement has no file in the formal-conjectures repository \cite{FC}.
+We therefore classify the result as new. The argument is elementary, and we cannot exclude that it was known privately.
+
+\section{Statement}\label{sec:statement}
+
+\begin{definition}\label{def:T}
+Define $T\colon\N\times\Z\to\N$ by $T(0,0)=1$, $T(n,k)=0$ for $|k|>2n$, and \eqref{eq:rec} for $n\ge1$, $|k|\le2n$, with $T(-1,\cdot)=0$. (Then \eqref{eq:rec} holds for all $n\ge1$, $k\in\Z$.)
+For $n\ge1$ let $R(n)$ be the largest $r\in\{0,\dots,2n+1\}$ such that $T(n,0),T(n,1),\dots,T(n,r-1)$ are all even, and let $L(n)$ be defined in the same way with $T(n,0),T(n,-1),\dots,T(n,-(r-1))$. Put $a(0)=0$ and, for $n\ge1$, $a(n)=0$ if $R(n)=0$ and $a(n)=L(n)+R(n)-1$ otherwise.
+\end{definition}
+
+If $T(n,0)$ is even, $a(n)$ is the size of the maximal block $\{-(L(n)-1),\dots,R(n)-1\}$ of consecutive positions around $0$ with even entries.
+The name of A355339 \cite{A355339} reads, verbatim, ``\texttt{a(n) is the number of central even terms in the n-th row of triangle A355320; a(0) = 0.}'', and its FORMULA section, in the entry as contributed by R\'emy Sigrist on June~29, 2022, reads, verbatim:
+\begin{quote}
+{\small\texttt{Conjecture: a(n) = 1 iff n > 0 and n belongs to A000918.}}
+\end{quote}
+The name of A355320 \cite{A355320} gives $T(0,0)=1$, and its FORMULA section states \eqref{eq:rec} for $n>0$, with $T$ extended by $0$ outside $-2n\le k\le 2n$; this is Definition~\ref{def:T}. The sequence A000918 \cite{A000918} is ``\texttt{a(n) = 2\^{}n - 2}'' with offset $0$, with terms $-1,0,2,6,14,\dots$.
+
+\begin{theorem}[Sigrist's conjecture]\label{thm:main}
+For every $n\ge0$, $a(n)=1$ if and only if $n>0$ and $n=2^m-2$ for some integer $m\ge0$.
+\end{theorem}
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A355339.lean}, reviewed for fidelity and frozen (SHA-256 \texttt{ea5b1be9\ldots 4226b}) before any proof attempt. Its definitions and the statement read, verbatim (the import, comments and docstrings, blank lines and all theorems are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A355339
+def addL : List ℕ → List ℕ → List ℕ
+  | [], l => l
+  | x :: xs, [] => x :: xs
+  | x :: xs, y :: ys => (x + y) :: addL xs ys
+def step (pq : List ℕ × List ℕ) : List ℕ × List ℕ :=
+  (pq.2, addL (addL pq.2 (List.replicate 4 0 ++ pq.2))
+    (addL (List.replicate 3 0 ++ pq.1) (List.replicate 5 0 ++ pq.1)))
+def rowPair (n : ℕ) : List ℕ × List ℕ := step^[n] ([], [1])
+def row (n : ℕ) : List ℕ := (rowPair n).2
+def entry (r : List ℕ) (m : ℕ) (k : ℤ) : ℕ :=
+  if 0 ≤ k + 2 * m then r.getD (k + 2 * m).toNat 0 else 0
+def T (n : ℕ) (k : ℤ) : ℕ := entry (row n) n k
+def a (n : ℕ) : ℕ :=
+  if n = 0 then 0 else
+    let r := row n
+    let right := (((List.range (2 * n + 1)).map fun k : ℕ => entry r n k).takeWhile
+      fun x => x % 2 == 0).length
+    let left := (((List.range (2 * n + 1)).map fun k : ℕ => entry r n (-k)).takeWhile
+      fun x => x % 2 == 0).length
+    if right = 0 then 0 else left + right - 1
+def statement : Prop :=
+  ∀ n : ℕ, a n = 1 ↔ (0 < n ∧ ∃ m : ℕ, (n : ℤ) = 2 ^ m - 2)
+end Math0.Statements.A355339
+\end{lstlisting}
+Row $n$ is stored as the list \texttt{row n} of its $4n+1$ entries, with $T(n,k)$ at position $k+2n$; \texttt{entry r n k} reads position $k+2n$ of \texttt{r} and returns $0$ outside the list. The map \texttt{step} sends (row $n-1$, row $n$) to (row $n$, row $n+1$), starting from row $-1$ (empty) and row $0$. Position $k+2n+2$ of row $n+1$ receives positions $k+2n+2$ and $k+2n-2$ of row $n$ (list shifts $0$ and $4$), that is $T(n,k+2)$ and $T(n,k-2)$, and positions $k+2n-1$ and $k+2n-3$ of row $n-1$ (shifts $3$ and $5$), that is $T(n-1,k+1)$ and $T(n-1,k-1)$; this is the recurrence $R_{n+1}=(1+X^4)R_n+(X^3+X^5)R_{n-1}$ of the PARI program in A355320. In \decl{a}, \texttt{right} and \texttt{left} are $R(n)$ and $L(n)$ (\texttt{takeWhile} takes the longest prefix of even values). Membership in A000918 is written in $\Z$, so $2^m-2$ is not truncated, and the statement covers all $n\ge0$ without further hypotheses.
+
+The statement file proves that \decl{T} satisfies the defining equations of Definition~\ref{def:T}, which determine it by induction on $n$: \decl{T_zero_zero} ($T(0,0)=1$), \decl{T_eq_zero} ($T(n,k)=0$ for $2n<|k|$), \decl{T_one} ($T(1,k)=T(0,k-2)+T(0,k+2)$) and \decl{T_add_two} (\eqref{eq:rec} for $T(n+2,k)$, every $k\in\Z$). The theorem \decl{a_eq} restates \decl{a} with \texttt{T n k} in place of \texttt{entry r n k} (by \texttt{rfl}). The theorems \decl{T_data} and \decl{a_data}, proved by \texttt{decide +kernel}, state that the values $T(n,k)$ for $0\le n\le 6$ are the $91$ listed terms of A355320 and that $a(0),\dots,a(76)$ are the $77$ listed terms of A355339. Independent Python computations by the reviewers agree with Sigrist's b-file of A355339 for $n\le 8192$ (they are not part of the formal proof).
+
+\section{Proof}\label{sec:proof}
+
+We follow the Lean file \path{lean/Math0/Frontier/OEIS/A355339.lean}; each step names the corresponding declaration. Throughout, $\binom pq=0$ for $q>p$, $x\tsub y=\max(x-y,0)$ on $\N$, and $\co{m}{P}$ is the coefficient of $X^m$ in $P$. All polynomials are in $\F[X]$, and an integer is identified with its image in $\F$.
+
+\subsection{\texorpdfstring{Row $0$ and symmetry}{Row 0 and symmetry}}
+
+\begin{lemma}[\decl{T0}, \decl{T_symm}]\label{lem:symm}
+$T(0,k)=[k=0]$, and $T(n,-k)=T(n,k)$ for all $n\ge0$, $k\in\Z$.
+\end{lemma}
+
+\begin{proof}
+The first claim is \decl{T_zero_zero} and \decl{T_eq_zero}. Symmetry follows by two-step induction on $n$: rows $0$ and $1$ are symmetric ($T(1,k)=[k=\pm2]$), and by the induction hypothesis the four terms $T(n+1,-k\mp2)$, $T(n,-k\mp1)$ of \eqref{eq:rec} for $T(n+2,-k)$ equal the four terms $T(n+1,k\pm2)$, $T(n,k\pm1)$ for $T(n+2,k)$.
+\end{proof}
+
+\subsection{\texorpdfstring{Row polynomials over $\mathbb{F}_2$}{Row polynomials over F2}}
+Define $F_n\in\F[X]$ (\decl{Fp}) by $F_0=1$, $F_1=1+X^4$ and $F_{n+2}=(1+X^4)F_{n+1}+(X^3+X^5)F_n$.
+
+\begin{lemma}[\decl{T_shift}, \decl{T_coeff}]\label{lem:coeff}
+For all $n,m\in\N$, $T(n,m-2n)\equiv\co{m}{F_n}\pmod 2$.
+\end{lemma}
+
+\begin{proof}
+For $j,m\in\N$ we have $T(n,m-2n-j)=T\bigl(n,(m-j)-2n\bigr)$ if $j\le m$, and $T(n,m-2n-j)=0$ if $j>m$, since then $m-2n-j<-2n$ (\decl{T_shift}).
+We use two-step induction on $n$. For $n=0$, $T(0,m)=[m=0]=\co{m}{1}$. For $n=1$, $T(1,m-2)=T(0,m-4)+T(0,m)=[m=4]+[m=0]=\co{m}{(1+X^4)}$. For $n+2$, put $k=m-2(n+2)$; then $k-2=m-2(n+1)-4$, $k+2=m-2(n+1)$, $k-1=m-2n-5$ and $k+1=m-2n-3$, so by \eqref{eq:rec}, the shift rule and the induction hypothesis, modulo $2$,
+\[
+  T(n+2,k)\equiv \co{m}{F_{n+1}}+[m\ge4]\,\co{m-4}{F_{n+1}}+[m\ge5]\,\co{m-5}{F_n}+[m\ge3]\,\co{m-3}{F_n},
+\]
+which is the coefficient of $X^m$ in $(1+X^4)F_{n+1}+(X^3+X^5)F_n=F_{n+2}$.
+\end{proof}
+
+\subsection{\texorpdfstring{A closed form for $F_n$}{A closed form for F\_n}}
+
+\begin{lemma}[\decl{hsum_rec}]\label{lem:hsum}
+Let $S$ be a commutative semiring, $A,B\in S$, and $h_n=\sum_{p+q=n}\binom pq A^pB^q$ (\decl{hsum}). Then $h_0=1$, $h_1=A$ and $h_{n+2}=A\,h_{n+1}+AB\,h_n$ for all $n\ge0$.
+\end{lemma}
+
+\begin{proof}
+The values of $h_0,h_1$ are immediate. In $h_{n+2}$ the term $p=0$ vanishes, so $h_{n+2}=\sum_{p+q=n+1}\binom{p+1}{q}A^{p+1}B^q$. By Pascal's rule, $\binom{p+1}{0}=\binom p0$ and $\binom{p+1}{q+1}=\binom pq+\binom p{q+1}$; hence
+\[
+  h_{n+2}=\sum_{p+q=n+1}\binom pqA^{p+1}B^q+\sum_{p+q=n}\binom pqA^{p+1}B^{q+1}=A\,h_{n+1}+AB\,h_n.\qedhere
+\]
+\end{proof}
+
+\begin{lemma}[\decl{one_add_X4}, \decl{Fp_mul}, \decl{Fp_closed}]\label{lem:closed}
+Let $v=1+X^2$. Then $F_nv^n=h_n(v^3,X^3)$ for all $n\ge0$, and
+$F_n=\sum_{p+q=n}\binom pq X^{3q}\,v^{\,2p\tsub q}$.
+\end{lemma}
+
+\begin{proof}
+In $\F[X]$ we have $1+X^4=(1+X^2)^2-2X^2=v^2$, and $X^3+X^5=X^3v$. So $G_n=F_nv^n$ satisfies $G_0=1$, $G_1=v^2\cdot v=v^3$ and
+\[
+  G_{n+2}=v^2F_{n+1}v^{n+2}+X^3vF_nv^{n+2}=v^3G_{n+1}+v^3X^3G_n,
+\]
+which are the initial values and the recurrence of $h_n(v^3,X^3)$ in Lemma~\ref{lem:hsum}.
+For the closed form, a term with $q>p$ vanishes, and for $q\le p$ we have $3p=(2p-q)+n$, so $\binom pqX^{3q}v^{2p-q}\cdot v^n=\binom pq(v^3)^p(X^3)^q$. Hence both sides of the claimed identity, multiplied by $v^n$, equal $h_n(v^3,X^3)$, and $v^n$ can be cancelled because $\F[X]$ is an integral domain and $v\ne0$.
+\end{proof}
+
+\begin{lemma}[\decl{vpow_coeff}, \decl{Fp_coeff}]\label{lem:fcoeff}
+For $e,j\in\N$, $\co{j}{v^e}=\binom{e}{j/2}$ if $j$ is even and $0$ if $j$ is odd. Hence, for all $n,m\in\N$, in $\F$,
+\begin{equation}\label{eq:coeff}
+  \co{m}{F_n}=\sum_{p+q=n}\binom pq\,\varepsilon_m(p,q),\qquad
+  \varepsilon_m(p,q)=\begin{cases}\binom{2p\tsub q}{(m-3q)/2}&\text{if }3q\le m\text{ and }2\mid m-3q,\\ 0&\text{otherwise.}\end{cases}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+$v^e=\sum_i\binom eiX^{2i}$ (in Lean, $v^e$ is the image of $(1+X)^e$ under $X\mapsto X^2$, \decl{Polynomial.expand}). The formula follows from Lemma~\ref{lem:closed}, since $\co{m}{(X^{3q}P)}=\co{m-3q}{P}$ if $3q\le m$ and $0$ otherwise.
+\end{proof}
+
+\subsection{Two binomial parity lemmas}
+We use Lucas's theorem \cite{Lucas} for the prime $2$ (\decl{lucas2}, from Mathlib's \decl{Choose.choose_modEq_choose_mod_mul_choose_div_nat}),
+\begin{equation}\label{eq:lucas}
+  \tbinom NK\equiv\tbinom{N\bmod2}{K\bmod2}\tbinom{\lfloor N/2\rfloor}{\lfloor K/2\rfloor}\pmod 2,
+\end{equation}
+and the fact that $\binom{2c}{c}=2\binom{2c-1}{c-1}$ is even for $c\ge1$ (\decl{Nat.two_dvd_centralBinom_of_one_le}).
+
+\begin{lemma}[\decl{oddC}]\label{lem:oddC}
+For $b\ge0$, $\binom{2b+1}{b}$ is odd if and only if $b+1$ is a power of $2$.
+\end{lemma}
+
+\begin{proof}
+Strong induction on $b$. By \eqref{eq:lucas}, $\binom{2b+1}{b}\equiv\binom{1}{b\bmod2}\binom{b}{\lfloor b/2\rfloor}=\binom{b}{\lfloor b/2\rfloor}$.
+If $b=0$, this is $1$ and $b+1=2^0$.
+If $b=2c$ with $c\ge1$, this is $\binom{2c}{c}$, which is even, and $b+1\ge3$ is odd, so not a power of $2$.
+If $b=2c+1$, this is $\binom{2c+1}{c}$, which by induction is odd if and only if $c+1=2^t$ for some $t$, that is, if and only if $b+1=2(c+1)$ is a power of $2$ (note $b+1\ne 2^0$).
+\end{proof}
+
+\begin{lemma}[\decl{dzero}]\label{lem:dzero}
+Let $t,D,q\ge0$. If $\binom{D+q}{q}$ is odd and $2D+q+1=2^t$, then $D=0$.
+\end{lemma}
+
+\begin{proof}
+Induction on $t$. If $t=0$, then $2D+q+1=1$ forces $D=0$. Let $2D+q+1=2^{t+1}$; then $q=2q'+1$ is odd. If $D$ were odd, $D+q$ would be even and \eqref{eq:lucas} would give the factor $\binom01=0$. Hence $D=2D'$, and \eqref{eq:lucas} gives $\binom{D+q}{q}\equiv\binom11\binom{D'+q'}{q'}$, so $\binom{D'+q'}{q'}$ is odd. Moreover $2(2D'+q'+1)=2D+q+1=2^{t+1}$, so $2D'+q'+1=2^t$, and the induction hypothesis gives $D'=0$.
+\end{proof}
+
+\subsection{\texorpdfstring{The entries $T(n,0)$ and $T(n,1)$}{The entries T(n,0) and T(n,1)}}
+
+\begin{proposition}[\decl{term_even}, \decl{T0_even}]\label{prop:T0}
+For $n\ge1$, $T(n,0)$ is even.
+\end{proposition}
+
+\begin{proof}
+By Lemma~\ref{lem:coeff}, $T(n,0)\equiv\co{2n}{F_n}$; we show that every term of \eqref{eq:coeff} with $m=2n$ vanishes. Let $p+q=n$. If $p<q$, then $\binom pq=0$. Let $p\ge q$, and suppose $3q\le 2n$ and $2n-3q$ is even (otherwise $\varepsilon_{2n}(p,q)=0$). Since $2n-3q=2p-q$, we can write $2p-q=2c$, and $\varepsilon_{2n}(p,q)=\binom{2c}{c}$. As $n\ge1$ and $p\ge q$, we have $p\ge1$ and $2c=2p-q\ge p\ge1$, so $c\ge1$ and $\binom{2c}{c}$ is even.
+\end{proof}
+
+\begin{proposition}[\decl{term_off}, \decl{T1_parity}]\label{prop:T1}
+For $n\ge0$, $T(n,1)$ is odd if and only if $n+2=2^{t+2}$ for some $t\ge0$.
+\end{proposition}
+
+\begin{proof}
+By Lemma~\ref{lem:coeff}, $T(n,1)\equiv\co{2n+1}{F_n}$.
+
+\emph{Off-diagonal terms vanish.} Let $p+q=n$ with $p\ne q$; we show $\binom pq\varepsilon_{2n+1}(p,q)=0$ in $\F$. If $p<q$, then $\binom pq=0$. Let $p>q$. Then $3q\le2n+1$, and $2n+1-3q=(2p-q)+1$. If this is odd, $\varepsilon_{2n+1}(p,q)=0$. Otherwise $2p-q=2c+1$ is odd and $\varepsilon_{2n+1}(p,q)=\binom{2c+1}{c+1}=\binom{2c+1}{c}$.
+Suppose both $\binom pq$ and $\binom{2c+1}{c}$ were odd. By Lemma~\ref{lem:oddC}, $c+1=2^t$ for some $t$. Put $D=p-q\ge1$; then $\binom{D+q}{q}=\binom pq$ is odd and $2D+q+1=2p-q+1=2c+2=2^{t+1}$, so Lemma~\ref{lem:dzero} gives $D=0$, a contradiction.
+
+\emph{$n$ odd.} Then $p+q=n$ forces $p\ne q$, so all terms vanish and $T(n,1)$ is even; and $n+2$ is odd, hence not of the form $2^{t+2}$.
+
+\emph{$n=2q$ even.} Only the term $(p,q)=(q,q)$ remains; here $\binom qq=1$, $3q\le 4q+1$ and $2n+1-3q=q+1$.
+If $q=2c$ is even, then $q+1$ is odd, the term is $0$ and $T(n,1)$ is even; and $n+2=4c+2\equiv2\pmod4$ is not of the form $2^{t+2}$.
+If $q=2c+1$ is odd, then $(q+1)/2=c+1$ and $2q\tsub q=2c+1$, so $T(n,1)\equiv\binom{2c+1}{c+1}=\binom{2c+1}{c}$, which by Lemma~\ref{lem:oddC} is odd if and only if $c+1=2^t$ for some $t$, that is, if and only if $n+2=4(c+1)=2^{t+2}$.
+\end{proof}
+
+Lemma~\ref{lem:symm} and Propositions~\ref{prop:T0} and~\ref{prop:T1} prove Theorem~\ref{thm:parity}.
+
+\subsection{\texorpdfstring{The run length and the proof of Theorem~\ref{thm:main}}{The run length and the proof of Theorem 3}}
+
+\begin{lemma}[\decl{range_map}, \decl{tw}, \decl{run_one}, \decl{a_one_iff}]\label{lem:run}
+For $n\ge1$, $a(n)=1$ if and only if $T(n,1)$ is odd.
+\end{lemma}
+
+\begin{proof}
+Since $n\ge1$, the lists $T(n,0),T(n,1),\dots,T(n,2n)$ and $T(n,0),T(n,-1),\dots,T(n,-2n)$ have at least two entries, and their first entry $T(n,0)$ is even by Proposition~\ref{prop:T0}. So $R(n),L(n)\ge1$, $a(n)=L(n)+R(n)-1$, and $a(n)=1$ if and only if $L(n)=R(n)=1$. Finally, $R(n)=1$ if and only if $T(n,1)$ is odd, and $L(n)=1$ if and only if $T(n,-1)$ is odd, which is the same condition by Lemma~\ref{lem:symm}.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+For $n=0$ both sides are false, as $a(0)=0$. Let $n\ge1$. By Lemma~\ref{lem:run} and Proposition~\ref{prop:T1}, $a(n)=1$ if and only if $n+2=2^{t+2}$ for some $t\ge0$. If $n+2=2^{t+2}$, take $m=t+2$. Conversely, if $n=2^m-2$ in $\Z$ with $n>0$, then $m\ne0$ (else $n=-1$) and $m\ne1$ (else $n=0$), so $m=t+2$ and $n+2=2^{t+2}$.
+\end{proof}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A355339.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A355339.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main theorem is \decl{Math0.Frontier.A355339.result}, of type \decl{Math0.Statements.A355339.statement}; the auxiliary declarations of the proof file named in Section~\ref{sec:proof} are private. The proof file uses no \texttt{decide}, \texttt{native\_decide}, \texttt{sorry} or \texttt{set\_option}. The data checks \decl{T_zero_zero}, \decl{T_data} and \decl{a_data} in the statement file use \texttt{decide +kernel}, which evaluates in the kernel and adds no axioms.
+
+\subsection*{Audit}
+The proof file ends with \texttt{\#math0\_settles result statement} (with full names). This command, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a definition of type \texttt{Prop} without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (so no \decl{sorryAx}, \texttt{native\_decide} or custom axiom); and (3) the type of \decl{result} is syntactically the statement or its negation, up to metadata annotations and without unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+math0 audit: 'Math0.Statements.A355339.statement' depends on axioms [propext]
+math0 audit: 'Math0.Frontier.A355339.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A355339.result' proves 'Math0.Statements.A355339.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. Checking the proof file alone with \texttt{lake env lean} takes about $15$ seconds on our machine.
+
+{\footnotesize\raggedright
+\begin{thebibliography}{99}
+
+\bibitem{BR}
+J.-L.~Baril and J.~L.~Ram\'irez, \emph{Knight's paths towards Catalan numbers}, arXiv:2206.12087 [math.CO], 2022.
+
+\bibitem{BHKR}
+J.-L.~Baril, N.~Hassler, S.~Kirgizov, and J.~L.~Ram\'irez, \emph{Grand zigzag knight's paths}, Enumer. Comb. Appl. \textbf{5}:1 (2025), Article \#S2R6, \url{https://doi.org/10.54550/ECA2025V5S1R6}; arXiv:2402.04851 [math.CO].
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171 [cs.AI], 2026.
+
+\bibitem{Lucas}
+\'E.~Lucas, \emph{Th\'eorie des fonctions num\'eriques simplement p\'eriodiques}, Amer. J. Math. \textbf{1} (1878), 184--240, 289--321.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proc.\ 9th ACM SIGPLAN Int.\ Conf.\ on Certified Programs and Proofs (CPP 2020), 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A000918}
+The OEIS Foundation Inc., \url{https://oeis.org/A000918}, entry by N.~J.~A. Sloane.
+
+\bibitem{A096587}
+The OEIS Foundation Inc., \url{https://oeis.org/A096587}, entry by C.~Kimberling (June~28, 2004).
+
+\bibitem{A096608}
+The OEIS Foundation Inc., \url{https://oeis.org/A096608}, entry by C.~Kimberling (June~29, 2004).
+
+\bibitem{A355320}
+The OEIS Foundation Inc., \url{https://oeis.org/A355320}, entry by R.~Sigrist (June~28, 2022).
+
+\bibitem{A355339}
+The OEIS Foundation Inc., \url{https://oeis.org/A355339}, entry and conjecture by R.~Sigrist (June~29, 2022), rev.~\#10.
+
+\end{thebibliography}
+}
+
+\end{document}

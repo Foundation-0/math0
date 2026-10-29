@@ -1,0 +1,324 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+\usepackage{booktabs}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    noncomputable,sorry},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  upquote=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {ˣ}{{$^{\times}$}}1
+    {∑}{{$\sum$}}1 {∈}{{$\in$}}1 {⊆}{{$\subseteq$}}1 {⊂}{{$\subset$}}1
+    {∃}{{$\exists$}}1 {∀}{{$\forall$}}1 {≠}{{$\ne$}}1 {∧}{{$\wedge$}}1
+    {→}{{$\to$}}1 {¬}{{$\neg$}}1 {δ}{{$\delta$}}1 {₀}{{$_0$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {∅}{{$\emptyset$}}1 {≤}{{$\le$}}1
+    {·}{{$\cdot$}}1 {↦}{{$\mapsto$}}1 {Θ}{{$\Theta$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{⊂}{\ensuremath{\subset}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{ˣ}{\ensuremath{^{\times}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{Θ}{\ensuremath{\Theta}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+
+\title[The formal statement of Erd\H{o}s Problem \#319 is false]{The largest minimal vanishing signed sum of reciprocals in $\{1,\dots,N\}$ depends on $N$: a defect in the formal statement of Erd\H{o}s Problem \#319}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 17, 2026}
+
+\begin{document}
+\begin{abstract}
+For $N\in\N$ let $c(N)$ be the largest size of a set $A\subseteq\{1,\dots,N\}$ that admits signs $\delta(n)\in\{-1,1\}$ with $\sum_{n\in A}\delta(n)/n=0$ such that no nonempty proper subset of $A$ has signed sum $0$. Erd\H{o}s Problem \#319 asks for $c(N)$; it is open, although $c(N)=\Theta(N)$ is known. The formal-conjectures repository states it in Lean as the claim that one natural number, which does not depend on $N$, equals $c(N)$ for every $N$. We prove that this claim is false for every value of that number, because $c(0)=0$ while $c(6)\ge 3$ (from $\frac12-\frac13-\frac16=0$); this is a misformalization report that says nothing about the open problem, and we propose a corrected statement. The proof is verified in Lean~4 against the upstream formal-conjectures statement, together with a check that our theorem is exactly that statement, negated and quantified over all values of the unknown.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Call a finite set $A$ of positive integers \emph{admissible} if there is a choice of signs $\delta(n)\in\{-1,1\}$, $n\in A$, such that
+\begin{equation}\label{eq:adm}
+\sum_{n\in A}\frac{\delta(n)}{n}=0
+\qquad\text{and}\qquad
+\sum_{n\in A'}\frac{\delta(n)}{n}\neq 0\quad\text{for every nonempty } A'\subsetneq A .
+\end{equation}
+For $N\in\N$ let $c(N)$ be the largest size of an admissible subset of $\{1,\dots,N\}$. Erd\H{o}s Problem \#319 \cite{EP319}, which goes back to Erd\H{o}s and Graham \cite{ErGr80}, asks for the size of the largest such set, that is, for $c(N)$. It is listed as open in the Erd\H{o}s problems database \cite{EPdb} (status last updated August 31, 2025), and \cite{EP319} records no solution.
+
+Trivially $c(N)\le N$. The only result recorded on \cite{EP319} is a lower bound observed by Adenwalla, $c(N)\ge(1-\frac1e+o(1))N$, which follows from a theorem of Croot \cite{Cr01}: for every $N>1$ there are integers $N<n_1<\dots<n_k\le(e+o(1))N$ with $\sum_i 1/n_i=1$. After rescaling, this gives a set $B\subseteq[(\frac1e-o(1))N,N]$ with $\sum_{b\in B}1/b=1$. The reciprocals of all integers in this interval sum to $1+o(1)$, so the integers of the interval missing from $B$ have reciprocal sum $o(1)$; each such reciprocal is at least $1/N$, so only $o(N)$ integers are missing and $|B|\ge(1-\frac1e-o(1))N$. For large $N$ we have $1\notin B$, and the set $A=B\cup\{1\}$ with $\delta(1)=1$ and $\delta=-1$ on $B$ is admissible: a nonempty proper subset containing $1$ has signed sum $1-\sum_{b\in B'}1/b>0$ with $B'\subsetneq B$, and one not containing $1$ has negative signed sum. Hence $c(N)=\Theta(N)$; the exact value of $c(N)$ is not known, and no asymptotic constant has been established in the refereed literature. When we checked in October 2026, the forum thread of \cite{EP319} had no comments, and the page listed one unrefereed proof claim, submitted in July 2026, asserting $c(N)=N-o(N)$; we have not checked it, and nothing below depends on it.
+
+The formal-conjectures repository \cite{FC} contains a Lean statement \decl{Erdos319.erdos_319} of this problem, together with the variants \decl{erdos_319.variants.isTheta} ($c(N)=\Theta(N)$) and \decl{erdos_319.variants.lb} (Adenwalla's bound), both tagged as solved and left with \texttt{sorry} proofs. At the pinned commit \texttt{c77fdd4} the unknown of the main statement is a single top-level definition \decl{erdos_319.answer} of type $\N$, and the theorem asserts, for every $N\in\N$, that this number is the greatest element of the set of sizes of admissible subsets of $\{1,\dots,N\}$ (Section~\ref{sec:statement}). So it claims that $c(N)$ is constant.
+
+\subsection*{Contribution and status}
+We prove (Theorem~\ref{thm:main}) that \decl{Erdos319.erdos_319} is false for every possible value of its unknown, because $c(0)=0$ and $c(6)\ge 3$. This is a \emph{misformalization report}. The argument is elementary and gives no information about the growth of $c(N)$. The defect itself had already been noted informally: the open pull request \#5446 to formal-conjectures \cite{PR5446} lists the answer slot of this statement among slots ``with the same defect'' (answers that cannot depend on inputs they must depend on) which it does not fix; see Section~\ref{sec:defect}. We found no previous formal proof that the statement is false. Section~\ref{sec:defect} proposes a corrected statement.
+
+\section{Statement}\label{sec:statement}
+
+\subsection{The upstream statement}
+The statement, copied verbatim from \path{FormalConjectures/ErdosProblems/319.lean} (lines 34--52, namespace \decl{Erdos319}, with \texttt{open Filter} and \texttt{open scoped Topology Finset Real}) at commit \texttt{c77fdd4}, is:
+\begin{lstlisting}
+def erdos_319.answer : ℕ := sorry
+
+/-- What is the size of the largest $A\subseteq\{1, \dots, N\}$ such that there is a function
+$\delta : A \to \{-1, 1\}$ such that
+$$
+  \sum_{n\in A} \frac{\delta n}{n} = 0
+$$
+and
+$$
+  \sum_{n\in A'}\frac{\delta n}{n} \neq 0
+$$
+for all non-empty $A'\subsetneq A$. -/
+@[category research open, question value, AMS 5]
+theorem erdos_319 (N : ℕ) : IsGreatest
+    { #A | (A) (_ : A ⊆ Finset.Icc 1 N)
+      (_ : ∃ δ : ℕ → ℤˣ, ∑ n ∈ A, (δ n : ℚ) / n = 0 ∧
+        ∀ A' ⊂ A, A'.Nonempty → ∑ n ∈ A', (δ n : ℚ) / n ≠ 0) }
+    erdos_319.answer := by
+  sorry
+\end{lstlisting}
+
+\subsection{Reading of the Lean statement}
+Here \texttt{A} and \texttt{A'} range over \texttt{Finset ℕ}, \texttt{\#A} is the cardinality of \texttt{A}, \texttt{Finset.Icc 1 N} is $\{1,\dots,N\}$ (empty for $N=0$) and \texttt{A' ⊂ A} is strict inclusion. The signs are a function $\delta\colon\N\to\Z^\times$, the units of $\Z$, i.e.\ $\delta(n)\in\{-1,1\}$, cast to $\Q$; only its values on $A$ matter, and every map $A\to\{-1,1\}$ extends to such a function, so this matches the docstring. Since $A\subseteq\{1,\dots,N\}$, every denominator is positive, and Lean's convention $x/0=0$ plays no role. The set-builder notation denotes
+\[
+S_N=\bigl\{\,|A| \;:\; A\subseteq\{1,\dots,N\},\ A \text{ admissible}\,\bigr\}\subseteq\N,
+\]
+with admissibility as in \eqref{eq:adm}, and \texttt{IsGreatest S a} means $a\in S$ and $x\le a$ for all $x\in S$. The empty set is admissible (its signed sum is $0$ and it has no nonempty proper subset) and $S_N\subseteq\{0,\dots,N\}$, so $S_N$ has a greatest element, namely $c(N)$. Thus, for each fixed $N$, the proposition \texttt{IsGreatest} $S_N$ $a$ says exactly $a=c(N)$; the encoding of the problem for fixed $N$ is faithful. Writing $a$ for \decl{erdos_319.answer}, the upstream theorem asserts
+\begin{equation}\label{eq:upstream}
+a=\max S_N=c(N)\qquad\text{for every } N\in\N .
+\end{equation}
+
+\subsection{Main result}
+
+\begin{theorem}\label{thm:main}
+There is no $a\in\N$ satisfying \eqref{eq:upstream}. More precisely, no $a\in\N$ is the greatest element of both $S_0$ and $S_6$.
+\end{theorem}
+
+In Lean (namespace \decl{Math0.Erdos319}):
+\begin{lstlisting}
+theorem erdos_319_refuted : ∀ c : ℕ, ¬ ∀ N : ℕ, IsGreatest
+    { #A | (A) (_ : A ⊆ Finset.Icc 1 N)
+      (_ : ∃ δ : ℕ → ℤˣ, ∑ n ∈ A, (δ n : ℚ) / n = 0 ∧
+        ∀ A' ⊂ A, A'.Nonempty → ∑ n ∈ A', (δ n : ℚ) / n ≠ 0) } c
+\end{lstlisting}
+This type is the type of \decl{Erdos319.erdos_319} with the constant \decl{erdos_319.answer} replaced by a bound variable \texttt{c}, negated and quantified over \texttt{c}. So it refutes the upstream statement for every way of filling in the unknown; Section~\ref{sec:lean} describes the check.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file; each lemma below is a theorem there, named in brackets. Let $\delta_0\colon\N\to\{-1,1\}$ be given by $\delta_0(2)=1$ and $\delta_0(n)=-1$ for $n\ne 2$ (the Lean definition \texttt{δ₀}).
+
+\begin{lemma}[\decl{eq_zero_of_mem}]\label{lem:S0}
+Every element of $S_0$ is $0$.
+\end{lemma}
+
+\begin{proof}
+If $|A|\in S_0$ is witnessed by $A$, then $A\subseteq\{1,\dots,0\}=\emptyset$, so $A=\emptyset$ and $|A|=0$.
+\end{proof}
+
+\begin{lemma}[\decl{sum_witness}]\label{lem:sum}
+$\sum_{n\in\{2,3,6\}}\delta_0(n)/n=0$.
+\end{lemma}
+
+\begin{proof}
+The sum is $\frac12-\frac13-\frac16=\frac{3-2-1}{6}=0$. In Lean, \texttt{simp} with \decl{Finset.sum_insert} and the definition of \texttt{δ₀} expands the sum into these three terms, and \texttt{norm\_num} evaluates it.
+\end{proof}
+
+\begin{lemma}[\decl{proper_witness}]\label{lem:proper}
+For every nonempty $A'\subsetneq\{2,3,6\}$, $\sum_{n\in A'}\delta_0(n)/n\ne 0$.
+\end{lemma}
+
+\begin{proof}
+The proper subsets of $\{2,3,6\}$ are $\emptyset$ and the six sets in the following table, which lists their signed sums under $\delta_0$:
+\begin{center}
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+$A'$ & $\{2\}$ & $\{3\}$ & $\{6\}$ & $\{2,3\}$ & $\{2,6\}$ & $\{3,6\}$\\
+\midrule
+$\sum_{n\in A'}\delta_0(n)/n$ & $\frac12$ & $-\frac13$ & $-\frac16$ & $\frac12-\frac13=\frac16$ & $\frac12-\frac16=\frac13$ & $-\frac13-\frac16=-\frac12$\\
+\bottomrule
+\end{tabular}
+\end{center}
+All six are nonzero, and $\emptyset$ is excluded by the hypothesis that $A'$ is nonempty.
+
+The Lean proof enumerates the proper subsets by a finite computation. From $A'\subset\{2,3,6\}$ it obtains $A'\subseteq\{2,3,6\}$ and $A'\ne\{2,3,6\}$, i.e.\ $A'\in\mathcal P(\{2,3,6\})\setminus\{\{2,3,6\}\}$ (\texttt{Finset.powerset} followed by \texttt{Finset.erase}). It then proves the equality of finite sets of finite sets
+\begin{lstlisting}
+(({2, 3, 6} : Finset ℕ).powerset.erase {2, 3, 6}) =
+    {∅, {2}, {3}, {6}, {2, 3}, {2, 6}, {3, 6}}
+\end{lstlisting}
+by \texttt{decide}. Equality of \texttt{Finset (Finset ℕ)} is decidable, and the kernel evaluates this decision procedure on the two closed terms, computing the powerset and the erasure, and checks that the result is \texttt{true}; no compiled code (\texttt{native\_decide}) is involved. Rewriting membership in the right-hand side gives seven cases. The case $A'=\emptyset$ contradicts nonemptiness, and in each of the other six cases \texttt{simp} expands the sum as in Lemma~\ref{lem:sum} and \texttt{norm\_num} proves that the resulting rational number, which is the corresponding entry of the table, is nonzero.
+\end{proof}
+
+\begin{lemma}[\decl{three_mem}]\label{lem:S6}
+$3\in S_6$.
+\end{lemma}
+
+\begin{proof}
+Take $A=\{2,3,6\}$ and the signs $\delta_0$. Then $A\subseteq\{1,\dots,6\}$, the signed sum over $A$ vanishes by Lemma~\ref{lem:sum}, and no nonempty proper subset has vanishing signed sum by Lemma~\ref{lem:proper}. So $A$ is admissible and $|A|=3\in S_6$. In Lean, the inclusion $\{2,3,6\}\subseteq$ \texttt{Finset.Icc 1 6} and the equality $|\{2,3,6\}|=3$ are each closed by \texttt{decide}.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $a\in\N$ and suppose that $a$ is the greatest element of $S_N$ for every $N$. For $N=0$, the membership $a\in S_0$ and Lemma~\ref{lem:S0} give $a=0$. For $N=6$, $a$ is an upper bound of $S_6$, so Lemma~\ref{lem:S6} gives $3\le a$. Together $3\le a=0$, a contradiction (closed by \texttt{omega} in Lean).
+\end{proof}
+
+\begin{remark}\label{rem:values}
+The proof uses only that $c(0)=0$ and $c(6)\ge 3$. The degenerate value $N=0$ is not essential: in fact $c(N)=0$ for $0\le N\le 5$ and $c(6)=4$, so any $N\le 5$ could replace $N=0$. We include the short argument, which is not part of the Lean development. Let $A\subseteq\{1,\dots,6\}$ be nonempty with $\sum_{n\in A}\delta(n)/n=0$, and multiply by $60$: $\sum_{n\in A}\delta(n)\,m_n=0$ with $(m_1,\dots,m_6)=(60,30,20,15,12,10)$. Reducing modulo $5$ shows $5\notin A$, since $m_5=12$ is the only $m_n$ not divisible by $5$. Then reducing modulo $2$ shows $4\notin A$, since $m_4=15$ is the only remaining odd $m_n$. Hence $A\subseteq\{1,2,3,6\}$ and $|A|\le 4$. If moreover $A\subseteq\{1,\dots,5\}$, then $A\subseteq\{1,2,3\}$, reducing modulo $3$ excludes $3$ (as $3\mid 60,30$ but $3\nmid 20$), and $\pm60$, $\pm30$, $\pm60\pm30$ are nonzero; so no nonempty subset of $\{1,\dots,5\}$ has a vanishing signed sum and $S_N=\{0\}$ for $N\le 5$. Conversely, $\{1,2,3,6\}$ with $\delta(1)=1$ and $\delta=-1$ elsewhere is admissible by the argument used for $B\cup\{1\}$ in the introduction, since $\frac12+\frac13+\frac16=1$. A direct computer search, also outside the Lean development, gives $c(N)=4$ for $6\le N\le 10$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is the file \path{lean/Math0/ErdosProblems/Erdos319_erdos_319.lean} of the math0 repository (\url{https://github.com/Foundation-0/math0}). It imports the upstream file \path{FormalConjectures/ErdosProblems/319.lean} and the math0 audit commands (\path{lean/Math0/Audit.lean}). In the namespace \decl{Math0.Erdos319} it declares the sign function \texttt{δ₀} and the theorems \decl{sum_witness} (Lemma~\ref{lem:sum}), \decl{proper_witness} (Lemma~\ref{lem:proper}), \decl{three_mem} (Lemma~\ref{lem:S6}), \decl{eq_zero_of_mem} (Lemma~\ref{lem:S0}) and the main theorem \decl{erdos_319_refuted} (Theorem~\ref{thm:main}). It contains no \texttt{sorry}, \texttt{native\_decide}, \texttt{set\_option} or \texttt{axiom}; the only uses of \texttt{decide} are the three small finite-set facts described in Section~\ref{sec:proof}. The file ends, after the namespace, with the audit command
+\begin{lstlisting}
+#math0_refutes_every_answer Math0.Erdos319.erdos_319_refuted Erdos319.erdos_319 with
+  Erdos319.erdos_319.answer
+\end{lstlisting}
+
+\subsection*{Audit}
+The command \texttt{\#math0\_refutes\_every\_answer} is defined in \path{lean/Math0/Audit.lean}. Given our theorem, the upstream theorem \decl{Erdos319.erdos_319} and its unknown \decl{Erdos319.erdos_319.answer} of type $T$ (here $T=\N$), it fails the build unless:
+\begin{enumerate}
+\item the two theorems have the same universe parameters and the unknown is not universe-polymorphic;
+\item the type of our theorem is syntactically identical, after removing metadata annotations and with no unfolding or definitional-equality check, to $\forall\, a : T,\ \neg P[a]$, where $P[a]$ is the type of the upstream theorem with every occurrence of the constant \decl{Erdos319.erdos_319.answer} replaced by the bound variable $a$;
+\item our theorem depends on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}; in particular not on \decl{sorryAx}, on \decl{Lean.ofReduceBool} (used by \texttt{native\_decide}) or on a custom axiom.
+\end{enumerate}
+The quantification over $a$ is needed because the body of the upstream definition is \texttt{sorry}: a proof of \texttt{¬ Erdos319.erdos\_319} itself would mention the constant \decl{erdos_319.answer}, whose axiom closure contains \decl{sorryAx}. The quantified form avoids this, and it also refutes every future version in which the definition is filled in and the theorem is left unchanged. On this file the command prints:
+\begin{lstlisting}
+math0 audit: 'Math0.Erdos319.erdos_319_refuted' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Erdos319.erdos_319_refuted' refutes 'Erdos319.erdos_319' for every value of 'Erdos319.erdos_319.answer'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1}, Mathlib \cite{Mathlib} \texttt{v4.33.1} and formal-conjectures \cite{FC} at commit \texttt{c77fdd4} (\texttt{c77fdd446d23539302aa73bcfae4a9fa962b8382}), all pinned in \path{lean/lakefile.toml} and \path{lean/lean-toolchain}. To reproduce, run \path{scripts/verify.sh} from the repository root. It downloads the Mathlib build cache, builds all math0 results with \texttt{lake build} (which re-runs every audit command), checks that the \texttt{formal\_conjectures} and \texttt{mathlib} checkouts have no local modifications, and reports the number of passed statement checks. The single file can be checked with \texttt{lake env lean Math0/ErdosProblems/Erdos319\_erdos\_319.lean} from the \path{lean} directory, which takes about 9 seconds once the dependencies are built.
+
+\section{The defect and a corrected statement}\label{sec:defect}
+
+\subsection*{The defect}
+Erd\H{o}s Problem \#319 asks for $c(N)$ as a function of $N$, and the upstream docstring asks for ``the size of the largest $A\subseteq\{1,\dots,N\}$''. In the Lean statement, however, \decl{erdos_319.answer} is a natural number declared once, outside the scope of the binder $N$, so it cannot depend on $N$. Since $c$ is not constant, the statement is false for the elementary reason of Theorem~\ref{thm:main}. Unlike some statements with the same kind of defect, restricting the range of $N$ does not help: by Remark~\ref{rem:values}, $c(1)=0<4=c(6)$, and since $c(N)\ge(1-\frac1e+o(1))N$, no constant equals $c(N)$ for all large $N$ either. The repository's own guidelines for reviewing statements ask to check, for a question that asks for a value, ``that the parameters it depends on are parameters of the definition''.
+
+The history of the file in \cite{FC} shows how the statement reached this form. The original formalization (commit \texttt{aadedd6a}, May 2025) wrote the unknown inline as \texttt{answer(sorry)} after the binder $N$. Pull request \#5446 \cite{PR5446}, opened on September 10, 2026 and still open in October 2026, is titled ``fix: answer slots that cannot depend on the inputs they must depend on''; after fixing several such slots elsewhere, it lists \texttt{319.lean:46} (in the version of the file current at that time, the line holding this \texttt{answer(sorry)}) among further slots with the same defect that it does not fix. Commit \texttt{2c24ebe7} (pull request \#7327, October 14, 2026) then replaced the inline placeholders of value questions by top-level definitions \texttt{<theorem>.answer}, which for this file produced the $N$-independent definition shown in Section~\ref{sec:statement}. As of October 2026 the file on the main branch of \cite{FC} is unchanged in this respect.
+
+\subsection*{A corrected statement}
+The repository's contribution guidelines let the answer definition take parameters of the theorem. We propose to make $N$ an argument of the unknown:
+\begin{lstlisting}
+def erdos_319.answer : ℕ → ℕ := sorry
+
+@[category research open, question value, AMS 5]
+theorem erdos_319 (N : ℕ) : IsGreatest
+    { #A | (A) (_ : A ⊆ Finset.Icc 1 N)
+      (_ : ∃ δ : ℕ → ℤˣ, ∑ n ∈ A, (δ n : ℚ) / n = 0 ∧
+        ∀ A' ⊂ A, A'.Nonempty → ∑ n ∈ A', (δ n : ℚ) / n ≠ 0) }
+    (erdos_319.answer N) := by
+  sorry
+\end{lstlisting}
+We checked that this compiles against the pinned formal-conjectures checkout; the upstream docstring, omitted here, should be kept (without it the repository's docstring linter warns). As for every value question in \cite{FC}, the corrected statement can be closed by the tautological filling in which \decl{erdos_319.answer} $N$ is $\max S_N$; the contribution guidelines state that deciding whether a filled-in answer is a mathematically meaningful solution is outside the scope of the repository. The upstream file itself notes that a solution may have to be expressed asymptotically, which is the role of \decl{erdos_319.variants.isTheta}. That variant and \decl{erdos_319.variants.lb} quantify over $N$ correctly (the former takes $c\colon\N\to\R$ as an argument, with the hypothesis that $c(N)=\max S_N$ for every $N$; the latter uses $\sup S_N$) and are not affected by the defect.
+
+\begin{thebibliography}{99}
+
+\bibitem{EP319}
+T.~F. Bloom, \emph{Erd\H{o}s Problem \#319}, \url{https://www.erdosproblems.com/319}, accessed October 2026.
+
+\bibitem{Cr01}
+E.~S. Croot III, \emph{On unit fractions with denominators in short intervals}, Acta Arith. \textbf{99} (2001), no.~2, 99--114.
+
+\bibitem{EPdb}
+Erd\H{o}s problems database contributors (maintained by T.~F. Bloom and T.~Tao), \emph{Erd\H{o}s problems database}, \url{https://github.com/teorth/erdosproblems}, accessed October 2026.
+
+\bibitem{ErGr80}
+P.~Erd\H{o}s and R.~L. Graham, \emph{Old and New Problems and Results in Combinatorial Number Theory}, Monographies de L'Enseignement Math\'ematique \textbf{28}, Universit\'e de Gen\`eve, Geneva, 1980.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{PR5446}
+formal-conjectures, pull request \#5446, \emph{fix: answer slots that cannot depend on the inputs they must depend on}, opened September 10, 2026, \url{https://github.com/google-deepmind/formal-conjectures/pull/5446}.
+
+\end{thebibliography}
+
+\end{document}

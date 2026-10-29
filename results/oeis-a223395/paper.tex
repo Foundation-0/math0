@@ -1,0 +1,353 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8, upquote=true,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {ℝ}{{$\mathbb{R}$}}1 {∀}{{$\forall$}}1
+    {∑}{{$\textstyle\sum$}}1 {∈}{{$\in$}}1 {→}{{$\to$}}1 {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1
+    {↔}{{$\leftrightarrow$}}1 {≤}{{$\le$}}1 {≠}{{$\ne$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\one}{\mathbf{1}}
+\newcommand{\sq}{\mathbin{\square}}
+
+\title[Walks on the $4\times4$ grid graph (OEIS A223395)]{Walks on the $4\times4$ grid graph: a proof of the recurrence, generating function and closed form conjectured in OEIS A223395}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 24, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $a(n)$ be the number of walks with $n$ vertices in the $4\times4$ grid graph $P_4\sq P_4$; this is the OEIS sequence A223395, defined there as a count of $n\times1$ arrays.
+We prove the three formulas that the entry records as empirical or conjectural: R.~H. Hardin's recurrence $a(n)=3a(n-1)+2a(n-2)-4a(n-3)$ for $n\ge4$, and Colin Barker's generating function $8x(2-3x^2)/((1-x)(1-2x-4x^2))$ and closed form.
+The proof reduces everything to the single identity $A^3\one+4\cdot\one=3A^2\one+2A\one$ for the adjacency matrix $A$; it is a routine instance of the transfer-matrix method and of the theory of main eigenvalues, and we classify it as a new result only in the narrow sense that we found no recorded proof of these formulas.
+The theorem is verified in Lean~4 against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry, whose definition of $a$ the kernel checks against all $24$ terms listed there.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+In March 2013 R.~H. Hardin contributed a family of OEIS sequences of the following kind: the nodes of a graph are labelled $0,1,\dots$, and one counts the $n\times k$ arrays of labels in which every move from an entry to a horizontal or vertical neighbour in the array moves along an edge of the graph.
+For the $4\times4$ square grid graph these numbers form the table A223402 \cite{A223402}, and its first column ($k=1$) is A223395 \cite{A223395}. An $n\times1$ array has no horizontal neighbours, so it is simply a walk with $n$ vertices ($n-1$ steps) in the grid graph $G=P_4\sq P_4$. If $A$ is the adjacency matrix of $G$ and $\one$ the all-ones vector, then $a(n)=\one^{\mathsf T}A^{\,n-1}\one$ for $n\ge1$, and the sequence begins $16,48,152,488,1576,\dots$.
+
+The entry \cite{A223395} lists Hardin's ``Empirical'' recurrence $a(n)=3a(n-1)+2a(n-2)-4a(n-3)$ (March~19, 2013) and, as ``Conjectures'' added by Colin Barker on August~20, 2018, a rational generating function and a closed form (quoted in Section~\ref{sec:statement}). In revision \#7 (August~20, 2018), the latest in the copy of the OEIS data we consulted, these labels are unchanged and there is no correction line; the table A223402 (revision \#8, October~3, 2025) still lists the recurrence of column $k=1$ as empirical, and so does the $3\times3$ analogue A223372 \cite{A223372} for its recurrence $a(n)=8a(n-2)$, $n>3$. We prove the three formulas of A223395 (Theorem~\ref{thm:main}) and verify the proof in Lean~4.
+
+\subsection*{Prior work and status}
+The math0 referees searched the OEIS, arXiv, MathOverflow, Mathematics Stack Exchange and the general web and found no explicit proof of the recurrence, the generating function or the closed form of A223395. The result is nevertheless a routine consequence of classical theory, and we do not present it as a substantive new theorem.
+Since $a(n)=\one^{\mathsf T}A^{n-1}\one$, the sequence satisfies the linear recurrence given by the monic polynomial of least degree that annihilates $\one$ under $A$. Cvetkovi\'c, Doob and Sachs \cite[Theorem~1.11]{CDS} express the generating function of the total numbers of walks of a graph through the characteristic polynomials of the graph and of its complement. The roots of the annihilating polynomial are the \emph{main eigenvalues} of $G$, those whose eigenspaces are not orthogonal to $\one$ (see Rowlinson's survey \cite{Ro}); the spectrum of $P_m\sq P_n$ is the classical set $\{2\cos\frac{i\pi}{m+1}+2\cos\frac{j\pi}{n+1}\}$ \cite{CDS}, and for $P_4\sq P_4$ the main eigenvalues are $1+\sqrt5$, $1$ and $1-\sqrt5$ (Remark~\ref{rem:spectral}). None of these sources states the formulas for $P_4\sq P_4$.
+
+The closest prior source is A081057 \cite{A081057} (P.~D. Hanna, 2003), defined by the exponential generating function $\bigl(\sum_{n\ge0}F_{n+1}x^n/n!\bigr)^2$. M.~Somos and V.~Jovovic (March 2003) gave its generating function, its recurrence, of the same signature $(3,2,-4)$, and a closed form; R.~J. Mathar (October 2010) noted that it ``apparently'' counts the walks on the $4\times4$ board that start at a corner; D.~Scambler (October 2010) decomposed such rook walks into independent horizontal and vertical walks, giving an exponential (binomial) convolution of Fibonacci numbers; and I.~M. Gessel (2022) gave the formula $(2^nL_{n+2}+2)/5$. A comment of R.~Jehn (October 2024) in A052899 \cite{A052899}, a sequence with the same signature, concerns walks leaving a $4\times4$ board. These entries concern walks from a corner, not all walks; the relation with A223395 (Remark~\ref{rem:A081057}) is not recorded in the OEIS. Dougherty-Bliss and Kauers \cite{DK} proved conjectured recurrences for a different family of Hardin's array sequences (king moves), which does not include the sequences considered here.
+
+Our contribution is a complete elementary proof, which avoids eigenvalues, together with a machine-checked version of it. We are not aware of an earlier formal proof.
+
+\section{Statement}\label{sec:statement}
+
+Let $V=\{0,1,\dots,15\}$, and place node $k$ in row $\lfloor k/4\rfloor$ and column $k\bmod 4$ of a $4\times4$ grid. Nodes $u,v$ are adjacent, $u\sim v$, if they are horizontal or vertical neighbours in the grid; this is the graph $G=P_4\sq P_4$, with $24$ edges. For $n\ge1$ let $a(n)$ be the number of sequences $(v_1,\dots,v_n)\in V^n$ with $v_i\sim v_{i+1}$ for $1\le i<n$, i.e.\ of walks with $n$ vertices in $G$.
+
+\begin{theorem}\label{thm:main}
+\begin{enumerate}
+\item For every $n\ge4$, $a(n)=3a(n-1)+2a(n-2)-4a(n-3)$.
+\item In the ring $\Z[[x]]$ of formal power series, $\displaystyle (1-x)(1-2x-4x^2)\sum_{n\ge1}a(n)x^n=8x(2-3x^2)$.
+\item For every $n\ge1$, $\displaystyle a(n)=\frac{8+(11-5\sqrt5)(1-\sqrt5)^n+(1+\sqrt5)^n(11+5\sqrt5)}{5}$.
+\end{enumerate}
+\end{theorem}
+
+Since $(1-x)(1-2x-4x^2)$ has constant term $1$, it is a unit in $\Z[[x]]$, so (2) is equivalent to $\sum_{n\ge1}a(n)x^n=8x(2-3x^2)/\bigl((1-x)(1-2x-4x^2)\bigr)$.
+The entry A223395 \cite{A223395} (offset $1$; author R.~H. Hardin, Mar 19 2013) reads, verbatim (name and FORMULA section):
+\begin{quote}
+{\small\raggedright\texttt{4 X 4 square grid graph coloring a rectangular array: number of n X 1 0..15 arrays where 0..15 label nodes of the square grid graph and every array movement to a horizontal or vertical neighbor moves along an edge of this graph.}\par\smallskip
+\texttt{Empirical: a(n) = 3*a(n-1) + 2*a(n-2) - 4*a(n-3).}\par
+\texttt{Conjectures from \_Colin Barker\_, Aug 20 2018: (Start)}\par
+\texttt{G.f.: 8*x*(2 - 3*x\^{}2) / ((1 - x)*(1 - 2*x - 4*x\^{}2)).}\par
+\texttt{a(n) = (8 + (11-5*sqrt(5))*(1-sqrt(5))\^{}n + (1+sqrt(5))\^{}n*(11+5*sqrt(5))) / 5.}\par
+\texttt{(End)}\par}
+\end{quote}
+Its EXAMPLE section lists the ``Vertex neighbors'' $0\to1\,4$, $1\to0\,2\,5$, \dots, $15\to14\,11$.
+
+\subsection*{Lean formalization}
+math0 formalized the statement in the file \path{lean/Math0/Statements/OEIS/A223395.lean}; it was reviewed for fidelity and frozen (SHA-256 \texttt{12e14164\ldots 2809}) before any proof attempt. The definitions and the statement read as follows (verbatim; the import, the documentation comments, two decidability instances and the data-check machinery described below are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A223395
+def Adj (i j : Fin 16) : Prop :=
+  (i.val / 4 = j.val / 4 ∧ (i.val % 4 + 1 = j.val % 4 ∨ j.val % 4 + 1 = i.val % 4)) ∨
+    (i.val % 4 = j.val % 4 ∧ (i.val / 4 + 1 = j.val / 4 ∨ j.val / 4 + 1 = i.val / 4))
+def entryNbrs : Fin 16 → List (Fin 16) :=
+  ![[1, 4], [0, 2, 5], [1, 3, 6], [2, 7], [0, 5, 8], [4, 1, 6, 9], [5, 2, 7, 10], [6, 3, 11],
+    [4, 9, 12], [8, 5, 10, 13], [9, 6, 11, 14], [10, 7, 15], [8, 13], [12, 9, 14],
+    [13, 10, 15], [14, 11]]
+theorem adj_iff_entry : ∀ i j : Fin 16, Adj i j ↔ j ∈ entryNbrs i := by decide +kernel
+def Valid {n : ℕ} (f : Fin n → Fin 16) : Prop :=
+  ∀ i j : Fin n, i.val + 1 = j.val → Adj (f i) (f j)
+def a (n : ℕ) : ℕ := Fintype.card {f : Fin n → Fin 16 // Valid f}
+def statementRec : Prop :=
+  ∀ n : ℕ, 4 ≤ n → (a n : ℤ) = 3 * a (n - 1) + 2 * a (n - 2) - 4 * a (n - 3)
+def statementGF : Prop :=
+  (1 - PowerSeries.X) * (1 - 2 * PowerSeries.X - 4 * PowerSeries.X ^ 2) *
+      PowerSeries.mk (fun n => if n = 0 then (0 : ℤ) else a n) =
+    8 * PowerSeries.X * (2 - 3 * PowerSeries.X ^ 2)
+def statementClosedForm : Prop :=
+  ∀ n : ℕ, 1 ≤ n → (a n : ℝ) =
+    (8 + (11 - 5 * Real.sqrt 5) * (1 - Real.sqrt 5) ^ n +
+      (1 + Real.sqrt 5) ^ n * (11 + 5 * Real.sqrt 5)) / 5
+def statement : Prop := statementRec ∧ statementGF ∧ statementClosedForm
+end Math0.Statements.A223395
+\end{lstlisting}
+\begin{itemize}
+\item Node $k$ is \texttt{k : Fin 16}, in row $k/4$ and column $k\%4$, and \decl{Adj} is grid adjacency; \decl{adj_iff_entry} checks in the kernel that it is exactly the neighbour list printed in the entry. An $n\times1$ array is a column \texttt{f : Fin n → Fin 16}. It has no horizontal neighbours, and as \decl{Adj} is symmetric, moving down or up between rows $i$ and $i+1$ gives the same condition, \decl{Valid}. \decl{Adj} is irreflexive, so equal consecutive entries are excluded, as the data require ($a(2)=48$ is twice the number of edges).
+\item \decl{a} is the number of valid columns, a count and not a formula. The offset is $1$; the value $a(0)=1$ (the empty column) is not a term and is not used by the statement. The file also defines the walk counts \decl{cnt}, the list-based transfer step \decl{stepL}, its iterates \decl{colsL} and the fast count \decl{aL}, proves \decl{a_eq_aL} (\texttt{a n = aL n} for all \texttt{n}), and checks all $24$ listed terms $a(1),\dots,a(24)=16,\dots,7716519437928$ by \texttt{decide +kernel} (\decl{a_data}). The lemmas used for this (\decl{valid_cons}, \decl{cnt_zero}, \decl{cnt_succ}, \decl{a_succ}, \decl{colsL_eq}, \dots) are reused in our proof.
+\item Hardin's recurrence carries no range in the entry; with offset $1$ it is read for all $n\ge4$, the first $n$ for which $a(n-3)$ is a term. It is stated in $\Z$ with every value of \decl{a} cast to $\Z$, so the subtraction is not truncated, and the index subtractions are exact since $n\ge4$. (With $a(0)=1$ the identity would fail at $n=3$: $152\ne172$.) Barker's series has constant term $0$ and its unit denominator is cleared, as in Theorem~\ref{thm:main}(2). The closed form is stated in $\R$ for $n\ge1$; at $n=0$ it would give $6\ne a(0)$.
+\end{itemize}
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file (Section~\ref{sec:lean}); each step names its Lean declaration.
+
+\subsection{Walk counts by starting vertex}
+For $n\ge0$ and $v\in V$ let $c_n(v)$ be the number of walks $(v_0,\dots,v_n)$ with $n+1$ vertices and $v_0=v$. In Lean, \texttt{cnt n v} is the number of valid columns \mbox{\texttt{f : Fin (n+1) → Fin 16}} with \texttt{f 0 = v}.
+
+\begin{lemma}[\decl{cnt_zero}, \decl{cnt_succ}, \decl{a_succ}]\label{lem:transfer}
+For all $n\ge0$ and $v\in V$: $\ c_0(v)=1,\quad c_{n+1}(v)=\sum_{u\sim v}c_n(u),\quad a(n+1)=\sum_{v\in V}c_n(v)$.
+\end{lemma}
+
+\begin{proof}
+A walk with one vertex is determined by that vertex. A sequence $(v,v_1,\dots,v_{n+1})$ is a walk if and only if $v\sim v_1$ and $(v_1,\dots,v_{n+1})$ is a walk (\decl{valid_cons}); grouping these walks by $u=v_1$ gives the second identity. Grouping the walks with $n+1$ vertices by their first vertex gives the third.
+\end{proof}
+
+In vector notation $c_0=\one$ and $c_{n+1}=Ac_n$, so $c_n=A^n\one$ and $a(n+1)=\one^{\mathsf T}A^n\one$.
+
+\subsection{The key identity}
+
+\begin{lemma}[\decl{cnt_base}]\label{lem:base}
+For every $v\in V$, $c_3(v)+4c_0(v)=3c_2(v)+2c_1(v)$.
+\end{lemma}
+
+\begin{proof}
+Write a vector on $V$ as a $4\times4$ array in grid position. Lemma~\ref{lem:transfer} gives $c_1(v)=\deg v$ and
+\[
+  c_1=\begin{pmatrix}2&3&3&2\\3&4&4&3\\3&4&4&3\\2&3&3&2\end{pmatrix},\quad
+  c_2=\begin{pmatrix}6&9&9&6\\9&14&14&9\\9&14&14&9\\6&9&9&6\end{pmatrix},\quad
+  c_3=\begin{pmatrix}18&29&29&18\\29&46&46&29\\29&46&46&29\\18&29&29&18\end{pmatrix}.
+\]
+For instance, node $1$ has the neighbours $0$, $2$ and $5$, so $c_2(1)=2+3+4=9$ and $c_3(1)=6+9+14=29$. The claim reads $18+4=3\cdot6+2\cdot2$ at the corners, $29+4=3\cdot9+2\cdot3$ at the other boundary nodes and $46+4=3\cdot14+2\cdot4$ at the inner nodes.
+In Lean, \decl{cnt_eq_colsL} (from \decl{colsL_eq}) rewrites $c_n(v)$ as the $v$-th entry of the list \texttt{colsL n}, obtained from the all-ones list of length $16$ by $n$ applications of the transfer step \decl{stepL}, and the $16$ resulting equations are proved by \texttt{decide +kernel}: the kernel evaluates the decision procedure by definitional unfolding to \texttt{true}. No compiled code is run and no axiom is added.
+\end{proof}
+
+\begin{lemma}[\decl{cnt_rec}]\label{lem:propagate}
+For all $n\ge0$ and $v\in V$, $c_{n+3}(v)+4c_n(v)=3c_{n+2}(v)+2c_{n+1}(v)$.
+\end{lemma}
+
+\begin{proof}
+Induction on $n$; the case $n=0$ is Lemma~\ref{lem:base}. If the identity holds for $n$ and all vertices, then by Lemma~\ref{lem:transfer}
+\[
+  c_{n+4}(v)+4c_{n+1}(v)=\sum_{u\sim v}\bigl(c_{n+3}(u)+4c_n(u)\bigr)
+  =\sum_{u\sim v}\bigl(3c_{n+2}(u)+2c_{n+1}(u)\bigr)=3c_{n+3}(v)+2c_{n+2}(v).
+\]
+All quantities are natural numbers and no subtraction occurs.
+\end{proof}
+
+\begin{lemma}[\decl{a_rec}]\label{lem:arec}
+For every $m\ge0$, $a(m+4)+4a(m+1)=3a(m+3)+2a(m+2)$.
+\end{lemma}
+
+\begin{proof}
+Sum Lemma~\ref{lem:propagate} (with $n=m$) over $v\in V$ and use $a(k+1)=\sum_vc_k(v)$ (Lemma~\ref{lem:transfer}).
+\end{proof}
+
+\begin{lemma}[\decl{a_small}]\label{lem:small}
+$a(1)=16$, $a(2)=48$ and $a(3)=152$.
+\end{lemma}
+
+\begin{proof}
+These are the sums of the entries of $c_0$, $c_1$ and $c_2$. In Lean: rewriting with \decl{a_eq_aL}, then \texttt{decide +kernel}.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:main}}
+
+\emph{(1) The recurrence} (\decl{rec_part}). Let $n\ge4$ and write $n=m+4$. Casting Lemma~\ref{lem:arec} to $\Z$ and rearranging gives $a(n)=3a(n-1)+2a(n-2)-4a(n-3)$.
+
+\emph{(2) The generating function} (\decl{gf_part}). Put $b_0=0$ and $b_n=a(n)$ for $n\ge1$, so that $F=\sum_{n\ge0}b_nx^n$ is the series of the statement. We have $(1-x)(1-2x-4x^2)=1-3x-2x^2+4x^3$ and $8x(2-3x^2)=16x-24x^3$. The coefficient of $x^k$ in $(1-3x-2x^2+4x^3)F$ is $b_k-3b_{k-1}-2b_{k-2}+4b_{k-3}$, where terms with a negative index are omitted. By Lemma~\ref{lem:small} it equals $0$ for $k=0$; $16$ for $k=1$; $48-3\cdot16=0$ for $k=2$; and $152-3\cdot48-2\cdot16=-24$ for $k=3$. For $k=m+4$ it equals $a(m+4)-3a(m+3)-2a(m+2)+4a(m+1)=0$ by Lemma~\ref{lem:arec}. These are the coefficients of $16x-24x^3$. In Lean the coefficients are extracted with \decl{PowerSeries.coeff_X_pow_mul'} and \decl{PowerSeries.coeff_C_mul}, followed by the case split $k\in\{0,1,2,3\}$ or $k\ge4$.
+
+\emph{(3) The closed form} (\decl{cf_part}). Let $s=\sqrt5$, so $s^2=5$, and for $n\ge0$ let
+\[
+  r(n)=\bigl(8+(11-5s)(1-s)^n+(1+s)^n(11+5s)\bigr)/5.
+\]
+\emph{Initial values.} Using $s^2=5$, $(1\mp s)^j(11\mp5s)$ equals $36\mp16s$, $116\mp52s$, $376\mp168s$ for $j=1,2,3$; hence $r(1)=(8+72)/5=16$, $r(2)=(8+232)/5=48$ and $r(3)=(8+752)/5=152$.
+\emph{Recurrence.} For $t\in\{1,1-s,1+s\}$ we have $t^3-3t^2-2t+4=(t-1)(t^2-2t-4)=0$: for $t=1$ the first factor vanishes, and for $t=1\pm s$ the second factor is $s^2-5=0$. Multiplying by $t^{m+1}$ and combining gives $r(m+4)=3r(m+3)+2r(m+2)-4r(m+1)$ for all $m\ge0$. Explicitly, as a polynomial identity in an indeterminate $s$,
+\[
+  r(m+4)-3r(m+3)-2r(m+2)+4r(m+1)=\tfrac{1}{5}\,s\,(s^2-5)\bigl((1+s)^{m+1}(11+5s)-(1-s)^{m+1}(11-5s)\bigr).
+\]
+\emph{Induction.} We show by induction on $m\ge0$ that $a(m+j)=r(m+j)$ for $j=1,2,3$. For $m=0$ this is Lemma~\ref{lem:small} together with the initial values. If it holds for $m$, the first two equalities for $m+1$ are hypotheses, and Lemma~\ref{lem:arec}, cast to $\R$, gives
+$a(m+4)=3a(m+3)+2a(m+2)-4a(m+1)=3r(m+3)+2r(m+2)-4r(m+1)=r(m+4)$.
+Hence $a(n)=r(n)$ for all $n\ge1$. In Lean the initial values and the inductive step are each closed by one \texttt{linear\_combination} using $s^2=5$.
+
+The three parts give \decl{statement}: in Lean, \texttt{theorem result : statement := ⟨rec\_part, gf\_part, cf\_part⟩}.\qed
+
+\subsection{Remarks (not formalized)}
+
+\begin{remark}[spectral explanation]\label{rem:spectral}
+The eigenvalues of $P_4$ are $2\cos(j\pi/5)$, $j=1,\dots,4$, with eigenvectors $(\sin(ij\pi/5))_{i=1}^4$; for even $j$ these are antisymmetric under $i\mapsto5-i$, hence orthogonal to $\one$, while for $j=1,3$ their coordinate sums are nonzero. So the main eigenvalues of $P_4$ are $\varphi=2\cos(\pi/5)=(1+\sqrt5)/2$ and $\psi=2\cos(3\pi/5)=(1-\sqrt5)/2$. Since $A_{G\sq H}=A_G\otimes I+I\otimes A_H$ and $\one_{G\sq H}=\one_G\otimes\one_H$, the main eigenvalues of $P_4\sq P_4$ are $2\varphi=1+\sqrt5$, $\varphi+\psi=1$ and $2\psi=1-\sqrt5$, the roots of $(t-1)(t^2-2t-4)$. This explains Lemma~\ref{lem:base}, but the proof above uses only the finite check.
+\end{remark}
+
+\begin{remark}[relation with A081057]\label{rem:A081057}
+Let $h(n)$ be A081057, so that
+\[
+  \sum_{n\ge0}h(n)\frac{x^n}{n!}=\Bigl(\sum_{n\ge0}F_{n+1}\frac{x^n}{n!}\Bigr)^2=\frac{\bigl(\varphi e^{\varphi x}-\psi e^{\psi x}\bigr)^2}{5}.
+\]
+As $\varphi+\psi=1$ and $\varphi\psi=-1$, this gives $h(n)=\bigl(2+\varphi^2(1+\sqrt5)^n+\psi^2(1-\sqrt5)^n\bigr)/5$ for $n\ge0$. Since $2\varphi^2(1+2\varphi)=(3+\sqrt5)(2+\sqrt5)=11+5\sqrt5$ and $2\psi^2(1+2\psi)=11-5\sqrt5$, Theorem~\ref{thm:main}(3) yields
+$a(n)=2\bigl(h(n)+h(n+1)\bigr)$ for $n\ge1$; e.g.\ $16=2(2+6)$, $48=2(6+18)$, $152=2(18+58)$. We have not looked for a bijective explanation.
+\end{remark}
+
+\begin{remark}[the $3\times3$ grid]\label{rem:3x3}
+The same method proves the empirical recurrence of A223372 \cite{A223372}, the walk counts of $P_3\sq P_3$: there $c_1$ takes the values $2,3,4$ at the corners, the boundary midpoints and the centre, and $c_3$ the values $16,24,32$, so $A^3\one=8A\one$. Applying $A^k$ and summing gives $a(n)=8a(n-2)$ whenever $n-1\ge3$, i.e.\ for $n>3$, exactly Hardin's range; at $n=3$ it fails, as $a(3)=68\ne8a(1)=72$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A223395.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A223395.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is the theorem \decl{Math0.Frontier.A223395.result}, whose type is \decl{Math0.Statements.A223395.statement}; the auxiliary lemmas \decl{cnt_eq_colsL}, \decl{cnt_base}, \decl{cnt_rec}, \decl{a_rec}, \decl{rec_part}, \decl{a_small}, \decl{gf_part} and \decl{cf_part} are \texttt{private} and state what Section~\ref{sec:proof} says. Neither file contains \texttt{sorry}, \texttt{admit}, \texttt{native\_decide}, \texttt{axiom} or \texttt{set\_option}; the kernel computations (\texttt{decide +kernel} in \decl{cnt_base} and \decl{a_small}, and in \decl{adj_iff_entry} and \decl{a_data} of the statement file) run within the default heartbeat limit. The proof file ends with
+
+\noindent\begin{minipage}{\linewidth}
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A223395.result Math0.Statements.A223395.statement
+\end{lstlisting}
+\end{minipage}
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a definition of type \texttt{Prop} without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, which rejects \decl{sorryAx}, \decl{Lean.ofReduceBool} (from \texttt{native\_decide}) and custom axioms; and (3) the type of \decl{result} is syntactically the statement or its negation, up to metadata, with no unfolding. Here it reports:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A223395.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A223395.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A223395.result' proves 'Math0.Statements.A223395.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, both pinned in \path{lean/}. The repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}; this result does not use it, since the statement is math0's own formalization of the OEIS entry.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The single file is checked by \texttt{lake env lean Math0/Frontier/OEIS/A223395.lean} in the directory \path{lean}, in about $15$ seconds on our machine.
+
+{\footnotesize
+\begin{thebibliography}{99}
+
+\bibitem{CDS}
+D.~M. Cvetkovi\'c, M.~Doob, and H.~Sachs, \emph{Spectra of Graphs: Theory and Application}, Pure and Applied Mathematics \textbf{87}, Academic Press, New York, 1980.
+
+\bibitem{DK}
+R.~Dougherty-Bliss and M.~Kauers, \emph{Hardinian arrays}, Electron. J. Combin. \textbf{31} (2024), no.~2, Paper No.~P2.9; arXiv:2309.00487.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A052899}
+The OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, A052899, \url{https://oeis.org/A052899}.
+
+\bibitem{A081057}
+The OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, A081057, \url{https://oeis.org/A081057}.
+
+\bibitem{A223372}
+The OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, A223372, \url{https://oeis.org/A223372}.
+
+\bibitem{A223395}
+The OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, A223395, \url{https://oeis.org/A223395}.
+
+\bibitem{A223402}
+The OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, A223402, \url{https://oeis.org/A223402}.
+
+\bibitem{Ro}
+P.~Rowlinson, \emph{The main eigenvalues of a graph: a survey}, Appl. Anal. Discrete Math. \textbf{1} (2007), no.~2, 455--471.
+
+\end{thebibliography}
+}
+\end{document}

@@ -1,0 +1,436 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,noncomputable,unfold,rw,at,apply,ring,linear_combination},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {∀}{{$\forall$}}1
+    {↔}{{$\leftrightarrow$}}1 {¬}{{$\neg$}}1 {←}{{$\leftarrow$}}1 {→}{{$\to$}}1 {·}{{$\cdot$}}1
+    {∑}{{$\sum$}}1 {∈}{{$\in$}}1 {∧}{{$\wedge$}}1 {×}{{$\times$}}1 {ˢ}{{$^{s}$}}1
+    {⁻}{{$^{-}$}}1 {¹}{{$^{1}$}}1 {≤}{{$\le$}}1 {≠}{{$\ne$}}1 {₀}{{$_0$}}1
+    {⟦}{{$[\![$}}1 {⟧}{{$]\!]$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+\raggedbottom
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Qx}{\Q[\![X]\!]}
+
+\title[Smallest sides of scalene integer triangles (OEIS A308107)]{The sum of the smallest sides of scalene integer triangles of perimeter $n$: a proof of Barker's generating function and recurrence for OEIS A308107}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 24, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $a(n)$ be the sum of the smallest sides of all scalene triangles with integer sides and perimeter $n$ (OEIS A308107).
+We prove the two formulas that Colin Barker conjectured for this sequence in 2019: the generating function $\sum_n a(n)x^n = x^9(2+2x+2x^2+x^3)/D(x)$, where $D(x)=(1-x)^4(1+x)^3(1+x^2)^2(1+x+x^2)^2$, and the resulting linear recurrence of order $15$, valid for $n>15$.
+The proof separates the triangles whose middle side exceeds the smallest side by one, parametrizes these by two positive integers, and turns a chain of bijective shift relations into an identity of formal power series.
+To our knowledge this is the first recorded proof (the entry still lists both formulas as conjectures), although the argument is elementary.
+The result is verified in Lean~4 with Mathlib against the frozen statement that math0 formalized from the OEIS entry; that statement was reviewed for fidelity before any proof attempt, and its definition of $a$ is checked by the kernel against all $61$ listed terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For $n\in\N$ let
+\[
+  T(n)=\{(k,i,j)\in\N^3 : k<i<j<k+i,\ k+i+j=n\},\qquad a(n)=\sum_{(k,i,j)\in T(n)} k .
+\]
+A scalene triangle with integer sides is determined by its three pairwise distinct side lengths, listed in increasing order as $k<i<j$; for such a triple the triangle inequalities reduce to $j<k+i$, and they force $k>j-i\ge1$.
+So $T(n)$ is the set of scalene integer triangles of perimeter $n$, $k$ is the smallest side, and $a(n)$ is the sequence A308107 of the OEIS \cite{A308107}, submitted by Wesley Ivan Hurt on May~13, 2019, with offset $1$.
+Its first nonzero terms are $a(9)=2$ (the triangle $(2,3,4)$), $a(11)=2$ (the triangle $(2,4,5)$) and $a(12)=3$ (the triangle $(3,4,5)$).
+On the same day Colin Barker added two conjectured formulas to the entry (Conjecture~\ref{conj} below).
+We prove both.
+
+\begin{theorem}\label{thm:main}
+As formal power series over $\Q$,
+\begin{equation}\label{eq:gf}
+  \sum_{n\ge0} a(n)\,x^n=\frac{x^9\,(2+2x+2x^2+x^3)}{(1-x)^4(1+x)^3(1+x^2)^2(1+x+x^2)^2},
+\end{equation}
+and for every integer $n>15$,
+\begin{multline}\label{eq:rec}
+  a(n) = -a(n-1) + 2a(n-3) + 4a(n-4) + 2a(n-5) - a(n-6) - 5a(n-7) - 5a(n-8) \\
+  - a(n-9) + 2a(n-10) + 4a(n-11) + 2a(n-12) - a(n-14) - a(n-15).
+\end{multline}
+\end{theorem}
+
+By the factorizations in the proof of Proposition~\ref{prop:AD}, the right-hand side of \eqref{eq:gf} equals
+\[
+  \frac{x^9\,(2-x^3-x^4)}{(1-x^2)(1-x^3)^2(1-x^4)^2}=\sum_{u,v,w\ge1}(v+w)\,x^{2u+4v+3w},
+\]
+which reflects the parametrization $(k,i,j)=(v+w,\,v+w+u,\,2v+w+u)$ of $T(n)$ by the positive integers $u,v,w$ with $2u+4v+3w=n$.
+The Lean proof, which we follow in Section~\ref{sec:proof}, uses this parametrization in steps: it removes $u$ by the shift $(k,i,j)\mapsto(k,i+1,j+1)$, and then $v$ and $w$ by further shifts, each giving an identity $(1-X^d)F=G$ in $\Qx$.
+
+\subsection*{Prior work and status}
+The number of integer triangles of perimeter $n$ is Alcuin's sequence A005044 \cite{A005044}, with generating function $x^3/((1-x^2)(1-x^3)(1-x^4))$; Andrews, Paule and Riese \cite{APR01} extended this to $k$-gons with MacMahon's partition analysis, Hirschhorn \cite{Hir02} gave a short derivation of their result, and Patronis and Rizos \cite{PR23} compare two elementary methods for triangles.
+These works count triangles and do not consider sums of side lengths.
+Hurt's related entries A307686 (smallest sides, all triangles) \cite{A307686}, A308108 and A308109 (largest and middle sides, scalene) \cite{A308108,A308109} and A308158 (smallest sides, isosceles) \cite{A308158} also carry generating functions conjectured by Barker in May 2019.
+These entries, and A308107 itself (revision \#14 of September~12, 2021, the current one), still mark Barker's formulas as conjectures and record no proof.
+A comment of Roger Cuculière in A005044 relates the scalene triangles of perimeter $n+6$ to all triangles of perimeter $n$; this reduces A308107 to A307686 (Remark~\ref{rem:A307686}) but proves neither.
+Fried's proofs of OEIS conjectures \cite{Fri24,Fri25,Fri26,Fri26b} do not cover these sequences.
+The math0 literature referees found no prior proof or counterexample, so we classify Theorem~\ref{thm:main} as a new result; the argument is a routine computation of MacMahon type, and the formula may have been derived elsewhere without being recorded.
+
+\section{Statement}\label{sec:statement}
+
+\subsection*{The OEIS conjecture}
+The FORMULA section of A308107 reads, verbatim:
+\begin{lstlisting}[language={}]
+Conjectures from _Colin Barker_, May 13 2019: (Start)
+G.f.: x^9*(2 + 2*x + 2*x^2 + x^3) / ((1 - x)^4*(1 + x)^3*(1 + x^2)^2*(1 + x + x^2)^2).
+a(n) = -a(n-1) + 2*a(n-3) + 4*a(n-4) + 2*a(n-5) - a(n-6) - 5*a(n-7) - 5*a(n-8) - a(n-9) + 2*a(n-10) + 4*a(n-11) + 2*a(n-12) - a(n-14) - a(n-15) for n>15.
+(End)
+\end{lstlisting}
+
+\begin{conjecture}[Barker, 2019]\label{conj}
+The sequence $a$ satisfies \eqref{eq:gf}, and \eqref{eq:rec} for all $n>15$.
+\end{conjecture}
+
+The entry's defining formula (also used in its PARI and Mathematica programs) is
+\[
+  a(n)=\sum_{k=1}^{\lfloor(n-1)/3\rfloor}\ \sum_{i=k+1}^{\lfloor(n-k-1)/2\rfloor}\operatorname{sign}\Bigl(\Bigl\lfloor\frac{i+k}{n-i-k+1}\Bigr\rfloor\Bigr)\,k .
+\]
+With $j=n-i-k$, the bound on $i$ says $i<j$, the sign factor is $1$ if $j<k+i$ and $0$ otherwise, and the bound on $k$ follows from $3k<k+i+j=n$; so this is the definition of $a$ above.
+
+\subsection*{Lean statement}
+The statement is the definition \decl{Math0.Statements.A308107.statement} in the math0 statement file \path{lean/Math0/Statements/OEIS/A308107.lean}, which was reviewed for fidelity and frozen (SHA-256 \texttt{e5f81c2e\ldots 516275}) before any proof attempt.
+The definition of $a$ and the statement read, verbatim (docstrings omitted; namespace \decl{Math0.Statements.A308107}, with \texttt{open PowerSeries}):
+\begin{lstlisting}
+def a (n : ℕ) : ℕ :=
+  ∑ t ∈ (Finset.range (n + 1) ×ˢ Finset.range (n + 1) ×ˢ Finset.range (n + 1)).filter
+      (fun t : ℕ × ℕ × ℕ => t.1 < t.2.1 ∧ t.2.1 < t.2.2 ∧ t.2.2 < t.1 + t.2.1 ∧
+        t.1 + t.2.1 + t.2.2 = n),
+    t.1
+
+def statement : Prop :=
+  (PowerSeries.mk (fun n => (a n : ℚ)) =
+    X ^ 9 * (2 + 2 * X + 2 * X ^ 2 + X ^ 3) *
+      ((1 - X) ^ 4 * (1 + X) ^ 3 * (1 + X ^ 2) ^ 2 * (1 + X + X ^ 2) ^ 2)⁻¹) ∧
+  (∀ n : ℕ, 15 < n →
+    (a n : ℤ) = -(a (n - 1) : ℤ) + 2 * (a (n - 3) : ℤ) + 4 * (a (n - 4) : ℤ) +
+      2 * (a (n - 5) : ℤ) - (a (n - 6) : ℤ) - 5 * (a (n - 7) : ℤ) - 5 * (a (n - 8) : ℤ) -
+      (a (n - 9) : ℤ) + 2 * (a (n - 10) : ℤ) + 4 * (a (n - 11) : ℤ) + 2 * (a (n - 12) : ℤ) -
+      (a (n - 14) : ℤ) - (a (n - 15) : ℤ))
+\end{lstlisting}
+
+\subsection*{Encoding}
+A triple \texttt{t} stands for $(k,i,j)=(\texttt{t.1},\texttt{t.2.1},\texttt{t.2.2})$, so \texttt{a n} is $\sum_{T(n)}k$; the range $\{0,\dots,n\}^3$ loses nothing as the sides sum to $n$.
+The entry has offset $1$; the extra value $a(0)=0$ (an empty sum) is harmless, as the right-hand side of \eqref{eq:gf} has zero constant term.
+The first clause is \eqref{eq:gf} in Mathlib's ring $\Qx$, where \texttt{PowerSeries.mk f} is $\sum_n f(n)X^n$ and \texttt{⁻¹} is the inverse of power series over a field.
+The denominator $D=(1-X)^4(1+X)^3(1+X^2)^2(1+X+X^2)^2$ has constant coefficient $1$, so $D^{-1}$ is its true inverse, and \decl{genFun_iff} (from Mathlib's \decl{PowerSeries.eq_mul_inv_iff_mul_eq}) shows that the first clause is equivalent to
+\begin{equation}\label{eq:AD}
+  A\cdot D = X^9(2+2X+2X^2+X^3),\qquad A=\textstyle\sum_{n\ge0}a(n)X^n .
+\end{equation}
+The second clause is \eqref{eq:rec} in $\Z$ for $n>15$; then $n-15\ge1$, so no truncated subtraction occurs.
+
+\subsection*{Checks against the OEIS data}
+The statement file defines a faster evaluator \decl{aFast}, which sums over the pairs $(k,i)$ with $j=n-(k+i)$, proves \decl{a_eq_aFast} (\texttt{a n = aFast n} for all $n$), and checks in \decl{a_data}, by \texttt{decide +kernel}, that $a(1),\dots,a(61)$ are the $61$ listed terms $0,\dots,0,2,0,2,3,5,3,9,\dots,740,735,825$.
+Two further checks concern the transcription of the conjecture: \decl{recurrence_data} checks by \texttt{decide} that the listed terms satisfy \eqref{eq:rec} for $16\le n\le61$, and \decl{den_eq} checks by \texttt{ring} that
+\begin{equation}\label{eq:den}
+  D = 1 + X - 2X^3 - 4X^4 - 2X^5 + X^6 + 5X^7 + 5X^8 + X^9 - 2X^{10} - 4X^{11} - 2X^{12} + X^{14} + X^{15},
+\end{equation}
+the characteristic polynomial of \eqref{eq:rec}.
+
+\section{Proof}\label{sec:proof}
+
+We follow the declarations of the Lean file, whose names we give in brackets; all except \decl{result} are private.
+We write $[P]$ for $1$ if $P$ holds and $0$ otherwise.
+Besides $T(n)$ (\decl{T}; $a(n)=\sum_{T(n)}k$ is \decl{a_eq_T}) we use $U(n)=\{(v,w)\in\N^2 : v,w\ge1,\ 4v+3w+2=n\}$ (\decl{U}) and
+\[
+  b_v(n)=\sum_{U(n)}v,\quad b_w(n)=\sum_{U(n)}w,\quad c(n)=\#U(n),\quad e(n)=\#\{(v,w)\in U(n): v=1\}
+\]
+(\decl{bv}, \decl{bw}, \decl{c}, \decl{e}); in Lean, $T(n)$ and $U(n)$ are filtered from $\{0,\dots,n\}^3$ and $\{0,\dots,n\}^2$.
+Each bijection below is applied with Mathlib's \decl{Finset.sum_nbij'}, which needs the two maps, membership of their images, the two inverse identities and equality of the summands; after unfolding membership, these goals are closed by \texttt{omega} (a few trivial ones by \texttt{simp} or \texttt{rfl}).
+
+\subsection*{Step 1: the middle side}
+
+\begin{lemma}[\decl{sum_T_filter}]\label{lem:tight}
+For every $n$, $\displaystyle\sum_{(k,i,j)\in T(n),\ i=k+1}k=\sum_{(v,w)\in U(n)}(v+w)$.
+\end{lemma}
+
+\begin{proof}
+Let $\varphi(v,w)=(v+w,\,v+w+1,\,2v+w+1)$ and $\psi(k,i,j)=(j-k-1,\,2k+1-j)$.
+If $(v,w)\in U(n)$, then $(k,i,j)=\varphi(v,w)$ satisfies $i=k+1$, $k<i$, $i<j$ (as $v\ge1$), $j<k+i=2v+2w+1$ (as $w\ge1$) and $k+i+j=4v+3w+2=n$.
+Conversely, if $(k,i,j)\in T(n)$ and $i=k+1$, then $v=j-k-1\ge1$ because $j>i$, $w=2k+1-j\ge1$ because $j<k+i$, and $4v+3w+2=j+2k+1=k+i+j=n$.
+Direct computation gives $\varphi(\psi(k,i,j))=(k,i,j)$ when $i=k+1$, and $\psi(\varphi(v,w))=(v,w)$.
+The summand $k$ at $\varphi(v,w)$ is $v+w$.
+\end{proof}
+
+\begin{lemma}[\decl{sum_T_filter_not}]\label{lem:loose}
+For every $n$, $\displaystyle\sum_{(k,i,j)\in T(n+2),\ i\ne k+1}k=\sum_{(k,i,j)\in T(n)}k$.
+\end{lemma}
+
+\begin{proof}
+The map $(k,i,j)\mapsto(k,i+1,j+1)$ sends $T(n)$ into $\{(k,i,j)\in T(n+2): i\ne k+1\}$, as $k<i$ gives $i+1\ne k+1$.
+Its inverse is $(k,i,j)\mapsto(k,i-1,j-1)$: if $(k,i,j)\in T(n+2)$ and $i\ne k+1$, then $i\ge k+2$, so $k<i-1<j-1<k+(i-1)$ and the perimeter drops by $2$.
+Both maps preserve the summand $k$.
+\end{proof}
+
+Splitting $T(n+2)$ according to whether $i=k+1$ and applying Lemmas~\ref{lem:tight} and~\ref{lem:loose} gives
+\begin{equation}\label{eq:ashift}
+  a(n+2)=a(n)+b_v(n+2)+b_w(n+2)\qquad(n\in\N)\quad(\text{\decl{a_shift}}).
+\end{equation}
+
+\subsection*{Step 2: shifts in \texorpdfstring{$U$}{U}}
+
+\begin{lemma}[\decl{U_shift_v}, \decl{U_shift_w}]\label{lem:Ushift}
+For every $n$ and every $g:\N^2\to\N$,
+\begin{align*}
+  \sum_{U(n+4)}g(v,w)&=\sum_{U(n)}g(v+1,w)+\sum_{U(n+4)}[v=1]\,g(v,w),\\
+  \sum_{U(n+3)}g(v,w)&=\sum_{U(n)}g(v,w+1)+\sum_{U(n+3)}[w=1]\,g(v,w).
+\end{align*}
+\end{lemma}
+
+\begin{proof}
+The map $(v,w)\mapsto(v+1,w)$ is a bijection from $U(n)$ onto $\{(v,w)\in U(n+4): v\ne1\}$, with inverse $(v,w)\mapsto(v-1,w)$, since $4(v+1)+3w+2=(4v+3w+2)+4$.
+Splitting $U(n+4)$ according to whether $v=1$ gives the first identity.
+The second is the same argument with $(v,w)\mapsto(v,w+1)$, which raises $4v+3w+2$ by $3$.
+\end{proof}
+
+\begin{lemma}[\decl{sum_U_small}]\label{lem:small}
+$U(n)=\emptyset$ for $n<9$; hence $b_v(n)=b_w(n)=c(n)=e(n)=0$ for $n<9$.
+\end{lemma}
+
+\begin{proof}
+If $v,w\ge1$ then $4v+3w+2\ge9$.
+\end{proof}
+
+\begin{lemma}[\decl{bv_shift}, \decl{bw_shift}, \decl{c_shift}, \decl{e_shift}]\label{lem:rels}
+For every $n\in\N$:
+\begin{align*}
+&(1)\ \ b_v(n+4)=b_v(n)+c(n+4), && (2)\ \ b_w(n+3)=b_w(n)+c(n+3),\\
+&(3)\ \ c(n+4)=c(n)+e(n+4), && (4)\ \ e(n+3)=e(n)+[n+3=9].
+\end{align*}
+\end{lemma}
+
+\begin{proof}
+(3) is the first identity of Lemma~\ref{lem:Ushift} with $g=1$.
+For (1), the first identity with $g(v,w)=v$ gives $b_v(n+4)=b_v(n)+c(n)+\sum_{U(n+4)}[v=1]\,v$; the last sum equals $e(n+4)$ because $v=1$ in each nonzero term, and $c(n)+e(n+4)=c(n+4)$ by (3).
+For (2), the second identity with $g(v,w)=w$ gives $b_w(n+3)=b_w(n)+c(n)+\#\{(v,w)\in U(n+3):w=1\}$ in the same way, and the second identity with $g=1$ shows that $c(n)$ plus this count is $c(n+3)$.
+For (4), the second identity with $g(v,w)=[v=1]$ gives $e(n+3)=e(n)+\sum_{U(n+3)}[w=1][v=1]$, and the last sum is $[(1,1)\in U(n+3)]=[n+3=9]$ because $4\cdot1+3\cdot1+2=9$.
+\end{proof}
+
+\subsection*{Step 3: power series}
+We write $\mathrm{mk}\,f=\sum_{n\ge0}f(n)X^n\in\Qx$ for $f:\N\to\Q$, as in Mathlib.
+
+\begin{lemma}[\decl{ps_shift}]\label{lem:ps}
+Let $d\in\N$ and $f,g:\N\to\Q$ with $f(n+d)=f(n)+g(n+d)$ for all $n$ and $f(n)=g(n)$ for $n<d$.
+Then $(1-X^d)\cdot\mathrm{mk}\,f=\mathrm{mk}\,g$.
+\end{lemma}
+
+\begin{proof}
+The coefficient of $X^n$ on the left is $f(n)-f(n-d)$ if $n\ge d$ and $f(n)$ if $n<d$ (Mathlib's \decl{PowerSeries.coeff_X_pow_mul'}).
+In the first case write $n=m+d$; then $f(m+d)-f(m)=g(m+d)$ by hypothesis. In the second case $f(n)=g(n)$.
+\end{proof}
+
+\begin{proposition}[\decl{gf_mul}]\label{prop:AD}
+With $A=\mathrm{mk}\,a$ and $D$ as in \eqref{eq:AD}, $A\cdot D=X^9(2+2X+2X^2+X^3)$ in $\Qx$.
+\end{proposition}
+
+\begin{proof}
+Let $B_v,B_w,C,E$ be the power series with coefficients $b_v,b_w,c,e$ (cast to $\Q$).
+We apply Lemma~\ref{lem:ps} five times:
+\begin{align*}
+  (1-X^2)A&=B_v+B_w && \text{by \eqref{eq:ashift}, $d=2$},\\
+  (1-X^4)B_v&=C && \text{by Lemma~\ref{lem:rels}(1), $d=4$},\\
+  (1-X^3)B_w&=C && \text{by Lemma~\ref{lem:rels}(2), $d=3$},\\
+  (1-X^4)C&=E && \text{by Lemma~\ref{lem:rels}(3), $d=4$},\\
+  (1-X^3)E&=X^9 && \text{by Lemma~\ref{lem:rels}(4), $d=3$, with $g(n)=[n=9]$}.
+\end{align*}
+The initial conditions $f(n)=g(n)$ for $n<d$ hold because $b_v,b_w,c,e$ vanish for $n<9$ (Lemma~\ref{lem:small}), $a(0)=a(1)=0$ (\decl{a_zero_one}, checked by \texttt{decide}), and $[n=9]=0$ for $n<3$; the first relation also uses $\mathrm{mk}(b_v+b_w)=B_v+B_w$.
+Put $P=1-X^2$, $Q=1-X^3$, $R=1-X^4$. Then $PQR\,A=QR\,B_v+QR\,B_w=(Q+R)\,C$, and multiplying by $QR$,
+\[
+  PQ^2R^2A=(Q+R)\,QR\,C=(Q+R)\,Q\,E=(Q+R)X^9=X^9(2-X^3-X^4).
+\]
+Now $PQ^2R^2=(1-X)D$ and $2-X^3-X^4=(1-X)(2+2X+2X^2+X^3)$, so $(1-X)(A\cdot D)=(1-X)X^9(2+2X+2X^2+X^3)$.
+Since $\Qx$ is an integral domain and $1-X\ne0$ (its constant coefficient is $1$), we may cancel $1-X$.
+In Lean, the cancellation is \texttt{mul\_left\_cancel}$_0$, and the remaining identity is a single \texttt{linear\_combination} of the six relations with coefficients $Q^2R^2$, $Q^2R^2$, $Q^2R$, $QR^2$, $Q(Q+R)$ and $Q+R$, checked by \texttt{ring}.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main} (\decl{result})]
+The generating-function clause follows from Proposition~\ref{prop:AD} and the equivalence \decl{genFun_iff} of Section~\ref{sec:statement}.
+For the recurrence, write $D=\sum_{m=0}^{15}d_mX^m$ as in \eqref{eq:den}, so $d_0=1$, and let $n>15$.
+The coefficient of $X^n$ in $X^mA$ is $a(n-m)$ for $m\le n$ (\decl{coeff_shift}), so the coefficient of $X^n$ in $A\cdot D$ is $\sum_{m=0}^{15}d_m\,a(n-m)$; in $X^9(2+2X+2X^2+X^3)=2X^9+2X^{10}+2X^{11}+X^{12}$ it is $0$, as $n\notin\{9,\dots,12\}$.
+Hence $a(n)=-\sum_{m=1}^{15}d_m\,a(n-m)$ in $\Q$, which is \eqref{eq:rec} by \eqref{eq:den}; as the cast $\Z\to\Q$ is injective (\decl{Int.cast_injective}), \eqref{eq:rec} holds in $\Z$.
+\end{proof}
+
+\begin{remark}[A307686; not formalized]\label{rem:A307686}
+Let $s(n)$ be the sum of the smallest sides of all integer triangles $k\le i\le j<k+i$ of perimeter $n$ (A307686) and $t(n)$ their number (A005044).
+Cuculière's correspondence $(k,i,j)\mapsto(k-1,i-2,j-3)$ is a bijection from the scalene triangles of perimeter $n+6$ onto all triangles of perimeter $n$, and it lowers the smallest side by $1$; hence $a(n+6)=s(n)+t(n)$ for all $n\ge0$.
+Since $a(n)=0$ for $n<6$ and $\sum t(n)x^n=x^3/((1-x^2)(1-x^3)(1-x^4))=x^3(1+x+x^2)(1-x^4)/D(x)$ (see \cite{APR01,Hir02}), Theorem~\ref{thm:main} gives
+\[
+  \sum_{n\ge0}s(n)x^n=\frac{x^3\bigl(2+2x+2x^2+x^3-(1+x+x^2)(1-x^4)\bigr)}{D(x)}=\frac{x^3\sum_{m=0}^{6}x^m}{D(x)},
+\]
+which is Barker's conjectured generating function in A307686. This is not part of the Lean verification; we checked $a(n+6)=s(n)+t(n)$ numerically for $n<194$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A308107.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}.
+It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A308107.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}.
+The main declaration is \decl{Math0.Frontier.A308107.result}, stated as \texttt{theorem result : statement}; the private auxiliary declarations are those named in Section~\ref{sec:proof}, for instance
+\begin{lstlisting}
+private theorem gf_mul :
+    mk (fun n => (a n : ℚ)) * den = X ^ 9 * (2 + 2 * X + 2 * X ^ 2 + X ^ 3)
+\end{lstlisting}
+The file uses no \texttt{sorry}, \texttt{native\_decide}, \texttt{set\_option} or macros, and its only kernel evaluation is \decl{a_zero_one} ($a(0)=a(1)=0$, by \texttt{decide}); the computational checks of the data, \decl{a_data} and \decl{recurrence_data}, are in the statement file, where \texttt{decide +kernel} makes the kernel evaluate \decl{aFast} on $n\le61$ (about $8\cdot10^4$ pairs in total) and compare with the listed terms.
+
+\subsection*{Audit}
+The proof file ends with \texttt{\#math0\_settles} applied to \decl{result} and \decl{statement}. This command, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless \decl{statement} is a \texttt{Prop}-valued definition without universe parameters, both declarations use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (which rejects \decl{sorryAx}, the axiom \decl{Lean.ofReduceBool} behind \texttt{native\_decide}, and custom axioms), and the type of \decl{result} is syntactically the statement or its negation, up to metadata, with no unfolding.
+Running \texttt{lake env lean Math0/Frontier/OEIS/A308107.lean} in the directory \path{lean} prints\par\nobreak\noindent
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A308107.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A308107.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A308107.result' proves 'Math0.Statements.A308107.statement'
+\end{lstlisting}
+\end{minipage}
+so \decl{result} proves the statement and depends only on the three permitted axioms.
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which does not contain A308107 and is not used by this result.
+To reproduce, run \path{scripts/verify.sh} from the repository root; it fetches the Mathlib cache, builds all math0 results with \texttt{lake build} (re-running every audit command) and checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified.
+For this result alone, run \texttt{lake build Math0.Statements.OEIS.A308107} and \texttt{lake env lean Math0/Frontier/OEIS/A308107.lean} in \path{lean}; the second takes under a minute.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{APR01}
+G.~E. Andrews, P.~Paule, and A.~Riese, \emph{MacMahon's partition analysis IX: $k$-gon partitions}, Bull. Austral. Math. Soc. \textbf{64} (2001), no.~2, 321--329.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Fri24}
+S.~Fried, \emph{Proofs of some conjectures from the OEIS}, arXiv:2410.07237, 2024.
+
+\bibitem{Fri25}
+S.~Fried, \emph{Proofs of several conjectures from the OEIS}, J. Integer Seq. \textbf{28} (2025), Article 25.4.3.
+
+\bibitem{Fri26}
+S.~Fried, \emph{Proofs of ten conjectures from the OEIS}, J. Integer Seq. \textbf{29} (2026), Article 26.1.8.
+
+\bibitem{Fri26b}
+S.~Fried, \emph{Further proofs of conjectures from the OEIS}, arXiv:2607.24832, 2026.
+
+\bibitem{Hir02}
+M.~D. Hirschhorn, \emph{$k$-gon partitions}, Bull. Austral. Math. Soc. \textbf{66} (2002), no.~1, 149--150.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A005044}
+The OEIS Foundation Inc., \url{https://oeis.org/A005044} (Alcuin's sequence), entry by R.~G. Wilson~v.
+
+\bibitem{A307686}
+The OEIS Foundation Inc., \url{https://oeis.org/A307686}, entry by W.~I. Hurt, May~11, 2019.
+
+\bibitem{A308107}
+The OEIS Foundation Inc., \url{https://oeis.org/A308107}, entry by W.~I. Hurt, May~13, 2019; revision \#14, Sep.~12, 2021.
+
+\bibitem{A308108}
+The OEIS Foundation Inc., \url{https://oeis.org/A308108}, entry by W.~I. Hurt, May~13, 2019.
+
+\bibitem{A308109}
+The OEIS Foundation Inc., \url{https://oeis.org/A308109}, entry by W.~I. Hurt, May~13, 2019.
+
+\bibitem{A308158}
+The OEIS Foundation Inc., \url{https://oeis.org/A308158}, entry by W.~I. Hurt, May~14, 2019.
+
+\bibitem{PR23}
+T.~Patronis and I.~Rizos, \emph{Triangles with integer sides and given perimeter}, Mathematical Review \textbf{97--98} (2022), 78--89 (in Greek); arXiv:2308.01912.
+
+\end{thebibliography}
+}
+
+\end{document}

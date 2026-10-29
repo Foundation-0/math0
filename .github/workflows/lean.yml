@@ -1,0 +1,52 @@
+name: Lean verification
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# A newer push to the same pull request supersedes an older run.
+concurrency:
+  group: lean-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    name: Build and audit every result
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    env:
+      # At most two Lean processes at once: heavy proof files peak at about 8 GB each.
+      LEAN_NUM_THREADS: "2"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # the freeze check reads the history of FROZEN.sha256
+      - name: Add swap (single proof files need up to 8 GB; the runner has 16 GB)
+        run: |
+          swap=/mnt/math0.swap
+          if [ ! -d /mnt ] || [ "$(df --output=avail -BG /mnt | tail -1 | tr -dc 0-9)" -lt 30 ]; then swap=/math0.swap; fi
+          sudo fallocate -l 20G "$swap" && sudo chmod 600 "$swap" && sudo mkswap "$swap" >/dev/null && sudo swapon "$swap"
+          free -h
+      - name: Frozen statements are unchanged, append-only, and committed before their proofs
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || github.event.before }}
+          ORDER: ${{ github.event_name == 'pull_request' && '--order' || '' }}
+        run: |
+          if [ -n "$BASE" ]; then python3 scripts/check_freeze.py --base "$BASE" $ORDER
+          else python3 scripts/check_freeze.py; fi
+      - name: Install Lean and fetch Mathlib's prebuilt cache
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: lean
+          # No GitHub cache: every math0 module (and every formal-conjectures module it imports)
+          # is elaborated and checked by the kernel again on every run, never replayed.
+          use-github-cache: false
+          build: false
+      - name: Rebuild every result from scratch and re-run every audit
+        run: |
+          expected=$(python3 -c 'import json; print(len(json.load(open("catalog.json"))["results"]))')
+          scripts/verify.sh --clean --expect "$expected"
+      - name: The audit commands reject what they should
+        run: scripts/test_audit.sh

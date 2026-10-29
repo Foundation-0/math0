@@ -1,0 +1,396 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw,apply,push_cast,absurd},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1
+    {↔}{{$\leftrightarrow$}}1 {¬}{{$\neg$}}1 {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {→}{{$\to$}}1
+    {←}{{$\leftarrow$}}1 {≤}{{$\le$}}1 {≥}{{$\ge$}}1 {≠}{{$\ne$}}1 {≡}{{$\equiv$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {·}{{$\cdot$}}1 {∣}{{$\mid$}}1 {∈}{{$\in$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\ord}{\operatorname{ord}}
+\newcommand{\per}{\operatorname{per}}
+
+\title[The decimal period of $1/11^n$]{The decimal expansion of $1/11^n$ has period $2\cdot 11^{n-1}$: a formal proof of the conjectured formula in OEIS A334603}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 18, 2026}
+
+\begin{document}
+\begin{abstract}
+We prove that for every $n\ge1$ the multiplicative order of $10$ modulo $11^n$, which is the period of the decimal expansion of $1/11^n$, equals $2\cdot 11^{n-1}$.
+This is the formula $a(n)=2\cdot11^{n-1}$ that the OEIS entry A334603 (B.~Schott, 2020) records as conjectured.
+The result is a special case of the classical lifting theorem for multiplicative orders modulo powers of an odd prime, applied to $10^2=1+11\cdot 9$ with $11\nmid 9$, so it is not new; our contribution is a machine-checked proof, to our knowledge the first formal proof of this statement.
+The proof is verified in Lean~4 with Mathlib against a statement that math0 formalized from the OEIS entry, reviewed for fidelity and frozen before any proof attempt, and whose definitions are checked by the kernel against the terms listed in the OEIS.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For an integer $m>1$ with $\gcd(m,10)=1$, the decimal expansion of $1/m$ is purely periodic, and its period (the length of its shortest repeating block) is the multiplicative order $\ord_m(10)$ of $10$ modulo $m$ (Remark~\ref{rem:period} below).
+The OEIS sequence A334603 \cite{A334603}, contributed by Bernard Schott on May~7, 2020, with more terms by Giovanni Resta, lists the periods $a(n)$ of $1/11^n$ for $n\ge1$:
+\[
+  2,\ 22,\ 242,\ 2662,\ 29282,\ 322102,\ \dots
+\]
+The entry records the formula $a(n)=2\cdot11^{n-1}$ as conjectured, with reference to a more general conjecture that it attributes to De Koninck and Mercier \cite[Probl\`eme~346]{DKM}: if $p$ is a prime with $\gcd(p,30)=1$ and the period of $1/p$ is $m$, then the period of $1/p^n$ is $mp^{n-1}$.
+We prove the formula for $p=11$ (Theorem~\ref{thm:main}) and verify the proof in Lean~4.
+
+\subsection*{Prior work and status}
+The formula is an instance of a classical fact about multiplicative orders modulo powers of an odd prime $p$: if $\ell=\ord_p(b)$ and $b^\ell=1+pc$ with $p\nmid c$, then $\ord_{p^n}(b)=\ell\,p^{n-1}$ for every $n\ge1$.
+The theory of residues modulo prime powers goes back to Gauss \cite[Art.~82 ff.]{Gauss}, whose Section~VI also treats the conversion of fractions into decimals \cite[Art.~312 ff.]{Gauss}.
+The key step, that an element $1+pc$ with $p\nmid c$ has order exactly $p^{n-1}$ modulo $p^n$, is the standard lemma used to prove that $(\Z/p^n\Z)^\times$ is cyclic (see, e.g., \cite[Ch.~4]{IR} and \cite[\S2.8]{NZM}).
+For $p=11$ and $b=10$ one has $\ell=2$ and $10^2=1+11\cdot9$ with $11\nmid 9$, which gives $\ord_{11^n}(10)=2\cdot11^{n-1}$.
+In the language of decimal expansions, Yao and Toyohara \cite[Theorem~2.1]{YT} state the general result as $l_{p^n}=p^{\,n-(m_p+1)}\,l_p$ for $n>m_p+1$ (and $l_{p^n}=l_p$ for $n\le m_p+1$), where $l_p$ is the period of $1/p$ and $m_p$ is the exponent of $p$ in the integer $c_p=(10^{l_p}-1)/p$ formed by the repeating block of $1/p$; for $p=11$ one has $c_{11}=9$, $m_{11}=0$ and $l_{11}=2$.
+Ross \cite{Ross} discusses repeating decimals with prime-power denominators, and Cook \cite{Cook} checks the period $22$ of $1/121$ explicitly.
+In the OEIS, a comment of September~5, 2026 by Eiver Rodr\'iguez in A055272 \cite{A055272} proves the analogous statement for $1/7^n$ by the analogous lifting argument.
+
+The label ``conjectured'' in A334603 therefore does not mark an open problem, and we claim no mathematical novelty.
+The math0 referees found no previous formalization of this statement; A334603 does not occur in the formal-conjectures repository \cite{FC}.
+The essential ingredient, the order of $1+pa$ modulo $p^{k+1}$, is already in Mathlib \cite{Mathlib} as \decl{ZMod.orderOf_one_add_mul_prime}.
+We classify the result as a known result whose formal proof given here is, to our knowledge, the first.
+
+\begin{remark}[the general conjecture; its refutation is not formalized]\label{rem:general}
+The general conjecture quoted in A334603 is false.
+The prime $p=487$ satisfies $\gcd(487,30)=1$ and $10^{486}\equiv1\pmod{487^2}$; it is one of the three known primes with $10^{p-1}\equiv1\pmod{p^2}$, namely $3$, $487$ and $56598313$ \cite{A045616}.
+Since $\ord_{487}(10)=486$, both $1/487$ and $1/487^2$ have period $486$, whereas the conjecture predicts $486\cdot487$ for $1/487^2$.
+This is exactly the case $p\mid c$ excluded in the lifting theorem above.
+We checked these values numerically; they are not part of the Lean development.
+The math0 statement file encodes the general conjecture as a separate proposition \decl{statement_general}, which this paper does not address.
+\end{remark}
+
+\section{Statement}\label{sec:statement}
+
+\begin{definition}\label{def:per}
+For $m\ge1$ with $\gcd(m,10)=1$ let $\per(m)$ be the least $k\ge1$ with $10^k\equiv1\pmod m$, that is, $\per(m)=\ord_m(10)$. It exists by Euler's theorem, since $10^{\varphi(m)}\equiv1\pmod m$.
+\end{definition}
+
+\begin{remark}\label{rem:period}
+Let $m>1$ with $\gcd(m,10)=1$. If $10^k\equiv1\pmod m$ with $k\ge1$, then $c=(10^k-1)/m$ is an integer and $1/m=c/(10^k-1)=\sum_{j\ge1}c\cdot10^{-jk}$, so the decimal expansion of $1/m$ is purely periodic with period $k$ (the block is the $k$-digit string of $c$ with leading zeros).
+Conversely, if the digits of $1/m$ are periodic with period $k$ from position $s+1$ on, then $10^s/m$ and $10^{s+k}/m$ have the same fractional part, so $m\mid 10^s(10^k-1)$ and hence $m\mid 10^k-1$.
+So the least period of the expansion of $1/m$ is $\per(m)$.
+For example, $1/121=0.\overline{0082644628099173553719}$ has period $22$, as in the example of the OEIS entry.
+\end{remark}
+
+\begin{theorem}\label{thm:main}
+For every $n\ge1$,
+\[
+  \ord_{11^n}(10)=2\cdot 11^{\,n-1}.
+\]
+Equivalently, the decimal expansion of $1/11^n$ has period $2\cdot11^{n-1}$.
+\end{theorem}
+
+\subsection*{The OEIS conjecture}
+The entry A334603 \cite{A334603} (revision \#31, November~19, 2023, in the copy of the OEIS data we used) is named, verbatim,
+\begin{quote}\small\texttt{Period of the fraction 1/11\^{}n for n >= 1.}\end{quote}
+has offset $1$, and is authored by \emph{Bernard Schott, May 07 2020}. Its COMMENTS section reads, verbatim,
+\begin{quote}\small\texttt{Conjecture proposed by the authors in References page 205: if p is a prime with gcd(p,30) = 1 and if the period of 1/p is m then the period of 1/p\^{}n is m*p\^{}(n-1).}\end{quote}
+where the reference is \cite{DKM}, and its FORMULA section contains, verbatim,
+\begin{quote}\small\texttt{a(n) = 2 * 11\^{}(n-1) [conjectured, see comments].}\end{quote}
+Theorem~\ref{thm:main} is this FORMULA conjecture. The entry's Mathematica program (G.~Resta) and PARI program (M.~Marcus) compute $\ord_{11^n}(10)$, as \texttt{MultiplicativeOrder[10, 11\^{}n]} and \texttt{znorder(Mod(10, 11\^{}n))}.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A334603.lean}, reviewed for fidelity and frozen (SHA-256 \texttt{c38de193\ldots 7c4b}) before any proof attempt. The definitions and the statement read as follows (verbatim; the import, the module docstring, all other doc comments, blank lines and all other declarations are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A334603
+theorem exists_pow_modEq_one {m : ℕ} (h : Nat.Coprime 10 m) :
+    ∃ k, 0 < k ∧ 10 ^ k ≡ 1 [MOD m] := by
+  have hm : m ≠ 0 := by
+    rintro rfl
+    exact absurd (Nat.coprime_zero_right 10 |>.1 h) (by norm_num)
+  exact ⟨Nat.totient m, Nat.totient_pos.2 (Nat.pos_of_ne_zero hm), Nat.ModEq.pow_totient h⟩
+def period (m : ℕ) : ℕ :=
+  if h : Nat.Coprime 10 m then Nat.find (exists_pow_modEq_one h) else 0
+def a (n : ℕ) : ℕ := period (11 ^ n)
+def statement : Prop := ∀ n : ℕ, 1 ≤ n → a n = 2 * 11 ^ (n - 1)
+end Math0.Statements.A334603
+\end{lstlisting}
+For $m$ coprime to $10$, \texttt{period m} is \decl{Nat.find} applied to the predicate $0<k\wedge 10^k\equiv1\pmod m$, i.e.\ the least such $k$, which is $\per(m)$ of Definition~\ref{def:per}; the witness required by \decl{Nat.find} is Euler's theorem. For $m$ not coprime to $10$ the value is $0$, a case that never occurs for $m=11^n$. The function \decl{a} uses the OEIS offset~$1$ (the value \texttt{a 0} $=$ \texttt{period 1} $=1$ is not a term), and \decl{statement} is the FORMULA line over the range $n\ge1$ of the sequence; the hypothesis $1\le n$ also keeps the truncated subtraction $n-1$ in $\N$ exact.
+Among other lemmas the statement file proves (statements shown, proofs omitted)
+\begin{lstlisting}
+theorem pow_eq_one_iff (m k : ℕ) : (10 : ZMod m) ^ k = 1 ↔ 10 ^ k ≡ 1 [MOD m]
+theorem period_eq_orderOf {m : ℕ} (hm : Nat.Coprime 10 m) :
+    period m = orderOf (10 : ZMod m)
+theorem prime_dvd_two_mul_pow {q i : ℕ} (hq : q.Prime) (h : q ∣ 2 * 11 ^ i) : q = 2 ∨ q = 11
+\end{lstlisting}
+and two data checks, which compare the definitions with the OEIS.
+
+The lemma \decl{a_data} states that \texttt{(List.range 20).map (fun i => a (i + 1))} is the list of the $20$ listed terms $2,22,\dots,122318180896829092582$ of A334603. A naive search for the least $k$ is infeasible for $a(20)\approx1.2\cdot10^{20}$, so the proof uses an order certificate: by Lemma~\ref{lem:crit} below, $\per(11^{i+1})=L$ with $L=2\cdot11^i$ follows from $10^L\equiv1$, $10^{L/2}\not\equiv1$ and, for $i\ge1$, $10^{L/11}\not\equiv1\pmod{11^{i+1}}$ (\decl{period_eq_of_cert} and \decl{prime_dvd_two_mul_pow}). These congruences, for $0\le i<20$, form the lemma \decl{cert_data}, which is proved by \texttt{decide +kernel}: the kernel evaluates a binary modular exponentiation \decl{powMod}, defined by structural recursion on a fuel argument and proved equal to $b^e \bmod m$ (\decl{powMod_eq}), using its built-in arbitrary-precision arithmetic on natural-number literals. The final list comparison is again \texttt{decide +kernel}.
+The lemma \decl{period_data} checks \texttt{period m} against the $35$ terms of A051626 \cite{A051626} (period of the decimal expansion of $1/m$) with $3\le m\le 90$ and $\gcd(m,10)=1$, by a kernel-evaluated Boolean test \decl{checkPeriod} that checks $10^L\equiv1$ and $10^k\not\equiv1$ for all $0<k<L$.
+Neither check is used in the proof of Theorem~\ref{thm:main}; they guard against a mis-encoded definition.
+The statement file also contains the general conjecture as \decl{statement_general} (Remark~\ref{rem:general}).
+
+\section{Proof}\label{sec:proof}
+
+The proof follows \path{lean/Math0/Frontier/OEIS/A334603.lean}; the Lean name is given with each step. For $k\ge0$ write $R_k=\Z/11^{k+1}\Z$ (\texttt{ZMod (11 \^{} (k + 1))}), and for an element $x$ of finite order in a monoid write $\ord(x)$ for its order (\texttt{orderOf x}).
+
+\begin{lemma}[\decl{pow_eq_one_iff}, \decl{period_eq_orderOf}; statement file]\label{lem:orderOf}
+For $m\ge1$ with $\gcd(m,10)=1$, $\per(m)$ is the order of $10$ in the multiplicative monoid of $\Z/m\Z$.
+\end{lemma}
+
+\begin{proof}
+For every $k$, $10^k=1$ in $\Z/m\Z$ if and only if $10^k\equiv1\pmod m$ (\decl{pow_eq_one_iff}). The order of an element $x$ of a monoid is the least $k\ge1$ with $x^k=1$, if one exists; here one exists by Euler's theorem. Hence both numbers are the least $k\ge1$ with $10^k\equiv1\pmod m$.
+\end{proof}
+
+\begin{lemma}[Mathlib, \decl{ZMod.orderOf_one_add_mul_prime}]\label{lem:lift}
+Let $p$ be an odd prime, $a\in\Z$ with $p\nmid a$, and $k\ge0$. Then $1+pa$ has order exactly $p^k$ in $\Z/p^{k+1}\Z$.
+\end{lemma}
+
+\begin{proof}
+We first show by induction on $j\ge0$ that $(1+pa)^{p^j}=1+p^{j+1}a_j$ for some $a_j\in\Z$ with $p\nmid a_j$. For $j=0$ take $a_0=a$. Given $a_j$, put $x=p^{j+1}a_j$. By the binomial theorem,
+\[
+  (1+x)^p = 1 + px + \sum_{i=2}^{p-1}\binom{p}{i}x^i + x^p .
+\]
+Here $px=p^{j+2}a_j$. For $2\le i\le p-1$ the prime $p$ divides $\binom pi$ and $p^{2(j+1)}$ divides $x^i$, so $p^{2j+3}$ divides $\binom pi x^i$, and $2j+3\ge j+3$. Finally $p^{p(j+1)}$ divides $x^p$, and $p(j+1)\ge3(j+1)\ge j+3$ because $p\ge3$. Hence $(1+x)^p=1+p^{j+2}(a_j+pt)$ for some $t\in\Z$, and $a_{j+1}=a_j+pt$ is not divisible by $p$.
+
+Let $g=1+pa\in\Z/p^{k+1}\Z$. Then $g^{p^k}=1+p^{k+1}a_k=1$, so $\ord(g)$ divides $p^k$ and $\ord(g)=p^i$ with $i\le k$. If $i<k$, then $k\ge1$ and $p^i\mid p^{k-1}$, so $g^{p^{k-1}}=1$, i.e.\ $p^{k+1}\mid p^ka_{k-1}$, i.e.\ $p\mid a_{k-1}$, a contradiction. So $\ord(g)=p^k$.
+\end{proof}
+
+Mathlib derives Lemma~\ref{lem:lift} from a more general version for $1+p^ma$ (\decl{ZMod.orderOf_one_add_mul_prime_pow}), proved by the same binomial computation.
+
+\begin{lemma}[\decl{orderOf_hundred}]\label{lem:hundred}
+For every $k\ge0$, the element $10^2$ has order $11^k$ in $R_k$.
+\end{lemma}
+
+\begin{proof}
+In $R_k$ we have $10^2=100=1+11\cdot 9$, and $11\nmid 9$. Apply Lemma~\ref{lem:lift} with $p=11$ and $a=9$.
+\end{proof}
+
+\begin{lemma}[\decl{ten_pow_odd_ne_one}]\label{lem:odd}
+For every $k\ge0$ and every odd $j$, $10^j\ne1$ in $R_k$.
+\end{lemma}
+
+\begin{proof}
+Since $11\mid 11^{k+1}$, reduction modulo $11$ is a ring homomorphism $\pi\colon R_k\to\Z/11\Z$ (\decl{ZMod.castHom}). If $10^j=1$ in $R_k$, then $\pi(10)^j=1$ in $\Z/11\Z$. But $\pi(10)=10=-1$ in $\Z/11\Z$, so $\pi(10)^j=(-1)^j=-1$ because $j$ is odd, and $-1\ne1$ in $\Z/11\Z$. This is a contradiction.
+\end{proof}
+
+\begin{lemma}[Mathlib, \decl{orderOf_eq_of_pow_and_pow_div_prime}]\label{lem:crit}
+Let $x$ be an element of a monoid and $L\ge1$. If $x^L=1$ and $x^{L/q}\ne1$ for every prime $q$ dividing $L$, then $\ord(x)=L$.
+\end{lemma}
+
+\begin{proof}
+Since $x^L=1$, $x$ has finite order $d$ and $d\mid L$. If $d<L$, then $L/d>1$ has a prime factor $q$; then $q\mid L$ and $d\mid L/q$, so $x^{L/q}=1$, a contradiction. Hence $d=L$.
+\end{proof}
+
+The prime divisors of $2\cdot11^k$ are among $2$ and $11$ (\decl{prime_dvd_two_mul_pow}, statement file): a prime dividing $2\cdot 11^k$ divides $2$ or $11^k$, hence equals $2$ or $11$.
+
+\begin{proposition}[\decl{orderOf_ten}]\label{prop:ten}
+For every $k\ge0$, the element $10$ has order $2\cdot 11^k$ in $R_k$.
+\end{proposition}
+
+\begin{proof}
+Let $L=2\cdot11^k\ge1$. We verify the hypotheses of Lemma~\ref{lem:crit} for $x=10$ in $R_k$.
+
+First, $10^L=(10^2)^{11^k}=1$, because $10^2$ has order $11^k$ by Lemma~\ref{lem:hundred}.
+
+Next let $q$ be a prime dividing $L$; then $q=2$ or $q=11$.
+
+\emph{Case $q=2$.} Then $L/2=11^k$ is odd, as a power of an odd number, so $10^{L/2}\ne1$ by Lemma~\ref{lem:odd}.
+
+\emph{Case $q=11$.} If $k=0$, then $L=2$ and $11\nmid L$, so this case does not occur. If $k=k'+1$, then $L/11=2\cdot11^{k'}$ and $10^{L/11}=(10^2)^{11^{k'}}$. By Lemma~\ref{lem:hundred} the order of $10^2$ in $R_k$ is $11^{k}=11^{k'+1}$, and $0<11^{k'}<11^{k'+1}$. A power $y^e$ with $0<e<\ord(y)$ is never $1$, by the minimality of the order (Mathlib, \decl{pow_ne_one_of_lt_orderOf}). Hence $10^{L/11}\ne1$.
+
+By Lemma~\ref{lem:crit}, the order of $10$ in $R_k$ is $L$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main} (\decl{result})]
+Let $n\ge1$ and write $n=k+1$. Since $\gcd(10,11^n)=1$, Lemma~\ref{lem:orderOf} gives $a(n)=\per(11^{k+1})=\ord_{R_k}(10)$, which equals $2\cdot11^k=2\cdot11^{n-1}$ by Proposition~\ref{prop:ten}.
+\end{proof}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A334603.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A334603.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A334603.result}, of type \decl{Math0.Statements.A334603.statement}; the three auxiliary theorems \decl{orderOf_hundred}, \decl{ten_pow_odd_ne_one} and \decl{orderOf_ten} are private to the file. The file reads, verbatim (the copyright header, the imports, the module docstring, the docstrings and blank lines omitted):
+\begin{lstlisting}
+namespace Math0.Frontier.A334603
+open Math0.Statements.A334603
+private theorem orderOf_hundred (k : ℕ) :
+    orderOf ((10 : ZMod (11 ^ (k + 1))) ^ 2) = 11 ^ k := by
+  have h := ZMod.orderOf_one_add_mul_prime (p := 11) (by norm_num) (by norm_num) 9
+    (by decide) k
+  have e : ((10 : ZMod (11 ^ (k + 1))) ^ 2) =
+      1 + ((11 : ℕ) : ZMod (11 ^ (k + 1))) * ((9 : ℤ) : ZMod (11 ^ (k + 1))) := by
+    push_cast
+    norm_num
+  rw [e]
+  exact h
+private theorem ten_pow_odd_ne_one (k j : ℕ) (hj : Odd j) :
+    (10 : ZMod (11 ^ (k + 1))) ^ j ≠ 1 := by
+  intro h
+  have h2 := congrArg (ZMod.castHom (dvd_pow_self 11 (Nat.succ_ne_zero k)) (ZMod 11)) h
+  rw [map_pow, map_one, map_ofNat] at h2
+  have h10 : (10 : ZMod 11) = -1 := by decide
+  rw [h10, hj.neg_one_pow] at h2
+  exact absurd h2 (by decide)
+private theorem orderOf_ten (k : ℕ) : orderOf (10 : ZMod (11 ^ (k + 1))) = 2 * 11 ^ k := by
+  apply orderOf_eq_of_pow_and_pow_div_prime (by positivity)
+  · rw [pow_mul, ← orderOf_hundred k, pow_orderOf_eq_one]
+  · intro q hq hqL
+    rcases prime_dvd_two_mul_pow hq hqL with rfl | rfl
+    · rw [Nat.mul_div_cancel_left _ (by norm_num)]
+      exact ten_pow_odd_ne_one k _ (Odd.pow (by decide))
+    · cases k with
+      | zero => norm_num at hqL
+      | succ k =>
+        rw [show 2 * 11 ^ (k + 1) / 11 = 2 * 11 ^ k by rw [pow_succ]; omega, pow_mul]
+        apply pow_ne_one_of_lt_orderOf (by positivity)
+        rw [orderOf_hundred]
+        exact Nat.pow_lt_pow_right (by norm_num) (Nat.lt_succ_self k)
+theorem result : statement := by
+  intro n hn
+  obtain ⟨k, rfl⟩ : ∃ k, n = k + 1 := ⟨n - 1, by omega⟩
+  rw [a, period_eq_orderOf (Nat.Coprime.pow_right _ (by norm_num)), orderOf_ten,
+    Nat.add_sub_cancel]
+end Math0.Frontier.A334603
+#math0_settles Math0.Frontier.A334603.result Math0.Statements.A334603.statement
+\end{lstlisting}
+The identity $10^2=1+11\cdot 9$ in $R_k$ is proved by \texttt{push\_cast} and \texttt{norm\_num}. The proof file uses \texttt{decide} only for small closed facts ($\neg(11\mid9)$ in $\Z$, $10=-1$ and $-1\ne1$ in $\Z/11\Z$, and the oddness of $11$), and uses no \texttt{native\_decide} and no \texttt{set\_option}.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a definition of type \texttt{Prop} without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, which rejects \decl{sorryAx}, the axiom \decl{Lean.ofReduceBool} introduced by \texttt{native\_decide}, and any custom axiom; and (3) the type of \decl{result} is syntactically the constant \decl{statement} or its negation, up to metadata, with no unfolding. Running \texttt{lake env lean Math0/Frontier/OEIS/A334603.lean} in the directory \path{lean} prints
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A334603.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A334603.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A334603.result' proves 'Math0.Statements.A334603.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (which re-runs every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks.
+The single file can be checked with the command above (about a minute on our machine).
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{Cook}
+J.~D. Cook, \emph{Reciprocals of prime powers}, blog post, September~28, 2021, \url{https://www.johndcook.com/blog/2021/09/28/reciprocals-of-prime-powers/}.
+
+\bibitem{DKM}
+J.-M. De Koninck and A.~Mercier, \emph{1001 Probl\`emes en Th\'eorie Classique des Nombres}, Ellipses, Paris, 2004; Probl\`eme~346, pp.~50 and 204--205.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Gauss}
+C.~F. Gauss, \emph{Disquisitiones Arithmeticae}, Fleischer, Leipzig, 1801. English translation by A.~A. Clarke, Yale University Press, New Haven, 1966.
+
+\bibitem{IR}
+K.~Ireland and M.~Rosen, \emph{A Classical Introduction to Modern Number Theory}, 2nd ed., Graduate Texts in Mathematics \textbf{84}, Springer, New York, 1990.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{NZM}
+I.~Niven, H.~S. Zuckerman, and H.~L. Montgomery, \emph{An Introduction to the Theory of Numbers}, 5th ed., Wiley, New York, 1991.
+
+\bibitem{Ross}
+K.~A. Ross, \emph{Repeating decimals: a period piece}, Math. Mag.\ \textbf{83} (2010), no.~1, 33--45, \url{https://doi.org/10.4169/002557010X479974}.
+
+\bibitem{YT}
+S.~Yao and A.~Toyohara, \emph{The length of the repeating decimal}, arXiv:2507.01295, 2025.
+
+\bibitem{A045616}
+The OEIS Foundation Inc., \url{https://oeis.org/A045616} (primes $p$ with $10^{p-1}\equiv1\pmod{p^2}$), entry by H.~Richter.
+
+\bibitem{A051626}
+The OEIS Foundation Inc., \url{https://oeis.org/A051626} (period of the decimal representation of $1/n$), entry by J.~Lowell.
+
+\bibitem{A055272}
+The OEIS Foundation Inc., \url{https://oeis.org/A055272} (first differences of $7^n$), entry by B.~E. Williams; comment by E.~Rodr\'iguez (September~5, 2026).
+
+\bibitem{A334603}
+The OEIS Foundation Inc., \url{https://oeis.org/A334603}, entry by B.~Schott (May~7, 2020), more terms by G.~Resta; revision \#31, November~19, 2023.
+
+\end{thebibliography}
+}
+
+\end{document}

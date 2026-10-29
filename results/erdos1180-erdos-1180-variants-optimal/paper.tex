@@ -1,0 +1,383 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    noncomputable,sorry},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8, aboveskip=6pt, belowskip=6pt}
+% Unicode inside listings (pdfLaTeX listings cannot read multibyte characters directly).
+\lstset{keepspaces=true, literate={ℕ}{{$\mathbb{N}$}}1 {ℝ}{{$\mathbb{R}$}}1 {ε}{{$\varepsilon$}}1
+  {δ}{{$\delta$}}1 {≤}{{$\le$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {→}{{$\to$}}1
+  {↦}{{$\mapsto$}}1 {∧}{{$\wedge$}}1 {¬}{{$\neg$}}1 {∈}{{$\in$}}1 {⁻}{{$^{-}$}}1 {¹}{{$^{1}$}}1
+  {ᶠ}{{$^{\mathsf{f}}$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\F}{\mathbb{F}_p}
+\newcommand{\eps}{\varepsilon}
+
+\title[A defect in a formal statement of Erd\H{o}s Problem \#1180]{Small primes force $C_{1/(m+1)}\ge 2^m$: the formal ``optimal'' variant of Erd\H{o}s Problem \#1180 is false}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 17, 2026}
+
+\begin{document}
+\begin{abstract}
+For $\eps>0$ let $C_\eps$ be the least $C$ such that, for every prime $p$, every residue modulo $p$ is a sum of at most $C$ inverses $n^{-1}\bmod p$ with $1\le n\le p^\eps$.
+The formal-conjectures statement \decl{Erdos1180.erdos_1180.variants.optimal} asserts that for every $\delta>0$ one has $C_\eps\le\eps^{-1-\delta}$ for all small $\eps>0$; we prove it false by showing $C_{1/(m+1)}\ge2^m$ for every $m\ge2$, since for $\eps=1/(m+1)$ and a Bertrand prime $2^m<p<2^{m+1}$ the only admissible denominator is $1$ (as $C_\eps$ is a minimum, this also uses a proof, along Glibichuk's lines, that a finite bound exists).
+This is a misformalization report, not progress on the research problem: the intended question, whether $\eps^{-1-o(1)}$ summands suffice for all sufficiently large primes, remains open, the small-prime obstruction is recorded upstream, and a Lean disproof of a verbatim copy of the statement already exists (linrock/math-proofs).
+We give an independent proof, verified in Lean~4 against the upstream formal-conjectures statement at commit \texttt{c77fdd4}, and propose a corrected statement.
+\end{abstract}
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+
+Erd\H{o}s and Graham \cite[p.~103]{ErGr80} asked the following question, listed as Erd\H{o}s Problem \#1180 \cite{EP1180}: given $\eps>0$, is there a constant $C_\eps$ such that, for every prime $p$, every residue modulo $p$ is a sum of at most $C_\eps$ elements of $\{n^{-1}:1\le n\le p^\eps\}$, where $n^{-1}$ is the inverse of $n$ modulo $p$?
+
+\subsection*{Known results}
+Shparlinski \cite{Sh02} answered the question affirmatively, even with pairwise distinct denominators.
+The problem page \cite{EP1180} records the quantitative form $C_\eps\ll\eps^{-3}$ of Shparlinski's result, and Glibichuk's improvement to $\ll\eps^{-2}$ \cite{Gl06}: for every sufficiently large prime $p$ every residue is a sum of $8(\lfloor1/\eps+1/2\rfloor+1)^2$ such inverses.
+As in \cite{Gl06}, and as the upstream formal statements record for both bounds, these quantitative bounds concern sufficiently large primes $p\ge P(\eps)$.
+The page also records a result of Croot with $(\log p)^{3+o(1)}$ summands, notes that $\gg\eps^{-1}$ summands are trivially necessary, and remarks that ``it may be that $C_\eps\le\eps^{-1-o(1)}$ is possible''.
+The main question is thus settled, and the last remark is the open part of the problem.
+
+\subsection*{The formal statements and prior work}
+The formal-conjectures repository \cite{FC} formalizes the problem in \path{FormalConjectures/ErdosProblems/1180.lean}, with $C_\eps$ defined as the least bound valid for \emph{all} primes.
+The main statement \decl{erdos_1180} and the variants \decl{shparlinski}, \decl{glibichuk} and \decl{lower_bound} are tagged \emph{solved}, with linked Lean proofs in plby/lean-proofs \cite{plby} and linrock/math-proofs \cite{linrock}; the variant \decl{erdos_1180.variants.optimal}, which asks whether $C_\eps\le\eps^{-1-\delta}$ for every $\delta>0$ and all small $\eps$, is tagged \emph{research open}.
+The obstruction used here is known upstream: commit \texttt{377a7b38} (pull request \#6486) \cite{PR6486} restated \decl{shparlinski} and \decl{glibichuk} for large primes only, because no bound on the all-primes constant can be polynomial in $\eps^{-1}$, as $1$ is the only admissible denominator when $p^\eps<2$, and its message notes that ``the audit also flags \texttt{variants.optimal} as questionable for the same reason (it uses the all-primes \texttt{C})'', but leaves that statement unchanged because the problem page reuses $C_\eps$ there without a prime threshold.
+
+A Lean disproof already exists: linrock/math-proofs \cite{linrock}, at commit \texttt{ba96303b}, proves $\neg$\decl{Erdos1180OptimalConjecture}, a verbatim copy of the upstream statement and its definitions, as \decl{Erdos1180.Palomar.not_erdos_1180_variants_optimal}, together with $2^{1/\eps}\le4C_\eps$.
+This work is registered as Palomar entry PALOMAR-2026-10-12-000005 \cite{Palomar}, cited in the upstream file; pull request \#7219 \cite{PR7219} linked it for the three other variants, while \decl{variants.optimal} carries no link at commit \texttt{c77fdd4}.
+Our refutation is therefore not the first formal one; it is independent, and it is checked against the upstream declaration itself rather than a copy.
+The part of our Lean file that proves \decl{erdos_1180} (Glibichuk's argument, Sections~\ref{sec:glib}--\ref{sec:params}) is adapted, under its Apache-2.0 licence, from plby/lean-proofs \cite{plby}, with lists replaced by multisets.
+We classify the result as a \emph{misformalization report}: the formal statement fails because it quantifies over all primes, including those below $2^{1/\eps}$, while the open question concerns large primes. Section~\ref{sec:defect} proposes a corrected statement.
+
+\section{Statement}\label{sec:statement}
+
+Throughout, $\N=\{0,1,2,\dots\}$, $\F=\mathbb{Z}/p\mathbb{Z}$, and powers $x^y$ with real exponent are real powers.
+Let $\eps\in\R$, let $p$ be a prime and $a\in\F$.
+An \emph{$\eps$-representation of $a$} is a finite multiset $s$ of natural numbers such that every $n\in s$ satisfies $1\le n\le p^\eps$ and $\gcd(n,p)=1$ (we call such $n$ \emph{admissible}), and $\sum_{n\in s}n^{-1}=a$ in $\F$, counted with multiplicity.
+Let $S_\eps\subseteq\N$ be the set of $C$ such that every $a\in\F$ has an $\eps$-representation of size at most $C$, for every prime $p$, and put $C_\eps=\min S_\eps$ if $S_\eps\ne\emptyset$ and $C_\eps=0$ otherwise.
+The upstream statement asserts:
+\begin{equation}\label{eq:O}
+  \forall\delta>0\ \ \exists\eta>0\ \ \forall\eps\in(0,\eta):\quad C_\eps\le\eps^{-(1+\delta)}.
+\end{equation}
+The definitions and the statement, copied verbatim from \path{FormalConjectures/ErdosProblems/1180.lean} at commit \texttt{c77fdd4} (inside \texttt{namespace Erdos1180}, with \texttt{open Filter}; docstrings of the two definitions omitted), read:
+\begin{lstlisting}
+def Represents (ε : ℝ) (p : ℕ) (a : ZMod p) (s : Multiset ℕ) : Prop :=
+  (∀ n ∈ s, 1 ≤ n ∧ (n : ℝ) ≤ (p : ℝ) ^ ε ∧ n.Coprime p) ∧
+    (s.map fun n : ℕ ↦ (n : ZMod p)⁻¹).sum = a
+
+noncomputable def C (ε : ℝ) : ℕ :=
+  sInf {C | ∀ p : ℕ, p.Prime → ∀ a : ZMod p, ∃ s : Multiset ℕ, s.card ≤ C ∧ Represents ε p a s}
+
+/-- Is $C_\epsilon\leq \epsilon^{-1-o(1)}$? -/
+@[category research open, question, AMS 11]
+theorem erdos_1180.variants.optimal : ∀ δ : ℝ, 0 < δ →
+    ∀ᶠ ε : ℝ in nhdsWithin 0 (Set.Ioi 0), (C ε : ℝ) ≤ ε⁻¹ ^ (1 + δ) := by
+  sorry
+\end{lstlisting}
+Since \texttt{sInf}~$\emptyset=0$ in $\N$, the filter \texttt{nhdsWithin 0 (Set.Ioi 0)} consists of the sets containing some $(0,\eta)$, and $(\eps^{-1})^{1+\delta}=\eps^{-(1+\delta)}$ for $\eps>0$, the Lean statement is exactly~\eqref{eq:O}.
+
+\begin{theorem}\label{thm:main}
+Statement \eqref{eq:O} is false. In fact it fails for $\delta=1$: $C_{1/(m+1)}>(m+1)^2$ for every $m\ge6$.
+\end{theorem}
+
+In Lean, Theorem~\ref{thm:main} is \decl{Math0.Erdos1180.not_erdos_1180_variants_optimal}, whose type is $\neg$\,\decl{(type_of%}~\decl{@_root_.Erdos1180.erdos_1180.variants.optimal)}, the negation of the upstream statement.
+The proof rests on two facts; the first is needed because if $S_\eps$ were empty, then $C_\eps=0$ and the inequality in~\eqref{eq:O} would hold trivially.
+
+\begin{theorem}[after Glibichuk \cite{Gl06}; upstream \decl{erdos_1180}]\label{thm:glib}
+Let $\eps>0$ and let $k$ be an integer with $k>2/\eps+1$. There is $P_0$ such that for every prime $p\ge P_0$ every $a\in\F$ has an $\eps$-representation of size exactly $8k^2$. Consequently $\max(8k^2,P_0)\in S_\eps$; in particular $S_\eps\ne\emptyset$.
+\end{theorem}
+
+\begin{proposition}\label{prop:lower}
+For every integer $m\ge2$, $C_{1/(m+1)}\ge 2^m$.
+\end{proposition}
+
+
+\section{Proof}\label{sec:proof}
+
+\subsection{Glibichuk's covering lemma}\label{sec:glib}
+Let $p$ be prime and $X,Y\subseteq\F$ with $N=|X||Y|$.
+For $\xi\in\F$ let $A_\xi=\{x+\xi y:x\in X,\,y\in Y\}$ and let $E_\xi$ be the number of pairs $(u,v)\in(X\times Y)^2$ with $u_1+\xi u_2=v_1+\xi v_2$.
+Write $XY=\{xy:x\in X,y\in Y\}$ and $hXY$ for the $h$-fold sumset $XY+\dots+XY$.
+Call $Y$ \emph{antisymmetric} if $-y\notin Y$ for every $y\in Y$.
+
+\begin{lemma}\label{lem:energy}
+\textup{(a)} $N^2\le|A_\xi|\,E_\xi$ for every $\xi$.
+\textup{(b)} $\sum_{\xi\ne0}E_\xi\le(p-1)N+N^2$; hence some $\xi\ne0$ satisfies $E_\xi\le N+N^2/(p-1)$.
+\textup{(c)} $E_{-\xi}=E_\xi$.
+\end{lemma}
+
+\begin{proof}
+(a) For $z\in A_\xi$ let $r(z)$ be the number of $u\in X\times Y$ with $u_1+\xi u_2=z$. Then $\sum_z r(z)=N$ and $\sum_z r(z)^2=E_\xi$, and Cauchy--Schwarz gives $N^2\le|A_\xi|\sum_zr(z)^2$.
+(b) The sum counts triples $(\xi,u,v)$ with $\xi\ne0$ and $u_1+\xi u_2=v_1+\xi v_2$. Triples with $u=v$ number at most $(p-1)N$. If $u\ne v$ and some $\xi$ solves the equation, then $u_2\ne v_2$ (otherwise the equation forces $u_1=v_1$), and two solutions $\xi,\eta$ give $(\xi-\eta)(u_2-v_2)=0$, so $\xi=\eta$; hence these triples number at most $N^2$. The second claim follows by averaging over the $p-1$ values $\xi\ne0$.
+(c) The involution $((x_1,y_1),(x_2,y_2))\mapsto((x_1,y_2),(x_2,y_1))$ of $(X\times Y)^2$ maps solutions for $\xi$ to solutions for $-\xi$, since $x_1+\xi y_1=x_2+\xi y_2$ is equivalent to $x_1-\xi y_2=x_2-\xi y_1$.
+\end{proof}
+
+\begin{lemma}\label{lem:half}
+Let $p>2$ be prime, $N>p$ and $E_\xi\le N+N^2/(p-1)$. Then $2|A_\xi|>p$.
+\end{lemma}
+
+\begin{proof}
+Suppose $2|A_\xi|\le p$. As $p$ is odd, $2|A_\xi|\le p-1$. By Lemma~\ref{lem:energy}(a), $2N^2\le2|A_\xi|E_\xi\le(p-1)E_\xi\le(p-1)N+N^2$, so $N\le p-1$, a contradiction.
+\end{proof}
+
+\begin{proposition}[Glibichuk]\label{prop:cover}
+Let $p>2$ be prime and $X,Y\subseteq\F$ with $|X||Y|>p$ and $Y$ antisymmetric. Then $8XY=\F$.
+\end{proposition}
+
+\begin{proof}
+By Lemmas~\ref{lem:energy} and~\ref{lem:half} there is $\xi\ne0$ with $2|A_\xi|>p$ and $2|A_{-\xi}|>p$.
+A set $A\subseteq\F$ with $2|A|>p$ meets $-A$, since otherwise $|A\cup(-A)|=2|A|>p$.
+So $x_1+\xi y_1=-(x_2+\xi y_2)$ for some $x_i\in X$, $y_i\in Y$, that is, $\xi(y_1+y_2)=-(x_1+x_2)$, and $c=y_1+y_2\ne0$ because $Y$ is antisymmetric.
+For $x_3\in X$, $y_3\in Y$,
+\[
+  c\,(x_3-\xi y_3)=x_3y_1+x_3y_2+x_1y_3+x_2y_3\in 4XY.
+\]
+Multiplication by $c$ is injective, so $|4XY|\ge|A_{-\xi}|>p/2$, i.e.\ $2|4XY|\ge p+1$.
+By the Cauchy--Davenport theorem, $|4XY+4XY|\ge\min(p,2|4XY|-1)=p$, so $8XY=\F$.
+\end{proof}
+
+\subsection{Sums of reciprocals of primes in blocks}\label{sec:blocks}
+Let $p$ be prime, $k\ge1$, $L\ge0$, $H<p$, and let $q_{i,j}$ ($0\le i<k$, $0\le j<L$) be pairwise distinct primes with $q_{i,j}\le H$ and
+\begin{equation}\label{eq:clear}
+  2kH^{2k-1}<p.
+\end{equation}
+For $u\colon\{0,\dots,k-1\}\to\{0,\dots,L-1\}$ put $r(u)=\sum_iq_{i,u(i)}^{-1}\in\F$, and let $B=\{r(u)\}$.
+
+\begin{lemma}\label{lem:blocks}
+The map $u\mapsto r(u)$ is injective, so $|B|=L^k$, and $B$ is antisymmetric.
+\end{lemma}
+
+\begin{proof}
+Let $D(u)=\prod_iq_{i,u(i)}$ and $M(u)=\sum_i\prod_{j\ne i}q_{j,u(j)}$, both positive integers. Since $0<q_{i,j}<p$, each $q_{i,j}$ is invertible in $\F$ and $D(u)r(u)=M(u)$ in $\F$. Moreover $D(u)\le H^k$ and $M(u)\le kH^{k-1}$, so $0<M(u)D(v)\le kH^{2k-1}<p/2$ for all $u,v$.
+
+\emph{Injectivity.} If $r(u)=r(v)$ then $M(u)D(v)=D(u)D(v)r(u)=M(v)D(u)$ in $\F$; both sides are integers in $[0,p)$, so they are equal. Suppose $u\ne v$, choose $i$ with $u(i)\ne v(i)$ and let $q=q_{i,u(i)}$. Then $q\mid D(u)$, so $q$ divides $M(v)D(u)=M(u)D(v)$. But $q\nmid D(v)$, since a prime dividing $D(v)$ equals some $q_{j,v(j)}$, and distinctness would give $(i,u(i))=(j,v(j))$. Also $q\nmid M(u)$: every summand of $M(u)$ except the $i$-th contains the factor $q$, and the $i$-th is a product of primes $q_{j,u(j)}\ne q$. This contradicts the primality of $q$.
+
+\emph{Antisymmetry.} If $r(u)=-r(v)$ then $p$ divides $M(u)D(v)+M(v)D(u)$, an integer in $(0,p)$; impossible.
+\end{proof}
+
+\begin{lemma}\label{lem:exact}
+Assume moreover $H^2\le p^\eps$. Then every element of $8BB$ has an $\eps$-representation of size exactly $8k^2$.
+\end{lemma}
+
+\begin{proof}
+For $u,v$ we have $r(u)r(v)=\sum_{i,j}(q_{i,u(i)}q_{j,v(j)})^{-1}$, a sum of $k^2$ inverses. Each denominator $n=q_{i,u(i)}q_{j,v(j)}$ satisfies $1\le n\le H^2\le p^\eps$, and $\gcd(n,p)=1$ because both factors are positive and less than $p$. So every element of $BB$ has an $\eps$-representation of size exactly $k^2$. The sum of the multisets of two representations represents the sum of the two residues, so every element of $8BB$ has one of size exactly $8k^2$.
+\end{proof}
+
+\subsection{Parameters and proof of Theorem~\ref{thm:glib}}\label{sec:params}
+
+\begin{lemma}\label{lem:params}
+Let $\eps>0$ and let $k$ be an integer with $k>2/\eps+1$. Put $\delta=2/(4k-1)$, $\gamma=(\delta+\frac1{2k})/2$ and $t=(\gamma/\delta+1)/2$. Then $0<\gamma<\delta<1$, $(2k-1)\delta<1$, $2\delta\le\eps$, $2k\gamma>1$, $0<t<1$ and $\gamma<\delta t$.
+\end{lemma}
+
+\begin{proof}
+$\frac1{2k}<\delta$ because $4k-1<4k$, so $\frac1{2k}<\gamma<\delta$ and $2k\gamma>1$. Next $\delta<1$ as $k>1$, and $(2k-1)\delta=\frac{4k-2}{4k-1}<1$. From $k\eps>2+\eps$ we get $\eps(4k-1)>8+3\eps>4$, i.e.\ $2\delta\le\eps$. Finally $\gamma/\delta\in(0,1)$ gives $t\in(0,1)$, and $\delta t=(\gamma+\delta)/2>\gamma$.
+\end{proof}
+
+\begin{lemma}\label{lem:good}
+With the parameters of Lemma~\ref{lem:params}, for all sufficiently large $n$, writing $H=\lfloor n^\delta\rfloor$ and $L=\lfloor n^\gamma\rfloor$:
+\textup{(G1)} $n>2$; \textup{(G2)} $H<n$; \textup{(G3)} $2kH^{2k-1}<n$; \textup{(G4)} $H^2\le n^\eps$; \textup{(G5)} $n<L^{2k}$; \textup{(G6)} $kL\le\pi(H)$.
+\end{lemma}
+
+\begin{proof}
+(G2) holds since $\delta<1$. (G3): $2kH^{2k-1}\le2k\,n^{(2k-1)\delta}<n$ for large $n$, as $(2k-1)\delta<1$. (G4): $H^2\le n^{2\delta}\le n^\eps$ for $n\ge1$. (G5): once $n^\gamma\ge1$ we have $L>n^\gamma/2$, so $L^{2k}>2^{-2k}n^{2k\gamma}>n$ for large $n$, as $2k\gamma>1$.
+(G6): we first show $\pi(x)\ge x^t$ for all large integers $x$. Chebyshev's bound $\pi(x)\ge(x\log2-\log(x+1))/\log x$ holds for all integers $x\ge2$; for $x\ge6$ we have $(x+1)^2\le2^x$, so $\log(x+1)\le\frac{x\log2}2$, and for large $x$ also $\log x\le\frac{\log2}{2}x^{1-t}$, whence $x^t\log x\le\frac{x\log 2}{2}\le x\log2-\log(x+1)$. Since $H\to\infty$, for large $n$ we get $\pi(H)\ge H^t>(n^\delta/2)^t=2^{-t}n^{\delta t}>k\,n^\gamma\ge kL$, using $H>n^\delta/2$ and $\delta t>\gamma$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:glib}]
+Take $P_0$ such that every $n\ge P_0$ satisfies (G1)--(G6). Let $p\ge P_0$ be prime and $a\in\F$. By (G6) there are $kL$ distinct primes $\le H$; label them $q_{i,j}$ ($i<k$, $j<L$). By (G2) and (G3) the hypotheses of Section~\ref{sec:blocks} hold, and Lemma~\ref{lem:blocks} and (G5) give an antisymmetric $B$ with $|B|^2=L^{2k}>p$. Proposition~\ref{prop:cover} with $X=Y=B$ (using (G1)) gives $8BB=\F$, and Lemma~\ref{lem:exact} (using (G4)) gives an $\eps$-representation of $a$ of size $8k^2$.
+For a prime $p<P_0$ and $a\in\F$, let $0\le a'<p$ be the integer representing $a$; the multiset consisting of $a'$ copies of $1$ is an $\eps$-representation of $a$ (note $1\le p^\eps$), of size $a'<P_0$. Hence $\max(8k^2,P_0)\in S_\eps$.
+\end{proof}
+
+\subsection{The lower bound and proof of Theorem~\ref{thm:main}}\label{sec:refute}
+
+\begin{lemma}\label{lem:one}
+Let $k\ge1$ and let $p$ be a prime with $p<2^k$. Then every $(1/k)$-representation $s$ of $-1$ has $|s|\ge p-1$.
+\end{lemma}
+
+\begin{proof}
+If $n\in s$ had $n\ge2$, then $2\le p^{1/k}$, and raising to the $k$-th power gives $2^k\le p$, a contradiction. So $s$ consists of $|s|$ copies of $1$, and $\sum_{n\in s}n^{-1}=|s|=-1$ in $\F$. Thus $p\mid|s|+1$, and $|s|+1\ge p$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:lower}]
+Let $m\ge2$ and $\eps=1/(m+1)$. By Bertrand's postulate there is a prime $p$ with $2^m<p\le2^{m+1}$; in fact $p<2^{m+1}$, since $p>2^m\ge4$ is odd while $2^{m+1}$ is even. By Theorem~\ref{thm:glib}, $S_\eps\ne\emptyset$, so $C_\eps=\min S_\eps\in S_\eps$, and $-1\in\F$ has an $\eps$-representation $s$ with $|s|\le C_\eps$. By Lemma~\ref{lem:one} with $k=m+1$, $C_\eps\ge|s|\ge p-1\ge2^m$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Suppose \eqref{eq:O} holds and apply it with $\delta=1$. Since $\eps_m=1/(m+1)$ tends to $0$ through positive values, there is $M$ with $C_{\eps_m}\le\eps_m^{-2}=(m+1)^2$ for all $m\ge M$. Take $m=M+10$. Proposition~\ref{prop:lower} gives $2^m\le C_{\eps_m}\le(m+1)^2$. But $(m+1)^2<2^m$ for $m\ge6$, by induction: $49<64$, and $(m+2)^2\le2(m+1)^2<2\cdot2^m$. Contradiction.
+\end{proof}
+
+The Lean proof carries out the argument of Proposition~\ref{prop:lower} inline for $m=M+10$, using Mathlib's \decl{Nat.exists_prime_lt_and_le_two_mul} (Bertrand) and \decl{Nat.sInf_mem}.
+
+\section{The defect and a corrected statement}\label{sec:defect}
+
+The lower bound of Proposition~\ref{prop:lower} comes only from primes $p<2^{1/\eps}$, for which $1$ is the only admissible denominator (Theorem~\ref{thm:glib} only ensures that $C_\eps$ is a genuine minimum); any bound valid for all primes is at least $p-1$ for each such $p$, so $C_\eps$ is exponential in $1/\eps$ whatever happens for large primes. The bounds of Shparlinski and Glibichuk concern the least bound valid for all primes $p\ge P(\eps)$, for which $\gg\eps^{-1}$ summands are also trivially necessary, and we read the remark ``it may be that $C_\eps\le\eps^{-1-o(1)}$'' as referring to that quantity, since for the all-primes constant it fails trivially. Theorem~\ref{thm:main} says nothing about the large-prime quantity, and whether it is $\eps^{-1-o(1)}$ remains open.
+
+Following the form that \cite{PR6486} gave to the \decl{shparlinski} and \decl{glibichuk} variants, we propose:
+\begin{lstlisting}
+/-- Is $C_\epsilon\leq \epsilon^{-1-o(1)}$, for all sufficiently large primes? -/
+@[category research open, question, AMS 11]
+theorem erdos_1180.variants.optimal : ∀ δ : ℝ, 0 < δ →
+    ∀ᶠ ε : ℝ in nhdsWithin 0 (Set.Ioi 0), ∃ P : ℕ, ∀ p : ℕ, P ≤ p → p.Prime → ∀ a : ZMod p,
+      ∃ s : Multiset ℕ, (s.card : ℝ) ≤ ε⁻¹ ^ (1 + δ) ∧ Represents ε p a s := by
+  sorry
+\end{lstlisting}
+We checked that this elaborates against the pinned versions of Section~\ref{sec:lean}. Alternatively, one can bound a large-prime constant in place of \decl{C}, as linrock/math-proofs does with \decl{CAsymptotic} \cite{linrock}.
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+{\raggedright The proof is the file \path{lean/Math0/ErdosProblems/Erdos1180_erdos_1180_variants_optimal.lean} (1073 lines) of the math0 repository (\url{https://github.com/Foundation-0/math0}). It imports only the upstream file \path{FormalConjectures/ErdosProblems/1180.lean} and the audit commands \path{lean/Math0/Audit.lean}, and contains no \texttt{sorry}, \decl{native_decide}, \decl{set_option} or new axioms. The main declarations, in the namespace \decl{Math0.Erdos1180}, are:
+\decl{exists_good_slope}, \decl{affEnergy_neg} (Lemma~\ref{lem:energy});
+\decl{card_affImg_large} (Lemma~\ref{lem:half});
+\decl{glibichuk} (Proposition~\ref{prop:cover}, using Mathlib's \decl{ZMod.cauchy_davenport});
+\decl{recSum_injective}, \decl{card_recSet}, \decl{recSet_antisymm} (Lemma~\ref{lem:blocks});
+\decl{sum8_exactRep} (Lemma~\ref{lem:exact});
+\decl{choose_params} (Lemma~\ref{lem:params});
+\decl{ev_good}, \decl{ev_primeCounting_ge} (Lemma~\ref{lem:good}, using Mathlib's \decl{Chebyshev.pi_ge});
+\decl{exists_bound} (Theorem~\ref{thm:glib});
+\decl{card_ge_of_represents_neg_one} (Lemma~\ref{lem:one});
+\decl{not_erdos_1180_variants_optimal} (Theorem~\ref{thm:main}).
+The statement of \decl{exists_bound} is that of upstream \decl{erdos_1180}; only the final theorem is audited against an upstream declaration, by the last line of the file,\par}
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+#math0_refutes Math0.Erdos1180.not_erdos_1180_variants_optimal Erdos1180.erdos_1180.variants.optimal
+\end{lstlisting}
+
+\subsection*{Audit}
+The command \decl{#math0_refutes} (defined in \path{lean/Math0/Audit.lean}) fails unless the two theorems have the same universe parameters, the type of ours is syntactically identical (up to metadata, with no unfolding or definitional-equality check) to $\neg T$ for $T$ the type of \decl{Erdos1180.erdos_1180.variants.optimal}, and ours depends on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}; this rejects \decl{sorryAx}, the axioms behind \decl{native_decide} and custom axioms. On this file it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize, upquote=true]
+math0 audit: 'Math0.Erdos1180.not_erdos_1180_variants_optimal' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Erdos1180.not_erdos_1180_variants_optimal' refutes 'Erdos1180.erdos_1180.variants.optimal'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1}, Mathlib \cite{Mathlib} \texttt{v4.33.1} and formal-conjectures \cite{FC} at commit \texttt{c77fdd446d23539302aa73bcfae4a9fa962b8382}, all pinned in \path{lean/}. To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib cache, builds all math0 results with \texttt{lake build} (re-running every audit), and checks that the pinned \decl{formal_conjectures} and \decl{mathlib} checkouts are unmodified. The single file can be checked in about a minute with \texttt{lake env lean} from \path{lean/}.
+
+\begin{thebibliography}{99}
+\small\raggedright
+
+\bibitem{EP1180}
+T.~F. Bloom, \emph{Erd\H{o}s Problems}, Problem \#1180, \url{https://www.erdosproblems.com/1180}, accessed October 2026.
+
+\bibitem{ErGr80}
+P.~Erd\H{o}s and R.~L. Graham, \emph{Old and new problems and results in combinatorial number theory}, Monographies de L'Enseignement Math\'ematique \textbf{28}, Universit\'e de Gen\`eve, 1980.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{PR6486}
+formal-conjectures, commit \texttt{377a7b38} (pull request \#6486), \emph{fix(ErdosProblems/1180): bound summands for large primes only}, 22 September 2026, \url{https://github.com/google-deepmind/formal-conjectures/pull/6486}.
+
+\bibitem{PR7219}
+formal-conjectures, commit \texttt{da0010d4} (pull request \#7219), \emph{feat(ErdosProblems/1180): link formal proofs for solved variants}, 13 October 2026, \url{https://github.com/google-deepmind/formal-conjectures/pull/7219}.
+
+\bibitem{Gl06}
+A.~A. Glibichuk, \emph{Combinatorial properties of sets of residues modulo a prime and the Erd\H{o}s--Graham problem}, Mat. Zametki \textbf{79} (2006), no.~3, 384--395; English transl.\ in Math. Notes \textbf{79} (2006), no.~3, 356--365.
+
+\bibitem{linrock}
+linrock, \emph{math-proofs}, directory \path{erdos-1180/} at commit \texttt{ba96303b34a95ac458958c1eb0bbdee54733484a}, \url{https://github.com/linrock/math-proofs}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Palomar}
+Palomar registry, entry PALOMAR-2026-10-12-000005, version 1, \url{https://palomar-registry.org/entry.html?id=PALOMAR-2026-10-12-000005&version=1}.
+
+\bibitem{plby}
+plby, \emph{lean-proofs}, file \path{src/latest/ErdosProblems/Erdos1180.lean} at commit \texttt{8822f7ddef30fadbd92e1c6ab4ed897af356af5e}, \url{https://github.com/plby/lean-proofs}.
+
+\bibitem{Sh02}
+I.~E. Shparlinski, \emph{On a question of Erd\H{o}s and Graham}, Arch. Math. (Basel) \textbf{78} (2002), no.~6, 445--448.
+
+\end{thebibliography}
+
+\end{document}

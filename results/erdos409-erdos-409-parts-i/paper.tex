@@ -1,0 +1,288 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    noncomputable,sorry,subst},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  upquote=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℝ}{{$\mathbb{R}$}}1 {≤}{{$\le$}}1 {≥}{{$\ge$}}1 {·}{{$\cdot$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1
+    {¬}{{$\neg$}}1 {→}{{$\to$}}1 {↦}{{$\mapsto$}}1 {∈}{{$\in$}}1
+    {φ}{{$\varphi$}}1 {σ}{{$\sigma$}}1 {Θ}{{$\Theta$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{Θ}{\ensuremath{\Theta}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\DeclareMathOperator{\IsLeast}{IsLeast}
+
+\title[The iteration count of $n\mapsto\varphi(n)+1$ is not constant]{The number of iterations of $n\mapsto\varphi(n)+1$ needed to reach a prime is not constant: a defect in the formal statement of Erd\H{o}s Problem \#409(i)}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 17, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $F(n)$ be the least number of iterations of $m\mapsto\varphi(m)+1$, started at $n$, after which a prime is reached; the first part of Erd\H{o}s Problem \#409 asks how large $F(n)$ is, and it is open. The formal-conjectures repository states this part in Lean as the claim that $F(n)$ equals one unknown natural number, the same for every $n>0$. We prove that this claim is false for every value of the unknown, because $F(2)=0$ while $F(4)\ne 0$; the argument is elementary, so this is a misformalization report that says nothing about the open problem, and we discuss a corrected statement. The proof is verified in Lean~4 against the upstream formal-conjectures statement, together with a check that our theorem is exactly that statement, negated and quantified over all values of the unknown.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Let $\varphi$ be Euler's totient function and $f(m)=\varphi(m)+1$. Since $\varphi(m)=m-1$ exactly when $m$ is prime, and $f(0)=1$, $f(1)=2$, the fixed points of $f$ are exactly the primes. If $n>1$ is not prime, then $\varphi(n)<n-1$, so $f(n)<n$; and $f(1)=2$. Hence every trajectory $n,f(n),f(f(n)),\dots$ with $n\ge 1$ reaches a prime and then stays there. Let $F(n)$ be the number of iterations needed, that is, the least $i\ge 0$ such that the $i$-th iterate of $f$ at $n$ is prime. Its values for $n=1,2,3,\dots$ form the OEIS sequence A039651 \cite{OEIS-A039651}, which begins $1,0,0,1,0,1,0,1,1,1,0,1,\dots$.
+
+Erd\H{o}s Problem \#409 \cite{EP409} asks: how many iterations of $n\mapsto\varphi(n)+1$ are needed before a prime is reached? Can infinitely many $n$ reach the same prime? What is the density of the $n$ that reach a fixed prime? The page attributes the problem to Finucane and cites \cite[p.~81]{ErGr80} and \cite[Problem~B41]{Gu04}. Citing comments of S.~Cambie, it notes that $F(n)=o(n)$ is trivial and that $F(n)=1$ for infinitely many $n$, so that the first question presumably asks for good upper bounds on $F(n)$. The problem is listed as open in the Erd\H{o}s problems database \cite{EPdb}. The OEIS sequence A229487 \cite{OEIS-A229487} records, for each prime $p$, the conjectured largest $n$ whose trajectory ends at $p$; it bears on the second and third questions, which we do not discuss.
+
+The formal-conjectures repository \cite{FC} contains a Lean formalization of the problem in \path{FormalConjectures/ErdosProblems/409.lean}. At the pinned commit \texttt{c77fdd4} its first part, \decl{Erdos409.erdos_409.parts.i}, has a single top-level unknown \decl{erdos_409.parts.i.answer} of type $\N$ and asserts that, for every $n>0$, this number is the least $i$ with $f^{(i)}(n)$ prime (Section~\ref{sec:statement}). The unknown cannot depend on $n$. The same file also states the question in three asymptotic forms, \decl{erdos_409.parts.i.isTheta}, \decl{erdos_409.parts.i.isBigO} and \decl{erdos_409.parts.i.isLittleO}, in which the iteration count is a function $c\colon\N\to\N$; these match the problem and are not affected by the present note.
+
+\subsection*{Contribution and status}
+We prove (Theorem~\ref{thm:main}) that \decl{Erdos409.erdos_409.parts.i} is false for every possible value of its unknown, because $F(2)=0$ and $F(4)\ne 0$. This is a \emph{misformalization report}. It does not bear on the open question of how $F(n)$ grows. The defect had already been pointed out informally: an open pull request to \cite{FC} lists this statement among answer slots that cannot depend on inputs they must depend on (Section~\ref{sec:defect}). We found no previous formal proof that the statement is false. Section~\ref{sec:defect} discusses a corrected statement (the fix proposed in that pull request, adapted to the current form of the file) and notes that the sibling statement \decl{erdos_409.variants.sigma} has the same defect.
+
+\section{Statement}\label{sec:statement}
+
+\subsection{Notation}
+Let $\N=\{0,1,2,\dots\}$, let $\varphi\colon\N\to\N$ be Euler's totient function (Mathlib's \decl{Nat.totient}, with $\varphi(0)=0$), and let $f(m)=\varphi(m)+1$. Write $f^{(0)}=\mathrm{id}$ and $f^{(i+1)}=f\circ f^{(i)}$. For $n\in\N$ put
+\[
+S(n)=\{\,i\in\N:\ f^{(i)}(n)\text{ is prime}\,\}.
+\]
+For $S\subseteq\N$ and $a\in\N$, $\IsLeast(S,a)$ means that $a\in S$ and $a\le i$ for all $i\in S$ (Mathlib's \decl{IsLeast}). For $n>0$ the set $S(n)$ is nonempty (this is the upstream lemma \decl{erdos_409.variants.termination}, proved by the argument in the introduction), and $F(n)=\min S(n)$ is the unique $a$ with $\IsLeast(S(n),a)$.
+
+\subsection{The upstream statement}
+The statement, copied verbatim from \path{FormalConjectures/ErdosProblems/409.lean} (lines 33--44, namespace \decl{Erdos409}, with \texttt{open scoped Nat}, so that \texttt{φ} denotes \decl{Nat.totient}) at commit \texttt{c77fdd4}, is:
+\begin{lstlisting}
+def erdos_409.parts.i.answer : ℕ := sorry
+
+/--
+How many iterations of $n\mapsto\phi(n) + 1$ are needed before a prime is reached?
+-/
+-- Formalisation note: the sequence of iterates always terminates if `n > 0`
+-- since it is strictly decreasing unless the input is prime, at which point
+-- it becomes static. See also https://oeis.org/A39651
+@[category research open, question value, AMS 11]
+theorem erdos_409.parts.i (n : ℕ) (hn : 0 < n) :
+    IsLeast { i | (φ · + 1)^[i] n |>.Prime } erdos_409.parts.i.answer := by
+  sorry
+\end{lstlisting}
+Here \texttt{(φ · + 1)} is the function $f$, \texttt{g\^{}[i]} is the $i$-th iterate of \texttt{g}, and \texttt{x |>.Prime} is \texttt{Nat.Prime x}. So the set in the statement is $S(n)$, and with $A=\texttt{erdos\_409.parts.i.answer}\in\N$ the statement asserts
+\begin{equation}\label{eq:upstream}
+\IsLeast\bigl(S(n),A\bigr)\qquad\text{for every } n\in\N \text{ with } n>0,
+\end{equation}
+that is, $F(n)=A$ for every $n>0$.
+
+\subsection{Main result}
+
+\begin{theorem}\label{thm:main}
+There is no $a\in\N$ such that $\IsLeast(S(n),a)$ holds for every $n>0$. More precisely, no $a\in\N$ satisfies both $\IsLeast(S(2),a)$ and $\IsLeast(S(4),a)$.
+\end{theorem}
+
+In Lean (namespace \decl{Math0.Erdos409}):
+\begin{lstlisting}
+theorem erdos_409_parts_i_refuted : ∀ a : ℕ, ¬ ∀ (n : ℕ) (_ : 0 < n),
+    IsLeast { i | (φ · + 1)^[i] n |>.Prime } a
+\end{lstlisting}
+This type is the type of \decl{Erdos409.erdos_409.parts.i} with the constant \decl{erdos_409.parts.i.answer} replaced by a bound variable \texttt{a}, negated and quantified over \texttt{a}. So it refutes the upstream statement for every way of filling in the unknown; Section~\ref{sec:lean} describes the check.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file, whose two auxiliary theorems are Lemmas~\ref{lem:two} and~\ref{lem:four}.
+
+\begin{lemma}[\decl{eq_zero_of_isLeast_two}]\label{lem:two}
+If $a\in\N$ and $\IsLeast(S(2),a)$, then $a=0$.
+\end{lemma}
+
+\begin{proof}
+Since $f^{(0)}(2)=2$ is prime (Mathlib's \decl{Nat.prime_two}), $0\in S(2)$. As $a$ is a lower bound of $S(2)$, $a\le 0$, hence $a=0$.
+\end{proof}
+
+\begin{lemma}[\decl{not_isLeast_four_zero}]\label{lem:four}
+$\IsLeast(S(4),0)$ does not hold.
+\end{lemma}
+
+\begin{proof}
+$\IsLeast(S(4),0)$ would give $0\in S(4)$, that is, $f^{(0)}(4)=4$ would be prime. But $4=2\cdot 2$ is not prime.
+\end{proof}
+
+In Lean, the membership statements are reduced to \texttt{Nat.Prime 2} and \texttt{Nat.Prime 4} by \texttt{simp} with the lemmas \decl{Set.mem_ofPred_eq}, \decl{Function.iterate_zero} and \decl{id_eq}. The fact $\neg\,\texttt{Nat.Prime 4}$ is proved by \texttt{decide}: the kernel evaluates Mathlib's decision procedure \decl{Nat.decidablePrime}, which tests $2\le p$ and that no $m$ with $2\le m<p$ divides $p$, at $p=4$, and finds that $2$ divides $4$. This is the only computation in the proof. The step $a\le 0\Rightarrow a=0$ in Lemma~\ref{lem:two} is closed by \texttt{omega}, and the side conditions $0<2$ and $0<4$ below by \texttt{norm\_num}.
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $a\in\N$ and suppose that $\IsLeast(S(n),a)$ for every $n>0$. Taking $n=2$ gives $\IsLeast(S(2),a)$, so $a=0$ by Lemma~\ref{lem:two}. Taking $n=4$ now gives $\IsLeast(S(4),0)$, which contradicts Lemma~\ref{lem:four}.
+\end{proof}
+
+\begin{remark}
+The proof only uses that $F(2)=0$ and $F(4)\ne 0$. In fact $F(4)=1$, since $f(4)=\varphi(4)+1=3$, and more generally $F(2p)=1$ for every odd prime $p$, since $2p$ is not prime and $\varphi(2p)+1=p$; this is one way to see the remark of \cite{EP409} that $F(n)=1$ infinitely often. Also $F(1)=1$ because $f(1)=2$. These values agree with A039651 \cite{OEIS-A039651}. None of this is needed for Theorem~\ref{thm:main}, and none of it says anything about upper bounds for $F(n)$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is the file \path{lean/Math0/ErdosProblems/Erdos409_erdos_409_parts_i.lean} of the math0 repository (\url{https://github.com/Foundation-0/math0}). It imports the upstream file \path{FormalConjectures/ErdosProblems/409.lean} and the math0 audit commands (\path{lean/Math0/Audit.lean}). It declares \decl{Math0.Erdos409.eq_zero_of_isLeast_two} (Lemma~\ref{lem:two}), \decl{Math0.Erdos409.not_isLeast_four_zero} (Lemma~\ref{lem:four}) and the main theorem \decl{Math0.Erdos409.erdos_409_parts_i_refuted} (Theorem~\ref{thm:main}). It contains no \texttt{sorry}, \texttt{native\_decide}, \texttt{set\_option} or \texttt{axiom}. The file ends, after the namespace, with the audit command
+\begin{lstlisting}
+#math0_refutes_every_answer Math0.Erdos409.erdos_409_parts_i_refuted Erdos409.erdos_409.parts.i
+  with Erdos409.erdos_409.parts.i.answer
+\end{lstlisting}
+
+\subsection*{Audit}
+The command \texttt{\#math0\_refutes\_every\_answer} is defined in \path{lean/Math0/Audit.lean}. Given our theorem, the upstream theorem \decl{Erdos409.erdos_409.parts.i} and its unknown \decl{Erdos409.erdos_409.parts.i.answer} of type $T$ (here $T=\N$), it fails the build unless:
+\begin{enumerate}
+\item the two theorems have the same universe parameters and the unknown is not universe-polymorphic;
+\item the type of our theorem, after metadata annotations are removed, is equal as a Lean expression (up to the names and binder annotations of bound variables, with no unfolding of definitions and no definitional-equality check) to $\forall\, a : T,\ \neg P[a]$, where $P[a]$ is the type of the upstream theorem with every occurrence of the constant \decl{Erdos409.erdos_409.parts.i.answer} replaced by the bound variable $a$;
+\item our theorem depends on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}; in particular not on \decl{sorryAx}, on \decl{Lean.ofReduceBool} (used by \texttt{native\_decide}) or on a custom axiom.
+\end{enumerate}
+The quantification over $a$ is needed because the body of the upstream definition is \texttt{sorry}. Applying our theorem to the constant itself yields a proof of the negation of the statement of \decl{Erdos409.erdos_409.parts.i}, but its axiom closure contains \decl{sorryAx}, reached through the body of the placeholder. The quantified form avoids this, and it also refutes every future version in which the definition is filled in and the theorem is left unchanged. On this file the command prints:
+\begin{lstlisting}
+math0 audit: 'Math0.Erdos409.erdos_409_parts_i_refuted' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Erdos409.erdos_409_parts_i_refuted' refutes 'Erdos409.erdos_409.parts.i' for every value of 'Erdos409.erdos_409.parts.i.answer'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1}, Mathlib \cite{Mathlib} \texttt{v4.33.1} and formal-conjectures \cite{FC} at commit \texttt{c77fdd4} (\texttt{c77fdd446d23539302aa73bcfae4a9fa962b8382}), all pinned in the \path{lean} directory (files \path{lakefile.toml} and \path{lean-toolchain}). To reproduce, run \path{scripts/verify.sh} from the repository root. It downloads the Mathlib build cache, builds all math0 results with \texttt{lake build} (which re-runs every audit command), checks that the \texttt{formal\_conjectures} and \texttt{mathlib} checkouts have no local modifications, and reports the number of passed statement checks. The single file can be checked with \texttt{lake env lean Math0/ErdosProblems/Erdos409\_erdos\_409\_parts\_i.lean} from the \path{lean} directory, which takes a few seconds once the dependencies are built.
+
+\section{The defect and a corrected statement}\label{sec:defect}
+
+\subsection*{The defect}
+The quantity asked about in Erd\H{o}s Problem \#409(i) is the function $n\mapsto F(n)$, and the question is how it grows. The Lean statement \decl{erdos_409.parts.i} instead declares its unknown \decl{erdos_409.parts.i.answer} once, outside the scope of the binder $n$, as a single natural number, and asserts that it equals $F(n)$ for every $n>0$. Since $F$ is not constant, this is false for the elementary reason of Theorem~\ref{thm:main}.
+
+In earlier versions of the file the unknown was written inline as \texttt{answer(sorry)} inside the statement, after the binder $n$. Commit \texttt{2c24ebe7} (pull request \#7327, October 14, 2026) replaced inline \texttt{answer(sorry)} placeholders of value questions by top-level definitions \texttt{<theorem>.answer}; for this statement that produced the $n$-independent definition shown in Section~\ref{sec:statement}. Pull request \#5446 \cite{PR5446}, opened on September 10, 2026 and still open in October 2026, lists \decl{erdos_409.parts.i} and \decl{erdos_409.variants.sigma} among answer slots that cannot depend on the inputs they must depend on, in the setting where the answer is extracted to a closed top-level definition, and proposes to apply a closed function to the theorem's binders.
+
+\subsection*{A corrected statement}
+The contribution guidelines of \cite{FC} say that if the type of the unknown depends on parameters of the theorem, these become parameters of the definition. Here the type $\N$ does not depend on $n$ but the value must, and the same device applies; this is the fix proposed in \cite{PR5446} (written there for the earlier inline placeholder), restated with a top-level definition:
+\begin{lstlisting}
+def erdos_409.parts.i.answer : ℕ → ℕ := sorry
+
+@[category research open, question value, AMS 11]
+theorem erdos_409.parts.i (n : ℕ) (hn : 0 < n) :
+    IsLeast { i | (φ · + 1)^[i] n |>.Prime } (erdos_409.parts.i.answer n) := by
+  sorry
+\end{lstlisting}
+We checked that this compiles against the pinned formal-conjectures checkout (docstring omitted here). It is consistent, but it only asks for the function $F$ itself, and it is satisfied by the tautological filling $\texttt{answer}\ n=\min S(n)$ (Lean's \decl{sInf}). We checked this filling in Lean as well, with a two-line proof from the upstream lemma \decl{erdos_409.variants.termination} and Mathlib's \decl{Nat.sInf_mem} and \decl{Nat.sInf_le}, using only the three permitted axioms; this check is not part of the math0 repository. The contribution guidelines state that deciding whether a filled-in answer is a mathematically meaningful solution is outside the scope of the repository, so this is not a defect of the corrected form. Still, the content of the question, good upper bounds for $F(n)$, is carried by the asymptotic variants, for example
+\begin{lstlisting}
+theorem erdos_409.parts.i.isTheta (c : ℕ → ℕ)
+    (h : ∀ n > 0, IsLeast { i | (φ · + 1)^[i] n |>.Prime } (c n)) :
+    (fun n => (c n : ℝ)) =Θ[atTop] erdos_409.parts.i.isTheta.answer := by
+  sorry
+\end{lstlisting}
+in which $c$ is a function of $n$. An alternative correction is therefore to remove \decl{erdos_409.parts.i} and keep these variants.
+
+\subsection*{The \texorpdfstring{$\sigma$}{sigma} variant}
+The statement \decl{erdos_409.variants.sigma} (lines 131--143 of the same file) has the same defect. With $g(m)=\sigma(m)-1$, where $\sigma$ is the sum-of-divisors function, it asserts that one constant \decl{erdos_409.variants.sigma.answer} is the least $i$ with $g^{(i)}(n)$ prime, for every $n>1$ whose $g$-trajectory reaches a prime. At $n=2$ this least $i$ is $0$. At $n=4$, which is not prime, the trajectory $4\mapsto 6\mapsto 11$ reaches a prime, since $\sigma(4)-1=6$ and $\sigma(6)-1=11$, and the least $i$ is $2\ne 0$. So this statement is also false for every value of its unknown, by the same two-point argument. This observation is not part of the Lean development described here.
+
+\begin{thebibliography}{99}
+
+\bibitem{EP409}
+T.~F. Bloom, \emph{Erd\H{o}s Problem \#409}, \url{https://www.erdosproblems.com/409}, accessed October 2026.
+
+\bibitem{EPdb}
+Erd\H{o}s problems database contributors, \emph{Erd\H{o}s problem database}, \url{https://github.com/teorth/erdosproblems}, entry 409 (status: open, last updated August 31, 2025).
+
+\bibitem{ErGr80}
+P.~Erd\H{o}s and R.~L. Graham, \emph{Old and new problems and results in combinatorial number theory}, Monographies de L'Enseignement Math\'ematique \textbf{28}, Universit\'e de Gen\`eve, Geneva, 1980.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Gu04}
+R.~K. Guy, \emph{Unsolved Problems in Number Theory}, 3rd ed., Problem Books in Mathematics, Springer-Verlag, New York, 2004.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{OEIS-A039651}
+The OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, sequence A039651 (D.~W. Wilson), \emph{Number of iterations of $f(x)=\varphi(x)+1$ on $n$ required to reach a prime}, \url{https://oeis.org/A039651}.
+
+\bibitem{OEIS-A229487}
+The OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, sequence A229487 (T.~D. Noe), \emph{Conjectured greatest number that converges to prime$(n)$ under the iteration $x\mapsto\varphi(x)+1$}, \url{https://oeis.org/A229487}.
+
+\bibitem{PR5446}
+formal-conjectures, pull request \#5446, \emph{fix: answer slots that cannot depend on the inputs they must depend on}, opened September 10, 2026, \url{https://github.com/google-deepmind/formal-conjectures/pull/5446}.
+
+\end{thebibliography}
+
+\end{document}

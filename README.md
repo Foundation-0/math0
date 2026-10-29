@@ -23,6 +23,7 @@ its own repository and is listed below.
 | [covering-min-modulus](https://github.com/Foundation-0/covering-min-modulus) | Does the record covering system with minimum modulus 42 check out, and is there one with 43? | Not started. |
 | [gfq-codes](https://github.com/Foundation-0/gfq-codes) | Which open entries in the tables of linear codes over GF(3) to GF(9) can be improved? | Not started. |
 | [rigid-realizations](https://github.com/Foundation-0/rigid-realizations) (with [physics0](https://github.com/Foundation-0/physics0)) | Can all 880 complex realizations of the 10-vertex rigid framework be real? | Not started. |
+| [Lean-verified results](RESULTS.md) (in this repository: `lean/`, `results/`) | Which neglected OEIS conjectures, and which statements in formal-conjectures, can be settled with proofs checked by the Lean kernel? | Formally verified (Lean kernel); manuscripts not peer reviewed. |
 
 ## How results are checked in every project
 

@@ -1,0 +1,331 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    bif,private},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8, upquote=true,
+  literate={ℕ}{{$\mathbb{N}$}}1 {∀}{{$\forall$}}1 {→}{{$\to$}}1 {≤}{{$\le$}}1
+    {×}{{$\times$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\Sm}{S_m}
+\newcommand{\Bm}{B_m}
+
+\title[Bar tilings and OEIS A394981]{Tilings of a rectangle by the bars $1\times1,\dots,1\times n$: a proof that $a(n+1)=4a(n)$ for odd $n\ge3$ in OEIS A394981}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 20, 2026}
+
+
+\begin{document}
+\begin{abstract}
+OEIS A394981 counts the tilings, up to the symmetries of the rectangle, of the rectangle with short side $\lfloor (n+1)/2\rfloor$ and area $n(n+1)/2$ by the bars $1\times1,\dots,1\times n$, each used once. We prove the conjecture in the entry that $a(n+1)=4a(n)$ for odd $n$, for every odd $n\ge3$; at $n=1$ it fails, as $a(1)=a(2)=1$. For $n\ge3$ no tiling has a nontrivial symmetry, so $a(n)$ is a quarter of the number $R(n)$ of all tilings, and the tilings of the $(m+1)\times(2m+3)$ rectangle split into four classes, each in bijection with the tilings of the $(m+1)\times(2m+1)$ rectangle. The entry still lists the identity as a conjecture and we found no earlier proof, so we classify the result as new. It is verified in Lean~4 against a statement formalized by math0 from the entry, reviewed for fidelity and frozen before the proof attempt, whose definition of $a(n)$ is checked by the kernel against the first nine terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Sequence A394981 of the OEIS \cite{A394981}, contributed by Gary Yane on April~8, 2026, is defined as follows: ``Given a set of n rectangular tiles, \{1 X 1, 1 X 2, 1 X 3, 1 X 4, ..., 1 X n\}, then a(n) is the number of tilings up to symmetry of the rectangle having smallest possible perimeter with area n*(n+1)/2 using all n tiles.'' A comment fixes the rectangle: for $n=8$ it is $4\times9$, and ``the short side of the rectangle has length floor((n+1)/2)''. (The $6\times6$ square has smaller perimeter but cannot contain the $1\times8$ bar.) So the rectangle is $(m+1)\times(2m+1)$ for $n=2m+1$ and $(m+1)\times(2m+3)$ for $n=2m+2$. The entry has offset $1$ and lists $20$ terms, $1,1,1,4,10,40,112,448,1360,5440,17728,70912,\dots$; $a(1)$ and $a(2)$ were corrected by Pontus von Brömssen on May~13, 2026. Its FORMULA section contains the unattributed line
+\begin{quote}
+``Conjecture: If n is odd, then a(n+1) = 4*a(n).''
+\end{quote}
+Read literally this includes $n=1$, where it fails: the $1\times1$ square has one tiling, and the two tilings of the $1\times3$ rectangle (bar $1$ then bar $2$, or bar $2$ then bar $1$) are mirror images, so $a(1)=a(2)=1$. All listed pairs $n=3,5,\dots,19$ satisfy it. We prove it for every odd $n\ge3$ (Theorem~\ref{thm:main}).
+
+\subsection*{Status and prior work}
+The current revision of the entry (\#42, May~16, 2026) still marks the identity as a conjecture, has the keyword ``more'', and records no proof. The math0 referees found no other OEIS entry citing A394981, and no proof or counterexample on arXiv, MathOverflow, Mathematics Stack Exchange, SeqFan or the web. The cross-referenced entries count different objects: tilings of rectangles by bars of unlimited supply (A254414, with its cases A254458 and A254607, by A.~P. Heinz \cite{A254414}) and tilings of the $2n\times2n$ square by $1\times n$ bars (A329279 \cite{A329279} by J.~Bowermaster). Recent work on related enumerations concerns different problems: Blanco, Dougherty-Bliss, Ter-Saakov and Zeilberger \cite{BDTZ} count tilings of grids by width-one strips of arbitrary lengths, with weights, and Martinez \cite{Ma} enumerates tilings by L-tetrominoes. We therefore classify the result as \emph{new}; the proof is elementary.
+
+\section{Statement}\label{sec:statement}
+
+\begin{definition}\label{def:tiling}
+The $r\times c$ \emph{rectangle} is the set of cells $(i,j)$, $0\le i<r$ (row), $0\le j<c$ (column). A \emph{placement} $(i,j,d)$, $d\in\{\mathrm h,\mathrm v\}$, of the bar of length $k$ covers the cells $(i,j+t)$ if $d=\mathrm h$, and $(i+t,j)$ if $d=\mathrm v$, for $0\le t<k$; it \emph{fits} if $i<r$, $j+k\le c$ (for $d=\mathrm h$), or $i+k\le r$, $j<c$, $k\ge2$ (for $d=\mathrm v$, so that the $1\times1$ bar is only placed horizontally). A \emph{tiling} $T$ by the bars $1,\dots,n$ assigns to each $k\in\{1,\dots,n\}$ a fitting placement $T(k)$ of the bar of length $k$ so that every cell is covered by exactly one bar. Let $\T(r,c,n)$ be the set of tilings, and $\lambda_T(x)$ the length of the bar of $T$ covering the cell $x$.
+\end{definition}
+
+As the lengths are distinct, a tiling is the same as a partition of the rectangle into one $1\times k$ or $k\times1$ bar for each $k\le n$. The symmetry group $G_{r,c}$ of the rectangle consists of the identity, $\rho_{\mathrm h}(i,j)=(r-1-i,j)$, $\rho_{\mathrm v}(i,j)=(i,c-1-j)$ and $\rho_{\mathrm h}\rho_{\mathrm v}$, plus four more if $r=c$. A symmetry $g$ maps each bar of $T$ to a bar of the same length, giving a tiling $gT$, and $gT=T$ if and only if $\lambda_T\circ g=\lambda_T$. For $n\ge1$ let $r_n=\lfloor(n+1)/2\rfloor$, $c_n=\lfloor n(n+1)/(2r_n)\rfloor$ (so $(r_n,c_n)=(m+1,2m+1)$ for $n=2m+1$ and $(m+1,2m+3)$ for $n=2m+2$), $\T_n=\T(r_n,c_n,n)$, $R(n)=|\T_n|$, and
+\begin{equation}\label{eq:a}
+  a(n)=\Bigl\lfloor\frac{1}{|G_{r_n,c_n}|}\sum_{T\in\T_n}\bigl|\{g\in G_{r_n,c_n}:\ \lambda_T\circ g=\lambda_T\}\bigr|\Bigr\rfloor .
+\end{equation}
+By Burnside's lemma the division is exact and $a(n)$ is the number of orbits of $G_{r_n,c_n}$ on $\T_n$.
+
+\begin{theorem}\label{thm:main}
+For every odd $n\ge3$, $a(n+1)=4a(n)$.
+\end{theorem}
+
+\begin{theorem}\label{thm:precise}
+Let $m\ge1$. Then $4\mid R(2m+1)$, $R(2m+2)=4R(2m+1)$, $a(2m+1)=R(2m+1)/4$ and $a(2m+2)=R(2m+2)/4=R(2m+1)$.
+\end{theorem}
+
+\subsection*{The Lean statement}
+The statement file \path{lean/Math0/Statements/OEIS/A394981.lean} was written by math0, reviewed for fidelity against the entry, and frozen (SHA-256 \texttt{682012a2\ldots dfdde}) before any proof attempt. Its definitions (namespace \decl{Math0.Statements.A394981}, with \code{open Finset}) are, verbatim with docstrings and blank lines omitted:
+\begin{lstlisting}[basicstyle=\ttfamily\fontsize{7}{7.9}\selectfont]
+def rows (n : ℕ) : ℕ := (n + 1) / 2
+def cols (n : ℕ) : ℕ := n * (n + 1) / 2 / rows n
+def barAt (x b s k : ℕ) : ℕ := x ^ b * ((2 ^ (b * (s * k)) - 1) / (2 ^ (b * s) - 1))
+def rectMask (r c w : ℕ) : ℕ :=
+  Nat.rec (motive := fun _ => ℕ) 0 (fun i m => m + (2 ^ c - 1) * 2 ^ (i * w)) r
+def starts (free s k : ℕ) : ℕ :=
+  Nat.rec (motive := fun _ => ℕ) free
+    (fun t acc => Nat.land acc (Nat.shiftRight free ((t + 1) * s))) (k - 1)
+def sumBits (g : ℕ → ℕ) (fuel : ℕ) : ℕ → ℕ :=
+  Nat.rec (motive := fun _ => ℕ → ℕ) (fun _ => 0)
+    (fun _ ih X =>
+      bif Nat.beq X 0 then 0 else g (X - Nat.land X (X - 1)) + ih (Nat.land X (X - 1))) fuel
+def search (w N L : ℕ) (f : ℕ → ℕ) : ℕ → ℕ → ℕ → ℕ :=
+  Nat.rec (motive := fun _ => ℕ → ℕ → ℕ)
+    (fun free lab => bif Nat.beq free 0 then f lab else 0)
+    (fun k ih free lab =>
+      sumBits (fun x => ih (free - barAt x 1 1 (k + 1)) (lab + (k + 1) * barAt x L 1 (k + 1)))
+          N (starts free 1 (k + 1)) +
+        bif Nat.ble 1 k then
+          sumBits (fun x => ih (free - barAt x 1 w (k + 1)) (lab + (k + 1) * barAt x L w (k + 1)))
+            N (starts free w (k + 1))
+        else 0)
+def field (L lab p : ℕ) : ℕ := Nat.land (Nat.shiftRight lab (L * p)) (2 ^ L - 1)
+def otherSymmetries (r c : ℕ) : List (ℕ × ℕ → ℕ × ℕ) :=
+  [fun p => (r - 1 - p.1, p.2), fun p => (p.1, c - 1 - p.2),
+    fun p => (r - 1 - p.1, c - 1 - p.2)] ++
+  (if r = c then
+    [fun p => (p.2, p.1), fun p => (c - 1 - p.2, r - 1 - p.1), fun p => (p.2, r - 1 - p.1),
+      fun p => (c - 1 - p.2, p.1)]
+  else [])
+def fixes (r c w L : ℕ) (g : ℕ × ℕ → ℕ × ℕ) (lab : ℕ) : Bool :=
+  Nat.rec (motive := fun _ => Bool) true
+    (fun i ih =>
+      Nat.rec (motive := fun _ => Bool) true
+          (fun j ihj =>
+            Nat.beq (field L lab ((g (i, j)).1 * w + (g (i, j)).2)) (field L lab (i * w + j)) &&
+              ihj) c &&
+        ih) r
+def stabCount (r c w L : ℕ) (lab : ℕ) : ℕ :=
+  1 + List.rec (motive := fun _ => ℕ) 0
+    (fun g _ ih => (bif fixes r c w L g lab then 1 else 0) + ih) (otherSymmetries r c)
+def a (n : ℕ) : ℕ :=
+  let r := rows n
+  let c := cols n
+  let w := c + 1
+  search w (r * w) n (stabCount r c w n) n (rectMask r c w) 0 /
+    (1 + (otherSymmetries r c).length)
+def statement : Prop :=
+  ∀ n : ℕ, 3 ≤ n → Odd n → a (n + 1) = 4 * a n
+\end{lstlisting}
+
+\subsection*{How the Lean definitions encode the entry}
+\code{rows} and \code{cols} are $r_n$ and $c_n$ (\decl{rect_data} and \decl{area_data} check the shapes and areas for $n\le20$). Cell $(i,j)$ has index $iw+j$ with $w=c+1$; the padding index $iw+c$ is never a cell, and sets of cells are bitmasks (\code{rectMask r c w} is the rectangle). \code{barAt}~$2^q$~$1$~$s$~$k$ is the bitmask of the cells $q,q+s,\dots,q+(k-1)s$ (\decl{barAt_eq}), and bit $q$ of \code{starts free s k} is set if and only if they are all free (\decl{testBit_starts}): a horizontal placement for $s=1$, as a run cannot pass a padding index, and a vertical one for $s=w$. \code{sumBits g N X} sums $g(2^q)$ over the set bits $q$ of $X$ when $X$ has at most $N$ set bits, which holds here as all set bits are below $N=rw$. \code{search} places the bars $n,\dots,1$ in turn at every placement inside the free cells (vertically only for length $\ge2$), writes each length into the $n$-bit fields of its cells in \code{lab}, and adds \code{f lab} if no cell is left free. \code{field} reads a label, \code{otherSymmetries} lists $G_{r,c}\setminus\{\mathrm{id}\}$, \code{fixes} tests $\lambda_T\circ g=\lambda_T$, and \code{stabCount} is the stabilizer order; so \code{a n} is \eqref{eq:a}. The theorem \decl{a_data} checks $a(1),\dots,a(9)=1,1,1,4,10,40,112,448,1360$ in the kernel (\texttt{decide +kernel}), and \decl{literal_fails_at_one} checks $a(2)\ne4a(1)$. Not kernel-checked: \texttt{\#eval} gives $a(10)=5440$ and $a(11)=17728$, and an independent Python enumeration gives the listed $a(1),\dots,a(10)$. The only change from the literal conjecture is the hypothesis $3\le n$.
+
+\section{Proof}\label{sec:proof}
+
+\subsection{From the search to tilings}
+For a set $S$ of cells and $w=c+1$ write $\langle S\rangle=\sum_{(i,j)\in S}2^{iw+j}$.
+
+\begin{lemma}[\decl{search_eq}, \decl{field_cell}, \decl{rectMask_eq}]\label{lem:search}
+Let $r,c,n\ge1$, $w=c+1$ and $f:\mathbb N\to\mathbb N$. Then
+$\code{search}\ w\ (rw)\ n\ f\ n\ (\code{rectMask}\ r\ c\ w)\ 0=\sum_{T\in\T(r,c,n)}f(\Lambda_T)$, where $\Lambda_T=\sum_{(i,j)}\lambda_T(i,j)\,2^{n(iw+j)}$, and $\code{field}\ n\ \Lambda_T\ (iw+j)=\lambda_T(i,j)$ for every cell $(i,j)$.
+\end{lemma}
+
+\begin{proof}
+We have $\code{rectMask}\ r\ c\ w=\langle\text{rectangle}\rangle$. By induction on $k$, for every set $S$ of cells and every $\ell$, $\code{search}\ w\ (rw)\ n\ f\ k\ \langle S\rangle\ \ell$ is the sum of $f\bigl(\ell+\sum_{k'\le k}k'\sum_{(i,j)\in T(k')}2^{n(iw+j)}\bigr)$ over the assignments $T$ of fitting placements to the bars $1,\dots,k$ that partition $S$. For $k=0$ both sides are $f(\ell)$ if $S=\emptyset$, else $0$. For the step, \code{search} sums over the set bits $q=iw+j$ ($j<w$) of \code{starts}~$\langle S\rangle$~$s$~$(k+1)$, for $s=1$ and, if $k\ge1$, for $s=w$. Such a bit is set if and only if $q,q+s,\dots,q+ks$ lie in $\langle S\rangle$; as no index $iw+c$ is a cell, this means $(i,j),\dots,(i,j+k)\in S$ for $s=1$, and $(i,j),\dots,(i+k,j)\in S$ for $s=w$ (\decl{starts_h}, \decl{starts_v}). So the set bits are the first cells of the placements $P$ of bar $k+1$ inside $S$ (\decl{sumBits_starts}; \decl{sumBits_eq} uses that $X-(X\mathbin{\&}(X-1))$ is the lowest set bit of $X\ne0$ and $X\mathbin{\&}(X-1)$ clears it). By \decl{barAt_eq} the new free set is $\langle S\setminus P\rangle$ and $k+1$ is added to the fields of the cells of $P$; and a placement $P$ of bar $k+1$ in $S$ together with a partition of $S\setminus P$ by the bars $1,\dots,k$ is a partition of $S$ by the bars $1,\dots,k+1$ (\decl{validOn_succ}). For $S$ the rectangle the encoded labelling is $\Lambda_T$ (\decl{enc_formula}). The fields do not overlap, since distinct cells have distinct indices and $\lambda_T\le n<2^n$, so \code{field} reads off $\lambda_T$ (\decl{field_sum}).
+\end{proof}
+
+\begin{lemma}[\decl{stabCount_eq_one}]\label{lem:nosym}
+Let $r,c\ge2$ and $r\ne c$. No nonidentity element of $G_{r,c}$ fixes a tiling $T\in\T(r,c,n)$, and $\code{stabCount}\ r\ c\ w\ n\ \Lambda_T=1$.
+\end{lemma}
+
+\begin{proof}
+Let $g\in\{\rho_{\mathrm h},\rho_{\mathrm v},\rho_{\mathrm h}\rho_{\mathrm v}\}$ with $\lambda_T\circ g=\lambda_T$. As the lengths are distinct, $x$ and $g(x)$ lie in the same bar for every cell $x$. If $g=\rho_{\mathrm h}$, the bar containing $(0,0)$ and $(r-1,0)$ is the vertical bar of length $r$ in column $0$, and the bar containing $(0,c-1)$ and $(r-1,c-1)$ is the vertical bar of length $r$ in column $c-1\ne0$: two different bars of the same length, a contradiction. The case $\rho_{\mathrm v}$ is symmetric. If $g=\rho_{\mathrm h}\rho_{\mathrm v}$, one bar contains $(0,0)$ and $(r-1,c-1)$, but a bar lies in one row or one column. By Lemma~\ref{lem:search}, \code{fixes} reads $\lambda_T$, so all three tests fail.
+\end{proof}
+
+For $m\ge1$ let $\Sm$ and $\Bm$ be the $(m+1)\times(2m+1)$ and $(m+1)\times(2m+3)$ rectangles, tiled by the bars $1,\dots,2m+1$ and $1,\dots,2m+2$; so $R(2m+1)=|\T(\Sm)|$ and $R(2m+2)=|\T(\Bm)|$.
+
+\begin{corollary}[\decl{search_count}, \decl{a_odd}, \decl{a_even}]\label{cor:quarter}
+For $m\ge1$, $a(2m+1)=\lfloor R(2m+1)/4\rfloor$ and $a(2m+2)=\lfloor R(2m+2)/4\rfloor$.
+\end{corollary}
+
+\begin{proof}
+$(r_{2m+1},c_{2m+1})=(m+1,2m+1)$ and $(r_{2m+2},c_{2m+2})=(m+1,2m+3)$ (\decl{rows_odd}, \decl{cols_even}, \dots). Neither rectangle is a square and both have at least two rows and columns, so the denominator in \code{a} is $4$, and by Lemmas~\ref{lem:search} and~\ref{lem:nosym} the numerator is $R(n)$.
+\end{proof}
+
+\subsection{The structure of the tilings}
+Fix $m\ge1$. The bars $1,\dots,m$ are \emph{short}; the bars $m+1,\dots,2m+1$ of $\Sm$ and $m+2,\dots,2m+2$ of $\Bm$ are \emph{long}. A bar at $(i,j,\mathrm h)$ of length $k$ occupies the columns $j,\dots,j+k-1$ of row $i$.
+
+\begin{lemma}[\decl{s_top}, \decl{s_long}, \decl{s_rows}, \decl{s_avm}, \decl{s_two}]\label{lem:S}
+Let $T\in\T(\Sm)$. (1) Bar $2m+1$ is a full row. (2) Every long bar $k$ is at some $(i,j,\mathrm h)$ with $j\le m<j+k$, so it contains column $m$ of its row. (3) Every row contains exactly one long bar. (4) No short bar meets column $m$. (5) Bar $2m$ is horizontal, starts in column $0$ or $1$, and is not in the row of bar $2m+1$.
+\end{lemma}
+
+\begin{proof}
+(1) A vertical bar has length at most $m+1<2m+1$. (2) A vertical long bar would fill a column, meeting the row of bar $2m+1$; so bar $k$ is horizontal with $j+k\le2m+1$, hence $j\le m$, and $j+k\ge m+1$. (3) Two long bars in a row would share the cell in column $m$, so the $m+1$ long bars are in distinct rows. (4) By (2) and (3), column $m$ is covered by long bars. (5) follows from (2), $j+2m\le2m+1$ and (3).
+\end{proof}
+
+\begin{lemma}[\decl{b_long}, \decl{b_rows}, \decl{b_vert}, \decl{b_horiz}]\label{lem:B}
+Let $T\in\T(\Bm)$. (1) Every long bar $K$ is at some $(i,j,\mathrm h)$ with $j\le m+1<j+K\le2m+3$, and every row contains exactly one long bar. (2) If bar $m+1$ is vertical, it fills column $0$ or column $2m+2$. (3) If bar $m+1$ is horizontal, in row $a$, then bars $m+1$ and $m+2$ fill row $a$: either bar $m+1$ occupies the columns $0,\dots,m$ and bar $m+2$ the columns $m+1,\dots,2m+2$, or bar $m+2$ occupies $0,\dots,m+1$ and bar $m+1$ occupies $m+2,\dots,2m+2$.
+\end{lemma}
+
+\begin{proof}
+(1) A vertical bar has length at most $m+1<K$, so bar $K$ is horizontal with $j+K\le2m+3$, hence $j\le m+1<m+2\le j+K$, and it contains column $m+1$ of its row. Two long bars in a row would share that cell, so the $m+1$ long bars lie in distinct rows, one in each. (2) A vertical bar $m+1$ fills a column $s$; bar $2m+2$ occupies the columns $j',\dots,j'+2m+1$ of its row with $j'\le1$, and avoids $s$, so $s=0$ or $s=2m+2$. (3) By (1), row $a$ contains a long bar $K$, disjoint from bar $m+1$; so $(m+1)+K\le2m+3$, $K=m+2$, and the two bars fill the row.
+\end{proof}
+
+Hence $\T(\Bm)$ is the disjoint union of four classes: $V_0$ (bar $m+1$ fills column $0$), $V_1$ (it fills column $2m+2$), $H_0$ (it is horizontal and starts in column $0$) and $H_1$ (it starts in column $m+2$).
+
+\subsection{Four bijections}
+For $(e,\delta)\in\{(1,1),(0,1),(0,2)\}$, used for $V_0$, $V_1$ and $H_0\cup H_1$ respectively, define column maps $\iota$ from $\Sm$ to $\Bm$ and $\pi$ back (\decl{cB}, \decl{cF}):
+\[
+  \iota(j)=\begin{cases}j+e,&j\le m,\\ j+e+\delta,&j>m,\end{cases}\qquad
+  \pi(b)=\begin{cases}b-e,&b\le m+e,\\ m,&m+e<b\le m+e+\delta,\\ b-e-\delta,&b>m+e+\delta.\end{cases}
+\]
+Then $\pi\circ\iota=\mathrm{id}$, and the columns of $\Bm$ missed by $\iota$ are $\{0,m+2\}$, $\{m+1,2m+2\}$ and $\{m+1,m+2\}$ in the three cases. In $V_0$, $V_1$ let $s\in\{0,2m+2\}$ be the column of bar $m+1$.
+
+\begin{lemma}[\decl{bV_long}, \decl{bV_avd}, \decl{bH_long}, \decl{bH_avd}]\label{lem:avoid}
+(1) If $T\in V_0\cup V_1$, every long bar $K$ is at some $(i,j,\mathrm h)$ with $e\le j\le m+e<m+e+1\le j+K-1$ and $j+K\le2m+2+e$; it avoids column $s$ and contains columns $m+e$, $m+e+1$. No short bar meets the columns $s$, $m+e$, $m+e+1$. (2) If $T\in H_0\cup H_1$, every bar $K\ge m+3$ is at some $(i,j,\mathrm h)$ with $j\le m$ and $j+K-1\ge m+2$. No short bar meets the columns $m$, $m+1$, $m+2$.
+\end{lemma}
+
+\begin{proof}
+(1) Lemma~\ref{lem:B}(1), $K\ge m+2$, and disjointness from the full column $s$ ($j\ge1$ if $s=0$, $j+K\le2m+2$ if $s=2m+2$) give the bounds. The cells of column $s$ lie in bar $m+1$, those of the columns $m+e$, $m+e+1$ in the long bar of their row. (2) The bounds follow from Lemma~\ref{lem:B}(1) and $K\ge m+3$. By Lemma~\ref{lem:B}(1) the bars $m+3,\dots,2m+2$ lie in the rows other than the row $a$ of bars $m+1$, $m+2$, one per row, and cover the columns $m,m+1,m+2$ there; and in row $a$ the columns $m,m+1,m+2$ are covered by bars $m+1$, $m+2$ (Lemma~\ref{lem:B}(3)).
+\end{proof}
+
+\begin{proposition}[\decl{card_classV}, \decl{card_classH}, \decl{card_big}]\label{prop:four}
+Each of $V_0,V_1,H_0,H_1$ has $R(2m+1)$ elements. Hence $R(2m+2)=4R(2m+1)$.
+\end{proposition}
+
+\begin{proof}
+\emph{Classes $V_0$, $V_1$.} The map $\Phi_V$ (\decl{PhiV}) sends $T$ to the tiling of $\Sm$ whose bar $k\le m$ is bar $k$ of $T$ with its column $j$ replaced by $\pi(j)$, and whose bar $k\in\{m+1,\dots,2m+1\}$ is horizontal in the row of bar $k+1$ of $T$, starting at column $j-e$ where $j$ is the start of bar $k+1$. Its inverse $\Psi_V$ (\decl{PsiV}) moves the short bars by $\iota$, puts bar $m+1$ in column $s$, and makes bar $K\in\{m+2,\dots,2m+2\}$ horizontal in the row of bar $K-1$ of $T'$, starting $e$ columns to the right of it. So $\Phi_V$ deletes the columns $s$ and $m+e+1$, shortening each long bar by one.
+
+For every cell $(a,b)$ of $\Sm$, $(a,b)$ lies in bar $k$ of $\Phi_V(T)$ if and only if $(a,\iota(b))$ lies in bar $k'$ of $T$, where $k'=k$ for $k\le m$ and $k'=k+1$ for $k>m$ (\decl{inBar_mvF}, \decl{inBar_lgF}). For short bars this holds because, by Lemma~\ref{lem:avoid}(1), a short bar lies in a block of columns that $\pi$ translates rigidly; a long bar $k+1$ at start $j$ occupies the columns $j,\dots,j+k$ with $e\le j\le m+e<m+e+1\le j+k$, and the columns $b$ with $\iota(b)$ in this range are exactly $j-e,\dots,j-e+k-1$. Since $(a,\iota(b))$ lies in exactly one bar of $T$, and not in bar $m+1$ as $\iota(b)\ne s$, every cell of $\Sm$ lies in exactly one bar of $\Phi_V(T)$, and the bars fit (\decl{phiV_valid}). Conversely, by Lemma~\ref{lem:S}(2)--(4), $\Psi_V$ moves the short bars of $T'$ rigidly and lengthens each long bar across the inserted column $m+e+1$; the same correspondence covers the cells $(a,\iota(b))$, the long bar of row $a$ covers $(a,m+e+1)$, bar $m+1$ covers column $s$, and no other bar meets column $s$ (\decl{psiV_col}, \decl{psiV_valid}). The two maps are mutually inverse, since $\pi\circ\iota=\mathrm{id}$, $\iota\circ\pi$ is the identity on the columns used by short bars (\decl{mvB_mvF}), and the shifts by $\pm e$ cancel (\decl{psiV_phiV}, \decl{phiV_psiV}).
+
+\emph{Classes $H_0$, $H_1$.} Let $(u,v)=(0,m+1)$ for $H_0$ and $(m+2,0)$ for $H_1$. The map $\Phi_H$ (\decl{PhiH}) moves the short bars by $\pi$, makes bar $k\in\{m+1,\dots,2m\}$ the bar $k+2$ of $T$ with the same row and start, shortened by two, and lets bar $2m+1$ fill the row of bar $m+1$ of $T$. Its inverse $\Psi_H$ (\decl{PsiH}) moves the short bars by $\iota$, lengthens bar $k\in\{m+1,\dots,2m\}$ of $T'$ by two to become bar $k+2$, and places bars $m+1$ and $m+2$ in the row of bar $2m+1$ of $T'$, starting in the columns $u$ and $v$. So $\Phi_H$ deletes the columns $m+1$, $m+2$ and merges bars $m+1$, $m+2$ into a full row. The verification is the same, using Lemmas~\ref{lem:B}(3) and~\ref{lem:avoid}(2) for $\Phi_H$ and Lemma~\ref{lem:S}(1)--(4) for $\Psi_H$ (\decl{phiH_valid}, \decl{psiH_valid}, \decl{psiH_phiH}, \decl{phiH_psiH}). Since the four classes partition $\T(\Bm)$, $R(2m+2)=4R(2m+1)$.
+\end{proof}
+
+\begin{proposition}[\decl{four_dvd_small}]\label{prop:dvd}
+$4\mid R(2m+1)$.
+\end{proposition}
+
+\begin{proof}
+Let $h$ and $v$ apply the reflections $(a,b)\mapsto(m-a,b)$ and $(a,b)\mapsto(a,2m-b)$ of $\Sm$ to every bar (\decl{hFlip}, \decl{vFlip}); on a placement of bar $k$, $h(i,j,\mathrm h)=(m-i,j,\mathrm h)$, $h(i,j,\mathrm v)=(m+1-k-i,j,\mathrm v)$, $v(i,j,\mathrm h)=(i,2m+1-k-j,\mathrm h)$ and $v(i,j,\mathrm v)=(i,2m-j,\mathrm v)$. Both are involutions of $\T(\Sm)$ (\decl{hFlip_valid}, \decl{hFlip_hFlip}, and likewise for $v$). Let $x,y$ be the rows of bars $2m+1$ and $2m$ and $z$ the start column of bar $2m$; by Lemma~\ref{lem:S}(1),(5), $y\ne x$ and $z\in\{0,1\}$. Let $\alpha(T)$ be ``$2x<m$, or $2x=m$ and $2y<m$'' and $\beta(T)$ be ``$z=0$''. The reflection $h$ replaces $x,y$ by $m-x,m-y$ and keeps $z$; as $2y\ne m$ when $2x=m$, $\alpha(hT)\iff\neg\alpha(T)$ and $\beta(hT)\iff\beta(T)$. The reflection $v$ keeps $x,y$ and replaces $z$ by $1-z$, so $\alpha(vT)\iff\alpha(T)$ and $\beta(vT)\iff\neg\beta(T)$ (\decl{flip_alpha_beta}). So $h$ pairs the tilings with and without $\alpha$, and $v$ pairs those with $\alpha\wedge\beta$ and $\alpha\wedge\neg\beta$: $R(2m+1)=2|\{\alpha\}|=4|\{\alpha\wedge\beta\}|$.
+\end{proof}
+
+\begin{proof}[Proof of Theorems~\ref{thm:main} and~\ref{thm:precise}]
+Let $n=2m+1$, $m\ge1$, and $R(2m+1)=4q$ (Proposition~\ref{prop:dvd}). By Corollary~\ref{cor:quarter} and Proposition~\ref{prop:four}, $a(2m+2)=\lfloor16q/4\rfloor=4q=R(2m+1)$ and $a(2m+1)=\lfloor4q/4\rfloor=q$, so $a(n+1)=4a(n)$.
+\end{proof}
+
+\section{Machine verification}\label{sec:lean}
+
+The proof is the file \path{lean/Math0/Frontier/OEIS/A394981.lean} (2439 lines) of the math0 repository, \url{https://github.com/Foundation-0/math0}, which imports the frozen statement file. Its main declaration is \code{theorem result : statement} in the namespace \decl{Math0.Frontier.A394981}; the lemmas of Section~\ref{sec:proof} are private declarations with the names given there (\decl{barAt_eq} and \decl{testBit_starts} are in the statement file). The proof uses no kernel computation (no \texttt{decide}, no \texttt{native\_decide}) and no \texttt{set\_option}. The file ends with
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+#math0_settles Math0.Frontier.A394981.result Math0.Statements.A394981.statement
+\end{lstlisting}
+This command (\path{lean/Math0/Audit.lean}) fails unless \decl{statement} is a \texttt{Prop}-valued definition without universe parameters, \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (which excludes \decl{sorryAx}, \texttt{native\_decide} and custom axioms), and the type of \decl{result} is syntactically \decl{statement} or its negation, with no unfolding. Compiling the file (30 to 45 seconds on our machine with a warm file cache) reports that \decl{statement} depends on the axiom \decl{propext} only, that \decl{result} depends on \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, and the statement check ``\decl{Math0.Frontier.A394981.result} proves \decl{Math0.Statements.A394981.statement}''.
+The toolchain is Lean~4 \cite{Lean4} \texttt{v4.33.1} with Mathlib \cite{Mathlib} \texttt{v4.33.1}; formal-conjectures \cite{FC} is pinned at commit \texttt{c77fdd4} but not used, as the statement was formalized by math0. To reproduce, run \path{scripts/verify.sh} from the repository root, which rebuilds all math0 results with \texttt{lake build} (re-running every audit) and checks that the pinned dependencies are unmodified, or run \texttt{lake env lean Math0/Frontier/OEIS/A394981.lean} in \path{lean/}.
+
+{\footnotesize
+\begin{thebibliography}{99}
+
+\bibitem{BDTZ}
+P.~Blanco, R.~Dougherty-Bliss, N.~Ter-Saakov and D.~Zeilberger, \emph{In how many ways can a rectangle be rectangled?}, arXiv:2606.05439, 2026.
+
+\bibitem{FC}
+M.~Firsching et al., \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026.
+
+\bibitem{Ma}
+L.~Martinez, \emph{Automatic enumeration of tilings by polyominoes}, arXiv:2607.29369, 2026.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proc.\ 9th ACM SIGPLAN Int.\ Conf.\ on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput.\ Sci.\ \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A394981}
+The OEIS Foundation Inc., \url{https://oeis.org/A394981}, entry by G.~Yane (Apr.~8, 2026); $a(1)$--$a(2)$ corrected by P.~von Brömssen (May~13, 2026); revision \#42, May~16, 2026.
+
+\bibitem{A254414}
+The OEIS Foundation Inc., \url{https://oeis.org/A254414}, \url{https://oeis.org/A254458} and \url{https://oeis.org/A254607}, entries by A.~P. Heinz (Jan.--Feb.\ 2015).
+
+\bibitem{A329279}
+The OEIS Foundation Inc., \url{https://oeis.org/A329279}, entry by J.~Bowermaster (Nov.~11, 2019).
+
+\end{thebibliography}
+}
+\end{document}

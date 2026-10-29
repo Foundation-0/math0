@@ -1,0 +1,383 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,noncomputable},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {∀}{{$\forall$}}1 {↔}{{$\leftrightarrow$}}1
+    {¬}{{$\neg$}}1 {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {→}{{$\to$}}1 {≤}{{$\le$}}1 {≠}{{$\ne$}}1
+    {∣}{{$\mid$}}1 {∏}{{$\prod$}}1 {∈}{{$\in$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\title[Factorials dividing products of binomial coefficients]{The largest $m$ with $m!$ dividing $\prod_{j=0}^{k}\binom{k}{j}$ equals $k$ if and only if $k+1$ is prime: Karttunen's conjecture for OEIS A249151 and A249434}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 25, 2026}
+
+\begin{document}
+\begin{abstract}
+For $k\ge0$ let $P(k)=\prod_{j=0}^{k}\binom kj$ be the product of the entries of row $k$ of Pascal's triangle, and let $M(k)$ be the largest integer $m$ such that $m!$ divides $P(k)$ (OEIS A249151).
+We prove that $M(k)=k$ if and only if $k+1$ is prime; equivalently, $k!\mid P(k)$ and $(k+1)!\nmid P(k)$ exactly when $k+1$ is prime. This settles a conjecture recorded by Antti Karttunen in 2014 in the OEIS entries A249434 and A249151, which still list it as conjectural.
+The proof is elementary: using $P(k+1)\,(k+1)!=P(k)\,(k+1)^{k+1}$ and a $q$-adic recursion for $v_q(P(n))$, we show that for every prime $q\mid k+1$ with $q\ne k+1$, $v_q(P(k))-v_q(k!)$ is either negative or at least $v_q(k+1)$. To our knowledge the result is new.
+It is verified in Lean~4 against a frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry, whose definitions are checked by the kernel against the listed OEIS terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For $n\ge0$ let $P(n)=\prod_{j=0}^{n}\binom nj$ be the product of the entries of row $n$ of Pascal's triangle. This is OEIS A001142 \cite{A001142}, $1,1,2,9,96,2500,162000,\dots$.
+Lagarias and Mehta \cite{LM} studied the size and the prime factorization of $P(n)$ (their $G_n$, the reciprocal of the product of all nonzero unreduced Farey fractions of order $n$). They gave three formulas for the $p$-adic valuation $\operatorname{ord}_p(G_n)$, two of them in terms of base-$p$ expansions, determined its extreme values, and showed in particular \cite[Theorem~6.7]{LM} that for $n\ge1$, $\operatorname{ord}_p(G_n)=0$ if and only if $n=ap^c-1$ with $1\le a\le p-1$. Partial factorizations of $G_n$, and of products of extended binomial coefficients, were studied by Du and Lagarias \cite{DL} and by Du, Lagarias and Yangjit \cite{DLY}.
+
+In October and November 2014 Antti Karttunen added to the OEIS the sequence A249151 \cite{A249151}, whose term $M(n)$ ($n\ge0$) is the largest $m$ such that $m!$ divides $P(n)$, namely $1,1,2,1,4,2,6,1,2,4,10,7,12,6,4,1,16,\dots$, together with A249434 \cite{A249434}, the integers $m\ge0$ with $m!\mid P(m)$, that is, with $M(m)\ge m$, and A249429 \cite{A249429}, the integers $n\ge 0$ with $M(n)>n$.
+For example $M(4)=4$, because $P(4)=96=4\cdot 4!$ and $5!\nmid 96$, while $M(3)=1$ because $P(3)=9$.
+The data suggest that $M(k)=k$ happens exactly when $k+1$ is prime, and Karttunen recorded this as a conjecture in A249434, A249151 and A249431 \cite{A249431}. We prove it.
+
+\begin{theorem}\label{thm:main}
+For every integer $k\ge0$, $M(k)=k$ if and only if $k+1$ is prime. Equivalently, $k!\mid P(k)$ and $(k+1)!\nmid P(k)$ if and only if $k+1$ is prime.
+\end{theorem}
+
+\subsection*{Method}
+Fix a prime $q$ and put $n=k+1$. The identity $P(n)\,n!=P(n-1)\,n^{n}$ gives $v_q(P(k))-v_q(k!)=D_q(n):=v_q(P(n))-(n-1)v_q(n)$ (Lemma~\ref{lem:D}), so $k!\mid P(k)$ means $D_q(n)\ge0$ for all $q$, and $(k+1)!\mid P(k)$ means $D_q(n)\ge v_q(n)$ for all $q$.
+A $q$-adic recursion for $v_q(P(n))$ (Lemma~\ref{lem:grec}) yields a closed form for $D_q(q^eu)$ and an inequality between $v_q(P(u))$ and the base-$q$ digit sum of $u$ (Lemma~\ref{lem:key}). Together they show that if $q\mid n$ and $n\ne q$, then $D_q(n)<0$ or $D_q(n)>v_q(n)$ (Proposition~\ref{prop:dich}), while $D_q(q)=0<1=v_q(q)$.
+
+\subsection*{Status and prior work}
+The OEIS entries A249434 (revision \#20, September 10, 2025), A249151 (\#38, August 24, 2025) and A249431 (\#16, August 24, 2025) still state the claim with ``It seems''; A249434 lists A006093 among its subsequences as ``(conjectured)'', and none of the entries records a proof.
+The vanishing criterion of Lagarias and Mehta \cite[Theorem~6.7]{LM} describes the case $v_q(P(u))=0$ that occurs in our dichotomy (Remark~\ref{rem:A249429}), but \cite{LM} does not discuss the divisibility of $G_n$ by factorials, the sequence A249151, or the primality of $n+1$, and the papers \cite{DL,DLY} do not address the conjecture either.
+The conjecture is not among the OEIS statements of the formal-conjectures repository \cite{FC} (checked at the commit pinned by math0, Section~\ref{sec:lean}), nor among the $492$ OEIS conjectures formalized in Lean by Tsoukalas et al.\ \cite{APN} that make up the OEIS Open benchmark \cite{Ad}. The math0 referees' searches of MathOverflow, Mathematics Stack Exchange and the SeqFan mailing list found no proof or counterexample.
+We therefore classify the result as \emph{new}. The argument is elementary; besides the recurrence of Lemma~\ref{lem:rec}, it uses only Legendre's formula for $v_q(m!)$.
+
+\section{Statement}\label{sec:statement}
+
+The COMMENTS section of A249434 \cite{A249434} (entry by Antti Karttunen, November~2, 2014) contains, verbatim:
+\begin{quote}
+{\small\texttt{It seems that A006093 gives all those k for which A249151(k) = k. If that is true, then this is a disjoint union of A006093 and A249429.}}
+\end{quote}
+Here A006093 \cite{A006093} is $a(n)=\mathrm{prime}(n)-1$ ($n\ge1$), so $k\ge0$ belongs to A006093 if and only if $k+1$ is prime.
+A249151 (by Karttunen, October~25, 2014) has the comment ``\texttt{A006093 seems to give all such k, that a(k) = k.}'', A249431 ($a(n)=\text{A249151}(n)-n$) has ``\texttt{It seems that A006093 gives the positions of zeros.}'', and the cross-references of A249434 contain the line ``\texttt{Subsequences: A006093 (conjectured), A249429, A249430, A249432.}''
+We read the conjecture as the set equality $\{k\ge0: M(k)=k\}=\text{A006093}$, which is Theorem~\ref{thm:main}; the second sentence of the comment and the cross-reference both presuppose the inclusion $\text{A006093}\subseteq\{k: M(k)=k\}$ as well. That second sentence then follows at once: A249434 $=\{k: M(k)\ge k\}$ is the disjoint union of $\{k: M(k)=k\}=\text{A006093}$ and $\{k:M(k)>k\}=\text{A249429}$.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A249434.lean}. The file was reviewed for fidelity before the proof attempt; that review recorded its SHA-256 hash \texttt{638b565a\ldots cb4a}, the file has not changed since, and the hash is listed in \path{lean/Math0/Statements/FROZEN.sha256}. Its main definitions and theorem statements read as follows (verbatim, in file order; the import, docstrings, blank lines, all proofs, the kernel-friendly helpers \decl{rowProdFact} and \decl{A249151'}, the \texttt{DecidablePred} instance and the auxiliary lemmas are omitted, and the two data lists are abbreviated):
+\begin{lstlisting}
+namespace Math0.Statements.A249434
+open Finset Nat
+def rowProd (n : ℕ) : ℕ := ∏ j ∈ range (n + 1), n.choose j
+theorem rowProd_succ_mul (n : ℕ) : rowProd (n + 1) * (n + 1)! = rowProd n * (n + 1) ^ (n + 1)
+def IsTerm (m : ℕ) : Prop := m ! ∣ rowProd m
+noncomputable def a (n : ℕ) : ℕ := Nat.nth IsTerm (n - 1)
+theorem a_data : (List.range 81).map (fun i => a (i + 1)) = [0, 1, 2, 4, 6, 10, ..., 250, 256]
+def lastFact (P : ℕ) : ℕ → ℕ → ℕ
+  | 0, m => m
+  | f + 1, m => if (m + 1)! ∣ P then lastFact P f (m + 1) else m
+def A249151 (n : ℕ) : ℕ := lastFact (rowProd n) (rowProd n) 0
+theorem A249151_isGreatest (n : ℕ) : IsGreatest {m : ℕ | m ! ∣ rowProd n} (A249151 n)
+theorem A249151_data : (List.range 81).map A249151 = [1, 1, 2, 1, 4, 2, 6, ..., 78, 80, 2]
+def statement : Prop :=
+  ∀ k : ℕ, IsGreatest {m : ℕ | m ! ∣ rowProd k} k ↔ (k + 1).Prime
+theorem statement_iff : statement ↔ ∀ k : ℕ, A249151 k = k ↔ (k + 1).Prime
+end Math0.Statements.A249434
+\end{lstlisting}
+\texttt{rowProd n} is $P(n)$, and \texttt{IsGreatest S k} means that $k\in S$ and $k$ is an upper bound of $S$. Thus \decl{statement} is Theorem~\ref{thm:main}, for every $k\in\N$; it does not refer to the search function \decl{A249151}, which implements the OEIS definition by an upward search from $m=0$. \decl{A249151_isGreatest} proves that this search returns the largest $m$ with $m!\mid P(n)$, and \decl{statement_iff} restates \decl{statement} as $\forall k,\ \text{A249151}(k)=k\leftrightarrow k+1\text{ prime}$.
+The data lemmas compare the definitions with the OEIS by evaluation in the kernel (\texttt{decide +kernel}, no \texttt{native\_decide}): \decl{a_data} checks that the $m<257$ with $m!\mid P(m)$ are exactly the $81$ listed terms of A249434 (the sequence \decl{a} has offset $1$), and \decl{A249151_data} checks the $81$ listed terms $M(0),\dots,M(80)$ of A249151. For speed, the kernel computes $(P(n),n!)$ by the recurrence $P(n+1)(n+1)!=P(n)(n+1)^{n+1}$ (\decl{rowProd_succ_mul}, proved in the file).
+The variable $k$ ranges over all of $\N$, as A249151 has offset $0$; for $k=0$ both sides are false, since $M(0)=1$ and $1$ is not prime.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A249434.lean}; each step names the corresponding Lean declaration.
+Throughout, $q$ is a prime and $v=v_q$ is the $q$-adic valuation of positive integers. For $n\ge0$ put
+\[
+  g(n)=v_q(P(n)),\qquad L(n)=v_q(n!),\qquad S(n)=n-(q-1)L(n)
+\]
+(\texttt{g q n} and \texttt{L q n} in Lean; $S$ appears only as the expression $n-(q-1)L(n)$). By Legendre's formula $S(n)$ is the sum of the base-$q$ digits of $n$, but we use only Lemma~\ref{lem:S}. All identities below are identities between integers; in Lean they are stated in $\Z$ after casting from $\N$.
+
+\begin{lemma}[\decl{isGreatest_iff}, \decl{dvd_rowProd_iff}]\label{lem:red}
+\textup{(a)} For integers $N\ge1$ and $k\ge0$, $k$ is the largest $m$ with $m!\mid N$ if and only if $k!\mid N$ and $(k+1)!\nmid N$.
+\textup{(b)} For integers $d,N\ge1$, $d\mid N$ if and only if $v_q(d)\le v_q(N)$ for every prime $q$.
+\end{lemma}
+
+\begin{proof}
+(a) If $k$ is the largest such $m$, then $k!\mid N$ and, as $k+1>k$, $(k+1)!\nmid N$. Conversely, if $k!\mid N$ and $m!\mid N$ for some $m>k$, then $(k+1)!\mid m!\mid N$. (b) is unique factorization (Mathlib's \decl{Nat.factorization_prime_le_iff_dvd}).
+\end{proof}
+
+\begin{lemma}[\decl{rowProd_succ_mul}, \decl{rec_val}]\label{lem:rec}
+For $n\ge0$, $P(n+1)\,(n+1)!=P(n)\,(n+1)^{n+1}$. Consequently, for every prime $q$,
+\begin{equation}\label{eq:rec}
+  g(n+1)+L(n+1)=g(n)+(n+1)\,v(n+1).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+For $0\le j\le n$ we have $\binom nj(n+1)=\binom{n+1}{j}(n+1-j)$. Multiplying over $j=0,\dots,n$ and using $\prod_{j=0}^{n}(n+1-j)=(n+1)!$ and $\binom{n+1}{n+1}=1$ gives $P(n)(n+1)^{n+1}=P(n+1)(n+1)!$. Both sides are positive; take $v_q$.
+\end{proof}
+
+\begin{lemma}[\decl{key_rel}, \decl{val_fact_iff}, \decl{val_fact_succ_iff}]\label{lem:D}
+Let $k\ge0$, $n=k+1$ and $D_q(n)=g(n)-(n-1)\,v(n)$. Then $g(k)-L(k)=D_q(n)$. Consequently
+\begin{align}
+  k!\mid P(k)&\iff D_q(n)\ge0\ \text{for every prime } q,\label{eq:div1}\\
+  (k+1)!\mid P(k)&\iff D_q(n)\ge v_q(n)\ \text{for every prime } q.\label{eq:div2}
+\end{align}
+\end{lemma}
+
+\begin{proof}
+Since $n!=n\cdot k!$, $L(n)=L(k)+v(n)$; subtracting this from \eqref{eq:rec} at $k$ gives $g(k)-L(k)=g(n)-k\,v(n)$. Now $v_q(k!)\le v_q(P(k))$ means $D_q(n)\ge0$, and $v_q((k+1)!)=v(n)+L(k)\le g(k)$ means $D_q(n)\ge v(n)$. Apply Lemma~\ref{lem:red}(b) with $N=P(k)\ge1$.
+\end{proof}
+
+\begin{remark}\label{rem:pow}
+As $P(k)/k!=P(n)/n^{n-1}$ by Lemma~\ref{lem:rec}, Theorem~\ref{thm:main} is equivalent to: for $n\ge1$, $n^{n-1}\mid P(n)$ and $n^n\nmid P(n)$ if and only if $n$ is prime. (This form is not stated in Lean.)
+\end{remark}
+
+\begin{lemma}[\decl{L_mul_add}, \decl{L_mul}, \decl{v_mul}, \decl{v_eq_zero}]\label{lem:L}
+For $m\ge0$ and $0\le r<q$, $L(qm+r)=m+L(m)$. Moreover $v(qm)=1+v(m)$ for $m\ge1$, and $v(qm+r)=0$ for $0<r<q$.
+\end{lemma}
+
+\begin{proof}
+The multiples of $q$ in $\{1,\dots,qm+r\}$ are $q,2q,\dots,mq$, whose product is $q^m m!$ (Mathlib's \decl{padicValNat_factorial_mul_add} and \decl{padicValNat_factorial_mul}). The other two claims are clear.
+\end{proof}
+
+\begin{lemma}[\decl{step_inner}, \decl{block}, \decl{g_mul}, \decl{g_mul_add}, \decl{g_self}]\label{lem:grec}
+For $m\ge0$ and $0\le r<q$,
+\begin{equation}\label{eq:grec}
+  g(qm+r)=q\,g(m)+(q-1-r)\bigl(m+L(m)\bigr).
+\end{equation}
+In particular $g(q)=q-1$.
+\end{lemma}
+
+\begin{proof}
+\emph{Within a block.} If $r+1<q$, apply \eqref{eq:rec} with $n=qm+r$: here $v(qm+r+1)=0$ and $L(qm+r+1)=m+L(m)$ by Lemma~\ref{lem:L}, so $g(qm+r+1)=g(qm+r)-(m+L(m))$. By induction on $r$,
+\begin{equation}\label{eq:block}
+  g(qm+r)=g(qm)-r\bigl(m+L(m)\bigr)\qquad(0\le r<q).
+\end{equation}
+\emph{The case $r=0$.} We show $g(qm)=q\,g(m)+(q-1)(m+L(m))$ by induction on $m$. For $m=0$ both sides vanish, as $P(0)=0!=1$. Assume the claim for $m$. By \eqref{eq:block} with $r=q-1$ and the induction hypothesis, $g(qm+q-1)=q\,g(m)$. Apply \eqref{eq:rec} with $n=qm+q-1$, so that $n+1=q(m+1)$, and use $L(q(m+1))=(m+1)+L(m+1)$ and $v(q(m+1))=1+v(m+1)$ from Lemma~\ref{lem:L}: $g(q(m+1))=q\,g(m)+q(m+1)(1+v(m+1))-(m+1)-L(m+1)$. By \eqref{eq:rec} with $n=m$, $q\,g(m)=q\,g(m+1)+q\,L(m+1)-q(m+1)v(m+1)$. Substituting gives $g(q(m+1))=q\,g(m+1)+(q-1)((m+1)+L(m+1))$, the claim for $m+1$. Combining it with \eqref{eq:block} gives \eqref{eq:grec}. Finally, \eqref{eq:grec} with $m=1$, $r=0$ and $g(1)=L(1)=0$ gives $g(q)=q-1$.
+\end{proof}
+
+\begin{lemma}[\decl{S_pos}, \decl{S_two}]\label{lem:S}
+\textup{(a)} $S(u)\ge1$ for $u\ge1$. \textup{(b)} If $u\ge2$ and $q\nmid u$, then $S(u)\ge2$.
+\end{lemma}
+
+\begin{proof}
+(a) is the inequality $(q-1)v_q(u!)<u$ for $u\ne0$ (Mathlib's \decl{sub_one_mul_padicValNat_factorial_lt_of_ne_zero}), which follows from Legendre's formula $v_q(u!)=\sum_{i\ge1}\lfloor u/q^i\rfloor$.
+(b) Write $u=qm+r$ with $1\le r\le q-1$; then $L(u)=m+L(m)$. If $m=0$, then $L(u)=0$ and $S(u)=u\ge2$. If $m\ge1$, then $(q-1)L(m)\le m-1$ by (a), so $(q-1)L(u)\le(q-1)m+m-1=qm-1\le u-2$.
+\end{proof}
+
+\begin{lemma}[\decl{key_ineq}]\label{lem:key}
+If $g(u)\ge1$, then $u\le(q-1)\bigl(g(u)+L(u)\bigr)$; that is, $(q-1)\,g(u)\ge S(u)$.
+\end{lemma}
+
+\begin{proof}
+By strong induction on $u$. Write $u=qm+r$ with $0\le r<q$, so that $L(u)=m+L(m)$ and $g(u)=q\,g(m)+(q-1-r)(m+L(m))$ by Lemma~\ref{lem:L} and \eqref{eq:grec}.
+
+\emph{Case $r\le q-2$.} If $m=0$, then $g(u)=q\,g(0)+(q-1-r)\cdot0=0$, contrary to the hypothesis. If $m\ge1$, then, as $g(m),L(m)\ge0$, $(q-1)(g(u)+L(u))=(q-1)\bigl(q\,g(m)+(q-r)(m+L(m))\bigr)\ge(q-1)(q-r)m$, and $(q-1)(q-r)m-(qm+r)=mq(q-r-2)+r(m-1)\ge0$.
+
+\emph{Case $r=q-1$.} Then $g(u)=q\,g(m)$, so $g(m)\ge1$; also $u\ge1$ (as $g(0)=0$), hence $m<u$, and the induction hypothesis gives $m\le(q-1)(g(m)+L(m))$. Therefore
+\begin{align*}
+  (q-1)\bigl(g(u)+L(u)\bigr)&=(q-1)\bigl(g(m)+L(m)\bigr)+(q-1)^2g(m)+(q-1)m\\
+  &\ge qm+(q-1)^2\ge qm+q-1=u. \qedhere
+\end{align*}
+\end{proof}
+
+\begin{lemma}[\decl{L_pow}, \decl{g_pow}]\label{lem:pow}
+For $e\ge0$ and $u\ge0$,
+\begin{align*}
+  (q-1)L(q^eu)&=(q-1)L(u)+(q^e-1)u,\\
+  (q-1)g(q^eu)&=q^e\bigl((q-1)g(u)-S(u)\bigr)+(q-1)e\,q^eu+S(u).
+\end{align*}
+\end{lemma}
+
+\begin{proof}
+Both by induction on $e$; the case $e=0$ is trivial. Put $x=q^eu$. The first identity follows from $L(qx)=x+L(x)$ (Lemma~\ref{lem:L}). For the second, \eqref{eq:grec} with $r=0$ gives $(q-1)g(qx)=q(q-1)g(x)+(q-1)^2x+(q-1)^2L(x)$. Insert the induction hypothesis for $(q-1)g(x)$ and the first identity for $(q-1)L(x)$; using $S(u)=u-(q-1)L(u)$, the terms collect to the claimed expression for $e+1$.
+\end{proof}
+
+\begin{proposition}[\decl{dichotomy}]\label{prop:dich}
+Let $n\ge1$ with $q\mid n$ and $n\ne q$, and let $D=D_q(n)=g(n)-(n-1)v(n)$. Then $D<0$ or $D\ge v(n)$.
+More precisely, writing $n=q^eu$ with $q\nmid u$: if $g(u)=0$ then $D<0$, and if $g(u)\ge1$ then $D>e=v(n)$.
+\end{proposition}
+
+\begin{proof}
+Write $n=q^eu$ with $q\nmid u$ (Mathlib's \decl{Nat.exists_eq_pow_mul_and_not_dvd}); then $u\ge1$, $v(n)=e$, and $e\ge1$ since $q\mid n$. Put $S=S(u)\ge1$ (Lemma~\ref{lem:S}). By Lemma~\ref{lem:pow},
+\begin{equation}\label{eq:closed}
+  (q-1)D=(q-1)g(q^eu)-(q-1)(q^eu-1)e=q^e\bigl((q-1)g(u)-S\bigr)+S+(q-1)e.
+\end{equation}
+\emph{Case $g(u)=0$.} Then $(q-1)D=(q-1)e-(q^e-1)S$. If $e=1$, then $u\ne1$ because $n\ne q$, so $u\ge2$ and $S\ge2$ by Lemma~\ref{lem:S}(b), and $(q-1)D=(q-1)(1-S)<0$. If $e\ge2$, then $(q^e-1)S\ge q^e-1=(q-1)(1+q+\dots+q^{e-1})>(q-1)e$ (\decl{pow_gt}, proved in Lean by induction on $e$), so again $(q-1)D<0$. Hence $D<0$.
+
+\emph{Case $g(u)\ge1$.} By Lemma~\ref{lem:key}, $(q-1)g(u)-S\ge0$, so \eqref{eq:closed} gives $(q-1)D\ge S+(q-1)e\ge1+(q-1)e$, that is, $(q-1)(D-e)\ge1$. Hence $D>e$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main} (\decl{result})]
+By Lemma~\ref{lem:red}(a) we must show: $k!\mid P(k)$ and $(k+1)!\nmid P(k)$ if and only if $n=k+1$ is prime. We use Lemma~\ref{lem:D}.
+
+\emph{$n$ prime.} Let $q$ be a prime. If $q\nmid n$, then $v_q(n)=0$ and $D_q(n)=g(n)\ge0$. If $q\mid n$, then $q=n$, and $D_n(n)=g(n)-(n-1)\cdot1=0$ by Lemma~\ref{lem:grec}. Hence $k!\mid P(k)$ by \eqref{eq:div1}. Since $D_n(n)=0<1=v_n(n)$, \eqref{eq:div2} fails at $q=n$, so $(k+1)!\nmid P(k)$.
+
+\emph{$n$ not prime} (this includes $n=1$). Assume $k!\mid P(k)$, so $D_q(n)\ge0$ for all $q$ by \eqref{eq:div1}. Let $q$ be a prime. If $q\nmid n$, then $D_q(n)\ge0=v_q(n)$. If $q\mid n$, then $n\ne q$, so by Proposition~\ref{prop:dich}, as $D_q(n)<0$ is excluded, $D_q(n)\ge v_q(n)$. By \eqref{eq:div2}, $(k+1)!\mid P(k)$.
+\end{proof}
+
+\begin{remark}[a description of A249429; not formalized]\label{rem:A249429}
+Let $n=k+1$ be $1$ or composite, and for each prime $q\mid n$ let $u_q$ be the part of $n$ prime to $q$. The proof shows: if $v_q(P(u_q))\ge1$ for every prime $q\mid n$, then $(k+1)!\mid P(k)$ and $M(k)>k$; otherwise $D_q(n)<0$ for some $q$, and $M(k)<k$.
+By \cite[Theorem~6.7]{LM}, for $u\ge1$, $v_q(P(u))=0$ if and only if $u=aq^c-1$ with $1\le a\le q-1$, $c\ge0$, i.e., $u+1$ has exactly one nonzero base-$q$ digit. Hence, for $n$ not prime, $k\in{}$A249429 if and only if for no prime $q\mid n$ does $u_q+1$ have a single nonzero base-$q$ digit; otherwise $M(k)<k$.
+For example, $36=2^2\cdot9=3^2\cdot4$ with $9+1=1010_2$ and $4+1=12_3$, so $35\in{}$A249429. We checked this description numerically for $k<700$; it is not formalized, and the Lean proof does not use \cite{LM}.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A249434.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A249434.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A249434.result}, of type \decl{Math0.Statements.A249434.statement}. From the statement file the proof uses only \decl{rowProd}, \decl{rowProd_pos}, \decl{rowProd_succ_mul} and \decl{statement}; the data lemmas are not used. Some of the declarations, verbatim (the lemmas inside \texttt{section Val} take a variable \texttt{(q : ℕ) [hq : Fact q.Prime]}; proofs omitted):
+\begin{lstlisting}
+private def g (q n : ℕ) : ℕ := padicValNat q (rowProd n)
+private def L (q n : ℕ) : ℕ := padicValNat q (n !)
+private lemma dichotomy (n : ℕ) (hn : n ≠ 0) (hdvd : q ∣ n) (hne : n ≠ q) :
+    (g q n : ℤ) - ((n : ℤ) - 1) * padicValNat q n < 0 ∨
+      (padicValNat q n : ℤ) ≤ (g q n : ℤ) - ((n : ℤ) - 1) * padicValNat q n
+theorem result : statement := by
+  ...
+#math0_settles Math0.Frontier.A249434.result Math0.Statements.A249434.statement
+\end{lstlisting}
+All helper definitions and lemmas are \texttt{private}. The proof file contains no \texttt{sorry}, \texttt{admit}, \texttt{decide}, \texttt{native\_decide}, \texttt{set\_option}, axiom declarations or new syntax; the arithmetic steps are closed by \texttt{linarith}, \texttt{nlinarith}, \texttt{linear\_combination}, \texttt{ring}, \texttt{positivity} and \texttt{omega}.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, \decl{Lean.ofReduceBool} from \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically the statement constant or its negation, up to metadata, with no unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A249434.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A249434.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A249434.result' proves 'Math0.Statements.A249434.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command) and checks that the pinned dependencies are unmodified. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A249434.lean} in \path{lean/}.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{Ad}
+T.~Adamczewski, \emph{OEIS Open: How many conjectures can language models turn into theorems?}, arXiv:2608.11941, 2026.
+
+\bibitem{DL}
+L.~Du and J.~C. Lagarias, \emph{Partial factorizations of products of binomial coefficients}, Int.\ J. Number Theory \textbf{18} (2022), no.~3, 691--728; arXiv:2006.15439.
+
+\bibitem{DLY}
+L.~Du, J.~C. Lagarias and W.~Yangjit, \emph{Products of extended binomial coefficients and their partial factorizations}, arXiv:2112.14422, 2021.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{LM}
+J.~C. Lagarias and H.~Mehta, \emph{Products of binomial coefficients and unreduced Farey fractions}, Int.\ J. Number Theory \textbf{12} (2016), no.~1, 57--91; arXiv:1409.4145.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{APN}
+G.~Tsoukalas et al., \emph{Advancing Mathematics Research with AI-Driven Formal Proof Search}, arXiv:2605.22763, 2026.
+
+\bibitem{A001142}
+The OEIS Foundation Inc., \url{https://oeis.org/A001142} (product of the entries of row $n$ of Pascal's triangle), entry by N.~J.~A. Sloane.
+
+\bibitem{A006093}
+The OEIS Foundation Inc., \url{https://oeis.org/A006093} ($\mathrm{prime}(n)-1$), entry by N.~J.~A. Sloane.
+
+\bibitem{A249151}
+The OEIS Foundation Inc., \url{https://oeis.org/A249151}, entry by A.~Karttunen (October 25, 2014); revision \#38, August 24, 2025.
+
+\bibitem{A249429}
+The OEIS Foundation Inc., \url{https://oeis.org/A249429}, entry by A.~Karttunen (November 2, 2014).
+
+\bibitem{A249431}
+The OEIS Foundation Inc., \url{https://oeis.org/A249431}, entry by A.~Karttunen (November 2, 2014); revision \#16, August 24, 2025.
+
+\bibitem{A249434}
+The OEIS Foundation Inc., \url{https://oeis.org/A249434}, entry by A.~Karttunen (November 2, 2014); revision \#20, September 10, 2025.
+
+\end{thebibliography}
+}
+
+\end{document}

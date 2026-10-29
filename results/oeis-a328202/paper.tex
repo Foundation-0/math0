@@ -1,0 +1,350 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℝ}{{$\mathbb{R}$}}1 {∀}{{$\forall$}}1 {→}{{$\to$}}1
+    {≤}{{$\le$}}1 {≠}{{$\ne$}}1 {¬}{{$\neg$}}1 {∣}{{$\mid$}}1 {≡}{{$\equiv$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\vp}{v_p}
+
+\title[The gcd of truncated rows of Pascal's triangle (OEIS A328202)]{The greatest common divisor of $\binom{n}{2},\dots,\binom{n}{n-2}$ equals $e^{\Lambda(n)}e^{\Lambda(n-1)}$: a formal proof of Maiga's formula for OEIS A328202}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 25, 2026}
+
+\begin{document}
+\begin{abstract}
+For $n\ge4$ let $a(n)=\gcd\{\binom nk:2\le k\le n-2\}$, the greatest common divisor of row $n$ of Pascal's triangle with the entries $1$ and $n$ removed (OEIS A328202).
+We prove that $a(n)=L(n)\,L(n-1)$ for every $n\ge4$, where $L(m)=e^{\Lambda(m)}$ equals $p$ if $m$ is a power of the prime $p$ and $1$ otherwise (OEIS A014963); this identity was recorded in the OEIS as a conjecture by Jon Maiga in 2019.
+The result is not new: it follows from Theorems~4 and~7 of Kaplan and Levy (2004), whose paper predates the conjecture and is not cited in the OEIS entry, which still labels the formula a conjecture. We give a short self-contained proof, based on Kummer's theorem for $\binom{p^t}{k}$ and Lucas's congruence, and formalize it; to our knowledge this is the first formal proof of the result.
+The proof is verified in Lean~4 with Mathlib against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry, whose definitions are checked by the kernel against the listed terms of A328202 and A014963.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+The sequence A328202 of the OEIS \cite{A328202}, contributed by Joel Kaufmann on October~7, 2019, has offset $4$ and is described as ``the greatest common divisor of all the numbers in row $n$ of Pascal's triangle excluding $1$ and $n$''. For example, row $8$ is $1,8,28,56,70,56,28,8,1$, and $\gcd(28,56,70)=14$, so $a(8)=14$; the data section lists $a(4),\dots,a(78)$, beginning $6,10,5,7,14,6,3,11,11,13,13,1,2,34$.
+On October~8, 2019, Jon Maiga added to the entry the formula
+\begin{equation}\label{eq:maiga}
+  a(n)=\mathrm{A014963}(n)\cdot\mathrm{A014963}(n-1),
+\end{equation}
+labelled as a conjecture, where A014963 \cite{A014963} is the exponential of the von Mangoldt function: $\mathrm{A014963}(m)=e^{\Lambda(m)}$ is the prime $p$ if $m$ is a power $p^t$ ($t\ge1$) of $p$, and $1$ otherwise. For $n=8$ this reads $14=2\cdot 7$.
+The entry also contains comments of Robert Israel (October~16, 2019): $p\mid a(p^k)$ and $p\mid a(p^k+1)$ for every prime $p$ and $k\ge1$; $a(p)=2p$ for a Fermat prime $p>3$ and $a(p+1)=2p$ for a Mersenne prime $p$; and the conjecture that these are the only cases with $a(n)>n$. A comment of Chai Wah Wu (October~9, 2026) notes that $\gcd(n,a(n))=1$ if $n$ is not a prime power, by Ram's theorem. In the current revision of the entry (\#46, October~10, 2026), \eqref{eq:maiga} is still labelled ``(conjecture)''.
+
+We prove \eqref{eq:maiga} for every $n\ge4$ (Theorem~\ref{thm:main}), with a proof verified in Lean~4.
+
+\subsection*{Prior work and status}
+The identity \eqref{eq:maiga} is a known theorem. We credit the literature as follows.
+\begin{itemize}
+\item Ram \cite{Ram} determined in 1909 the greatest common divisor of the full interior row, $\gcd\{\binom nk:1\le k\le n-1\}=L(n)$ for $n\ge2$; the comment of Chai Wah Wu in A328202 refers to this result as Ram's theorem.
+\item Kaplan and Levy \cite{KL} study $g(n,t)=\gcd\bigl(\binom nt,\binom n{t+1},\dots,\binom n{n-t}\bigr)$, so that $a(n)=g(n,2)$. Their Theorem~4 is the formula $g(n,1)=L(n)$ for $n\ge2$. They set $h(n,t)=g(n,t+1)/\operatorname{lcm}(g(n-1,t),g(n,t))$ for $n\ge2$ and $0\le t<\lfloor n/2\rfloor$ (their Notation~6, an integer by their Theorem~5), and their main result, Theorem~7, applied with $t=1$ gives $h(n,1)=1$ for all $n\ge4$ (the integer $1$ has no prime factors). Hence
+\[
+  a(n)=g(n,2)=\operatorname{lcm}\bigl(g(n-1,1),g(n,1)\bigr)=\operatorname{lcm}\bigl(L(n-1),L(n)\bigr)=L(n)L(n-1)\qquad(n\ge4),
+\]
+the last step because $L(n)\mid n$ and $L(n-1)\mid n-1$ are coprime. The same follows from their Theorem~9 with $t=1$. Their Table~2 lists $g(n,2)=6,10,5,7,14,6$ for $n=4,\dots,9$, in agreement with A328202. Their proofs use Kummer's theorem on carries \cite{Kummer}.
+\item Joris, Oestreicher and Steinig \cite{JOS} study the greatest common divisor of the binomial coefficients $\binom nk$ with $k$ in an interval $r\le k\le s$; according to later work citing it, they give an explicit general formula for this gcd, which would contain \eqref{eq:maiga} as the case $r=2$, $s=n-2$. We have not been able to consult this paper and have not checked its formula, so we do not know whether it states \eqref{eq:maiga} explicitly.
+\end{itemize}
+The paper \cite{KL} appeared fifteen years before the conjecture was recorded, and neither \cite{KL} nor \cite{JOS} is cited in the OEIS entry. The math0 referees found no formalization of the result in Lean or Mathlib. We therefore classify the present work as the \emph{first formal proof of a known result}.
+
+Our proof (Section~\ref{sec:proof}) works one prime at a time and avoids base-$p$ digits: it uses the $p$-adic valuation of $\binom{p^t}{k}$, the congruence $\binom{p^tm}{p^t}\equiv m\pmod p$ (from Lucas's theorem \cite{Lucas}), Pascal's rule and $(N+1)\binom Nj=(j+1)\binom{N+1}{j+1}$. Israel's conjecture follows by a short argument that we did not formalize (Remark~\ref{rem:israel}).
+
+\section{Statement}\label{sec:statement}
+
+\begin{definition}\label{def:main}
+For $m\ge1$ let $L(m)=p$ if $m=p^t$ for a prime $p$ and an integer $t\ge1$, and $L(m)=1$ otherwise; thus $L(m)=e^{\Lambda(m)}$, where $\Lambda$ is the von Mangoldt function. For $n\ge4$ let $a(n)=\gcd\{\binom nk : 2\le k\le n-2\}$.
+\end{definition}
+
+For $n\ge4$ the entries of row $n$ equal to $1$ or $n$ are exactly $\binom n0=\binom nn=1$ and $\binom n1=\binom n{n-1}=n$, since $\binom nk\ge\binom n2=n(n-1)/2>n$ for $2\le k\le n-2$. So $a(n)$ is the sequence A328202. The FORMULA section of the entry \cite{A328202} contains, verbatim:
+\begin{quote}
+{\small\texttt{a(n) = A014963(n) * A014963(n - 1) (conjecture).\\ - \_Jon Maiga\_, Oct 08 2019}}
+\end{quote}
+The name of A014963 \cite{A014963} (offset $1$) is ``Exponential of Mangoldt function M(n): a(n) = 1 unless n is a prime or prime power, in which case a(n) = that prime.''
+
+\begin{theorem}\label{thm:main}
+For every integer $n\ge4$,
+\[
+  \gcd\Bigl\{\binom nk : 2\le k\le n-2\Bigr\}=L(n)\,L(n-1).
+\]
+\end{theorem}
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A328202.lean}, reviewed for fidelity and frozen (SHA-256 \texttt{4021583e\ldots ca08f}) before any proof attempt. Its definitions and main statement read, verbatim (import, comments, docstrings, blank lines, \texttt{set\_option} lines, all theorems and the secondary definition \decl{statementIsrael} omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A328202
+def a (n : ℕ) : ℕ := (Finset.Icc 2 (n - 2)).gcd (Nat.choose n)
+def expMangoldt (m : ℕ) : ℕ := if IsPrimePow m then m.minFac else 1
+def statement : Prop :=
+  ∀ n : ℕ, 4 ≤ n → a n = expMangoldt n * expMangoldt (n - 1)
+end Math0.Statements.A328202
+\end{lstlisting}
+Here \texttt{(Finset.Icc 2 (n - 2)).gcd (Nat.choose n)} is the greatest common divisor of $\binom nk$ over $2\le k\le n-2$, which is $a(n)$ by the discussion above. (The programs in the OEIS entry take the gcd over $2\le k\le n/2$, or $2\le k\le\lfloor (n+1)/2\rfloor$ in the PARI program; by the symmetry $\binom nk=\binom n{n-k}$ this is the same set of numbers.) Mathlib's \decl{IsPrimePow m} means $m=p^t$ with $p$ prime and $t\ge1$, and then \decl{m.minFac}, the least prime factor of $m$, is $p$; so \decl{expMangoldt} is $L$. Since $n\ge4$, the truncated subtractions $n-1$ and $n-2$ are exact, the range $2\le k\le n-2$ is nonempty, and the statement covers the whole range $n\ge4$ of the sequence with no extra hypotheses. The values of \decl{a} for $n<4$ play no role.
+
+The statement file also proves three facts that tie the definitions to their sources:
+\begin{lstlisting}
+theorem a_data : (List.range 75).map (fun i => a (i + 4)) = [6, 10, 5, 7, 14, ...]
+theorem expMangoldt_data : (List.range 95).map (fun i => expMangoldt (i + 1)) = [...]
+theorem cast_expMangoldt (m : ℕ) :
+    (expMangoldt m : ℝ) = Real.exp (ArithmeticFunction.vonMangoldt m)
+\end{lstlisting}
+In \decl{a_data} the list (elided here) is the complete data section $a(4),\dots,a(78)$ of A328202, and \decl{expMangoldt_data} compares \decl{expMangoldt} with all $95$ terms listed in A014963, for $m=1,\dots,95$. Both are proved by \texttt{decide +kernel}, that is, by evaluating the definitions in the Lean kernel (about four seconds for \decl{a_data}). The lemma \decl{cast_expMangoldt} identifies \decl{expMangoldt} with $e^{\Lambda}$ for Mathlib's von Mangoldt function.
+The file also records Israel's conjecture as a separate proposition \decl{statementIsrael}; it is not the target of this work and is not proved in Lean.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows \path{lean/Math0/Frontier/OEIS/A328202.lean}; the Lean name of each step is given in brackets. Throughout, $p$ denotes a prime and $v_p$ the $p$-adic valuation. We use two classical facts from Mathlib: the identity
+\begin{equation}\label{eq:absorb}
+  (N+1)\binom Nj=\binom{N+1}{j+1}(j+1)\qquad(N,j\ge0)
+\end{equation}
+(\decl{Nat.add_one_mul_choose_eq}), and Pascal's rule $\binom{N+1}{j+1}=\binom Nj+\binom N{j+1}$.
+
+\begin{lemma}[Kummer for prime powers; \decl{not_sq_dvd_choose}]\label{lem:kummer}
+Let $t\ge0$ and $1\le k\le p^t$. Then $v_p\binom{p^t}{k}=t-v_p(k)$. In particular, if $v_p(k)\ge t-1$, then $p^2\nmid\binom{p^t}k$.
+\end{lemma}
+
+\begin{proof}
+Write $N=p^t$. Then
+\[
+  \binom Nk=\frac{N(N-1)\cdots(N-k+1)}{k!}=\frac Nk\prod_{j=1}^{k-1}\frac{N-j}{j}.
+\]
+For $1\le j\le k-1<p^t$ put $v=v_p(j)$; then $v<t$, so $p^v\mid p^t-j$, while $p^{v+1}\mid p^t$ and $p^{v+1}\nmid j$ give $p^{v+1}\nmid p^t-j$. Hence $v_p(N-j)=v_p(j)$, every factor of the product has valuation $0$, and $v_p\binom Nk=t-v_p(k)$. If $v_p(k)\ge t-1$ this is at most $1$. (In Lean the formula is Mathlib's \decl{Nat.factorization_choose_prime_pow}.)
+\end{proof}
+
+\begin{lemma}[\decl{expMangoldt_dvd_self}, \decl{expMangoldt_prime_pow}]\label{lem:L}
+For $m\ge1$, $L(m)\mid m$; and $L(p^t)=p$ for $t\ge1$. Consequently, for $n\ge2$, $L(n)$ and $L(n-1)$ are coprime.
+\end{lemma}
+
+\begin{proof}
+The first two assertions are immediate from the definition. Since $\gcd(n,n-1)=1$, any divisors of $n$ and of $n-1$ are coprime.
+\end{proof}
+
+\begin{lemma}[\decl{expMangoldt_dvd_choose}, \decl{expMangoldt_pred_dvd_choose}]\label{lem:lower}
+Let $n\ge1$.
+\begin{enumerate}
+\item $L(n)\mid\binom nk$ for $0<k<n$.
+\item $L(n-1)\mid\binom nk$ for $2\le k\le n-2$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) If $L(n)=1$ there is nothing to prove. Otherwise $n=p^t$ with $t\ge1$ and $L(n)=p$; since $0<k<p^t$ we have $v_p(k)<t$, so $v_p\binom{p^t}k=t-v_p(k)\ge1$ by Lemma~\ref{lem:kummer}. (In Lean this is Mathlib's \decl{Nat.Prime.dvd_choose_pow}.)
+
+(2) Write $n=N+1$ and $k=j+1$, so that $1\le j$ and $j+1\le N-1$. By Pascal's rule $\binom nk=\binom Nj+\binom N{j+1}$ with $0<j<j+1<N$, and by (1) applied to $N=n-1$ both terms are divisible by $L(n-1)$.
+\end{proof}
+
+\begin{lemma}[Lucas; \decl{choose_pow_mul_modEq}, \decl{not_dvd_choose_pow_mul}]\label{lem:lucas}
+For all $m,t\ge0$,
+\[
+  \binom{p^tm}{p^t}\equiv m\pmod p.
+\]
+In particular, if $p\nmid m$ then $p\nmid\binom{p^tm}{p^t}$.
+\end{lemma}
+
+\begin{proof}
+We use one step of Lucas's theorem \cite{Lucas} (Mathlib's \decl{Choose.choose_modEq_choose_mod_mul_choose_div_nat}): for all $N,K\ge0$,
+\begin{equation}\label{eq:lucas}
+  \binom NK\equiv\binom{N\bmod p}{K\bmod p}\binom{\lfloor N/p\rfloor}{\lfloor K/p\rfloor}\pmod p .
+\end{equation}
+(Proof: write $N=N_0+pN'$ and $K=K_0+pK'$ with $0\le N_0,K_0<p$. In $\mathbb F_p[x]$ we have $(1+x)^N=(1+x)^{N_0}(1+x^p)^{N'}$, and the coefficient of $x^K$ on the right is $\sum\binom{N_0}{i}\binom{N'}{j}$ over $i+pj=K$, $0\le i\le N_0$; since $i\equiv K\pmod p$ and $0\le i<p$, the only possible term is $i=K_0$, $j=K'$, and if $K_0>N_0$ there is no term at all, matching $\binom{N_0}{K_0}=0$.)
+We prove the lemma by induction on $t$. For $t=0$, $\binom m1=m$. For the step, apply \eqref{eq:lucas} with $N=p^{t+1}m$ and $K=p^{t+1}$: here $N\bmod p=K\bmod p=0$, $\lfloor N/p\rfloor=p^tm$ and $\lfloor K/p\rfloor=p^t$, so $\binom{p^{t+1}m}{p^{t+1}}\equiv\binom00\binom{p^tm}{p^t}\equiv m\pmod p$ by the induction hypothesis.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main} (\decl{result})]
+Fix $n\ge4$ and put $g=a(n)$ and $\ell=L(n)L(n-1)$. By definition of the gcd,
+\begin{equation}\label{eq:gdiv}
+  g\mid\binom nk\qquad\text{for all }2\le k\le n-2 .
+\end{equation}
+We show $\ell\mid g$ and $g\mid\ell$; then $g=\ell$.
+
+\emph{Step 1: $\ell\mid g$.} Let $2\le k\le n-2$. By Lemma~\ref{lem:lower}, $L(n)\mid\binom nk$ and $L(n-1)\mid\binom nk$, and these two numbers are coprime by Lemma~\ref{lem:L}, so $\ell\mid\binom nk$. As this holds for every $k$ in the range, $\ell$ divides the gcd $g$.
+
+\emph{Step 2: $g\mid\ell$.} It suffices to show that $p^e\mid g$ implies $p^e\mid\ell$ for every prime $p$ and every $e\ge0$ (Mathlib's \decl{Nat.dvd_iff_prime_pow_dvd_dvd}). For $e=0$ this is trivial, so let $e\ge1$ and $p^e\mid g$; in particular $p\mid g$. We record two observations.
+\begin{enumerate}
+\item[(i)] If $p\mid\ell$ and $p^2\nmid g$, then $p^e\mid\ell$. Indeed $p^2\nmid g$ forces $e\le1$, so $p^e\mid p\mid\ell$.
+\item[(ii)] $p\mid n$ or $p\mid n-1$. Indeed, \eqref{eq:absorb} with $N=n-1$, $j=1$ reads $n(n-1)=2\binom n2$, and $p\mid g\mid\binom n2$ by \eqref{eq:gdiv}.
+\end{enumerate}
+
+\emph{Case A: $p\mid n$.} Write $n=p^tm$ with $p\nmid m$; then $t\ge1$ (because $p\mid n$) and $m\ge1$.
+
+\emph{Case A1: $m=1$}, i.e.\ $n=p^t$. Then $L(n)=p$ by Lemma~\ref{lem:L}, so $p\mid\ell$, and by (i) it suffices to show $p^2\nmid g$. We exhibit $k_0$ with $2\le k_0\le n-2$ and $p^2\nmid\binom n{k_0}$; then $p^2\nmid g$ by \eqref{eq:gdiv}.
+If $t=1$, take $k_0=2$: it lies in the range because $n\ge4$, and $2\le p=p^t$ and $v_p(2)\ge0=t-1$, so $p^2\nmid\binom p2$ by Lemma~\ref{lem:kummer}.
+If $t\ge2$, take $k_0=p^{t-1}$. Then $k_0\ge p\ge2$ and $k_0+2\le 2k_0\le pk_0=n$, so $k_0$ lies in the range; moreover $v_p(k_0)=t-1$, so $p^2\nmid\binom{p^t}{k_0}$ by Lemma~\ref{lem:kummer}.
+
+\emph{Case A2: $m\ge2$.} This case is impossible. Take $k_0=p^t$. Then $k_0\ge p\ge2$ and $k_0+2\le2p^t\le mp^t=n$, so $p\mid g\mid\binom n{p^t}=\binom{p^tm}{p^t}$ by \eqref{eq:gdiv}, contradicting Lemma~\ref{lem:lucas}.
+
+\emph{Case B: $p\mid n-1$.} Write $n-1=p^tm$ with $p\nmid m$; again $t\ge1$ and $m\ge1$. Note that $p\nmid p^tm+1=n$, since $p\mid p^tm$.
+
+\emph{Case B1: $m=1$}, i.e.\ $n-1=p^t$. Then $L(n-1)=p$, so $p\mid\ell$, and by (i) it suffices to show $p^2\nmid g$. Take $k_0=p^{t-1}+1\ge2$. It lies in the range: if $t=1$ then $k_0=2$ and $k_0+2=4\le n$; if $t\ge2$ then $p^{t-1}\ge2$ and $p^t\ge2p^{t-1}$, so $k_0+2=p^{t-1}+3\le 2p^{t-1}+1\le p^t+1=n$. By \eqref{eq:absorb} with $N=p^t$ and $j=p^{t-1}$, we have $(p^t+1)\binom{p^t}{p^{t-1}}=\binom{n}{k_0}(p^{t-1}+1)$.
+Suppose $p^2\mid g$. Then $p^2\mid\binom n{k_0}$ by \eqref{eq:gdiv}, so $p^2$ divides the left-hand side. As $p\nmid p^t+1$, the numbers $p^2$ and $p^t+1$ are coprime, hence $p^2\mid\binom{p^t}{p^{t-1}}$. This contradicts Lemma~\ref{lem:kummer}, since $v_p(p^{t-1})=t-1$. Hence $p^2\nmid g$.
+
+\emph{Case B2: $m\ge2$.} This case is impossible. Take $k_0=p^t+1\ge2$; then $k_0+2=p^t+3\le 2p^t+1\le mp^t+1=n$, because $p^t\ge2$. By \eqref{eq:absorb} with $N=p^tm$ and $j=p^t$, we have $(p^tm+1)\binom{p^tm}{p^t}=\binom n{k_0}(p^t+1)$.
+Since $p\mid g\mid\binom n{k_0}$, the prime $p$ divides the left-hand side, hence divides $p^tm+1$ or $\binom{p^tm}{p^t}$. The first is impossible because $p\mid p^tm$, and the second contradicts Lemma~\ref{lem:lucas}.
+
+By (ii), Cases A and B are exhaustive, and in every case that can occur we have shown $p^e\mid\ell$. Hence $g\mid\ell$, and with Step~1, $g=\ell$.
+\end{proof}
+
+\begin{remark}[Israel's conjecture; not formalized]\label{rem:israel}
+Theorem~\ref{thm:main} implies the conjecture of Israel recorded in A328202 (the ``only if'' direction below), together with the two facts he states before it (the ``if'' direction): for $n\ge4$, $a(n)>n$ holds if and only if $n$ is a Fermat prime $>3$ or $n-1$ is a Mersenne prime. Indeed, if at most one of $n$, $n-1$ is a prime power, then $a(n)$ equals $1$, $L(n)\le n$ or $L(n-1)\le n-1$, so $a(n)\le n$. If both are prime powers, one of them is even, hence a power of $2$, and $a(n)=2p$ where the other one is $p^s$ with $p$ an odd prime. If $s\ge2$ then $2p<p^2\le p^s\le n$, so $a(n)\le n$. If $s=1$, then either $n=p=2^r+1$ with $r\ge2$, which is a Fermat prime $>3$ (a prime of the form $2^r+1$ has $r$ a power of $2$), or $n-1=p=2^r-1$ is a Mersenne prime; in both cases $a(n)=2p>n$. Conversely, if $n$ is a Fermat prime $>3$ or $n-1$ is a Mersenne prime, then $n$ and $n-1$ are both prime powers, the odd one is a prime $p$, and $a(n)=2p>n$. This deduction is not part of the Lean development, and the proposition \decl{statementIsrael} of the statement file is not proved there.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in \path{lean/Math0/Frontier/OEIS/A328202.lean} in the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A328202.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A328202.result}, of type \decl{Math0.Statements.A328202.statement}. The auxiliary lemmas, all private, correspond to Lemmas~\ref{lem:kummer}--\ref{lem:lucas}; their statements read, verbatim (proofs and docstrings omitted):
+\begin{lstlisting}
+private lemma expMangoldt_dvd_self (m : ℕ) : expMangoldt m ∣ m
+private lemma expMangoldt_prime_pow {p t : ℕ} (hp : p.Prime) (ht : t ≠ 0) :
+    expMangoldt (p ^ t) = p
+private lemma expMangoldt_dvd_choose (n k : ℕ) (hk0 : k ≠ 0) (hkn : k ≠ n) :
+    expMangoldt n ∣ n.choose k
+private lemma expMangoldt_pred_dvd_choose (n k : ℕ) (hk : 2 ≤ k) (hkn : k + 2 ≤ n) :
+    expMangoldt (n - 1) ∣ n.choose k
+private lemma not_sq_dvd_choose {p t k : ℕ} (hp : p.Prime) (hk0 : k ≠ 0) (hk : k ≤ p ^ t)
+    (hf : t - 1 ≤ k.factorization p) : ¬ p ^ 2 ∣ (p ^ t).choose k
+private lemma choose_pow_mul_modEq {p m : ℕ} (hp : p.Prime) :
+    ∀ t : ℕ, (p ^ t * m).choose (p ^ t) ≡ m [MOD p]
+private lemma not_dvd_choose_pow_mul {p m t : ℕ} (hp : p.Prime) (hm : ¬ p ∣ m) :
+    ¬ p ∣ (p ^ t * m).choose (p ^ t)
+theorem result : statement
+\end{lstlisting}
+The proof of \decl{result} follows Section~\ref{sec:proof} case by case; the decompositions $n=p^tm$ and $n-1=p^tm$ come from \decl{Nat.exists_eq_pow_mul_and_not_dvd}, and the range conditions on $k_0$ are closed by \texttt{omega} and \texttt{nlinarith}. The proof file contains no \texttt{decide}, \texttt{native\_decide}, \texttt{sorry} or \texttt{set\_option}.
+
+\subsection*{Audit}
+The file ends with the command
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A328202.result Math0.Statements.A328202.statement
+\end{lstlisting}
+defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself. It fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (rejecting \decl{sorryAx}, \decl{Lean.ofReduceBool} from \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically \decl{statement} or its negation, up to metadata, with no unfolding. Running \texttt{lake env lean Math0/Frontier/OEIS/A328202.lean} in the directory \path{lean} prints
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A328202.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A328202.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A328202.result' proves 'Math0.Statements.A328202.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}. The repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use: the statement is a math0 formalization of an OEIS conjecture.
+To reproduce, run \path{scripts/verify.sh} from the repository root. It fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. Once its dependencies are built, the single file can also be checked with the \texttt{lake env lean} command above.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171 [cs.AI], 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{JOS}
+H.~Joris, C.~Oestreicher, and J.~Steinig, \emph{The greatest common divisor of certain sets of binomial coefficients}, J. Number Theory \textbf{21} (1985), no.~1, 101--119.
+
+\bibitem{KL}
+G.~Kaplan and D.~Levy, \emph{GCD of truncated rows in Pascal's triangle}, Integers \textbf{4} (2004), \#A14. \url{https://math.colgate.edu/~integers/e14/e14.pdf}.
+
+\bibitem{Kummer}
+E.~E. Kummer, \emph{\"Uber die Erg\"anzungss\"atze zu den allgemeinen Reciprocit\"atsgesetzen}, J. Reine Angew. Math.\ \textbf{44} (1852), 93--146.
+
+\bibitem{Lucas}
+\'E.~Lucas, \emph{Th\'eorie des fonctions num\'eriques simplement p\'eriodiques}, Amer. J. Math.\ \textbf{1} (1878), 184--240 and 289--321.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A014963}
+The OEIS Foundation Inc., Entry A014963 in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A014963}.
+
+\bibitem{A328202}
+The OEIS Foundation Inc., Entry A328202 in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A328202} (revision \#46, October~10, 2026).
+
+\bibitem{Ram}
+B.~Ram, \emph{Common factors of $\frac{n!}{m!\,(n-m)!}$ $(m=1,2,\dots,n-1)$}, J. Indian Math. Club \textbf{1} (1909), 39--43.
+
+\end{thebibliography}
+}
+\end{document}

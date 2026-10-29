@@ -1,0 +1,364 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    noncomputable,private},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8, upquote=true,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {∀}{{$\forall$}}1 {→}{{$\to$}}1
+    {↔}{{$\leftrightarrow$}}1 {∧}{{$\wedge$}}1 {≥}{{$\ge$}}1 {≤}{{$\le$}}1 {…}{{$\dots$}}1
+    {·}{{$\cdot$}}1 {×}{{$\times$}}1 {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1
+    {²}{{$^2$}}1 {³}{{$^3$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\emergencystretch=3em
+
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\DeclareMathOperator{\lcm}{lcm}
+\DeclareMathOperator{\den}{den}
+\DeclareMathOperator{\num}{num}
+
+\title[Row denominators of the cube of the mean matrix]{The least common denominator of row $n$ of the cube of the mean matrix is $n\cdot\lcm(1,\dots,n)^2$: a proof of Lang's conjecture in OEIS A119936}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 24, 2026}
+\hypersetup{pdftitle={The least common denominator of row n of the cube of the mean matrix is n lcm(1,...,n)\textasciicircum 2: a proof of Lang's conjecture in OEIS A119936},pdfauthor={math0}}
+
+\begin{document}
+\begin{abstract}
+Let $A$ be the infinite lower-triangular mean matrix, $A(i,j)=1/i$ for $j\le i$ and $A(i,j)=0$ for $j>i$, and let $a(n)$ be the least common multiple of the reduced denominators of the entries of row $n$ of $A^3$. We prove that $a(n)=n\cdot\lcm(1,\dots,n)^2$ for every $n\ge1$, equivalently $a(n)/n^3=\mathrm{A002944}(n)^2$; this is the equation that Wolfdieter Lang labelled a conjecture in OEIS A119936 in 2006, and it also proves the formula $\mathrm{A027451}(n)=(\lcm(1,\dots,n)/n)^2$, which J.~W. Meijer added to OEIS A027451 in 2009 without proof. The proof is elementary: for each prime $p$ it exhibits a column of row $n$ whose denominator contains the full power of $p$ dividing $n\cdot\lcm(1,\dots,n)^2$. We found no earlier proof and classify the result as new, with the caveat that the argument is short and may be known informally. The theorem is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, reviewed for fidelity and frozen before the proof attempt; its definitions are checked by the kernel against the listed terms of A119936, A119935, A119932 and A002944.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Let $A=(A(i,j))_{i,j\ge1}$ be the infinite lower-triangular matrix with
+\[
+  A(i,j)=\begin{cases}1/i,& j\le i,\\ 0,& j>i.\end{cases}
+\]
+Applied to a sequence $(x_j)$, it returns the sequence of arithmetic means $(x_1+\dots+x_i)/i$; it is the matrix of Ces\`aro means of order one, called the lower triangular mean matrix in OEIS A027447 \cite{A027447}. Its cube $A^3$ is again lower triangular, and for $1\le m\le n$ its entries are
+\begin{equation}\label{eq:r}
+  r(n,m):=(A^3)(n,m)=\frac1n\sum_{m\le l\le k\le n}\frac1{kl}
+\end{equation}
+(Lemma~\ref{lem:explicit}). The OEIS contains several sequences built from this triangle: the numerators A119935 \cite{A119935} and denominators A119932 \cite{A119932} of $r(n,m)$ in lowest terms (Wolfdieter Lang, 2006); the integer triangle A027447 \cite{A027447} (Olivier G\'erard) of the numerators when each row of $A^3$ is written over its least common denominator; its first diagonal A027451 \cite{A027451}; and the sequence A119936 \cite{A119936} (Lang, July~20, 2006),
+\[
+  a(n)=\lcm_{1\le m\le n}\den r(n,m)\qquad(n\ge1),
+\]
+the least common denominator of row $n$, which begins $1, 8, 108, 576, 18000, 21600, 1234800,\dots$. In the FORMULA section of A119936 Lang wrote:
+\begin{quote}
+``a(n)/n\^{}3 = A027451(n) = A002944(n)\^{}2 (the second equation is a conjecture).'' (Wolfdieter Lang, Jul~20 2006)
+\end{quote}
+Here A002944 \cite{A002944} is $\lcm(1,2,\dots,n)/n$. Row $n$ of A027447 is $a(n)\,r(n,m)$, $1\le m\le n$, and $r(n,n)=1/n^3$, so $\mathrm{A027451}(n)=a(n)/n^3$ by definition: the first equation is not in doubt. The conjecture is the second equation, that is,
+\[
+  \frac{a(n)}{n^3}=\Bigl(\frac{\lcm(1,\dots,n)}{n}\Bigr)^2,\qquad\text{equivalently}\qquad a(n)=n\cdot\lcm(1,\dots,n)^2 .
+\]
+We prove it for every $n\ge1$ (Theorem~\ref{thm:main}).
+
+\subsection*{Related statements in the OEIS}
+In A027451, Johannes W. Meijer added (July~21, 2009) the formula ``a(n) = (lcm(1..n)/n)\^{}2'' and the cross-reference ``Equals A002944(n)\^{}2'', with no proof or reference. Since $\mathrm{A027451}(n)=a(n)/n^3$, this formula is equivalent to Lang's conjecture, so Theorem~\ref{thm:main} proves it as well (Corollary~\ref{cor:A027451}). The same entry contains a comment of Gary Detlefs (2010), ``It appears that a(n) = denominator of n\^{}2*sum(1/k\^{}2,k=1..n)''; this is a different statement, which we do not address. A119936 also lists the formula $a(n)/n^3=(\mathrm{A099946}(n)\,(n-1))^2$ for $n\ge2$, marked ``from the conjecture''; since $\mathrm{A099946}(n)=\lcm(1,\dots,n)/(n(n-1))$, it is the same identity. Lang's entries A120078 and A120079 \cite{A120078}, on generating functions related to the hydrogen spectrum, say that a sequence beginning $1,1,4,9,144,\dots$ that arises there is ``conjectured to be A027451(n)''; those sequences have other definitions and are not addressed here. Crowley's paper \cite{Cr}, which A119936 links to, mentions a sequence of denominators that ``appears to be'' A119936, and gives no proof of the formula.
+
+\subsection*{Status}
+The current revision of A119936 (\#22, November~5, 2019) still calls the second equation a conjecture. The math0 referees found no proof or counterexample in the OEIS entries related to A119936 (A027447, A027451, A119932, A119935, A002944, A099946, A120078, A120079 and others), in Stephan's collection of OEIS conjectures \cite{St}, in Fried's paper on proofs of OEIS conjectures \cite{Fr} and the later papers in his series, or by web searches. We therefore classify Theorem~\ref{thm:main} as a \emph{new result}. The proof is a short argument, one prime at a time, and it may well be known informally; we did not find it written down.
+
+\section{Statement}\label{sec:statement}
+
+For $n\ge1$ put $L_n=\lcm(1,2,\dots,n)$. For $q\in\Q$ write $q=\num(q)/\den(q)$ in lowest terms, with $\den(q)\ge1$ and $\gcd(|\num(q)|,\den(q))=1$. For a prime $p$ and a positive integer $j$, $v_p(j)$ is the exponent of $p$ in $j$.
+
+\begin{theorem}\label{thm:main}
+For every integer $n\ge1$,
+\[
+  a(n)=\lcm_{1\le m\le n}\den r(n,m)=n\,L_n^2,
+  \qquad\text{equivalently}\qquad
+  \frac{a(n)}{n^3}=\Bigl(\frac{L_n}{n}\Bigr)^2=\mathrm{A002944}(n)^2 .
+\]
+\end{theorem}
+
+\begin{corollary}[not formalized separately]\label{cor:A027451}
+For every $n\ge1$, $\mathrm{A027451}(n)=(L_n/n)^2=\mathrm{A002944}(n)^2$, and for $n\ge2$, $a(n)/n^3=(\mathrm{A099946}(n)\,(n-1))^2$.
+\end{corollary}
+
+\begin{proof}
+$\mathrm{A027451}(n)=a(n)\,r(n,n)=a(n)/n^3$ by the definitions of A027451 and A027447, and $\mathrm{A099946}(n)\,(n-1)=L_n/n$.
+\end{proof}
+
+\subsection*{The Lean statement}
+The statement was formalized by math0 in the file \path{lean/Math0/Statements/OEIS/A119936.lean}, reviewed for fidelity against the OEIS entries, and frozen (SHA-256 \texttt{dadd10f3\ldots cfcfaafc5}) before any proof attempt. The definitions used by the statement, and the statement itself, are verbatim:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+/-- The lower-triangular mean matrix (1-indexed): `A(i,j) = 1/i` if `j ≤ i`, `0` if `j > i`. -/
+def A (i j : ℕ) : ℚ := if j ≤ i then 1 / (i : ℚ) else 0
+
+/-- The `N × N` leading truncation of `A`; the index `i : Fin N` stands for row/column `i + 1`. -/
+def Amat (N : ℕ) : Matrix (Fin N) (Fin N) ℚ :=
+  Matrix.of fun i j => A ((i : ℕ) + 1) ((j : ℕ) + 1)
+
+/-- The triangle of rationals A119935/A119932: `r n m = (A^3)[n,m]` for `1 ≤ m ≤ n`, computed as
+the `(n,m)` entry of the cube of the `n × n` truncation of `A` (`0` outside the triangle). -/
+def r (n m : ℕ) : ℚ :=
+  if h : 1 ≤ m ∧ m ≤ n then (Amat n ^ 3) ⟨n - 1, by omega⟩ ⟨m - 1, by omega⟩ else 0
+
+/-- A119936: the LCM of the (lowest-terms) denominators of row `n` of the triangle `r`,
+`a(n) = lcm_{m=1..n} A119932(n,m)`. -/
+def a (n : ℕ) : ℕ := (Finset.Icc 1 n).lcm fun m => (r n m).den
+
+/-- `lcm(1, 2, …, n)` (A003418); `lcmUpTo 0 = 1`. -/
+def lcmUpTo (n : ℕ) : ℕ := (Finset.Icc 1 n).lcm id
+
+/-- A002944: `LCM(1, 2, …, n) / n` (exact division for `n ≥ 1`, see `A002944_mul`). -/
+def A002944 (n : ℕ) : ℕ := lcmUpTo n / n
+
+/-- The conjecture: for every `n ≥ 1`, `a(n)/n³ = A002944(n)²` (here `a(n)/n³` is A027451(n),
+the diagonal entry `a(n)·r(n,n)` of A027447, so this is the conjectured
+`A027451(n) = A002944(n)²`). -/
+def statement : Prop :=
+  ∀ n : ℕ, 1 ≤ n → (a n : ℚ) / (n : ℚ) ^ 3 = ((A002944 n : ℕ) : ℚ) ^ 2
+\end{lstlisting}
+All declarations are in the namespace \decl{Math0.Statements.A119936}. The same file proves
+\begin{lstlisting}
+theorem statement_iff : statement ↔ ∀ n : ℕ, 1 ≤ n → a n = n * lcmUpTo n ^ 2
+\end{lstlisting}
+which is the equivalence of the two forms in Theorem~\ref{thm:main}.
+
+\subsection*{How the Lean definitions encode the entries}
+\code{A i j} is $A(i,j)$ with indices starting at $1$. \code{Amat N} is the leading $N\times N$ block of $A$ as a Mathlib matrix indexed by \code{Fin N}, where the index $i$ stands for $i+1$. \code{r n m} is the entry in row $n$, column $m$ of \code{Amat n \^{} 3}, computed with Mathlib's matrix multiplication and power, and is $0$ outside $1\le m\le n$. Taking the $n\times n$ truncation is exact: $(A^3)(n,m)=\sum_{k,l}A(n,k)A(k,l)A(l,m)$, and $A(n,k)=0$ for $k>n$ and $A(k,l)=0$ for $l>k$, so only indices $\le n$ contribute. The statement file proves this in the form~\eqref{eq:r} (\decl{r_eq_sum}, \decl{r_eq_explicit}; Lemma~\ref{lem:explicit} below). \code{(r n m).den} is Mathlib's \decl{Rat.den}, the denominator in lowest terms, so \code{a n} is $a(n)$ as given by the name of A119936 and by its formula $a(n)=\lcm_{m=1..n}\mathrm{A119932}(n,m)$. \code{lcmUpTo n} is $L_n$, and \code{A002944 n} is $L_n/n$ computed with division in $\N$, which is exact for $n\ge1$ (\decl{A002944_mul}). Finally \code{statement} asserts $a(n)/n^3=\mathrm{A002944}(n)^2$ in $\Q$ for all $n\ge1$, the common offset of A119936, A027451 and A002944; as explained in the introduction, $a(n)/n^3$ is $\mathrm{A027451}(n)$, so this is exactly the conjectured equation.
+
+The statement file checks the definitions against the OEIS data by kernel evaluation (\texttt{decide +kernel}): \decl{a_data} reproduces all $19$ listed terms of A119936, from $a(1)=1$ to $a(19)=1029655143835718400$; \decl{triangle_num_data} and \decl{triangle_den_data} reproduce the $37$ listed terms of A119935 and the $32$ listed terms of A119932, read by rows; and \decl{A002944_data} reproduces the $31$ listed terms of A002944. During the fidelity review, an independent computation with exact rational arithmetic reproduced the $19$ terms of A119936.
+
+\section{Proof}\label{sec:proof}
+
+Throughout, $n\ge1$ is fixed, $L=L_n$ and $D=nL^2$. For a prime $p$ let $e_p=\lfloor\log_p n\rfloor$, the largest $e$ with $p^e\le n$ (Mathlib's \code{Nat.log p n}).
+
+\begin{lemma}[\decl{r_eq_sum}, \decl{r_eq_explicit}]\label{lem:explicit}
+For $1\le m\le n$,
+\[
+  r(n,m)=\sum_{k=1}^n\sum_{l=1}^nA(n,k)A(k,l)A(l,m)=\frac1n\sum_{k=m}^n\sum_{l=m}^k\frac1{kl}.
+\]
+\end{lemma}
+
+\begin{proof}
+The first equality is the definition of the matrix cube, after shifting the indices of \code{Fin n} by one. For $1\le k\le n$ we have $A(n,k)=1/n$, and $A(k,l)A(l,m)$ equals $1/(kl)$ if $m\le l\le k$ and $0$ otherwise. Terms with $k<m$ have no admissible $l$.
+\end{proof}
+
+\begin{lemma}[\decl{Nat.factorization_lcmUpto}, \decl{factorization_le_log}]\label{lem:val}
+Let $p$ be a prime. Then $v_p(L)=e_p$, and $v_p(j)\le e_p$ for every $1\le j\le n$.
+\end{lemma}
+
+\begin{proof}
+If $1\le j\le n$, then $p^{v_p(j)}\le j\le n$, so $v_p(j)\le e_p$. Since $v_p(L)=\max_{1\le j\le n}v_p(j)$ and $j=p^{e_p}\le n$ attains $e_p$, we get $v_p(L)=e_p$. In Lean the first claim is the Mathlib lemma \decl{Nat.factorization_lcmUpto}.
+\end{proof}
+
+\begin{lemma}[\decl{mul_dvd_sq}, \decl{N}, \decl{N_cast}]\label{lem:N}
+For $1\le k,l\le n$, $kl$ divides $L^2$. For $1\le m\le n$ let
+\[
+  N(m)=\sum_{k=m}^n\sum_{l=m}^k\frac{L^2}{kl}\in\N .
+\]
+Then $N(m)=D\cdot r(n,m)$.
+\end{lemma}
+
+\begin{proof}
+$k\mid L$ and $l\mid L$ give $kl\mid L^2$, so every summand of $N(m)$ is a natural number. By Lemma~\ref{lem:explicit}, $D\,r(n,m)=nL^2\cdot\frac1n\sum_{k,l}\frac1{kl}=\sum_{k,l}\frac{L^2}{kl}$.
+\end{proof}
+
+\begin{lemma}[\decl{num_mul_eq}, \decl{den_dvd_of}, \decl{pow_dvd_den}]\label{lem:den}
+Let $q\in\Q$ and $M,D'\in\N$ with $M=D'q$. Then
+\begin{enumerate}
+\item[(i)] $|\num(q)|\cdot D'=M\cdot\den(q)$;
+\item[(ii)] $\den(q)\mid D'$;
+\item[(iii)] if $p$ is a prime with $p\nmid M$, then every prime power $p^k$ dividing $D'$ divides $\den(q)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) $\num(q)=q\,\den(q)$, so $\num(q)D'=\den(q)\,D'q=M\den(q)$ in $\Z$; take absolute values. (ii) By (i), $\den(q)$ divides $|\num(q)|\,D'$, and it is coprime to $|\num(q)|$, so $\den(q)\mid D'$. (iii) By (i), $p^k\mid D'\mid|\num(q)|\,D'=M\den(q)$, and $p^k$ is coprime to $M$ because $p\nmid M$, so $p^k\mid\den(q)$.
+\end{proof}
+
+The heart of the proof is the choice of a column for each prime.
+
+\begin{lemma}[\decl{p_dvd_term}, \decl{not_p_dvd_term}, \decl{exists_good}]\label{lem:column}
+Let $p$ be a prime, $e=e_p$, $c=\lfloor n/p^e\rfloor$ and $m_p=c\,p^e$. Then $1\le m_p\le n$ and $p\nmid N(m_p)$.
+\end{lemma}
+
+\begin{proof}
+Since $p^e\le n$, we have $c\ge1$, so $1\le m_p\le n$; also $n<(c+1)p^e$ by the definition of $c$. Write $m=m_p$ and split off the term $k=m$ (for which $l=m$ is the only choice):
+\[
+  N(m)=\frac{L^2}{m^2}+\sum_{k=m+1}^n\sum_{l=m}^k\frac{L^2}{kl}.
+\]
+We use three facts.
+
+(a) \emph{If $m<k\le n$, then $p^e\nmid k$.} Otherwise $k=jp^e$ with $cp^e<jp^e\le n<(c+1)p^e$, so $c<j<c+1$, which is impossible.
+
+(b) \emph{If $1\le k,l\le n$ and $k$, $l$ are not both multiples of $p^e$, then $p\mid L^2/(kl)$.} Put $t=L^2/(kl)\in\N$, and suppose $p\nmid t$. By Lemma~\ref{lem:val}, $p^{2e}\mid L^2=t\,kl$, and $p^{2e}$ is coprime to $t$, so $p^{2e}\mid kl$, that is, $v_p(k)+v_p(l)\ge2e$. Since $v_p(k)\le e$ and $v_p(l)\le e$ (Lemma~\ref{lem:val}), $v_p(k)=v_p(l)=e$, so $p^e$ divides both $k$ and $l$, a contradiction.
+
+(c) \emph{If $1\le m'\le n$ and $p^e\mid m'$, then $p\nmid L^2/m'^2$.} Otherwise $p\cdot p^e\cdot p^e$ divides $(L^2/m'^2)\cdot m'\cdot m'=L^2$, so $v_p(L^2)\ge2e+1$, contradicting $v_p(L^2)=2e$ (Lemma~\ref{lem:val}).
+
+By (a) and (b), $p$ divides every term of the double sum, and by (c), applied to $m'=m$, $p$ does not divide $L^2/m^2$. Hence $p\nmid N(m)$.
+\end{proof}
+
+When $p>n$ we have $e=0$, $c=n$ and $m_p=n$; then $N(n)=L^2/n^2$ is prime to $p$, and the lemma holds trivially.
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+\emph{$a(n)\mid D$.} For $1\le m\le n$, Lemma~\ref{lem:N} gives $N(m)=D\,r(n,m)$ with $N(m),D\in\N$, so $\den r(n,m)\mid D$ by Lemma~\ref{lem:den}(ii). Hence the least common multiple $a(n)$ divides $D$.
+
+\emph{$D\mid a(n)$.} It suffices to show that every prime power $p^k$ dividing $D$ divides $a(n)$ (Mathlib's \decl{Nat.dvd_iff_prime_pow_dvd_dvd}). Let $m_p$ be the column of Lemma~\ref{lem:column}. Then $N(m_p)=D\,r(n,m_p)$ and $p\nmid N(m_p)$, so $p^k\mid\den r(n,m_p)$ by Lemma~\ref{lem:den}(iii), and $\den r(n,m_p)\mid a(n)$ because $1\le m_p\le n$.
+
+The two natural numbers divide each other, so $a(n)=D=nL^2$ (this is the private lemma \decl{a_eq}). Dividing by $n^3$ and using $\mathrm{A002944}(n)\cdot n=L$ (\decl{A002944_mul}) gives $a(n)/n^3=(L/n)^2=\mathrm{A002944}(n)^2$; in Lean this last step is the statement file's \decl{statement_iff}, and the theorem is proved as \lstinline|result := statement_iff.2 fun _ hn => a_eq hn|.
+\end{proof}
+
+\begin{example}
+For $n=4$: $L=12$, $D=576$, and row $4$ of $A^3$ is $\frac{415}{576},\frac{115}{576},\frac{37}{576},\frac1{64}$, so $a(4)=576$. For $p=3$: $e_3=1$, $m_3=3$, and $N(3)=\frac{144}{9}+\frac{144}{12}+\frac{144}{16}=16+12+9=37$, which is prime to $3$; so $3^2\mid\den r(4,3)=576$. For $p=2$: $e_2=2$, $m_2=4$, $N(4)=144/16=9$ is odd, and $2^6\mid\den r(4,4)=64$.
+\end{example}
+
+\begin{remark}
+The proof shows more: for each prime $p$, the $p$-part of $\den r(n,m_p)$ is exactly $p^{v_p(n)+2e_p}$, the $p$-part of $D$. The column $m_p$ depends on $p$, and a fixed column such as $m=1$ need not carry all primes: for $n=14$ an exact computation (not part of the formal proof) gives $\den r(14,1)=D/7$, while the column $m_7=14$ carries the factor $7^3$ of $D$. The same computation shows that for every $n\le80$ some single column has denominator exactly $D$ (for $n=14$, the column $m=8$); we neither prove nor need this.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A119936.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file (Section~\ref{sec:statement}) and \path{lean/Math0/Audit.lean}. The main declaration is \code{theorem result : statement} in the namespace \decl{Math0.Frontier.A119936}. The lemmas of Section~\ref{sec:proof} correspond to Lean declarations as follows: Lemma~\ref{lem:explicit} is \decl{r_eq_sum} and \decl{r_eq_explicit} (statement file); Lemma~\ref{lem:val} is \decl{factorization_lcmUpTo} (a wrapper of Mathlib's \decl{Nat.factorization_lcmUpto}) and \decl{factorization_le_log}; Lemma~\ref{lem:N} is \decl{mul_dvd_sq}, the definition \decl{N} and \decl{N_cast}; Lemma~\ref{lem:den} is \decl{num_mul_eq}, \decl{den_dvd_of} and \decl{pow_dvd_den}; Lemma~\ref{lem:column} is \decl{exists_good}, with facts (b) and (c) as \decl{p_dvd_term} and \decl{not_p_dvd_term}; and the integer identity $a(n)=nL^2$ is \decl{a_eq}. Apart from \decl{r_eq_sum} and \decl{r_eq_explicit}, these are private declarations of the proof file. The denominator arguments use Mathlib's \decl{Rat.reduced} (coprimality of numerator and denominator) and \decl{Rat.mul_den_eq_num}. The proof involves no finite computation; the only kernel evaluations are the data checks of the statement file described in Section~\ref{sec:statement}. Neither file uses \decl{sorry}, \decl{native_decide}, \decl{set_option} or new axioms.
+
+\subsection*{Audit}
+The proof file ends with the command
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A119936.result Math0.Statements.A119936.statement
+\end{lstlisting}
+The command \decl{#math0_settles} (defined in \path{lean/Math0/Audit.lean}) is used for statements that math0 formalizes itself. It fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, which excludes \decl{sorryAx}, the axiom \decl{Lean.ofReduceBool} introduced by \decl{native_decide}, and custom axioms; and (3) the type of \decl{result} is syntactically the constant \decl{statement} or its negation, up to metadata annotations, with no unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A119936.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A119936.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A119936.result' proves 'Math0.Statements.A119936.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}. The repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}; this result does not use it, since A119936 is not among its statements. To reproduce, run \path{scripts/verify.sh} from the repository root. It builds all math0 results with \texttt{lake build}, which re-runs every audit command, and it checks that the pinned dependencies have no local modifications. To check this file alone, build the statement module (\texttt{lake build Math0.Statements.OEIS.A119936}; the kernel check \decl{a_data} takes about $75$\,s of CPU time) and then run \texttt{lake env lean Math0/Frontier/OEIS/A119936.lean} in \path{lean/}, which takes about $20$\,s.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{Cr}
+S.~Crowley, \emph{Two new zeta constants: fractal string, continued fraction, and hypergeometric aspects of the Riemann zeta function}, arXiv:1207.1126, 2012.
+
+\bibitem{FC}
+M.~Firsching et al., \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026; \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Fr}
+S.~Fried, \emph{Proofs of some conjectures from the OEIS}, arXiv:2410.07237, 2024.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput.\ Sci.\ \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{St}
+R.~Stephan, \emph{Prove or disprove. 100 conjectures from the OEIS}, arXiv:math/0409509, 2004.
+
+\bibitem{A002944}
+The OEIS Foundation Inc., \url{https://oeis.org/A002944}, $a(n)=\mathrm{LCM}(1,2,\dots,n)/n$; entry by N.~J.~A. Sloane.
+
+\bibitem{A027447}
+The OEIS Foundation Inc., \url{https://oeis.org/A027447}, triangle read by rows: cube of the lower triangular mean matrix; entry by O.~G\'erard.
+
+\bibitem{A027451}
+The OEIS Foundation Inc., \url{https://oeis.org/A027451}, first diagonal of A027447; entry by O.~G\'erard, formula by J.~W. Meijer (Jul.~21, 2009).
+
+\bibitem{A119932}
+The OEIS Foundation Inc., \url{https://oeis.org/A119932}, triangle of denominators of the cube of a certain lower triangular matrix; entry by W.~Lang (Jul.~20, 2006).
+
+\bibitem{A119935}
+The OEIS Foundation Inc., \url{https://oeis.org/A119935}, triangle of numerators of the cube of a certain lower triangular matrix; entry by W.~Lang (Jul.~20, 2006).
+
+\bibitem{A119936}
+The OEIS Foundation Inc., \url{https://oeis.org/A119936}, least common multiple of denominators of the rows of the triangle of rationals A119935/A119932; entry by W.~Lang (Jul.~20, 2006); revision \#22, Nov.~5, 2019.
+
+\bibitem{A120078}
+The OEIS Foundation Inc., \url{https://oeis.org/A120078} and \url{https://oeis.org/A120079}; entries by W.~Lang (Jul.~20, 2006).
+
+\end{thebibliography}
+}
+\end{document}

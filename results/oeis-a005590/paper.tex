@@ -1,0 +1,423 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw,decreasing_by,all_goals},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {∀}{{$\forall$}}1 {↔}{{$\leftrightarrow$}}1
+    {¬}{{$\neg$}}1 {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {→}{{$\to$}}1 {≤}{{$\le$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\st}{\operatorname{st}}
+\newcommand{\Fib}{\mathcal{F}}
+
+\title[Zeros of OEIS A005590 at multiples of three]{For $a(0)=0$, $a(1)=1$, $a(2n)=a(n)$, $a(2n+1)=a(n+1)-a(n)$, one has $a(3n)=0$ exactly for fibbinary $n$: Stephan's conjecture for OEIS A005590}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 18, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $a\colon\N\to\Z$ be defined by $a(0)=0$, $a(1)=1$, $a(2n)=a(n)$ and $a(2n+1)=a(n+1)-a(n)$; this is OEIS A005590, the analogue of Stern's diatomic sequence with a minus sign.
+We prove the conjecture recorded by Ralf Stephan in the OEIS in 2003 that $a(3n)=0$ if and only if $n$ is a fibbinary number, that is, the binary expansion of $n$ has no two adjacent ones (OEIS A003714).
+The proof follows the pair $(a(m),a(m+1))$ along the binary expansion of $m$ by a three-state automaton, whose absorbing state carries a linear invariant that guarantees $a(m)\ne0$. As a by-product, which we prove here but did not formalize, the zeros of $a$ are exactly the numbers $3n$ with $n$ fibbinary.
+To our knowledge the result is new, although the argument is elementary; the OEIS entry still lists the statement as a conjecture.
+The theorem is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, whose definitions are checked by the kernel against the listed OEIS terms; this statement is not part of the formal-conjectures repository.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+The sequence A005590 of the OEIS \cite{A005590}, with offset $0$, is defined by
+\[
+  a(0)=0,\qquad a(1)=1,\qquad a(2n)=a(n),\qquad a(2n+1)=a(n+1)-a(n)\qquad(n\ge0).
+\]
+Its first terms are $0,1,1,0,1,-1,0,1,1,-2,-1,1,0,1,1,0,1,-3,\dots$.
+Replacing the minus sign by a plus sign gives Stern's diatomic sequence A002487 \cite{A002487}.
+The OEIS entry cites work of Reznick \cite{Rez84,Rez85} and links an annotated scan of his 1984 abstract \cite{Rez84}.
+That abstract announces a closed form for $a(n)$ in terms of the binary expansion of $n$ and a combinatorial interpretation (without stating either), gives the generating function $x\prod_{k\ge0}(1+x^{2^k}-x^{2^{k+1}})$, states that $a(n)\ge1$ if and only if the binary expansion of $n$ has an odd number of ones, and gives $\limsup_n \log|a(n)|/\log n=\log\frac{3+\sqrt{13}}{2}\big/\log 16=0.4309\ldots$; the OEIS entry records this growth rate, attributed to Reznick.
+Allouche and Shallit \cite[Example~7]{AS} use the sequence as an example of a $2$-regular sequence, Stephan added the generating function to the OEIS entry in April 2003 (see also \cite{St03}), and Allouche and Mend\`es France \cite{AMF} relate the sequence to the Thue--Morse sequence.
+
+On May~2, 2003, Ralf Stephan added to the FORMULA section of A005590 the conjecture that $a(3n)=0$ if and only if $n$ belongs to A003714 \cite{A003714}, the \emph{fibbinary numbers} $0,1,2,4,5,8,9,10,16,\dots$, whose binary expansions contain no two adjacent ones.
+We prove this conjecture (Theorem~\ref{thm:main}).
+
+\subsection*{Method}
+The pair $v(m)=(a(m),a(m+1))$ is obtained from $v(0)=(0,1)$ by applying two linear maps along the binary digits of $m$, read from the most significant one.
+The pair stays in $\{(0,1),(1,1)\}$ until a digit $0$ is read at $(1,1)$; from then on a linear condition holds that forces $a(m)\ne0$.
+Hence $a(m)=0$ exactly when a three-state automaton accepts $m$ (Lemma~\ref{lem:inv} and Corollary~\ref{cor:zero}); an induction on $n$ shows that it accepts $3n$ exactly when $n$ is fibbinary (Lemma~\ref{lem:three}).
+The automaton accepts precisely the binary words in $(0\,|\,11)^*$, so the zeros of $a$ are exactly the numbers $3n$ with $n$ fibbinary, which form A277335 \cite{A277335} (Remark~\ref{rem:zeroset}).
+
+\subsection*{Status and prior work}
+The statement is still marked ``Conjecture'' in A005590 (revision \#97, November~5, 2025); the entry's edit notes record only ``More terms'' and ``Signs corrected'' (both 2003).
+The set $\{3n: n\text{ fibbinary}\}$ appears in the OEIS as A277335 (A.~Karttunen, 2016; ``numbers where all 1-bits occur in runs of even length'') and, with its positive elements grouped by bit length, as A290258 \cite{A290258} (E.~Deutsch, 2017), but neither entry mentions A005590, and none of the entries cross-referencing A005590 that the referees read mentions its zeros.
+The math0 referees found no proof or counterexample in the literature they checked.
+The conjecture is not among Stephan's \emph{100 conjectures from the OEIS} \cite{St04}, and \cite{St03} lists A005590 only in a table of generating functions.
+The paper \cite{AS} treats the sequence only as an example of $2$-regularity, and \cite{AMF} says nothing about its zeros.
+Work on Stern-type sequences by Northshield \cite{No}, Defant \cite{De} and Reznick \cite{Rez06} does not address it, and Fried's recent paper proving OEIS conjectures \cite{Fr} does not mention A005590.
+It is not among the OEIS statements of the formal-conjectures repository \cite{FC}, nor among the $492$ OEIS conjectures, formalized in Lean by Tsoukalas et al.\ \cite{APN}, that make up the OEIS Open benchmark \cite{Ad}.
+Searches of arXiv, MathOverflow, Mathematics Stack Exchange and the SeqFan mailing list found nothing further.
+We therefore classify the result as \emph{new}, with two caveats.
+First, the argument is elementary (a finite automaton and an induction), and the description of the zero set may be known informally.
+Second, Reznick's 1984 abstract \cite{Rez84}, which we read in the annotated scan linked from the OEIS entry, says nothing about the zeros of $a$, but it announces a closed form for $a(n)$ in terms of the binary expansion of $n$ without stating it. In his 1991 letter on the same scan Reznick calls the abstract the only published reference, and we found no later publication of that closed form, which may well yield the description of the zero set. The OEIS entry, which links that scan, still lists the statement as a conjecture.
+
+\section{Statement}\label{sec:statement}
+
+\begin{definition}\label{def:main}
+Let $a\colon\N\to\Z$ be the sequence of the introduction. For $n\in\N$ write $b_i(n)\in\{0,1\}$ for the $i$-th binary digit of $n$, so that $n=\sum_{i\ge0}b_i(n)2^i$. We call $n$ \emph{fibbinary}, and write $\Fib(n)$, if there is no $i\ge0$ with $b_i(n)=b_{i+1}(n)=1$.
+\end{definition}
+
+The FORMULA section of A005590 \cite{A005590} contains, verbatim:
+\begin{quote}
+{\small\texttt{Conjecture: a(3n)=0 iff n in A003714. - \_Ralf Stephan\_, May 02 2003}}
+\end{quote}
+Both A005590 and A003714 have offset $0$, and A003714 is described as the ``numbers whose binary representation contains no two adjacent 1's'' \cite{A003714}; $0$ belongs to it.
+
+\begin{theorem}\label{thm:main}
+For every $n\ge0$, $a(3n)=0$ if and only if $n$ is fibbinary.
+\end{theorem}
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in the file \path{lean/Math0/Statements/OEIS/A005590.lean}. It was reviewed for fidelity and frozen (SHA-256 \texttt{55c35a6c\ldots 288f}) before any proof attempt. The definitions of the sequence, of the fibbinary property and of the statement read as follows (verbatim; the import, docstrings, blank lines, all theorems, including the two data checks, and the decidability instance are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A005590
+def aux : ℕ → ℕ → ℤ
+  | 0, _ => 0
+  | fuel + 1, n =>
+    if n ≤ 1 then (n : ℤ)
+    else if n % 2 = 0 then aux fuel (n / 2)
+    else aux fuel (n / 2 + 1) - aux fuel (n / 2)
+def a (n : ℕ) : ℤ := aux (n + 1) n
+def IsFibbinary (n : ℕ) : Prop :=
+  ∀ i : ℕ, ¬ (n.testBit i = true ∧ n.testBit (i + 1) = true)
+def statement : Prop :=
+  ∀ n : ℕ, a (3 * n) = 0 ↔ IsFibbinary n
+end Math0.Statements.A005590
+\end{lstlisting}
+The encoding matches Definition~\ref{def:main}.
+The values are signed, so \decl{a} takes values in $\Z$ and the subtraction is exact.
+The function \decl{aux} runs the OEIS recursion with a fuel argument, so that the kernel can evaluate it; with fuel $n+1$ the fuel is never exhausted, because each recursive call is on a smaller argument ($\lfloor n/2\rfloor<n$ for even $n\ge2$ and $\lfloor n/2\rfloor+1<n$ for odd $n\ge3$).
+Among other lemmas, the file proves the following (statements shown, proofs omitted); \decl{a_zero}, \decl{a_one}, \decl{a_even} and \decl{a_odd} are the four defining equations, for every $n$, and these determine the sequence:
+\begin{lstlisting}
+theorem aux_eq_aux : ∀ (f g n : ℕ), n < f → n < g → aux f n = aux g n
+theorem a_zero : a 0 = 0
+theorem a_one : a 1 = 1
+theorem a_even (n : ℕ) : a (2 * n) = a n
+theorem a_odd (n : ℕ) : a (2 * n + 1) = a (n + 1) - a n
+theorem isFibbinary_iff_land (n : ℕ) : IsFibbinary n ↔ n &&& (n >>> 1) = 0
+\end{lstlisting}
+\decl{IsFibbinary} is the literal reading of the description of A003714 quoted above: \texttt{Nat.testBit n i} is $b_i(n)$, and bits beyond the length of the binary expansion are $0$.
+The lemma \decl{isFibbinary_iff_land} gives the usual bitwise test, which makes the predicate decidable.
+Two data lemmas, proved by \texttt{decide +kernel}, compare the definitions with the OEIS: \decl{a_data} checks all $105$ listed terms $a(0),\dots,a(104)$ of A005590, and \decl{fibbinary_data} checks that the numbers $n<265$ with \texttt{IsFibbinary n} are exactly the $61$ listed terms $0,1,2,\dots,264$ of A003714.
+The statement quantifies over all $n\in\N$ and adds no hypotheses.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A005590.lean}; the name of the corresponding Lean declaration is given with each step. For $m\ge0$ put
+\[
+  v(m)=(a(m),a(m+1))\in\Z^2 .
+\]
+
+\begin{lemma}\label{lem:vec}
+For all $m\ge0$, if $v(m)=(x,y)$ then $v(2m)=(x,\,y-x)$ and $v(2m+1)=(y-x,\,y)$.
+\end{lemma}
+
+\begin{proof}
+By \decl{a_even} and \decl{a_odd}, $a(2m)=a(m)=x$ and $a(2m+1)=a(m+1)-a(m)=y-x$; by \decl{a_even} at $m+1$, $a(2m+2)=a(m+1)=y$.
+\end{proof}
+
+\begin{definition}[the automaton, \decl{st}]\label{def:st}
+Define $\delta_0,\delta_1\colon\{0,1,2\}\to\{0,1,2\}$ by
+\[
+\begin{array}{c|ccc}
+ s & 0 & 1 & 2\\\hline
+ \delta_0(s) & 0 & 2 & 2\\
+ \delta_1(s) & 1 & 0 & 2
+\end{array}
+\]
+and $\st\colon\N\to\{0,1,2\}$ by $\st(0)=0$ and $\st(m)=\delta_{m\bmod 2}(\st(\lfloor m/2\rfloor))$ for $m\ge1$.
+\end{definition}
+
+Since $\delta_0(0)=0$, the recursion also holds at $m=0$, so
+\begin{equation}\label{eq:st}
+  \st(2k)=\delta_0(\st(k)),\qquad \st(2k+1)=\delta_1(\st(k))\qquad(k\ge0)
+\end{equation}
+(\decl{st_even}, \decl{st_odd}).
+Thus $\st(m)$ is the state reached from state $0$ by reading the binary digits of $m$ from the most significant one; leading zeros do not matter.
+In Lean, \decl{st} is a function $\N\to\N$ defined by well-founded recursion, with the recursive call at $\lfloor m/2\rfloor<m$, and $\delta_0,\delta_1$ are written as \texttt{if st k = 0 then 0 else 2} and \texttt{if st k = 0 then 1 else if st k = 1 then 0 else 2}; these agree with the table on $\{0,1,2\}$, and $\st(m)\le2$ for all $m$ by Corollary~\ref{cor:zero}.
+
+Let $P(x,y)$ be the condition
+\[
+  P(x,y)\colon\quad (0<x\ \text{and}\ y<x)\quad\text{or}\quad(x<0\ \text{and}\ x<y).
+\]
+Equivalently, $x\ne0$ and $y/x<1$. Clearly $P(x,y)$ implies $x\ne0$.
+
+\begin{lemma}[\decl{Inv}, \decl{inv_all}]\label{lem:inv}
+For every $m\ge0$ one of the following holds:
+\begin{enumerate}
+\item[(I0)] $\st(m)=0$ and $v(m)=(0,1)$;
+\item[(I1)] $\st(m)=1$ and $v(m)=(1,1)$;
+\item[(I2)] $\st(m)=2$ and $P(v(m))$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+By strong induction on $m$. For $m=0$ we have $\st(0)=0$ and $v(0)=(a(0),a(1))=(0,1)$ by \decl{a_zero} and \decl{a_one}, so (I0) holds.
+
+Let $m=2k$ with $k\ge1$. Then $k<m$, so the claim holds for $k$, and by Lemma~\ref{lem:vec} and \eqref{eq:st}, $v(m)=(x,y-x)$ and $\st(m)=\delta_0(\st(k))$, where $(x,y)=v(k)$.
+If $k$ satisfies (I0), then $v(m)=(0,1)$ and $\st(m)=0$: (I0).
+If $k$ satisfies (I1), then $v(m)=(1,0)$ and $\st(m)=2$; since $1>0$ and $0<1$, $P(1,0)$ holds: (I2).
+If $k$ satisfies (I2), then $\st(m)=2$. If $0<x$ and $y<x$, then $y-x<0<x$, so $P(x,y-x)$ holds by its first alternative; if $x<0$ and $x<y$, then $y-x>0>x$, so it holds by its second alternative. Hence (I2).
+
+Let $m=2k+1$ with $k\ge0$. Then $k<m$, and $v(m)=(y-x,y)$, $\st(m)=\delta_1(\st(k))$, where $(x,y)=v(k)$.
+If $k$ satisfies (I0), then $v(m)=(1,1)$ and $\st(m)=1$: (I1).
+If $k$ satisfies (I1), then $v(m)=(0,1)$ and $\st(m)=0$: (I0).
+If $k$ satisfies (I2), then $\st(m)=2$. If $0<x$ and $y<x$, then $y-x<0$ and $y-x<y$, so $P(y-x,y)$ holds by its second alternative; if $x<0$ and $x<y$, then $y-x>0$ and $y<y-x$, so it holds by its first alternative. Hence (I2).
+\end{proof}
+
+In Lean the two cases from (I2) are closed by \decl{omega}, a decision procedure for linear arithmetic over $\Z$.
+
+\begin{corollary}[\decl{a_eq_zero_iff}, \decl{st_le}]\label{cor:zero}
+For every $m\ge0$ we have $\st(m)\le2$, and $a(m)=0$ if and only if $\st(m)=0$.
+\end{corollary}
+
+\begin{proof}
+In case (I0) of Lemma~\ref{lem:inv}, $\st(m)=0$ and $a(m)=0$. In case (I1), $\st(m)=1$ and $a(m)=1\ne0$. In case (I2), $\st(m)=2$ and $a(m)\ne0$ because $P(v(m))$ holds.
+\end{proof}
+
+\begin{lemma}[\decl{fib_iff}, \decl{fib_zero}]\label{lem:fib}
+$\Fib(0)$ holds, and for every $n\ge0$,
+\[
+  \Fib(n)\iff \neg\bigl(n\equiv1\ (\mathrm{mod}\ 2)\ \text{and}\ \lfloor n/2\rfloor\equiv1\ (\mathrm{mod}\ 2)\bigr)\ \text{and}\ \Fib(\lfloor n/2\rfloor).
+\]
+Consequently, for every $k\ge0$: $\Fib(2k)\iff\Fib(k)$, $\Fib(4k+1)\iff\Fib(k)$, and $\Fib(4k+3)$ is false.
+\end{lemma}
+
+\begin{proof}
+All binary digits of $0$ vanish, so $\Fib(0)$. For the equivalence we use $b_0(n)=n\bmod2$ and $b_{i+1}(n)=b_i(\lfloor n/2\rfloor)$ (in Lean, \decl{Nat.testBit_zero} and \decl{Nat.testBit_succ}).
+The pair of positions $(0,1)$ of $n$ consists of two ones exactly when $n$ and $\lfloor n/2\rfloor$ are both odd, and for $i\ge0$ the pair $(i+1,i+2)$ of $n$ is the pair $(i,i+1)$ of $\lfloor n/2\rfloor$. This proves the equivalence.
+For $n=2k$, $n$ is even and $\lfloor n/2\rfloor=k$, so $\Fib(2k)\iff\Fib(k)$. For $n=4k+1$, $\lfloor n/2\rfloor=2k$ is even, so $\Fib(4k+1)\iff\Fib(2k)\iff\Fib(k)$. For $n=4k+3$, both $n$ and $\lfloor n/2\rfloor=2k+1$ are odd, so $\Fib(4k+3)$ fails.
+\end{proof}
+
+These consequences amount to the description, recorded in A003714 \cite{A003714}, of the fibbinary numbers as the smallest set that contains $0$ and contains $2x$ and $4x+1$ for each of its elements $x$.
+
+\begin{lemma}[\decl{st_three_mul}]\label{lem:three}
+For every $n\ge0$, $\st(3n)=0$ if and only if $\Fib(n)$.
+\end{lemma}
+
+\begin{proof}
+By strong induction on $n$. For $n=0$ both sides hold, since $\st(0)=0$ and $\Fib(0)$. Let $n\ge1$; then $n$ is even, or $n\equiv1$, or $n\equiv3\pmod 4$.
+
+\emph{Case $n=2k$.} Then $1\le k<n$, and $3n=2\cdot(3k)$, so $\st(3n)=\delta_0(\st(3k))$ by \eqref{eq:st}. Since $\delta_0(s)=0$ exactly for $s=0$, we get $\st(3n)=0\iff\st(3k)=0\iff\Fib(k)\iff\Fib(n)$, by the induction hypothesis and Lemma~\ref{lem:fib}.
+
+\emph{Case $n=4k+1$.} Then $k<n$, and
+\[
+  3n=12k+3=2\bigl(2\cdot(3k)+1\bigr)+1,
+\]
+so $\st(3n)=\delta_1(\delta_1(\st(3k)))$ by applying \eqref{eq:st} twice. The map $\delta_1$ swaps $0$ and $1$ and fixes $2$, so $\delta_1\circ\delta_1$ is the identity on $\{0,1,2\}$, and $\st(3k)\in\{0,1,2\}$ by Corollary~\ref{cor:zero}. Hence $\st(3n)=\st(3k)$, and $\st(3n)=0\iff\Fib(k)\iff\Fib(n)$.
+
+\emph{Case $n=4k+3$.} Here
+\[
+  3n=12k+9=2\bigl(2\cdot(3k+2)\bigr)+1,
+\]
+so $\st(3n)=\delta_1(\delta_0(\st(3k+2)))$. The map $\delta_0$ takes values in $\{0,2\}$, and $\delta_1(0)=1$, $\delta_1(2)=2$, so $\st(3n)\ne0$. By Lemma~\ref{lem:fib}, $\Fib(n)$ is false too. (The induction hypothesis is not needed in this case.)
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+By Corollary~\ref{cor:zero} applied to $m=3n$ and Lemma~\ref{lem:three}, $a(3n)=0\iff\st(3n)=0\iff\Fib(n)$.
+\end{proof}
+
+\begin{remark}[the zero set of $a$; not formalized]\label{rem:zeroset}
+By the transition table, the binary words that lead from state $0$ to state $0$ are exactly the words in $(0\,|\,11)^*$, and those that lead to state $1$ are exactly the words in $(0\,|\,11)^*1$: in states $0$ and $1$ the automaton reads blocks $0$ and $11$, and a $0$ read in state $1$ leads to the absorbing state $2$. By Corollary~\ref{cor:zero} and Lemma~\ref{lem:inv}, $a(m)=0$ if and only if the binary expansion of $m$ lies in $(0\,|\,11)^*$, and $a(m)=1$ whenever it lies in $(0\,|\,11)^*1$.
+A word in $(0\,|\,11)^*$ whose blocks $11$ occupy the positions $\{j,j+1\}$, $j\in J$, has value $\sum_{j\in J}3\cdot2^j=3n$ with $n=\sum_{j\in J}2^j$, and $n$ is fibbinary because the blocks are disjoint, so that distinct elements of $J$ differ by at least $2$. Conversely, if $n=\sum_{j\in J}2^j$ is fibbinary, the sets $\{j,j+1\}$, $j\in J$, are pairwise disjoint, so $3n=\sum_{j\in J}(2^j+2^{j+1})$ has binary expansion in $(0\,|\,11)^*$. Hence $\{m\ge0: a(m)=0\}=\{3n: n\ \text{fibbinary}\}$, which is the sequence A277335 \cite{A277335}; this sharpens Theorem~\ref{thm:main}, since it shows that $a(m)\ne0$ whenever $3\nmid m$.
+For example, $2^k-1$ has binary expansion $1^k$, so $a(2^k-1)$ is $0$ for even $k$ and $1$ for odd $k$, in agreement with formulas recorded in A005590 by C.~W. Wu.
+This remark is not part of the Lean development: the Lean proof establishes Corollary~\ref{cor:zero} internally but does not formalize the description of the accepted words. We checked the remark, and Lemma~\ref{lem:inv}, numerically for all $m<2^{18}$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A005590.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A005590.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A005590.result}, of type \decl{Math0.Statements.A005590.statement}. The automaton, the invariant and the end of the file are, verbatim (imports, docstrings, blank lines, the \texttt{namespace} and \texttt{open} lines and all lemmas omitted):
+\begin{lstlisting}
+private def st : ℕ → ℕ
+  | 0 => 0
+  | n + 1 =>
+    if (n + 1) % 2 = 0 then (if st ((n + 1) / 2) = 0 then 0 else 2)
+    else (if st ((n + 1) / 2) = 0 then 1 else if st ((n + 1) / 2) = 1 then 0 else 2)
+  decreasing_by all_goals omega
+private def Inv (m : ℕ) : Prop :=
+  (st m = 0 ∧ a m = 0 ∧ a (m + 1) = 1) ∨ (st m = 1 ∧ a m = 1 ∧ a (m + 1) = 1) ∨
+    (st m = 2 ∧ ((0 < a m ∧ a (m + 1) < a m) ∨ (a m < 0 ∧ a m < a (m + 1))))
+theorem result : statement := by
+  intro n
+  rw [a_eq_zero_iff, st_three_mul]
+end Math0.Frontier.A005590
+#math0_settles Math0.Frontier.A005590.result Math0.Statements.A005590.statement
+\end{lstlisting}
+The proof file uses no \texttt{decide} or \texttt{native\_decide} tactic and no \texttt{set\_option}. From the statement file it uses \decl{a_zero}, \decl{a_one}, \decl{a_even} and \decl{a_odd}; the first two, and the case $n=0$ of \decl{a_odd}, are proved there by \texttt{decide +kernel}, i.e.\ by evaluation in the kernel, which adds no axioms.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (rejecting \decl{sorryAx}, \decl{Lean.ofReduceBool} from \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically the statement or its negation, up to metadata, with no unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A005590.statement' depends on axioms [propext]
+math0 audit: 'Math0.Frontier.A005590.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A005590.result' proves 'Math0.Statements.A005590.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A005590.lean} in the directory \path{lean}; this takes under a minute on our machine, most of it spent loading Mathlib.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{Ad}
+T.~Adamczewski, \emph{OEIS Open: How many conjectures can language models turn into theorems?}, arXiv:2608.11941, 2026.
+
+\bibitem{AMF}
+J.-P. Allouche and M.~Mend\`es France, \emph{Lacunary formal power series and the Stern--Brocot sequence}, Acta Arith.\ \textbf{159} (2013), 47--61; arXiv:1202.0211 (first version titled \emph{Stern--Brocot polynomials and power series}).
+
+\bibitem{AS}
+J.-P. Allouche and J.~Shallit, \emph{The ring of $k$-regular sequences}, Theoret.\ Comput.\ Sci.\ \textbf{98} (1992), 163--197.
+
+\bibitem{De}
+C.~Defant, \emph{Upper bounds for Stern's diatomic sequence and related sequences}, arXiv:1506.07824, 2015.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Fr}
+S.~Fried, \emph{Further proofs of conjectures from the OEIS}, arXiv:2607.24832, 2026.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{No}
+S.~Northshield, \emph{Three analogues of Stern's diatomic sequence}, arXiv:1503.03433, 2015.
+
+\bibitem{Rez84}
+B.~Reznick, \emph{A new sequence with many properties}, Abstract 809-10-185, Abstracts Amer.\ Math.\ Soc.\ \textbf{5} (1984), 16. Annotated scan, with a letter to N.~J.~A. Sloane (June~3, 1991), at \url{https://oeis.org/A005590/a005590.png}.
+
+\bibitem{Rez85}
+B.~Reznick, \emph{Some extremal problems for continued fractions}, Illinois J. Math.\ \textbf{29} (1985), 261--279.
+
+\bibitem{Rez06}
+B.~Reznick, \emph{Regularity properties of the Stern enumeration of the rationals}, J. Integer Seq.\ \textbf{11} (2008), Article~08.4.1; arXiv:math/0610601.
+
+\bibitem{St03}
+R.~Stephan, \emph{Divide-and-conquer generating functions. Part I. Elementary sequences}, arXiv:math/0307027, 2003.
+
+\bibitem{St04}
+R.~Stephan, \emph{Prove or disprove. 100 conjectures from the OEIS}, arXiv:math/0409509, 2004.
+
+\bibitem{APN}
+G.~Tsoukalas et al., \emph{Advancing Mathematics Research with AI-Driven Formal Proof Search}, arXiv:2605.22763, 2026.
+
+\bibitem{A002487}
+The OEIS Foundation Inc., \url{https://oeis.org/A002487} (Stern's diatomic series), entry by N.~J.~A. Sloane.
+
+\bibitem{A003714}
+The OEIS Foundation Inc., \url{https://oeis.org/A003714} (fibbinary numbers), entry by N.~J.~A. Sloane.
+
+\bibitem{A005590}
+The OEIS Foundation Inc., \url{https://oeis.org/A005590}, entry by N.~J.~A. Sloane; conjecture by R.~Stephan (May 2, 2003); revision \#97, Nov.~5, 2025.
+
+\bibitem{A277335}
+The OEIS Foundation Inc., \url{https://oeis.org/A277335}, entry by A.~Karttunen (2016).
+
+\bibitem{A290258}
+The OEIS Foundation Inc., \url{https://oeis.org/A290258}, entry by E.~Deutsch (2017).
+
+\end{thebibliography}
+}
+
+\end{document}

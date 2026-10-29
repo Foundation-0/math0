@@ -1,0 +1,383 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8, upquote=true,
+  literate={ℕ}{{$\mathbb{N}$}}1 {∀}{{$\forall$}}1 {↔}{{$\leftrightarrow$}}1
+    {¬}{{$\neg$}}1 {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {→}{{$\to$}}1 {≤}{{$\le$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\DeclareMathOperator{\ord}{ord}
+
+\title[Repunit residues and long period primes]{The repunits $R_1,\dots,R_n$ leave exactly $n-1$ distinct residues modulo $n$ if and only if $n$ is a long period prime}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 18, 2026}
+
+\begin{document}
+\begin{abstract}
+For $n\ge1$ let $a(n)$ be the number of distinct remainders of the repunits $R_k=(10^k-1)/9$, $1\le k\le n$, upon division by $n$; this is OEIS A335012.
+We prove the conjecture recorded in that entry by Sen-Peng Eu (2020) that $a(n)=n-1$ if and only if $n$ is a long period prime, that is, $n$ is prime and the decimal expansion of $1/n$ has period $n-1$ (OEIS A006883, which includes $2$).
+The proof is elementary: it uses the periodicity of repunits modulo $n$, the congruence $R_k\equiv k\pmod 3$, and Euler's theorem.
+To our knowledge it is the first complete proof; the OEIS entry still lists the statement as a conjecture, and the case $\gcd(n,30)=1$ follows readily from a formula stated without proof by Robert Israel in the same entry.
+The theorem is verified in Lean~4 with Mathlib against a statement that math0 formalized from the OEIS entry, whose definitions are checked by the kernel against the listed OEIS terms; this statement is not part of the formal-conjectures repository.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For $k\ge0$ let $R_k=(10^k-1)/9$ be the $k$-th repunit, so $R_1=1$, $R_2=11$, $R_3=111$, and so on (OEIS A002275 \cite{A002275}).
+The sequence A335012 of the OEIS \cite{A335012}, submitted by Sen-Peng Eu on May~19, 2020, has offset $1$ and is defined by
+\[
+  a(n)=\#\{\,R_k \bmod n \;:\; 1\le k\le n\,\},
+\]
+the ``number of different remainders when the first $n$ terms of $1, 11, 111, 1111, \dots$ are divided by $n$''.
+For example $a(4)=2$, since $1,11,111,1111$ leave the remainders $1,3,3,3$ modulo $4$.
+The sequence begins
+\[
+  1, 1, 3, 2, 1, 3, 6, 3, 9, 1, 2, 4, 6, 6, 3, 4, 16, 9, 18, 2, 6, 2, 22, \dots
+\]
+Since there are only $n$ residues modulo $n$, $a(n)\le n$.
+
+A prime $p$ is a \emph{long period prime} if the decimal expansion of $1/p$ has period $p-1$ (OEIS A006883 \cite{A006883}).
+By the convention stated in A006883, $2$ is a long period prime, because $1/2=0.5000\ldots$ is eventually periodic with period $1=2-1$; the related sequence A001913 \cite{A001913} of full reptend primes, the primes with primitive root $10$, omits $2$.
+For a prime $p\notin\{2,5\}$ the period of $1/p$ equals the multiplicative order $\ord_p(10)$ of $10$ modulo $p$ \cite[Ch.~IX]{HW}, so $p$ is a long period prime exactly when $10$ is a primitive root modulo $p$ (see also \cite{MW}).
+Throughout, for $n\ge1$, $\ord_n(10)$ denotes the least $m\ge1$ with $10^m\equiv1\pmod n$; it exists if and only if $\gcd(n,10)=1$, and when it does not exist an equation $\ord_n(10)=n-1$ is regarded as false (this agrees with Mathlib's convention, see Section~\ref{sec:statement}).
+The primes $3$ and $5$ are not long period primes, since $1/3$ and $1/5$ have period $1$.
+The long period primes begin $2,7,17,19,23,29,47,59,61,97,\dots$, and the values of $a$ listed above have $a(n)=n-1$ exactly at $n=2,7,17,19,23$.
+The COMMENTS section of A335012 contains the following conjecture, which we prove.
+
+\begin{theorem}\label{thm:main}
+For every integer $n\ge1$, $a(n)=n-1$ if and only if $n$ is a long period prime, that is, $n$ is prime and either $n=2$ or $\ord_n(10)=n-1$.
+\end{theorem}
+
+We prove Theorem~\ref{thm:main} in Section~\ref{sec:proof} and verify it in Lean~4 (Section~\ref{sec:lean}).
+
+\subsection*{Status and prior work}
+The current revision of A335012 (revision \#31, March~12, 2026) still states the claim as a conjecture, and the entry has no extension line recording a proof or a counterexample.
+The nearest earlier result is a comment by Robert Israel in the same entry, dated June~25, 2020: if $\gcd(n,30)=1$ then $a(n)$ equals A084680$(n)$ \cite{A084680}, the multiplicative order of $10$ modulo $n$.
+The comment is stated without proof.
+Combined with $\ord_n(10)\le\varphi(n)\le n-1$ for $n\ge2$, where equality throughout forces $n$ to be prime, it gives Theorem~\ref{thm:main} for $\gcd(n,30)=1$ (see Remark~\ref{rem:israel}, where we derive Israel's formula from the lemmas of Section~\ref{sec:proof}).
+It says nothing about $n$ divisible by $2$, $3$ or $5$.
+Multiples of $2$ and $5$ are easy to exclude; multiples of $3$ need the congruence $R_k\equiv k\pmod 3$.
+The ingredients are standard (for instance, the pigeonhole argument showing that some repunit is divisible by any $n$ coprime to $10$, and $R_k\equiv k\pmod 3$), and the cross-referenced entries A006883 and A084680 do not mention a proof.
+The math0 referees searched arXiv, MathOverflow, Mathematics Stack Exchange, the SeqFan mailing list and the general web, and found no earlier proof or counterexample.
+The statement is not among the OEIS statements of the formal-conjectures repository \cite{FC} at the commit pinned by math0.
+We therefore classify Theorem~\ref{thm:main} as a \emph{new result}, with the caveat that the argument is elementary and that its main case is essentially contained in Israel's comment; what is new is the treatment of the multiples of $2$, $3$ and $5$ and the complete proof of both directions.
+The entry also records, in an unsigned comment, that $a(n)=n$ if and only if $n$ is a power of $3$; we do not address that statement.
+
+\section{Statement}\label{sec:statement}
+
+The COMMENTS section of A335012 \cite{A335012} contains, verbatim:
+\begin{quote}\raggedright
+{\small\texttt{Conjecture: a(n) = n-1 if and only if n is a long period prime (A006883), that is, n is a prime and the decimal expansion of 1/n has period n-1.}}
+\end{quote}
+The comment carries no separate signature, so we attribute it to the author of the entry, Sen-Peng Eu (May~19, 2020).
+Theorem~\ref{thm:main} is this conjecture, read for every index $n\ge1$ of the sequence and with long period primes as defined in A006883, including $2$.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in the file
+\path{lean/Math0/Statements/OEIS/A335012.lean}, which was reviewed for fidelity and frozen (SHA-256 \texttt{954d748d\ldots dbf31}) before any proof attempt.
+Its declarations are, verbatim except that the copyright header, the \texttt{import} line, docstrings and blank lines are omitted and the proof of \decl{isLongPeriodPrimeB_iff} is replaced by \texttt{...}:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+namespace Math0.Statements.A335012
+def a (n : ℕ) : ℕ := ((Finset.Icc 1 n).image (fun k => ((10 ^ k - 1) / 9) % n)).card
+theorem a_data : (List.range 81).map (fun i => a (i + 1)) =
+    [1, 1, 3, 2, 1, 3, 6, 3, 9, 1, 2, 4, 6, 6, 3, 4, 16, 9, 18, 2, 6, 2, 22, 5, 2, 6, 27, 7, 28, 3,
+      15, 5, 6, 16, 6, 10, 3, 18, 6, 3, 5, 6, 21, 3, 9, 22, 46, 6, 42, 2, 48, 7, 13, 27, 2, 8, 18,
+      28, 58, 4, 60, 15, 18, 6, 6, 6, 33, 17, 66, 6, 35, 11, 8, 3, 4, 19, 6, 6, 13, 4, 81] := by
+  decide +kernel
+def IsLongPeriodPrime (p : ℕ) : Prop :=
+  p.Prime ∧ (p = 2 ∨ orderOf (10 : ZMod p) = p - 1)
+def isLongPeriodPrimeB (p : ℕ) : Bool :=
+  decide p.Prime && (p == 2 || (10 ^ (p - 1) % p == 1 % p &&
+    (List.range' 1 (p - 2)).all fun m => 10 ^ m % p != 1 % p))
+theorem isLongPeriodPrimeB_iff (p : ℕ) : isLongPeriodPrimeB p = true ↔ IsLongPeriodPrime p := by
+  ...
+theorem isLongPeriodPrime_data :
+    (List.range 270).filter isLongPeriodPrimeB =
+      [2, 7, 17, 19, 23, 29, 47, 59, 61, 97, 109, 113, 131, 149, 167, 179, 181, 193, 223, 229,
+        233, 257, 263, 269] := by
+  decide +kernel
+def statement : Prop :=
+  ∀ n : ℕ, 1 ≤ n → (a n = n - 1 ↔ IsLongPeriodPrime n)
+end Math0.Statements.A335012
+\end{lstlisting}
+
+\subsection*{How the definitions encode the OEIS entry}
+\begin{itemize}
+\item \emph{The sequence.} In \decl{a}, the term \texttt{(10 \^{} k - 1) / 9} is computed in $\N$ with truncated subtraction and floor division; since $10^k\ge1$ and $9\mid 10^k-1$, it equals $R_k$ exactly (this is the lemma \decl{rep_eq} of the proof file). Thus \texttt{a n} is the number of elements of the image of $k\mapsto R_k \bmod n$ on $\{1,\dots,n\}$, which is the definition of A335012 and agrees with the PARI program \texttt{\#Set(vector(n, k, (10\^{}k-1)/9) \% n)} and the Maple programs of the entry. The theorem \decl{a_data} checks, by evaluation in the Lean kernel, that \texttt{a} reproduces all $81$ listed terms $a(1),\dots,a(81)$.
+\item \emph{Long period primes.} \decl{IsLongPeriodPrime} says that $p$ is prime and either $p=2$ or $10$ has order $p-1$ in $\Z/p\Z$. For primes $p\notin\{2,5\}$ this is the period condition, as recalled in the introduction. For $p=5$ we have $10=0$ in $\Z/5\Z$, and Mathlib's \decl{orderOf x} is $0$ by convention when no positive power of \texttt{x} equals $1$, so the condition reads $0=4$ and fails; this correctly excludes $5$. For $p=2$ the same convention gives \texttt{orderOf (10 : ZMod 2) = 0}, which is why the disjunct $p=2$ is needed. For $p=3$ the order is $1\ne2$, so $3$ is excluded. These are the same conventions as the Maple program and the alternative Mathematica program of A006883, which test, for primes $p$, whether $p=2$ or $\ord_p(10)=p-1$. As a check, \decl{isLongPeriodPrime_data} shows by kernel evaluation that the numbers below $270$ satisfying the Boolean test \decl{isLongPeriodPrimeB} are exactly the first $24$ listed terms of A006883, and \decl{isLongPeriodPrimeB_iff} proves that this Boolean test is equivalent to \decl{IsLongPeriodPrime}.
+\item \emph{Range.} The statement quantifies over all $n\ge1$, the index range of A335012. The hypothesis $1\le n$ is necessary: \texttt{a 0 = 0 = 0 - 1} in $\N$ while $0$ is not prime, so the statement would be false at $n=0$. It adds no other hypotheses.
+\end{itemize}
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A335012.lean}; with each step we give the name of the corresponding Lean declaration.
+Following that file, we define the repunits recursively by
+\[
+  R_0=0,\qquad R_{k+1}=10R_k+1\qquad(k\ge0)
+\]
+(\decl{rep}). For an integer $x$ and $n\ge1$ we write $x \bmod n\in\{0,\dots,n-1\}$ for the remainder of $x$ upon division by $n$.
+
+\begin{lemma}[\decl{nine_rep}, \decl{rep_eq}, \decl{a_eq}, \decl{rep_add}, \decl{rep_mod_three}, \decl{rep_mod_two}, \decl{rep_mod_five}]\label{lem:basic}
+For all $k,m\ge0$:
+\begin{enumerate}
+\item $9R_k+1=10^k$; hence $(10^k-1)/9=R_k$, and $a(n)=\#\{R_k\bmod n: 1\le k\le n\}$ for every $n$;
+\item $R_{m+k}=10^kR_m+R_k$;
+\item $R_k\equiv k\pmod 3$;
+\item if $k\ge1$, then $R_k\equiv1\pmod 2$ and $R_k\equiv 1\pmod 5$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) By induction on $k$: $9R_{k+1}+1=10(9R_k+1)=10^{k+1}$.
+(2) By induction on $k$: the case $k=0$ is $R_m=R_m$, and $R_{m+k+1}=10R_{m+k}+1=10^{k+1}R_m+(10R_k+1)$.
+(3) By induction: $R_{k+1}=10R_k+1\equiv R_k+1\pmod 3$.
+(4) $R_k=10R_{k-1}+1\equiv1\pmod{10}$.
+\end{proof}
+
+\begin{lemma}[\decl{modEq_of_dvd_rep}, \decl{dvd_rep_of_modEq}]\label{lem:div}
+Let $n\ge1$ and $m\ge0$. If $n\mid R_m$, then $10^m\equiv1\pmod n$. Conversely, if $\gcd(n,3)=1$ and $10^m\equiv1\pmod n$, then $n\mid R_m$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:basic}(1), $10^m-1=9R_m$. If $n\mid R_m$ then $n\mid 10^m-1$. Conversely, if $10^m\equiv1\pmod n$ then $n\mid 9R_m$; since $\gcd(n,3)=1$ we have $\gcd(n,9)=1$, and hence $n\mid R_m$.
+\end{proof}
+
+In Lean the order of $10$ is taken in the ring \texttt{ZMod n}; the lemma \decl{zmod_pow_iff} translates $10^m=1$ in $\Z/n\Z$ into $10^m\equiv1\pmod n$.
+
+\begin{lemma}[periodicity; \decl{exists_small}, \decl{a_le_of_dvd}]\label{lem:per}
+Let $n,m\ge1$ with $n\mid R_m$. Then for every $k\ge1$ there is $j$ with $1\le j\le m$ and $R_j\equiv R_k\pmod n$. Consequently $a(n)\le m$.
+\end{lemma}
+
+\begin{proof}
+By strong induction on $k$. If $k\le m$ take $j=k$. If $k>m$, then $1\le k-m<k$, so by induction there is $j\in[1,m]$ with $R_j\equiv R_{k-m}\pmod n$, and by Lemma~\ref{lem:basic}(2), $R_k=10^{k-m}R_m+R_{k-m}\equiv R_{k-m}\equiv R_j\pmod n$.
+Hence $\{R_k\bmod n:1\le k\le n\}\subseteq\{R_j\bmod n:1\le j\le m\}$, and the latter set has at most $m$ elements.
+\end{proof}
+
+\begin{lemma}[cancellation; \decl{dvd_rep_sub}]\label{lem:cancel}
+Let $n\ge1$ with $\gcd(n,10)=1$, and let $0\le i<j$ with $R_i\equiv R_j\pmod n$. Then $n\mid R_{j-i}$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:basic}(2), $R_j=10^iR_{j-i}+R_i$, so $n\mid 10^iR_{j-i}$. Since $\gcd(n,10^i)=1$, $n\mid R_{j-i}$.
+\end{proof}
+
+\begin{lemma}[pigeonhole; \decl{exists_collision}]\label{lem:pigeon}
+If $a(n)<n$, there are $1\le i<j\le n$ with $R_i\equiv R_j\pmod n$.
+\end{lemma}
+
+\begin{proof}
+Otherwise $k\mapsto R_k\bmod n$ is injective on $\{1,\dots,n\}$, and its image has $n$ elements.
+\end{proof}
+
+\begin{lemma}[\decl{a_le_sub_two}]\label{lem:miss}
+Let $n\ge3$, and suppose that $R_k\bmod n\notin\{0,2\}$ for all $k\ge1$. Then $a(n)\le n-2$.
+\end{lemma}
+
+\begin{proof}
+All residues $R_k\bmod n$ lie in $\{0,1,\dots,n-1\}\setminus\{0,2\}$, a set with $n-2$ elements since $n\ge3$.
+\end{proof}
+
+Finally, $a(1)=1$ and $a(2)=1$ (\decl{a_one}, \decl{a_two}): modulo $1$ the only residue is $0$, and $R_1=1$, $R_2=11$ are both odd. In Lean both values are obtained by \texttt{decide +kernel}, that is, by evaluating the definition of \decl{a} in the kernel.
+
+\begin{proposition}[\decl{forward}]\label{prop:forward}
+Let $n\ge1$ with $a(n)=n-1$. Then $n$ is a long period prime.
+\end{proposition}
+
+\begin{proof}
+We consider five cases, in the order of the Lean proof.
+
+\emph{Case $n=1$.} Then $a(1)=1\ne0=n-1$, so this case does not occur.
+
+\emph{Case $2\mid n$.} If $n=2$, then $n$ is a long period prime by definition. Otherwise $n\ge4$. Since $n$ is even, $R_k\bmod n\equiv R_k\equiv1\pmod 2$ for $k\ge1$ by Lemma~\ref{lem:basic}(4), so every residue $R_k\bmod n$ is odd and in particular differs from $0$ and $2$. Lemma~\ref{lem:miss} gives $a(n)\le n-2<n-1$, a contradiction.
+
+\emph{Case $5\mid n$.} Then $n\ge5$, and $R_k\bmod n\equiv R_k\equiv1\pmod5$ for $k\ge1$, so again no residue equals $0$ or $2$, and Lemma~\ref{lem:miss} gives a contradiction.
+
+From now on $n\ge3$ and $\gcd(n,10)=1$.
+
+\emph{Case $3\mid n$.} Since $a(n)=n-1<n$, Lemma~\ref{lem:pigeon} gives $1\le i<j\le n$ with $R_i\equiv R_j\pmod n$, and Lemma~\ref{lem:cancel} gives $n\mid R_m$ with $m=j-i\in[1,n-1]$. By Lemma~\ref{lem:per}, $n-1=a(n)\le m$, so $m=n-1$ and $n\mid R_{n-1}$. Then $3\mid R_{n-1}$, and $R_{n-1}\equiv n-1\pmod 3$ by Lemma~\ref{lem:basic}(3), so $3\mid n-1$. Together with $3\mid n$ this gives $3\mid1$, a contradiction.
+
+\emph{Case $\gcd(n,30)=1$.} By Euler's theorem $10^{\varphi(n)}\equiv1\pmod n$, and $\varphi(n)\ge1$. Lemma~\ref{lem:div} (which applies since $\gcd(n,3)=1$) gives $n\mid R_{\varphi(n)}$, and Lemma~\ref{lem:per} gives $n-1=a(n)\le\varphi(n)$. Since $n\ge2$ we also have $\varphi(n)<n$, so $\varphi(n)=n-1$ and $n$ is prime. Let $d$ be the order of $10$ in $\Z/n\Z$. As $10^{n-1}\equiv1\pmod n$, $d$ divides $n-1$, so $1\le d\le n-1$. Since $10^d\equiv1\pmod n$, Lemma~\ref{lem:div} gives $n\mid R_d$, and Lemma~\ref{lem:per} gives $n-1=a(n)\le d$. Hence $d=n-1$, and $n$ is a long period prime.
+\end{proof}
+
+\begin{proposition}[\decl{backward}]\label{prop:backward}
+If $p$ is a long period prime, then $a(p)=p-1$.
+\end{proposition}
+
+\begin{proof}
+If $p=2$, then $a(2)=1=p-1$. Otherwise $p\ge3$ is prime and $10$ has order $d=p-1$ in $\Z/p\Z$; in particular $10^{p-1}\equiv1\pmod p$.
+
+\emph{$p$ is coprime to $30$.} From $10^{p-1}\equiv1\pmod p$ we get $\gcd(10^{p-1},p)=\gcd(1,p)=1$, and since $p-1\ge1$ this gives $\gcd(10,p)=1$. Moreover $p\ne3$: in $\Z/3\Z$ we have $10^1=1$ with $1<2=d$, which contradicts the minimality of the order. Since $p$ and $3$ are distinct primes, $\gcd(p,3)=1$.
+
+\emph{Upper bound.} By Lemma~\ref{lem:div}, $p\mid R_{p-1}$, so $a(p)\le p-1$ by Lemma~\ref{lem:per}.
+
+\emph{Lower bound.} The residues $R_1\bmod p,\dots,R_{p-1}\bmod p$ are pairwise distinct. Indeed, if $R_i\equiv R_j\pmod p$ with $1\le i<j\le p-1$, then $p\mid R_{j-i}$ by Lemma~\ref{lem:cancel}, so $10^{j-i}\equiv1\pmod p$ by Lemma~\ref{lem:div}. But $0<j-i<p-1=d$, which contradicts the minimality of $d$. These $p-1$ distinct residues are among the residues $R_k\bmod p$, $1\le k\le p$, so $a(p)\ge p-1$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main} (\decl{result})]
+For $n\ge1$, Proposition~\ref{prop:forward} gives the forward implication and Proposition~\ref{prop:backward} the converse.
+\end{proof}
+
+\begin{remark}[Israel's formula]\label{rem:israel}
+The same lemmas give the formula $a(n)=\ord_n(10)$ for $\gcd(n,30)=1$ stated by Israel in A335012.
+Let $d=\ord_n(10)$, which exists since $\gcd(n,10)=1$. By Lemma~\ref{lem:div}, $n\mid R_d$, so $a(n)\le d$ by Lemma~\ref{lem:per}. As in the lower bound of Proposition~\ref{prop:backward}, Lemmas~\ref{lem:cancel} and~\ref{lem:div} and the minimality of $d$ show that $R_1,\dots,R_d$ are pairwise distinct modulo $n$; since $d\mid\varphi(n)$ we have $d\le n$, so $a(n)\ge d$.
+This remark is not part of the Lean development, which avoids the order of $10$ modulo a composite $n$ by using Euler's theorem directly.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A335012.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A335012.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A335012.result}, of type \decl{Math0.Statements.A335012.statement}. All auxiliary declarations, named in Section~\ref{sec:proof}, are private. The repunit, the two directions and the end of the file are, verbatim (docstrings, blank lines and the proofs of the two directions omitted):
+\begin{lstlisting}
+private def rep : ℕ → ℕ
+  | 0 => 0
+  | k + 1 => 10 * rep k + 1
+private lemma forward {n : ℕ} (hn : 1 ≤ n) (ha : a n = n - 1) : IsLongPeriodPrime n := by
+  ...
+private lemma backward {p : ℕ} (hp : IsLongPeriodPrime p) : a p = p - 1 := by
+  ...
+theorem result : statement := fun _ hn => ⟨forward hn, backward⟩
+end Math0.Frontier.A335012
+#math0_settles Math0.Frontier.A335012.result Math0.Statements.A335012.statement
+\end{lstlisting}
+The proof file uses no \texttt{sorry}, \texttt{native\_decide} or \texttt{set\_option}. Its only proofs by evaluation are \texttt{decide +kernel} for $a(1)=1$ and $a(2)=1$, and one \texttt{decide} for $10^1=1$ in \texttt{ZMod 3}; both tactics produce proofs checked by the kernel and add no axioms. Euler's theorem (\decl{Nat.ModEq.pow_totient}), the fact that $\varphi(n)=n-1$ if and only if $n$ is prime, for $n\ge1$ (\decl{Nat.totient_eq_iff_prime}), and the basic properties of \decl{orderOf} come from Mathlib.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, \decl{Lean.ofReduceBool} from \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically the statement or its negation, up to metadata, with no unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A335012.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A335012.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A335012.result' proves 'Math0.Statements.A335012.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. Once its imports are built, the single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A335012.lean} in the directory \path{lean}.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{HW}
+G.~H. Hardy and E.~M. Wright, \emph{An Introduction to the Theory of Numbers}, 6th ed., revised by D.~R. Heath-Brown and J.~H. Silverman, Oxford University Press, 2008.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{MW}
+E.~W. Weisstein, \emph{Full Reptend Prime}, MathWorld -- A Wolfram Web Resource, \url{https://mathworld.wolfram.com/FullReptendPrime.html}.
+
+\bibitem{A001913}
+The OEIS Foundation Inc., \url{https://oeis.org/A001913} (full reptend primes: primes with primitive root 10), entry by N.~J.~A. Sloane.
+
+\bibitem{A002275}
+The OEIS Foundation Inc., \url{https://oeis.org/A002275} (repunits), entry by N.~J.~A. Sloane.
+
+\bibitem{A006883}
+The OEIS Foundation Inc., \url{https://oeis.org/A006883} (long period primes), entry by R.~Munafo.
+
+\bibitem{A084680}
+The OEIS Foundation Inc., \url{https://oeis.org/A084680} (order of 10 modulo $n$), entry by L.~Beedassy (2003).
+
+\bibitem{A335012}
+The OEIS Foundation Inc., \url{https://oeis.org/A335012}, entry by S.-P. Eu (May 19, 2020); comment by R.~Israel (June 25, 2020); revision \#31, Mar.~12, 2026.
+
+\end{thebibliography}
+}
+\end{document}

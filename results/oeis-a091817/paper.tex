@@ -1,0 +1,372 @@
+% math0 manuscript template. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8, keepspaces=true,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {∀}{{$\forall$}}1
+    {∃}{{$\exists$}}1 {→}{{$\to$}}1 {≤}{{$\le$}}1 {≠}{{$\ne$}}1 {∈}{{$\in$}}1
+    {∑}{{$\sum$}}1 {∧}{{$\wedge$}}1 {⁻¹}{{$^{-1}$}}2}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}_p}
+\newcommand{\res}[1]{\overline{#1}}
+\DeclareMathOperator{\num}{num}
+\DeclareMathOperator{\den}{den}
+
+\title[The congruence $2H_{p-3}\equiv 3\pmod p$ and OEIS A091817]{The congruence $2H_{p-3}\equiv 3 \pmod p$ and the integrality of the terms of OEIS A091817}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 18, 2026}
+
+\begin{document}
+\begin{abstract}
+For a prime $p\ge 3$ write the harmonic number $H_{p-3}=1+\frac12+\dots+\frac1{p-3}$ in lowest terms as $N/D$ (with $H_0=0/1$). We prove that $p$ divides $2N-3D$, which confirms Leroy Quet's conjecture, recorded in OEIS A091817 in 2004, that the terms $(2N-3D)/p$ of that sequence are always integers.
+The result is not new mathematics: it is the case $k=3$ of the known congruence $H_{p-k}\equiv H_{k-1}\pmod p$, an immediate consequence of the classical fact $H_{p-1}\equiv0\pmod p$, although we found no place where this consequence is recorded for A091817.
+We classify the note as the first formal proof of a known result.
+The proof is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, whose definitions are checked by the kernel against all $18$ listed terms and which was reviewed for fidelity and frozen before the proof attempt.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Let $H_m=\sum_{k=1}^{m}1/k$ denote the $m$-th harmonic number, with $H_0=0$. The OEIS sequence A091817 \cite{A091817}, contributed by Mohammed Bouayoun and Ralf Stephan on March~7, 2004, and proposed by Leroy Quet, is
+\[
+  a(n)=\frac{2\num(H_{p-3})-3\den(H_{p-3})}{p},\qquad p\text{ the $(n+1)$-th prime},\ n\ge1,
+\]
+where $\num$ and $\den$ denote the numerator and the (positive) denominator in lowest terms. Its first terms, for $p=3,5,7,11,13$, are $-1,0,2,62,554$. The entry records that Quet conjectured that the terms are always integral, and that this was checked for $p<3\cdot10^4$. The math0 referees read the edit history of the entry: the current revision (\#8, March~11, 2014) still states the conjecture without a proof or a reference.
+
+\subsection*{Prior work}
+The conjecture follows at once from classical facts. For an odd prime $p$, pairing $1/k$ with $1/(p-k)$ shows that $p$ divides the numerator of $H_{p-1}$; Wolstenholme proved in 1862 that $p^2$ divides it when $p>3$ \cite{Wol}, \cite[Theorem~115]{HW}. Since $1/(p-j)\equiv-1/j\pmod p$, this gives the reflection congruence
+\begin{equation}\label{eq:reflection}
+  H_{p-k}=H_{p-1}-\sum_{j=1}^{k-1}\frac1{p-j}\equiv H_{k-1}\pmod p,\qquad 1\le k\le p-1,
+\end{equation}
+understood in the ring of rationals whose denominator is prime to $p$. The congruence in \eqref{eq:reflection} is (2.1) in Lemma~2.1 of Z.-W.~Sun's preprint arXiv:0911.4433v3 (2009) \cite{Sun-pre}, whose journal version is \cite{Sun}, and the same derivation appears in the proof of the second congruence in (2.2) of Sun and Zhao \cite{SZ}, the final version of the same arXiv number. The congruence is quoted from \cite{Sun-pre,Sun}, in the equivalent form $H_{p-k-1}\equiv H_k\pmod p$ for $1\le k\le p-2$, as Lemma~2.2 of Me\v{s}trovi\'c \cite{Me}, and attributed to Sun \cite{Sun} by Yang and Wang \cite{YW}. Taking $k=3$ gives $H_{p-3}\equiv H_2=3/2\pmod p$, which for $p\ge5$ is exactly Quet's conjecture; the case $p=3$ is $a(1)=-1$. The analogous case $k=2$, namely that $p$ divides $\num(H_{p-2})-\den(H_{p-2})$, is recorded by Alexander Adamchuk (June~9, 2006) in the entry A064169 \cite{A064169}. We found no place, in the OEIS or elsewhere, where the case $k=3$ is connected with A091817.
+
+The conjecture is not among the OEIS statements of the formal-conjectures repository \cite{FC} (checked at commit \texttt{c77fdd4}), nor among the OEIS conjectures of the OEIS Open benchmark \cite{Ad}, and the referees found no other formal proof. What this note adds is therefore a self-contained proof that matches a kernel-checked Lean proof of a frozen formal statement of the conjecture (Section~\ref{sec:lean}); to our knowledge it is the first formal proof of the statement.
+
+\section{Statement}\label{sec:statement}
+
+For $x\in\Q$ we write $x=\num(x)/\den(x)$ in lowest terms with $\den(x)\ge1$; thus $\num(0)=0$ and $\den(0)=1$.
+
+\begin{definition}\label{def:main}
+For $m\in\N$ let $H_m=\sum_{k=1}^{m}1/k\in\Q$, and for a prime $p\ge3$ let
+\[
+  t(p)=\frac{2\num(H_{p-3})-3\den(H_{p-3})}{p}\in\Q.
+\]
+For $n\ge1$ let $a(n)=t(p_n)$, where $p_0=2<p_1=3<p_2=5<\cdots$ are the primes, indexed from $0$.
+\end{definition}
+
+So $a(n)$ is the term for the $(n+1)$-th prime, and $a(1)=t(3)$, in agreement with the offset $1$ of the entry and with its PARI program, which loops over the primes $p\ge3$. The entry's name and the conjecture, an unsigned comment in the entry submitted by M.~Bouayoun and R.~Stephan on March~7, 2004 \cite{A091817}, read verbatim:
+\begin{quote}\raggedright
+\textsc{Name}: \texttt{(2*numerator(H(p-3)) -3*denominator(H(p-3)))/p with H(m) = 1 + 1/2 + 1/3 + ...+ 1/m.}\\[2pt]
+\textsc{Comment}: \texttt{Leroy Quet conjectures that the terms are always integral. This is true for p < 3*10\^{}4.}
+\end{quote}
+
+\begin{theorem}\label{thm:main}
+Let $p\ge3$ be prime and $H_{p-3}=N/D$ in lowest terms. Then $p\mid 2N-3D$. Consequently $a(n)\in\Z$ for every $n\ge1$.
+\end{theorem}
+
+For $p\ge5$ the denominator $D$ divides $\operatorname{lcm}(1,\dots,p-3)$, so $p\nmid D$ and the theorem says $H_{p-3}\equiv3/2\pmod p$. For $p=3$ we have $N=0$, $D=1$ and $a(1)=-3/3=-1$.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in the file \path{lean/Math0/Statements/OEIS/A091817.lean}, reviewed for fidelity, and frozen before any proof attempt (its SHA-256 hash begins with \texttt{0debd9c5}). Its definitions and the statement are, verbatim except that docstrings, an auxiliary lemma \decl{firstPrimeFrom_spec}, the proof of \decl{primeAt_eq_nth} and one \texttt{example} are omitted:
+\begin{lstlisting}
+namespace Math0.Statements.A091817
+
+def firstPrimeFrom : ℕ → ℕ → ℕ
+  | 0, _ => 0
+  | fuel + 1, q => if q.Prime then q else firstPrimeFrom fuel (q + 1)
+
+def nextPrime (m : ℕ) : ℕ := firstPrimeFrom (m + 2) (m + 1)
+
+def primeAt : ℕ → ℕ
+  | 0 => 2
+  | i + 1 => nextPrime (primeAt i)
+
+theorem primeAt_eq_nth (i : ℕ) : primeAt i = Nat.nth Nat.Prime i
+
+def H (m : ℕ) : ℚ := ((List.range m).map (fun k => (1 : ℚ) / ((k : ℚ) + 1))).sum
+
+def term (p : ℕ) : ℚ := (2 * (H (p - 3)).num - 3 * ((H (p - 3)).den : ℤ) : ℚ) / (p : ℚ)
+
+def a (n : ℕ) : ℚ := term (primeAt n)
+
+theorem a_data : (List.range 18).map (fun i => a (i + 1)) =
+    [-1, 0, 2, 62, 554, 74258, 142682, 2830946, 1448977246, 12576415426, 1857881203154,
+      64634117421826, 62771945063582, 164497840779865642, 350742295126606034006,
+      5774653629556529218142, 5647762835059481932498, 12720214895833193424471634] := by
+  decide +kernel
+
+def statement : Prop :=
+  ∀ n : ℕ, 1 ≤ n → ∃ z : ℤ, a n = (z : ℚ)
+
+end Math0.Statements.A091817
+\end{lstlisting}
+
+The encoding matches Definition~\ref{def:main}.
+\texttt{H m} is the exact rational sum $\sum_{k=0}^{m-1}1/(k+1)=H_m$, so \texttt{H 0} $=0$, as for the empty sum in PARI.
+Mathlib's \decl{Rat.num} and \decl{Rat.den} are the numerator and the positive denominator in lowest terms, so they agree with PARI's \texttt{numerator} and \texttt{denominator}.
+\texttt{term p} is $t(p)$, computed in $\Q$ without rounding; the sequence is $\Q$-valued because its integrality is exactly what the conjecture asserts.
+\texttt{primeAt i} is the $i$-th prime, indexed from $0$, computed by a bounded search for the next prime in $(m,2m+2]$; the lemma \decl{primeAt_eq_nth} proves that it equals Mathlib's \texttt{Nat.nth Nat.Prime i}, using Bertrand's postulate. Hence \texttt{a n} $=a(n)$.
+The statement quantifies over $n\ge1$, that is, over the primes $p\ge3$, and asserts that $a(n)$ is equal to (the image of) an integer. For $n\ge1$ the subtraction $p-3$ in $\N$ is exact and the division is by $p\ne0$. The restriction $n\ge1$ is necessary: for $n=0$, $p=2$, the truncated subtraction gives $2-3=0$ and \texttt{a 0} $=-3/2$, which the fidelity review checked in the kernel.
+
+The theorem \decl{a_data}, proved by \texttt{decide +kernel}, checks that the definitions reproduce all $18$ terms listed in the OEIS, $a(1),\dots,a(18)$ for $p=3,\dots,67$; the omitted \texttt{example} checks, also in the kernel, that $a(1),\dots,a(4)$ belong to $p=3,5,7,11$. The fidelity reviewer also recomputed the $18$ terms independently in Python. The OEIS formula line states $a(n)=(2A001008(p-3)-3A002805(p-3))/p$ for primes $p\ge5$ \cite{A001008,A002805}; the data, the PARI program and the formal statement also include $p=3$, so the formal statement is at least as strong as the conjecture under either reading.
+
+\section{Proof}\label{sec:proof}
+
+We follow the Lean proof, which has four auxiliary results (Lemmas~\ref{lem:succ}--\ref{lem:val}) and a final deduction. Throughout, $p$ is a prime, $\F=\Z/p\Z$, and $\res x\in\F$ is the residue of an integer $x$. As in Lean, the inverse in the field $\F$ is extended by $0^{-1}=0$; with this convention $x\mapsto x^{-1}$ is an involution of $\F$, hence a bijection. For $m\in\N$ put
+\[
+  S(m)=\sum_{k=0}^{m-1}\bigl(\res k+1\bigr)^{-1}=\sum_{k=1}^{m}\res{k}^{\,-1}\in\F .
+\]
+This is the private definition \texttt{invSum p m}. For $m<p$ every $\res k$ with $1\le k\le m$ is nonzero, and $S(m)$ is the reduction of $H_m$ modulo $p$; the lemmas below make this precise without using localizations.
+
+\begin{lemma}[\decl{H_succ}]\label{lem:succ}
+$H_{m+1}=H_m+1/(m+1)$ for all $m\in\N$.
+\end{lemma}
+
+\begin{proof}
+This is the definition of $H$ as a sum over $\{0,\dots,m\}$, split off at the last term.
+\end{proof}
+
+\begin{lemma}[\decl{key}]\label{lem:key}
+For every $m<p$ there is an integer $A_m$ with $H_m\cdot m!=A_m$ and $\res{A_m}=\res{m!}\cdot S(m)$ in $\F$.
+\end{lemma}
+
+\begin{proof}
+Induction on $m$. For $m=0$ take $A_0=0$: $H_0\cdot0!=0$ and $S(0)=0$. Now let $m+1<p$ and let $A_m$ be given by the induction hypothesis (applicable since $m<p$). Put $A_{m+1}=A_m(m+1)+m!$. By Lemma~\ref{lem:succ},
+\[
+  H_{m+1}(m+1)!=\Bigl(H_m+\frac1{m+1}\Bigr)(m+1)\,m!=H_m m!\,(m+1)+m!=A_{m+1}.
+\]
+Modulo $p$, since $1\le m+1<p$, the residue $\res{m+1}=\res m+1$ is nonzero, so $(\res m+1)(\res m+1)^{-1}=1$. Using $S(m+1)=S(m)+(\res m+1)^{-1}$ and the induction hypothesis,
+\[
+  \res{(m+1)!}\,S(m+1)=(\res m+1)\,\res{m!}\,S(m)+\res{m!}\,(\res m+1)(\res m+1)^{-1}
+  =\res{A_m}(\res m+1)+\res{m!}=\res{A_{m+1}}.\qedhere
+\]
+\end{proof}
+
+\begin{lemma}[\decl{invSum_self}]\label{lem:self}
+If $p\ne2$, then $S(p)=\sum_{k=1}^{p}\res k^{\,-1}=0$.
+\end{lemma}
+
+\begin{proof}
+First, $\sum_{x\in\F}x^{-1}=\sum_{x\in\F}x$, because $x\mapsto x^{-1}$ is a bijection of $\F$. Second, $\sum_{x\in\F}x=0$: this is the case $i=1$ of the fact that $\sum_{x\in\mathbb{F}_q}x^i=0$ for $i<q-1$ in a finite field with $q$ elements (Mathlib's \decl{FiniteField.sum_pow_lt_card_sub_one}), which applies because $1<p-1$ for $p\ge3$. (Directly: $\sum_{x=0}^{p-1}x=p\cdot\frac{p-1}2$ with $\frac{p-1}{2}\in\Z$.) Third, $k\mapsto\res k$ is a bijection from $\{0,1,\dots,p-1\}$ onto $\F$, with inverse $x\mapsto$ the least nonnegative representative of $x$; hence $\sum_{k=0}^{p-1}\res k^{\,-1}=\sum_{x\in\F}x^{-1}=0$.
+Finally, the sum $\sum_{k=0}^{p}\res k^{\,-1}$ can be split off at either end:
+\[
+  \res 0^{\,-1}+\sum_{k=0}^{p-1}(\res k+1)^{-1}=\sum_{k=0}^{p}\res k^{\,-1}=\sum_{k=0}^{p-1}\res k^{\,-1}+\res p^{\,-1}.
+\]
+Since $\res0^{\,-1}=0^{-1}=0$ and $\res p=0$, so that $\res p^{\,-1}=0$, this gives $S(p)=\sum_{k=0}^{p-1}\res k^{\,-1}=0$.
+\end{proof}
+
+Since $\res p^{\,-1}=0$, Lemma~\ref{lem:self} is the statement $\sum_{k=1}^{p-1}\res k^{\,-1}=0$, i.e.\ $H_{p-1}\equiv0\pmod p$.
+
+\begin{lemma}[\decl{invSum_val}]\label{lem:val}
+If $p\ne2$, then $2\,S(p-3)=3$ in $\F$.
+\end{lemma}
+
+\begin{proof}
+Since $p\ge3$ we may write $p=q+3$ with $q=p-3\in\N$. In $\F$ we have $\res q=-3$, hence $\res q+1=-2$, $\res q+2=-1$ and $\res q+3=0$. Splitting off the last three terms of $S(q+3)$ and using Lemma~\ref{lem:self},
+\[
+  0=S(q+3)=S(q)+(-2)^{-1}+(-1)^{-1}+0^{-1}=S(q)-2^{-1}-1 .
+\]
+As $p\nmid2$, $\res2\ne0$ and $2\cdot2^{-1}=1$. Multiplying by $2$ gives $0=2S(q)-1-2$, that is, $2S(p-3)=3$.
+\end{proof}
+
+For $p=3$ this reads $2\cdot S(0)=0=3$ in $\mathbb{F}_3$, which is consistent.
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+We prove the formal statement: for every $n\ge1$ there is $z\in\Z$ with $a(n)=z$.
+Let $n\ge1$ and $p=p_n$. By \decl{primeAt_eq_nth}, $p=\texttt{Nat.nth Nat.Prime n}$, the $n$-th prime counted from $0$, so $p$ is prime; since the enumeration of the primes is strictly increasing and $p_0=2$, we get $p>2$, so $p\ge3$.
+
+Let $m=p-3<p$ and let $A=A_m$ be the integer of Lemma~\ref{lem:key}, so $H_m\,m!=A$ and $\res A=\res{m!}\,S(m)$. Write $H_m=N/D$ in lowest terms. Since $H_m D=N$ (Mathlib's \decl{Rat.mul_den_eq_num}), we have $N\cdot m!=H_m D\cdot m!=A\cdot D$, an identity in $\Q$ between integers and hence in $\Z$. Reducing modulo $p$ gives
+\[
+  \res N\cdot\res{m!}=\res{m!}\,S(m)\cdot\res D .
+\]
+As $m<p$, the prime $p$ does not divide $m!$, so $\res{m!}\ne0$ and we may cancel it: $\res N=S(m)\,\res D$. By Lemma~\ref{lem:val},
+\[
+  \res{2N-3D}=2S(m)\,\res D-3\,\res D=(2S(m)-3)\,\res D=0 .
+\]
+Hence $p\mid 2N-3D$; write $2N-3D=pz$ with $z\in\Z$. Since $p\ne0$ in $\Q$, we get $a(n)=t(p)=(2N-3D)/p=z$.
+\end{proof}
+
+\begin{remark}
+The argument does not use that $p\nmid D$: the factorial $m!$, which is prime to $p$, plays the role of a common denominator. For $p\ge5$ the theorem is equivalent to $H_{p-3}\equiv3/2\pmod p$, and Lemma~\ref{lem:self} together with $(p-1)^{-1}\equiv-1$ and $(p-2)^{-1}\equiv-1/2$ is the case $k=3$ of the derivation of \eqref{eq:reflection}.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A091817.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A091817.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. Its declarations are the following (signatures verbatim, proofs omitted):
+\begin{lstlisting}
+namespace Math0.Frontier.A091817
+open Math0.Statements.A091817
+
+private def invSum (p m : ℕ) : ZMod p := ∑ k ∈ Finset.range m, ((k : ZMod p) + 1)⁻¹
+
+private theorem H_succ (m : ℕ) : H (m + 1) = H m + 1 / ((m : ℚ) + 1)
+
+private theorem key (p : ℕ) [Fact p.Prime] : ∀ m, m < p → ∃ a : ℤ,
+    H m * (m.factorial : ℚ) = a ∧ (a : ZMod p) = (m.factorial : ZMod p) * invSum p m
+
+private theorem invSum_self (p : ℕ) [hp : Fact p.Prime] (h2 : p ≠ 2) : invSum p p = 0
+
+private theorem invSum_val (p : ℕ) [hp : Fact p.Prime] (h2 : p ≠ 2) :
+    2 * invSum p (p - 3) = 3
+
+theorem result : statement
+
+end Math0.Frontier.A091817
+
+#math0_settles Math0.Frontier.A091817.result Math0.Statements.A091817.statement
+\end{lstlisting}
+They correspond to Lemmas~\ref{lem:succ}--\ref{lem:val} and Theorem~\ref{thm:main}. The main declaration is \decl{Math0.Frontier.A091817.result}, of type \decl{Math0.Statements.A091817.statement}. The proofs use, besides the tactics \texttt{field\_simp}, \texttt{push\_cast} and \texttt{linear\_combination}, the Mathlib lemmas \decl{Equiv.sum_comp} with \decl{Equiv.inv} and \decl{FiniteField.sum_pow_lt_card_sub_one} (Lemma~\ref{lem:self}), \decl{ZMod.natCast_eq_zero_iff} and \decl{Nat.Prime.dvd_factorial} (the residues of $m+1$, $2$ and $m!$ are nonzero), \decl{Rat.mul_den_eq_num} (the identity $H_mD=N$), \decl{ZMod.intCast_zmod_eq_zero_iff_dvd} (passing from $\F$ back to divisibility in $\Z$), and \decl{Nat.nth_strictMono} with \decl{Nat.nth_prime_zero_eq_two} (the bound $p\ge3$). The proof involves no finite computation; the only kernel evaluations in this result are the data checks in the statement file (\decl{a_data} and the omitted \texttt{example}), which are not used by the proof. Neither file uses \texttt{native\_decide}, \texttt{sorry} or a \texttt{maxHeartbeats} option.
+
+\subsection*{Audit}
+The file ends with \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself. It fails unless (1) \decl{statement} is a definition of type \texttt{Prop} without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, \decl{Lean.ofReduceBool}, \decl{Lean.trustCompiler} and custom axioms); and (3) the type of \decl{result} is syntactically the statement or its negation, after removing metadata annotations, with no unfolding. On this file it reports
+\begin{lstlisting}
+math0 audit: 'Math0.Statements.A091817.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A091817.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A091817.result' proves 'Math0.Statements.A091817.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A091817.lean} in the directory \path{lean}; this takes well under a minute on our machine, most of it spent loading Mathlib.
+
+\begin{thebibliography}{99}
+
+\bibitem{Ad}
+T.~Adamczewski, \emph{OEIS Open: How many conjectures can language models turn into theorems?}, arXiv:2608.11941, 2026.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{HW}
+G.~H. Hardy and E.~M. Wright, \emph{An Introduction to the Theory of Numbers}, 5th ed., Oxford University Press, 1979.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Me}
+R.~Me\v{s}trovi\'c, \emph{An elementary proof of a congruence by Skula and Granville}, Arch. Math. (Brno) \textbf{48} (2012), no.~2, 113--120; arXiv:1108.2361.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Sun-pre}
+Z.-W. Sun, \emph{Arithmetic theory of harmonic numbers}, preprint, arXiv:0911.4433v3, 2009.
+
+\bibitem{Sun}
+Z.-W. Sun, \emph{Arithmetic theory of harmonic numbers}, Proc. Amer. Math. Soc. \textbf{140} (2012), 415--428.
+
+\bibitem{SZ}
+Z.-W. Sun and L.-L. Zhao, \emph{Arithmetic theory of harmonic numbers (II)}, Colloq. Math. \textbf{130} (2013), no.~1, 67--78; arXiv:0911.4433v8.
+
+\bibitem{Wol}
+J.~Wolstenholme, \emph{On certain properties of prime numbers}, Quart. J. Pure Appl. Math. \textbf{5} (1862), 35--39.
+
+\bibitem{YW}
+J.~Yang and Y.~Wang, \emph{Modulus $p^2$ congruences involving harmonic numbers}, arXiv:1803.02966, 2018.
+
+\bibitem{A001008}
+The OEIS Foundation Inc., \url{https://oeis.org/A001008} (numerators of harmonic numbers).
+
+\bibitem{A002805}
+The OEIS Foundation Inc., \url{https://oeis.org/A002805} (denominators of harmonic numbers).
+
+\bibitem{A064169}
+The OEIS Foundation Inc., \url{https://oeis.org/A064169}, entry by L.~Quet (2001), comment by A.~Adamchuk (2006).
+
+\bibitem{A091817}
+The OEIS Foundation Inc., \url{https://oeis.org/A091817}, entry by M.~Bouayoun and R.~Stephan (2004), proposed by L.~Quet.
+
+\end{thebibliography}
+
+\end{document}

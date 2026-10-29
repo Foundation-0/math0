@@ -1,0 +1,14 @@
+# Lean / Lake
+lean/.lake/
+# LaTeX build products
+*.aux
+*.log
+*.out
+*.toc
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.bbl
+*.blg
+# Python
+__pycache__/

@@ -1,0 +1,305 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    noncomputable,private},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8, upquote=true,
+  literate={ℂ}{{$\mathbb{C}$}}1 {ℕ}{{$\mathbb{N}$}}1 {ℝ}{{$\mathbb{R}$}}1 {ℚ}{{$\mathbb{Q}$}}1
+    {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {→}{{$\to$}}1 {↔}{{$\leftrightarrow$}}1
+    {≤}{{$\le$}}1 {≠}{{$\ne$}}1 {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {∈}{{$\in$}}1 {∉}{{$\notin$}}1
+    {∩}{{$\cap$}}1 {∪}{{$\cup$}}1 {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {¬}{{$\neg$}}1
+    {₁}{{$_1$}}1 {₂}{{$_2$}}1 {₃}{{$_3$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\re}{\operatorname{Re}}
+\newcommand{\im}{\operatorname{Im}}
+\newcommand{\inter}{\operatorname{int}}
+\newcommand{\lean}[1]{{\upshape[#1]}}
+
+\title[Edges of the all-chords graph of a triangle (OEIS A367119)]{The all-chords graph of a triangle with $n$ points in general position on each side has $\tfrac32(3n^4+4n^3+3n^2+4n+2)$ edges}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 20, 2026}
+
+
+\begin{document}
+\begin{abstract}
+Place $n$ points in the relative interior of each side of an equilateral triangle, join every pair of the $3n+3$ boundary points (corners included) by a segment, and assume that no interior point lies on three segments. We prove that the resulting planar graph has $\frac32(3n^4+4n^3+3n^2+4n+2)$ edges for every $n\ge0$ and every such placement, as conjectured by S.~R. Shannon and N.~J.~A. Sloane in OEIS A367119 (2023), by counting the $3n(n+1)$ chords and the $\frac34n^2(n+1)(3n+1)$ crossing pairs of chords. The formula also follows in one line from the vertex count that the companion entry A367117 states as a theorem, so we classify the result as the first formal proof of a known result. The proof, including the geometric facts behind the count, is verified in Lean~4 with Mathlib against a statement that math0 formalized from the OEIS entry and froze after a fidelity review, before any proof attempt.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Place $n$ points in the relative interior of each side of an equilateral triangle $\Delta$ and join every pair of the $3n+3$ boundary points (corners included) by a segment. Pairs on a common side give pieces of that side; every other pair gives a \emph{chord} through the interior. If no interior point of $\Delta$ lies on three of the segments (general position), the drawing is a planar graph whose vertices are the boundary points and the crossing points of chords. The OEIS entries A367117, A367118 and A367119 \cite{A367117,A367118,A367119}, contributed by Scott R.~Shannon and N.~J.~A. Sloane on November~5, 2023, count its vertices, regions and edges, and A367119 conjectures that there are $\frac32(3n^4+4n^3+3n^2+4n+2)$ edges. We prove this for every placement in general position (Theorem~\ref{thm:main}), so the count does not depend on the placement, as the entry presupposes.
+
+\subsection*{Prior work and status}
+A367119 (last revised November~9, 2023) and A367118 still list the edge and region formulas as conjectures, and so does the edge table A367190 \cite{A367190} for its triangle row. The vertex entry A367117, however, states as a theorem (without an argument) that there are $V(n)=\frac34(n+1)(3n^3+n^2+4)$ vertices, the table A367183 \cite{A367183} lists this row outside its conjectured rows, and a formula of Shannon and Sloane in A213827 \cite{A213827} (November~9, 2023) equates $n^2(n+1)(3n+1)/4$ with $(V(n)-3(n+1))/3$, a third of the interior crossings (it cites A367177, evidently a typo for A367117). The edge formula follows from $V(n)$ in one line: a chord carrying $m$ crossings is cut into $m+1$ edges, the boundary into $3n+3$ edges, and there are $3n(n+1)$ chords, so $E=3(n+1)+3n(n+1)+2(V-3n-3)=2V+3(n^2-1)$.
+For the variant in which the corners are not endpoints of chords, Sloane proved the crossing count in A365929 \cite{A365929} (November~7, 2023) and marked the edge and region formulas of A366932 and A367015 \cite{A366932,A367015} as theorems (December~31, 2025); A392261, A392282, A392228 (January 2026) treat $k$ points per side of a regular $n$-gon, corners excluded, with a proof by Shannon attached to A392261 \cite{A392261} that we did not consult. Counting crossings of chords in general position by $4$-subsets of endpoints is classical; Poonen and Rubinstein \cite{PR} treat the non-generic case of the diagonals of a regular polygon. The math0 referees' searches (arXiv, Mathematics Stack Exchange, the web) found no source that explicitly proves the A367119 conjecture, and it is not in formal-conjectures \cite{FC}.
+Since the formula is an immediate consequence of the vertex count recorded in A367117, we classify the result as the \emph{first formal proof of a known result}. Starting from the geometric definitions, the Lean proof also covers what the count takes for granted: chords cross exactly when their endpoints interleave, crossing points on a chord are distinct, and the sides carry no vertices besides the boundary points.
+
+\section{Statement}\label{sec:statement}
+
+Write $[p,q]$ and $(p,q)$ for closed and open segments in $\C=\mathbb{R}^2$. Let $c_0=0$, $c_1=1$, $c_2=\frac12+\frac{\sqrt3}{2}i$ (indices modulo~$3$), $\Delta=\operatorname{conv}\{c_0,c_1,c_2\}$, $S_j=[c_j,c_{j+1}]$ and $S_j^\circ=(c_j,c_{j+1})$.
+
+\begin{definition}\label{def:graph}
+Let $n\ge0$. A \emph{placement} of $n$ points per side is a finite set $B\subset\C$ with $c_0,c_1,c_2\in B$, $B\subseteq S_0\cup S_1\cup S_2$ and $|B\cap S_j^\circ|=n$ for $j=0,1,2$. The \emph{drawn segments} are the $[p,q]$ with $p\ne q$ in $B$. $B$ is in \emph{general position} if no point of $\inter\Delta$ lies on three pairwise distinct drawn segments. The \emph{vertex set} $V(B)$ consists of the points of $B$ and every $z$ with $s\cap t=\{z\}$ for two drawn segments $s,t$. In the graph $G(B)$ on $\C$, distinct $u,v$ are adjacent if $u,v\in V(B)$, some drawn segment contains both, and $V(B)\cap(u,v)=\emptyset$. $E(B)$ is the number of edges of $G(B)$.
+\end{definition}
+
+The entry A367119 \cite{A367119} has offset $0$ and $36$ listed terms $3, 24, 153, 588, 1635, 3708,\dots,7015788$. Its name, first comment and conjecture (Shannon and Sloane, November~5, 2023) read verbatim:
+\begin{quote}\scriptsize\raggedright
+\texttt{Place n points in general position on each side of an equilateral triangle, and join every pair of the 3*n+3 boundary points by a chord; sequence gives number of edges in the resulting planar graph.}\\
+\texttt{"In general position" implies that the internal lines (or chords) only have simple intersections. There is no interior point where three or more chords meet.}\\
+\texttt{Conjecture: a(n) = (3/2)*(3*n\^{}4 + 4*n\^{}3 + 3*n\^{}2 + 4*n + 2).}
+\end{quote}
+
+\begin{theorem}\label{thm:main}
+For every $n\ge0$ and every placement $B$ of $n$ points per side in general position, $E(B)=\frac32\bigl(3n^4+4n^3+3n^2+4n+2\bigr)$.
+\end{theorem}
+
+\subsection*{Lean formalization}
+The statement file \path{lean/Math0/Statements/OEIS/A367119.lean} (SHA-256 \texttt{0972bcc5\ldots 415bc4}) was written by math0, reviewed for fidelity and frozen before any proof attempt. Its definitions and statement read verbatim (namespace \decl{Math0.Statements.A367119}; docstrings and the computable part omitted):
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+noncomputable def corner : Fin 3 → ℂ := ![0, 1, ⟨1 / 2, Real.sqrt 3 / 2⟩]
+noncomputable def triangle : Set ℂ := convexHull ℝ (Set.range corner)
+def IsPlacement (n : ℕ) (B : Finset ℂ) : Prop :=
+  (∀ j : Fin 3, corner j ∈ B) ∧
+  (∀ z ∈ B, ∃ j : Fin 3, z ∈ segment ℝ (corner j) (corner (j + 1))) ∧
+  (∀ j : Fin 3, ((B : Set ℂ) ∩ openSegment ℝ (corner j) (corner (j + 1))).ncard = n)
+def drawn (B : Finset ℂ) : Set (Set ℂ) :=
+  {s | ∃ p ∈ B, ∃ q ∈ B, p ≠ q ∧ s = segment ℝ p q}
+def GeneralPosition (B : Finset ℂ) : Prop :=
+  ∀ z ∈ interior triangle, ∀ s₁ ∈ drawn B, ∀ s₂ ∈ drawn B, ∀ s₃ ∈ drawn B,
+    z ∈ s₁ → z ∈ s₂ → z ∈ s₃ → s₁ = s₂ ∨ s₁ = s₃ ∨ s₂ = s₃
+def vertices (B : Finset ℂ) : Set ℂ :=
+  (B : Set ℂ) ∪ {z | ∃ s ∈ drawn B, ∃ t ∈ drawn B, s ∩ t = {z}}
+def planarGraph (B : Finset ℂ) : SimpleGraph ℂ :=
+  SimpleGraph.fromRel fun u v =>
+    u ∈ vertices B ∧ v ∈ vertices B ∧ (∃ s ∈ drawn B, u ∈ s ∧ v ∈ s) ∧
+      ∀ w ∈ vertices B, w ∉ openSegment ℝ u v
+noncomputable def edges (B : Finset ℂ) : ℕ := (planarGraph B).edgeSet.ncard
+def statement : Prop :=
+  ∀ (n : ℕ) (B : Finset ℂ), IsPlacement n B → GeneralPosition B →
+    (edges B : ℚ) = 3 / 2 * (3 * n ^ 4 + 4 * n ^ 3 + 3 * n ^ 2 + 4 * n + 2)
+\end{lstlisting}
+\emph{Encoding.} \texttt{corner j} is $c_j$ (\texttt{Fin 3} arithmetic makes side $2$ run from $c_2$ to $c_0$); the other definitions are those of Definition~\ref{def:graph}. \texttt{SimpleGraph.fromRel} symmetrizes the relation and removes loops; the edge set is finite, so \texttt{ncard} has no junk value. General position is the entry's comment read literally (a drawn segment through an interior point is a chord by Lemma~\ref{lem:chords}(e), so it concerns chords only), and $s\cap t=\{z\}$ keeps the points of overlapping pieces of a side out of the vertex set. The conclusion is an identity in $\mathbb{Q}$ for all $n\ge0$, matching the offset. It does not assert that general placements exist; they do (not formalized): the concurrence of three given chords at an interior point forces a polynomial equation in the positions of the $3n$ non-corner points that is not identically satisfied, since three such chords have six distinct endpoints and moving a non-corner one along its side breaks the concurrence; so a generic placement is in general position.
+
+\emph{Data check.} The statement file defines a computable model \texttt{a}: it numbers the boundary points $0,\dots,3n+2$ cyclically with corner $j$ at $j(n+1)$, takes as chords the pairs not on a common closed side, lets two chords cross when their endpoints interleave, and sets $\texttt{a}(n)=(3n+3)+\sum_{\text{chords }c}(1+\#\{\text{chords crossing }c\})$. The theorem \decl{a_data} checks $\texttt{a}(0),\dots,\texttt{a}(10)$ against the first eleven listed terms by \texttt{decide +kernel} (axiom: \decl{propext} only). The identity $\texttt{a}(n)=E(B)$ for placements in general position is not proved in Lean (it follows from Proposition~\ref{prop:edges} and Lemma~\ref{lem:chords}(c),(d), which are), and \decl{statement} does not use \texttt{a}. The formula agrees with all $36$ listed terms, and the referees' exact rational simulation of Definition~\ref{def:graph} on random placements gave $3,24,153,588,1635,3708$ for $n\le5$.
+
+\section{Proof}\label{sec:proof}
+
+We follow \path{lean/Math0/Frontier/OEIS/A367119.lean}; brackets give the corresponding (private) Lean declarations. For $p,q,z\in\C$ let $D(p,q,z)=\re(q-p)\im(z-p)-\im(q-p)\re(z-p)$; it is affine in $z$ and vanishes on $[p,q]$ \lean{\decl{D_comb}, \decl{D_of_mem_segment}}.
+
+\begin{lemma}\label{lem:D}
+Let $p,q,r,s\in\C$.
+(a) \lean{\decl{seg_inter_sub}} If $D(p,q,r)\ne0$, then $[p,q]\cap[r,s]$ has at most one point.
+(b) \lean{\decl{crossPt_mem}} If $D(p,q,r)D(p,q,s)<0$ and $D(r,s,p)D(r,s,q)<0$, then $(p,q)\cap(r,s)\ne\emptyset$.
+(c) \lean{\decl{seg_pos}, \decl{seg_neg}} If $D(p,q,r)$, $D(p,q,s)$ are both positive or both negative, $D(p,q,\cdot)$ has no zero on $[r,s]$.
+\end{lemma}
+
+\begin{proof}
+(a) $(1-\lambda)r+\lambda s\in[p,q]$ forces $(1-\lambda)D(p,q,r)+\lambda D(p,q,s)=0$, an affine equation in $\lambda$ that is not identically zero. (b) With $\alpha=D(p,q,r)$, $\beta=D(p,q,s)$, the point $X=(\alpha s-\beta r)/(\alpha-\beta)$ has positive coefficients on $r,s$, and a direct computation using $D(r,s,q)-D(r,s,p)=\alpha-\beta$ writes it with the positive coefficients $D(r,s,q)/(\alpha-\beta)$, $-D(r,s,p)/(\alpha-\beta)$ on $p,q$. (c) On $[r,s]$, $D(p,q,\cdot)$ takes convex combinations of its values at $r$ and $s$.
+\end{proof}
+
+For $t\in[0,3)$ let $P(t)=x(t)+i\sqrt3\,y(t)$, where $(x,y)(t)$ is $(t,0)$ for $t\le1$, $\bigl(\frac{3-t}2,\frac{t-1}2\bigr)$ for $1<t\le2$ and $\bigl(\frac{3-t}2,\frac{3-t}2\bigr)$ for $2<t<3$; so $P$ runs along $S_0,S_1,S_2$ in turn and $P(j)=c_j$. Put $\Sigma_0=[0,1]$, $\Sigma_1=[1,2]$, $\Sigma_2=[2,3)\cup\{0\}$ and $I_0=(0,1)$, $I_1=(1,2)$, $I_2=(2,3)$.
+
+\begin{lemma}\label{lem:param}
+Let $t\in[0,3)$.
+(a) \lean{\decl{P_inj}} $P$ is injective on $[0,3)$, with left inverse $\theta(z)=\re z$ if $\im z=0$ and $\theta(z)=3-2\re z$ otherwise.
+(b) \lean{\decl{P_mem_side_iff}, \decl{P_mem_openSide_iff}} $P(t)\in S_j\iff t\in\Sigma_j$, $P(t)\in S_j^\circ\iff t\in I_j$, and $S_j=P(\Sigma_j)$.
+(c) \lean{\decl{Dline_pos_iff}} $D(c_0,c_1,P(t))=\sqrt3\,y$, $D(c_1,c_2,P(t))=\frac{\sqrt3}2(1-x-y)$, $D(c_2,c_0,P(t))=\frac{\sqrt3}2(x-y)$. All three are $\ge0$, and $D(c_j,c_{j+1},P(t))=0$ if and only if $t\in\Sigma_j$.
+(d) \lean{\decl{mem_triangle_of}, \decl{mem_interior_of}} If $D(c_j,c_{j+1},z)\ge0$ for $j=0,1,2$, then $z\in\Delta$; if all three are $>0$, then $z\in\inter\Delta$.
+(e) \lean{\decl{exists_T}} If $B$ is a placement of $n$ points per side and $T=\theta(B)$, then $T\subset[0,3)$, $B=P(T)$, $0,1,2\in T$, $|T\cap I_j|=n$, $|T|=3n+3$ and $|T\cap\Sigma_j|=n+2$.
+\end{lemma}
+
+\begin{proof}
+(a)--(c) are computations; $\im P(t)=0$ exactly when $t\le1$, and $\re P(t)=(3-t)/2$ for $t>1$. (d) The numbers $\frac{2}{\sqrt3}\bigl(D(c_1,c_2,z),D(c_2,c_0,z),D(c_0,c_1,z)\bigr)$ sum to $1$ and are the barycentric coordinates of $z$; the set where all are positive is open and lies in $\Delta$. (e) By (b) each $z\in B$ is $P(t)$ with $t=\theta(z)\in[0,3)$; the corners give $0,1,2\in T$; $B\cap S_j^\circ=P(T\cap I_j)$ and (a) give $|T\cap I_j|=n$; and $T=\{0,1,2\}\sqcup\bigsqcup_j(T\cap I_j)$, while $T\cap\Sigma_j$ is $T\cap I_j$ plus two corner parameters.
+\end{proof}
+
+From now on $B$ is a placement in general position and $T=\theta(B)$. A \emph{chord} is a pair $(a,b)$ with $a<b$ in $T$ such that no $\Sigma_j$ contains both $a$ and $b$; its segment is $[P(a),P(b)]$. Let $E(a,b,c)=D(P(a),P(b),P(c))/\sqrt3$ \lean{\decl{D_P}}.
+
+\begin{lemma}\label{lem:orient}
+(a) \lean{\decl{E_pos}} If $0\le a<b<c<3$ and no $\Sigma_j$ contains all of $a,b,c$, then $E(a,b,c)>0$.
+(b) \lean{\decl{E_sign}, \decl{P_not_mem_seg}} If $(a,b)$ is a chord and $t\in[0,3)\setminus\{a,b\}$, then $D(P(a),P(b),P(t))$ is negative if $a<t<b$ and positive otherwise. So no other point of $B$ lies on the chord.
+\end{lemma}
+
+\begin{proof}
+(a) Let $A=[0,1]$, $B'=(1,2]$, $C=(2,3)$, and write $XYZ$ for the case $a\in X$, $b\in Y$, $c\in Z$. In the cases $AAA$, $B'B'B'$, $CCC$ the parameters lie in one $\Sigma_j$; otherwise $2E(a,b,c)$ is
+\[
+\begin{array}{l@{\ \ }l@{\qquad}l@{\ \ }l}
+AAB'\colon & (b-a)(c-1), & AAC\colon & (b-a)(3-c),\\
+AB'B'\colon & (1-a)(c-b), & B'B'C\colon & (b-a)(c-2),\\
+ACC\colon & a(c-b), & B'CC\colon & (2-a)(c-b),\\
+AB'C\colon & (1-a)(2-b)(3-c)+a(b-1)(c-2). &&
+\end{array}
+\]
+All factors are $\ge0$. A zero value occurs only for $AB'B'$ with $a=1$, $ACC$ with $a=0$, $B'CC$ with $a=2$, or $AB'C$ with $a=0$, $b=2$, and in each of these cases $a,b,c$ lie in one $\Sigma_j$. (Lean: \texttt{nlinarith} in each case.)
+(b) The triples $(a,t,b)$, $(t,a,b)$, $(a,b,t)$ contain $a,b$, so no $\Sigma_j$ contains them. Apply (a) to the one in increasing order and use $E(a,b,t)=-E(a,t,b)=E(t,a,b)$.
+\end{proof}
+
+Chords $(a,b)$ and $(e,f)$ \emph{interleave} if $a<e<b<f$ or $e<a<f<b$ \lean{\decl{crossR}}.
+
+\begin{lemma}\label{lem:chords}
+Let $c=(a,b)$ and $d=(e,f)$ be chords.
+(a) \lean{\decl{oseg_interior}, \decl{oseg_not_side}} $(P(a),P(b))\subset\inter\Delta$, and $(P(a),P(b))$ misses $S_0\cup S_1\cup S_2$.
+(b) \lean{\decl{seg_inter_unique}} If $c\ne d$, the two chord segments have at most one common point.
+(c) \lean{\decl{X_mem}, \decl{seg_inter_X}} If $c,d$ interleave, their segments meet in exactly one point $X(c,d)$, which lies in both open segments.
+(d) \lean{\decl{crossR_of_mem}} If $c\ne d$ and $(P(a),P(b))\cap[P(e),P(f)]\ne\emptyset$, then $c$ and $d$ interleave.
+(e) \lean{\decl{classify}} Every drawn segment is $[P(e'),P(f')]$ with $e'\ne f'$ in $T$; either it is a chord segment, or $e',f'\in\Sigma_j$ for some $j$ and it lies in $S_j$.
+(f) \lean{\decl{Sd_inter}, \decl{side_inter_corner}} For $i\ne j$, $\Sigma_i\cap\Sigma_j$ is one corner parameter and $S_i\cap S_j$ is one corner.
+(g) \lean{\decl{oneD}} Two nondegenerate subsegments of a segment $[p,q]$, $p\ne q$, whose open segments share a point $z$, share another point.
+\end{lemma}
+
+\begin{proof}
+(a) By Lemma~\ref{lem:param}(c), $D(c_j,c_{j+1},\cdot)$ is $\ge0$ at $P(a),P(b)$ and $>0$ at one of them, as $a,b$ are not both in $\Sigma_j$; so it is $>0$ on $(P(a),P(b))$. Apply Lemma~\ref{lem:param}(d); the sides lie on the zero lines.
+(b) Some endpoint of $d$ is not an endpoint of $c$; by Lemma~\ref{lem:orient}(b) it lies off the line of $c$, and Lemma~\ref{lem:D}(a) applies.
+(c) By Lemma~\ref{lem:orient}(b), interleaving puts $P(e),P(f)$ strictly on opposite sides of the line of $c$, and $P(a),P(b)$ on opposite sides of the line of $d$. Apply Lemma~\ref{lem:D}(b), then (b).
+(d) Let $z$ be a common point. If $c,d$ share an endpoint $P(u)$, the other endpoint of $d$ is off the line of $c$, so $z=P(u)$ by Lemma~\ref{lem:D}(a), but $P(u)\notin(P(a),P(b))$. If they share no endpoint and do not interleave, then $e,f$ both lie in $(a,b)$ or both outside $[a,b]$, so $D(P(a),P(b),\cdot)$ has the same strict sign at $P(e)$, $P(f)$ (Lemma~\ref{lem:orient}(b)) and no zero on $[P(e),P(f)]$ (Lemma~\ref{lem:D}(c)), contradicting $D(P(a),P(b),z)=0$.
+(e) holds as the sides are convex, and (f) follows from Lemma~\ref{lem:param}(b). (g) Pull back along $\lambda\mapsto p+\lambda(q-p)$: two real intervals whose interiors contain $\zeta$ share $[\zeta,\zeta+\varepsilon]$ for some $\varepsilon>0$.
+\end{proof}
+
+For a chord $c$ let $\kappa(c)$ be the number of chords interleaving with $c$.
+
+\begin{proposition}\label{prop:vertices}
+(a) \lean{\decl{V_chord}, \decl{VC_card}} For a chord $c=(a,b)$, $V(B)\cap[P(a),P(b)]=\{P(a),P(b)\}\cup\{X(c,d): d\text{ interleaves }c\}$, a set of exactly $2+\kappa(c)$ points.
+(b) \lean{\decl{V_side}, \decl{VS_card}} $V(B)\cap S_j=P(T\cap\Sigma_j)$, a set of $n+2$ points.
+\end{proposition}
+
+\begin{proof}
+(a) The endpoints are in $B$, and $X(c,d)$ is a vertex since $\{X(c,d)\}=[P(a),P(b)]\cap[P(e),P(f)]$. Conversely, let $z\in V(B)\cap[P(a),P(b)]$, $z\ne P(a),P(b)$. Then $z\in(P(a),P(b))\subset\inter\Delta$, and $z\notin B$ by Lemma~\ref{lem:orient}(b), so $\{z\}=s\cap t$ for drawn segments $s\ne t$ (a drawn segment has two points). General position at $z$, applied to $[P(a),P(b)]$, $s$, $t$, shows that one of $s,t$ is $[P(a),P(b)]$; the other contains $z$, so by Lemma~\ref{lem:chords}(e),(a) it is the segment of a chord $d\ne c$, and by Lemma~\ref{lem:chords}(d),(c) $d$ interleaves $c$ and $z=X(c,d)$.
+The points $X(c,d)$ lie in the open segment, so they differ from the endpoints, and $P(a)\ne P(b)$. If $X(c,d)=X(c,d')$ with $d\ne d'$, this interior point lies on the segments of $c,d,d'$, which are pairwise distinct by Lemma~\ref{lem:chords}(b) \lean{\decl{seg_ne}}, contradicting general position.
+(b) The points of $B$ on $S_j$ are vertices and form $P(T\cap\Sigma_j)$, of size $n+2$. Conversely, let $z\in V(B)\cap S_j$, $z\notin B$, so $\{z\}=s\cap t$ for drawn segments $s,t$ and $z$ lies in the open segment of each. By Lemma~\ref{lem:chords}(a),(e), $s\subseteq S_k$ and $t\subseteq S_{k'}$. If $k=k'$, Lemma~\ref{lem:chords}(g) gives a second point of $s\cap t$; if $k\ne k'$, then $z$ is a corner by Lemma~\ref{lem:chords}(f), so $z\in B$. Both are impossible.
+\end{proof}
+
+\begin{proposition}[\decl{edgeSet_eq}, \decl{EF_card}, \decl{edges_eq}]\label{prop:edges}
+Call distinct $u,v$ in a finite set $F\subset\C$ \emph{consecutive} if $F\cap(u,v)=\emptyset$. The edge set of $G(B)$ is the disjoint union, over the sides $S_j$ and the chord segments $M$, of the sets of consecutive pairs of $V(B)\cap S_j$ and of $V(B)\cap M$. Hence
+\[
+E(B)=\sum_{j=0}^2\bigl((n+2)-1\bigr)+\sum_{c}\bigl(\kappa(c)+1\bigr)=3(n+1)+\#\{\text{chords}\}+\sum_c\kappa(c).
+\]
+\end{proposition}
+
+\begin{proof}
+Let $M$ be a side or a chord segment and $F_M=V(B)\cap M$. As $M$ is convex, a pair $\{u,v\}\subseteq M$ is an edge exactly when it is a consecutive pair of $F_M$ \lean{\decl{consF_iff}}. Every edge lies on a drawn segment, hence on some $M$ (Lemma~\ref{lem:chords}(e)), and every $M$ is drawn. The families are disjoint since an edge has two points: distinct chord segments share at most one point (Lemma~\ref{lem:chords}(b)), two sides share one corner (Lemma~\ref{lem:chords}(f)), and $S_j$ meets the segment of a chord $(a,b)$ only in its endpoints (Lemma~\ref{lem:chords}(a)), which are not both on $S_j$. A nonempty finite subset of a nondegenerate segment, pulled back to reals $\lambda_1<\dots<\lambda_k$ along an affine parametrization, has exactly the $k-1$ consecutive pairs $\{\lambda_i,\lambda_{i+1}\}$ \lean{\decl{consF_card}, \decl{consR_card}}. Proposition~\ref{prop:vertices} gives the sizes.
+\end{proof}
+
+\begin{lemma}\label{lem:count}
+(a) \lean{\decl{chords_card}} There are exactly $3n(n+1)$ chords.
+(b) \lean{\decl{diag_iff}} Let $0\le w<x<y<z<3$. For each $j$, at least three of $w,x,y,z$ lie in $\Sigma_j$ if and only if $\{w,y\}\subseteq\Sigma_j$ or $\{x,z\}\subseteq\Sigma_j$. Hence $(w,y)$ and $(x,z)$ are both chords if and only if no $\Sigma_j$ contains three of the four points.
+(c) \lean{\decl{crossings_formula}} $\sum_c\kappa(c)=\frac32\,n^2(n+1)(3n+1)$.
+\end{lemma}
+
+\begin{proof}
+(a) Of the $(3n+3)(3n+2)$ ordered pairs of distinct parameters, exactly $3(n+2)(n+1)$ lie in a common $\Sigma_j$, since no such pair lies in two of them (Lemma~\ref{lem:chords}(f)). Each chord accounts for two of the others, so there are $\frac12\bigl[(3n+3)(3n+2)-3(n+2)(n+1)\bigr]=3n(n+1)$ chords.
+(b) Every $3$-subset of $\{w,x,y,z\}$ contains $\{w,y\}$ or $\{x,z\}$. Conversely, $\Sigma_0,\Sigma_1$ are intervals, so $w,y\in\Sigma_j$ gives $x\in\Sigma_j$ and $x,z\in\Sigma_j$ gives $y\in\Sigma_j$. For $\Sigma_2=[2,3)\cup\{0\}$: if $w,y\in\Sigma_2$, then $x\in\Sigma_2$ when $w\ge2$, and $z>y\ge2$ when $w=0$; if $x,z\in\Sigma_2$, then $x>0$ forces $x\ge2$, so $y\in\Sigma_2$. (In Lean these checks go through a monotone region index $\rho:[0,3)\to\{0,\dots,5\}$ and \texttt{omega}.)
+(c) Interleaving is symmetric and irreflexive, so $\sum_c\kappa(c)=2N$, where $N$ counts the pairs of chords $(w,y),(x,z)$ with $w<x<y<z$. Sending such a pair to $\{w,x,y,z\}$ is a bijection \lean{\decl{crossH_card}} onto the set $\mathcal G$ of $4$-subsets of $T$ with no three points in one $\Sigma_j$; the inverse sorts the $4$-set (\decl{Finset.orderEmbOfFin}) and takes its two diagonals, which are chords by (b). As $|T\cap\Sigma_j|=n+2$ and $|T\setminus\Sigma_j|=2n+1$, there are $(2n+1)\binom{n+2}3+\binom{n+2}4=\frac18n(n+1)(n+2)(3n+1)$ $4$-subsets with at least three points in $\Sigma_j$ \lean{\decl{bad_card}}, and none has three points in each of two $\Sigma_i\ne\Sigma_j$, as $|\Sigma_i\cap\Sigma_j|=1$ \lean{\decl{not_both_bad}}. By inclusion--exclusion and $\binom{3n+3}4=\frac38n(n+1)(3n+1)(3n+2)$,
+\[
+|\mathcal G|=\binom{3n+3}4-3\Bigl[(2n+1)\binom{n+2}3+\binom{n+2}4\Bigr]=\tfrac38n(n+1)(3n+1)\cdot2n=\tfrac34n^2(n+1)(3n+1).
+\]
+In Lean the binomial coefficients are expanded as rational polynomials and the identity is checked by \texttt{ring}.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}] \lean{\decl{result}}
+By Proposition~\ref{prop:edges} and Lemma~\ref{lem:count}(a),(c),
+\[
+E(B)=3(n+1)+3n(n+1)+\tfrac32n^2(n+1)(3n+1)=\tfrac32\bigl(3n^4+4n^3+3n^2+4n+2\bigr).\qedhere
+\]
+\end{proof}
+
+\begin{remark}
+The same lemmas give (not formalized) $V=3n+3+\frac34n^2(n+1)(3n+1)$ (A367117) and, by Euler's formula, $E-V+1=\frac14(9n^4+12n^3+15n^2+12n+4)$ regions (A367118).
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+The proof is the file \path{lean/Math0/Frontier/OEIS/A367119.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}, which imports the frozen statement file and \path{lean/Math0/Audit.lean}. The main theorem is \decl{Math0.Frontier.A367119.result}, of type \decl{Math0.Statements.A367119.statement}; the auxiliary declarations are private. The file ends with
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A367119.result Math0.Statements.A367119.statement
+\end{lstlisting}
+This command (defined in \path{lean/Math0/Audit.lean}) fails unless \decl{statement} is a universe-monomorphic \texttt{Prop}-valued definition, \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (excluding \decl{sorryAx}, \texttt{native\_decide} and custom axioms), and the type of \decl{result} is syntactically \decl{statement} or its negation, without unfolding. Here \texttt{lake env lean} on the file prints no warnings and reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A367119.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A367119.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A367119.result' proves 'Math0.Statements.A367119.statement'
+\end{lstlisting}
+The proof file contains no \texttt{sorry}, \texttt{native\_decide}, \texttt{axiom} or \texttt{set\_option}. We use Lean~4 \cite{Lean4} and Mathlib \cite{Mathlib}, both \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root; it fetches the Mathlib cache, builds all math0 results with \texttt{lake build} (re-running every audit) and checks that the pinned dependencies are unmodified. This result alone: \texttt{lake build Math0.Frontier.OEIS.A367119} in \path{lean}.
+
+{\footnotesize\raggedright
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171 [cs.AI], 2026.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, CADE 28, LNCS \textbf{12699} (2021), 625--635.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, CPP 2020, ACM, 2020, 367--381.
+
+\bibitem{PR}
+B.~Poonen and M.~Rubinstein, \emph{The number of intersection points made by the diagonals of a regular polygon}, SIAM J. Discrete Math. \textbf{11} (1998), no.~1, 135--156; arXiv:math/9508209.
+
+\bibitem{A213827}
+The OEIS Foundation Inc., \url{https://oeis.org/A213827} (C.~Kimberling, 2012).
+
+\bibitem{A365929}
+The OEIS Foundation Inc., \url{https://oeis.org/A365929} (V.~S. Balaji, 2023).
+
+\bibitem{A366932}
+The OEIS Foundation Inc., \url{https://oeis.org/A366932} (S.~R. Shannon, 2023).
+
+\bibitem{A367015}
+The OEIS Foundation Inc., \url{https://oeis.org/A367015} (S.~R. Shannon, 2023).
+
+\bibitem{A367117}
+The OEIS Foundation Inc., \url{https://oeis.org/A367117} (S.~R. Shannon and N.~J.~A. Sloane, 2023).
+
+\bibitem{A367118}
+The OEIS Foundation Inc., \url{https://oeis.org/A367118} (S.~R. Shannon and N.~J.~A. Sloane, 2023).
+
+\bibitem{A367119}
+The OEIS Foundation Inc., \url{https://oeis.org/A367119} (S.~R. Shannon and N.~J.~A. Sloane, 2023).
+
+\bibitem{A367183}
+The OEIS Foundation Inc., \url{https://oeis.org/A367183} (S.~R. Shannon and N.~J.~A. Sloane, 2023).
+
+\bibitem{A367190}
+The OEIS Foundation Inc., \url{https://oeis.org/A367190} (S.~R. Shannon and N.~J.~A. Sloane, 2023).
+
+\bibitem{A392261}
+The OEIS Foundation Inc., \url{https://oeis.org/A392261} (S.~R. Shannon and N.~J.~A. Sloane, 2026).
+
+\end{thebibliography}
+}
+
+\end{document}

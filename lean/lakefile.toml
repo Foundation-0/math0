@@ -1,0 +1,23 @@
+name = "math0"
+version = "0.1.0"
+defaultTargets = ["Math0"]
+
+[leanOptions]
+pp.unicode.fun = true
+autoImplicit = false
+relaxedAutoImplicit = false
+
+# Third-party statements of open problems. Pinned so that every statement we
+# prove is exactly the one published upstream at this commit.
+[[require]]
+name = "formal_conjectures"
+git = "https://github.com/google-deepmind/formal-conjectures"
+rev = "c77fdd446d23539302aa73bcfae4a9fa962b8382"
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.33.1"
+
+[[lean_lib]]
+name = "Math0"

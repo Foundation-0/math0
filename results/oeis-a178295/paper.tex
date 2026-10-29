@@ -1,0 +1,350 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw,noncomputable},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8, upquote=true,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {ℝ}{{$\mathbb{R}$}}1
+    {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {∈}{{$\in$}}1 {→}{{$\to$}}1 {↔}{{$\leftrightarrow$}}1
+    {∧}{{$\wedge$}}1 {≤}{{$\le$}}1 {≠}{{$\ne$}}1 {⁻¹}{{$^{-1}$}}2 {↪}{{$\hookrightarrow$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\cQ}{\mathcal{Q}}
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\cC}{\mathcal{C}}
+
+
+\title[Collinear four-point subsets of $\{0,\dots,4\}^n$]{Collinear four-point subsets of the grid $\{0,1,2,3,4\}^n$: a proof of Mathar's formulas for OEIS A178295}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 24, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $a(n)$ be the number of $4$-element subsets of the grid $\{0,1,2,3,4\}^n\subset\R^n$ that lie on a line. We prove that $a(n)=9^n/2+3\cdot7^n/2-2\cdot5^n$ for every $n\ge0$, together with the recurrence $a(n)=21a(n-1)-143a(n-2)+315a(n-3)$ for $n\ge3$ and the generating function $x(-5+41x)/((9x-1)(7x-1)(5x-1))$; these three formulas were conjectured by R.~J. Mathar in OEIS A178295 in 2010.
+The proof writes an ordered collinear $4$-tuple as $n$ columns in $\{0,\dots,4\}^4$ that are pairwise affinely related, and a finite classification of the $120$ injective columns into $12$ classes of size $4$ and $36$ classes of size $2$ gives $24\,a(n)=12(9^n-5^n)+36(7^n-5^n)$.
+We found no earlier proof and classify the result as new, although it is elementary and close to the classical count of lines in $n$-dimensional tic-tac-toe.
+The theorem is verified in Lean~4 against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry, with the finite facts about columns checked by kernel evaluation.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Let $G_n=\{0,1,2,3,4\}^n\subset\R^n$. A set $S\subseteq\R^n$ is \emph{collinear} if it is contained in an affine line. Let $\cQ_n$ be the set of collinear $4$-element subsets of $G_n$ and $a(n)=|\cQ_n|$.
+The OEIS entry A178295 \cite{A178295}, contributed by R.~H. Hardin on May~24, 2010 at the suggestion of R.~J. Mathar on the Sequence Fans mailing list, lists
+\[
+a(0),\dots,a(9)=0,\ 5,\ 64,\ 629,\ 5632,\ 48485,\ 410944,\ 3470549,\ 29389312,\ 250334405 .
+\]
+The same day Mathar recorded three conjectural formulas: a closed form, a linear recurrence of order $3$ and a rational generating function. In the current revision of the entry (\#15, July~22, 2025) they are still labelled as a conjecture. We prove all three (Theorem~\ref{thm:main}).
+Related entries created the same day carry analogous conjectures of Mathar, among them A178294 \cite{A178294} (collinear triples in the grid of side $4$), A178296 \cite{A178296} ($5$-tuples, side $6$) and A178297 \cite{A178297} ($6$-tuples, side $7$).
+
+\subsection*{Prior work}
+Mathar's manuscript \cite{Ma}, linked from A178294, fits Hardin's tables to Ehrhart polynomials; its abstract calls it a ``mostly speculative summary''. We could not obtain its full text. Our knowledge of it comes from search snippets of the abstract, seen by the math0 literature referee, and from the following report.
+Issue \#7376 of the GitHub repository \texttt{the-omega-institute/trureturing} \cite{TRU} (opened September~12 and closed September~13, 2026) reports a Lean proof of Mathar's closed form for A178294, collinear triples in $\{0,1,2,3\}^n$. Its literature check found no earlier proof or disproof and describes \cite{Ma} as presenting the formula as a fit, without proof. It does not mention A178295.
+
+The count of \emph{full} lines is classical: the grid $\{0,\dots,k-1\}^n$, the board of $n$-dimensional tic-tac-toe of side $k$, has $((k+2)^n-k^n)/2$ lines containing $k$ grid points. Erd\H{o}s and Selfridge state this count \cite{ES}, Golomb and Hales prove it \cite[Theorem~1]{GH}, and Honsberger presents a proof due to L.~Moser \cite{Ho}; for $k=4$, $n=3$ it gives the $76$ winning lines of Qubic \cite{Pa}. For $k=5$ the count is $(7^n-5^n)/2$, OEIS A081200 \cite{A081200}, where Hardin's comment identifying the sequence with this count is also still labelled as a conjecture; math0 has formalized a proof of that identification separately. Mathar's closed form can be written as
+\[
+  a(n)=\frac{9^n-5^n}{2}+3\cdot\frac{7^n-5^n}{2},
+\]
+and Remark~\ref{rem:geom} explains the two terms geometrically; a reader who knows the word-counting method of \cite{GH} can derive the formula quickly in this way. The math0 referees searched arXiv, MathOverflow, Mathematics Stack Exchange, the Sequence Fans mailing list and the tic-tac-toe literature, including \cite{GH}, and found no published statement of the number of collinear $4$-subsets, or of the term $(9^n-5^n)/2$, and no resolution of the conjecture. We therefore classify Theorem~\ref{thm:main} as a \emph{new result}, with two caveats: the argument is short and elementary, and the full text of \cite{Ma} could not be checked.
+
+Our proof, which is the one formalized, does not use the structure of lattice lines. It writes an ordered collinear $4$-tuple as $n$ columns in $\{0,\dots,4\}^4$, reduces collinearity to a pairwise relation between columns, and classifies the columns by a finite computation (Section~\ref{sec:proof}).
+
+\section{Statement}\label{sec:statement}
+
+\begin{theorem}\label{thm:main}
+Let $a(n)$ be the number of collinear $4$-element subsets of $\{0,1,2,3,4\}^n\subset\R^n$. Then:
+\begin{enumerate}
+\item $a(n)=9^n/2+3\cdot7^n/2-2\cdot5^n$ for every $n\ge0$;
+\item $a(n)=21\,a(n-1)-143\,a(n-2)+315\,a(n-3)$ for every $n\ge3$;
+\item $\sum_{n\ge0}a(n)\,x^n=x(-5+41x)/\bigl((9x-1)(7x-1)(5x-1)\bigr)$ in the ring $\Q[[x]]$ of formal power series.
+\end{enumerate}
+\end{theorem}
+
+The entry A178295 \cite{A178295} (offset $0$) reads, verbatim (name, author and formula lines):
+\begin{lstlisting}[language={},frame=none,basicstyle=\ttfamily\footnotesize,literate={}]
+Number of collinear point 4-tuples in a 5 X 5 X 5 X... n-dimensional cubic grid.
+_R. H. Hardin_, suggested by R. J. Mathar in the Sequence Fans Mailing List, May 24 2010
+Conjecture: a(n) = 9^n/2+3*7^n/2-2*5^n. a(n)= +21*a(n-1) -143*a(n-2) +315*a(n-3). G.f.: x*(-5+41*x)/((9*x-1)*(7*x-1)*(5*x-1)). [_R. J. Mathar_, May 24 2010]
+\end{lstlisting}
+
+\subsection*{Lean formalization}
+math0 formalized the statement in \path{lean/Math0/Statements/OEIS/A178295.lean}, namespace \decl{Math0.Statements.A178295}. The file was reviewed for fidelity, and its SHA-256 hash \texttt{70638d82\ldots bbcc412} recorded, before any proof attempt; the file has not changed since, and this hash is listed in \path{lean/Math0/Statements/FROZEN.sha256}. The definitions used by the statement, and the statement itself, are (verbatim; docstrings, the two decidability instances, which are obtained by \texttt{infer\_instance}, and auxiliary declarations are omitted):
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize]
+abbrev Pt (n : ℕ) := Fin n → Fin 5
+def coord {n : ℕ} (p : Pt n) (i : Fin n) : ℤ := ((p i : ℕ) : ℤ)
+def Coll3 {n : ℕ} (p q r : Pt n) : Prop :=
+  ∀ i j : Fin n, (coord q i - coord p i) * (coord r j - coord p j) =
+    (coord q j - coord p j) * (coord r i - coord p i)
+def IsCollinear {n : ℕ} (s : Finset (Pt n)) : Prop :=
+  ∀ p ∈ s, ∀ q ∈ s, ∀ r ∈ s, Coll3 p q r
+def a (n : ℕ) : ℕ :=
+  ((Finset.univ : Finset (Pt n)).powersetCard 4 |>.filter IsCollinear).card
+def statement : Prop :=
+  (∀ n : ℕ, (a n : ℚ) = 9 ^ n / 2 + 3 * 7 ^ n / 2 - 2 * 5 ^ n) ∧
+  (∀ n : ℕ, 3 ≤ n →
+    (a n : ℤ) = 21 * (a (n - 1) : ℤ) - 143 * (a (n - 2) : ℤ) + 315 * (a (n - 3) : ℤ)) ∧
+  PowerSeries.mk (fun n => (a n : ℚ)) =
+    PowerSeries.X * (-5 + 41 * PowerSeries.X) *
+      ((9 * PowerSeries.X - 1) * (7 * PowerSeries.X - 1) * (5 * PowerSeries.X - 1))⁻¹
+\end{lstlisting}
+
+\emph{Encoding.} The grid $G_n$ is \texttt{Pt n}; for $n=0$ it has one point. \texttt{Coll3 p q r} says that every $2\times2$ minor $(q-p)_i(r-p)_j-(q-p)_j(r-p)_i$ vanishes in $\Z$, and \texttt{IsCollinear s} requires this for all triples of points of $s$, repetitions allowed. The statement file proves \decl{isCollinear_iff_collinear}: \texttt{IsCollinear s} holds if and only if \texttt{Collinear ℝ (toReal '' s)}, where \decl{toReal} views a grid point as a point of $\R^n$ and Mathlib's \texttt{Collinear} says that the points lie on one affine line. ``Point $4$-tuples'' are read as unordered sets of four distinct points (\texttt{powersetCard 4}); the data force this reading, since $a(1)=5=\binom54$ and $a(2)=64=25+25+10+4$ counts the four-point subsets of the $5$ rows, the $5$ columns and the $2$ main diagonals, and the $4$ diagonals with exactly $4$ points. The closed form is stated in $\Q$, so the halves are exact, for all $n\ge0$ (the offset; the entry gives no range). The recurrence is stated in $\Z$ for $n\ge3$, where all indices are defined. The generating function uses Mathlib's inverse in $\Q[[x]]$; the denominator has constant coefficient $-1\ne0$, so this is the true quotient, and \decl{genFun_iff} restates the clause as $A(x)D(x)=x(-5+41x)$, where $A(x)=\sum a(n)x^n$ and $D(x)=(9x-1)(7x-1)(5x-1)$.
+
+\emph{Data check.} The definition of \texttt{a} is computable but too slow for the kernel. The statement file defines an evaluator \decl{fastA}, which, for each pair of points $p,q$ with $p$ before $q$ in a fixed list, adds $\binom m2$, where $m$ is the number of points after $q$ on the line $pq$, and proves $a(n)=\mathtt{fastA}(n)$ for every $n$ (\decl{a_eq_fastA}). The lemma \decl{a_data} checks $a(0),a(1),a(2)=0,5,64$ by \texttt{decide +kernel}. The evaluator does about $5^{3n}$ work, and a kernel evaluation of $a(3)$ with an evaluator of this kind ran out of memory, so only these three terms are kernel-checked against \texttt{a}. The lemmas \decl{closedForm_data} and \decl{recurrence_data} check that the transcribed closed form gives all ten listed terms and that these terms satisfy the transcribed recurrence; they concern the formulas, not \texttt{a}. Outside Lean, the math0 referees reproduced $a(1),\dots,a(5)=5,64,629,5632,48485$ by brute force.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file (Section~\ref{sec:lean}); each step names its Lean declaration. Write $[5]=\{0,1,2,3,4\}$ and $I=\{0,1,2,3\}$.
+
+\subsection{Columns and compatibility}
+A \emph{column} is a map $u\colon I\to[5]$, written $u=(u_0,u_1,u_2,u_3)$ or as a word $u_0u_1u_2u_3$; let $\cK=[5]^I$ be the set of the $625$ columns and $\cC\subseteq\cK$ the set of constant columns. A column is \emph{injective} if its four entries are distinct.
+
+\begin{definition}[\decl{RR}]
+Columns $u,w$ are \emph{compatible}, written $u\sim w$, if $(u_b-u_a)(w_c-w_a)=(w_b-w_a)(u_c-u_a)$ for all $a,b,c\in I$; that is, the four points $(u_a,w_a)\in\Z^2$ are collinear.
+\end{definition}
+
+\begin{lemma}[\decl{RR_symm}, \decl{RR_const_right}, \decl{const_of_RR}, \decl{RR_trans}]\label{lem:alg}
+Let $u,v,w,t\in\cK$.
+\begin{enumerate}
+\item If $u\sim w$ then $w\sim u$.
+\item If $w$ is constant, then $u\sim w$.
+\item If $w\sim t$, $w_a=w_b$ and $t_a\ne t_b$ for some $a,b\in I$, then $w$ is constant.
+\item If $v_{a_0}\ne v_{b_0}$ for some $a_0,b_0\in I$, $v\sim u$ and $v\sim w$, then $u\sim w$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) and (2) are immediate. (3) The instance $(a,b,c)$ of $w\sim t$ reads $0=(t_b-t_a)(w_c-w_a)$, and $t_b\ne t_a$, so $w_c=w_a$ for every $c$.
+(4) Put $D=v_{b_0}-v_{a_0}\ne0$, $P=u_{b_0}-u_{a_0}$ and $R=w_{b_0}-w_{a_0}$. Subtracting the instances $(a_0,b_0,x)$ and $(a_0,b_0,y)$ of $v\sim u$ gives $D(u_y-u_x)=P(v_y-v_x)$ for all $x,y\in I$, and likewise $D(w_y-w_x)=R(v_y-v_x)$. Hence $D^2(u_b-u_a)(w_c-w_a)=PR\,(v_b-v_a)(v_c-v_a)=D^2(w_b-w_a)(u_c-u_a)$ for all $a,b,c$, and we cancel $D^2\ne0$ in $\Z$.
+\end{proof}
+
+\subsection{The finite classification}
+Let $r_1,\dots,r_{48}$ be the following injective columns (the list \decl{repL}):
+$r_1,\dots,r_{12}$ are the $12$ permutations of $0123$ with first entry $0$ or $1$, in lexicographic order ($0123,\dots,1320$);
+$r_{13},\dots,r_{48}$ are the $36$ injective columns $u$ whose entries include $0$ and $4$ and which are lexicographically smaller than $4-u=(4-u_a)_a$, in lexicographic order ($0124,\dots,2140$).
+For $1\le k\le48$ let $A_k=\{w\in\cK: r_k\sim w\}$.
+
+\begin{lemma}[\decl{rep_injB}, \decl{rep_sep}, \decl{cover_check}, \decl{count_check}, \decl{const_check}]\label{lem:finite}
+\leavevmode
+\begin{enumerate}
+\item Each $r_k$ is injective.
+\item If $k\ne k'$ then $r_k\not\sim r_{k'}$.
+\item Every injective column is compatible with some $r_k$.
+\item $|A_k|=9$ for $k\le12$ and $|A_k|=7$ for $k>12$.
+\item $|\cC|=5$.
+\end{enumerate}
+\end{lemma}
+
+\emph{The certificate.} In Lean each item is a closed decidable proposition proved by \texttt{decide +kernel}: the kernel itself reduces the Boolean test to \texttt{true}, with no compiled code and no extra axiom. The test \decl{RRb} evaluates the $64$ instances $(a,b,c)$ of the compatibility identity with the statement file's \decl{minorB}, which compares two sums of products in $\N$ (correct by \decl{minorB_iff}), and \decl{RRb_iff} proves that \decl{RRb} decides $\sim$. Items (3)--(5) run over the statement file's list \texttt{L 4} of all $625$ columns, which \decl{mem_L} and \decl{nodup_L} show to be complete and duplicate-free; \decl{card_filter_col} turns counts along \texttt{L 4} into cardinalities of finite sets. The kernel thus tests at most $48\cdot625$ pairs of columns per item.
+
+\begin{proof}[Proof by hand]
+Lean uses only the computation. Let $u$ be injective. If $w=\alpha u+\beta$ with $\alpha,\beta\in\Q$, both sides of the identity defining $u\sim w$ equal $\alpha(u_b-u_a)(u_c-u_a)$, so $u\sim w$. Conversely, if $u\sim w$, the instances $(a_0,b_0,c)$ with $a_0\ne b_0$ fixed give $w=\alpha u+\beta$. So $A_u=\{w:u\sim w\}$ consists of the $5$ constant columns ($\alpha=0$) and of injective columns $\alpha u+\beta$ whose span $\max-\min$ is $|\alpha|$ times that of $u$; four distinct values in $[5]$ have span $3$ or $4$.
+If $u$ has span $3$, its values are $m,\dots,m+3$ with $m\in\{0,1\}$, and $|\alpha|\in\{1,4/3\}$; $|\alpha|=4/3$ is impossible, since the entries of $w$ where $u$ takes the values $m$ and $m+1$ would differ by $4/3$. So $w\in\{u-m,\ u-m+1,\ m+3-u,\ m+4-u\}$.
+If $u$ has span $4$, its values are $0<x<y<4$ and $0,4$, and $|\alpha|\in\{1,3/4\}$; $|\alpha|=3/4$ is impossible, since the entries where $u$ takes the values $0$ and $x$ would differ by $3x/4\notin\Z$. So $w\in\{u,4-u\}$.
+By Lemma~\ref{lem:alg}(1),(4), $\sim$ is an equivalence relation on the $120$ injective columns, with classes of size $4$ (the $2\cdot4!=48$ columns of span $3$) and $2$ (the $3\cdot4!=72$ columns of span $4$), so $12$ and $36$ classes. The $r_k$ are exactly the lexicographically smallest members of the $48$ classes (in a class of span $3$ the smallest member takes the values $0,1,2,3$, and of $v$ and $3-v$ it is the one with first entry at most $1$; in a class $\{u,4-u\}$ it is the smaller of the two). This gives (1)--(3); (4) follows from $|A_k|=5+4$ or $5+2$, and (5) is clear.
+\end{proof}
+
+\subsection{From sets to column families}
+Let $E(n)$ be the set of injective maps $f\colon I\to G_n$ such that \texttt{Coll3}$(f(a),f(b),f(c))$ for all $a,b,c\in I$ (\decl{E}). Let $V(n)$ be the set of families $g=(g_i)_{i<n}$ of columns such that $g_i\sim g_j$ for all $i,j$ and the rows are distinct: for all $a\ne b$ in $I$ some $i$ has $g_i(a)\ne g_i(b)$ (\decl{V}).
+
+\begin{lemma}[\decl{fiber_card}, \decl{card_E}, \decl{card_E_V}]\label{lem:E}
+$|V(n)|=|E(n)|=24\,a(n)$.
+\end{lemma}
+
+\begin{proof}
+For $f\in E(n)$ the image $f(I)$ has $4$ elements and is collinear, since any three of its points are $f(a),f(b),f(c)$. Conversely, if $s\in\cQ_n$, every injective $f$ with $f(I)=s$ lies in $E(n)$. So $f\mapsto f(I)$ maps $E(n)$ onto $\cQ_n$, and each fibre is the set of bijections $I\to s$, in bijection with the embeddings $I\hookrightarrow s$, of which there are $4!=24$. Hence $|E(n)|=24\,a(n)$.
+Transposition $f\mapsto g$, $g_i(a)=f(a)_i$, is a bijection from maps $I\to G_n$ to families of $n$ columns. The instance $(i,j)$ of \texttt{Coll3}$(f(a),f(b),f(c))$ is literally the instance $(a,b,c)$ of $g_i\sim g_j$, and $f$ is injective exactly when the rows of $g$ are distinct. Hence $|E(n)|=|V(n)|$.
+\end{proof}
+
+\subsection{Decomposition}
+For $1\le k\le48$ let $W(n,k)=A_k^n\setminus\cC^n$, the families of $n$ columns, each compatible with $r_k$, not all constant (\decl{W}).
+
+\begin{proposition}[\decl{V_eq}, \decl{W_disj}]\label{prop:decomp}
+$V(n)$ is the disjoint union of $W(n,1),\dots,W(n,48)$.
+\end{proposition}
+
+\begin{proof}
+\emph{$V(n)\subseteq\bigcup_k W(n,k)$.} Let $g\in V(n)$. Rows $0$ and $1$ are distinct, so some column $g_{i_0}$ is not constant. It is injective: if $g_{i_0}(a)=g_{i_0}(b)$ with $a\ne b$, some $g_j$ has $g_j(a)\ne g_j(b)$, and Lemma~\ref{lem:alg}(3) applied to $g_{i_0}\sim g_j$ makes $g_{i_0}$ constant. By Lemma~\ref{lem:finite}(3), $r_k\sim g_{i_0}$ for some $k$. For every $j$, Lemma~\ref{lem:alg}(4) through the non-constant $g_{i_0}$, applied to $g_{i_0}\sim r_k$ and $g_{i_0}\sim g_j$, gives $r_k\sim g_j$. So $g\in W(n,k)$.
+
+\emph{$W(n,k)\subseteq V(n)$.} Let $g\in W(n,k)$. Since $r_k$ is injective, Lemma~\ref{lem:alg}(4) through $r_k$ gives $g_i\sim g_j$ for all $i,j$. Choose a non-constant $g_{i_0}$. If $a\ne b$ and $g_i(a)=g_i(b)$ for all $i$, Lemma~\ref{lem:alg}(3) applied to $g_{i_0}\sim r_k$, with $r_k(a)\ne r_k(b)$, makes $g_{i_0}$ constant, a contradiction.
+
+\emph{Disjointness.} If $g\in W(n,k)\cap W(n,k')$, choose a non-constant $g_{i_0}$; Lemma~\ref{lem:alg}(4) through $g_{i_0}$ gives $r_k\sim r_{k'}$, so $k=k'$ by Lemma~\ref{lem:finite}(2).
+\end{proof}
+
+\begin{lemma}[\decl{card_W}, \decl{card_V}]\label{lem:count}
+$|W(n,k)|=|A_k|^n-5^n$, and $|V(n)|=12(9^n-5^n)+36(7^n-5^n)$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:alg}(2), $\cC^n\subseteq A_k^n$, so $|W(n,k)|=|A_k|^n-|\cC|^n$. Use Lemma~\ref{lem:finite}(4),(5) and sum over $k$ by Proposition~\ref{prop:decomp}.
+\end{proof}
+
+For $n=0$ all these sets are empty, in agreement with $a(0)=0$; no separate case is needed.
+
+\subsection{Proof of Theorem~\ref{thm:main}}
+\emph{(1)} (\decl{a_mul}, \decl{closed}). Lemmas~\ref{lem:E} and~\ref{lem:count} give $24\,a(n)=12(9^n-5^n)+36(7^n-5^n)$. In Lean this holds in $\N$ with truncated subtraction; since $5^n\le7^n\le9^n$ it casts to $\Q$, and dividing by $24$ gives $a(n)=(9^n-5^n)/2+3(7^n-5^n)/2=9^n/2+3\cdot7^n/2-2\cdot5^n$.
+
+\emph{(2)} (\decl{result}). Since $x^3-21x^2+143x-315=(x-5)(x-7)(x-9)$, each of $5^n,7^n,9^n$, and hence $a(n)$ by~(1), satisfies $s(n)=21s(n-1)-143s(n-2)+315s(n-3)$. In Lean one writes $n=m+3$, casts to $\Q$, substitutes~(1) and closes the goal by \texttt{ring}.
+
+\emph{(3)} (\decl{genFun_iff}, \decl{result}). $D(x)=-1+21x-143x^2+315x^3$ is invertible in $\Q[[x]]$, and the claim is equivalent to $A(x)D(x)=-5x+41x^2$. The coefficient of $x^n$ in $A(x)D(x)$ is $-a(n)+21a(n-1)-143a(n-2)+315a(n-3)$, terms with negative index omitted. For $n=0,1,2$ it is $0$, $-5+0=-5$ and $-64+105-0=41$, using $a(0),a(1),a(2)=0,5,64$ from~(1); for $n\ge3$ it is $0$ by~(2) (in Lean, again by substituting~(1) and \texttt{ring}). \qed
+
+\begin{remark}[geometric meaning; not formalized]\label{rem:geom}
+If $g\in W(n,k)$ with $r_k$ of span $3$, the four points are $x(0),x(1),x(2),x(3)$ for a map $t\mapsto x(t)$ each of whose coordinates is constant, equal to $t$ or $t+1$, or equal to $3-t$ or $4-t$: $9$ choices per coordinate, not all constant, so the four points are consecutive lattice points on a line. Counting such words up to reversal, as Golomb and Hales count lines \cite{GH}, gives $(9^n-5^n)/2$ sets of four consecutive collinear points. If $r_k$ has span $4$, the points are four of the five points of a full line, including both endpoints; there are $(7^n-5^n)/2$ full lines \cite{ES,GH}, each with three such subsets. This matches $12(9^n-5^n)/24$ and $36(7^n-5^n)/24$. A math0 referee derived the formula independently in this way, using that a line whose primitive direction has a coordinate of absolute value at least $2$ meets $G_n$ in at most $3$ points. The same count for collinear $k$-subsets of $\{0,\dots,k\}^n$ suggests $\bigl((k+5)^n-(k+1)^n+(k-1)((k+3)^n-(k+1)^n)\bigr)/2$, which agrees with Mathar's conjectured closed forms in A178294, A178296 and A178297 ($k=3,5,6$); we have not formalized these cases.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+The proof is in \path{lean/Math0/Frontier/OEIS/A178295.lean} of the math0 repository (\url{https://github.com/Foundation-0/math0}). It imports the frozen statement file (Section~\ref{sec:statement}) and the audit commands of \path{lean/Math0/Audit.lean}. The main declaration is \lstinline{theorem result : statement} in the namespace \decl{Math0.Frontier.A178295}; the auxiliary declarations of this file named in Section~\ref{sec:proof} (all except those attributed there to the statement file) are \texttt{private}, and the file ends with
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize]
+#math0_settles Math0.Frontier.A178295.result Math0.Statements.A178295.statement
+\end{lstlisting}
+Neither file contains \texttt{sorry}, \texttt{admit}, \texttt{axiom}, \texttt{native\_decide}, \texttt{implemented\_by}, \texttt{extern}, \texttt{unsafe}, \texttt{opaque} or \texttt{set\_option}; the finite checks of Lemma~\ref{lem:finite} run within the default limits.
+
+The command \texttt{\#math0\_settles}, used for statements that math0 formalizes itself, fails unless (i) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (ii) \decl{statement} and \decl{result} depend on no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, which excludes \decl{sorryAx}, the axiom \decl{Lean.ofReduceBool} behind \texttt{native\_decide}, and custom axioms; and (iii) the type of \decl{result} is syntactically \decl{statement} or its negation, up to metadata, with no unfolding. Compiling the file with \texttt{lake env lean} prints the following, and no warnings:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A178295.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A178295.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A178295.result' proves 'Math0.Statements.A178295.statement'
+\end{lstlisting}
+
+\emph{Toolchain and reproduction.} Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}. The repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}; this result does not use it, since the statement is math0's own formalization of an OEIS conjecture. To reproduce, run \path{scripts/verify.sh} from the repository root; it fetches the Mathlib cache, runs \texttt{lake build} on all math0 results (re-running every audit command) and checks that the pinned dependencies are unmodified. The single file is checked by \texttt{lake env lean Math0/Frontier/OEIS/A178295.lean} in \path{lean/}; this takes about two minutes, nearly all of it in the \texttt{decide +kernel} checks.
+
+{\footnotesize
+\begin{thebibliography}{99}
+
+\bibitem{ES}
+P.~Erd\H{o}s and J.~L. Selfridge, \emph{On a combinatorial game}, J. Combin. Theory Ser.~A \textbf{14} (1973), no.~3, 298--301.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{GH}
+S.~W. Golomb and A.~W. Hales, \emph{Hypercube tic-tac-toe}, in: R.~J. Nowakowski (ed.), \emph{More Games of No Chance}, MSRI Publications \textbf{42}, Cambridge University Press, 2002, 167--182.
+
+\bibitem{Ho}
+R.~Honsberger, \emph{Mathematical Morsels}, Mathematical Association of America, 1978.
+
+\bibitem{Ma}
+R.~J. Mathar, \emph{Points on a line in the finite d-dimensional simple cubic lattice}, manuscript, \url{https://oeis.org/A178294/a178294.pdf} (linked from OEIS A178294).
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Pa}
+O.~Patashnik, \emph{Qubic: $4\times4\times4$ tic-tac-toe}, Math. Mag. \textbf{53} (1980), no.~4, 202--216.
+
+\bibitem{TRU}
+\texttt{the-omega-institute/trureturing}, GitHub issue \#7376 (September 12--13, 2026), on a Lean proof of the conjectured closed form in OEIS A178294, \url{https://github.com/the-omega-institute/trureturing/issues/7376}.
+
+\bibitem{A081200}
+The OEIS Foundation Inc., \url{https://oeis.org/A081200}; comment by R.~Hardin (May 24, 2010).
+
+\bibitem{A178294}
+The OEIS Foundation Inc., \url{https://oeis.org/A178294}; entry by R.~H. Hardin, conjecture by R.~J. Mathar (May 24, 2010).
+
+\bibitem{A178295}
+The OEIS Foundation Inc., \url{https://oeis.org/A178295}; entry by R.~H. Hardin, conjecture by R.~J. Mathar (May 24, 2010); revision \#15, July 22, 2025.
+
+\bibitem{A178296}
+The OEIS Foundation Inc., \url{https://oeis.org/A178296}; entry by R.~H. Hardin, conjecture by R.~J. Mathar (May 24, 2010).
+
+\bibitem{A178297}
+The OEIS Foundation Inc., \url{https://oeis.org/A178297}; entry by R.~H. Hardin, conjectures by R.~J. Mathar (May 24, 2010).
+
+\end{thebibliography}
+}
+
+\end{document}

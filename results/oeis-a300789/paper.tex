@@ -1,0 +1,338 @@
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    noncomputable,private},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {∧}{{$\wedge$}}1 {×}{{$\times$}}1 {∈}{{$\in$}}1 {→}{{$\to$}}1
+    {∃}{{$\exists$}}1 {∀}{{$\forall$}}1 {∨}{{$\vee$}}1 {⋃₀}{{$\textstyle\bigcup_0$}}2 {≤}{{$\le$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\ind}[1]{[\,#1\,]}
+\newcommand{\imb}{\operatorname{I}}
+\newcommand{\sh}{\operatorname{D}}
+
+\title[Domino-tileable Young diagrams (OEIS A300789)]{A Young diagram can be tiled by dominoes if and only if its odd parts occupy as many even as odd positions: the conjecture in OEIS A300789}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 18, 2026}
+
+\begin{document}
+\begin{abstract}
+We prove that the Young diagram of an integer partition $y_1\ge y_2\ge\dots\ge y_m$ can be tiled by dominoes if and only if the number of odd parts $y_i$ with $i$ even equals the number of odd parts $y_i$ with $i$ odd.
+Equivalently, the sequence A300789 of Heinz numbers of domino-tileable partitions coincides with the sequence of Heinz numbers of partitions satisfying this parity condition, as conjectured in the OEIS entry A300789 (G.~Wiseman, 2018).
+The result is not new: it is the case $r=2$ of the classical description of partitions with empty $r$-core, and the parity form appears explicitly in a lemma of Albion (arXiv 2021, published 2024); the OEIS entry nevertheless still records it as a conjecture.
+Our contribution is, to our knowledge, the first formal proof: it is verified in Lean~4, with Mathlib, against a statement that math0 formalized from the OEIS entry, reviewed for fidelity and frozen before any proof attempt, and whose definitions are checked by the kernel against the $63$ listed terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+The Heinz number of an integer partition $y=(y_1,\dots,y_m)$ is $p_{y_1}p_{y_2}\cdots p_{y_m}$, where $p_j$ is the $j$-th prime ($p_1=2$); by unique factorization, every integer $k\ge1$ is the Heinz number of exactly one partition, and $k=1$ belongs to the empty partition.
+The OEIS entry A300789 \cite{A300789}, created by Gus Wiseman on March~12, 2018, lists the Heinz numbers of the partitions whose Young diagram can be tiled by dominoes:
+\[
+1,3,4,7,9,10,12,13,16,19,21,22,25,27,28,29,34,36,\dots
+\]
+The entry records the conjecture that these are exactly the Heinz numbers of the partitions ``in which the odd parts appear as many times in even as in odd positions'' (quoted in full in Section~\ref{sec:statement}).
+For example, $10=p_3p_1$ is a term: $(3,1)$ has odd parts in positions $1$ and $2$, and its diagram is tiled by one vertical and one horizontal domino. The odd parts of $(3,2,1)$, with Heinz number $30$, are both in odd positions, and its diagram has four cells of one chessboard colour and two of the other.
+We prove the conjecture (Theorem~\ref{thm:main} and Corollary~\ref{cor:seq}).
+
+\subsection*{Prior work and status}
+The statement is classical, and we do not claim it as new.
+The necessity of the condition is the chessboard-colouring argument: each domino covers one cell of each colour, and a row of length $y_i$ contributes $\pm[y_i\text{ odd}]$ to the colour difference (Lemma~\ref{lem:row}).
+For sufficiency, in the language of cores, a partition's diagram is domino-tileable exactly when its $2$-core is empty: removing rim dominoes, which preserves the colour difference, leads to the $2$-core, which is a staircase $(k,k-1,\dots,1)$, and a nonempty staircase has nonzero colour difference.
+Littlewood's decomposition of a partition into its $r$-core and $r$-quotient \cite{Lit51} is classical; see James and Kerber \cite{JK81} and Macdonald \cite[Ch.~I, \S1, Ex.~8, pp.~12--15]{Mac95}, where the $r$-core is read off from the distribution of the beta-numbers of the partition modulo $r$; when the number of beta-numbers is a multiple of $r$, the $r$-core is empty exactly when they are equidistributed modulo $r$.
+For $r=2$ this is the parity condition in another form.
+Albion \cite[Lemma~2.1]{Alb24}, who takes domino-tileability as a definition of empty $2$-core, states for $\lambda$ with at most $2n$ parts that $\lambda$ has empty $2$-core if and only if $\{\lambda_i+2n-i: 1\le i\le 2n\}$ contains $n$ even and $n$ odd integers, noting that the equivalences ``easily follow by induction on $|\lambda|$''. Since $\lambda_i+2n-i\equiv\lambda_i+i\pmod 2$, counting the even and odd values position by position shows that this is exactly the condition of A300789.
+The black-equals-white criterion for Young diagrams is also the key fact behind the competitive-programming problem ``Domino for Young'' (Codeforces Round~\#609, December 2019, problems 1268B and 1269D \cite{CF}), whose answer, the maximum number of disjoint dominoes in a Young diagram, is the smaller of the two colour counts.
+
+Within the OEIS, the entry A304710 \cite{A304710} (A.~P. Heinz, May~17, 2018), which counts the partitions of $2n$ whose diagram cannot be tiled with dominoes, states, without the word ``conjectured'', that it also counts the partitions of $2n$ in which the number of odd parts in even positions differs from the number in odd positions, and its example section gives the colouring argument for $(3,2,1)$.
+In A000712 \cite{A000712} (partitions of $n$ into parts of two kinds), W.~Meeussen (April~17, 2013) and J.~Karlsson (December~9, 2025) commented that it also counts the partitions of $2n$ satisfying the parity condition, respectively the domino-tileable ones.
+Both programs in A300789 itself generate the terms from the parity condition: the Mathematica program is labelled ``Conjectured'', while the Maple program (A.~P. Heinz, May~22, 2018) carries no such label.
+The entry (revision \#11, May~22, 2018) still describes the statement as a conjecture and cites no proof; the statement is not among those of the formal-conjectures repository \cite{FC}.
+We therefore classify our result as the first formal proof, to our knowledge, of a known result.
+
+\subsection*{Method}
+We follow the standard argument: the chessboard imbalance of a diagram vanishes exactly under the parity condition, and it vanishes for every tileable diagram (Lemmas~\ref{lem:balanced} and~\ref{lem:fwd}); conversely, a balanced diagram is tiled by removing rim dominoes, since a diagram without a removable rim domino is a staircase (Proposition~\ref{prop:bwd}).
+
+\section{Statement}\label{sec:statement}
+
+We index rows and columns from $0$. For a partition $y=(y_1\ge\dots\ge y_m)$ with $y_m\ge1$ let $Y(i)=y_{i+1}$ for $i<m$ and $Y(i)=0$ for $i\ge m$. The \emph{Young diagram} of $y$ is $\{(i,j)\in\N^2: j<Y(i)\}$. A \emph{domino} is a set $\{(i,j),(i+1,j)\}$ or $\{(i,j),(i,j+1)\}$, and a set $S\subseteq\N^2$ is \emph{domino-tileable} if it is the union of a family of pairwise disjoint dominoes. Positions are numbered $1,\dots,m$ in the order $y_1,\dots,y_m$.
+
+\begin{theorem}\label{thm:main}
+The Young diagram of a partition $y=(y_1\ge\dots\ge y_m)$ is domino-tileable if and only if
+\begin{equation}\label{eq:par}
+\#\{1\le i\le m: i\text{ even},\ y_i\text{ odd}\}=\#\{1\le i\le m: i\text{ odd},\ y_i\text{ odd}\}.
+\end{equation}
+\end{theorem}
+
+Reversing the order of the parts maps position $i$ to $m+1-i$, which either preserves all parities or swaps all of them; hence \eqref{eq:par} does not depend on whether the parts are listed in decreasing or increasing order (the entry's programs use the increasing order).
+
+\begin{corollary}\label{cor:seq}
+Let $a(n)$ be the $n$-th smallest Heinz number of a partition with domino-tileable Young diagram, and $b(n)$ the $n$-th smallest Heinz number of a partition satisfying \eqref{eq:par}. Then $a(n)=b(n)$ for all $n\ge1$.
+\end{corollary}
+
+The entry A300789 \cite{A300789} has the name ``Heinz numbers of integer partitions whose Young diagram can be tiled by dominos.'' and offset~$1$; its second comment reads, verbatim:
+\begin{quote}
+This sequence is conjectured to be the Heinz numbers of integer partitions in which the odd parts appear as many times in even as in odd positions.
+\end{quote}
+The comment is unsigned; the entry's author is Gus Wiseman (March~12, 2018), and the last revision (\#11) is dated May~22, 2018.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A300789.lean}, reviewed for fidelity and frozen before any proof attempt (SHA-256 \texttt{6d088323\ldots 05be}, recorded at the fidelity review and listed in \path{lean/Math0/Statements/FROZEN.sha256}; the proof leaves the file unchanged). Its definitions read as follows (verbatim; the import, docstrings, blank lines, the decision procedure, the decidability instances and all theorems are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A300789
+def parts (k : ℕ) : List ℕ := (k.primeFactorsList.map Nat.primeCounting).reverse
+def youngDiagram (y : List ℕ) : Set (ℕ × ℕ) :=
+  {c | c.1 < y.length ∧ c.2 < y.getD c.1 0}
+def IsDomino (d : Set (ℕ × ℕ)) : Prop :=
+  ∃ i j : ℕ, d = {(i, j), (i + 1, j)} ∨ d = {(i, j), (i, j + 1)}
+def DominoTileable (S : Set (ℕ × ℕ)) : Prop :=
+  ∃ D : Set (Set (ℕ × ℕ)), (∀ d ∈ D, IsDomino d) ∧ D.PairwiseDisjoint id ∧ ⋃₀ D = S
+def IsTerm (k : ℕ) : Prop := 0 < k ∧ DominoTileable (youngDiagram (parts k))
+noncomputable def a (n : ℕ) : ℕ := Nat.nth IsTerm (n - 1)
+def OddPartsBalanced (y : List ℕ) : Prop :=
+  ((Finset.range y.length).filter fun i => Even (i + 1) ∧ Odd (y.getD i 0)).card =
+    ((Finset.range y.length).filter fun i => Odd (i + 1) ∧ Odd (y.getD i 0)).card
+def IsConjTerm (k : ℕ) : Prop := 0 < k ∧ OddPartsBalanced (parts k)
+noncomputable def b (n : ℕ) : ℕ := Nat.nth IsConjTerm (n - 1)
+def statement : Prop := ∀ n : ℕ, 1 ≤ n → a n = b n
+end Math0.Statements.A300789
+\end{lstlisting}
+Here \texttt{Nat.primeFactorsList k} is the increasing list of prime factors of $k$ with multiplicity and \texttt{Nat.primeCounting p} $=\pi(p)$ is the index of the prime $p$, so \texttt{parts k} is the partition with Heinz number $k$ in weakly decreasing order. As \texttt{y.getD i 0} is the $i$-th entry of \texttt{y} (from $0$), or $0$ beyond its length, \decl{youngDiagram} is the diagram defined above and \decl{OddPartsBalanced} is \eqref{eq:par} with position $i+1$ for index $i$. \texttt{Nat.nth p j} is the $j$-th smallest (from $0$) number satisfying $p$, so \decl{a} and \decl{b} are the sequences of Corollary~\ref{cor:seq} with offset $1$.
+The statement file decides \decl{IsTerm} by a verified search (Section~\ref{sec:fwd}) and proves by \texttt{decide +kernel}, i.e.\ by evaluation in the kernel, that $a(1),\dots,a(63)$ and $b(1),\dots,b(63)$ are both the $63$ terms $1,3,\dots,131$ listed in the entry (\decl{a_data}, \decl{b_data}; a kernel-checked \texttt{List.filter} over $\{0,\dots,131\}$ is transferred to \decl{Nat.nth} by \decl{map_nth_eq_of_filter}), and that \decl{parts} gives the partitions of the entry's example (\decl{parts_example}).
+The conjecture is read as equality of the two increasing sequences, with no extra hypotheses; Corollary~\ref{cor:seq} is exactly \decl{statement}. Both term sets contain every $3^e$ (the partition $(2,\dots,2)$), so they are infinite and this reading is equivalent to equality of the two sets; the proof establishes the latter directly. Since every partition is \texttt{parts k} for its Heinz number $k$, equality of the two sets is in turn equivalent to Theorem~\ref{thm:main}; this last step uses the bijection between partitions and Heinz numbers, which is not formalized (see the remark after the proof of Theorem~\ref{thm:main}).
+
+\section{Proof}\label{sec:proof}
+
+The proof follows \path{lean/Math0/Frontier/OEIS/A300789.lean}; Lean names are given in parentheses. Write $\ind{P}\in\{0,1\}$ for the truth value of $P$.
+For a function $Y\colon\N\to\N$ and $N\in\N$ define the \emph{imbalance} and the \emph{diagram}
+\[
+\imb_N(Y)=\sum_{i<N}(-1)^i\,\ind{Y(i)\text{ odd}}\in\Z\quad(\text{\decl{imb}}),\qquad \sh(Y)=\{(i,j)\in\N^2: j<Y(i)\}\quad(\text{\decl{shape}}).
+\]
+For a list $y$ of length $m$ we write $Y_y(i)=\texttt{y.getD i 0}$, and give the cell $c=(i,j)$ the weight $w(c)=(-1)^{i+j}$ (\decl{wt}).
+
+\begin{lemma}[\decl{sum_row}]\label{lem:row}
+For all $i,n$: $\sum_{j<n}(-1)^{i+j}=(-1)^i\,\ind{n\text{ odd}}$.
+\end{lemma}
+
+\begin{proof}
+Induction on $n$: adding the term $(-1)^{i+n}$ changes $(-1)^i\ind{n\text{ odd}}$ into $(-1)^i\ind{n+1\text{ odd}}$, as one checks separately for $n$ even and $n$ odd.
+\end{proof}
+
+\begin{lemma}[\decl{term_eq}, \decl{balanced_iff}]\label{lem:balanced}
+For every list $y$ of length $m$, \texttt{OddPartsBalanced y} holds if and only if $\imb_m(Y_y)=0$. In particular, for a partition $y$, condition \eqref{eq:par} is equivalent to $\imb_m(Y_y)=0$.
+\end{lemma}
+
+\begin{proof}
+For $i,v\in\N$ we have $(-1)^i\ind{v\text{ odd}}=\ind{i+1\text{ odd}\wedge v\text{ odd}}-\ind{i+1\text{ even}\wedge v\text{ odd}}$, by checking the four parity cases of $i$ and $v$. Summing over $i<m$ with $v=Y_y(i)$ gives $\imb_m(Y_y)=B-A$, where $A$ and $B$ are the two cardinalities in \decl{OddPartsBalanced} (even and odd positions, respectively).
+\end{proof}
+
+\subsection{Tileable diagrams are balanced}\label{sec:fwd}
+Rather than summing weights over an abstract family of dominoes, the Lean proof runs the colour argument along the decision procedure of the statement file. For a list $y$, \texttt{cellsList y} lists the cells of \texttt{youngDiagram y} row by row, in strictly increasing row-major order (\decl{pairwise_cellsList}), and \decl{tileL} tries to pair the first cell of a list with its right neighbour or with the cell below:
+\begin{lstlisting}
+def tileL : ℕ → List (ℕ × ℕ) → Bool
+  | _, [] => true
+  | 0, _ :: _ => false
+  | fuel + 1, c :: rest =>
+    (decide ((c.1, c.2 + 1) ∈ rest) && tileL fuel (rest.erase (c.1, c.2 + 1))) ||
+      (decide ((c.1 + 1, c.2) ∈ rest) && tileL fuel (rest.erase (c.1 + 1, c.2)))
+\end{lstlisting}
+
+\begin{lemma}[\decl{tileL_iff}, in the statement file]\label{lem:search}
+If the list $l$ of cells is strictly increasing in row-major order and has length at most $f$, then \texttt{tileL f l = true} if and only if the set of entries of $l$ is domino-tileable.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+Induction on $l$. If $S$ is tileable and $c$ is its row-major first cell, the domino $d\ni c$ of a tiling lies in $S$, so its other cell is not before $c$; hence $d=\{c,c+(0,1)\}$ or $d=\{c,c+(1,0)\}$ (\decl{domino_at_min}), and $S\setminus d$ is tiled by the remaining dominoes (\decl{exists_domino_of_tileable}). Conversely, adding a domino $d\subseteq S$ to a tiling of $S\setminus d$ tiles $S$ (\decl{tileable_of_diff}). Removing two entries from a strictly increasing list leaves a strictly increasing list.
+\end{proof}
+
+\begin{lemma}[\decl{sum_wt_of_tileL}, \decl{sum_cellsList}]\label{lem:fwd}
+If \texttt{tileL f l = true}, then $\sum_{c\in l}w(c)=0$. For every list $y$ of length $m$, $\sum_{c\in\texttt{cellsList }y}w(c)=\imb_m(Y_y)$.
+\end{lemma}
+
+\begin{proof}
+For the first claim, induct on $f$. If $l=c::\mathit{rest}$ is accepted, then some $c'\in\{c+(0,1),c+(1,0)\}$ lies in $\mathit{rest}$ and $\mathit{rest}.\mathrm{erase}\ c'$ is accepted with fuel $f-1$, so its weight is $0$ by induction. Since $c::\mathit{rest}$ is a permutation of $c::c'::(\mathit{rest}.\mathrm{erase}\ c')$ and $w(c')=-w(c)$, the weight of $l$ is $w(c)+w(c')+0=0$. The second claim follows by summing Lemma~\ref{lem:row} over the rows $i<m$.
+\end{proof}
+
+\subsection{Balanced diagrams are tileable}
+
+\begin{lemma}[\decl{imb_staircase_ne}]\label{lem:stair}
+Let $N\in\N$ and $Y\colon\N\to\N$ with $Y(i)=0$ for $i\ge N$, $k=Y(0)\ge1$, and $Y(r)=\max(k-r,0)$ for all $r$. Then $\imb_N(Y)\ne0$.
+\end{lemma}
+
+\begin{proof}
+From $0=Y(N)=\max(k-N,0)$ we get $k\le N$. If $Y(i)$ is odd then $Y(i)=k-i$, so $i\equiv k+1\pmod 2$ and $(-1)^i=(-1)^{k+1}$. Hence $\imb_N(Y)=(-1)^{k+1}\sum_{i<N}\ind{Y(i)\text{ odd}}$. The last sum is at least $\ind{Y(k-1)\text{ odd}}=1$, since $k-1<N$ and $Y(k-1)=1$.
+\end{proof}
+
+\begin{proposition}[\decl{tileable_shape}]\label{prop:bwd}
+Let $N\in\N$ and let $Y\colon\N\to\N$ be weakly decreasing with $Y(i)=0$ for $i\ge N$ and $\imb_N(Y)=0$. Then $\sh(Y)$ is domino-tileable.
+\end{proposition}
+
+\begin{proof}
+By strong induction on $s=\sum_{i<N}Y(i)$, the number of cells, for all such $Y$ simultaneously. If $Y(0)=0$ then $Y\equiv0$, $\sh(Y)=\emptyset$, and the empty family tiles it. Assume $Y(0)\ge1$. In the first two cases below we exhibit a domino $d\subseteq\sh(Y)$ and a function $Y'$ satisfying the hypotheses with $\sum_{i<N}Y'(i)<s$ and $\sh(Y)\setminus d=\sh(Y')$; by induction $\sh(Y')$ is tileable, and adding $d$ to its tiling tiles $\sh(Y)$ (\decl{tileable_of_diff}).
+
+\emph{Case 1: $Y(i)\ge Y(i+1)+2$ for some $i$.} Then $Y(i)\ge2$, so $i<N$. Let $d=\{(i,Y(i)-2),(i,Y(i)-1)\}$, a horizontal domino in $\sh(Y)$, and let $Y'$ agree with $Y$ except $Y'(i)=Y(i)-2$. Clearly $\sh(Y)\setminus d=\sh(Y')$. $Y'$ is weakly decreasing because $Y'(i)=Y(i)-2\ge Y(i+1)$ and $Y'(i)<Y(i)\le Y(a)$ for $a<i$, it vanishes from $N$ on, it has two cells fewer, and $\imb_N(Y')=\imb_N(Y)=0$ since $Y(i)-2\equiv Y(i)\pmod 2$.
+
+\emph{Case 2: $Y(i)=Y(i+1)>Y(i+2)$ for some $i$.} Then $Y(i+1)\ge1$, so $i+1<N$. Let $d=\{(i,Y(i)-1),(i+1,Y(i)-1)\}$, a vertical domino in $\sh(Y)$, and let $Y'$ agree with $Y$ except $Y'(i)=Y(i)-1$ and $Y'(i+1)=Y(i+1)-1$. Again $\sh(Y)\setminus d=\sh(Y')$. $Y'$ is weakly decreasing: for $a<i$ we have $Y'(a)=Y(a)\ge Y(i)>Y'(i)$, and for $b\ge i+2$ we have $Y'(b)=Y(b)\le Y(i+2)\le Y(i+1)-1=Y'(i+1)=Y'(i)$. The rows $i$ and $i+1$ have equal lengths before and after, so their contributions $(-1)^i\varepsilon+(-1)^{i+1}\varepsilon$ to the imbalance (with $\varepsilon=\ind{Y(i)\text{ odd}}$, respectively $\ind{Y(i)-1\text{ odd}}$) are $0$ in both $Y$ and $Y'$, while all other rows are unchanged; hence $\imb_N(Y')=\imb_N(Y)=0$.
+
+\emph{Case 3: neither case applies.} Then for every $i$, $Y(i+1)\le Y(i)\le Y(i+1)+1$, and $Y(i+1)=Y(i)$ implies $Y(i+2)\ge Y(i+1)$, hence $Y(i+2)=Y(i+1)$. So if $Y(r+1)=Y(r)$ for some $r$, then by induction $Y(r+t+1)=Y(r+t)$ for all $t$, and $Y(r)=Y(r+N)=0$ (\decl{hflat}). We now show $Y(r)=\max(k-r,0)$ with $k=Y(0)$, by induction on $r$ (\decl{hst}). The case $r=0$ is clear. Given it for $r$: either $Y(r+1)=Y(r)$, and then $Y(r)=0$, so $k\le r$ and $Y(r+1)=0=\max(k-r-1,0)$; or $Y(r+1)=Y(r)-1$, and then $Y(r)\ge1$, so $Y(r)=k-r$ and $Y(r+1)=k-(r+1)$. Thus $Y$ is a staircase with $Y(0)\ge1$, and Lemma~\ref{lem:stair} gives $\imb_N(Y)\ne0$, a contradiction. So Case~3 cannot occur.
+\end{proof}
+
+In Lean, $Y'$ is the function \texttt{fun r => if r = i then Y r - 2 else Y r} (in Case~2, \texttt{if r = i $\vee$ r = i + 1 then Y r - 1 else Y r}), so no list manipulation is needed; the arithmetic side conditions are discharged by \texttt{omega}.
+
+\subsection{Proof of Theorem~\ref{thm:main} and Corollary~\ref{cor:seq}}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $y$ be a partition with $m$ parts, so that $Y_y$ is weakly decreasing, vanishes from $m$ on, and \texttt{youngDiagram y} $=\sh(Y_y)$ (\decl{youngDiagram_eq}; the condition $i<m$ in \decl{youngDiagram} is implied by $j<Y_y(i)$). By Lemma~\ref{lem:balanced}, \eqref{eq:par} is equivalent to $\imb_m(Y_y)=0$.
+If the diagram is tileable, Lemma~\ref{lem:search} (with $l=\texttt{cellsList }y$ and $f$ its length) shows that \texttt{tileL} accepts \texttt{cellsList y}, and Lemma~\ref{lem:fwd} gives $\imb_m(Y_y)=0$.
+Conversely, if $\imb_m(Y_y)=0$, Proposition~\ref{prop:bwd} with $N=m$ shows that $\sh(Y_y)$ is tileable.
+\end{proof}
+
+In Lean the theorem is proved as \decl{isTerm_iff}: \texttt{IsTerm k} $\leftrightarrow$ \texttt{IsConjTerm k} for every $k\in\N$, by this argument for $y=\texttt{parts k}$, which is weakly decreasing because \texttt{Nat.primeFactorsList k} is sorted and $\pi$ is monotone (\decl{parts_pairwise}, \decl{antitone_getD}). All other lemmas hold for arbitrary lists, respectively weakly decreasing functions; the bijection between partitions and Heinz numbers is not needed for the formal statement and is not formalized.
+
+\begin{proof}[Proof of Corollary~\ref{cor:seq}]
+By \decl{isTerm_iff} the predicates \decl{IsTerm} and \decl{IsConjTerm} are equal (function and propositional extensionality), hence so are \texttt{Nat.nth IsTerm} and \texttt{Nat.nth IsConjTerm}, and \texttt{a n = b n} for every $n$, in particular for $n\ge1$ (\decl{result}).
+\end{proof}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is the file \path{lean/Math0/Frontier/OEIS/A300789.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A300789.lean} and the audit commands of \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A300789.result}, of type \decl{Math0.Statements.A300789.statement}; the auxiliary declarations of Section~\ref{sec:proof} are private. From the statement file the proof uses \decl{tileL_iff}, \decl{pairwise_cellsList}, \decl{setOf_mem_cellsList}, \decl{tileable_of_diff} and \decl{tileable_empty}. The file ends with the command \texttt{\#math0\_settles} \decl{Math0.Frontier.A300789.result} \decl{Math0.Statements.A300789.statement}. The proof file contains no \texttt{sorry}, \texttt{native\_decide}, \texttt{axiom} or \texttt{set\_option}, and the statement file's data lemmas use only \texttt{decide +kernel}.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles} (\path{lean/Math0/Audit.lean}) fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (rejecting \decl{sorryAx}, the axioms of \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically \decl{statement} or its negation, up to metadata. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A300789.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A300789.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A300789.result' proves 'Math0.Statements.A300789.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A300789.lean} in the directory \path{lean}.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{Alb24}
+S.~P. Albion, \emph{Proof of some Littlewood identities conjectured by Lee, Rains and Warnaar}, Proc.\ Amer.\ Math.\ Soc.\ Ser.~B \textbf{11} (2024), 133--146, \url{https://doi.org/10.1090/bproc/221}; arXiv:2108.12766.
+
+\bibitem{CF}
+Codeforces Round \#609, Problem 1268B (Div.~1) / 1269D (Div.~2), \emph{Domino for Young}, December 2019, \url{https://codeforces.com/problemset/problem/1268/B}; editorial at \url{https://codeforces.com/blog/entry/72358}.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{JK81}
+G.~James and A.~Kerber, \emph{The Representation Theory of the Symmetric Group}, Encyclopedia of Mathematics and its Applications~\textbf{16}, Addison-Wesley, Reading, MA, 1981.
+
+\bibitem{Lit51}
+D.~E. Littlewood, \emph{Modular representations of symmetric groups}, Proc.\ Roy.\ Soc.\ London Ser.~A \textbf{209} (1951), 333--353.
+
+\bibitem{Mac95}
+I.~G. Macdonald, \emph{Symmetric Functions and Hall Polynomials}, 2nd ed., Clarendon Press, Oxford University Press, New York, 1995.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput.\ Sci.\ \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A000712}
+The OEIS Foundation Inc., \url{https://oeis.org/A000712}, entry by N.~J.~A. Sloane; comments by W.~Meeussen (Apr.~17, 2013) and J.~Karlsson (Dec.~9, 2025).
+
+\bibitem{A300789}
+The OEIS Foundation Inc., \url{https://oeis.org/A300789}, entry by G.~Wiseman (Mar.~12, 2018); revision \#11, May~22, 2018.
+
+\bibitem{A304710}
+The OEIS Foundation Inc., \url{https://oeis.org/A304710}, entry by A.~P. Heinz (May~17, 2018).
+
+\end{thebibliography}
+}
+
+\end{document}

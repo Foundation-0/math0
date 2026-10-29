@@ -1,0 +1,361 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,noncomputable},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8,
+  literate={∑}{{$\sum$}}1 {∈}{{$\in$}}1 {∉}{{$\notin$}}1 {ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1
+    {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {∧}{{$\wedge$}}1 {≤}{{$\le$}}1 {→}{{$\to$}}1
+    {×}{{$\times$}}1 {²}{{$^2$}}1 {³}{{$^3$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\LB}{\mathrm{LB}}
+\newcommand{\ind}[1]{[\,#1\,]}
+
+\title[A polycube of $k^3$ dice shows at least $6k(k+2)$ pips]{For $k\ge2$, a face-connected polycube of $k^3$ standard dice shows at least $6k(k+2)$ pips, with equality for the cube (OEIS A363609)}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 19, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $a(n)$ be the least total number of pips that can be visible on a face-connected polycube built from $n$ standard dice, where a face of a die is visible unless it is glued to another die (OEIS A363609). We prove the conjecture recorded in that entry: $a(k^3)=6k(k+2)$ for every $k\ge2$, so the $k\times k\times k$ cube is optimal among all polycubes with $k^3$ cells. The lower bound combines a per-die inequality (a die shows at least as many pips as it has exposed faces plus exposed pairs of perpendicular faces) with projection counts and a slice-wise discrete Loomis--Whitney inequality; it does not use connectivity. The math0 referees found no earlier resolution, and we classify the result as new. The proof is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, reviewed for fidelity and frozen before the proof attempt; the Lean kernel checks its definitions against the entry's data, exactly for the first seven terms and as upper bounds for all $57$ listed terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+A standard die carries $1,\dots,6$ pips on its six faces, with opposite faces summing to $7$. Glue $n$ such dice face to face into a face-connected polycube and count the pips on all faces that are not glued to another die, including the bottom faces. The sequence A363609 \cite{A363609}, contributed by Matt Donahoe on June~11, 2023, lists the least possible count $a(n)$ for $n=1,\dots,57$:
+\[
+21,30,40,40,51,52,54,48,60,62,65,60,\dots,90\ (n=27),\dots
+\]
+The entry's formula section contains the line \texttt{Conjecture: a(k\^{}3) = 6*(k+2)*k for k > 1.} For the cube $[0,k)^3$ the value $6k(k+2)$ is attained: turn the $8$ corner dice to show $1,2,3$, the $12(k-2)$ edge dice to show $1,2$ and the $6(k-2)^2$ face dice to show $1$, for a total of $48+36(k-2)+6(k-2)^2=6k(k+2)$. The content of the conjecture is the matching lower bound over all polycubes with $k^3$ cells.
+
+\subsection*{Prior work}
+The entry links a Python program by Donahoe \cite{Don}, which the referees describe as a heuristic search over layouts consisting of a box, a rectangular partial layer and a row; it does not prove optimality. M.~S.~Branicky added two formulas to the entry in June 2023: the upper bound $a(ijk)\le 48+2((i-2)(j-2)+(i-2)(k-2)+(j-2)(k-2))+12(i+j+k-6)$ for $i,j,k>1$, which for $i=j=k$ is the cube count above, and two-sided bounds $\mathrm{lb}(n)\le a(n)\le\mathrm{ub}(n)$ in terms of the minimum surface area A193416 \cite{A193416}. These do not settle the conjecture. The value $90$ for the $3\times3\times3$ cube appears as a contest exercise (AMC~10A 2002, Problem~18 \cite{AMC}); it concerns the cube alone, not optimality among polycubes. The unweighted analogue is A193416, the minimum surface area of a polycube with $n$ cells, for which the entry records $a(n^3)=6n^2$ (C.~R.~Greathouse~IV, 2011); the lower bound $6n^2$ follows from the Loomis--Whitney inequality \cite{LW} as in Section~\ref{sec:proj}. The math0 referees found the conjecture still stated as open in the current revision (\#45, September~3, 2023) of A363609 and found no proof or counterexample in searches of arXiv, MathOverflow, Mathematics Stack Exchange, Puzzling Stack Exchange and SeqFan. A discussion that is not indexed cannot be excluded, but on this evidence the result is new.
+
+Besides the classical projection bound for the surface area, our proof of the conjecture (Theorem~\ref{thm:main}) uses an \emph{edge term}: a die shows at least one extra pip for each pair of perpendicular exposed faces, and every slice of the polycube has a cell with two prescribed perpendicular faces exposed. The proof is formalized in Lean~4 with Mathlib (Section~\ref{sec:lean}).
+
+\section{Statement}\label{sec:statement}
+
+Write $e_1,e_2,e_3$ for the standard basis of $\Z^3$ and $\D=\{\pm e_1,\pm e_2,\pm e_3\}$. A cell $q\in\Z^3$ is the unit cube $q+[0,1]^3$; its six faces have outer normals $d\in\D$. Two directions $d,e\in\D$ are \emph{perpendicular} if $e\ne\pm d$.
+
+\begin{definition}\label{def:main}
+A \emph{polycube} is a finite set $P\subset\Z^3$ that is face-connected: any two cells of $P$ are joined by a chain of cells of $P$ in which consecutive cells differ by an element of $\D$. An \emph{orientation} is a pair $o=(u,v)$ of perpendicular $u,v\in\D$; a die in orientation $o$ shows $\pi_o(d)$ pips on its face with normal $d$, where
+\[
+\pi_o(u)=1,\quad \pi_o(v)=2,\quad \pi_o(u\times v)=3,\quad \pi_o(-u\times v)=4,\quad \pi_o(-v)=5,\quad \pi_o(-u)=6.
+\]
+For a polycube $P$ and orientations $o=(o_q)_{q\in P}$, the number of visible pips is
+\[
+V(P,o)=\sum_{q\in P}\ \sum_{d\in\D,\ q+d\notin P}\pi_{o_q}(d),
+\]
+and $a(n)$ is the minimum of $V(P,o)$ over all polycubes $P$ with $|P|=n$ and all $o$.
+\end{definition}
+
+There are $6\cdot4=24$ orientations, the rotations of one die; opposite faces sum to $7$, and $1,2,3$ form a right-handed frame, so all dice have the same chirality. A reflection of a whole configuration replaces every die by its mirror image, so the other chirality gives the same minimum.
+
+\begin{theorem}\label{thm:main}
+For every integer $k\ge2$, $a(k^3)=6k(k+2)$.
+\end{theorem}
+
+\subsection*{The OEIS entry}
+The entry A363609 \cite{A363609} (author Matt Donahoe, June~11, 2023; revision \#45, September~3, 2023) has the name ``Minimum sum of the visible pips on a polycube made from n dice.'', offset $1$, the comment ``This sequence is calculated using standard six-sided dice of the same chirality. Opposite sides sum to seven.'' and the example ``For n = 2, two dice are conjoined to hide both their 6-pip faces, so a(2) = 30.'' Its formula section contains, verbatim and without attribution, the line
+\begin{quote}\raggedright
+\texttt{Conjecture: a(k\^{}3) = 6*(k+2)*k for k > 1.}
+\end{quote}
+Theorem~\ref{thm:main} is this conjecture.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A363609.lean}, reviewed for fidelity and frozen (SHA-256 \texttt{aec2c052\ldots 245afe}) before any proof attempt; it is not part of the formal-conjectures repository \cite{FC}. Its definitions and the statement are, verbatim except that docstrings and the certification section are omitted:
+\begin{lstlisting}
+namespace Math0.Statements.A363609
+open Finset
+abbrev Cell := ℤ × ℤ × ℤ
+def dirs : Finset Cell := {(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)}
+def dot (u v : Cell) : ℤ := u.1 * v.1 + u.2.1 * v.2.1 + u.2.2 * v.2.2
+def cross (u v : Cell) : Cell :=
+  (u.2.1 * v.2.2 - u.2.2 * v.2.1, u.2.2 * v.1 - u.1 * v.2.2, u.1 * v.2.1 - u.2.1 * v.1)
+def IsOrientation (o : Cell × Cell) : Prop := o.1 ∈ dirs ∧ o.2 ∈ dirs ∧ dot o.1 o.2 = 0
+def pips (o : Cell × Cell) (d : Cell) : ℕ :=
+  if d = o.1 then 1 else if d = o.2 then 2 else if d = cross o.1 o.2 then 3
+  else if d = -cross o.1 o.2 then 4 else if d = -o.2 then 5 else if d = -o.1 then 6 else 0
+def visiblePips (P : Finset Cell) (o : Cell → Cell × Cell) : ℕ :=
+  ∑ c ∈ P, ∑ d ∈ dirs, if c + d ∈ P then 0 else pips (o c) d
+def Adj (P : Finset Cell) (u v : Cell) : Prop := u ∈ P ∧ v ∈ P ∧ v - u ∈ dirs
+def FaceConnected (P : Finset Cell) : Prop :=
+  ∀ x ∈ P, ∀ y ∈ P, Relation.ReflTransGen (Adj P) x y
+def totals (n : ℕ) : Set ℕ :=
+  {t | ∃ P : Finset Cell, P.card = n ∧ FaceConnected P ∧
+    ∃ o : Cell → Cell × Cell, (∀ c ∈ P, IsOrientation (o c)) ∧ visiblePips P o = t}
+noncomputable def a (n : ℕ) : ℕ := sInf (totals n)
+def statement : Prop := ∀ k : ℕ, 1 < k → a (k ^ 3) = 6 * (k + 2) * k
+end Math0.Statements.A363609
+\end{lstlisting}
+The encoding matches Definition~\ref{def:main}. \decl{dirs} is $\D$, \decl{IsOrientation} says that $u,v\in\D$ are perpendicular, and \decl{pips} is $\pi_o$. The face of $c\in P$ with normal $d$ counts iff $c+d\notin P$, so all six faces of a single die count and $a(1)=21$. A face towards an enclosed empty cell also counts; this agrees with the data, since under the other reading the $3\times3\times3$ cube without its centre would give $a(26)\le90$, whereas the entry lists $a(26)=93$. (See also Remark~\ref{rem:extra}.) \texttt{totals n} is the set of all values $V(P,o)$ and \texttt{a n} its infimum in $\N$. For $n\ge1$ the set is nonempty (a row of $n$ cells is a polycube), so the infimum is a minimum; the value \texttt{a 0} is not part of the sequence and is excluded by $k>1$. The statement involves no truncated subtraction or division.
+
+The statement file checks the definitions against the data by kernel computation (\texttt{decide +kernel}). The theorem \decl{a_data} gives the exact values $a(1),\dots,a(7)=21,30,40,40,51,52,54$, by a certified enumeration of all polycubes with at most $6$ cells up to the $48$ lattice symmetries ($1,1,2,7,23,112$ representatives) and of all their one-cell extensions. The theorem \decl{a_le_data} gives $a(n)\le$ the listed value for all $57$ listed terms, via kernel-checked witness polycubes. Unformalized exhaustive enumerations run during review reproduced the numbers of fixed polycubes (A001931 \cite{A001931}) and the listed values up to $a(9)$ or $a(10)$.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows \path{lean/Math0/Frontier/OEIS/A363609.lean}; Section~\ref{sec:lean} lists the corresponding declarations. Throughout, $P\subset\Z^3$ is finite and $q=(q_1,q_2,q_3)$ denotes a cell.
+
+\subsection{Reduction to one die at a time}
+For $q\in P$ let $E_P(q)=\{d\in\D: q+d\notin P\}$ be the set of exposed directions. For $E\subseteq\D$ let $f(E)=\min_o\sum_{d\in E}\pi_o(d)$, the minimum over the $24$ orientations, and put
+\[
+\LB(P)=\sum_{q\in P}f(E_P(q)).
+\]
+
+\begin{lemma}\label{lem:reduce}
+For every $n$: if $P_0$ is a polycube with $|P_0|=n$ and $\LB(P_0)\le\LB(P)$ for every polycube $P$ with $|P|=n$, then $a(n)=\LB(P_0)$.
+\end{lemma}
+
+\begin{proof}
+For fixed $P$ the term of $V(P,o)$ for the cell $q$ depends only on $o_q$, so $V(P,o)\ge\LB(P)$ for every $o$, with equality when each $o_q$ is chosen to minimize $\sum_{d\in E_P(q)}\pi_{o_q}(d)$. Hence $\LB(P_0)$ is a value of $V$ and is at most every value of $V$ on polycubes with $n$ cells.
+\end{proof}
+
+For $E\subseteq\D$ let $p(E)$ be the number of unordered pairs $\{d,e\}\subseteq E$ of perpendicular directions.
+
+\begin{lemma}\label{lem:die}
+For every $E\subseteq\D$, $f(E)\ge|E|+p(E)$, with equality if $E$ contains no two opposite directions.
+\end{lemma}
+
+\begin{proof}
+Fix an orientation. The faces in $E$ show distinct numbers of pips, and two opposite faces show $7$ together. Let $r$ be the number of opposite pairs $\{d,-d\}\subseteq E$ and $s=|E|-2r$ the number of remaining faces of $E$; these lie in $s$ further opposite pairs, so $r+s\le3$, and they show $s$ distinct positive numbers. Hence the pips on $E$ total at least $7r+s(s+1)/2$, while $|E|+p(E)=(2r+s)+\binom{2r+s}{2}-r$. For $r=0$ both sides equal $s(s+1)/2$. The remaining cases are $(r,s)=(1,0),(1,1),(1,2),(2,0),(2,1),(3,0)$, where the two sides are $7\ge2$, $8\ge5$, $10\ge9$, $14\ge8$, $15\ge13$ and $21\ge18$.
+
+If $r=0$, the $s\le3$ faces of $E$ are mutually perpendicular. Choosing $u,v$ among them (in the right order, so that $u\times v$ is the third one when $s=3$) puts $1,\dots,s$ on them, so $f(E)\le s(s+1)/2=|E|+p(E)$.
+\end{proof}
+
+In Lean, $f$ is evaluated by the kernel on all $64$ subsets $E$ (minimum over the $24$ orientations), giving a table \decl{tabF}; the inequality and the equality case are then checked on that table by \texttt{decide}. For $d\in\D$ and perpendicular $d,e\in\D$ let
+\[
+N_d(P)=\#\{q\in P: q+d\notin P\},\qquad N_{d,e}(P)=\#\{q\in P: q+d\notin P,\ q+e\notin P\}.
+\]
+Summing Lemma~\ref{lem:die} over $q\in P$ gives
+\begin{equation}\label{eq:LBE}
+\LB(P)\ \ge\ \sum_{d\in\D}N_d(P)+\sum_{\{d,e\}}N_{d,e}(P),
+\end{equation}
+the second sum running over the $12$ unordered pairs of perpendicular directions.
+
+\subsection{Projections and slices}\label{sec:proj}
+For $i\in\{1,2,3\}$ let $A_i$ be the number of points of the projection of $P$ that forgets the coordinate $q_i$, and let $\ell_i=\#\{q_i:q\in P\}$ be the number of occupied slices orthogonal to $e_i$.
+
+\begin{lemma}\label{lem:faces}
+$N_{\pm e_i}(P)\ge A_i$ for every $i$.
+\end{lemma}
+
+\begin{proof}
+Let $d=se_i$ with $s=\pm1$, and let $\rho$ be the projection forgetting $q_i$. For each point $w\in\rho(P)$ choose $m\in P\cap\rho^{-1}(w)$ with $sm_i$ maximal. Then $m+d$ lies in the same fibre and has a larger value of $sq_i$, so $m+d\notin P$. Thus $\rho$ maps $\{q\in P:q+d\notin P\}$ onto $\rho(P)$.
+\end{proof}
+
+\begin{lemma}\label{lem:edges}
+Let $\{i,j,l\}=\{1,2,3\}$ and $s,t\in\{\pm1\}$. Then $N_{se_i,te_j}(P)\ge\ell_l$.
+\end{lemma}
+
+\begin{proof}
+For each occupied value $z$ of $q_l$ choose $m\in P$ with $m_l=z$ such that $(sm_i,tm_j)$ is lexicographically maximal. The cells $m+se_i$ and $m+te_j$ have $l$-th coordinate $z$; the first has a larger value of $sq_i$, the second the same value of $sq_i$ and a larger value of $tq_j$. Both exceed $(sm_i,tm_j)$ lexicographically, so neither lies in $P$. Thus $q\mapsto q_l$ maps $\{q\in P:q+se_i\notin P,\ q+te_j\notin P\}$ onto the set of occupied values.
+\end{proof}
+
+Each axis carries two directions and each of the three pairs of axes carries four perpendicular pairs of directions, so \eqref{eq:LBE} and Lemmas~\ref{lem:faces} and~\ref{lem:edges} give
+\begin{equation}\label{eq:proj}
+\LB(P)\ \ge\ 2(A_1+A_2+A_3)+4(\ell_1+\ell_2+\ell_3).
+\end{equation}
+
+\begin{lemma}\label{lem:slices}
+If $|P|=k^3$, then $\ell_1+\ell_2+\ell_3\ge3k$.
+\end{lemma}
+
+\begin{proof}
+$P$ is contained in the product of its three coordinate sets, so $k^3\le\ell_1\ell_2\ell_3$. By the AM--GM inequality $27\ell_1\ell_2\ell_3\le(\ell_1+\ell_2+\ell_3)^3$, hence $(3k)^3\le(\ell_1+\ell_2+\ell_3)^3$.
+\end{proof}
+
+\begin{lemma}[slice-wise Loomis--Whitney]\label{lem:LW}
+For every $k\in\N$, $4k|P|\le(A_3+k^2)(A_1+A_2)$. In particular, if $|P|=k^3$ then $A_1+A_2+A_3\ge3k^2$.
+\end{lemma}
+
+\begin{proof}
+For an occupied value $z$ of $q_3$ let $P_z=\{q\in P:q_3=z\}$, $m_z=|P_z|$, and let $\alpha_z,\beta_z$ be the sizes of the projections of $P_z$ forgetting $q_1$ and $q_2$, respectively. These projections keep $q_3$, so the projections of $P$ split by the value of $q_3$ and $\sum_z\alpha_z=A_1$, $\sum_z\beta_z=A_2$, $\sum_z m_z=|P|$. In $P_z$ a cell is determined by $(q_1,q_2)$, so $m_z\le A_3$; it is also determined by its two projections, so $m_z\le\alpha_z\beta_z$. Hence, using $4A_3k^2\le(A_3+k^2)^2$ and $4\alpha_z\beta_z\le(\alpha_z+\beta_z)^2$,
+\[
+(4km_z)^2=4k^2\cdot4m_z^2\le(4A_3k^2)(4\alpha_z\beta_z)\le\bigl((A_3+k^2)(\alpha_z+\beta_z)\bigr)^2,
+\]
+so $4km_z\le(A_3+k^2)(\alpha_z+\beta_z)$. Summing over $z$ gives the first claim. If $|P|=k^3$, put $u=A_3+k^2$ and $v=A_1+A_2$; then $16k^4\le4uv\le(u+v)^2$, so $u+v\ge4k^2$.
+\end{proof}
+
+The classical Loomis--Whitney inequality \cite{LW}, applied to the union of the unit cubes of $P$, gives the discrete form $|P|^2\le A_1A_2A_3$; with AM--GM it gives the same consequence. The form above, in which $\sqrt{A_3}$ is replaced by the AM--GM bound $(A_3+k^2)/(2k)$, avoids square roots.
+
+\begin{proposition}\label{prop:lower}
+If $P\subset\Z^3$ is finite with $|P|=k^3$, then $\LB(P)\ge6k(k+2)$.
+\end{proposition}
+
+\begin{proof}
+By \eqref{eq:proj} and Lemmas~\ref{lem:slices} and~\ref{lem:LW}, $\LB(P)\ge2\cdot3k^2+4\cdot3k=6k^2+12k$.
+\end{proof}
+
+\subsection{The cube}
+
+\begin{proposition}\label{prop:cube}
+Let $k\ge2$ and $Q_k=\{0,\dots,k-1\}^3$. Then $Q_k$ is a polycube with $k^3$ cells and $\LB(Q_k)=6k(k+2)$.
+\end{proposition}
+
+\begin{proof}
+Every cell of $Q_k$ is joined to the origin inside $Q_k$ by moving along the first, then the second, then the third axis, so $Q_k$ is face-connected. For $q\in Q_k$ the direction $e_i$ is exposed iff $q_i=k-1$, and $-e_i$ iff $q_i=0$; as $k\ge2$, no two opposite directions are exposed. Put $u(x)=\ind{x=k-1}+\ind{x=0}\in\{0,1\}$ and $X_i=u(q_i)$. By the equality case of Lemma~\ref{lem:die}, $f(E_{Q_k}(q))=X_1+X_2+X_3+X_1X_2+X_1X_3+X_2X_3$, that is,
+\[
+f(E_{Q_k}(q))+1+X_1X_2X_3=(1+X_1)(1+X_2)(1+X_3).
+\]
+A product of functions of one coordinate each sums over $Q_k$ to the product of the one-dimensional sums, and $\sum_{x=0}^{k-1}u(x)=2$. Summing over $q\in Q_k$ therefore gives $\LB(Q_k)+k^3+2^3=(k+2)^3$, so $\LB(Q_k)=6k^2+12k$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Let $k\ge2$. By Proposition~\ref{prop:cube}, $Q_k$ is a polycube with $k^3$ cells and $\LB(Q_k)=6k(k+2)$, and by Proposition~\ref{prop:lower} every polycube $P$ with $k^3$ cells has $\LB(P)\ge6k(k+2)$. Lemma~\ref{lem:reduce} gives $a(k^3)=6k(k+2)$.
+\end{proof}
+
+\begin{remark}\label{rem:extra}
+The following observations are not part of the formal development.
+(1) Connectivity of $P$ is used only for the upper bound.
+(2) Lemma~\ref{lem:die} holds for any labelling of a die with opposite faces summing to $7$, so the argument does not depend on chirality.
+(3) Every face counted in Lemmas~\ref{lem:faces} and~\ref{lem:edges} sees infinity along a straight ray that avoids $P$, so these lemmas and \eqref{eq:LBE} remain valid when only faces facing the unbounded component of the complement are counted. Hence Theorem~\ref{thm:main} also holds if faces towards an enclosed cavity are not counted.
+(4) For general $n$, the inequality $|P|^2\le A_1A_2A_3$ \cite{LW}, $|P|\le\ell_1\ell_2\ell_3$, AM--GM and \eqref{eq:proj} give $a(n)\ge6n^{2/3}+12n^{1/3}$, with equality for $n=k^3$, $k\ge2$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in \path{lean/Math0/Frontier/OEIS/A363609.lean} in the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A363609.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is
+\begin{lstlisting}
+theorem result : statement
+\end{lstlisting}
+in the namespace \decl{Math0.Frontier.A363609}, so \decl{Math0.Frontier.A363609.result} has type exactly \decl{Math0.Statements.A363609.statement}. From the statement file the proof uses \decl{fmin_exposed} (the value $f(E_P(q))$ is the table entry \decl{tabF} at the six exposure flags, proved by kernel evaluation of the minimum over the $24$ orientations), \decl{LB_mem_totals} and \decl{a_eq_of} (together Lemma~\ref{lem:reduce}). The private auxiliary declarations of the proof file correspond to Section~\ref{sec:proof} as follows: \decl{tabF_lower} and \decl{tabF_upper} are Lemma~\ref{lem:die}, as $64$-case checks of the table by \texttt{decide}; \decl{E1}, \decl{E2} and \decl{LB_ge_E} are $N_d$, $N_{d,e}$ and \eqref{eq:LBE}; \decl{card_image_le_E1} and \decl{card_image_le_E2} are Lemmas~\ref{lem:faces} and~\ref{lem:edges} for an abstract projection and height function (via \decl{Finset.exists_max_image}, with the key \decl{toLex} in the second); \decl{LB_ge_proj} is \eqref{eq:proj}; \decl{amgm3} and \decl{sum3_ge} are Lemma~\ref{lem:slices}; \decl{slice_arith}, \decl{loomis} and \decl{sum2_ge} are Lemma~\ref{lem:LW}; \decl{LB_lower} is Proposition~\ref{prop:lower}; and \decl{cube}, \decl{card_cube}, \decl{mem_cube}, \decl{line}, \decl{cube_conn}, \decl{sum_cube_mul} and \decl{LB_cube} give Proposition~\ref{prop:cube}. Apart from small kernel-checked facts about the six directions, the only kernel computations the proof relies on are these two checks and, in the statement file, the evaluation of \decl{tabF} (\decl{fmin_sel}, by \texttt{decide +kernel}). \texttt{sorry}, \texttt{native\_decide} and \texttt{set\_option} do not occur in either file.
+
+\subsection*{Audit}
+The file ends with the command
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A363609.result Math0.Statements.A363609.statement
+\end{lstlisting}
+from \path{lean/Math0/Audit.lean}. It fails unless (1) \decl{statement} is a definition of type \texttt{Prop} without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this excludes \decl{sorryAx}, \texttt{native\_decide} and custom axioms); and (3) the type of \decl{result} is syntactically the statement or its negation, after removing metadata annotations, with no unfolding. On this file it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A363609.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A363609.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A363609.result' proves 'Math0.Statements.A363609.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root; it fetches the Mathlib cache, builds all math0 results with \texttt{lake build} (re-running every audit command) and checks that the pinned dependencies are unmodified. The single file is checked by \texttt{lake env lean Math0/Frontier/OEIS/A363609.lean} in \path{lean}, in about $16$ seconds once the statement module (whose kernel data checks take a few minutes) is built.
+
+\begin{thebibliography}{99}
+
+\bibitem{AMC}
+Art of Problem Solving, \emph{2002 AMC 10A Problems/Problem 18}, \url{https://artofproblemsolving.com/wiki/index.php/2002_AMC_10A_Problems/Problem_18}.
+
+\bibitem{Don}
+M.~Donahoe, \emph{Python program for A363609}, \url{https://github.com/mdonahoe/oeis/blob/main/A363609/dice.py}.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{LW}
+L.~H. Loomis and H.~Whitney, \emph{An inequality related to the isoperimetric inequality}, Bull. Amer. Math. Soc. \textbf{55} (1949), 961--962.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{A001931}
+The OEIS Foundation Inc., \url{https://oeis.org/A001931} (number of fixed 3-dimensional polycubes with $n$ cells).
+
+\bibitem{A193416}
+The OEIS Foundation Inc., \url{https://oeis.org/A193416} (minimum surface area of polycubes with volume $n$), entry by J.~Barajas Martin (2011).
+
+\bibitem{A363609}
+The OEIS Foundation Inc., \url{https://oeis.org/A363609}, entry by M.~Donahoe (2023).
+
+\end{thebibliography}
+
+\end{document}

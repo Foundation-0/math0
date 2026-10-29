@@ -1,0 +1,405 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,noncomputable,decreasing_by,rw,apply,ring},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {∀}{{$\forall$}}1 {→}{{$\to$}}1
+    {≤}{{$\le$}}1 {∈}{{$\in$}}1 {∑}{{$\sum$}}1 {⟦}{{$[\![$}}1 {⟧}{{$]\!]$}}1
+    {⁄}{{/}}1 {←}{{$\leftarrow$}}1 {·}{{$\cdot$}}1 {≠}{{$\ne$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+\newunicodechar{⟦}{\ensuremath{[\![}}
+\newunicodechar{⟧}{\ensuremath{]\!]}}
+\newunicodechar{⁄}{/}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\den}{\operatorname{den}}
+\newcommand{\st}[2]{\genfrac{[}{]}{0pt}{}{#1}{#2}}
+\newcommand{\fps}{\Q[\![X]\!]}
+\newcommand{\coef}[1]{[X^{#1}]}
+
+\title[Denominators of Curtz's polynomials (OEIS A141412)]{Denominators of Curtz's polynomials are Farhi's $d(n+1,k+1)$: a formal proof of Marcus's conjecture for OEIS A141412}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 20, 2026}
+
+\begin{document}
+\begin{abstract}
+Curtz's polynomials are defined by $P_0(x)=1$ and $P_n(x)=(-1)^n/(n+1)+x\sum_{i=0}^{n-1}\frac{(-1)^i}{i+1}P_{n-1-i}(x)$ for $n\ge1$, and OEIS A141412 is the triangle $T(n,k)$ of the reduced denominators of the coefficients $[x^k]P_n(x)$.
+In 2018 Michel Marcus conjectured in that entry that $T(n,k)=d(n+1,k+1)$, where $d(n,k)$ is the denominator of $\st nk k!/n!$, with $\st nk$ the unsigned Stirling numbers of the first kind; these are the numbers $d_{n,k}$ of Farhi.
+We give a machine-checked proof of this conjecture for every entry $0\le k\le n$ of the triangle. The proof goes through the identity $[x^k]P_n(x)=(-1)^{n+k}(k+1)!\st{n+1}{k+1}/(n+1)!$ ($n,k\ge0$), from which the conjecture follows at once and which is checked in Lean as an auxiliary lemma.
+This identity is not new: it is equation~(6) of a 1993 paper of Flajolet, Gourdon and Salvy, and it is also recorded in OEIS formulas of Curtz (2008) and Greubel (2023); our contribution is the first formal proof of this known result.
+The proof is verified in Lean~4 with Mathlib against a statement that math0 formalized from the OEIS entry, reviewed for fidelity and frozen before any proof attempt; its definitions are checked by the kernel against all $78$ listed terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+In 1992 Paul Curtz \cite{Cu92} introduced the polynomials $P_n(x)\in\Q[x]$ defined by
+\begin{equation}\label{eq:rec}
+  P_0(x)=1,\qquad P_n(x)=\frac{(-1)^n}{n+1}+x\sum_{i=0}^{n-1}\frac{(-1)^i}{i+1}\,P_{n-1-i}(x)\quad(n\ge1).
+\end{equation}
+They are the characteristic polynomials of the matrices that occur in Adams' method for the numerical solution of ordinary differential equations \cite{FGS}, and Curtz conjectured in \cite{Cu92} that $P_n$ has no real root for even $n$ and exactly one positive real root for odd $n$.
+Flajolet, Gourdon and Salvy \cite{FGS} proved this conjecture in 1993.
+Their starting point is the bivariate generating function
+\begin{equation}\label{eq:fgs3}
+  \sum_{n\ge0}P_n(x)z^n=\frac{\log(1+z)}{z}\cdot\frac{1}{1-x\log(1+z)}
+\end{equation}
+(\cite[eq.~(3)]{FGS}), which they compare with the classical generating function of the Stirling numbers of the first kind \cite{Co74} to obtain (\cite[eq.~(6)]{FGS})
+\begin{equation}\label{eq:fgs6}
+  P_n(x)=\frac{(-1)^n}{(n+1)!}\sum_{k=0}^{n}\st{n+1}{k+1}(k+1)!\,(-x)^k ,
+\end{equation}
+where $\st nk$ denotes the unsigned Stirling number of the first kind (the number of permutations of $n$ elements with $k$ cycles).
+
+In the OEIS the polynomials are defined in a comment of A129891 \cite{A129891} (whose terms are the row sums of a related family of polynomials with integer coefficients, not of the $P_n$), and the numerators and denominators of their coefficients $c(n,k)=[x^k]P_n(x)$ form the triangles A140749 \cite{A140749} and A141412 \cite{A141412}; all three entries are due to Curtz. A141412 lists the triangle $T(n,k)=\den c(n,k)$ for $0\le k\le n\le 11$.
+On October~18, 2018, Michel Marcus added to A141412 the conjecture that $T(n,k)=d(n+1,k+1)$, where $d(n,k)$ is the denominator of $\st nk k!/n!$, referring to the numbers $d_{n,k}$ of Farhi \cite{Fa19}.
+Farhi defines $F_{n,k}=\sum 1/(i_1i_2\cdots i_k)$, the sum over all $(i_1,\dots,i_k)$ of positive integers with $i_1+\dots+i_k=n$, and $d_{n,k}=\den F_{n,k}$; by \cite[Prop.~4.1]{Fa19}, $F_{n,k}=\st nk k!/n!$, so Marcus's $d(n,k)$ is Farhi's $d_{n,k}$.
+
+\subsection*{Status and prior work}
+Formula~\eqref{eq:fgs6} gives $c(n,k)=(-1)^{n+k}\st{n+1}{k+1}(k+1)!/(n+1)!$, and since a sign does not change a reduced denominator, Marcus's conjecture follows immediately from the 1993 paper \cite{FGS}, which the entry A141412 itself cites.
+The OEIS also records the numerator and denominator parts of this identity, in terms of the triangle $A048594(n,k)=k!\,s(n,k)$ of signed Stirling numbers, whose $k$-th column has exponential generating function $\log(1+x)^k$ \cite{A048594}: in A140749 Curtz noted on July~17, 2008 that the numerators of the $c(n,k)$ are those of $A048594(n+1,k+1)/(n+1)!$, and in A141412 G.~C. Greubel added on October~24, 2023 the formula ``Equals denominators of $A048594(n+1,k+1)/(n+1)!$'', with Mathematica, Magma and Sage programs that compute the triangle this way.
+Nevertheless the entry (revision \#32, November~7, 2023) still labels Marcus's statement a conjecture.
+
+The mathematics in this paper is therefore known; the result is a \emph{first formal proof of a known result}.
+The math0 referees found no earlier formal proof of the statement, and it is not among the OEIS statements of the formal-conjectures repository \cite{FC} (at the commit pinned in Section~\ref{sec:lean}).
+Our proof (Section~\ref{sec:proof}) is the column-by-column form of the generating-function argument of \cite{FGS}, with the Stirling generating function derived from a differential equation.
+
+\section{Statement}\label{sec:statement}
+
+\begin{definition}\label{def:main}
+Let $P_n(x)\in\Q[x]$ be defined by~\eqref{eq:rec} and let $c(n,k)=[x^k]P_n(x)$ for $n,k\ge0$. For $q\in\Q$ let $\den q\ge1$ be the denominator of $q$ in lowest terms. Put
+\[
+  T(n,k)=\den c(n,k),\qquad d(n,k)=\den\Bigl(\st nk\frac{k!}{n!}\Bigr)\qquad(n,k\ge0),
+\]
+where $\st nk$ is the unsigned Stirling number of the first kind, given by $\st00=1$, $\st0{k+1}=\st{n+1}0=0$ and
+$\st{n+1}{k+1}=n\st n{k+1}+\st nk$.
+\end{definition}
+
+The first rows of $(c(n,k))_{0\le k\le n}$ are
+\[
+  1;\quad -\tfrac12,\ 1;\quad \tfrac13,\ -1,\ 1;\quad -\tfrac14,\ \tfrac{11}{12},\ -\tfrac32,\ 1;\quad \tfrac15,\ -\tfrac56,\ \tfrac74,\ -2,\ 1;\quad\dots,
+\]
+so that $T$ begins $1;\ 2,1;\ 3,1,1;\ 4,12,2,1;\ 5,6,4,1,1$, as in A141412.
+The FORMULA section of A141412 \cite{A141412} contains, verbatim:
+\begin{quote}
+{\small\raggedright\texttt{Conjecture: T(n, k) = d(n+1, k+1), with d(n,k) = denominator(A000254(n, k)*k!/n!) where A000254 are the unsigned Stirling numbers of the 1st kind. See d(n,k) in Farhi link. - \_Michel Marcus\_, Oct 18 2018}\par}
+\end{quote}
+Strictly, A000254 \cite{A000254} is the one-index sequence $\st{n+1}2$; the comment uses it as a function of two arguments and states that it means the unsigned Stirling numbers of the first kind, so we read $A000254(n,k)$ as $\st nk$ (the triangle A132393 \cite{A132393}). This agrees with Farhi's $d_{n,k}$ and with Greubel's formula and programs in the entry.
+
+\begin{theorem}[Marcus's conjecture]\label{thm:main}
+For all $n\ge0$ and $0\le k\le n$, $T(n,k)=d(n+1,k+1)$.
+\end{theorem}
+
+Theorem~\ref{thm:main} follows from the following identity, which is~\eqref{eq:fgs6}.
+
+\begin{theorem}[{\cite[eq.~(6)]{FGS}}]\label{thm:coef}
+For all $n,k\ge0$,
+\[
+  c(n,k)=(-1)^{n+k}\,\st{n+1}{k+1}\frac{(k+1)!}{(n+1)!}.
+\]
+\end{theorem}
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A141412.lean}, reviewed for fidelity and frozen (SHA-256 \texttt{3f92df65\ldots7b77}) before any proof attempt. Its definitions read, verbatim (header, import, docstrings, blank lines and the three theorems are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A141412
+open Polynomial
+noncomputable def P : ℕ → ℚ[X]
+  | 0 => 1
+  | n + 1 => C ((-1) ^ (n + 1) / (((n + 1 : ℕ) : ℚ) + 1)) +
+      X * ∑ i ∈ Finset.range (n + 1), C ((-1) ^ i / ((i : ℚ) + 1)) * P (n - i)
+decreasing_by omega
+def c : ℕ → ℕ → ℚ
+  | 0, 0 => 1
+  | 0, _ + 1 => 0
+  | n + 1, 0 => (-1) ^ (n + 1) / (((n + 1 : ℕ) : ℚ) + 1)
+  | n + 1, k + 1 => ∑ i ∈ Finset.range (n + 1), (-1) ^ i / ((i : ℚ) + 1) * c (n - i) k
+def T (n k : ℕ) : ℕ := (c n k).den
+def d (n k : ℕ) : ℕ :=
+  ((Nat.stirlingFirst n k : ℚ) * (Nat.factorial k : ℚ) / (Nat.factorial n : ℚ)).den
+def statement : Prop :=
+  ∀ n k : ℕ, k ≤ n → T n k = d (n + 1) (k + 1)
+end Math0.Statements.A141412
+\end{lstlisting}
+The encoding matches Definition~\ref{def:main} as follows.
+The polynomial \decl{P} is~\eqref{eq:rec} written for $n+1$: $P_{n+1}=(-1)^{n+1}/(n+2)+X\sum_{i=0}^{n}\frac{(-1)^i}{i+1}P_{n-i}$. Mathlib polynomials are noncomputable, so the table entries are given by the computable recursion \decl{c}, which is the coefficientwise form of the same recursion; the theorem \decl{coeff_P} in the same file, \texttt{(P n).coeff k = c n k} for all \texttt{n k}, proves by induction on $k$ that the two agree.
+\decl{T} takes \decl{Rat.den}, the positive denominator of a rational number in lowest terms, as Maple's \texttt{denom} in the entry's program; the theorem \decl{T_eq_den_coeff}, \texttt{T n k = ((P n).coeff k).den}, restates $T(n,k)=\den([x^k]P_n)$.
+\decl{T_data} states that the list of the $78$ values $T(n,k)$, $0\le k\le n\le 11$, read by rows (written \texttt{(List.range 12).flatMap (fun n => (List.range (n + 1)).map (fun k => T n k))}), equals the list of the terms in A141412; it is proved by \texttt{decide +kernel}, i.e.\ by evaluation in the Lean kernel, in about $9$ seconds.
+\decl{Nat.stirlingFirst} is Mathlib's unsigned Stirling number of the first kind, defined by exactly the recursion of Definition~\ref{def:main}; in \decl{d} the division is in $\Q$.
+The statement quantifies over the whole triangle $0\le k\le n$ and adds no hypotheses. The proof does not use the hypothesis $k\le n$; for $k>n$ both sides equal $1$.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A141412.lean}; the name of the corresponding Lean declaration is given with each step (all of them are \texttt{private}, except \decl{result}).
+We work in the ring $\fps$ of formal power series, and write $\coef N g$ for the coefficient of $X^N$ in $g$ and $g'$ for the formal derivative. Define
+\begin{align*}
+  L&=\sum_{j\ge1}\frac{(-1)^{j+1}}{j}X^j &&(\text{the series }\log(1+X);\ \text{\decl{L}}),\\
+  F_m&=\sum_{N\ge0}(-1)^{N+m}\st Nm\frac{m!}{N!}X^N &&(m\ge0;\ \text{\decl{F}}),\\
+  C_k&=\sum_{n\ge0}c(n,k)X^n &&(k\ge0;\ \text{\decl{Cs}}).
+\end{align*}
+Thus $\coef0L=0$ and $\coef jL=(-1)^{j+1}/j$ for $j\ge1$.
+
+\begin{lemma}[\decl{coeff_one_add_X_mul_deriv}]\label{lem:deriv}
+For every $g\in\fps$ and $N\ge0$,
+$\coef N\bigl((1+X)g'\bigr)=(N+1)\coef{N+1}g+N\coef Ng$.
+\end{lemma}
+
+\begin{proof}
+We have $\coef N g'=(N+1)\coef{N+1}g$. For $N\ge1$, $\coef N(Xg')=\coef{N-1}g'=N\coef Ng$; for $N=0$, $\coef0(Xg')=0=N\coef Ng$. Add the two.
+\end{proof}
+
+\begin{lemma}[\decl{one_add_X_mul_deriv_L}]\label{lem:L}
+$(1+X)L'=1$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:deriv}, the constant coefficient is $1\cdot\coef1L+0=1$, and for $N\ge1$ the coefficient of $X^N$ is $(N+1)\cdot(-1)^{N+2}/(N+1)+N\cdot(-1)^{N+1}/N=(-1)^N-(-1)^N=0$.
+\end{proof}
+
+\begin{lemma}[\decl{one_add_X_mul_deriv_F}]\label{lem:F}
+For every $m\ge0$, $(1+X)F_{m+1}'=(m+1)F_m$.
+\end{lemma}
+
+\begin{proof}
+Fix $N\ge0$ and put $\varepsilon=(-1)^{N+m}$. By Lemma~\ref{lem:deriv}, the Stirling recurrence $\st{N+1}{m+1}=N\st N{m+1}+\st Nm$ and $(N+1)!=(N+1)N!$,
+\begin{align*}
+  \coef N\bigl((1+X)F_{m+1}'\bigr)
+  &=(N+1)\,\varepsilon\st{N+1}{m+1}\frac{(m+1)!}{(N+1)!}+N\,(-\varepsilon)\st N{m+1}\frac{(m+1)!}{N!}\\
+  &=\varepsilon\frac{(m+1)!}{N!}\Bigl(N\st N{m+1}+\st Nm-N\st N{m+1}\Bigr)
+   =(m+1)\,\varepsilon\st Nm\frac{m!}{N!},
+\end{align*}
+which is $\coef N\bigl((m+1)F_m\bigr)$, since $(m+1)!=(m+1)m!$.
+In Lean: \decl{Nat.stirlingFirst_succ_succ}, \decl{Nat.factorial_succ}, then \texttt{field\_simp} and \texttt{ring}.
+\end{proof}
+
+\begin{lemma}[\decl{F_eq}]\label{lem:Feq}
+For every $m\ge0$, $F_m=L^m$.
+\end{lemma}
+
+\begin{proof}
+By induction on $m$. Since $\st N0=1$ for $N=0$ and $0$ otherwise, $F_0=1=L^0$.
+Assume $F_m=L^m$. By the power rule (\decl{derivative_pow}) and Lemma~\ref{lem:L},
+\[
+  (1+X)\bigl(L^{m+1}\bigr)'=(m+1)L^m\cdot(1+X)L'=(m+1)L^m=(m+1)F_m=(1+X)F_{m+1}',
+\]
+the last step by Lemma~\ref{lem:F}. The constant coefficient of $1+X$ is $1$, so $1+X\neq0$, and $\fps$ is an integral domain; cancelling gives $(L^{m+1})'=F_{m+1}'$.
+The constant coefficients agree: $\coef0F_{m+1}=\st0{m+1}\cdot(\dots)=0$ and $\coef0L^{m+1}=(\coef0L)^{m+1}=0$.
+Over a ring without additive torsion, such as $\Q$, a power series is determined by its derivative and its constant coefficient (Mathlib's \decl{PowerSeries.derivative.ext}). Hence $F_{m+1}=L^{m+1}$.
+\end{proof}
+
+Lemma~\ref{lem:Feq} is the classical identity $\sum_N s(N,m)z^N/N!=\log(1+z)^m/m!$ for the signed Stirling numbers $s(N,m)=(-1)^{N+m}\st Nm$ \cite{Co74}, which Mathlib does not provide.
+
+\begin{lemma}[\decl{c_zero}]\label{lem:c0}
+For every $n\ge0$, $c(n,0)=(-1)^n/(n+1)$.
+\end{lemma}
+
+\begin{proof}
+For $n=0$ both sides are $1$; for $n\ge1$ this is the defining equation of \decl{c}.
+\end{proof}
+
+\begin{lemma}[\decl{Cs_succ}]\label{lem:Cs}
+For every $k\ge0$, $C_{k+1}=L\,C_k$.
+\end{lemma}
+
+\begin{proof}
+The constant coefficients are $c(0,k+1)=0$ and $\coef0L\cdot c(0,k)=0$. For $n\ge0$,
+\[
+  \coef{n+1}(L\,C_k)=\sum_{j=0}^{n+1}\coef jL\;c(n+1-j,k)=\sum_{i=0}^{n}\coef{i+1}L\;c(n-i,k)=\sum_{i=0}^{n}\frac{(-1)^i}{i+1}\,c(n-i,k),
+\]
+where we dropped the term $j=0$ (as $\coef0L=0$) and put $j=i+1$; the right-hand side is the definition of $c(n+1,k+1)$. In Lean the reindexing uses \decl{Finset.Nat.sum_antidiagonal_succ} and \decl{Finset.Nat.sum_antidiagonal_eq_sum_range_succ_mk}.
+\end{proof}
+
+\begin{lemma}[\decl{X_mul_Cs}]\label{lem:XCs}
+For every $k\ge0$, $X\,C_k=L^{k+1}$.
+\end{lemma}
+
+\begin{proof}
+By induction on $k$. For $k=0$: both sides have constant coefficient $0$, and for $n\ge0$, $\coef{n+1}(XC_0)=c(n,0)=(-1)^n/(n+1)=(-1)^{n+2}/(n+1)=\coef{n+1}L$ by Lemma~\ref{lem:c0}. If $XC_k=L^{k+1}$, then $XC_{k+1}=X\,L\,C_k=L\cdot L^{k+1}=L^{k+2}$ by Lemma~\ref{lem:Cs}.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:coef} \textup{(\texttt{c\_eq})}]
+Comparing the coefficients of $X^{n+1}$ in Lemma~\ref{lem:XCs} and using Lemma~\ref{lem:Feq} with $m=k+1$,
+\[
+  c(n,k)=\coef{n+1}(XC_k)=\coef{n+1}L^{k+1}=\coef{n+1}F_{k+1}=(-1)^{(n+1)+(k+1)}\st{n+1}{k+1}\frac{(k+1)!}{(n+1)!},
+\]
+and $(-1)^{(n+1)+(k+1)}=(-1)^{n+k}$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main} \textup{(\texttt{result})}]
+Let $n,k\ge0$ and $q=\st{n+1}{k+1}(k+1)!/(n+1)!$. By Theorem~\ref{thm:coef}, $c(n,k)$ is $q$ or $-q$ (\decl{neg_one_pow_eq_or}). Since $\den(-q)=\den q$ (\decl{Rat.neg_den}), $T(n,k)=\den c(n,k)=\den q=d(n+1,k+1)$. The hypothesis $k\le n$ is not used.
+\end{proof}
+
+\begin{remark}[not formalized]\label{rem:farhi}
+Lemma~\ref{lem:XCs} also yields Farhi's form of the coefficients directly. Expanding the power,
+\[
+  c(n,k)=\coef{n+1}L^{k+1}=\sum_{\substack{i_1+\dots+i_{k+1}=n+1\\ i_j\ge1}}\ \prod_{j=1}^{k+1}\frac{(-1)^{i_j+1}}{i_j}=(-1)^{n+k}F_{n+1,k+1},
+\]
+with $F_{n,k}$ as in the introduction. Together with $F_{n,k}=\st nk k!/n!$ \cite[Prop.~4.1]{Fa19} this gives Theorem~\ref{thm:coef} again, and it shows that $T(n,k)=d_{n+1,k+1}$ holds with Farhi's original definition of $d_{n,k}$. Summing Lemma~\ref{lem:XCs} over $k$ with weight $x^k$ gives~\eqref{eq:fgs3}.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in \path{lean/Math0/Frontier/OEIS/A141412.lean} in the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A141412.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A141412.result}, of type \decl{Math0.Statements.A141412.statement}. The auxiliary declarations are the private definitions and lemmas named in Section~\ref{sec:proof}. The three series and the end of the file read, verbatim (header, imports, docstrings, blank lines, the \texttt{namespace} and \texttt{open} lines and the other lemmas omitted):
+\begin{lstlisting}
+private noncomputable def L : ℚ⟦X⟧ :=
+  PowerSeries.mk fun n => if n = 0 then 0 else (-1 : ℚ) ^ (n + 1) / n
+private noncomputable def F (m : ℕ) : ℚ⟦X⟧ :=
+  PowerSeries.mk fun N =>
+    (-1 : ℚ) ^ (N + m) * (Nat.stirlingFirst N m : ℚ) * (m.factorial : ℚ) / (N.factorial : ℚ)
+private noncomputable def Cs (k : ℕ) : ℚ⟦X⟧ :=
+  PowerSeries.mk fun n => c n k
+theorem result : statement := by
+  intro n k _
+  rw [T, d, c_eq]
+  rcases neg_one_pow_eq_or ℚ (n + 1 + (k + 1)) with h | h
+  · rw [h, one_mul]
+  · rw [h, neg_one_mul, Rat.neg_den]
+end Math0.Frontier.A141412
+#math0_settles Math0.Frontier.A141412.result Math0.Statements.A141412.statement
+\end{lstlisting}
+The proof file uses no \texttt{sorry}, \texttt{decide}, \texttt{native\_decide}, custom axioms or \texttt{set\_option}; it does not use \decl{T_data}, \decl{P} or \decl{coeff_P}, since \decl{statement} is expressed through \decl{c} directly.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, \decl{Lean.ofReduceBool} from \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically \decl{statement} or $\neg$\,\decl{statement}, up to metadata annotations, with no unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A141412.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A141412.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A141412.result' proves 'Math0.Statements.A141412.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib cache, builds all math0 results with \texttt{lake build} (re-running every audit command), and checks that the pinned dependencies are unmodified. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A141412.lean} in the directory \path{lean}, once the statement module has been built with \texttt{lake build Math0.Statements.OEIS.A141412}; on our machine the check takes about $25$ seconds, most of it spent loading Mathlib.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{Co74}
+L.~Comtet, \emph{Advanced Combinatorics}, Reidel, Dordrecht, 1974.
+
+\bibitem{Cu92}
+P.~Curtz, Probl\`eme soumis, \emph{Gazette des Math\'ematiciens} \textbf{52} (1992), 44.
+
+\bibitem{Fa19}
+B.~Farhi, \emph{On the derivatives of the integer-valued polynomials}, Funct.\ Approx.\ Comment.\ Math.\ \textbf{61} (2019), no.~2, 227--241; arXiv:1810.07560.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{FGS}
+P.~Flajolet, X.~Gourdon, and B.~Salvy, \emph{Sur une famille de polyn\^omes issus de l'analyse num\'erique}, Gazette des Math\'ematiciens \textbf{55} (1993), 67--78. Also INRIA Research Report RR-1857, February 1993, \url{https://inria.hal.science/inria-00074815}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput.\ Sci.\ \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A000254}
+The OEIS Foundation Inc., \url{https://oeis.org/A000254}, entry by N.~J.~A. Sloane.
+
+\bibitem{A048594}
+The OEIS Foundation Inc., \url{https://oeis.org/A048594}, entry by O.~Marichev.
+
+\bibitem{A129891}
+The OEIS Foundation Inc., \url{https://oeis.org/A129891}, entry by P.~Curtz (2007).
+
+\bibitem{A132393}
+The OEIS Foundation Inc., \url{https://oeis.org/A132393}, entry by P.~Del\'eham.
+
+\bibitem{A140749}
+The OEIS Foundation Inc., \url{https://oeis.org/A140749}, entry by P.~Curtz (2008).
+
+\bibitem{A141412}
+The OEIS Foundation Inc., \url{https://oeis.org/A141412}, entry by P.~Curtz (2008); conjecture by M.~Marcus (2018); revision \#32, Nov.~7, 2023.
+
+\end{thebibliography}
+}
+
+\end{document}

@@ -1,0 +1,353 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  upquote=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {→}{{$\to$}}1 {≠}{{$\ne$}}1 {≤}{{$\le$}}1 {≥}{{$\ge$}}1
+    {∀}{{$\forall$}}1 {¬}{{$\neg$}}1 {∧}{{$\wedge$}}1 {…}{{$\dots$}}1 {·}{{$\cdot$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+\newunicodechar{…}{\ensuremath{\dots}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\DeclareMathOperator{\rev}{rev}
+\newcommand{\len}{\ell}
+\newcommand{\xs}{x_{\ast}}
+
+\title[A counterexample to a conjecture in OEIS A393794]{A second nine-digit fixed point of the 1089-trick map,\\ refuting a uniqueness conjecture in OEIS A393794}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 18, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $\rev(m)$ denote the decimal reversal of $m$ (leading zeros dropped) and let $T(x)=D+\rev(D)$ with $D=|x-\rev(x)|$ be the 1089-trick map.
+In OEIS A393794, Havenaar conjectured that for every $n\ge1$ the number $a(n)=110\,(10^{n+1}-1)$ is the only fixed point of $T$ with exactly $n+4$ decimal digits.
+We show that $108910890$ is a nine-digit fixed point of $T$ different from $a(5)=109999890$, so the conjecture is false; the counterexample is ten times the term $10891089$ of A001232, and an elementary argument, not formalized, shows that the same construction gives a second $(n+4)$-digit fixed point for every $n\ge5$.
+To our knowledge this is the first explicit refutation, although the argument is elementary and the number had already been computed without being connected to the conjecture: it is listed among the fixed points of $T$ in the conjecturer's own computational data, and, as one element of a $2$-cycle of a closely related reversal map, in a 2024 paper of Almirantis and Li.
+The refutation is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, checked against the OEIS data, reviewed for fidelity and frozen before the proof attempt.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+For $m\in\N$ let $\rev(m)$ be the number whose decimal digits are those of $m$ in reverse order, with leading zeros of the result dropped (OEIS A004086 \cite{OEISrel}); for example $\rev(10890)=9801$.
+The \emph{1089-trick map} is
+\[
+  T(x)=D+\rev(D),\qquad D=|x-\rev(x)| .
+\]
+The name alludes to the classical puzzle in which a three-digit number whose first and last digits differ is replaced by the difference $D$ of it and its reversal, written with three digits, and then $D$ is added to its own reversal; the result is always $1089$.
+The map $T$ applies the same two operations to numbers of any length, but without padding.
+
+In OEIS A393794 \cite{A393794}, Remco Havenaar (February 27, 2026) lists the numbers
+\[
+  a(n)=110\,(10^{n+1}-1)\qquad(n\ge1):\quad 10890,\ 109890,\ 1099890,\ 10999890,\ 109999890,\ \dots,
+\]
+whose decimal digits are $1,0,9^{\,n-1},8,9,0$. The entry proves that each $a(n)$ is a fixed point of $T$ and conjectures that it is the \emph{only} fixed point of $T$ with $n+4$ digits, having verified this exhaustively for $n=1,\dots,4$.
+The same family and the same conjecture appear in Havenaar's manuscript \cite{HavenaarPaper}, in the repository linked from the entry \cite{HavenaarRepo}: writing $k=n+4$ for the number of digits, its Remark ``Uniqueness per digit count'' reads (with $n_k=a(k-4)$ and $\mathcal{D}_{10}^k$ the set of $k$-digit numbers) ``Exhaustive computation for $k = 5, 6, 7, 8$ confirms that $n_k$ is the \emph{unique} fixed point of~$T$ in $\mathcal{D}_{10}^k$. We conjecture that this holds for all $k \geq 5$,'' and the question is repeated in the manuscript's list of open problems.
+
+Both sources relate $a(n)$ to OEIS A001232 \cite{A001232}, the numbers $k>0$ with $9k=\rev(k)$: $1089$, $10989$, $109989$, $1099989$, $10891089$, \dots. They observe that $a(n)/10=11\,(10^{n+1}-1)$ is a \emph{primitive} term of A001232, that is, one whose digits are $1,0,9^{\,n-1},8,9$. The structure of A001232 is classical. D.~W. Wilson (1997) showed that its terms are the numbers $99m$ in which $m$ is a palindrome over the digits $0,1$ with no isolated digit, so that there are $F_{\lfloor j/2\rfloor-1}$ terms with $j\ge4$ digits ($F_i$ the Fibonacci numbers); M.~F. Hasler (2022) described the terms as symmetric concatenations of primitive terms separated by blocks of zeros (both results are recorded in \cite{A001232}). Sloane's survey \cite{Sloane2178} treats the more general question of which numbers are multiplied by a constant when their digits are reversed.
+Almirantis and Li \cite{AL1,AL2} study the iteration of the two-option reversal map $\Phi(y)=y-\rev(y)$ if $\rev(y)<y$, and $\Phi(y)=y+\rev(y)$ otherwise. This map is closely related to $T$: if $x>\rev(x)$ and $D=x-\rev(x)$ satisfies $\rev(D)\ge D$, then $\Phi(\Phi(x))=T(x)$. In \cite[Corollary~3.3]{AL2} they show that if $\rev(y)=9y$ then $y$ and $10y$ form a $2$-cycle of $\Phi$, which is the computation in Lemma~\ref{lem:A001232} below, and their Table~2 lists the $2$-cycle $\{10891089,\,108910890\}$. The variant of $\Phi$ that also subtracts when $\rev(y)=y$, and so sends palindromes to $0$, is the map of OEIS A124074 \cite{A124074}, contributed by S.~Dumortier in 2006, whose example already exhibits the $2$-cycle $1089\to10890\to1089$. Section~2 of \cite{AL2} also studies the two steps of the 1089 trick for numbers of any length, that is, the values $T(y)$ for $y>\rev(y)$ such that $y-\rev(y)$ has as many digits as $y$, and its Appendix~A.2 lists $108910890$ among these values for eight-digit $y$. Neither paper considers the fixed points of $T$, and \cite{AL2} predates the conjecture of A393794. (Corollary, table and appendix numbers refer to the arXiv version of \cite{AL2}.)
+
+\subsection*{Result and status}
+We show (Theorem~\ref{thm:main}) that $\xs=108910890$ is a nine-digit fixed point of $T$ with $\xs\ne a(5)=109999890$, so the conjecture fails at $n=5$. It is the smallest failure, since the conjecture holds for $n\le4$ by the exhaustive checks of \cite{A393794}, which the math0 referees repeated. The witness is $\xs=10\cdot 10891089$, ten times the smallest non-primitive term of A001232, and Lemma~\ref{lem:A001232} explains why: ten times any term of A001232 is a fixed point of $T$. The same construction gives a second fixed point with $n+4$ digits for every $n\ge5$ (Proposition~\ref{prop:family}).
+
+A393794 contains no correction or comment noting a counterexample: revision \#19 (March 10, 2026) was still the current revision when we checked \url{https://oeis.org/A393794} in October 2026. The math0 referees found no refutation on arXiv or elsewhere on the web. A393794 is not part of the formal-conjectures repository \cite{FC}.
+We note, however, that the number $108910890$ had already been computed. It is listed, without comment, among the fixed points of $T$ in a results file of Havenaar's repository \cite{HavenaarRepo} (file \path{data/results_export.json}, experiment~10, time-stamped February 25, 2026, which iterates $T$ from all $9\cdot10^6$ seven-digit starting values). It also appears twice in \cite{AL2}, which predates the conjecture: in Table~2, as the larger element of a $2$-cycle of the map $\Phi$ described above, and in Appendix~A.2, among the outputs of the two-step 1089 trick on eight-digit numbers. In none of these places is it connected with the conjecture. With these caveats we classify the result as new; mathematically it is elementary.
+
+\section{Statement}\label{sec:statement}
+
+\subsection{The theorem}
+For $x\in\N$ let $\len(x)$ be the number of decimal digits of $x$, with $\len(0)=0$; thus $\len(x)=L\ge1$ if and only if $10^{L-1}\le x<10^{L}$. Let $\rev$, $T$ and $a(n)$ be as in the introduction, and put
+\[
+  \xs=108910890 .
+\]
+
+\begin{theorem}\label{thm:main}
+$\len(\xs)=9$, $T(\xs)=\xs$, and $\xs\ne a(5)=109999890$.
+\end{theorem}
+
+\begin{corollary}\label{cor:main}
+The following statement is false: for every $n\ge1$, $\len(a(n))=n+4$, $T(a(n))=a(n)$, and every $x\in\N$ with $\len(x)=n+4$ and $T(x)=x$ equals $a(n)$.
+\end{corollary}
+
+The first two clauses of Corollary~\ref{cor:main} hold for every $n\ge1$ (Lemma~\ref{lem:an}), so it is the uniqueness clause that fails.
+
+\subsection{The OEIS conjecture}
+The conjecture is the first comment of A393794 \cite{A393794}, an entry by Remco Havenaar dated February 27, 2026 (revision \#19, March 10, 2026). The entry is named ``Fixed points of the 1089-trick map T(n) = |n - reverse(n)| + reverse(|n - reverse(n)|)'', has offset~$1$ and formula ``\texttt{a(n) = 110*(10\^{}(n+1) - 1)}'', and the comment reads verbatim:
+\begin{quote}\small
+a(n) is the unique fixed point of the 1089-trick map T among all (n+4)-digit numbers (verified exhaustively for n = 1..4; conjectured for all n >= 1).
+\end{quote}
+The entry's example ``10890 - 09801 = 1089; 1089 + 9801 = 10890'' shows that reversal drops leading zeros: with $\rev(1089)$ padded to five digits, $98010$, the example would fail.
+
+\subsection{The Lean statement}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A393794.lean} (namespace \decl{Math0.Statements.A393794}). It was reviewed for fidelity and frozen (SHA-256 \texttt{3c0423ef\dots ae69a}) before any proof attempt. Its definitions and the statement are (verbatim):
+\begin{lstlisting}
+/-- `reverse(m)` (A004086): the number whose decimal digits are those of `m` in reverse order
+(leading zeros of the result are dropped). -/
+def rev (m : ℕ) : ℕ := Nat.ofDigits 10 (Nat.digits 10 m).reverse
+
+/-- The 1089-trick map `T(x) = |x - reverse(x)| + reverse(|x - reverse(x)|)`. -/
+def T (x : ℕ) : ℕ := Nat.dist x (rev x) + rev (Nat.dist x (rev x))
+
+/-- A393794: `a(n) = 110 * (10^(n+1) - 1)` (`n ≥ 1`), the fixed points `10890, 109890,
+1099890, …` of the 1089-trick map `T` listed in the entry; `a(n)` has `n + 4` digits. -/
+def a (n : ℕ) : ℕ := 110 * (10 ^ (n + 1) - 1)
+
+/-- Conjecture (Havenaar, A393794): for every `n ≥ 1`, `a(n)` is the unique fixed point of the
+1089-trick map `T` among all `(n + 4)`-digit numbers. -/
+def statement : Prop :=
+  ∀ n : ℕ, 1 ≤ n →
+    (Nat.digits 10 (a n)).length = n + 4 ∧ T (a n) = a n ∧
+      ∀ x : ℕ, (Nat.digits 10 x).length = n + 4 → T x = x → x = a n
+\end{lstlisting}
+
+\subsection{How the encoding matches the OEIS}
+\emph{Reversal.} Mathlib's \texttt{Nat.digits 10 m} is the list of decimal digits of $m$, least significant first, with no trailing zeros (so \texttt{Nat.digits 10 0} is empty), and \texttt{Nat.ofDigits 10 L} evaluates $\sum_i L_i10^i$. Reversing the list and evaluating it gives the digits of $m$ read backwards, and any zeros that become leading zeros contribute nothing. So \decl{rev} is A004086, and the kernel confirms \texttt{rev 10890 = 9801} in agreement with the entry's example.
+\emph{The map.} \texttt{Nat.dist x y} is $|x-y|$, so truncated subtraction on $\N$ plays no role in \decl{T}.
+\emph{The sequence.} \decl{a} is the entry's formula with offset $1$. As $10^{n+1}\ge1$, the subtraction does not truncate. The entry's data, its Mathematica and Python programs, and its proof that $T(a(n))=a(n)$ all use this formula. The name, read as ``$a(n)$ is the $n$-th positive fixed point of $T$'', gives an equivalent conjecture: under the conjecture, the positive fixed points with at least five digits are exactly the $a(n)$, and \decl{least_fixed_point} below shows there is none with fewer digits; conversely, under the other reading the only $(n+4)$-digit fixed point must be $a(n)$, which is one by Lemma~\ref{lem:an}. The formula reading is used because defining $a(n)$ as the $n$-th fixed point would build the conjectured uniqueness into the definition.
+\emph{Digit length.} ``$(n+4)$-digit'' is \texttt{(Nat.digits 10 x).length = n + 4}, i.e.\ $\len(x)=n+4$. This excludes the trivial fixed point $T(0)=0$.
+\emph{Range.} The comment says ``conjectured for all n >= 1'', and the statement adds no other hypotheses. The two conjuncts asserting that $a(n)$ has $n+4$ digits and is fixed are part of the meaning of ``$a(n)$ is the unique fixed point''; they are true (Lemma~\ref{lem:an}).
+\emph{Data.} The statement file proves, each by \texttt{decide +kernel}: that $a(1),\dots,a(18)$ are the $18$ listed terms $10890,\dots,1099999999999999999890$ (\decl{a_data}); that $T$ fixes each of them (\decl{T_data}); that $a(i+1)$ has $i+5$ digits for $i<18$ (\decl{digits_data}); and that $10890=a(1)$ is the least positive fixed point of $T$, by checking every $x<10890$ (\decl{least_fixed_point}).
+
+Corollary~\ref{cor:main} is the Lean theorem \decl{Math0.Frontier.A393794.result}, whose type is \texttt{¬ statement}. Theorem~\ref{thm:main} is the private lemma \decl{witness} in the same file (Section~\ref{sec:lean}). Lemmas~\ref{lem:A001232} and~\ref{lem:an} and Proposition~\ref{prop:family} below are not formalized.
+
+\section{Proof}\label{sec:proof}
+
+\subsection{The witness}
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Since $10^8\le\xs<10^9$, we have $\len(\xs)=9$. The decimal digits of $\xs$ are $1,0,8,9,1,0,8,9,0$; read backwards they are $0,9,8,0,1,9,8,0,1$, and dropping the leading zero gives
+\[
+  \rev(\xs)=98019801 .
+\]
+As $\xs>\rev(\xs)$,
+\[
+  D=|\xs-\rev(\xs)|=108910890-98019801=10891089 .
+\]
+The digits of $D$ are $1,0,8,9,1,0,8,9$, so $\rev(D)=98019801$ (here no zero is dropped), and
+\[
+  T(\xs)=D+\rev(D)=10891089+98019801=108910890=\xs .
+\]
+Finally $a(5)=110\,(10^6-1)=110\cdot999999=109999890\ne\xs$.
+\end{proof}
+
+In Lean, the three facts of Theorem~\ref{thm:main} form a single proposition, the lemma \decl{witness}, which is closed by \texttt{decide +kernel}. Its second conjunct, \texttt{T 108910890 = 108910890}, is decided by evaluating the definitions: the kernel computes \texttt{Nat.digits 10 108910890} $=[0,9,8,0,1,9,8,0,1]$, reverses it to $[1,0,8,9,1,0,8,9,0]$, and evaluates $\sum_i L_i10^i=98019801$, exactly as in the proof above. The other two conjuncts are evaluated the same way.
+
+\begin{proof}[Proof of Corollary~\ref{cor:main}]
+Suppose the statement holds. Apply it with $n=5$, which satisfies $n\ge1$, and take the uniqueness clause with $x=\xs$. By Theorem~\ref{thm:main}, $\len(\xs)=9=5+4$ and $T(\xs)=\xs$, so $\xs=a(5)$. This contradicts $\xs\ne a(5)$.
+\end{proof}
+
+The Lean proof of \decl{result} is exactly this: it introduces the hypothesis \texttt{h : statement}, destructures \decl{witness} into \texttt{hlen}, \texttt{hT} and \texttt{hne}, discharges $1\le5$ by \texttt{norm\_num}, and applies \texttt{hne} to the third component of \texttt{h 5}, instantiated at $x=108910890$.
+
+\subsection{Where the counterexample comes from}
+The rest of this section is not part of the Lean development. It explains the witness and shows that the conjecture fails for every $n\ge5$.
+
+\begin{lemma}\label{lem:A001232}
+If $k\ge1$ and $9k=\rev(k)$, then $T(10k)=10k$ and $\len(10k)=\len(k)+1$.
+\end{lemma}
+\begin{proof}
+If the decimal string of $k$ is $s$, then that of $10k$ is $s0$. Its reversal is $0$ followed by the reversal of $s$, which, once leading zeros are dropped, is the number $\rev(k)$. Hence $\rev(10k)=\rev(k)=9k$, and $D=|10k-9k|=k$. Then $\rev(D)=9k$ and $T(10k)=k+9k=10k$. The digit count is clear.
+\end{proof}
+
+The same computation appears in \cite[Corollary~3.3]{AL2}, phrased as the statement that $k$ and $10k$ form a $2$-cycle of the map $\Phi$ of the introduction.
+
+\begin{lemma}[A393794]\label{lem:an}
+For every $n\ge1$, $\len(a(n))=n+4$ and $T(a(n))=a(n)$.
+\end{lemma}
+\begin{proof}
+Let $R=10^{n+1}-1$ and $k=11R=10^{n+2}+(10^{n+1}-11)$. As $10^{n+1}-11$ has the $n+1$ digits $9^{\,n-1},8,9$, the digits of $k$ are $1,0,9^{\,n-1},8,9$. Similarly $9k=99R=98\cdot10^{n+1}+(10^{n+1}-99)$, and $10^{n+1}-99$, written with $n+1$ digits, is $9^{\,n-1},0,1$; so $9k$ has digits $9,8,9^{\,n-1},0,1$, which are those of $k$ reversed, and $9k=\rev(k)$. Lemma~\ref{lem:A001232} applies to $k$, and $10k=110R=a(n)$ has $\len(k)+1=n+4$ digits.
+\end{proof}
+
+This is the proof given in the entry \cite{A393794}, rearranged. The witness $\xs$ arises in the same way from $k=10891089=1089\cdot10001$, which satisfies $9k=98019801=\rev(k)$.
+
+\begin{proposition}\label{prop:family}
+For every $n\ge5$, the number $x_n=10890\,(10^{n-1}+1)$ has $n+4$ digits, satisfies $T(x_n)=x_n$, and is different from $a(n)$. In particular $x_5=\xs$.
+\end{proposition}
+\begin{proof}
+Put $m=n-1\ge4$ and $k=1089\,(10^m+1)=1089\cdot10^m+1089$. As $1089<10^4\le10^m$, the decimal string of $k$ is $1089\,0^{m-4}\,1089$, with $m+4$ digits. Its reversal is $9801\,0^{m-4}\,9801$, that is, $\rev(k)=9801\cdot10^m+9801=9k$. By Lemma~\ref{lem:A001232}, $x_n=10k$ is a fixed point of $T$ with $m+5=n+4$ digits. Finally
+\[
+  a(n)-x_n=\bigl(11000\cdot10^{n-1}-110\bigr)-\bigl(10890\cdot10^{n-1}+10890\bigr)=110\,(10^{n-1}-100)>0 .
+\]
+\end{proof}
+
+So the uniqueness claim, which holds for $n\le4$ by exhaustive search, fails for every $n\ge5$.
+
+\begin{remark}\label{rem:count}
+By Lemma~\ref{lem:A001232} and Wilson's description of A001232 quoted in the introduction, the number of fixed points of $T$ with $n+4$ digits is at least $F_{\lfloor (n+3)/2\rfloor-1}$, which is $2$ for $n=5,6$ and tends to infinity with $n$.
+Exhaustive searches run by the math0 referees (one in C over all $x<10^{10}$) found exactly the positive fixed points
+\[
+  10890,\ 109890,\ 1099890,\ 10999890,\ 108910890,\ 109999890,\ 1089010890,\ 1099999890,
+\]
+which are ten times the terms of A001232 below $10^9$. We do not know whether every positive fixed point of $T$ is of this form.
+These searches also show that the data of A393794, read as the list of all fixed points of $T$ suggested by the entry's name, omit $108910890$ between $a(4)$ and $a(5)$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+In the math0 repository (\url{https://github.com/Foundation-0/math0}), the proof is in \path{lean/Math0/Frontier/OEIS/A393794.lean}, namespace \decl{Math0.Frontier.A393794}. The main theorem is \decl{Math0.Frontier.A393794.result}, with the private lemma \decl{witness}. The statement is \decl{Math0.Statements.A393794.statement} in \path{lean/Math0/Statements/OEIS/A393794.lean}. The proof file, after its imports and module docstring, is (verbatim):
+\begin{lstlisting}
+namespace Math0.Frontier.A393794
+open Math0.Statements.A393794
+
+/-- `108910890` has 9 digits, is fixed by `T`, and differs from `a 5` (kernel-checked). -/
+private theorem witness :
+    (Nat.digits 10 108910890).length = 5 + 4 ∧ T 108910890 = 108910890 ∧
+      108910890 ≠ a 5 := by
+  decide +kernel
+
+/-- The conjecture fails at `n = 5`: `108910890` is a second 9-digit fixed point of `T`. -/
+theorem result : ¬ statement := by
+  intro h
+  obtain ⟨hlen, hT, hne⟩ := witness
+  exact hne ((h 5 (by norm_num)).2.2 108910890 hlen hT)
+
+end Math0.Frontier.A393794
+
+#math0_settles Math0.Frontier.A393794.result Math0.Statements.A393794.statement
+\end{lstlisting}
+
+\subsection*{Kernel computation}
+The tactic \texttt{decide +kernel} asks the Lean kernel to reduce the \texttt{Decidable} instance of the proposition in \decl{witness} to \texttt{true}. The kernel unfolds the definitions of \decl{Nat.digits}, \decl{List.reverse}, \decl{Nat.ofDigits}, \decl{Nat.dist}, \decl{rev}, \decl{T} and \decl{a}, using its built-in arbitrary-precision arithmetic on natural-number literals for the divisions, remainders, sums, products and comparisons. No compiled code is trusted: the file uses no \texttt{native\_decide} (which would add the axiom \decl{Lean.ofReduceBool}), and it contains no \texttt{sorry}, \texttt{axiom} or \texttt{set\_option}. The same mechanism proves the data checks \decl{a_data}, \decl{T_data}, \decl{digits_data} and \decl{least_fixed_point} in the statement file.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a universe-monomorphic definition of type \texttt{Prop}; (2) \decl{statement} depends only on the axioms \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, so it cannot hide a \texttt{sorry}; (3) the type of \decl{result} is, up to metadata annotations and with no unfolding, either \texttt{statement} or \texttt{¬ statement}; and (4) \decl{result} also depends only on those three axioms. On this file it reports:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A393794.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A393794.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A393794.result' refutes 'Math0.Statements.A393794.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}. The repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root. It builds all math0 results with \texttt{lake build}, which re-runs every audit command, and checks that the pinned dependencies are unmodified. To check this file alone once its imports are built (for example by \texttt{lake build}), run \texttt{lake env lean Math0/Frontier/OEIS/A393794.lean} in \path{lean/}; this used under a minute of CPU time on our machine.
+The math0 referees also recomputed $\rev(\xs)$, $D$, $\rev(D)$, $T(\xs)$ and $a(5)$ independently in Python.
+
+\begin{thebibliography}{99}
+
+\bibitem{AL1}
+Y.~Almirantis and W.~Li, \emph{Rich dynamical behaviors from a digital reversal operation}, arXiv:2408.02527, 2024.
+
+\bibitem{AL2}
+Y.~Almirantis and W.~Li, \emph{Extending the 1089 attractor to any number of digits and any number of steps}, Fibonacci Quart. \textbf{64} (2026), no.~2, 281--310; arXiv:2410.11784 (2024).
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{HavenaarPaper}
+R.~Havenaar, \emph{Fixed Points of Digit-Operation Pipelines in Arbitrary Bases: Algebraic Structure and Five Infinite Families}, manuscript, SYNTRIAD Research, 2026, file \path{papers/paper_A.tex} in \cite{HavenaarRepo}. (Cited in A393794 as \emph{Fixed Points of Digit-Operation Dynamical Systems: Algebraic Structure and Five Infinite Families}.)
+
+\bibitem{HavenaarRepo}
+R.~Havenaar, \emph{SYNTRIAD Digit-Dynamics Discovery Engine}, GitHub repository, \url{https://github.com/SYNTRIAD/digit-dynamics} (accessed October 2026).
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A393794}
+The OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, entry A393794 (R.~Havenaar), \emph{Fixed points of the 1089-trick map}, revision \#19, March 10, 2026, \url{https://oeis.org/A393794}.
+
+\bibitem{A001232}
+The OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, entry A001232 (N.~J.~A. Sloane and S.~Plouffe), \emph{Numbers k such that 9*k = (k written backwards), k > 0}, with contributions by D.~W. Wilson (1997) and M.~F. Hasler (2022), revision \#124, July 28, 2026, \url{https://oeis.org/A001232}.
+
+\bibitem{A124074}
+The OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, entry A124074 (S.~Dumortier, 2006), \emph{Consider the map that sends a number m to m - reverse(m) if that is nonnegative, otherwise to m + reverse(m). Sequence gives those numbers that reach a nonzero cycle under repeated application of this map}, \url{https://oeis.org/A124074}.
+
+\bibitem{OEISrel}
+The OEIS Foundation Inc., \emph{The On-Line Encyclopedia of Integer Sequences}, entry A004086 (N.~J.~A. Sloane), \emph{Read n backwards}, \url{https://oeis.org/A004086}.
+
+\bibitem{Sloane2178}
+N.~J.~A. Sloane, \emph{2178 and all that}, Fibonacci Quart. \textbf{52} (2014), no.~2, 99--120; arXiv:1307.0453.
+
+\end{thebibliography}
+
+\end{document}

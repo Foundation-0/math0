@@ -1,0 +1,371 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {∀}{{$\forall$}}1 {↔}{{$\leftrightarrow$}}1
+    {¬}{{$\neg$}}1 {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {→}{{$\to$}}1 {≤}{{$\le$}}1 {<}{{$<$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Lev}{\mathrm{Lev}}
+\newcommand{\last}{\operatorname{last}}
+\newcommand{\len}[1]{\lvert #1\rvert}
+\newcommand{\A}{A}
+
+\title[The Golomb triangle A113676 and Levine's sequence A014644]{The row lengths and row ends of the Golomb triangle OEIS A113676 are given by Levine's sequence A014644}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 20, 2026}
+
+\begin{document}
+\begin{abstract}
+Cut Golomb's sequence with one of its two $2$'s removed, $1,2,3,3,4,4,4,5,5,5,\dots$, into consecutive rows so that the first row is $(1)$ and each further row has as many terms as the sum of the previous row; the row lengths form OEIS A113676.
+We prove both conjectures that Floor van Lamoen and Paul D.\ Hanna recorded in that entry in 2005: for $n\ge2$ the length of row $n$ equals $A(n+2)-A(n+1)$, and the last term of row $n$ equals $A(n+1)$, where $A$ is Levine's sequence A014644 (and row $1$ ends in $A(1)=1$).
+The proof rests on the fact, also observed by Claes and Miyamoto, that from the second row on the rows of Levine's array are initial segments of Golomb's sequence; a telescoping identity and an induction then locate the rows of the triangle exactly.
+To our knowledge the result is new, though elementary; the OEIS entry still lists both statements as conjectures.
+The theorem is verified in Lean~4 against a frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry, whose definitions are checked by the kernel against the listed OEIS terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+\emph{Golomb's sequence} $G$ (OEIS A001462 \cite{A001462}; Golomb \cite{Go}, Guy \cite[E25]{Guy}) is the unique nondecreasing sequence of positive integers with $G(1)=1$ in which every $n\ge1$ occurs exactly $G(n)$ times:
+\[
+  G = 1,2,2,3,3,4,4,4,5,5,5,6,6,6,6,7,\dots
+\]
+\emph{Levine's array} A014643 \cite{A014643} starts with the row $(1,1)$, and the $i$-th term of each row is the number of $i$'s in the next row, listed in increasing order:
+\[
+  (1,1),\quad (1,2),\quad (1,2,2),\quad (1,2,2,3,3),\quad (1,2,2,3,3,4,4,4,5,5,5),\ \dots
+\]
+The final terms of the rows form Levine's sequence A014644 \cite{A014644},
+\[
+  A = 1,2,2,3,5,11,38,272,6474,1090483,4363282578,\dots
+\]
+(terms $A(1),\dots,A(11)$ were computed by C.~Mallows and $A(12),\dots,A(15)$ by J.~Claes in 2005; the b-file of the entry now gives nineteen terms, the last four computed by Claes and Miyamoto \cite{A014644,CM}).
+
+The OEIS entry A113676 \cite{A113676}, by Floor van Lamoen and Paul D.\ Hanna (November~6, 2005), takes Golomb's sequence with one $2$ removed, $1,2,3,3,4,4,4,5,5,5,\dots$, and cuts it into consecutive rows: the first row is $(1)$, and the number of terms of row $n$ is the sum of row $n-1$. The triangle begins
+\[
+  (1);\quad (2);\quad (3,3);\quad (4,4,4,5,5,5);\ \dots
+\]
+and $a(n)$ is the number of terms of row $n$: $1,1,2,6,27,234,6202,1084009,4362192095$.
+The entry records two conjectures, quoted in Section~\ref{sec:statement}: the row lengths $a(n)$, $n\ge2$, are the first differences of $A$ from its third term on, and the final terms of the rows are the terms of $A$ with its duplicate $2$ removed. We prove both (Theorem~\ref{thm:main}).
+
+\subsection*{Method}
+Write $P(l)=(G(1),\dots,G(l))$ and $L_k$ for the number of terms of row $k$ of Levine's array.
+Since $G$ describes itself, the Levine step sends $P(l)$ to the list $1^{G(1)}2^{G(2)}\cdots l^{G(l)}$, which is again an initial segment of $G$; so row $k\ge2$ of Levine's array is $P(L_k)$ (Lemma~\ref{lem:levine}). Taking sums gives the telescoping identity $G(L_k+1)+\dots+G(L_{k+1})=L_{k+2}-L_{k+1}$ (Lemma~\ref{lem:tele}), and an induction shows that row $n\ge2$ of the triangle is exactly the block $G(L_n+1),\dots,G(L_{n+1})$ (Lemma~\ref{lem:rowend}). Since $L_k=A(k+1)$ and the last term of $P(L_{n+1})$ is $A(n+1)$, both conjectures follow.
+
+\subsection*{Status and prior work}
+The entry A113676 (revision \#9, March~5, 2025) still lists both statements as conjectures, with no proof or comment on them.
+The comments of A001462 contain a related conjecture of van Lamoen of the same date, phrased in terms of a differently described triangle and partial sums of its row sums; it is still worded as a conjecture in the current revision, and we do not address it here.
+The key ingredient of our proof is known: the note ``Rows converge to A001462'' in A014643 reflects it, and Claes and Miyamoto \cite[p.~3, eqs.~(3)--(4)]{CM} observe that the Levine step (their ``golombic operator'' $\Gamma$) maps the first $n$ terms of Golomb's sequence to its first A001463$(n)$ terms \cite{A001463}, so that the rows of A014643 are initial segments of $G$, and they record how the length, the sum and the last term of a list relate to those of its image under the Levine step (our Lemma~\ref{lem:gamma}). Their paper does not mention A113676 or the triangle, and does not derive the two statements proved here.
+The math0 referees also checked A014644, A014643, A011784, A012257, A001463, A113722, A113724, A113730 and A304679, and web searches (including arXiv and the SeqFan list) found no resolution.
+We therefore classify the result as new, with the caveat that it is a short consequence (a telescoping sum and an induction) of the initial-segment property above.
+
+\section{Statement}\label{sec:statement}
+
+For a finite list $c=(c_1,\dots,c_l)$ of natural numbers we write $\len c=l$ for its length, $\Sigma c=c_1+\dots+c_l$ for its sum and $\last(c)=c_l$ for its last term (if $l\ge1$). We write $i^{m}$ for the list of $m$ copies of $i$ and juxtaposition for concatenation, and define the \emph{Levine step}
+\[
+  \Gamma(c_1,\dots,c_l) = 1^{c_1}\,2^{c_2}\cdots l^{c_l}.
+\]
+
+\begin{definition}\label{def:main}
+Let $G$ be Golomb's sequence and $P(l)=(G(1),\dots,G(l))$.
+\begin{enumerate}
+\item Let $H(1)=1$ and $H(j)=G(j+1)$ for $j\ge2$, so $H=1,2,3,3,4,4,4,5,5,5,\dots$.
+\item Let $E(0)=0$, $E(1)=1$ and $E(n+2)=E(n+1)+\sum_{E(n)<j\le E(n+1)}H(j)$. Row $n\ge1$ of the triangle is $R_n=(H(j))_{E(n-1)<j\le E(n)}$, and $a(n)=\len{R_n}$. Thus $R_1=(1)$ and $\len{R_{n+2}}=\Sigma R_{n+1}$.
+\item Let $\Lev_1=(1,1)$ and $\Lev_{k+1}=\Gamma(\Lev_k)$ for $k\ge1$; let $A(k)=\last(\Lev_k)$ and $L_k=\len{\Lev_k}$.
+\end{enumerate}
+\end{definition}
+
+The sequence $E$ is nondecreasing, so $a(n)=E(n)-E(n-1)$. One has $\Lev_2=(1,2)$, $\Lev_3=(1,2,2)$, so $L_1=L_2=2$ and $L_3=3$.
+
+The COMMENTS section of A113676 \cite{A113676} (entry by Floor van Lamoen and Paul D.\ Hanna, Nov~06 2005) contains, verbatim:
+\begin{quote}
+{\small\texttt{Conjecture: a(n) for n>1 gives first differences of Lionel Levine's sequence A014644(n) for n>=3.}}\\
+{\small\texttt{Conjecture: Final elements of the rows form A014644 except for duplicate 2.}}
+\end{quote}
+The name of the entry refers to ``A001642''; this is a typo for A001462, as the example rows of the entry show.
+
+\begin{theorem}\label{thm:main}
+\textup{(1)} For every $n\ge2$, $a(n)=A(n+2)-A(n+1)$.
+\textup{(2)} $\last(R_1)=A(1)$, and $\last(R_n)=A(n+1)$ for every $n\ge2$.
+\end{theorem}
+
+The proof in Section~\ref{sec:proof} gives slightly more, which is not part of the formal statement below (it appears only as intermediate steps of the Lean proof): for $n\ge2$ row $n$ of the triangle is the block $R_n=(G(i))_{A(n+1)<i\le A(n+2)}$ of Golomb's sequence, and $G(A(n+2))=A(n+1)$.
+
+The indexing in (1) is the one forced by the data: $a(2)=1=A(4)-A(3)$ and $a(3)=2=A(5)-A(4)$, whereas the shift $A(n+1)-A(n)$ would give $a(3)=1$. In (2), the final terms $1,2,3,5,11,38,272,\dots$ of the rows are $A=1,2,2,3,5,11,38,272,\dots$ with one of the two equal terms $A(2)=A(3)=2$ removed.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A113676.lean}, reviewed for fidelity and frozen (SHA-256 \texttt{a80c3eb1\ldots afab5}) before any proof attempt. Its definitions and the statement are, verbatim (the import, docstrings, section headers, blank lines and all theorems omitted; \texttt{List.range' s c} is $[s,s+1,\dots,s+c-1]$):
+\begin{lstlisting}
+namespace Math0.Statements.A113676
+def golombAux : ℕ → List ℕ
+  | 0 => [1, 2, 2]
+  | m + 1 => golombAux m ++ List.replicate ((golombAux m).getD (m + 2) 0) (m + 3)
+def golomb : ℕ → ℕ
+  | 0 => 0
+  | n + 1 => (golombAux n).getD n 0
+def H (j : ℕ) : ℕ := if j ≤ 1 then golomb j else golomb (j + 1)
+def rowEnd : ℕ → ℕ
+  | 0 => 0
+  | 1 => 1
+  | n + 2 => rowEnd (n + 1) +
+      ((List.range' (rowEnd n + 1) (rowEnd (n + 1) - rowEnd n)).map H).sum
+def row (n : ℕ) : List ℕ :=
+  (List.range' (rowEnd (n - 1) + 1) (rowEnd n - rowEnd (n - 1))).map H
+def a (n : ℕ) : ℕ := (row n).length
+def levineAux : List ℕ → ℕ → List ℕ
+  | [], _ => []
+  | c :: l, i => List.replicate c i ++ levineAux l (i + 1)
+def levineRow : ℕ → List ℕ
+  | 0 => []
+  | 1 => [1, 1]
+  | k + 2 => levineAux (levineRow (k + 1)) 1
+def A014644 (k : ℕ) : ℕ := (levineRow k).getLastD 0
+def statement : Prop :=
+  (∀ n : ℕ, 2 ≤ n → (a n : ℤ) = (A014644 (n + 2) : ℤ) - (A014644 (n + 1) : ℤ)) ∧
+  ((row 1).getLast? = some (A014644 1) ∧
+    ∀ n : ℕ, 2 ≤ n → (row n).getLast? = some (A014644 (n + 1)))
+end Math0.Statements.A113676
+\end{lstlisting}
+The encoding matches Definition~\ref{def:main}: \decl{rowEnd} is $E$, \decl{row} is $R_n$, \texttt{levineAux l 1} is $\Gamma(l)$, \decl{levineRow} is $\Lev_k$ and \decl{A014644} is $A$ (all with offset $1$; the values at $0$ are never used). Golomb's sequence is computed by its self-generating construction: \texttt{golombAux m} starts from $1,2,2$ and appends, for $k=3,\dots,m+2$, the number $k$ repeated $G(k)$ times, where $G(k)$ is read off the list built so far. The file proves (proofs omitted)
+\begin{lstlisting}
+theorem golombAux_eq_flatMap (m : ℕ) :
+    golombAux m = (List.range' 1 (m + 2)).flatMap (fun k => List.replicate (golomb k) k)
+theorem golombAux_eq_map (m : ℕ) :
+    golombAux m = (List.range' 1 (golombAux m).length).map golomb
+theorem a_data : (List.range 9).map (fun i => a (i + 1)) =
+    [1, 1, 2, 6, 27, 234, 6202, 1084009, 4362192095]
+theorem A014644_data : (List.range 11).map (fun i => A014644 (i + 1)) =
+    [1, 2, 2, 3, 5, 11, 38, 272, 6474, 1090483, 4363282578]
+\end{lstlisting}
+The first two say that every stage is $P(\ell)=1^{G(1)}2^{G(2)}\cdots(m+2)^{G(m+2)}$ for its length $\ell$, which is the self-describing property of A001462; together with $G(1)=1$ it determines the sequence. The file also checks by kernel evaluation all $84$ terms of A001462 listed in the OEIS (\decl{golomb_data}), the four example rows of A113676 (\decl{rows_example}), and the last terms $1,2,3,5,11,38,272$ of rows $1$ to $7$ (\decl{rowLast_data}); \decl{a_data} and \decl{A014644_data} check all $9$ listed terms of A113676 and the first $11$ of A014644.
+The large values are certified without computing long lists in the kernel. The iterates of $\Gamma$ starting from $(1,2,2)$ are proved to be initial segments of $G$ (\decl{golombFast_eq_golombAux}); the fifth one, $P(6474)$, is evaluated by \texttt{decide +kernel}, and the sixth one, $P(1090483)$, is never built: its length and sum are obtained from the sum $1090483$ and the weighted sum $\sum_{i\le 6474}iG(i)=4363282578$ of $P(6474)$, via the lemmas that $\len{\Gamma(c)}=\Sigma c$ and $\Sigma\Gamma(c)=\sum_i i\,c_i$. The rows $1,\dots,7$ and $a(1),\dots,a(8)$ are read off $P(6474)$; $a(9)=\sum_{6475\le i\le 1090483}G(i)=4363282578-1090483$ is obtained as above; and the same two lemmas applied to $\Lev_8=P(6474)$, together with $A(k+2)=L_{k+1}$ (\decl{A014644_add_two}), give $A(9),A(10),A(11)$. These checks only concern the fidelity of the definitions; the proof of Theorem~\ref{thm:main} uses none of them.
+
+The statement is computed in $\Z$, so the difference in (1) is a true difference, and ``the last term of row $n$ is $x$'' is \texttt{(row n).getLast? = some x}, which fails for an empty row.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A113676.lean}; the names of the corresponding Lean lemmas are given in brackets.
+
+\begin{lemma}[Levine step]\label{lem:gamma}
+Let $c=(c_1,\dots,c_l)$. Then $\len{\Gamma(c)}=\Sigma c$ {\upshape[\decl{length_levineAux}]}, and all terms of $\Gamma(c)$ are $\ge1$ {\upshape[\decl{levineAux_pos}]}. If $l\ge1$ and all $c_i\ge1$, then $\last(\Gamma(c))=l$ {\upshape[\decl{getLast?_levineAux}]}. If all $c_i\ge1$, then $\Sigma c\ge l$.
+\end{lemma}
+
+\begin{proof}
+The first two claims are immediate from the definition. If $l\ge1$ and $c_l\ge1$, the last block $l^{c_l}$ of $\Gamma(c)$ is nonempty, so $\Gamma(c)$ ends in $l$. The last claim is clear.
+\end{proof}
+
+\begin{lemma}[Golomb's sequence]\label{lem:golomb}
+$G(i)\ge1$ for $i\ge1$ {\upshape[\decl{golomb_pos}]}, and for every $l\ge2$,
+\[
+  \Gamma(P(l))=1^{G(1)}2^{G(2)}\cdots l^{G(l)}=P(l'),\qquad l'=G(1)+\dots+G(l).
+\]
+\end{lemma}
+
+\begin{proof}
+Positivity holds because every stage of the construction consists of positive numbers [\decl{golombAux_pos_length}]. Let $m=l-2$. By \decl{golombAux_eq_flatMap}, the stage \texttt{golombAux m} is $1^{G(1)}\cdots l^{G(l)}=\Gamma(P(l))$, and by \decl{golombAux_eq_map} it is $P(l')$ for its length $l'$, which is $\Sigma P(l)$ by Lemma~\ref{lem:gamma}.
+\end{proof}
+
+\begin{lemma}[Levine's rows]\label{lem:levine}
+For $k\ge1$: $L_k\ge2$ {\upshape[\decl{two_le_length_levineRow}]}, $L_{k+1}=\Sigma\Lev_k\ge L_k$ {\upshape[\decl{length_levineRow_succ}, \decl{length_levineRow_le}]}, and $A(k+1)=L_k$ {\upshape[\decl{A014644_add_two}]}. For $k\ge2$: $\Lev_k=P(L_k)$ {\upshape[\decl{levineRow_eq}]}.
+\end{lemma}
+
+\begin{proof}
+All terms of $\Lev_k$ are $\ge1$ ($\Lev_1=(1,1)$ and Lemma~\ref{lem:gamma}). Hence $L_{k+1}=\len{\Gamma(\Lev_k)}=\Sigma\Lev_k\ge L_k$, and $L_k\ge L_1=2$ by induction. Since $\Lev_k$ is nonempty with positive terms, $A(k+1)=\last(\Gamma(\Lev_k))=L_k$ by Lemma~\ref{lem:gamma}.
+For the last claim we induct on $k\ge2$. For $k=2$, $\Lev_2=(1,2)=P(2)$ (checked by \texttt{decide}). If $\Lev_k=P(L_k)$ with $L_k\ge2$, then by Lemma~\ref{lem:golomb} $\Lev_{k+1}=\Gamma(P(L_k))=P(l')$ for some $l'$, and necessarily $l'=L_{k+1}$.
+\end{proof}
+
+\begin{lemma}[Telescoping]\label{lem:tele}
+For $k\ge2$ {\upshape[\decl{sum_block}]},
+\[
+  L_{k+1}+\sum_{i=L_k+1}^{L_{k+1}}G(i)=L_{k+2}.
+\]
+\end{lemma}
+
+\begin{proof}
+As $L_k\le L_{k+1}$, $P(L_{k+1})$ is $P(L_k)$ followed by $(G(L_k+1),\dots,G(L_{k+1}))$. By Lemma~\ref{lem:levine}, $P(L_{k+1})=\Lev_{k+1}$ and $P(L_k)=\Lev_k$; taking sums and using $\Sigma\Lev_{k+1}=L_{k+2}$, $\Sigma\Lev_k=L_{k+1}$ gives the claim.
+\end{proof}
+
+\begin{lemma}[Row ends]\label{lem:rowend}
+For every $n\ge1$, $E(n)+1=L_{n+1}$ and $E(n+1)+1=L_{n+2}$ {\upshape[\decl{rowEnd_eq}]}.
+\end{lemma}
+
+\begin{proof}
+Induction on $n$. For $n=1$: $E(1)=1$, $E(2)=E(1)+H(1)=2$, $L_2=2$ and $L_3=3$ (checked by \texttt{decide}). Assume both equalities for $n$; the first one for $n+1$ is the second one for $n$. By definition,
+\[
+  E(n+2)=E(n+1)+\sum_{j=E(n)+1}^{E(n+1)}H(j).
+\]
+Since $E(n)+1=L_{n+1}\ge2$, every index $j$ in the sum is $\ge2$, so $H(j)=G(j+1)$ [\decl{map_H_range'_golomb}], and the sum equals $\sum_{i=L_{n+1}+1}^{L_{n+2}}G(i)$, which is $L_{n+3}-L_{n+2}$ by Lemma~\ref{lem:tele} with $k=n+1\ge2$. Hence $E(n+2)+1=L_{n+2}+(L_{n+3}-L_{n+2})=L_{n+3}$.
+\end{proof}
+
+\begin{lemma}[Strict growth]\label{lem:strict}
+$L_{k+1}<L_{k+2}$ for every $k\ge1$ {\upshape[\decl{length_levineRow_lt}]}.
+\end{lemma}
+
+\begin{proof}
+For $k=1$, $L_2=2<3=L_3$. If $L_{k+1}<L_{k+2}$, then by Lemma~\ref{lem:tele} with $k+1$, $L_{k+3}-L_{k+2}$ is a sum of $L_{k+2}-L_{k+1}\ge1$ Golomb terms, each $\ge1$ by Lemma~\ref{lem:golomb} [\decl{le_sum_map_golomb}], so $L_{k+3}-L_{k+2}\ge1$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Row $1$ is $(1)$ [\decl{row_one}] and $\Lev_1=(1,1)$, so $\last(R_1)=1=A(1)$.
+Let $n\ge2$. By Lemma~\ref{lem:rowend} applied to $n-1\ge1$, $E(n-1)+1=L_n\ge2$ and $E(n)+1=L_{n+1}$; as in the proof of Lemma~\ref{lem:rowend}, $H(j)=G(j+1)$ for $j>E(n-1)$, so
+\[
+  R_n=(H(j))_{E(n-1)<j\le E(n)}=(G(i))_{L_n<i\le L_{n+1}}.
+\]
+By Lemma~\ref{lem:levine}, $L_n=A(n+1)$ and $L_{n+1}=A(n+2)$, which gives the description of $R_n$ stated after the theorem.
+
+(1) $a(n)=\len{R_n}=L_{n+1}-L_n=A(n+2)-A(n+1)$; this is a true difference, since $L_n\le L_{n+1}$.
+
+(2) By Lemma~\ref{lem:strict}, $L_n<L_{n+1}$, so $R_n$ is nonempty and $\last(R_n)=G(L_{n+1})$. By Lemma~\ref{lem:levine}, $\Lev_{n+1}=P(L_{n+1})$ with $L_{n+1}\ge1$, so $A(n+1)=\last(\Lev_{n+1})=G(L_{n+1})$. Hence $\last(R_n)=A(n+1)$, and $G(A(n+2))=A(n+1)$.
+\end{proof}
+
+\begin{remark}
+Lemmas~\ref{lem:golomb} and~\ref{lem:levine} also give $A(k+2)=L_{k+1}=\Sigma P(L_k)=\mathrm{A001463}(A(k+1))$ for $k\ge2$, where A001463 is the sequence of partial sums of $G$ \cite{A001463}; this identity, which is not stated separately in the Lean file, is a restatement of the observation of Claes and Miyamoto \cite[p.~3]{CM} that $\Gamma$ maps $P(n)$ to $P(\mathrm{A001463}(n))$. For example, $L_2,L_3,\dots=2,3,5,11,38,272,\dots$, and the rows $R_2=(G(3))=(2)$, $R_3=(G(4),G(5))=(3,3)$ and $R_4=(G(6),\dots,G(11))=(4,4,4,5,5,5)$ are the blocks of $G$ between consecutive values of $L_k$.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A113676.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A113676.lean} and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A113676.result}, of type \decl{Math0.Statements.A113676.statement}. The private lemmas \decl{golomb_pos}, \decl{le_sum_map_golomb}, \decl{two_le_length_levineRow}, \decl{length_levineRow_succ}, \decl{length_levineRow_le}, \decl{levineRow_eq}, \decl{sum_block}, \decl{rowEnd_eq}, \decl{length_levineRow_lt} and \decl{getLast?_map_range'} correspond to Lemmas~\ref{lem:golomb}--\ref{lem:strict} and to the last step of the proof of Theorem~\ref{thm:main}. From the statement file the proof uses general lemmas such as \decl{golombAux_eq_flatMap}, \decl{golombAux_eq_map}, \decl{levineAux_map}, \decl{length_levineAux}, \decl{A014644_add_two} and \decl{map_H_range'_golomb}, but none of the data checks. The proof file contains no \texttt{sorry}, no \texttt{native\_decide} and no \texttt{set\_option}; the tactic \texttt{decide} is used only for the base cases about $\Lev_1,\Lev_2,\Lev_3$, $P(2)$, $E(1)$ and $E(2)$, which the kernel checks by evaluation without additional axioms.
+
+\subsection*{Audit}
+The file ends with the command
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A113676.result Math0.Statements.A113676.statement
+\end{lstlisting}
+Defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, it fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (rejecting \decl{sorryAx}, \decl{Lean.ofReduceBool} from \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically the statement or its negation, up to metadata, with no unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A113676.statement' depends on axioms [propext]
+math0 audit: 'Math0.Frontier.A113676.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A113676.result' proves 'Math0.Statements.A113676.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use, since the statement is not part of that repository.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command) and checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A113676.lean} in the directory \path{lean}, after \texttt{lake build Math0.Statements.OEIS.A113676}.
+
+\begin{thebibliography}{99}
+
+\bibitem{CM}
+J.~Claes and R.~Miyamoto, \emph{Golombic and Levine sequences}, arXiv:2602.10992 [math.CO], 2026.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Go}
+S.~W. Golomb, \emph{Problem 5407}, Amer. Math. Monthly \textbf{73} (1966), no.~6, 674.
+
+\bibitem{Guy}
+R.~K. Guy, \emph{Unsolved Problems in Number Theory}, 3rd ed., Springer, 2004, Section E25, 347--348.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A001462}
+The OEIS Foundation Inc., \url{https://oeis.org/A001462} (Golomb's sequence), entry by N.~J.~A. Sloane.
+
+\bibitem{A001463}
+The OEIS Foundation Inc., \url{https://oeis.org/A001463} (partial sums of A001462), entry by N.~J.~A. Sloane.
+
+\bibitem{A014643}
+The OEIS Foundation Inc., \url{https://oeis.org/A014643} (Levine's array), entry by N.~J.~A. Sloane.
+
+\bibitem{A014644}
+The OEIS Foundation Inc., \url{https://oeis.org/A014644} (Levine's sequence), entry by N.~J.~A. Sloane.
+
+\bibitem{A113676}
+The OEIS Foundation Inc., \url{https://oeis.org/A113676}, entry and conjectures by F.~van Lamoen and P.~D. Hanna (Nov.~6, 2005); revision \#9, Mar.~5, 2025.
+
+\end{thebibliography}
+\end{document}

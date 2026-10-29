@@ -1,0 +1,59 @@
+# OEIS A363482: apart from 49, every denominator of 1/(2-3/(3-4/(...(n-1)-n/(-5)))) is 1 or a prime
+
+**Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
+**Area:** Number theory  
+**Source problem:** OEIS A363482  
+**Date:** 2026-10-18
+
+## Result
+
+For n >= 3 let t_n = -5 and t_k = k - (k+1)/t_{k+1} for k = n-1, ..., 2. Let a(n) be the denominator, in lowest terms, of 1/t_2 = 1/(2-3/(3-4/(...(n-1)-n/(-5)))). Then for every n >= 3, either a(n) = 49, or a(n) = 1, or a(n) is prime. This is Bouras' conjecture (2023). The value 49 occurs only at n = 6.
+
+## Assessment
+
+The closed form for the reduced denominator, a(n) = N/gcd(N, 5(n-1)(n-3)!) with N = n^2+3n-5, is essentially the formula already in the entry, and it comes from a standard convergent recurrence. From there the proof is about a page of elementary number theory, and it is the same argument already published for the sibling sequence A363102 (endpoint -2) and its relatives. If a prime p <= n-3 divides a(n), Legendre's bound forces a high power of p to divide N, which is too big except in a small case (N = 3p^2) that is easy to handle. Any prime factor above n-3 is in fact at least n+2, because N + c factors for c = 0, 1, 5, 7, and since N < (n+2)^2 there is room for only one such factor. The cases n <= 35 are a finite check. The manuscript itself says it adapts the existing template, so no new idea was needed.
+
+*Follows from:* The entry's own formula a(n) = (n^2+3n-5)/gcd(n^2+3n-5, 5*A051403(n-3)+n*A051403(n-4)), which reduces to N/gcd(N, 5(n-1)(n-3)!), combined with the p-adic/Legendre-bound template of Adamczewski's proof of the sibling conjecture A363102 (arXiv:2608.11941, Appendix A, linked from cross-reference A363102).
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
+
+## Verification
+
+The statement was formalized by math0 (not by a third party) from the conjecture in [OEIS A363482](https://oeis.org/A363482) as [`Math0.Statements.A363482.statement`](../../lean/Math0/Statements/OEIS/A363482.lean). Its definitions are checked by the kernel against the OEIS data. A separate agent reviewed it for fidelity to the OEIS text and froze it (by hash) before any proof attempt. The statement and its frozen hash were committed together with the proof, so the order (freeze, then proof) is recorded only in the pipeline's logs, not in the git history. Its fidelity to the OEIS text is a judgement, not a machine check, so the conjecture as stated in OEIS is quoted in the notes below for comparison. The Lean file [`lean/Math0/Frontier/OEIS/A363482.lean`](../../lean/Math0/Frontier/OEIS/A363482.lean) proves it; the final command `#math0_settles` checks that our theorem's type is exactly the statement or its negation and that both use no axioms beyond `propext`, `Classical.choice` and `Quot.sound`.
+
+## Notes
+
+Conjecture as stated in OEIS: Conjecture: Except for 49, every term of this sequence is either a prime or 1. (Mohammed Bouras, Jun 04 2023; 'The conjecture holds through n=10000' - Bill McEachen, Jul 08 2025)
+
+Referees: No prior resolution of A363482 found. Sources checked:
+- OEIS A363482 (local mirror, identical to upstream oeisdata #29, Jul 13 2025): conjecture plus a numerical check to n = 10000 (McEachen), no proof.
+- Bouras, "A New Primes-Generating Sequence", arXiv:2509.09745 (2025): lists A363482 as the k=5 case of n^2+(k-2)n-k, with observations only.
+- Epoch OEIS Open benchmark (github.com/epoch-research/LeanOpenProblems-results, metadata/oeis/conjectures.json): A363482 is absent.
+- google-deepmind/formal-conjectures: no A363482 file.
+- google-deepmind/alphaproof-nexus-results: no A363482 file.
+
+Related prior results on sibling sequences:
+- A363102 (endpoint -2) proved: T. Adamczewski, "OEIS Open: How many conjectures can language models turn into theorems?", arXiv:2608.11941 (2026), Appendix A; also AlphaProof Nexus oeis_a363102_conjecture_1.lean.
+- A356247 (endpoint -1) proved: B. Cloitre, "On the sequence A356247" (2025, OEIS-hosted PDF a356247_1.pdf; not readable here).
+- A363347 (endpoint -4) conjectures 1-2 proved: AlphaProof Nexus oeis_363347_conjecture_2.lean; Adamczewski, arXiv:2608.11941.
+
+The proof here follows the same template as the A363102 proof.
+
+Reading note (fidelity pass, 29 Oct 2026): the statement exempts every term equal to 49. Read strictly, the conjecture exempts only the single term a(6) = 49, which also needs the value 49 to occur only once. That holds for n < 1200 by exact computation but is not part of the Lean result.
+
+## Manuscript
+
+[paper.pdf](paper.pdf) ([source](paper.tex))
+
+## Citation
+
+```bibtex
+@misc{math0:oeis-a363482,
+  author       = {{math0}},
+  title        = {{OEIS A363482: apart from 49, every denominator of 1/(2-3/(3-4/(...(n-1)-n/(-5)))) is 1 or a prime}},
+  howpublished = {\url{https://github.com/Foundation-0/math0/tree/main/results/oeis-a363482}},
+  note         = {Produced by Claude (Anthropic); Lean-verified},
+  year         = {2026}
+}
+```

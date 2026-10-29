@@ -1,0 +1,322 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    noncomputable,private},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+  breaklines=true, keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray},
+  frame=single, extendedchars=true, inputencoding=utf8, upquote=true,
+  literate={ℂ}{{$\mathbb{C}$}}1 {ℕ}{{$\mathbb{N}$}}1 {ℝ}{{$\mathbb{R}$}}1 {ℤ}{{$\mathbb{Z}$}}1
+    {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {→}{{$\to$}}1 {↔}{{$\leftrightarrow$}}1
+    {≤}{{$\le$}}1 {≠}{{$\ne$}}1 {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {∈}{{$\in$}}1
+    {×}{{$\times$}}1 {⋃}{{$\bigcup$}}1 {¬}{{$\neg$}}1 {…}{{$\ldots$}}1
+    {₁}{{$_1$}}1 {₂}{{$_2$}}1 {₃}{{$_3$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\re}{\operatorname{Re}}
+\newcommand{\im}{\operatorname{Im}}
+
+\title[Internal $n$-gons in a regular $n$-gon (OEIS A357216)]{Internal $n$-gons in a regular $n$-gon: three sides are concurrent only for $n=3,4,6$, and otherwise there are $nk^2+1$ regions}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 18, 2026}
+
+\begin{document}
+\begin{abstract}
+Divide each side of a regular $n$-gon into $k+1$ equal parts and, for $\mu=1,\dots,k$, join the $\mu$-th division points of consecutive sides; this draws $k$ internal $n$-gons. We prove the two conjectures that S.~R. Shannon stated in 2022 in OEIS A357216: for $n\ge3$, some $k$ produces a point lying on three of the $nk$ drawn sides if and only if $n\in\{3,4,6\}$; and for $n=5$ and every $n\ge7$ the drawing cuts the polygon into exactly $nk^2+1$ regions, for every $k\ge0$. A point on three sides would force a relation $\alpha W+\beta=0$ with rational $\alpha\ne0$, $\beta$, where $W=1+2\cos(2\pi/n)$, which Niven's theorem excludes for $n=5$ and $n\ge7$. To our knowledge the result is new; both conjectures are still listed as open in the OEIS. The proof is checked in Lean~4 with Mathlib against a statement that math0 formalized from the OEIS entry, reviewed for fidelity and frozen before any proof attempt.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Let $n\ge3$ and $k\ge0$. Divide each side of a regular $n$-gon into $k+1$ equal parts. For $\mu=1,\dots,k$ the $\mu$-th division points of the $n$ sides are the vertices of a smaller regular $n$-gon, the $\mu$-th \emph{internal $n$-gon}. The OEIS entry A357216 \cite{A357216}, contributed by Scott R.~Shannon on September~18, 2022, tabulates the number $T(n,k)$ of regions into which the $k$ internal $n$-gons cut the outer one; A357235 \cite{A357235} and A357254 \cite{A357254} count vertices and edges, and the rows $n=3,4,6$ are A356984, A357058 and A357196 \cite{A356984,A357058,A357196}. Shannon's extended table covers $3\le n\le 50$, $0\le k\le75$. If no three drawn segments pass through a common point, Euler's formula gives $nk^2+1$ regions; for $n=3,4,6$ the table falls below this value (for example $T(3,5)=70<76$, $T(4,5)=93<101$, $T(6,9)=475<487$). The three entries conjecture that only the triangle, the square and the hexagon have such \emph{non-simple intersections}, and A357216 conjectures $T(n,k)=nk^2+1$ for all other $n$. We prove both conjectures (Theorem~\ref{thm:main}); the main tool is Niven's theorem \cite{Niven}.
+
+\subsection*{Status and prior work}
+A357216, A357235 and A357254 (last revised September~21, 2022) state the conjectures with no report of a proof. A356984 contains Talmon Silver's classification of the intersection points for the triangle only; A357058 and A357196 list values of $k$ that give non-simple intersections for the square (the even ones) and the hexagon, without a general argument. The math0 referees' searches (arXiv, MathOverflow, Mathematics Stack Exchange, SeqFan, the web) found only the OEIS entries, and the conjectures are not in formal-conjectures \cite{FC}. We therefore classify the result as \emph{new}; the argument is short and may exist somewhere unrecorded.
+
+\section{Statement}\label{sec:statement}
+
+Throughout, $n\ge3$, $k\ge0$, indices of vertices are taken modulo $n$, and
+\[
+V_j=e^{2\pi i j/n},\qquad D_{j,\mu}=V_j+\tfrac{\mu}{k+1}\,(V_{j+1}-V_j),\qquad t_\mu=\tfrac{\mu}{k+1}.
+\]
+The polygon is $P=\operatorname{conv}\{V_0,\dots,V_{n-1}\}\subset\C=\mathbb{R}^2$ and $U=\operatorname{int}P$. For $0\le j<n$ and $1\le\mu\le k$ the \emph{chord} $C_{j,\mu}$ is the closed segment $[D_{j,\mu},D_{j+1,\mu}]$: the side of the $\mu$-th internal $n$-gon that cuts off the corner $V_{j+1}$. A \emph{non-simple intersection} is a point lying on three distinct chords.
+
+The entry A357216 contains, verbatim, the comment and the two formulas
+\begin{quote}\footnotesize
+\texttt{Conjecture: the only n-gons that contain non-simple intersections are the 3-gon (triangle), 4-gon (square), and 6-gon (hexagon).}\\
+\texttt{Conjectured formula for all columns for n >= 7: T(n,k) = n*k\^{}2 + 1.}\\
+\texttt{Conjectured formula for all rows except for n = 3, 4, 6: T(n,k) = n*k\^{}2 + 1.}
+\end{quote}
+all by Scott R.~Shannon, September~18, 2022.
+
+\begin{theorem}\label{thm:main}
+(1) For $n\ge3$, some $k\ge0$ admits a point lying on three distinct chords if and only if $n\in\{3,4,6\}$.
+(2) If $n=5$ or $n\ge7$, then for every $k\ge0$ the set $U\setminus\bigcup_{j,\mu}C_{j,\mu}$ has exactly $nk^2+1$ connected components.
+\end{theorem}
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A357216.lean}, reviewed for fidelity and frozen (SHA-256 \texttt{0b6d1419\ldots 2635391}) before any proof attempt. Its geometric definitions and the statement are, verbatim except that docstrings are omitted:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+namespace Math0.Statements.A357216
+noncomputable def vertex (n j : ℕ) : ℂ := Complex.exp (2 * Real.pi * Complex.I * j / n)
+noncomputable def divPt (n k j m : ℕ) : ℂ :=
+  vertex n j + ((m : ℂ) / ((k : ℂ) + 1)) * (vertex n (j + 1) - vertex n j)
+noncomputable def chord (n k : ℕ) (c : Fin n × Fin k) : Set ℂ :=
+  segment ℝ (divPt n k (c.1 : ℕ) ((c.2 : ℕ) + 1)) (divPt n k ((c.1 : ℕ) + 1) ((c.2 : ℕ) + 1))
+noncomputable def polygon (n : ℕ) : Set ℂ :=
+  convexHull ℝ (Set.range fun j : Fin n => vertex n j)
+noncomputable def regionSet (n k : ℕ) : Set ℂ :=
+  interior (polygon n) \ ⋃ c : Fin n × Fin k, chord n k c
+noncomputable def regions (n k : ℕ) : ℕ :=
+  Nat.card (ConnectedComponents (regionSet n k))
+def HasNonSimpleIntersection (n k : ℕ) : Prop :=
+  ∃ p : ℂ, ∃ c₁ c₂ c₃ : Fin n × Fin k, c₁ ≠ c₂ ∧ c₁ ≠ c₃ ∧ c₂ ≠ c₃ ∧
+    p ∈ chord n k c₁ ∧ p ∈ chord n k c₂ ∧ p ∈ chord n k c₃
+def statement : Prop :=
+  (∀ n : ℕ, 3 ≤ n → ((∃ k : ℕ, HasNonSimpleIntersection n k) ↔ (n = 3 ∨ n = 4 ∨ n = 6))) ∧
+  (∀ n k : ℕ, (n = 5 ∨ 7 ≤ n) → regions n k = n * k ^ 2 + 1)
+\end{lstlisting}
+\emph{Encoding.} \texttt{vertex n j} is $V_j$, \texttt{divPt n k j m} is $D_{j,m}$, and the chord indexed by $c=(j,\mu-1)\in\texttt{Fin n}\times\texttt{Fin k}$ is $C_{j,\mu}$; since $V_n=V_0$, the chord with $j=n-1$ ends on side~$0$. \texttt{regions n k} counts the components of $U$ minus all chords, which is $T(n,k)$. \decl{HasNonSimpleIntersection} needs no interiority condition: a point on three distinct chords lies in $U$, because the only points of a chord outside $U$ are its endpoints (Lemma~\ref{lem:line}(d)) and each division point is an endpoint of only two chords (Lemma~\ref{lem:divpt}). The comment is read as an equivalence, which includes the existence of non-simple intersections for $n=3,4,6$ that the data show; the two formulas together say $T(n,k)=nk^2+1$ for $n=5$ and $n\ge7$ and all $k\ge0$.
+
+\emph{Data check.} The statement file also defines a computable table \decl{T} (an exact computation in $\mathbb{Z}[2\cos(2\pi/n)]$ that uses the rotational symmetry) and its antidiagonal reading \decl{a} with offset~$3$, and proves by \texttt{decide +kernel} (\decl{a_data}, about $35$ seconds of kernel time) that \decl{a} reproduces all $66$ listed terms. The identity \texttt{T n k = regions n k} is the intended meaning of \decl{T} but is \emph{not} proved in Lean; \decl{statement} does not mention \decl{T}. Outside Lean, a Python transcription of \decl{T} and a referee's floating-point computation from the geometric definition both reproduce the entry's $195$-value example table ($n\le15$, $k\le14$).
+
+\section{Proof}\label{sec:proof}
+
+\subsection{Counting components cut out by lines}
+
+A function $f:\C\to\mathbb{R}$ is \emph{affine} if $f(z+r(w-z))=f(z)+r(f(w)-f(z))$ for all $z,w\in\C$, $r\in\mathbb{R}$.
+
+\begin{proposition}[\decl{count_general}]\label{prop:count}
+Let $U\subseteq\C$ be nonempty, open and convex, and let $f_0,\dots,f_{N-1}$ be continuous affine functions. Suppose that for each $i<N$ there are $A_i,B_i\in\C$ with $\gamma_i(r)=A_i+r(B_i-A_i)$ such that
+(i) $U\cap\{f_i=0\}=\gamma_i((0,1))$; (ii) $f_i\not\equiv0$; (iii) $f_j\circ\gamma_i\not\equiv0$ for $j<i$.
+Let $U_N=\{z\in U: f_i(z)\ne0\text{ for all }i<N\}$ and $\rho_i=\#\{r\in(0,1): f_j(\gamma_i(r))=0\text{ for some }j<i\}$. Then $U_N$ has exactly $1+\sum_{i<N}(1+\rho_i)$ connected components.
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1 (\decl{card_cc_eq}).} For $z\in U_N$ let $\sigma_N(z)=\{i<N: f_i(z)>0\}$. The set $\{y\in U: f_i(y)f_i(z)>0\ \forall i<N\}$ is an open neighbourhood of $z$ in $U_N$ on which $\sigma_N$ is constant, so $\sigma_N$ is locally constant, hence constant on components. Each fibre $\{\sigma_N=\sigma\}$ is convex: on a segment between two of its points each $f_i$ is affine with the same strict sign at both ends, and $U$ is convex. Fibres are therefore connected, and the components of $U_N$ are exactly the nonempty fibres; their number is $|\sigma_N(U_N)|$, which is finite.
+
+\emph{Step 2 (\decl{ncard_step}).} Let $R_\pm=\sigma_N(\{z\in U_N:\pm f_N(z)>0\})$. Then $\sigma_{N+1}(U_{N+1})$ is the disjoint union of $\{\sigma\cup\{N\}:\sigma\in R_+\}$ and $R_-$, of size $|R_+\cup R_-|+|R_+\cap R_-|$. If $z\in U_N$, $f_N(z)=0$ and $f_N(w)\ne0$ (by (ii)), then for small $\varepsilon$ the points $z\pm\varepsilon(w-z)$ lie in the neighbourhood of Step~1, and $f_N$ has both signs on them. Hence $R_+\cup R_-=\sigma_N(U_N)$ and $\sigma_N(U_N\cap\{f_N=0\})\subseteq R_+\cap R_-$; conversely, if $\sigma\in R_+\cap R_-$, the zero of $f_N$ on a segment joining points of the fibre of $\sigma$ with $f_N>0$ and $f_N<0$ lies in that convex fibre. So $|\sigma_{N+1}(U_{N+1})|=|\sigma_N(U_N)|+|\sigma_N(U_N\cap\{f_N=0\})|$.
+
+\emph{Step 3 (\decl{sgn1_count}).} By (i), $U_N\cap\{f_N=0\}=\{\gamma_N(r):0<r<1,\ f_j(\gamma_N(r))\ne0\ \forall j<N\}$. Write $f_j(\gamma_N(r))=c_j+rd_j$; by (iii) these are nonzero affine functions of $r$, so the set $Z\subset(0,1)$ of their roots is finite, $|Z|=\rho_N$. By induction on $|Z|$, $s(r)=\{j<N: c_j+rd_j>0\}$ takes exactly $|Z|+1$ values on $(0,1)\setminus Z$: by the intermediate value theorem $s$ is constant on root-free intervals, in particular on $(\max Z,1)$, and this value is new, because some $c_j+rd_j$ with $d_j\ne0$ changes sign at $\max Z$. Since $\sigma_N(\gamma_N(r))=s(r)$, Step~2 adds $1+\rho_N$ components, and induction on $N$ from $|\sigma_0(U_0)|=1$ proves the claim.
+\end{proof}
+
+\subsection{Corner frames}
+Put $\varphi=\pi/n$. For a corner $V_C$, the vectors $V_{C-1}-V_C$, $V_{C+1}-V_C$ are linearly independent over $\mathbb{R}$, so every $z\in\C$ is uniquely $z=V_C+x(V_{C-1}-V_C)+y(V_{C+1}-V_C)$. The \emph{frame coordinates} $x=x_C(z)$, $y=y_C(z)$ are continuous and affine; explicitly, with $w=\overline{V_C}z$, $x+y=(1-\re w)/(1-\cos2\varphi)$ and $y-x=\im w/\sin2\varphi$ (\decl{fx}, \decl{fy}, \decl{recon}). Put
+\[
+X(a)=\frac{\sin(a\varphi)\sin((a-1)\varphi)}{\sin\varphi\,\sin2\varphi},\quad
+Y(a)=\frac{\sin(a\varphi)\sin((a+1)\varphi)}{\sin\varphi\,\sin2\varphi},\quad W=1+2\cos\tfrac{2\pi}{n}.
+\]
+
+\begin{lemma}[\decl{fx_vertex}, \decl{XY_range}, \decl{Y_pos_range}]\label{lem:frame}
+(1) For every integer $a$, $x_C(V_{C+a})=X(a)$ and $y_C(V_{C+a})=Y(a)$; $X$ and $Y$ have period $n$.
+(2) $(X,Y)$ equals $(0,0)$, $(0,1)$, $(1,0)$, $(1,W)$, $(W,1)$ at $a=0,1,-1,2,-2$.
+(3) If $a\not\equiv0\pmod n$ then $X(a),Y(a)\ge0$ and $X(a)+Y(a)\ge1$; if also $a\not\equiv-1$, then $Y(a)>0$. In particular $W\ge0$, and $Y(a)\ge0$ for all $a$.
+\end{lemma}
+
+\begin{proof}
+(1) For $w=e^{2ia\varphi}$, double-angle formulas give $x+y=\sin^2(a\varphi)/\sin^2\varphi$ and $y-x=\sin(2a\varphi)/\sin2\varphi$, and sum-to-product formulas give the same for $X(a)+Y(a)$ and $Y(a)-X(a)$. Replacing $a$ by $a+n$ flips the sign of two sine factors. (2) is direct; for $a=\pm2$ note $\sin3\varphi/\sin\varphi=3-4\sin^2\varphi=1+2\cos2\varphi$. (3) By periodicity assume $1\le a\le n-1$. Then $a\varphi\in[\varphi,\pi-\varphi]$ and $(a\pm1)\varphi\in[0,\pi]$, so all sines are $\ge0$, $\sin(a\varphi)\ge\sin\varphi>0$, and $X+Y=\sin^2(a\varphi)/\sin^2\varphi\ge1$. If $a\le n-2$ then $(a+1)\varphi<\pi$ and $Y(a)>0$. Finally $W=X(-2)$.
+\end{proof}
+
+\begin{lemma}[\decl{polygon_sub}, \decl{interior_pos}, \decl{tri_interior}]\label{lem:polygon}
+For every corner $C$: (a) $P\subseteq\{x_C\ge0,\ y_C\ge0\}$; (b) $x_C(z)>0$ and $y_C(z)>0$ for $z\in U$; (c) $\{x_C>0,\ y_C>0,\ x_C+y_C<1\}\subseteq U$. In particular $U$ is a nonempty open convex set.
+\end{lemma}
+
+\begin{proof}
+(a) The vertices satisfy the inequalities by Lemma~\ref{lem:frame}, and the right side is convex. (b) $x_C(z+e(V_C-V_{C-1}))=x_C(z)-e$, and for small $e>0$ this point is in $P$, so $x_C(z)\ge e$ by (a); similarly for $y_C$ with $V_C-V_{C+1}$. (c) Such a point is $(1-x-y)V_C+xV_{C-1}+yV_{C+1}\in P$, and the set is open.
+\end{proof}
+
+\subsection{Chords and their lines}
+Fix $k$ and a chord $c=(j,\mu)$, $t=t_\mu\in(0,1)$. By Lemma~\ref{lem:frame}(2), in the frame at the corner $V_{j+1}$ the endpoints $D_{j,\mu}$, $D_{j+1,\mu}$ have coordinates $(1-t,0)$ and $(0,t)$, so $\gamma_c(r)=D_{j,\mu}+r(D_{j+1,\mu}-D_{j,\mu})$ has coordinates $((1-t)(1-r),\,tr)$ and lies on the zero set of the affine function
+\[
+F_c(z)=t\,x_{j+1}(z)+(1-t)\,y_{j+1}(z)-t(1-t).
+\]
+
+\begin{lemma}[\decl{gam_interior}, \decl{line_inter}, \decl{mem_chord_iff}]\label{lem:line}
+(a) $\gamma_c(r)\in U$ for $0<r<1$. (b) If $z\in U$ and $F_c(z)=0$, then $z=\gamma_c(r)$ for some $r\in(0,1)$. (c) For $z\in U$, $z\in C_c$ if and only if $F_c(z)=0$. (d) The only points of $C_c$ outside $U$ are its endpoints.
+\end{lemma}
+
+\begin{proof}
+(a) Lemma~\ref{lem:polygon}(c): the coordinates are positive with sum $1-r-t+2rt<1$. (b) By Lemma~\ref{lem:polygon}(b), $x,y>0$; put $r=y/t>0$; then $F_c(z)=0$ gives $x=(1-t)(1-r)$, so $r<1$, and $z=\gamma_c(r)$ because frame coordinates determine the point. (c) and (d) follow.
+\end{proof}
+
+For a second chord $e=(j',\mu')$ with $s=t_{\mu'}$ put $\Phi_{c,e}(r)=F_e(\gamma_c(r))$. Since $W\ge0$, the numbers
+\[
+a(s,t)=(1-t)\bigl(sW+(1-s)^2\bigr)+ts^2,\qquad b(s,t)=(1-t)(1-s)^2+t\bigl(s^2+(1-s)W\bigr)
+\]
+are positive for $s,t\in(0,1)$ (\decl{aP_pos}, \decl{bM_pos}).
+
+\begin{lemma}[\decl{pair_same}, \decl{pair_next}, \decl{pair_prev}, \decl{pair_far}]\label{lem:pairs}
+For $0\le r\le1$:
+(a) if $j'=j$, then $\Phi_{c,e}(r)=(t-s)(r-s)$;
+(b) if $j'\equiv j+1$, then $\Phi_{c,e}(r)=(1-r)\,a(s,t)+r\,s(s-t)$;
+(c) if $j\equiv j'+1$, then $\Phi_{c,e}(r)=(1-r)(1-s)(t-s)+r\,b(s,t)$;
+(d) otherwise $\Phi_{c,e}(r)>0$.
+\end{lemma}
+
+\begin{proof}
+Let $G(a)=F_e(V_{j'+1+a})=sX(a)+(1-s)Y(a)-s(1-s)$. Since $\gamma_c(r)=(1-r)[(1-t)V_j+tV_{j+1}]+r[(1-t)V_{j+1}+tV_{j+2}]$ and $F_e$ is affine,
+\[
+\Phi_{c,e}(r)=(1-r)\bigl[(1-t)G(\delta-1)+tG(\delta)\bigr]+r\bigl[(1-t)G(\delta)+tG(\delta+1)\bigr],\qquad \delta=j-j'
+\]
+(\decl{Fl_gam_master}). By Lemma~\ref{lem:frame}(2), $G(-2)=sW+(1-s)^2$, $G(-1)=s^2$, $G(0)=-s(1-s)$, $G(1)=(1-s)^2$, $G(2)=s^2+(1-s)W$, and substitution gives (a)--(c). In case (d), $\delta-1,\delta,\delta+1\not\equiv0$, and for $a\not\equiv0$ Lemma~\ref{lem:frame}(3) gives $G(a)\ge\min(s,1-s)(X(a)+Y(a))-s(1-s)\ge\min(s,1-s)-s(1-s)>0$.
+\end{proof}
+
+\begin{corollary}[\decl{cls}]\label{cor:cls}
+If $c\ne e$, $0<r<1$ and $\Phi_{c,e}(r)=0$, then one of the following holds:
+(S) $j'=j$ and $r=s$;
+(N) $j'\equiv j+1$, $s<t$, and $(1-r)a(s,t)+rs(s-t)=0$;
+(P) $j\equiv j'+1$, $s>t$, and $(1-r)(1-s)(t-s)+rb(s,t)=0$.
+\end{corollary}
+
+\begin{proof}
+In case (a) of Lemma~\ref{lem:pairs}, $t\ne s$ because $\mu\ne\mu'$. In case (b) with $s\ge t$, and in case (c) with $s\le t$, $\Phi_{c,e}(r)>0$. Case (d) is excluded.
+\end{proof}
+
+\subsection{\texorpdfstring{No triple points for $n=5$ and $n\ge7$}{No triple points for n = 5 and n >= 7}}
+
+\begin{lemma}[\decl{W_irr}, \decl{I1}, \decl{I2}]\label{lem:irr}
+Let $n=5$ or $n\ge7$. Then $W\notin\Q$. Consequently, for all $t,s,\rho\in\{t_1,\dots,t_k\}$,
+\[
+(1-\rho)\,a(s,t)+\rho\,s(s-t)\ne0\qquad\text{and}\qquad(1-\rho)(1-s)(t-s)+\rho\,b(s,t)\ne0 .
+\]
+\end{lemma}
+
+\begin{proof}
+If $W$ were rational, so would be $\cos(2\pi/n)$, and by Niven's theorem (Mathlib's \decl{niven}) it would lie in $\{0,\pm\frac12,\pm1\}$. But $\cos(2\pi/5)\in(0,\frac12)$ because $2\pi/5\in(\pi/3,\pi/2)$, and $\cos(2\pi/n)\in(\frac12,1)$ for $n\ge7$ because $2\pi/n\in(0,\pi/3)$. The two expressions are affine in $W$ with rational coefficients; the coefficients of $W$ are $(1-\rho)(1-t)s\ne0$ and $\rho t(1-s)\ne0$. If either expression vanished, $W$ would be rational.
+\end{proof}
+
+\begin{proposition}[\decl{no_triple}]\label{prop:notriple}
+Let $n=5$ or $n\ge7$. No point of $U$ is a zero of $F_{c_1}$, $F_{c_2}$, $F_{c_3}$ for three distinct chords $c_i=(j_i,\mu_i)$.
+\end{proposition}
+
+\begin{proof}
+Suppose $p$ is one, and write $t_i=t_{\mu_i}$. By Lemma~\ref{lem:line}(b), $p=\gamma_{c_1}(r_1)=\gamma_{c_2}(r_2)$ with $r_1,r_2\in(0,1)$. Apply Corollary~\ref{cor:cls} to the pairs $(c_1,c_2)$ and $(c_1,c_3)$ at $r_1$.
+(S),(S): $j_2=j_3=j_1$ and $t_2=r_1=t_3$, so $c_2=c_3$. (S),(N): $r_1=t_2$ and $(1-t_2)a(t_3,t_1)+t_2t_3(t_3-t_1)=0$, contradicting Lemma~\ref{lem:irr}; the cases (S),(P), (N),(S) and (P),(S) are the same with the roles exchanged. (N),(N): $j_2=j_3\equiv j_1+1$. For the pair $(c_2,c_3)$ at $r_2$ only (S) is possible, so $r_2=t_3$; for $(c_2,c_1)$ only (P) is possible (as $n\ge3$), so $(1-t_3)(1-t_1)(t_2-t_1)+t_3b(t_1,t_2)=0$, contradicting Lemma~\ref{lem:irr}. (P),(P): symmetrically $j_2=j_3$, $r_2=t_3$, and (N) for $(c_2,c_1)$ gives $(1-t_3)a(t_1,t_2)+t_3t_1(t_1-t_2)=0$, a contradiction. (N),(P) or (P),(N): $j_3-j_2\equiv\pm2$, which is not $\equiv0,\pm1$ as $n\ge5$, so no case of Corollary~\ref{cor:cls} applies to $(c_2,c_3)$ at $r_2$.
+\end{proof}
+
+\subsection{Part (1) of Theorem~\ref{thm:main}}
+
+\begin{lemma}[\decl{divPt_inj}]\label{lem:divpt}
+If $D_{\sigma,\mu}=D_{\sigma',\mu'}$ with $0\le\sigma,\sigma'<n$ and $1\le\mu'\le k$, then $\sigma=\sigma'$ and $\mu=\mu'$. Hence each division point is an endpoint of exactly two chords.
+\end{lemma}
+
+\begin{proof}
+In the frame at $V_{\sigma+1}$, $y(D_{\sigma,\mu})=0$ since $Y(-1)=Y(0)=0$. If $\sigma'\ne\sigma$, let $a=\sigma'-\sigma\not\equiv0$ and $\tau=\mu'/(k+1)\in(0,1)$; then $y(D_{\sigma',\mu'})=(1-\tau)Y(a-1)+\tau Y(a)>0$ by Lemma~\ref{lem:frame}(3): $Y(a)>0$ if $a\not\equiv-1$, and otherwise $a-1\equiv-2\not\equiv0,-1$ and $Y(a-1)>0$. So $\sigma=\sigma'$, and $x(D_{\sigma,\mu})=1-\mu/(k+1)$ gives $\mu=\mu'$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}(1)]
+Let $n\ge3$, $n\notin\{3,4,6\}$, so $n=5$ or $n\ge7$, and suppose $p$ lies on three distinct chords $c_i=(j_i,\mu_i)$ (\decl{no_nonsimple}). If $p\in U$, then $F_{c_i}(p)=0$ by Lemma~\ref{lem:line}(c), contradicting Proposition~\ref{prop:notriple}. Otherwise, by Lemma~\ref{lem:line}(d), $p=D_{\sigma_i,\mu_i}$ with $\sigma_i\in\{j_i,j_i+1\}$ for each $i$. By Lemma~\ref{lem:divpt} all $\mu_i$ are equal and all $\sigma_i$ equal one $\sigma$; then the $j_i$ are pairwise distinct elements of $\{\sigma,\sigma-1\}$, which is impossible.
+
+Conversely (\decl{triple_exists}): if $\mu_1\ne\mu_2$ and $(1-t_{\mu_2})a(t_{\mu_3},t_{\mu_1})+t_{\mu_2}t_{\mu_3}(t_{\mu_3}-t_{\mu_1})=0$, then $p=\gamma_{(0,\mu_1)}(t_{\mu_2})\in U$ lies on $C_{0,\mu_1}$, on $C_{0,\mu_2}$ by Lemma~\ref{lem:pairs}(a) and on $C_{1,\mu_3}$ by Lemma~\ref{lem:pairs}(b), using Lemma~\ref{lem:line}(c). Here $W=0,1,2$ for $n=3,4,6$, and the equation holds for
+\begin{center}
+\begin{tabular}{cccccc}
+$n$ & $k$ & $(\mu_1,\mu_2,\mu_3)$ & $(t_{\mu_1},t_{\mu_2},t_{\mu_3})$ & $a(t_{\mu_3},t_{\mu_1})$ & $t_{\mu_3}(t_{\mu_3}-t_{\mu_1})$\\\hline
+$3$ & $5$ & $(3,5,2)$ & $(1/2,\,5/6,\,1/3)$ & $5/18$ & $-1/18$\\
+$4$ & $5$ & $(4,5,3)$ & $(2/3,\,5/6,\,1/2)$ & $5/12$ & $-1/12$\\
+$6$ & $9$ & $(5,9,2)$ & $(1/2,\,9/10,\,1/5)$ & $27/50$ & $-3/50$
+\end{tabular}
+\end{center}
+as $\frac16\cdot\frac5{18}=\frac56\cdot\frac1{18}$, $\frac16\cdot\frac5{12}=\frac56\cdot\frac1{12}$, $\frac1{10}\cdot\frac{27}{50}=\frac9{10}\cdot\frac3{50}$ (\decl{triple3}, \decl{triple4}, \decl{triple6}).
+\end{proof}
+
+\subsection{Part (2) of Theorem~\ref{thm:main}}
+Let $n=5$ or $n\ge7$. Order the chords by $i=n(\mu-1)+j$, $0\le i<nk$, and let $f_i=F_{(j,\mu)}$, $A_i=D_{j,\mu}$, $B_i=D_{j+1,\mu}$. By Lemma~\ref{lem:line}(c), $U\setminus\bigcup C_{j,\mu}=U_{nk}$ (\decl{regionSet_eq}). The hypotheses of Proposition~\ref{prop:count} hold: $U$ by Lemma~\ref{lem:polygon}; (i) by Lemma~\ref{lem:line}(a),(b); (ii) since $f_i(V_{j+1})=-t(1-t)\ne0$; and (iii) by Lemma~\ref{lem:pairs}: for $e\ne c$, $\Phi_{c,e}(0)$ is $s(s-t)\ne0$ in case (a), $a(s,t)>0$ in case (b) and positive in case (d), and $\Phi_{c,e}(1)=b(s,t)>0$ in case (c).
+
+\begin{lemma}[\decl{roots_count}]\label{lem:roots}
+For the chord $c=(j,\mu)$ with index $i$, $\rho_i=2(\mu-1)$.
+\end{lemma}
+
+\begin{proof}
+An earlier chord $e=(j',\mu')$ has $\mu'\le\mu$. By Corollary~\ref{cor:cls}, its line meets $\gamma_c((0,1))$ only in case (S), at $r=t_{\mu'}$ with $\mu'<\mu$, or in case (N), with $j'\equiv j+1$ and $\mu'<\mu$, at the unique root $r=a/(a+s(t-s))\in(0,1)$ of the affine function in (N); case (P) needs $\mu'>\mu$. Conversely all chords $(j,\mu')$ and $(j+1,\mu')$ with $\mu'<\mu$ are earlier (their indices are $<n\mu'\le i$). These $2(\mu-1)$ roots are distinct, as a coincidence would put $\gamma_c(r)$ on three chord lines (Proposition~\ref{prop:notriple}).
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}(2)]
+By Proposition~\ref{prop:count} and Lemma~\ref{lem:roots} (\decl{regions_formula}, \decl{sum_formula}), the number of components is
+$1+\sum_{i<nk}\bigl(1+2\lfloor i/n\rfloor\bigr)=1+\sum_{\mu=1}^{k}n(2\mu-1)=nk^2+1$.
+\end{proof}
+
+\begin{remark}
+For $n=5$ and $n\ge7$ the same lemmas give the vertex and edge counts $nk^2+n$ and $2nk^2+n$ conjectured in A357235 and A357254: there are $nk(k-1)$ crossing points (Lemma~\ref{lem:roots}), and each chord is crossed by $2(k-1)$ others at distinct points (not formalized).
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+The proof is in \path{lean/Math0/Frontier/OEIS/A357216.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. Its main theorem \decl{Math0.Frontier.A357216.result} has type \decl{Math0.Statements.A357216.statement}; the private auxiliary declarations are named with the results above (in Lean the chord index is $(j,\mu-1)$, and $x_C,y_C,X,Y,F_c,\gamma_c$ are \decl{fx}, \decl{fy}, \decl{Xr}, \decl{Yr}, \decl{Fl}, \decl{gam}). The proof does not use \decl{T} or \decl{a_data}. The file ends with
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A357216.result Math0.Statements.A357216.statement
+\end{lstlisting}
+which (see \path{lean/Math0/Audit.lean}) checks that \decl{statement} is a \texttt{Prop}-valued definition without universe parameters, that \decl{statement} and \decl{result} use no axioms beyond \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (excluding \decl{sorryAx}, the axioms behind \decl{native_decide}, and custom axioms), and that the type of \decl{result} is syntactically \decl{statement} or its negation, with no unfolding. Running \texttt{lake env lean} on the file reports (besides linter warnings)
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A357216.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A357216.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A357216.result' proves 'Math0.Statements.A357216.statement'
+\end{lstlisting}
+No \texttt{sorry}, \texttt{native\_decide}, \texttt{axiom} or \texttt{set\_option} occurs. Lean~4 \cite{Lean4} and Mathlib \cite{Mathlib} are pinned at \texttt{v4.33.1}, and formal-conjectures \cite{FC} at commit \texttt{c77fdd4} (not used here). The script \path{scripts/verify.sh} rebuilds all math0 results, re-running every audit, and checks that the pinned dependencies are unmodified; for this result alone, run \texttt{lake build Math0.Frontier.OEIS.A357216} in \path{lean}.
+
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, CADE 28, LNCS \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, CPP 2020, ACM, 2020, 367--381.
+
+\bibitem{Niven}
+I.~Niven, \emph{Irrational Numbers}, Carus Math. Monographs \textbf{11}, Math. Assoc. America, 1956 (Corollary~3.12).
+
+\bibitem{A356984}
+The OEIS Foundation Inc., \url{https://oeis.org/A356984}, entry by S.~R. Shannon (Sep.~8, 2022).
+
+\bibitem{A357058}
+The OEIS Foundation Inc., \url{https://oeis.org/A357058}, entry by S.~R. Shannon (Sep.~10, 2022).
+
+\bibitem{A357196}
+The OEIS Foundation Inc., \url{https://oeis.org/A357196}, entry by S.~R. Shannon (Sep.~17, 2022).
+
+\bibitem{A357216}
+The OEIS Foundation Inc., \url{https://oeis.org/A357216}, entry by S.~R. Shannon (Sep.~18, 2022).
+
+\bibitem{A357235}
+The OEIS Foundation Inc., \url{https://oeis.org/A357235}, entry by S.~R. Shannon (Sep.~19, 2022).
+
+\bibitem{A357254}
+The OEIS Foundation Inc., \url{https://oeis.org/A357254}, entry by S.~R. Shannon (Sep.~20, 2022).
+
+\end{thebibliography}
+
+\end{document}

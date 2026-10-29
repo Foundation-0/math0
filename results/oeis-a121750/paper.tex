@@ -1,0 +1,351 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw,at},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true, upquote=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1
+    {↔}{{$\leftrightarrow$}}1 {¬}{{$\neg$}}1 {→}{{$\to$}}1 {≤}{{$\le$}}1 {≥}{{$\ge$}}1
+    {≠}{{$\ne$}}1 {∈}{{$\in$}}1 {×}{{$\times$}}1 {·}{{$\cdot$}}1 {⟨}{{$\langle$}}1
+    {⟩}{{$\rangle$}}1 {⌊}{{$\lfloor$}}1 {⌋}{{$\rfloor$}}1 {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\ev}{\operatorname{ev}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\Iv}[1]{[\,#1\,]}
+
+\title[Mathar's recurrence for even columns in deco polyominoes]{Mathar's order-six D-finite recurrence for the number of even-length columns in deco polyominoes (OEIS A121750)}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 24, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $a(n)$ be the total number of columns of even length over all deco polyominoes of height $n$ (OEIS A121750). In 2022 R.~J. Mathar conjectured that $a$ satisfies a linear recurrence of order~$6$ whose coefficients are polynomials in $n$ of degree at most~$3$. We prove this recurrence for every $n\ge7$. Starting from the combinatorial definition, a translation-invariance argument reduces the column-by-column enumeration to a small system of first-order relations, and Mathar's operator annihilates every solution of this system. We found no earlier proof, so we classify the result as new; it is not deep, since the recurrence would also follow by routine closure computations from a first-order recurrence of E.~Deutsch that the entry states without proof. The proof is verified in Lean~4 with Mathlib against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry; there $a(n)$ is defined by enumerating deco polyominoes and is checked by the kernel against all $19$ listed terms.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+A polyomino is \emph{directed} if each cell can be reached from a source cell by north and east unit steps inside the polyomino, and \emph{column-convex} if each column is a vertical segment. Its \emph{height measured along the diagonal} is the number of diagonals $x+y=\mathrm{const}$ that meet it. A \emph{deco polyomino} is a directed column-convex polyomino whose height along the diagonal is attained only in its last column. Barcucci, Del Lungo and Pinzani introduced deco polyominoes as a class in bijection with permutations, so that there are $n!$ of height $n$ \cite{BDP}. They were studied with succession rules in \cite{BBD}, and six bijections with permutations are given in \cite{DPP}.
+
+E.~Deutsch's OEIS entry A121750 \cite{A121750} (2006, offset~$1$) is the sequence $a(n)$, the total number of columns of even length over all deco polyominoes of height $n$: $0,1,5,26,184,1338,11652,\dots$; the corresponding triangle is A121748 \cite{A121748}. The entry records Deutsch's first-order recurrence
+\begin{equation}\label{eq:deutsch}
+  a(n)=n\,a(n-1)+d(n-1)+(n-1)!\,\lfloor (n-1)/2\rfloor\qquad(n\ge2),
+\end{equation}
+with $a(1)=0$, $d(1)=1$, $d(2)=0$, $d(2m)=3!+5!+\dots+(2m-1)!$ and $d(2m+1)=-d(2m)$, without proof or reference. On July 26, 2022, R.~J. Mathar added the conjecture that $a$ satisfies the order-$6$ recurrence \eqref{eq:mathar} below. The current revision of the entry (\#13, August 20, 2024) still labels it ``Conjecture''.
+
+\subsection*{Prior work and status}
+Conjectures recorded in the OEIS, among them many recurrences conjectured by Mathar, are the subject of several papers: Ekhad, Yang and Zeilberger prove many of Mathar's conjectured recurrences automatically \cite{EYZ} (their paper predates this conjecture), Fried proves a range of OEIS conjectures \cite{Fr24,Fr26}, and Kauers and Koutschan study OEIS sequences that appear to be D-finite \cite{KK}. None of them treats A121750, and the literature on deco polyominoes \cite{BDP,BBD,DPP} does not study columns of even length. The math0 referees found no proof of \eqref{eq:mathar} there, in the related entries A121747--A121751, or elsewhere on the web, so we classify the result as \emph{new}. It is not deep: if \eqref{eq:deutsch} is taken as known, $a$ is P-recursive by the closure properties of D-finite sequences \cite{Stanley}, and \eqref{eq:mathar} could be verified by a routine computation. Our proof does not assume \eqref{eq:deutsch}; it starts from the definition, and on paper the same relations also give \eqref{eq:deutsch} (Remark~\ref{rem:deutsch}).
+
+\section{Statement}\label{sec:statement}
+
+The FORMULA section of A121750 \cite{A121750} contains, verbatim:
+\begin{lstlisting}[language={},basicstyle=\ttfamily\footnotesize]
+Conjecture D-finite with recurrence a(n) +(-n-2)*a(n-1) +(-n^2+4*n-2)*a(n-2) +(n^3-3*n^2-4*n+11)*a(n-3) -(n-1)*(n^2-11*n+26)*a(n-4) +(-n^3+5*n^2+7*n-43)*a(n-5) +(n-3)*(n-5)^2*a(n-6)=0. - _R. J. Mathar_, Jul 26 2022
+\end{lstlisting}
+For $n\in\Z$ put $p_0(n)=1$, $p_1(n)=-n-2$, $p_2(n)=-n^2+4n-2$, $p_3(n)=n^3-3n^2-4n+11$, $p_4(n)=-(n-1)(n^2-11n+26)$, $p_5(n)=-n^3+5n^2+7n-43$, $p_6(n)=(n-3)(n-5)^2$, and $L_n(x_0,\dots,x_6)=\sum_{k=0}^{6}p_k(n)\,x_k$.
+
+\begin{theorem}\label{thm:main}
+Let $a(n)$ be the total number of columns of even length over all deco polyominoes of height $n$. Then for every $n\ge7$,
+\begin{equation}\label{eq:mathar}
+  \sum_{k=0}^{6}p_k(n)\,a(n-k)=0 .
+\end{equation}
+\end{theorem}
+
+Mathar gives no range; since the sequence starts at $a(1)$ and \eqref{eq:mathar} involves $a(n-6)$, the natural range is $n\ge7$. (The Lean definition has $a(0)=0$, and with this value \eqref{eq:mathar} fails at $n=6$, with left-hand side $-3$.)
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A121750.lean}, reviewed for fidelity, and frozen (SHA-256 \texttt{c1f77c15\ldots 7414b}) before any proof attempt. The definitions and the statement read as follows (verbatim; omitted are the copyright header, the import, the module docstring, section headings, docstrings, blank lines, all theorems, and the auxiliary definitions \decl{IsTail}, \decl{eo}, \decl{nextRow}, \decl{tab} and \decl{aDP}, which are used only in proofs and data checks):
+\begin{lstlisting}
+namespace Math0.Statements.A121750
+def IsDeco (n : ℕ) (cs : List (ℕ × ℕ)) : Prop :=
+  -- at least one column, and every column is a nonempty vertical segment
+  cs ≠ [] ∧
+  (∀ c ∈ cs, c.1 ≤ c.2) ∧
+  -- the source `(0, 0)` is the bottom cell of the first column
+  (∀ c ∈ cs.head?, c.1 = 0) ∧
+  -- directed: the bottom cell of column `i + 1` has its west neighbour in column `i`
+  (∀ i (h : i + 1 < cs.length), cs[i].1 ≤ cs[i + 1].1 ∧ cs[i + 1].1 ≤ cs[i].2) ∧
+  -- height `n` along the diagonal: `max (x + y) + 1 = n` over the cells (`min (x + y) = 0`)
+  (∀ i (h : i < cs.length), i + cs[i].2 + 1 ≤ n) ∧
+  (∃ i, ∃ h : i < cs.length, i + cs[i].2 + 1 = n) ∧
+  -- the height is attained only in the last column
+  (∀ i (h : i < cs.length), i + cs[i].2 + 1 = n → i + 1 = cs.length)
+def tails : ℕ → ℕ → List (List (ℕ × ℕ))
+  | 0, b => if b = 0 then [[(b, 0)]] else []
+  | r + 1, b => (if b ≤ r + 1 then [[(b, r + 1)]] else []) ++
+      (List.range' b (r + 1 - b)).flatMap fun t =>
+        ((List.range' b (t + 1 - b)).flatMap (tails r)).map ((b, t) :: ·)
+def decos : ℕ → List (List (ℕ × ℕ))
+  | 0 => []
+  | n + 1 => tails n 0
+def evenCols (cs : List (ℕ × ℕ)) : ℕ :=
+  cs.countP fun c => (c.2 + 1 - c.1) % 2 == 0
+def a (n : ℕ) : ℕ := ((decos n).map evenCols).sum
+def statement : Prop :=
+  ∀ n : ℕ, 7 ≤ n →
+    (a n : ℤ) + (-(n : ℤ) - 2) * a (n - 1) + (-(n : ℤ) ^ 2 + 4 * n - 2) * a (n - 2) +
+      ((n : ℤ) ^ 3 - 3 * n ^ 2 - 4 * n + 11) * a (n - 3) -
+      ((n : ℤ) - 1) * ((n : ℤ) ^ 2 - 11 * n + 26) * a (n - 4) +
+      (-(n : ℤ) ^ 3 + 5 * n ^ 2 + 7 * n - 43) * a (n - 5) +
+      ((n : ℤ) - 3) * ((n : ℤ) - 5) ^ 2 * a (n - 6) = 0
+end Math0.Statements.A121750
+\end{lstlisting}
+
+\emph{Encoding.} Translate a directed column-convex polyomino so that its source, the bottom cell of its first column, is $(0,0)$. It is then determined by its columns $((b_0,t_0),\dots,(b_k,t_k))$, column $i$ being the cells $(i,y)$ with $b_i\le y\le t_i$, subject to $b_i\le t_i$, $b_0=0$ and $b_i\le b_{i+1}\le t_i$ (the bottom cell of column $i+1$ can only be entered from the west; conversely every cell is then reached by climbing a column, stepping east, and so on). The largest value of $x+y$ in column $i$ is $i+t_i$, and the smallest overall is $0$. So the height is $n$ iff $i+t_i+1\le n$ for all $i$ with equality for some $i$, and it is attained only in the last column iff equality forces $i=k$. These are the clauses of \decl{IsDeco}. The statement file proves that \texttt{decos n} lists exactly the column lists satisfying \texttt{IsDeco n}, each once (\decl{mem_decos}, \decl{nodup_decos}), so, up to this encoding, \texttt{a n} is literally the OEIS definition. The value \texttt{a 0} $=0$ is not a term and does not enter the statement. The arithmetic is in $\Z$, and the natural-number indices $n-k$, $k\le6<n$, are not truncated.
+
+\emph{Checks against the OEIS data} (kernel-checked with \texttt{decide +kernel}; \decl{a_data}, \decl{decos_length_data} and \decl{recurrence_data} go through a table proved equal to the enumeration, see Lemma~\ref{lem:rec}). The definition reproduces all $19$ listed terms $a(1),\dots,a(19)$ (\decl{a_data}); there are $n!$ deco polyominoes of height $n$ for $1\le n\le19$ (\decl{decos_length_data}), as proved in \cite{BDP}; direct enumeration gives $a(1),\dots,a(6)$, the counts $n!$ for $n\le6$, and rows $1$--$6$ of A121748 (\decl{a_data_direct}, \decl{decos_length_data_direct}, \decl{triangle_data}); and \decl{recurrence_data} checks \eqref{eq:mathar} on the listed terms, $7\le n\le19$, which tests the transcription only. The step from cell sets to column lists is argued in prose in the module docstring and is not formalized. The referees checked it independently by computer enumeration of cell sets, which for $n\le8$ gives $n!$ polyominoes, the values $a(n)$, and rows $1$--$8$ of A121748.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A121750.lean} (Lean names in brackets) and uses only the definitions and the lemmas \decl{tab_getD}, \decl{a_eq_aDP}, \decl{recurrence_data} of the statement file.
+
+\subsection{Column lists and their recursion}
+For a list $P=((b_0,t_0),\dots,(b_k,t_k))$ in $\N^2$ let $\ev(P)$ be the number of $i$ with $t_i-b_i+1$ even. For $r,b\in\N$ let $\cT(r,b)$ be the set of nonempty such lists with $b_0=b$, $b_i\le t_i$, $b_i\le b_{i+1}\le t_i$, and $i+t_i\le r$ for all $i$ with equality iff $i=k$ (\decl{IsTail}). The statement file proves that \texttt{tails r b} lists $\cT(r,b)$ without repetition (\decl{mem_tails}, \decl{nodup_tails}) and that $\cT(n,0)$ is the set of deco polyominoes of height $n+1$ (\decl{isDeco_succ}). Let $N(r,b)=|\cT(r,b)|$ and $E(r,b)=\sum_{P\in\cT(r,b)}\ev(P)$, so that $a(n+1)=E(n,0)$ for $n\ge0$. Write $\Iv{\phi}\in\{0,1\}$ for the truth value of $\phi$, and $\varepsilon_b(t)=\Iv{t+1-b\text{ even}}$.
+
+\begin{lemma}[definition of \decl{tails}; \decl{tab_getD}]\label{lem:rec}
+$\cT(0,0)=\{((0,0))\}$ and $\cT(0,b)=\varnothing$ for $b\ge1$. For $r\ge0$ and $b\le r+1$, $\cT(r+1,b)$ is the disjoint union of $\{((b,r+1))\}$ and the sets $\{(b,t)\cdot Q: Q\in\cT(r,b')\}$ for $b\le t\le r$ and $b\le b'\le t$, where $(b,t)\cdot Q$ is $Q$ with the column $(b,t)$ put in front. Consequently
+\begin{align*}
+  N(r+1,b)&=1+\sum_{t=b}^{r}\sum_{b'=b}^{t}N(r,b'),\\
+  E(r+1,b)&=\varepsilon_b(r+1)+\sum_{t=b}^{r}\Bigl(\varepsilon_b(t)\sum_{b'=b}^{t}N(r,b')+\sum_{b'=b}^{t}E(r,b')\Bigr).
+\end{align*}
+\end{lemma}
+
+\begin{proof}
+The first column $(b,t)$ of a list in $\cT(r+1,b)$ is either its last column, with $t=r+1$, or $t\le r$ and the remaining columns form a list $Q$ whose column $i$ was column $i+1$; the conditions $(i+1)+t_{i+1}\le r+1$, with equality only at the end, become those of $\cT(r,\cdot)$, and directedness says that the first bottom $b'$ of $Q$ lies in $[b,t]$. This is the recursive definition of \decl{tails} (with \decl{mem_tails}, \decl{nodup_tails}). The counting formulas follow from $\ev((b,t)\cdot Q)=\varepsilon_b(t)+\ev(Q)$. In Lean, \decl{nextRow} computes the right-hand sides from the list \texttt{tab r}, and \decl{tab_getD} proves that \texttt{tab r} has $(N(r,b),E(r,b))$ at position $b$ for all $r,b$; with \decl{a_eq_aDP} this gives $a(n+1)=E(n,0)$.
+\end{proof}
+
+\subsection{Translation invariance}
+Let $\mathrm{sh}(P)$ be $P$ with every column raised by one cell, $(b_i,t_i)\mapsto(b_i+1,t_i+1)$.
+
+\begin{lemma}[\decl{tails_shift}, \decl{tab_shift}, \decl{tab_sub}]\label{lem:shift}
+For all $r,b$, $\cT(r+1,b+1)=\mathrm{sh}(\cT(r,b))$; in Lean, \texttt{tails (r+1) (b+1)} is the list \texttt{tails r b} with $\mathrm{sh}$ applied to each entry. Hence $N(r+1,b+1)=N(r,b)$, $E(r+1,b+1)=E(r,b)$, and $(N(r,b),E(r,b))=(c(r-b),\tau(r-b))$ for $b\le r$, where $c(m)=N(m,0)$ and $\tau(m)=E(m,0)$.
+\end{lemma}
+
+\begin{proof}
+Induction on $r$. For $r=0$ both sides are $\{((1,1))\}$ if $b=0$ and empty otherwise (Lemma~\ref{lem:rec}). For the step, apply Lemma~\ref{lem:rec} to $\cT(r+2,b+1)$ and substitute $t=t'+1$, $b'=b''+1$, so that $b\le t'\le r$ and $b\le b''\le t'$ (\decl{range'_succ_left}). By induction $\cT(r+1,b''+1)=\mathrm{sh}(\cT(r,b''))$, so every piece, including $((b+1,r+2))=\mathrm{sh}((b,r+1))$, is the image under $\mathrm{sh}$ of the corresponding piece of $\cT(r+1,b)$. Shifting preserves column lengths, so $\ev\circ\mathrm{sh}=\ev$ (\decl{evenCols_sh}). The last claim follows by induction on $b$.
+\end{proof}
+
+Thus $a(m+1)=E(m,0)=\tau(m)$ (\decl{a_tot}); $c$ and $\tau$ are \decl{cnt} and \decl{tot}.
+
+\subsection{First-order relations}
+For $f\colon\N\to\Z$ and $r\in\N$ define
+\[
+  G_f(r)=\sum_{t=0}^{r}\sum_{j=0}^{t}f(r-j),\qquad H_f(r)=\sum_{t=0}^{r}\Iv{t\text{ odd}}\sum_{j=0}^{t}f(r-j)
+\]
+(\decl{gS}, \decl{hS}; in Lean $f$ takes values in $\N$ and the relations below are cast to $\Z$).
+
+\begin{lemma}[\decl{row0}, \decl{Z1}, \decl{Z4}]\label{lem:row0}
+For all $r\ge0$,
+\[
+  c(r+1)=1+G_c(r),\qquad \tau(r+1)=\Iv{r+1\text{ odd}}+H_c(r)+G_\tau(r).
+\]
+\end{lemma}
+
+\begin{proof}
+Take $b=0$ in Lemma~\ref{lem:rec} and rename $b'$ as $j$. Since $j\le t\le r$, Lemma~\ref{lem:shift} gives $N(r,j)=c(r-j)$ and $E(r,j)=\tau(r-j)$; and $\varepsilon_0(t)=\Iv{t\text{ odd}}$.
+\end{proof}
+
+\begin{lemma}[\decl{gS_succ}, \decl{hS_succ}, \decl{oddCnt_eq}]\label{lem:peel}
+For $f\colon\N\to\Z$ and $r\ge0$,
+\[
+  G_f(r+1)=G_f(r)+(r+2)f(r+1),\qquad H_f(r+1)+H_f(r)=G_f(r)+\lfloor (r+2)/2\rfloor\, f(r+1).
+\]
+\end{lemma}
+
+\begin{proof}
+Splitting off $j=0$ gives $\sum_{j=0}^{t}f(r+1-j)=f(r+1)+\sum_{j=0}^{t-1}f(r-j)$ (\decl{inner_succ}). Summing over $0\le t\le r+1$, the term $t=0$ of $\sum_t\sum_{j<t}$ is empty, and $t=t'+1$ turns the rest into $G_f(r)$; this gives the first identity. In the same way $H_f(r+1)=f(r+1)\,\#\{t<r+2: t\text{ odd}\}+\sum_{t'=0}^{r}\Iv{t'+1\text{ odd}}\sum_{j=0}^{t'}f(r-j)$; adding $H_f(r)$ and using $\Iv{t'+1\text{ odd}}+\Iv{t'\text{ odd}}=1$ (\decl{eo_add}) gives the second, since the number of odd $t<r+2$ is $\lfloor(r+2)/2\rfloor$.
+\end{proof}
+
+Combining the two lemmas (with $f=c$ and $f=\tau$), the quantities $c$, $\tau$, $G_c$, $G_\tau$ and $H_c$ satisfy, for every $r\ge0$ (\decl{Z1}--\decl{Z5}):
+\begin{equation}\label{eq:sys}
+\begin{aligned}
+  \tau(r+1)&=\Iv{r+1\text{ odd}}+H_c(r)+G_\tau(r), & G_\tau(r+1)&=G_\tau(r)+(r+2)\,\tau(r+1),\\
+  c(r+1)&=1+G_c(r), & G_c(r+1)&=G_c(r)+(r+2)\,c(r+1),\\
+  H_c(r+1)&=G_c(r)+\lfloor (r+2)/2\rfloor\,c(r+1)-H_c(r).
+\end{aligned}
+\end{equation}
+
+\subsection{The algebraic core}
+
+\begin{proposition}[\decl{alg0}, \decl{alg1}]\label{prop:alg}
+Let $s\in\Z$, $p\in\{0,1\}$ and $\rho=2s+p$. Let $v_1,\dots,v_7$, $\gamma_0,\dots,\gamma_6$, $\eta_0,\dots,\eta_6$, $\mu_0,\dots,\mu_5$, $u_1,\dots,u_6$ be integers such that
+\begin{align*}
+  v_{j+1}&=\Iv{\rho+j+1\text{ odd}}+\eta_j+\gamma_j, & \gamma_{j+1}&=\gamma_j+(\rho+j+2)\,v_{j+1},\\
+  u_{j+1}&=1+\mu_j, & \mu_{j+1}&=\mu_j+(\rho+j+2)\,u_{j+1},\\
+  \eta_{j+1}&=\mu_j+\bigl(s+\lfloor (p+j+2)/2\rfloor\bigr)\,u_{j+1}-\eta_j,
+\end{align*}
+the first relation for $0\le j\le6$, the relation for $\mu_{j+1}$ for $0\le j\le4$, and the others for $0\le j\le5$.
+Then $L_{\rho+8}(v_7,v_6,\dots,v_1)=0$.
+\end{proposition}
+
+\begin{proof}
+For fixed $p$ the parity indicators are constants. Read in the order $j=0,1,\dots$, the relations express every variable as a polynomial with integer coefficients in $s$ and the free values $\gamma_0,\eta_0,\mu_0$; for instance $u_{j}=(1+\mu_0)(\rho+3)(\rho+4)\cdots(\rho+j+1)$. Substituting the polynomials for $v_1,\dots,v_7$ into $L_{\rho+8}(v_7,\dots,v_1)$ and expanding gives $0$ in $\Z[s,\gamma_0,\eta_0,\mu_0]$, for $p=0$ and for $p=1$. In Lean, \decl{alg0} ($p=0$) and \decl{alg1} ($p=1$) state this, with the indicators and floors as hypotheses holding their explicit values; \texttt{subst\_vars} eliminates all variables but $s,\gamma_0,\eta_0,\mu_0$, and \texttt{ring} normalizes the expression to $0$, a proof the kernel checks. We confirmed both expansions independently with SymPy.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:main}}
+\emph{Case $n=7$.} Here $(p_0,\dots,p_6)(7)=(1,-9,-23,179,12,-92,16)$, and $11652-9\cdot1338-23\cdot184+179\cdot26+12\cdot5-92\cdot1+16\cdot0=0$. In Lean this is the instance $n=7$ of \decl{recurrence_data}, evaluated by the kernel through the verified table.
+
+\emph{Case $n\ge8$} (\decl{key}, \decl{result}). Write $n=r+8$ with $r\ge0$, and $r=2s+p$ with $s\in\N$, $p\in\{0,1\}$ (\texttt{Nat.even\_or\_odd'}). Put
+\[
+  v_j=\tau(r+j),\quad \gamma_j=G_\tau(r+j),\quad \eta_j=H_c(r+j),\quad \mu_j=G_c(r+j),\quad u_j=c(r+j).
+\]
+By \eqref{eq:sys} at $r,r+1,\dots,r+6$, these integers satisfy the hypotheses of Proposition~\ref{prop:alg} with $\rho=r$. Since $a(n-k)=a(r+8-k)=\tau(r+7-k)=v_{7-k}$ (\decl{a_tot}), the proposition gives $\sum_{k=0}^{6}p_k(n)\,a(n-k)=L_{r+8}(v_7,\dots,v_1)=0$. (The case $n=7$ would need the base index $r=-1$.) \qed
+
+\begin{remark}\label{rem:deutsch}
+On paper (not formalized, and not needed for the Lean proof), \eqref{eq:sys} also yields Deutsch's recurrence \eqref{eq:deutsch}. Subtracting consecutive relations for $c$ gives $c(r+2)=(r+3)\,c(r+1)$; with $c(0)=1$, $c(1)=2$ this gives $c(m)=(m+1)!$, the count $n!$ of \cite{BDP}. For $m\ge1$ the relations for $\tau$ and $G_\tau$ give $\delta(m):=\tau(m+1)-(m+2)\tau(m)=\Iv{m+1\text{ odd}}-\Iv{m\text{ odd}}+H_c(m)-H_c(m-1)$, and then the relations for $H_c$ and $G_c$ give $\delta(m+1)+\delta(m)=(m+3)\,(m+1)!\,\lfloor (m+2)/2\rfloor$. Thus $\Delta(n)=a(n+1)-(n+1)a(n)=\delta(n-1)$ satisfies $\Delta(n+1)+\Delta(n)=(n+2)\,n!\,\lfloor(n+1)/2\rfloor$ for $n\ge2$. So does $d(n)+n!\lfloor n/2\rfloor$, because $d(n+1)+d(n)=\Iv{n\text{ odd}}\,n!$, and the two agree at $n=1,2$ (values $1,2$). Hence $\Delta(n)=d(n)+n!\lfloor n/2\rfloor$ for $n\ge1$, which is \eqref{eq:deutsch}.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is \path{lean/Math0/Frontier/OEIS/A121750.lean} in the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A121750.lean} and the audit commands \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A121750.result}, of type \decl{Math0.Statements.A121750.statement}; all auxiliary declarations of this file are private. \decl{result} handles $n=7$ by \texttt{recurrence\_data 7}; for $n=r+8$ it rewrites $a(n-k)$ as $\tau(r+7-k)$ and closes the goal by \texttt{linear\_combination key r}, where \decl{key} instantiates \decl{alg0}/\decl{alg1} with \decl{Z1}--\decl{Z5}. The file ends with
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A121750.result Math0.Statements.A121750.statement
+\end{lstlisting}
+Neither file uses \texttt{sorry}, \texttt{native\_decide}, custom axioms or \texttt{set\_option}; the data lemmas use \texttt{decide +kernel}, which adds no axiom.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles} (for statements that math0 formalizes itself) fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms besides \decl{propext}, \decl{Classical.choice}, \decl{Quot.sound}, which rejects \decl{sorryAx}, \decl{Lean.ofReduceBool} (from \texttt{native\_decide}) and custom axioms; and (3) the type of \decl{result} is syntactically \decl{statement} or $\neg$\,\decl{statement}, up to metadata, with no unfolding. Here it reports
+\begin{lstlisting}[language={},basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A121750.statement' depends on axioms [propext]
+math0 audit: 'Math0.Frontier.A121750.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A121750.result' proves 'Math0.Statements.A121750.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1} are pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use (the statement is a math0 formalization of an OEIS conjecture). To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib cache, builds all results with \texttt{lake build} (re-running every audit), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. In \path{lean}, \texttt{lake env lean Math0/Frontier/OEIS/A121750.lean} checks the single file in under one minute of CPU time; building the statement file, whose data lemmas are evaluated by the kernel, took one to two minutes on a loaded machine.
+
+{\footnotesize
+\begin{thebibliography}{99}
+
+\bibitem{BBD}
+E.~Barcucci, S.~Brunetti, and F.~Del Ristoro, \emph{Succession rules and deco polyominoes}, Theor.\ Inform.\ Appl.\ (RAIRO ITA) \textbf{34} (2000), 1--14.
+
+\bibitem{BDP}
+E.~Barcucci, A.~Del Lungo, and R.~Pinzani, \emph{``Deco'' polyominoes, permutations and random generation}, Theoret.\ Comput.\ Sci.\ \textbf{159} (1996), 29--42.
+
+\bibitem{DPP}
+E.~Deutsch, E.~Pergola, and R.~Pinzani, \emph{Six bijections between deco polyominoes and permutations}, arXiv:0810.2876, 2008.
+
+\bibitem{EYZ}
+S.~B. Ekhad, M.~Yang, and D.~Zeilberger, \emph{Automated proofs of many conjectured recurrences in the OEIS made by R.\,J. Mathar}, arXiv:1707.04654, 2017.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Fr24}
+S.~Fried, \emph{Proofs of some conjectures from the OEIS}, arXiv:2410.07237, 2024.
+
+\bibitem{Fr26}
+S.~Fried, \emph{Further proofs of conjectures from the OEIS}, arXiv:2607.24832, 2026.
+
+\bibitem{KK}
+M.~Kauers and C.~Koutschan, \emph{Some D-finite and some possibly D-finite sequences in the OEIS}, J.\ Integer Seq.\ \textbf{26} (2023), Article~23.4.5; arXiv:2303.02793.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput.\ Sci.\ \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{A121748}
+The OEIS Foundation Inc., \emph{Triangle read by rows: $T(n,k)$ is the number of deco polyominoes of height $n$ and having $k$ columns of even length}, entry A121748 (E.~Deutsch, 2006) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A121748}.
+
+\bibitem{A121750}
+The OEIS Foundation Inc., \emph{Number of columns of even length in all deco polyominoes of height $n$}, entry A121750 (E.~Deutsch, 2006) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A121750}; revision \#13, August~20, 2024.
+
+\bibitem{Stanley}
+R.~P. Stanley, \emph{Differentiably finite power series}, European J.\ Combin.\ \textbf{1} (1980), no.~2, 175--188.
+
+\end{thebibliography}
+}
+
+\end{document}

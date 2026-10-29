@@ -1,0 +1,374 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw,at,by_contra,only},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8, upquote=true,
+  literate={∈}{{$\in$}}1 {ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1
+    {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {→}{{$\to$}}1 {←}{{$\leftarrow$}}1 {↔}{{$\leftrightarrow$}}1
+    {≤}{{$\le$}}1 {≥}{{$\ge$}}1 {≠}{{$\ne$}}1 {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {×}{{$\times$}}1 {·}{{$\cdot$}}1
+    {₀}{{$_0$}}1 {₁}{{$_1$}}1 {₂}{{$_2$}}1
+    {…}{{$\ldots$}}1 {¬}{{$\neg$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+\newunicodechar{…}{\ensuremath{\ldots}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\Aa}{\operatorname{A228286}}
+
+\title[A counterexample to a conjecture in OEIS A338885]{A diagonal lattice rectangle touching all four sides of a $655\times 104$ box: a counterexample to Kagey's conjecture on the smallest entries of OEIS A338885}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 18, 2026}
+
+\begin{document}
+\begin{abstract}
+For $n\ge2$ let $\R(n)$ be the set of positive integers $k$ such that some rectangle with integer vertices and no side parallel to the $x$-axis lies in the box $[0,n]\times[0,k]$ and touches all four of its sides; these sets are the rows of the OEIS triangle A338885. In 2020 P.~Kagey conjectured that $\min\R(n)=\Aa(n)$, where $\Aa(n)=\min\{x+yz: x,y,z\ge1,\ xy+z=n\}$. We show that the conjecture is false: the rectangle with vertices $(4,0)$, $(655,42)$, $(651,104)$, $(0,62)$ shows $104\in\R(655)$, while every value $x+yz$ with $xy+z=655$ is at least $105$ (in fact $\Aa(655)=115$). To our knowledge the counterexample is new; it is the result of a short computation, and the conjecture is still listed as open in the OEIS. The refutation is checked in Lean~4 against a statement that math0 formalized from the OEIS entry, whose definitions are checked by the kernel against the listed data; this statement is not part of the formal-conjectures repository.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+A \emph{diagonal lattice rectangle} is a rectangle whose vertices lie in $\Z^2$ and none of whose sides is parallel to the $x$-axis. The OEIS entry A338885, contributed by Peter Kagey on November~14, 2020 \cite{A338885}, is the irregular triangle whose $n$-th row ($n\ge2$) lists, in increasing order, all $k$ such that a diagonal lattice rectangle touches all four sides of an $n\times k$ rectangle. The rows begin
+\[
+  \R(2)=\{2\},\quad \R(3)=\{3\},\quad \R(4)=\{4,5\},\quad \R(5)=\{4,5,7\},\quad \R(6)=\{6,9,10\},\ \dots
+\]
+The row lengths form A338886 \cite{A338886}, and the entry links Kagey's table of the first $100$ rows and a Code Golf Stack Exchange challenge on the same question \cite{CGSE}. The entry contains two conjectures, about the smallest and the largest number in each row. The first one compares the row minimum with the sequence A228286 \cite{A228286}, contributed by Andy Niedermaier on August~19, 2013:
+\[
+  \Aa(n)=\min\{x+yz : x,y,z\in\Z_{\ge1},\ xy+z=n\}\qquad(n\ge2).
+\]
+According to a comment in that entry, one term of A228286 was the subject of a problem in the Team Round of the 2013 ARML contest.
+
+In this note we show that the first conjecture is false (Theorem~\ref{thm:main}). By computation, the smallest counterexample is $n=655$, where $\min\R(655)=104$ and $\Aa(655)=115$. The reason is visible in the parametrization of Section~\ref{sec:remarks}: the elements of $\R(n)$ are the numbers $pr+qs$ with $pq+rs=n$ and $p,q,r,s\ge1$, and $\Aa(n)$ is the minimum over the quadruples with an entry equal to~$1$. The element $104$ of $\R(655)$ comes from $655=2\cdot2+21\cdot31$, that is, $(p,q,r,s)=(2,2,21,31)$.
+
+\subsection*{Status and prior work}
+The conjecture is stated without a counterexample in the current revision~\#22 of A338885 (September~11, 2021); the math0 referees compared this revision with the local mirror of the OEIS data and found them identical. The entry's table covers only rows $2$ to $101$, all below the first counterexample. The referees also checked the cross-referenced entries A228286, A228287, A228288, A338886, A338887, A033638, A085582 and A113751, and the answers and comments of the Code Golf question \cite{CGSE}; none of them mentions a resolution. Web searches (arXiv, MathOverflow, Mathematics Stack Exchange, the SeqFan mailing list, the OEIS wiki) found no proof or counterexample. The conjecture is not among the OEIS statements of the formal-conjectures repository \cite{FC}. We therefore classify the result as \emph{new}. The caveat is that the counterexample is found by a straightforward search, so others may have observed it without recording it.
+
+The second conjecture of the entry, that $\max\R(n)$ equals A033638$(n)=\lfloor n^2/4\rfloor+1$ \cite{A033638}, is true and elementary (Remark~\ref{rem:max}); it is not the subject of this note.
+
+\section{Statement}\label{sec:statement}
+
+Throughout, the \emph{$n\times k$ box} is $B_{n,k}=[0,n]\times[0,k]\subset\mathbb{R}^2$.
+
+\begin{definition}\label{def:row}
+For integers $n\ge2$ and $k\ge0$, write $k\in\R(n)$ if there are $P_0=(x_0,y_0)\in\Z^2$ and $u=(u_1,u_2)$, $v=(v_1,v_2)\in\Z^2$ such that
+\begin{enumerate}
+\item $u\cdot v=u_1v_1+u_2v_2=0$ and $u_2\ne0$, $v_2\ne0$;
+\item the four points $P_0$, $P_0+u$, $P_0+u+v$, $P_0+v$ lie in $B_{n,k}$;
+\item each of the lines $x=0$, $x=n$, $y=0$, $y=k$ contains one of these four points.
+\end{enumerate}
+\end{definition}
+
+Every rectangle with integer vertices is $\{P_0+su+tv: s,t\in[0,1]\}$ for a corner $P_0\in\Z^2$ and nonzero perpendicular side vectors $u,v\in\Z^2$, and its sides are parallel to $u$ or to~$v$. So $u_2,v_2\ne0$ says exactly that no side is parallel to the $x$-axis; it also forces $u,v\ne0$, so the rectangle is non-degenerate. Squares are allowed; for example $\R(2)=\{2\}$ comes from the square with vertices $(1,0),(2,1),(1,2),(0,1)$. A convex polygon lies in the box if and only if its vertices do, and if it lies in the box, it meets the side on the line $x=0$ if and only if the minimum of the linear function $(x,y)\mapsto x$ over the polygon is $0$. This minimum is attained at a vertex, and the same holds for the other three sides. So (2) and (3) say exactly that the rectangle lies in the $n\times k$ box and touches all four of its sides, and $\R(n)$ is the $n$-th row of A338885.
+
+The comment section of A338885 contains, verbatim:
+\begin{quote}
+\texttt{Conjecture: The smallest number in the n-th row is A228286(n).}
+\end{quote}
+The entry, including this comment, is by Peter Kagey, November~14, 2020.
+
+\begin{conjecture}[Kagey]\label{conj}
+For every $n\ge2$, $\Aa(n)$ is the least element of $\R(n)$.
+\end{conjecture}
+
+\begin{theorem}\label{thm:main}
+$104\in\R(655)$ and $\Aa(655)\ge105$. In particular, Conjecture~\ref{conj} is false.
+\end{theorem}
+
+In fact $\Aa(655)=115$ and $\min\R(655)=104$, and $655$ is the smallest counterexample (Proposition~\ref{prop:comp}); these facts are computations that are not formalized.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A338885.lean}. It was reviewed for fidelity and frozen (SHA-256 \texttt{c2422329\ldots a45e84db}) before any proof attempt. The definitions on which the statement depends, the set \texttt{A228286Set} used in the proof, and the statement itself are, verbatim except that docstrings are omitted (the computational definitions \texttt{inRowB}, \texttt{row}, \texttt{flatAux} and \decl{a}, used only for the data check, are described below):
+\begin{lstlisting}
+namespace Math0.Statements.A338885
+
+def InBox (n k : ℕ) (p : ℤ × ℤ) : Prop :=
+  0 ≤ p.1 ∧ p.1 ≤ n ∧ 0 ≤ p.2 ∧ p.2 ≤ k
+
+def vertices (x₀ y₀ u₁ u₂ v₁ v₂ : ℤ) : List (ℤ × ℤ) :=
+  [(x₀, y₀), (x₀ + u₁, y₀ + u₂), (x₀ + u₁ + v₁, y₀ + u₂ + v₂), (x₀ + v₁, y₀ + v₂)]
+
+def InRow (n k : ℕ) : Prop :=
+  ∃ x₀ y₀ u₁ u₂ v₁ v₂ : ℤ,
+    -- the sides `u` and `v` are perpendicular (so the parallelogram is a rectangle)
+    u₁ * v₁ + u₂ * v₂ = 0 ∧
+    -- no side is parallel to the x-axis
+    u₂ ≠ 0 ∧ v₂ ≠ 0 ∧
+    -- the rectangle lies in the box
+    (∀ p ∈ vertices x₀ y₀ u₁ u₂ v₁ v₂, InBox n k p) ∧
+    -- it touches the sides `x = 0`, `x = n`, `y = 0`, `y = k`
+    (∃ p ∈ vertices x₀ y₀ u₁ u₂ v₁ v₂, p.1 = 0) ∧
+    (∃ p ∈ vertices x₀ y₀ u₁ u₂ v₁ v₂, p.1 = n) ∧
+    (∃ p ∈ vertices x₀ y₀ u₁ u₂ v₁ v₂, p.2 = 0) ∧
+    (∃ p ∈ vertices x₀ y₀ u₁ u₂ v₁ v₂, p.2 = k)
+
+def A228286Set (n : ℕ) : Set ℕ :=
+  {m | ∃ x y z : ℕ, 0 < x ∧ 0 < y ∧ 0 < z ∧ x * y + z = n ∧ m = x + y * z}
+
+def A228286List (n : ℕ) : List ℕ :=
+  (List.range' 1 (n - 1)).flatMap fun x => (List.range' 1 (n - 1)).filterMap fun y =>
+    if x * y < n then some (x + y * (n - x * y)) else none
+
+def A228286 (n : ℕ) : ℕ := (A228286List n).min?.getD 0
+
+def statement : Prop :=
+  ∀ n : ℕ, 2 ≤ n → IsLeast {k : ℕ | InRow n k} (A228286 n)
+\end{lstlisting}
+Here \texttt{IsLeast S m} means $m\in S$ and $m\le s$ for all $s\in S$. The file also proves the following facts (proofs omitted, data lists abbreviated). In it, \texttt{row n} is the list of all $k\le\lfloor n^2/4\rfloor+1$ that pass a Boolean test for the existence of $0<a<n$ and $0<c<k$ with $a(n-a)=c(k-c)$, and \decl{a} is the flattened triangle read from these lists.
+\begin{lstlisting}
+theorem inRow_iff_param (n k : ℕ) :
+    InRow n k ↔ ∃ a b c d : ℕ, 0 < a ∧ 0 < b ∧ 0 < c ∧ 0 < d ∧
+      a + b = n ∧ c + d = k ∧ a * b = c * d
+theorem le_of_inRow {n k : ℕ} (h : InRow n k) : k ≤ n * n / 4 + 1
+theorem mem_row (n k : ℕ) : k ∈ row n ↔ InRow n k
+theorem row_sorted (n : ℕ) : (row n).Pairwise (· < ·)
+theorem a_data : (List.range 71).map (fun i => a (i + 2)) =
+    [2, 3, 4, 5, 4, 5, 7, 6, 9, 10, 5, 7, 8, 11, 13, …, 14, 15, 17, 20, 22, 23]
+theorem mem_A228286List (n m : ℕ) : m ∈ A228286List n ↔ m ∈ A228286Set n
+theorem isLeast_A228286 {n : ℕ} (hn : 2 ≤ n) : IsLeast (A228286Set n) (A228286 n)
+theorem A228286_data : (List.range 70).map (fun i => A228286 (i + 2)) =
+    [2, 3, 4, 4, 6, 5, 7, 6, 6, 7, 9, 7, …, 16, 16, 18, 17, 23, 21, 25, 17]
+\end{lstlisting}
+
+\emph{Encoding.} \texttt{InRow n k} is Definition~\ref{def:row} with $P_0=(x_0,y_0)$; the list \decl{vertices} is $P_0,P_0+u,P_0+u+v,P_0+v$, and all coordinates are integers, so no truncated subtraction or division occurs in it. \texttt{A228286Set n} is the set $\{x+yz: x,y,z\ge1,\ xy+z=n\}$ from the OEIS definition. \texttt{A228286 n} is the minimum of an explicit finite list, and \decl{isLeast_A228286} proves that for $n\ge2$ it is the least element of \texttt{A228286Set n}; the truncated subtraction \texttt{n - x * y} in \decl{A228286List} is guarded by \texttt{x * y < n}. Both sequences have offset~$2$, and \decl{statement} quantifies over all $n\ge2$ with no further hypothesis.
+
+\emph{Data check.} The theorems \decl{a_data} and \decl{A228286_data} are proved by \texttt{decide +kernel}. They check all $71$ listed terms of A338885 (rows $2$ to $12$ and the listed beginning of row~$13$) and all $70$ listed terms of A228286, $\Aa(2),\dots,\Aa(71)$. By \decl{mem_row} and \decl{row_sorted}, the list \texttt{row n} is the increasing enumeration of the set of all $k$ with \texttt{InRow n k}, so the first check compares the geometric definition, not a formula, with the OEIS data. The referees compared both lists with the entries by script, and one referee compared the rows computed from the parametrization of \decl{inRow_iff_param} with Kagey's table of the first $100$ rows; all agree.
+
+\section{Proof}\label{sec:proof}
+
+The proof has two parts: an explicit rectangle, and a finite search that bounds $\Aa(655)$ from below. It does not compute $\Aa(655)$: an attempt to evaluate \texttt{A228286 655}, whose list ranges over $654^2\approx4.3\cdot10^5$ pairs $(x,y)$, with \texttt{decide +kernel} did not finish (the process was killed after about seven minutes, probably for lack of memory).
+
+\begin{lemma}[\decl{inRow_655_104}]\label{lem:witness}
+$104\in\R(655)$.
+\end{lemma}
+
+\begin{proof}
+Take $P_0=(4,0)$, $u=(651,42)$ and $v=(-4,62)$. Then $u\cdot v=651\cdot(-4)+42\cdot62=-2604+2604=0$, and $u_2=42\ne0$, $v_2=62\ne0$. The four vertices are
+\[
+  P_0=(4,0),\quad P_0+u=(655,42),\quad P_0+u+v=(651,104),\quad P_0+v=(0,62),
+\]
+all in $[0,655]\times[0,104]$. The lines $x=0$, $x=655$, $y=0$, $y=104$ contain $(0,62)$, $(655,42)$, $(4,0)$, $(651,104)$, respectively.
+\end{proof}
+
+In Lean, the proof supplies $(x_0,y_0,u_1,u_2,v_1,v_2)=(4,0,651,42,-4,62)$ and the four touching vertices, and \texttt{simp} and \texttt{norm\_num} check the conditions.
+
+\begin{lemma}[\decl{search}]\label{lem:search}
+For all integers $1\le x,y\le104$ with $xy<655$,
+\[
+  x+y\,(655-xy)\ge105 .
+\]
+\end{lemma}
+
+\begin{proof}
+This is a finite check of the $2391$ pairs $(x,y)$ in the range; the smallest value of $x+y(655-xy)$ among them is $115$. In Lean the statement is
+\begin{lstlisting}
+private theorem search : ∀ x < 105, ∀ y < 105, 0 < x → 0 < y → x * y < 655 →
+    105 ≤ x + y * (655 - x * y) := by
+  decide +kernel
+\end{lstlisting}
+The bounded quantifiers, implications and inequalities have decidability instances from the core library. With \texttt{decide +kernel}, type-checking the proof requires the kernel itself to reduce the resulting Boolean to \texttt{true}, which it does by evaluating all $105\cdot105=11025$ cases $x,y\in\{0,\dots,104\}$ (those with $x=0$, $y=0$ or $xy\ge655$ hold because a hypothesis fails), using its arbitrary-precision arithmetic on natural-number literals. Unlike \texttt{native\_decide}, no compiled code is trusted.
+\end{proof}
+
+\begin{lemma}[\decl{ge_of_mem}]\label{lem:lower}
+If $x,y,z\ge1$ and $xy+z=655$, then $x+yz\ge105$.
+\end{lemma}
+
+\begin{proof}
+Suppose $m=x+yz\le104$. Then $x\le m\le104$, and since $z\ge1$, $y\le yz\le m\le104$. Moreover $xy=655-z<655$ and $z=655-xy$. Lemma~\ref{lem:search} gives $m=x+y(655-xy)\ge105$, a contradiction.
+\end{proof}
+
+In Lean the hypothesis is \texttt{m ∈ A228286Set 655}; the arithmetic steps are done by \decl{Nat.le_mul_of_pos_right} and \texttt{omega}.
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+The first claim is Lemma~\ref{lem:witness}. For the second, $\Aa(655)\in\{x+yz:x,y,z\ge1,\ xy+z=655\}$ by \decl{isLeast_A228286} (with $n=655\ge2$), so $\Aa(655)\ge105$ by Lemma~\ref{lem:lower}. Now suppose the conjecture held. Then for $n=655$, $\Aa(655)$ is a lower bound of $\R(655)$, and $104\in\R(655)$ gives $\Aa(655)\le104$, a contradiction. The Lean proof is, verbatim:
+\begin{lstlisting}
+theorem result : ¬ statement := by
+  intro h
+  have hle : A228286 655 ≤ 104 := (h 655 (by norm_num)).2 inRow_655_104
+  have hge : 105 ≤ A228286 655 := ge_of_mem (isLeast_A228286 (by norm_num)).1
+  omega
+\end{lstlisting}
+Here \texttt{(h 655 \_).2} is the lower-bound half of \texttt{IsLeast}; the membership half is not used.
+\end{proof}
+
+\subsection{Further remarks (not formalized)}\label{sec:remarks}
+
+The following facts explain the counterexample. Apart from the parametrization of \decl{inRow_iff_param} and the bound \decl{le_of_inRow}, they are not part of the Lean development.
+
+\begin{lemma}\label{lem:param}
+For $n\ge2$,
+\[
+  \R(n)=\{c+d: a,b,c,d\ge1,\ a+b=n,\ ab=cd\}=\{pr+qs: p,q,r,s\ge1,\ pq+rs=n\}.
+\]
+\end{lemma}
+
+\begin{proof}
+The first equality is \decl{inRow_iff_param}. Given a rectangle as in Definition~\ref{def:row}, put $a=|u_1|$, $b=|v_1|$, $c=|u_2|$, $d=|v_2|$. The $x$-coordinates of the vertices range over an interval of length $|u_1|+|v_1|$, and by (2) and (3) this interval is $[0,n]$; so $a+b=n$, and likewise $c+d=k$. From $u_1v_1=-u_2v_2\ne0$ we get $a,b\ge1$ and $ab=cd$. Conversely, given $a,b,c,d$, the corner $P_0=(b,0)$ with $u=(a,c)$ and $v=(-b,d)$ has vertices $(b,0)$, $(n,c)$, $(a,k)$, $(0,d)$ and $u\cdot v=cd-ab=0$. Lemma~\ref{lem:witness} is this construction with $(a,b,c,d)=(651,4,42,62)$.
+
+For the second equality, let $ab=cd$, put $p=\gcd(a,c)$ and write $a=pq$, $c=pr$ with $\gcd(q,r)=1$. Then $qb=rd$, so $r\mid b$; writing $b=rs$ gives $d=qs$. Hence $n=pq+rs$ and $k=pr+qs$. Conversely $(a,b,c,d)=(pq,rs,pr,qs)$ satisfies $ab=cd$.
+\end{proof}
+
+The representation $(p,q,r,s)\mapsto(pq+rs,\,pr+qs)$ is invariant under $(p,q,r,s)\mapsto(q,p,s,r)$ and $(p,q,r,s)\mapsto(s,r,q,p)$, which together move any entry to any position. With $s=1$, $(p,q,r)=(y,x,z)$ gives $pq+rs=xy+z$ and $pr+qs=x+yz$. Hence
+\[
+  \{x+yz:x,y,z\ge1,\ xy+z=n\}=\{pr+qs:pq+rs=n,\ \min(p,q,r,s)=1\}\subseteq\R(n),
+\]
+so $\Aa(n)\in\R(n)$ and $\min\R(n)\le\Aa(n)$ for every $n\ge2$. Conjecture~\ref{conj} is therefore equivalent to the claim that, for every $n$, the minimum of $pr+qs$ subject to $pq+rs=n$ is attained at a quadruple containing a~$1$. For $n=655$, the identity $655=2\cdot2+21\cdot31$ gives $(p,q,r,s)=(2,2,21,31)$ and $pr+qs=42+62=104$.
+
+\begin{proposition}[computation]\label{prop:comp}
+$\Aa(655)=115$, attained for example at $(x,y,z)=(6,109,1)$ and $(31,21,4)$. The row $\R(655)$ begins $104,115,121,125,135,137$. Among $2\le n\le2000$, $\min\R(n)\ne\Aa(n)$ holds exactly for the following nine values of~$n$:
+\[
+\begin{array}{c|ccccccccc}
+  n & 655 & 845 & 909 & 1019 & 1229 & 1435 & 1439 & 1759 & 1931\\ \hline
+  \min\R(n) & 104 & 116 & 149 & 128 & 140 & 160 & 152 & 168 & 176\\
+  \Aa(n) & 115 & 130 & 153 & 131 & 149 & 161 & 181 & 173 & 197
+\end{array}
+\]
+\end{proposition}
+
+We computed these values by exhaustive search in Python, using Lemma~\ref{lem:param} for $\min\R(n)$. They agree with the referees' independent computations, which found the same counterexamples up to $n=1500$; the value $\Aa(655)=115$ also agrees with Kagey's table of A228286 \cite{A228286}. None of this is formally verified, and Theorem~\ref{thm:main} does not depend on it.
+
+\begin{remark}[The largest entry]\label{rem:max}
+The second conjecture of A338885 states that the largest number in row $n$ is A033638$(n)=\lfloor n^2/4\rfloor+1$. By Lemma~\ref{lem:param}, if $k=c+d\in\R(n)$ then $c+d\le cd+1=ab+1\le\lfloor n^2/4\rfloor+1$, because $(c-1)(d-1)\ge0$ and $ab\le(a+b)^2/4$; this upper bound is the theorem \decl{le_of_inRow} of the statement file. It is attained by $(a,b,c,d)=(\lfloor n/2\rfloor,\lceil n/2\rceil,1,\lfloor n/2\rfloor\lceil n/2\rceil)$. Only the upper bound is formalized; we make no claim about the novelty of this observation.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A338885.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A338885.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is
+\begin{center}
+\texttt{Math0.Frontier.A338885.result :\ ¬ Math0.Statements.A338885.statement}.
+\end{center}
+The auxiliary declarations \decl{search}, \decl{ge_of_mem} and \decl{inRow_655_104} are private; they are Lemmas~\ref{lem:search}, \ref{lem:lower} and~\ref{lem:witness}. The only proof by \texttt{decide +kernel} in the proof file is the search of Lemma~\ref{lem:search}; the data checks of the statement file are not used by the proof.
+
+\subsection*{Audit}
+The file ends with
+\begin{lstlisting}
+#math0_settles Math0.Frontier.A338885.result Math0.Statements.A338885.statement
+\end{lstlisting}
+This command is defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself. It fails unless (1) \decl{statement} is a definition of type \texttt{Prop} without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms other than \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, which rejects \decl{sorryAx}, the axioms \decl{Lean.ofReduceBool} and \decl{Lean.trustCompiler} introduced by \decl{native_decide}, and custom axioms; and (3) the type of \decl{result} is syntactically the statement or its negation, after removing metadata annotations and with no unfolding. Running \texttt{lake env lean Math0/Frontier/OEIS/A338885.lean} in the directory \path{lean} reports:
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A338885.statement' depends on axioms []
+math0 audit: 'Math0.Frontier.A338885.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A338885.result' refutes 'Math0.Statements.A338885.statement'
+\end{lstlisting}
+Neither file contains \texttt{sorry}, \texttt{admit}, \texttt{native\_decide}, \texttt{axiom} or \texttt{set\_option}.
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}. The repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. To reproduce, run \path{scripts/verify.sh} from the repository root; it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (which re-runs every audit command), and checks that the pinned dependencies are unmodified. To check this result alone, run \texttt{lake build Math0.Statements.OEIS.A338885} (including the data checks, about $45$ seconds) and then \texttt{lake env lean Math0/Frontier/OEIS/A338885.lean} in the directory \path{lean}.
+
+\begin{thebibliography}{99}
+
+\bibitem{CGSE}
+P.~Kagey, \emph{Rectangles in rectangles}, Code Golf Stack Exchange, question 213754, October 2020, \url{https://codegolf.stackexchange.com/q/213754}.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A033638}
+The OEIS Foundation Inc., \url{https://oeis.org/A033638}, Quarter-squares plus 1.
+
+\bibitem{A228286}
+The OEIS Foundation Inc., \url{https://oeis.org/A228286}, entry by A.~Niedermaier (2013).
+
+\bibitem{A338885}
+The OEIS Foundation Inc., \url{https://oeis.org/A338885}, entry by P.~Kagey (2020).
+
+\bibitem{A338886}
+The OEIS Foundation Inc., \url{https://oeis.org/A338886}, entry by P.~Kagey (2020).
+
+\end{thebibliography}
+
+\end{document}

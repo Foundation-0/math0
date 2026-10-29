@@ -1,0 +1,349 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,rw,at,split_ifs,push_cast,using},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℤ}{{$\mathbb{Z}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {∀}{{$\forall$}}1
+    {∧}{{$\wedge$}}1 {≤}{{$\le$}}1 {≠}{{$\ne$}}1 {∈}{{$\in$}}1 {∑}{{$\sum$}}1
+    {→}{{$\to$}}1 {←}{{$\leftarrow$}}1 {↦}{{$\mapsto$}}1 {⁻}{{$^{-}$}}1 {¹}{{$^{1}$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {⊢}{{$\vdash$}}1 {·}{{$\cdot$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+\newunicodechar{⊢}{\ensuremath{\vdash}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\pd}{\mathbf{d}}
+
+\title[Row sums of an inverse band triangle modulo 2]{The row sums of the inverse of the band triangle $1/(3n+1)$, $k\le n\le 2k$, are the period-doubling sequence modulo~$2$ (OEIS A127752)}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 25, 2026}
+
+\begin{document}
+\begin{abstract}
+Let $A$ be the infinite lower-triangular matrix with entries $A(n,k)=1/(3n+1)$ for $k\le n\le 2k$ and $A(n,k)=0$ otherwise, and let $a(n)$ be the $n$-th row sum of $A^{-1}$ (OEIS A127752).
+We prove Paul Barry's 2007 conjecture that $a(n)\bmod 2$ is the first Feigenbaum symbolic (period-doubling) sequence A035263, the fixed point of the morphism $0\mapsto11$, $1\mapsto10$; precisely, $a(n)\bmod 2=\mathrm{A035263}(n+1)$ for all $n\ge0$.
+The proof derives $a(0)=1$, $a(2m+2)=3$ and $a(2m+1)=a(m)+3$ from the system $A\,a=\mathbf 1$ and compares this with the self-similarity of the morphic word.
+To our knowledge this is a new result: the conjecture is still marked as open in the OEIS, where it had been checked for the first 2048 terms.
+The proof is verified in Lean~4 against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry, whose definitions are proved to agree with the matrix-inverse definition and are checked by the kernel against the listed terms of both sequences.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Let $A=(A(n,k))_{n,k\ge0}$ be the number triangle
+\[
+  A(n,k)=\begin{cases}\dfrac1{3n+1}, & k\le n\le 2k,\\[4pt] 0, & \text{otherwise.}\end{cases}
+\]
+Row $n$ of $A$ has the entry $1/(3n+1)$ in the columns $\lceil n/2\rceil\le k\le n$. Since $A$ is lower triangular with nonzero diagonal entries $A(n,n)=1/(3n+1)$, it has a unique lower-triangular inverse $A^{-1}$, and its leading $N\times N$ block is the inverse of the leading $N\times N$ block of $A$. The inverse is the triangle A127751 \cite{A127751}, and its row sums
+\[
+  a(n)=\sum_{k=0}^{n}A^{-1}(n,k)\qquad(n\ge0)
+\]
+form the sequence A127752 \cite{A127752}: $1, 4, 3, 7, 3, 6, 3, 10, 3, 6, 3, 9, 3, 6, 3, 13,\dots$
+Both entries were submitted by Paul Barry on January~28, 2007. The entry A127752 contains the comment
+\begin{quote}
+{\small\texttt{a(n) mod 2 is first Feigenbaum symbolic sequence A035263 (conjecture).}}
+\end{quote}
+Here A035263 \cite{A035263} is the trajectory of $1$ under the morphism $0\mapsto11$, $1\mapsto10$, also known as the period-doubling sequence: $1,0,1,1,1,0,1,0,1,0,1,1,\dots$ (offset $1$).
+We prove this conjecture (Theorem~\ref{thm:main}).
+
+\subsection*{Prior work and status}
+\begin{itemize}
+\item In the current revision of A127752 (\#11, February~11, 2021) the statement is still labelled ``(conjecture)''. On September~29, 2018, Antti Karttunen added the remark that ``the conjecture is true at least up to 2048 first terms'' (noting that the indexing of A127752 starts at $0$), a b-file of $a(n)$ for $n\le2048$, and a PARI program; Jean-Fran\c{c}ois Alcover added a Mathematica program on February~11, 2021. Both programs invert a fixed finite truncation of $A$. The entry has no formula section \cite{A127752}.
+\item The triangle entry A127751 (revision \#5, September~29, 2018) repeats the conjecture: ``Row sums A127752 mod 2 are conjectured to be first Feigenbaum symbolic sequence A035263'' \cite{A127751}.
+\item The companion entries A127749 and A127750 (Barry, same day) concern the triangle with $1/(2n+1)$ in place of $1/(3n+1)$ and conjecture that the row sums of its inverse are, modulo~$2$, the Fredholm--Rueppel sequence A036987 \cite{A127749,A127750}; R.~J. Mathar noted in 2021 that this is equivalent to the row-sum conjecture in A111967 \cite{A127749,A111967}. These are still labelled as conjectures; see Remark~\ref{rem:companion}.
+\item S.~Fried \cite{Fried} proved conjectures of Barry about the triangle A127793, the inverse of the band triangle with the same support $k\le n\le2k$ but entries $1/\lfloor(n+2)/2\rfloor$, and its connection with the largest odd divisor A000265. That paper does not treat A127752.
+\end{itemize}
+The math0 referees searched the OEIS (including all entries that cite A127751 or A127752), arXiv, the web and recent papers proving OEIS conjectures, and found no earlier proof or counterexample; the statement is not in the formal-conjectures repository \cite{FC}. We therefore classify Theorem~\ref{thm:main} as a \emph{new result}. The proof is short and elementary; the only point is to compare consecutive equations of the triangular system $A\,a=\mathbf1$.
+
+\section{Statement}\label{sec:statement}
+
+Write $\pd(n)=\mathrm{A035263}(n)$ for $n\ge1$. Let $\sigma$ be the morphism of the free monoid on $\{0,1\}$ with $\sigma(0)=11$ and $\sigma(1)=10$, and let $w_k=\sigma^k(1)$, so $w_0=1$, $w_1=10$, $w_2=1011$, $w_3=10111010$. Each $w_k$ has length $2^k$ and is a prefix of $w_{k+1}$ (by induction, since $w_0$ is a prefix of $w_1$ and $\sigma$ preserves prefixes), so the $w_k$ converge to an infinite word $\pd(1)\pd(2)\pd(3)\cdots$.
+
+\begin{theorem}[Barry's conjecture]\label{thm:main}
+For every $n\ge0$,
+\[
+  a(n)\equiv \pd(n+1)\pmod 2 .
+\]
+Equivalently, $a(n)$ is odd if and only if $\pd(n+1)=1$.
+\end{theorem}
+
+\subsection*{The conjecture and its indexing}
+The comment quoted in the introduction is unsigned; as is usual in the OEIS, we attribute it to the author of the entry, Paul Barry (January~28, 2007). A127752 has offset $0$ and A035263 has offset $1$, and the conjecture compares the two sequences term by term from their first terms: $a(0),a(1),a(2),\dots$ modulo $2$ is $1,0,1,1,1,0,\dots=\pd(1),\pd(2),\pd(3),\dots$. This is the reading of Karttunen's remark in the entry (``please note the different indexing, here 0-based''); the other alignment, $a(n)\equiv\pd(n)$, fails already at $n=1$, where $a(1)=4$ and $\pd(1)=1$.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A127752.lean}, reviewed for fidelity, and frozen (SHA-256 \texttt{9f79e91f\ldots 0f38ec}) before any proof attempt. Its definitions and the statement read as follows (verbatim and in order; the copyright header, the import, comments, docstrings and all theorems are omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A127752
+open Finset Matrix
+def A (n k : ℕ) : ℚ := if k ≤ n ∧ n ≤ 2 * k then 1 / (3 * n + 1 : ℚ) else 0
+def next (l : List ℤ) : ℤ :=
+  3 * l.length + 1 - ∑ j ∈ range l.length, if l.length ≤ 2 * j then l.getD j 0 else 0
+def vals : ℕ → List ℤ
+  | 0 => []
+  | n + 1 => vals n ++ [next (vals n)]
+def a (n : ℕ) : ℤ := (vals (n + 1)).getD n 0
+def Amat (N : ℕ) : Matrix (Fin N) (Fin N) ℚ := Matrix.of fun i j => A i j
+def sigma (x : ℕ) : List ℕ := if x = 0 then [1, 1] else [1, 0]
+def word : ℕ → List ℕ
+  | 0 => [1]
+  | k + 1 => (word k).flatMap sigma
+def A035263 (n : ℕ) : ℕ := (word n).getD (n - 1) 0
+def statement : Prop := ∀ n : ℕ, a n % 2 = (A035263 (n + 1) : ℤ)
+end Math0.Statements.A127752
+\end{lstlisting}
+
+\emph{The triangle and its row sums.} \texttt{A n k} is $A(n,k)$, a rational number, and \texttt{Amat N} is the leading $N\times N$ block $A_N$ of $A$. The sequence $a$ is not defined through a matrix inverse but by forward substitution in $A\,s=\mathbf1$: row $n$ of this system reads $\frac1{3n+1}\sum_{\lceil n/2\rceil\le j\le n}s(j)=1$, so
+\begin{equation}\label{eq:rec}
+  s(n)=3n+1-\sum_{\substack{j<n\\ n\le 2j}}s(j).
+\end{equation}
+The list \texttt{vals n} is $[s(0),\dots,s(n-1)]$: \texttt{vals (n+1)} appends to \texttt{vals n} the value \mbox{\texttt{next (vals n)}}, which is $s(n)$ computed by \eqref{eq:rec} from the entries already in the list (so each value is computed once). Then \texttt{a n} is the entry of \mbox{\texttt{vals (n+1)}} at the $0$-based position $n$, that is, $s(n)$. The statement file proves (statements shown, proofs omitted)
+\begin{lstlisting}
+theorem a_rec (n : ℕ) :
+    a n = 3 * n + 1 - ∑ j ∈ range n, if n ≤ 2 * j then a j else 0
+theorem a_spec (N : ℕ) (i : Fin N) : (a i : ℚ) = ∑ j, (Amat N)⁻¹ i j
+\end{lstlisting}
+Thus \decl{a_rec} is \eqref{eq:rec}, and \decl{a_spec} ties \texttt{a} to the OEIS definition: for all $i<N$, $a(i)$ is the $i$-th row sum of Mathlib's inverse $A_N^{-1}$. (Its proof: $A_N$ is lower triangular with determinant $\prod_{n<N}(3n+1)^{-1}\ne0$, and $A_N(a(0),\dots,a(N-1))^{T}=\mathbf1$ row by row by \eqref{eq:rec}.) As the leading blocks of $A^{-1}$ are the $A_N^{-1}$, this is the $i$-th row sum of $A^{-1}$. In particular $a(n)$ is an integer, and ``$a(n)\bmod 2$'' is encoded as \texttt{a n \% 2}, the Euclidean remainder in $\Z$, which is $0$ or $1$.
+
+\emph{The sequence A035263.} \texttt{sigma} is $\sigma$ (on all of $\N$, with every nonzero letter treated as $1$; only the letters $0$ and $1$ occur), \texttt{word k} is $w_k$ as a list, and \texttt{A035263 n} is the letter of $w_n$ at the $1$-based position $n$, which exists since $|w_n|=2^n\ge n$. The statement file proves that the choice of the iterate does not matter:
+\begin{lstlisting}
+theorem word_length (k : ℕ) : (word k).length = 2 ^ k
+theorem word_prefix (k : ℕ) : word k <+: word (k + 1)
+theorem A035263_eq {n k : ℕ} (hn : 1 ≤ n) (hk : n ≤ 2 ^ k) :
+    A035263 n = (word k).getD (n - 1) 0
+\end{lstlisting}
+(\texttt{<+:} is the prefix relation; \texttt{l.getD i 0} is the entry of \texttt{l} at the $0$-based position $i$, or $0$ if $i$ is not less than the length of \texttt{l}.)
+
+\emph{Data checks.} The theorems \decl{a_data} and \decl{A035263_data}, proved by \texttt{decide +kernel}, state that the definitions reproduce all $106$ terms $a(0),\dots,a(105)$ listed in A127752 and all $105$ terms $\pd(1),\dots,\pd(105)$ listed in A035263. This anchors the definitions to the OEIS independently of the conjecture.
+
+\emph{The statement.} \decl{statement} is $\forall n\ge0,\ a(n)\bmod 2=\pd(n+1)$, which is Theorem~\ref{thm:main} with the indexing discussed above. The statement file uses no \texttt{sorry}, \texttt{native\_decide} or custom axioms.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A127752.lean}; the Lean name of each step is given in brackets. All lemmas are about the sequence $a$ defined by \eqref{eq:rec}, which by \decl{a_spec} is A127752.
+
+\subsection{A recursion for \texorpdfstring{$a$}{a}}
+
+\begin{lemma}[window identity; \decl{sum_Ico_a}]\label{lem:window}
+For every $n\ge0$,
+\[
+  \sum_{j=\lfloor(n+1)/2\rfloor}^{n}a(j)=3n+1 .
+\]
+\end{lemma}
+
+\begin{proof}
+For $0\le j\le n$ we have $n\le 2j$ if and only if $j\ge\lceil n/2\rceil=\lfloor(n+1)/2\rfloor$, and $j=n$ satisfies this. Hence the sum in \eqref{eq:rec} together with the term $a(n)$ is the sum over $\lfloor(n+1)/2\rfloor\le j\le n$, and \eqref{eq:rec} (\decl{a_rec}) rearranges to the claim. In Lean the index set is identified with \texttt{Ico} $\lfloor(n+1)/2\rfloor$ $(n+1)$ by \texttt{omega}.
+\end{proof}
+
+This is row $n$ of the system $A\,a=\mathbf1$ multiplied by $3n+1$.
+
+\begin{lemma}[\decl{a_zero}, \decl{a_even}, \decl{a_odd}]\label{lem:arec}
+For every $m\ge0$,
+\[
+  a(0)=1,\qquad a(2m+2)=3,\qquad a(2m+1)=a(m)+3 .
+\]
+\end{lemma}
+
+\begin{proof}
+For $n=0$ the sum in \eqref{eq:rec} is empty, so $a(0)=1$. Lemma~\ref{lem:window} at $n=2m$, $2m+1$ and $2m+2$ gives, since $\lfloor(2m+1)/2\rfloor=m$ and $\lfloor(2m+2)/2\rfloor=\lfloor(2m+3)/2\rfloor=m+1$,
+\begin{align}
+  a(m)+\sum_{j=m+1}^{2m}a(j)&=6m+1, \label{eq:w0}\\
+  \sum_{j=m+1}^{2m}a(j)+a(2m+1)&=6m+4, \label{eq:w1}\\
+  \sum_{j=m+1}^{2m+1}a(j)+a(2m+2)&=6m+7, \label{eq:w2}
+\end{align}
+where in \eqref{eq:w0} the first term of the window was split off and in \eqref{eq:w1}, \eqref{eq:w2} the last term (for $m=0$ the sums over $m+1\le j\le 2m$ are empty). The left-hand side of \eqref{eq:w1} is $\sum_{j=m+1}^{2m+1}a(j)$, so subtracting \eqref{eq:w1} from \eqref{eq:w2} gives $a(2m+2)=3$, and subtracting \eqref{eq:w0} from \eqref{eq:w1} gives $a(2m+1)-a(m)=3$. In Lean the subtractions are done by \texttt{linarith}.
+\end{proof}
+
+In particular $a(n)$ is odd for every even $n$ (it is $1$ or $3$), and for odd $n=2m+1$ the parity of $a(n)$ is opposite to that of $a(m)$.
+
+\subsection{A recursion for A035263}
+For a finite word $u=u_0u_1\cdots u_{L-1}$ over $\{0,1\}$ (indexed from $0$), $\sigma(u)=\sigma(u_0)\sigma(u_1)\cdots\sigma(u_{L-1})$ is a concatenation of blocks of length $2$, and $\sigma(x)=1\,\overline{x}$ with $\overline{0}=1$, $\overline{1}=0$ (\decl{sigma_eq}). Reading off positions gives:
+
+\begin{lemma}[\decl{flatMap_getD_even}, \decl{flatMap_getD_odd}]\label{lem:sigma}
+Let $u$ be a finite word of length $L$ and let $0\le i<L$. Then the letter of $\sigma(u)$ at the $0$-based position $2i$ is $1$, and the letter at position $2i+1$ is $1$ if $u_i=0$ and $0$ otherwise.
+\end{lemma}
+
+\begin{proof}
+By induction on $u$. If $u=xu'$, then $\sigma(u)=1\,\overline{x}\,\sigma(u')$. For $i=0$ the letters at positions $0$ and $1$ are $1$ and $\overline{x}$. For $i\ge1$, positions $2i$ and $2i+1$ of $\sigma(u)$ are positions $2(i-1)$ and $2(i-1)+1$ of $\sigma(u')$, and $u_i=u'_{i-1}$ with $i-1<L-1=|u'|$, so the induction hypothesis applies.
+\end{proof}
+
+\begin{lemma}[\decl{A035263_odd_index}, \decl{A035263_even_index}]\label{lem:drec}
+For every $m\ge0$,
+\[
+  \pd(2m+1)=1,\qquad \pd(2m+2)=\begin{cases}1,&\pd(m+1)=0,\\0,&\text{otherwise.}\end{cases}
+\]
+\end{lemma}
+
+\begin{proof}
+Since $m+1\le 2^m$ (\decl{succ_le_two_pow}), we have $2m+2\le2^{m+1}=|w_{m+1}|$, so by \decl{A035263_eq} the letters $\pd(2m+1)$ and $\pd(2m+2)$ are the letters of $w_{m+1}=\sigma(w_m)$ at the $0$-based positions $2m$ and $2m+1$. Here $m<2^m=|w_m|$, so Lemma~\ref{lem:sigma} applies with $u=w_m$ and $i=m$: the first letter is $1$, and the second is $1$ if the letter of $w_m$ at position $m$ is $0$, and $0$ otherwise. Finally, again by \decl{A035263_eq} (with $n=m+1\le2^m$), the letter of $w_m$ at position $m$ is $\pd(m+1)$.
+\end{proof}
+
+In other words, $c(m)=\pd(m+1)$ satisfies $c(2m)=1$ and $c(2m+1)=1-c(m)$; this is the familiar self-similarity of the period-doubling word, here derived from the definition of A035263 as a morphic word.
+
+\subsection{Proof of the theorem}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+We show $a(n)\bmod2=\pd(n+1)$ by strong induction on $n$ (\decl{result}). Write $n=2m$ or $n=2m+1$.
+
+\emph{Case $n=2m$.} By Lemma~\ref{lem:drec}, $\pd(2m+1)=1$. By Lemma~\ref{lem:arec}, $a(0)=1$ and $a(2m)=3$ for $m\ge1$, so $a(2m)\bmod2=1$ in both cases.
+
+\emph{Case $n=2m+1$.} Since $m<2m+1$, the induction hypothesis gives $a(m)\bmod 2=\pd(m+1)$. By Lemmas~\ref{lem:arec} and~\ref{lem:drec}, $a(2m+1)=a(m)+3$ and $\pd(2m+2)=1$ if $\pd(m+1)=0$, and $\pd(2m+2)=0$ otherwise. If $\pd(m+1)=0$, then $a(m)$ is even, so $a(m)+3$ is odd and $a(2m+1)\bmod2=1=\pd(2m+2)$. If $\pd(m+1)\ne0$, then $a(m)\bmod2=\pd(m+1)$ is a nonzero element of $\{0,1\}$, so $a(m)$ is odd, $a(m)+3$ is even, and $a(2m+1)\bmod2=0=\pd(2m+2)$.
+
+In Lean the case split is \texttt{Nat.even\_or\_odd'}. The even case is closed by \texttt{rfl} after rewriting with \decl{a_zero} or \decl{a_even}. In the odd case the two values of the \texttt{if} are separated by \texttt{split\_ifs}, and each parity step is closed by \texttt{omega} after moving the casts from $\N$ to $\Z$.
+\end{proof}
+
+\subsection{Further remarks (not formalized)}
+The following remarks are proved on paper only; they are not part of the Lean development and were not reviewed by the math0 referees.
+
+\begin{remark}[closed form]\label{rem:closed}
+Write $n+1=2^t u$ with $u$ odd. Lemma~\ref{lem:arec} determines $a$ completely: in terms of $b(N)=a(N-1)$ it reads $b(1)=1$, $b(u)=3$ for odd $u\ge3$, and $b(2M)=b(M)+3$ for $M\ge1$. Hence
+\[
+  a(n)=\begin{cases}3t+1,& u=1 \ (\text{$n+1$ a power of $2$}),\\ 3t+3,& u\ge3,\end{cases}
+\]
+in agreement with the data ($a(7)=10$, $a(11)=9$, $a(63)=19$). Since $\pd(n+1)=1$ if and only if $t$ is even (by Lemma~\ref{lem:drec}, $\pd(N)=1$ for odd $N$ and $\pd(2M)=1-\pd(M)$; this is the description of A035263 in its name as the parity of the $2$-adic valuation of $2N$ \cite{A035263}), this gives a second proof of Theorem~\ref{thm:main}: $a(n)\equiv t+1\pmod 2$ in both cases. The Lean proof does not use this closed form.
+\end{remark}
+
+\begin{remark}[the companion conjectures]\label{rem:companion}
+The argument of Lemmas~\ref{lem:window} and~\ref{lem:arec} applies to any band triangle with entries $1/\gamma(n)$ for $k\le n\le 2k$ and $\gamma(n)\ne0$: the row sums $s$ of its inverse satisfy $\sum_{j=\lfloor(n+1)/2\rfloor}^n s(j)=\gamma(n)$, hence $s(0)=\gamma(0)$, $s(2m+2)=\gamma(2m+2)-\gamma(2m+1)$ and $s(2m+1)=s(m)+\gamma(2m+1)-\gamma(2m)$. For $\gamma(n)=2n+1$ (A127749, A127750) this gives $s(0)=1$, $s(2m+2)=2$, $s(2m+1)=s(m)+2$, so $s(n)$ is odd if and only if $n+1$ is a power of $2$; that is, $s(n)\bmod 2$ is the Fredholm--Rueppel sequence A036987 (offset $0$), as Barry conjectured \cite{A127749,A127750}. For $\gamma\equiv1$ (the $0/1$ band triangle, which is A101688 read by rows; its inverse is A111967) it gives $s(0)=1$, $s(2m+2)=0$, $s(2m+1)=s(m)$, so the row sums are exactly A036987, which is the conjecture recorded in A111967 \cite{A111967}.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The math0 repository is \url{https://github.com/Foundation-0/math0}. The proof is the file \path{lean/Math0/Frontier/OEIS/A127752.lean}; it imports the frozen statement file \path{lean/Math0/Statements/OEIS/A127752.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. Its main declaration is the theorem \decl{Math0.Frontier.A127752.result}, whose type is \decl{Math0.Statements.A127752.statement}. The auxiliary lemmas, named in Section~\ref{sec:proof}, are private. The proof of \decl{result} is a strong induction on $n$ (\texttt{Nat.strong\_induction\_on}) with the case split \texttt{Nat.even\_or\_odd'}, exactly as in Section~\ref{sec:proof}. The file ends with the audit command \texttt{\#math0\_settles Math0.Frontier.A127752.result Math0.Statements.A127752.statement}. Neither file uses \texttt{sorry}, \texttt{native\_decide} or custom axioms; the only option set is \texttt{maxRecDepth}, for the data check \decl{a_data} in the statement file.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, \decl{Lean.ofReduceBool} from \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically \decl{statement} or $\neg$\,\decl{statement}, up to metadata annotations, with no unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A127752.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A127752.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A127752.result' proves 'Math0.Statements.A127752.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib cache, builds all math0 results with \texttt{lake build} (re-running every audit command), and checks that the pinned dependencies are unmodified. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A127752.lean} in the directory \path{lean}.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171 [cs.AI], 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Fried}
+S.~Fried, \emph{On the inverse of a certain triangular matrix and its connection to the largest odd divisor}, Notes on Number Theory and Discrete Mathematics \textbf{32}(2) (2026), 255--262, \url{https://doi.org/10.7546/nntdm.2026.32.2.255-262}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A035263}
+The OEIS Foundation Inc., \emph{Trajectory of $1$ under the morphism $0\to11$, $1\to10$; parity of $2$-adic valuation of $2n$: $a(n)=\mathrm{A000035}(\mathrm{A001511}(n))$}, entry A035263 (K.~Karamanos and N.~J.~A. Sloane) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A035263}.
+
+\bibitem{A111967}
+The OEIS Foundation Inc., \emph{Inverse of number triangle A101688}, entry A111967 (P.~Barry, 2005) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A111967}.
+
+\bibitem{A127749}
+The OEIS Foundation Inc., \emph{Inverse of number triangle $A(n,k)=1/(2n+1)$ if $k\le n\le 2k$, $0$ otherwise}, entry A127749 (P.~Barry, 2007) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A127749}.
+
+\bibitem{A127750}
+The OEIS Foundation Inc., \emph{Row sums of inverse of number triangle $A(n,k)=1/(2n+1)$ if $k\le n\le 2k$, $0$ otherwise}, entry A127750 (P.~Barry, 2007) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A127750}.
+
+\bibitem{A127751}
+The OEIS Foundation Inc., \emph{Inverse of number triangle $A(n,k)=\mathrm{if}(k\le n,\mathrm{if}(n\le 2k,1/(3n+1),0),0)$}, entry A127751 (P.~Barry, 2007) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A127751}; revision \#5, September~29, 2018.
+
+\bibitem{A127752}
+The OEIS Foundation Inc., \emph{Row sums of inverse of number triangle $A(n,k)=1/(3n+1)$ if $k\le n\le 2k$, $0$ otherwise}, entry A127752 (P.~Barry, 2007) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A127752}; revision \#11, February~11, 2021.
+
+\end{thebibliography}
+}
+
+\end{document}

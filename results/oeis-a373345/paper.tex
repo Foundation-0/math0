@@ -1,0 +1,351 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,noncomputable,rw,at,apply},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {↔}{{$\leftrightarrow$}}1
+    {¬}{{$\neg$}}1 {→}{{$\to$}}1 {←}{{$\leftarrow$}}1 {≤}{{$\le$}}1 {≠}{{$\ne$}}1
+    {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {·}{{$\cdot$}}1 {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\IsTerm}{\mathrm{Term}}
+\newcommand{\Bits}{\mathrm{B}}
+\newcommand{\low}{\mathrm{low}}
+
+\title[Row lengths of the Schreier-set triangle A373345]{The $n$-th Schreier set in binary order has as many elements as the Zeckendorf representation of $n$}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 25, 2026}
+
+\begin{document}
+\begin{abstract}
+A finite nonempty set $S$ of positive integers is a Schreier set if $|S|\le\min S$. List the Schreier sets in increasing order of the integer $\sum_{s\in S}2^{s-1}$; these integers form OEIS A371176, and the sets themselves are the rows of the triangle OEIS A373345.
+We prove that for every $n\ge1$ the $n$-th Schreier set has exactly as many elements as the Zeckendorf representation of $n$ has terms, which is the conjecture ``A007895 (conjectured row lengths)'' recorded by Paolo Xausa in A373345.
+The identity is known in substance: it follows from Chu's cardinality-preserving bijection between Schreier sets and Zeckendorf sets (2019) and from formulas stated without proof by Kurkov in A371176 before the conjecture was posed, and an informal proof was posted in September 2026. We therefore classify this note as the first formal proof of a known result.
+The proof is verified in Lean~4 against the frozen, fidelity-reviewed statement that math0 formalized from the OEIS entry, whose definitions are checked by the kernel against all $91$ listed terms of A373345.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Schreier sets were introduced by J.~Schreier \cite{Schreier} in a counterexample in the theory of weak convergence; a finite nonempty set $S\subset\Z_{>0}$ is a \emph{Schreier set} if $|S|\le\min S$.
+Encoding $S$ by the integer $e(S)=\sum_{s\in S}2^{s-1}$, whose binary expansion has its ones exactly at the $1$-based positions $s\in S$, one has $|S|=w(e(S))$ and $\min S=\nu(e(S))$, where $w(k)$ is the binary weight of $k$ (OEIS A000120) and $\nu(k)=v_2(2k)$ is the ruler function (A001511).
+Hence the codes of Schreier sets are exactly the positive integers $k$ with $w(k)\le\nu(k)$. This is the sequence A371176 \cite{A371176} (Mikhail Kurkov, March 14, 2024), $1,2,4,6,8,10,12,16,\dots$; the correspondence with Schreier sets, and with the ordering of Schreier sets described in a 2012 blog post of A.~Bird \cite{Bird}, was pointed out in comments by M.~Marcus and M.~S.~Branicky on May 31, 2024.
+The triangle A373345 \cite{A373345} (Paolo Xausa, June 1, 2024) lists in row $n$ the elements of the Schreier set encoded by the $n$-th term of A371176, in decreasing order: the rows start $\{1\},\{2\},\{3\},\{3,2\},\{4\},\{4,2\},\{4,3\},\{5\},\dots$
+Its CROSSREFS section names A007895 \cite{A007895}, the number of terms in the Zeckendorf representation of $n$, as the ``conjectured row lengths''. We prove this conjecture (Theorem~\ref{thm:main}).
+
+\subsection*{Prior work and status}
+The identity is not new in substance; we credit the earlier work as precisely as we can.
+\begin{itemize}
+\item \emph{Kurkov's formulas in A371176.} Revision \#14 of A371176 (April 20, 2024), which predates A373345, already contains, among other unproved formulas, the recursion
+$a(n)=2^{A072649(n)-1}+[r(n)>0]\cdot2\,a(r(n))$ (written there with $c(n)$ for $r(n)$), where $a$ is A371176, $r(n)=A066628(n)$ is $n$ minus the largest Fibonacci number $\le n$, and $A072649(n)=p+1$ for $F_{p+2}\le n<F_{p+3}$.
+Since $2a(r(n))<2^{A072649(n)-1}$ (a consequence of the Fibonacci count of Schreier sets by maximum), it gives $w(a(n))=1+w(a(r(n)))$ when $r(n)>0$; the Zeckendorf count obeys the same recursion, so the formula implies the conjecture at once. The same revision also contains the formula $a(n)=b(n)\,A001316(b(n))/2$ with $b(n)=A048679(n)$; as $A001316(m)=2^{w(m)}$, and $b(n)$ is obtained from the binary form of the Zeckendorf representation of $n$ (the fibbinary number A003714$(n)$) by the rewriting $01\to1$, which keeps the number of ones, this too gives $w(a(n))=w(b(n))=A007895(n)$. A later comment of Kurkov (October 21, 2024) describes $a(n)$ explicitly by rewriting the Zeckendorf representation of $n$. All of these are stated without proof in the entry.
+\item \emph{Chu's bijection.} H.~V.~Chu \cite{Chu} proved that the weak-Schreier subsets of $\{1,\dots,n\}$ (those with $\min S\ge|S|$, together with $\emptyset$) and the subsets without two consecutive integers are equinumerous (Theorem~3), by the explicit map $\{t_1<\dots<t_k\}\mapsto\{t_1-(k-1),t_2-(k-2),\dots,t_k\}$. This map preserves cardinality and, as is easy to check, the binary order; Theorem~\ref{thm:main} follows (Remark~\ref{rem:chu}).
+\item \emph{An informal proof.} A GitHub issue posted on September 20, 2026 \cite{Issue} gives a paper proof of exactly this row-length identity through Chu's map, and a second derivation from Bird's recursive description of the ordering; it presents the identity as an elementary consequence of Chu's bijection rather than a substantial new result, describes itself as paper mathematics and not a Lean certification, and claims no Lean implementation.
+\end{itemize}
+The math0 referees found no earlier formal proof. We classify the result as the \emph{first formal proof of a known result}. Our proof (Section~\ref{sec:proof}) is a direct induction on binary expansions; in effect it proves Kurkov's recursion (Remark~\ref{rem:kurkov}). Paolo Xausa recorded the same conjecture for the triangle A373557 of strong Schreier sets ($|S|<\min S$), whose entries are those of A373345 increased by $1$ (FORMULA section of A373345); that triangle is not part of the formal statement.
+
+\section{Statement}\label{sec:statement}
+
+\subsection*{The OEIS conjecture}
+In the current revision of A373345 (\#45, September 13, 2024) the second CROSSREFS line reads, verbatim,
+\begin{quote}\small
+\texttt{Cf. A007895 (conjectured row lengths), A072649 (first column), A373346 (row sums), A373347.}
+\end{quote}
+The line is unsigned; the entry's author line is \texttt{\_Paolo Xausa\_, Jun 01 2024}, and we attribute the conjecture to him. The relevant definitions are, verbatim:
+A373345, ``Irregular triangle read by rows where row n lists (in decreasing order) the elements of the Schreier set encoded by A371176(n)'' (offset~$1$), where by its comments $k$ encodes the set of ``the 1-based position of the ones in the binary expansion of k'';
+A371176, ``Numbers k such that A000120(k) \texttt{<=} A001511(k)'' (offset~$1$);
+A007895, ``Number of terms in the Zeckendorf representation of n (write n as a sum of non-consecutive distinct Fibonacci numbers)'' (offset~$0$).
+
+\subsection*{Notation}
+Let $F_0=0$, $F_1=1$, $F_{m+2}=F_{m+1}+F_m$. Every $n\ge0$ has a unique Zeckendorf representation $n=\sum_{j\in Z}F_j$ with $Z\subset\{2,3,\dots\}$ containing no two consecutive integers; write $z(n)=|Z|$, so $z(n)=A007895(n)$.
+For $k\in\N$ let $\Bits(k)$ be the set of $0$-based positions of the ones in the binary expansion of $k$, let $w(k)=|\Bits(k)|$, and for $k\ne0$ let $\low(k)=\min\Bits(k)=v_2(k)$, so that $\nu(k)=v_2(2k)=\low(k)+1$.
+Call $k$ a \emph{term} if $k>0$ and $w(k)\le v_2(2k)$, and let $a(1)<a(2)<\cdots$ be the terms (A371176). Row $n$ of A373345 is $\{i+1:i\in\Bits(a(n))\}$, listed in decreasing order, and has $w(a(n))$ elements.
+
+\begin{theorem}\label{thm:main}
+For every $n\ge1$, $w(a(n))=z(n)$. Equivalently, row $n$ of A373345 has $A007895(n)$ elements; equivalently, the $n$-th Schreier set in the order of $e(S)$ has $z(n)$ elements.
+\end{theorem}
+
+For example, $a(12)=28=11100_2$, row $12$ is $\{5,4,3\}$, and $12=8+3+1=F_6+F_4+F_2$, so both sides equal $3$.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A373345.lean}, reviewed for fidelity, and frozen (SHA-256 \texttt{75365247\ldots 4101}) before any proof attempt. Its definitions and the statement read, verbatim (copyright header, import, docstrings, the computable helpers and all theorems omitted):
+\begin{lstlisting}
+namespace Math0.Statements.A373345
+def IsTerm (k : ℕ) : Prop := 0 < k ∧ k.bitIndices.length ≤ padicValNat 2 (2 * k)
+noncomputable def A371176 (n : ℕ) : ℕ := Nat.nth IsTerm (n - 1)
+noncomputable def T (n : ℕ) : List ℕ := ((A371176 n).bitIndices.map (· + 1)).reverse
+def statement : Prop :=
+  ∀ n : ℕ, 1 ≤ n → (T n).length = (Nat.zeckendorf n).length
+end Math0.Statements.A373345
+\end{lstlisting}
+Mathlib's \texttt{Nat.bitIndices k} is the increasing list of the $0$-based positions of the ones of $k$, so its length is $w(k)=A000120(k)$, and \texttt{padicValNat 2 (2 * k)} is $v_2(2k)=A001511(k)$ for $k\ge1$; the conjunct \texttt{0 < k} excludes $k=0$, for which $0\le0$ would hold. \texttt{Nat.nth IsTerm i} is the $i$-th term counting from $0$, so \texttt{A371176 n} is $a(n)$ with offset~$1$. \texttt{T n} lists the $1$-based positions of the ones of $a(n)$ in decreasing order, i.e.\ row $n$ of A373345.
+Mathlib's \texttt{Nat.zeckendorf} is defined greedily, $\mathtt{zeckendorf}\,0=[\,]$ and, for $m>0$, $\mathtt{zeckendorf}\,m=g::\mathtt{zeckendorf}(m-F_g)$ with $g=\mathtt{greatestFib}\,m$ the largest index with $F_g\le m$; Mathlib proves (\decl{Nat.zeckendorfEquiv}) that it is the unique strictly decreasing list of indices $\ge2$, with adjacent entries differing by at least $2$, whose Fibonacci numbers sum to $m$, so its length is $z(m)=A007895(m)$. Row $n$ ($n\ge1$) is matched with $A007895(n)$; matching it with the first listed term $A007895(0)=0$ would fail already for row~$1$.
+
+The statement file anchors these definitions to the OEIS data. Since \texttt{Nat.nth}, \texttt{Nat.bitIndices} and \texttt{Nat.zeckendorf} are not suitable for kernel evaluation, it defines computable versions (a bounded search \texttt{code i} for the $i$-th term, a bit list \texttt{bitPos}, a fuel-bounded greedy Zeckendorf \texttt{zeckAux}) and proves them equal to the definitions above; it then checks the data with \texttt{decide +kernel}. The relevant theorems are (statements verbatim, proofs and the long data lists omitted):
+\begin{lstlisting}
+theorem code_eq_nth (i : ℕ) : code i = Nat.nth IsTerm i
+theorem row_eq_T (n : ℕ) : row n = T n
+theorem a_eq (m : ℕ) : a m = ((List.range m).flatMap (fun i => T (i + 1))).getD (m - 1) 0
+theorem a_data : (List.range 91).map (fun i => a (i + 1)) = [1, 2, 3, 3, 2, 4, ...]
+theorem code_data : (List.range 42).map code = [1, 2, 4, 6, 8, 10, 12, 16, ...]
+theorem statement_check : ∀ n, 1 ≤ n → n ≤ 42 → (T n).length = (Nat.zeckendorf n).length
+\end{lstlisting}
+Here \texttt{a m} is the $m$-th entry of the flattened triangle $T(1)\mathbin{+\!\!+}T(2)\mathbin{+\!\!+}\cdots$ (\decl{a_eq}). \decl{a_data} reproduces all $91$ listed terms of A373345 (rows $1$ to $42$), \decl{code_data} the first $42$ terms of A371176, and \decl{statement_check} the claimed identity for $n\le42$, as a check of the alignment of rows with A007895.
+
+\section{Proof}\label{sec:proof}
+
+The proof follows the Lean file \path{lean/Math0/Frontier/OEIS/A373345.lean}; we give each lemma with the name of the corresponding private declaration. Throughout, $c(k)=\#\{j<k: j\text{ is a term}\}$ (Mathlib's \texttt{Nat.count}) and $\zeta(m)$ is the length of \texttt{Nat.zeckendorf m}, so $\zeta(m)=z(m)$. We write $\Bits(k)$ as the increasing list \texttt{k.bitIndices}, and $L+1$ for the list $L$ with $1$ added to each entry. Recall $\Bits(2m)=\Bits(m)+1$ and $\Bits(2m+1)=0::(\Bits(m)+1)$ (Mathlib).
+
+\begin{lemma}[\decl{bitIndices_two_pow_add}]\label{lem:bits}
+If $0\le j<2^p$, then $\Bits(2^p+j)=\Bits(j)\mathbin{+\!\!+}[p]$. In particular $w(2^p+j)=w(j)+1$, and $\low(2^p+j)=\low(j)$ if $j>0$.
+\end{lemma}
+
+\begin{proof}
+Induction on $p$. For $p=0$, $j=0$ and $\Bits(1)=[0]$. For $p+1$, write $j=2j'$ or $j=2j'+1$ with $j'<2^p$. Then $2^{p+1}+2j'=2(2^p+j')$, so $\Bits(2^{p+1}+2j')=(\Bits(j')\mathbin{+\!\!+}[p])+1=\Bits(2j')\mathbin{+\!\!+}[p+1]$ by the induction hypothesis; the odd case is the same with $0$ prepended.
+\end{proof}
+
+\begin{lemma}[\decl{isTerm_iff}]\label{lem:term}
+For $k\ne0$, $k$ is a term if and only if $w(k)\le\low(k)+1$.
+\end{lemma}
+
+\begin{proof}
+This is \decl{padicValNat_two_mul} of the statement file: writing $k=2^v(2m+1)$, one has $v_2(2k)=v+1$ and $\low(k)=v$.
+\end{proof}
+
+\begin{lemma}[\decl{isTerm_two_pow_add_even}, \decl{not_isTerm_two_pow_add_odd}]\label{lem:structure}
+Let $p,i\ge0$.
+\begin{enumerate}
+\item If $2i<2^p$, then $2^p+2i$ is a term if and only if $i=0$ or $i$ is a term.
+\item If $2i+1<2^p$, then $2^p+2i+1$ is not a term.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(1) If $i=0$, then $w(2^p)=1\le p+1=v_2(2^{p+1})$, so $2^p$ is a term (\decl{isTerm_two_pow}). If $i>0$, write $\Bits(i)=b::\ell$. By Lemma~\ref{lem:bits}, $\Bits(2^p+2i)=(b+1)::(\ell+1)\mathbin{+\!\!+}[p]$, so $w(2^p+2i)=|\ell|+2$ and $\low(2^p+2i)=b+1$. By Lemma~\ref{lem:term} the condition for $2^p+2i$ is $|\ell|+2\le b+2$, which is the condition $|\ell|+1\le b+1$ for $i$.
+(2) $\Bits(2^p+2i+1)=0::(\Bits(i)+1)\mathbin{+\!\!+}[p]$ has length at least $2$ and first entry $0$, and $2>0+1$.
+\end{proof}
+
+\begin{lemma}[\decl{count_two_pow_add}]\label{lem:count}
+If $2i\le2^p$, then $c(2^p+2i)=c(2^p)+c(i)+[i\ne0]$.
+\end{lemma}
+
+\begin{proof}
+Induction on $i$; the case $i=0$ is trivial. Let $2(i+1)\le2^p$, so $2i+1<2^p$. By definition of $c$ and the induction hypothesis,
+\[
+c(2^p+2i+2)=c(2^p)+c(i)+[i\ne0]+[2^p+2i\text{ is a term}]+[2^p+2i+1\text{ is a term}],
+\]
+while $c(2^p)+c(i+1)+1=c(2^p)+c(i)+[i\text{ is a term}]+1$. The last bracket on the first line is $0$ by Lemma~\ref{lem:structure}(2). If $i=0$, the first line is $c(2^p)+0+0+1+0$ and the second $c(2^p)+0+0+1$, since $0$ is not a term. If $i\ne0$, the first line is $c(2^p)+c(i)+1+[i\text{ is a term}]$ by Lemma~\ref{lem:structure}(1), which is the second.
+\end{proof}
+
+\begin{lemma}[\decl{count_two_pow}]\label{lem:fib}
+For every $p\ge0$, $c(2^p)+1=F_{p+2}$.
+\end{lemma}
+
+\begin{proof}
+We prove $c(2^p)+1=F_{p+2}$ and $c(2^{p+1})+1=F_{p+3}$ together, by induction on $p$. For $p=0$: $c(1)=0$ since $0$ is not a term, and $c(2)=1$ since $1$ is a term; $F_2=1$, $F_3=2$. For the step, Lemma~\ref{lem:count} with $p+1$ in place of $p$ and $i=2^p$ gives $c(2^{p+2})=c(2^{p+1})+c(2^p)+1$, hence $c(2^{p+2})+1=F_{p+3}+F_{p+2}=F_{p+4}$.
+\end{proof}
+
+Since the terms below $2^p$ are the codes of the Schreier sets contained in $\{1,\dots,p\}$, Lemma~\ref{lem:fib} is the known count of these sets (cf.\ \cite{Chu,Bird}).
+
+\begin{lemma}[\decl{zeckendorf_fib_add}]\label{lem:zeck}
+If $m<F_{p+1}$, then $\zeta(F_{p+2}+m)=\zeta(m)+1$.
+\end{lemma}
+
+\begin{proof}
+Let $N=F_{p+2}+m>0$. Then $F_{p+2}\le N<F_{p+2}+F_{p+1}=F_{p+3}$, so $\mathtt{greatestFib}\,N=p+2$ (by Mathlib's \decl{Nat.le_greatestFib} and \decl{Nat.greatestFib_lt}), and \decl{Nat.zeckendorf_of_pos} gives $\mathtt{zeckendorf}\,N=(p+2)::\mathtt{zeckendorf}\,m$.
+\end{proof}
+
+\begin{proposition}[\decl{main}]\label{prop:main}
+For every term $k$, $w(k)=\zeta(c(k)+1)$.
+\end{proposition}
+
+\begin{proof}
+Strong induction on $k$. Let $p=\lfloor\log_2k\rfloor$, so $k=2^p+j$ with $0\le j<2^p$. By Lemma~\ref{lem:structure}(2), $j$ is even, $j=2i$, and by Lemma~\ref{lem:structure}(1), $i=0$ or $i$ is a term.
+
+\emph{Case $i=0$.} Then $k=2^p$, $w(k)=1$, and $c(k)+1=F_{p+2}=F_{p+2}+0$ by Lemma~\ref{lem:fib}. Since $0<F_{p+1}$, Lemma~\ref{lem:zeck} gives $\zeta(c(k)+1)=\zeta(0)+1=1$.
+
+\emph{Case $i$ a term.} Then $i\ge1$, so $2\le2i<2^p$; hence $p=q+1$ with $q\ge0$ and $i<2^q$, and $i<k$. By Lemma~\ref{lem:bits} and $\Bits(2i)=\Bits(i)+1$, $w(k)=w(2i)+1=w(i)+1$. By Lemmas~\ref{lem:count} and~\ref{lem:fib},
+\[
+c(k)+1=c(2^{q+1})+c(i)+2=F_{q+3}+\bigl(c(i)+1\bigr).
+\]
+Since $i$ is a term and $i<2^q$, $c$ is strictly larger at $2^q$ than at $i$ (\decl{Nat.count_strict_mono}), so $c(i)+1\le c(2^q)=F_{q+2}-1<F_{q+2}$. Lemma~\ref{lem:zeck} (with $q+1$ in place of $p$ and $m=c(i)+1$) and the induction hypothesis for $i$ give
+\[
+\zeta(c(k)+1)=\zeta(c(i)+1)+1=w(i)+1=w(k).\qedhere
+\]
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+The set of terms is infinite, since every power of $2$ is a term and $2^b>b$ for all $b$. Hence (\decl{Nat.nth_mem_of_infinite}, \decl{Nat.count_nth_of_infinite}) $k=\mathtt{Nat.nth\ IsTerm}\,(n-1)=a(n)$ is a term with $c(k)=n-1$. The length of $T(n)$ is the length of $\Bits(k)$, i.e.\ $w(k)$, and by Proposition~\ref{prop:main} $w(k)=\zeta(c(k)+1)=\zeta(n)$ for $n\ge1$.
+\end{proof}
+
+\begin{remark}[Kurkov's recursion]\label{rem:kurkov}
+The proof of Proposition~\ref{prop:main} shows more: if $k=a(n)$ has top bit $p$, then $F_{p+2}\le n<F_{p+3}$, and either $n=F_{p+2}$ and $a(n)=2^p$, or $n=F_{p+2}+n'$ with $1\le n'<F_{p+1}$ and $a(n)=2^p+2a(n')$. This is Kurkov's formula $a(n)=2^{A072649(n)-1}+[r(n)>0]\cdot2a(r(n))$ quoted in the introduction, with $r(n)=n'$. The Lean file does not state this recursion as a separate declaration.
+\end{remark}
+
+\begin{remark}[A second proof via Chu's bijection; not formalized]\label{rem:chu}
+Order finite sets of positive integers colexicographically, $S\prec S'$ if $\max(S\triangle S')\in S'$; this is the order of the codes $e(S)$, and also the lexicographic order of the decreasing sequences of elements, a proper prefix coming first. For a Schreier set with elements $s_1>s_2>\dots>s_r$, Chu's map \cite{Chu} is $f(S)=\{s_1,s_2-1,\dots,s_r-(r-1)\}$. Since $s_r\ge r$, $f(S)$ is a set of positive integers with gaps $\ge2$, and $f$ is a bijection from Schreier sets onto nonempty sets without two consecutive integers, with inverse adding $j-1$ to the $j$-th largest element. It preserves cardinality and maximum, and it preserves the lexicographic order of decreasing sequences, since at the first position $j$ where two sequences differ both entries are lowered by $j-1$. Both families are ordered with finitely many predecessors for each element, so $f$ maps the $n$-th Schreier set to the $n$-th nonempty set $Z_n$ without consecutive integers. Finally, $Z\mapsto\sum_{z\in Z}F_{z+1}$ is the Zeckendorf bijection onto $\N$ (with $\emptyset\mapsto0$), and it is increasing for $\prec$ because $\sum_{z\in Z}F_{z+1}<F_{t+1}$ whenever $\max Z<t$. Hence $Z_n$ has Zeckendorf value $n$ and $|Z_n|=z(n)$. This is essentially the argument of \cite{Issue}.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in \path{lean/Math0/Frontier/OEIS/A373345.lean} in the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A373345.lean} (Section~\ref{sec:statement}), from which it uses \decl{padicValNat_two_mul} and \decl{isTerm_two_pow}, and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A373345.result}, of type \decl{Math0.Statements.A373345.statement}. The private lemmas \decl{bitIndices_two_pow_add}, \decl{isTerm_iff}, \decl{isTerm_two_pow_add_even}, \decl{not_isTerm_two_pow_add_odd}, \decl{count_two_pow_add}, \decl{count_two_pow} and \decl{zeckendorf_fib_add} are Lemmas~\ref{lem:bits}--\ref{lem:zeck} in Lean form, and \decl{exists_bitIndices_cons} states that $\Bits(i)$ is nonempty for $i\ne0$. The statement of \decl{main} and the final theorem read (verbatim):
+\begin{lstlisting}
+private theorem main (k : ℕ) : IsTerm k →
+    k.bitIndices.length = (Nat.zeckendorf (Nat.count IsTerm k + 1)).length
+
+theorem result : statement := by
+  intro n hn
+  have hinf : {k | IsTerm k}.Infinite := by
+    apply Set.infinite_of_not_bddAbove
+    rintro ⟨b, hb⟩
+    have h := hb (isTerm_two_pow b)
+    have := Nat.lt_two_pow_self (n := b)
+    omega
+  have hterm : IsTerm (Nat.nth IsTerm (n - 1)) := Nat.nth_mem_of_infinite hinf _
+  have hcount : Nat.count IsTerm (Nat.nth IsTerm (n - 1)) = n - 1 :=
+    Nat.count_nth_of_infinite hinf _
+  rw [T, A371176, List.length_reverse, List.length_map, main _ hterm, hcount,
+    show n - 1 + 1 = n by omega]
+
+#math0_settles Math0.Frontier.A373345.result Math0.Statements.A373345.statement
+\end{lstlisting}
+The proof involves no finite computation: it uses neither \texttt{decide} nor \texttt{native\_decide}, and no \texttt{set\_option}. The kernel computations of the statement file (Section~\ref{sec:statement}) serve only to check its definitions against the OEIS data. Neither file contains \texttt{sorry} or custom axioms.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} depend on no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, \decl{Lean.ofReduceBool} from \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically \decl{statement} or $\neg$\,\decl{statement}, up to metadata annotations, with no unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A373345.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A373345.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A373345.result' proves 'Math0.Statements.A373345.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use, since the statement is a math0 formalization of an OEIS conjecture and not part of formal-conjectures.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The single file can be checked with \texttt{lake env lean Math0/Frontier/OEIS/A373345.lean} in the directory \path{lean}.
+
+{\small\raggedright
+\begin{thebibliography}{99}
+
+\bibitem{Bird}
+A.~Bird, \emph{Jozef Schreier, Schreier sets and the Fibonacci sequence}, Out Of The Norm (blog), May~13, 2012, \url{https://outofthenormmaths.wordpress.com/2012/05/13/jozef-schreier-schreier-sets-and-the-fibonacci-sequence/}.
+
+\bibitem{Chu}
+H.~V.~Chu, \emph{The Fibonacci sequence and Schreier--Zeckendorf sets}, J. Integer Seq. \textbf{22} (2019), Article 19.6.5; arXiv:1906.10962.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171 [cs.AI], 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Issue}
+AlyciaBHZ, \emph{Research: full Schreier--Zeckendorf row-length identity (OEIS A373345)}, GitHub issue \#9050 in the-omega-institute/trureturing, September~20, 2026, \url{https://github.com/the-omega-institute/trureturing/issues/9050}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A007895}
+The OEIS Foundation Inc., \emph{Number of terms in the Zeckendorf representation of $n$}, entry A007895 in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A007895}.
+
+\bibitem{A371176}
+The OEIS Foundation Inc., \emph{Numbers $k$ such that $A000120(k)\le A001511(k)$}, entry A371176 (M.~Kurkov, 2024) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A371176}.
+
+\bibitem{A373345}
+The OEIS Foundation Inc., \emph{Irregular triangle read by rows where row $n$ lists (in decreasing order) the elements of the Schreier set encoded by A371176$(n)$}, entry A373345 (P.~Xausa, 2024) in The On-Line Encyclopedia of Integer Sequences, \url{https://oeis.org/A373345}; revision \#45, September~13, 2024.
+
+\bibitem{Schreier}
+J.~Schreier, \emph{Ein Gegenbeispiel zur Theorie der schwachen Konvergenz}, Studia Math. \textbf{2} (1930), 58--62.
+
+\end{thebibliography}
+}
+
+\end{document}

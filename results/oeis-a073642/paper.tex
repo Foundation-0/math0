@@ -1,0 +1,337 @@
+% math0 manuscript template. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,noncomputable,apply,unfold,rw,exact_mod_cast,only},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8, keepspaces=true,
+  literate={ℕ}{{$\mathbb{N}$}}1 {ℚ}{{$\mathbb{Q}$}}1 {∀}{{$\forall$}}1 {→}{{$\to$}}1
+    {≤}{{$\le$}}1 {≠}{{$\ne$}}1 {∑}{{$\sum$}}1 {∈}{{$\in$}}1 {·}{{$\cdot$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {₂}{{$_2$}}1 {²}{{$^2$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\emergencystretch=3em
+\raggedbottom
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\vt}{\nu_2}
+\newcommand{\Bits}{\mathrm{I}}
+
+\title[Yanev's identity for OEIS A073642]{The sum of the positions of the 1-bits of $n$ equals $\tfrac12\bigl(3\,\nu_2(n!)-\sum_{k=1}^{n}\nu_2(k)^2\bigr)$}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 20, 2026}
+
+\begin{document}
+\begin{abstract}
+For $n\ge0$ let $a(n)$ be the sum of the exponents $i$ such that $2^i$ occurs in the binary expansion of $n$ (OEIS A073642). In 2017 V.~Yanev conjectured in that entry that $a(n)=\frac12\bigl(3\,\mathrm{A011371}(n)-\sum_{k=1}^{n}\mathrm{A007814}(k)^2\bigr)$ for $n>0$, where $\mathrm{A011371}(n)=n-s_2(n)=\nu_2(n!)$ and $\mathrm{A007814}(k)=\nu_2(k)$.
+We prove this by induction on $n$ from the local identity $2a(n+1)+\nu_2(n+1)^2=2a(n)+3\,\nu_2(n+1)$, which in turn follows by induction over the parity of $n$ from the recursions $a(2k)=a(2k+1)=a(k)+s_2(k)$ and the identity $s_2(n+1)+\nu_2(n+1)=s_2(n)+1$.
+The entry still lists the formula as a conjecture and we found no earlier proof, so we classify the result as new; it is, however, an elementary consequence of classical facts such as Legendre's formula, and we claim no new method.
+The proof is verified in Lean~4 against a statement that math0 formalized from the OEIS entry; its definitions are checked by the kernel against the listed terms, and it was reviewed for fidelity and frozen before the proof attempt.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+Every $n\in\N$ has a unique binary expansion $n=\sum_{i\in\Bits(n)}2^i$ with a finite set $\Bits(n)\subset\N$ of \emph{bit positions}. The OEIS entry A073642 \cite{A073642}, contributed by Benoit Cloitre in 2002, is the sequence
+\[
+  a(n)=\sum_{i\in\Bits(n)} i:\qquad 0,\,0,\,1,\,1,\,2,\,2,\,3,\,3,\,3,\,3,\,4,\,4,\,5,\,5,\,6,\,6,\,4,\,\dots\quad(n\ge0);
+\]
+for example $25=2^4+2^3+2^0$ gives $a(25)=7$. By a comment of A.~Ayyer in the entry, which refers to Macdonald \cite{Macdonald}, $2^{a(n)}$ is the number of partitions of $n$ whose dimension, given by the hook-length formula, is odd; the entry also links to Ayyer, Prasad and Spallone \cite{APS} on such partitions. The entry records the recursion $a(2n)=a(n)+s_2(n)$, $a(2n+1)=a(2n)$ (R.~Stephan, 2003), where $s_2(n)=|\Bits(n)|$ is the binary weight (A000120 \cite{A000120}), and the generating function $(1-x)^{-1}\sum_{k\ge1}k\,x^{2^k}/(1+x^{2^k})$ (I.~Gutkovskiy, 2019).
+
+On September~9, 2017, Velin Yanev added the following conjecture to the entry: for $n>0$,
+\begin{equation}\label{eq:yanev}
+  a(n)=\frac{3\,\mathrm{A011371}(n)-\sum_{k=1}^{n}\mathrm{A007814}(k)^2}{2},
+\end{equation}
+where $\mathrm{A011371}(n)=n-s_2(n)$ \cite{A011371}, which equals $\vt(n!)$ by Legendre's formula \cite{Legendre}, and $\mathrm{A007814}(k)=\vt(k)$ is the $2$-adic valuation \cite{A007814}. We prove \eqref{eq:yanev} (Theorem~\ref{thm:main}).
+
+\subsection*{Prior work and status}
+We found no earlier proof. The math0 referees report that revision \#121 of A073642 (July~5, 2026) still lists \eqref{eq:yanev} as a conjecture, with no comment or edit about a proof; that the related entries A011371, A007814, A029931, A115364, A198192 and A198193 contain no such identity; and that no OEIS sequence lists the partial sums of $\mathrm{A007814}(k)^2$. S.~Fried \cite{Fried} proved several other conjectures of Yanev, in A000188, A001157 and A006519; his note treats only those three entries (we checked its text) and is not linked from A073642, and the referees found no mention of A073642 in Fried's other papers on OEIS conjectures. The statement is not in the formal-conjectures repository \cite{FC}, and the referees did not find it in other public collections of formalized OEIS conjectures. We therefore classify Theorem~\ref{thm:main} as a new result, in the sense that it is the first recorded proof of a conjecture listed as open.
+
+The identity is elementary, and we claim no new technique. Its ingredients are classical: Legendre's formula $\vt(n!)=n-s_2(n)$, and the evaluation of $\sum_{k\le n}f(\vt(k))$ through the counts $\lfloor n/2^j\rfloor$ of multiples of $2^j$. As the referees observed, the identity also follows from Gutkovskiy's generating function; see Remark~\ref{rem:closed}, which gives this second proof. The proof that we formalized (Section~\ref{sec:proof}) is a short induction: the step from $n$ to $n+1$ is the local identity $2a(n+1)+\vt(n+1)^2=2a(n)+3\,\vt(n+1)$ (Lemma~\ref{lem:key}).
+
+\section{Statement}\label{sec:statement}
+
+The entry A073642 \cite{A073642} reads in part (verbatim; \textsc{Formula} lists further formulas):
+\begin{quote}\raggedright
+\textsc{Name}: \texttt{Replace 2\char`\^k in the binary representation of n with k (i.e., if n = 2\char`\^b + 2\char`\^c + 2\char`\^d + ... then a(n) = b + c + d + ...).}\\[2pt]
+\textsc{Formula}: \texttt{Conjecture: a(n) = (3*A011371(n) - Sum\char`\_\char`\{k=1..n\char`\}\ A007814(k)\char`\^2)/2 for n > 0. - Velin Yanev, Sep 09 2017}
+\end{quote}
+The offset is $0$. The two sequences in the conjecture are A011371 \cite{A011371} (offset $0$), ``a(n) = n minus (number of 1's in binary expansion of n). Also highest power of 2 dividing n!.'', and A007814 \cite{A007814} (offset $1$), ``Exponent of highest power of 2 dividing n, a.k.a. the binary carry sequence, the ruler sequence, or the 2-adic valuation of n.''
+
+\begin{theorem}[Yanev's conjecture]\label{thm:main}
+For every integer $n\ge1$,
+\[
+  \sum_{i\in\Bits(n)} i \;=\; \frac{3\,\bigl(n-s_2(n)\bigr)-\sum_{k=1}^{n}\vt(k)^2}{2},
+\]
+where the right-hand side is computed in $\Q$. Equivalently, $2a(n)+\sum_{k=1}^{n}\vt(k)^2=3\,\vt(n!)$.
+\end{theorem}
+
+For instance, $n=6$ gives $a(6)=1+2=3$, $n-s_2(n)=4$ and $\sum_{k=1}^{6}\vt(k)^2=0+1+0+4+0+1=6$, and indeed $(12-6)/2=3$. The identity also holds for $n=0$, where both sides vanish.
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A073642.lean}, reviewed for fidelity, and frozen before the proof attempt (SHA-256 \texttt{cf003192\dots 51a12c}). Listing~\ref{lst:stmt} reproduces its three definitions, two of its lemmas and the statement, verbatim except that the copyright header, the \texttt{import Mathlib} line, docstrings and comments, the proofs, the helper lemma \decl{count_one_digits_two} and the four kernel-checked data lemmas are omitted.
+\begin{lstlisting}[float=tp,caption={The frozen statement file \texttt{Math0/Statements/OEIS/A073642.lean} (excerpt).},label=lst:stmt]
+namespace Math0.Statements.A073642
+
+def a (n : ℕ) : ℕ := (Nat.bitIndices n).sum
+
+def A011371 (n : ℕ) : ℕ := n - (Nat.digits 2 n).count 1
+
+def A007814 (n : ℕ) : ℕ := padicValNat 2 n
+
+theorem a_sum_two_pow (s : Finset ℕ) : a (∑ i ∈ s, 2 ^ i) = ∑ i ∈ s, i := by
+  -- (proof omitted)
+
+theorem A011371_eq_padicValNat_factorial (n : ℕ) : A011371 n = padicValNat 2 n.factorial := by
+  -- (proof omitted)
+
+def statement : Prop :=
+  ∀ n : ℕ, 0 < n →
+    (a n : ℚ) = (3 * (A011371 n : ℚ) - ∑ k ∈ Finset.Icc 1 n, (A007814 k : ℚ) ^ 2) / 2
+
+end Math0.Statements.A073642
+\end{lstlisting}
+
+
+\emph{Encoding.} Mathlib's \texttt{Nat.bitIndices n} is the increasing list of the elements of $\Bits(n)$; it is defined by binary recursion, and Mathlib proves that $\sum_i 2^i$ over this list is $n$. So \decl{a} is $a$. The lemma \decl{a_sum_two_pow} states the OEIS definition literally: $a\bigl(\sum_{i\in s}2^i\bigr)=\sum_{i\in s}i$ for every finite set $s\subset\N$. \texttt{Nat.digits 2 n} is the list of binary digits of $n$, so \decl{A011371} is the primary OEIS definition of A011371; the truncated subtraction on $\N$ is harmless, as the number of $1$'s is at most $n$. The lemma \decl{A011371_eq_padicValNat_factorial} proves the entry's second description, $\mathrm{A011371}(n)=\vt(n!)$ (Lemma~\ref{lem:legendre} below). \decl{A007814} is \texttt{padicValNat 2}, which is $\vt$ on $k\ge1$ (and $0$ at $k=0$, a value that the statement never uses, since $k$ ranges over $\{1,\dots,n\}$). The statement quantifies over $n>0$, as the entry does, and evaluates the right-hand side in $\Q$, so neither the subtraction nor the division by $2$ is truncated; it thus also asserts that the right-hand side is the natural number $a(n)$.
+
+\emph{Checks against the OEIS.} Four lemmas of the statement file, all proved by kernel evaluation (\texttt{decide +kernel}), check the encoding: \decl{a_data} reproduces all $88$ listed terms $a(0),\dots,a(87)$; \decl{A011371_data} reproduces the $73$ listed terms of A011371 ($n=0,\dots,72$); \decl{A007814_data} reproduces the $111$ listed terms of A007814 ($k=1,\dots,111$); and \decl{rhs_data} checks that $3\,\mathrm{A011371}(n)-\sum_{k=1}^{n}\mathrm{A007814}(k)^2$, computed in $\mathbb{Z}$, is twice the listed $a(n)$ for $n=1,\dots,87$. The last lemma is a sanity check of the encoding and is not part of the statement. The fidelity reviewer compared the data with the OEIS by script, and a referee checked \eqref{eq:yanev} in exact rational arithmetic for all $n\le 200{,}000$.
+
+\section{Proof}\label{sec:proof}
+
+We follow the Lean proof; each lemma carries the names of the corresponding declarations. Throughout, $s(n)=s_2(n)=|\Bits(n)|$ (in Lean the private function \decl{L}, the length of \texttt{Nat.bitIndices n}) and $\nu=\vt$, with $\nu(0)=0$ as in Mathlib.
+
+\begin{lemma}[\decl{a_two_mul}, \decl{a_two_mul_add_one}, \decl{L_two_mul}, \decl{L_two_mul_add_one}]\label{lem:rec}
+For every $k\in\N$,
+\[
+  a(2k)=a(2k+1)=a(k)+s(k),\qquad s(2k)=s(k),\qquad s(2k+1)=s(k)+1 .
+\]
+\end{lemma}
+
+\begin{proof}
+From $k=\sum_{i\in\Bits(k)}2^i$ we get $2k=\sum_{i\in\Bits(k)}2^{i+1}$ and $2k+1=2^0+\sum_{i\in\Bits(k)}2^{i+1}$, so by uniqueness of the binary expansion $\Bits(2k)=\{i+1:i\in\Bits(k)\}$ and $\Bits(2k+1)=\{0\}\cup\{i+1:i\in\Bits(k)\}$, the union being disjoint. (In Lean these are the Mathlib simplification lemmas \texttt{Nat.bitIndices\_two\_mul} and \texttt{Nat.bitIndices\_two\_mul\_add\_one}, which hold by the recursive definition of \texttt{Nat.bitIndices}.) Hence $a(2k)=\sum_{i\in\Bits(k)}(i+1)=a(k)+s(k)$, the extra position $0$ adds nothing to $a(2k+1)$, and the sizes are $s(k)$ and $s(k)+1$.
+\end{proof}
+
+This is Stephan's recursion recorded in the entry.
+
+\begin{lemma}[\decl{v2_odd}, \decl{v2_two_mul}]\label{lem:val}
+For every $k\in\N$, $\nu(2k+1)=0$; and if $k\ge1$, then $\nu(2k)=\nu(k)+1$.
+\end{lemma}
+
+\begin{proof}
+$2\nmid 2k+1$. For $k\ge1$, $\vt$ is additive on products of nonzero numbers and $\vt(2)=1$ (Mathlib's \texttt{padicValNat.mul} and \texttt{padicValNat.self}).
+\end{proof}
+
+\begin{lemma}[\decl{L_succ}]\label{lem:pop}
+For every $n\in\N$, $s(n+1)+\nu(n+1)=s(n)+1$.
+\end{lemma}
+
+\begin{proof}
+By strong induction on $n$. If $n=2k$, then by Lemmas~\ref{lem:rec} and~\ref{lem:val}, $s(2k+1)+\nu(2k+1)=s(k)+1=s(2k)+1$. If $n=2k+1$, then $n+1=2(k+1)$ with $k+1\ge1$, so
+\[
+  s(n+1)+\nu(n+1)=s(k+1)+\nu(k+1)+1=s(k)+2=s(2k+1)+1,
+\]
+where the middle step is the induction hypothesis for $k<n$.
+\end{proof}
+
+\begin{lemma}[\decl{key}]\label{lem:key}
+For every $n\in\N$, $2a(n+1)+\nu(n+1)^2=2a(n)+3\,\nu(n+1)$.
+\end{lemma}
+
+\begin{proof}
+By strong induction on $n$. If $n=2k$, then $\nu(n+1)=0$ and $a(2k+1)=a(2k)$ by Lemmas~\ref{lem:val} and~\ref{lem:rec}, so both sides equal $2a(2k)$.
+
+If $n=2k+1$, put $u=\nu(k+1)$. Since $n+1=2(k+1)$ with $k+1\ge1$, Lemmas~\ref{lem:rec} and~\ref{lem:val} give $\nu(n+1)=u+1$, $a(n+1)=a(k+1)+s(k+1)$ and $a(n)=a(k)+s(k)$. The claim becomes
+\begin{equation}\label{eq:keyodd}
+  2a(k+1)+2s(k+1)+(u+1)^2 = 2a(k)+2s(k)+3u+3 .
+\end{equation}
+The induction hypothesis for $k<n$ gives $2a(k+1)+u^2=2a(k)+3u$, and Lemma~\ref{lem:pop} for $k$ gives $s(k+1)+u=s(k)+1$. Adding the first equation to twice the second yields $2a(k+1)+u^2+2s(k+1)+2u=2a(k)+3u+2s(k)+2$, and adding $1$ to both sides gives~\eqref{eq:keyodd}. (In Lean the last step is \texttt{nlinarith}.)
+\end{proof}
+
+\begin{proposition}[\decl{main}]\label{prop:main}
+For every $n\in\N$,
+\[
+  2a(n)+\sum_{k=1}^{n}\nu(k)^2=3\,\vt(n!).
+\]
+\end{proposition}
+
+\begin{proof}
+By induction on $n$. For $n=0$, $\Bits(0)=\varnothing$, so $a(0)=0$, the sum is empty and $\vt(0!)=\vt(1)=0$. For the step, $\sum_{k=1}^{n+1}\nu(k)^2=\sum_{k=1}^{n}\nu(k)^2+\nu(n+1)^2$, and $(n+1)!=(n+1)\cdot n!$ with both factors nonzero, so $\vt((n+1)!)=\nu(n+1)+\vt(n!)$. Using Lemma~\ref{lem:key} and then the induction hypothesis,
+\[
+  2a(n+1)+\sum_{k=1}^{n+1}\nu(k)^2
+  = 2a(n)+3\,\nu(n+1)+\sum_{k=1}^{n}\nu(k)^2
+  = 3\,\vt(n!)+3\,\nu(n+1)=3\,\vt((n+1)!). \qedhere
+\]
+\end{proof}
+
+\begin{lemma}[Legendre; \decl{A011371_eq_padicValNat_factorial}, statement file]\label{lem:legendre}
+For every $n\in\N$, $n-s_2(n)=\vt(n!)$; that is, $\mathrm{A011371}(n)=\vt(n!)$.
+\end{lemma}
+
+\begin{proof}
+Legendre's formula \cite{Legendre} in Mathlib (\texttt{sub\_one\_mul\_padicValNat\_factorial}) states $(p-1)\,\nu_p(n!)=n-S_p(n)$ for a prime $p$, where $S_p(n)$ is the sum of the base-$p$ digits of $n$. For $p=2$ every digit is $0$ or $1$, so $S_2(n)$ is the number of digits equal to $1$ (the lemma \decl{count_one_digits_two} of the statement file). Alternatively, summing Lemma~\ref{lem:pop} over $0,\dots,n-1$ gives $s(n)+\sum_{k=1}^{n}\nu(k)=n$, and $\sum_{k=1}^{n}\nu(k)=\vt(n!)$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main} (\decl{result})]
+Let $n\ge1$; the hypothesis is not used. Casting Proposition~\ref{prop:main} to $\Q$ and replacing $\vt(n!)$ by $\mathrm{A011371}(n)$ (Lemma~\ref{lem:legendre}) gives $2a(n)+\sum_{k=1}^{n}\mathrm{A007814}(k)^2=3\,\mathrm{A011371}(n)$ in $\Q$. Solving for $a(n)$ gives~\eqref{eq:yanev}.
+\end{proof}
+
+\begin{remark}[a direct proof of Lemmas~\ref{lem:pop} and~\ref{lem:key}]\label{rem:carry}
+Let $v=\nu(n+1)$. Then $n+1=2^{v+1}H+2^v$ for some $H\in\N$, so $n=2^{v+1}H+\sum_{i<v}2^i$. With $T=\{i+v+1:i\in\Bits(H)\}$ this gives $\Bits(n+1)=T\cup\{v\}$ and $\Bits(n)=T\cup\{0,\dots,v-1\}$. Hence $s(n+1)-s(n)=1-v$, and $a(n+1)-a(n)=v-\binom{v}{2}$, that is, $2a(n+1)+v^2=2a(n)+3v$. The Lean proof uses the induction over parity instead, because it needs only the two rewriting rules of Lemma~\ref{lem:rec}.
+\end{remark}
+
+\begin{remark}[a closed form and the generating function; not formalized]\label{rem:closed}
+The number of $k\in\{1,\dots,n\}$ with $2^j\mid k$ is $\lfloor n/2^j\rfloor$. Writing $\nu(k)^2=\sum_{j=1}^{\nu(k)}(2j-1)$ and $\nu(k)=\sum_{j=1}^{\nu(k)}1$ and exchanging the sums gives $\sum_{k=1}^{n}\nu(k)^2=\sum_{j\ge1}(2j-1)\lfloor n/2^j\rfloor$ and $\vt(n!)=\sum_{j\ge1}\lfloor n/2^j\rfloor$. So the right-hand side of~\eqref{eq:yanev} equals $\sum_{j\ge1}(2-j)\lfloor n/2^j\rfloor$. If $n=\sum_i b_i2^i$ with $b_i\in\{0,1\}$, then $\lfloor n/2^j\rfloor=\sum_{i\ge j}b_i2^{i-j}$, and
+\[
+  \sum_{j\ge1}(2-j)\Bigl\lfloor\frac{n}{2^j}\Bigr\rfloor=\sum_{i}b_i\sum_{t=0}^{i-1}(2-i+t)\,2^t=\sum_i b_i\,i=a(n),
+\]
+because $\sum_{t=0}^{i-1}(2-i+t)2^t=(2-i)(2^i-1)+\bigl((i-2)2^i+2\bigr)=i$. This proves Theorem~\ref{thm:main} again. In generating functions, $\sum_{n\ge0}\lfloor n/m\rfloor x^n=x^m/\bigl((1-x)(1-x^m)\bigr)$, and the identity $y/(1+y)=y/(1-y)-2y^2/(1-y^2)$ with $y=x^{2^k}$ turns Gutkovskiy's generating function $(1-x)^{-1}\sum_{k\ge1}k\,x^{2^k}/(1+x^{2^k})$ into $(1-x)^{-1}\sum_{j\ge1}(2-j)\,x^{2^j}/(1-x^{2^j})$, the generating function of the closed form above.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A073642.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A073642.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. In the namespace \decl{Math0.Frontier.A073642} it contains the private definition \decl{L} (the binary weight $s$) and the private lemmas \decl{a_two_mul}, \decl{a_two_mul_add_one}, \decl{L_two_mul}, \decl{L_two_mul_add_one}, \decl{v2_two_mul}, \decl{v2_odd}, \decl{L_succ}, \decl{key} and \decl{main}, which are the objects of Section~\ref{sec:proof} under the names given there. The two central lemmas read:
+\begin{lstlisting}
+private lemma key (n : ℕ) :
+    2 * a (n + 1) + padicValNat 2 (n + 1) ^ 2 = 2 * a n + 3 * padicValNat 2 (n + 1)
+
+private lemma main (n : ℕ) :
+    2 * a n + ∑ k ∈ Finset.Icc 1 n, padicValNat 2 k ^ 2 = 3 * padicValNat 2 n.factorial
+\end{lstlisting}
+The main declaration is \decl{Math0.Frontier.A073642.result}, of type \decl{Math0.Statements.A073642.statement}; it uses Lemma~\ref{lem:legendre} from the statement file, and the file ends with \texttt{\#math0\_settles} applied to these two names. The strong inductions of Lemmas~\ref{lem:pop} and~\ref{lem:key} use \decl{Nat.strong_induction_on} and \decl{Nat.even_or_odd'}; the step of Proposition~\ref{prop:main} uses \decl{Finset.sum_Icc_succ_top}, \decl{Nat.factorial_succ} and \decl{padicValNat.mul}. The proof involves no computation; the only kernel evaluations are the data checks of the statement file (Section~\ref{sec:statement}). The file uses no \texttt{native\_decide}, no \texttt{sorry} and no \texttt{set\_option}.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound}, which rejects \decl{sorryAx}, \decl{Lean.ofReduceBool} and custom axioms; and (3) the type of \decl{result} is syntactically the statement or its negation, up to metadata, with no unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+math0 audit: 'Math0.Statements.A073642.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A073642.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A073642.result' proves 'Math0.Statements.A073642.statement'
+\end{lstlisting}
+The data checks of the statement file use only these axioms too.
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use. Running \path{scripts/verify.sh} from the repository root fetches the Mathlib cache, rebuilds all math0 results with \texttt{lake build} (re-running every audit), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. For this result alone, run \texttt{lake build Math0.Statements.OEIS.A073642} (the data checks take about $5$ seconds) and then \texttt{lake env lean Math0/Frontier/OEIS/A073642.lean} in \path{lean}.
+
+{\small
+\begin{thebibliography}{99}
+
+\bibitem{APS}
+A.~Ayyer, A.~Prasad, and S.~Spallone, \emph{Odd partitions in Young's lattice}, arXiv:1601.01776, 2016.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An open and evolving benchmark for verified discovery in mathematics}, arXiv:2605.13171, 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{Fried}
+S.~Fried, \emph{Proofs of some conjectures of Yanev}, 2025, attached to OEIS A000188, A001157 and A006519, \url{https://oeis.org/A000188/a000188.pdf}.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: CADE 28, Lecture Notes in Comput.\ Sci.\ \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{Legendre}
+A.-M. Legendre, \emph{Essai sur la th\'eorie des nombres}, 2nd ed., Paris, 1808.
+
+\bibitem{Macdonald}
+I.~G. Macdonald, \emph{On the degrees of the irreducible representations of symmetric groups}, Bull.\ London Math.\ Soc.\ \textbf{3} (1971), 189--192.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proc.\ 9th ACM SIGPLAN Int.\ Conf.\ Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{A000120}
+The OEIS Foundation Inc., \url{https://oeis.org/A000120}.
+
+\bibitem{A007814}
+The OEIS Foundation Inc., \url{https://oeis.org/A007814}.
+
+\bibitem{A011371}
+The OEIS Foundation Inc., \url{https://oeis.org/A011371}.
+
+\bibitem{A073642}
+The OEIS Foundation Inc., \url{https://oeis.org/A073642}; conjecture of V.~Yanev (Sep.~9, 2017).
+
+\end{thebibliography}
+}
+
+\end{document}

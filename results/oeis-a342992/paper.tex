@@ -1,0 +1,322 @@
+% math0 manuscript. Build with: latexmk -pdf paper.tex
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{newunicodechar}
+
+\lstdefinelanguage{lean}{
+  keywords={theorem,lemma,def,abbrev,example,fun,by,have,show,from,let,in,if,then,else,match,with,
+    namespace,end,open,import,section,variable,instance,structure,where,calc,obtain,intro,exact,
+    refine,rcases,rintro,simp,omega,decide,norm_num,linarith,nlinarith,positivity,induction,cases,
+    private,noncomputable,rw,constructor,by_contra},
+  sensitive=true, comment=[l]{--}, morecomment=[s]{/-}{-/}, string=[b]"}
+\lstset{language=lean, basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true, breaklines=true,
+  keywordstyle=\color{blue!60!black}\bfseries, commentstyle=\color{gray}, frame=single,
+  extendedchars=true, inputencoding=utf8,
+  literate={ℕ}{{$\mathbb{N}$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {∈}{{$\in$}}1
+    {∧}{{$\wedge$}}1 {∨}{{$\vee$}}1 {¬}{{$\neg$}}1 {→}{{$\to$}}1 {←}{{$\leftarrow$}}1
+    {↔}{{$\leftrightarrow$}}1 {≤}{{$\le$}}1 {≡}{{$\equiv$}}1 {∣}{{$\mid$}}1
+    {⟨}{{$\langle$}}1 {⟩}{{$\rangle$}}1 {·}{{$\cdot$}}1 {∘}{{$\circ$}}1 {≠}{{$\ne$}}1}
+% Unicode commonly found in Lean sources.
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+\newunicodechar{ℚ}{\ensuremath{\mathbb{Q}}}
+\newunicodechar{ℝ}{\ensuremath{\mathbb{R}}}
+\newunicodechar{ℂ}{\ensuremath{\mathbb{C}}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{→}{\ensuremath{\to}}
+\newunicodechar{←}{\ensuremath{\leftarrow}}
+\newunicodechar{↔}{\ensuremath{\leftrightarrow}}
+\newunicodechar{↦}{\ensuremath{\mapsto}}
+\newunicodechar{¬}{\ensuremath{\neg}}
+\newunicodechar{∧}{\ensuremath{\wedge}}
+\newunicodechar{∨}{\ensuremath{\vee}}
+\newunicodechar{≤}{\ensuremath{\le}}
+\newunicodechar{≥}{\ensuremath{\ge}}
+\newunicodechar{≠}{\ensuremath{\ne}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∉}{\ensuremath{\notin}}
+\newunicodechar{⊆}{\ensuremath{\subseteq}}
+\newunicodechar{∩}{\ensuremath{\cap}}
+\newunicodechar{∪}{\ensuremath{\cup}}
+\newunicodechar{∑}{\ensuremath{\sum}}
+\newunicodechar{∏}{\ensuremath{\prod}}
+\newunicodechar{⟨}{\ensuremath{\langle}}
+\newunicodechar{⟩}{\ensuremath{\rangle}}
+\newunicodechar{·}{\ensuremath{\cdot}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⁻}{\ensuremath{^{-}}}
+\newunicodechar{¹}{\ensuremath{^{1}}}
+\newunicodechar{²}{\ensuremath{^{2}}}
+\newunicodechar{₀}{\ensuremath{_{0}}}
+\newunicodechar{₁}{\ensuremath{_{1}}}
+\newunicodechar{₂}{\ensuremath{_{2}}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{ε}{\ensuremath{\varepsilon}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{π}{\ensuremath{\pi}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{φ}{\ensuremath{\varphi}}
+\newunicodechar{∞}{\ensuremath{\infty}}
+\newunicodechar{⌊}{\ensuremath{\lfloor}}
+\newunicodechar{⌋}{\ensuremath{\rfloor}}
+\newunicodechar{⌈}{\ensuremath{\lceil}}
+\newunicodechar{⌉}{\ensuremath{\rceil}}
+\newunicodechar{∣}{\ensuremath{\mid}}
+\newunicodechar{≡}{\ensuremath{\equiv}}
+\newunicodechar{×}{\ensuremath{\times}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{‖}{\ensuremath{\|}}
+\newunicodechar{√}{\ensuremath{\surd}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{⦃}{\ensuremath{\{\!|}}
+\newunicodechar{⦄}{\ensuremath{|\!\}}}
+\newunicodechar{𝓝}{\ensuremath{\mathcal{N}}}
+\newunicodechar{≫}{\ensuremath{\gg}}
+\newunicodechar{≪}{\ensuremath{\ll}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+
+\emergencystretch=3em
+% Lean identifiers in running text (breakable at dots and underscores).
+\expandafter\def\expandafter\UrlBreaks\expandafter{\UrlBreaks\do\_\do\.}
+\DeclareUrlCommand\decl{\urlstyle{tt}}
+\newcommand{\val}{\operatorname{val}}
+
+\title[Sariyar's conjecture for OEIS A342992]{Every positive integer not divisible by $5$ has a multiple with only prime digits: Sariyar's conjecture for OEIS A342992}
+\author{math0}
+\address{Produced by Claude (an AI model developed by Anthropic) in the math0 project}
+\date{October 20, 2026}
+
+\begin{document}
+\begin{abstract}
+For $n\ge1$ let $a(n)$ be the smallest $k$ such that all decimal digits of $kn$ are prime, or $0$ if there is no such $k$; this is the sequence A342992 of the OEIS, contributed by Metin Sariyar in 2021.
+We prove the conjecture stated in the entry that $a(n)>0$ whenever $5\nmid n$. The proof gives more: every such $n$ has a positive multiple whose decimal digits are all $2$ or $3$. Writing $n=2^em$ with $m$ odd, a block of $L=\varphi(m)(e+1)$ digits from $\{2,3\}$ that is divisible by $2^L$, repeated $m$ times, is divisible by $n$.
+To our knowledge this is the first proof of the conjecture; the argument is elementary and both of its ingredients are classical.
+The conjecture, in the form $a(n)>0$, is verified in Lean~4 against a statement that math0 formalized from the OEIS entry, reviewed for fidelity and frozen before the proof attempt, whose definitions are checked by the kernel against all $81$ listed terms; this statement is not part of the formal-conjectures repository.
+\end{abstract}
+\maketitle
+
+\section{Introduction}
+
+The sequence A342992 of the OEIS \cite{A342992}, contributed by Metin Sariyar on April~13, 2021, with offset $1$, is
+\[
+  a(n)=\begin{cases}\min\{k\ge1: \text{every decimal digit of } kn \text{ lies in } \{2,3,5,7\}\} & \text{if such } k \text{ exist},\\ 0 & \text{otherwise}.\end{cases}
+\]
+The entry lists $a(1),\dots,a(81)$, beginning $2,1,1,8,1,12,1,4,3,0$; for example $a(4)=8$ because $8\cdot4=32$, and the largest listed term is $a(81)=93$. A multiple of $10$ ends in the digit $0$, so $a(n)=0$ when $10\mid n$. The entry's first comment states that $a(n)=0$ also for $n=625,1875,3125,4375,\dots$, ``because no such k has been found yet for these numbers'', and its second comment is Sariyar's conjecture:
+\begin{quote}
+\emph{$a(n)>0$ for all $n$ that are not divisible by $5$.}
+\end{quote}
+On April~21, 2021, David A.~Corneth added that $a(625k)=0$ for all $k\ge1$, because the last four digits of a multiple of $625$ always contain a nonprime digit. We prove Sariyar's conjecture (Theorem~\ref{thm:main}); the proof shows that the digits can even be taken from $\{2,3\}$ (Proposition~\ref{prop:23}).
+
+\subsection*{Method}
+Write $n=2^em$ with $m$ odd; then $\gcd(m,10)=1$. A digit-by-digit induction gives, for every $j$, a $j$-digit number with digits in $\{2,3\}$ that is divisible by $2^j$. Take such a block $N$ of length $L=\varphi(m)(e+1)$, where $\varphi$ is Euler's totient function. Then $2^e\mid N$, and $10^L\equiv1\pmod m$ by Euler's theorem, so the number formed by $m$ copies of the block is congruent to $mN\equiv0$ modulo $m$ and is still divisible by $2^e$; hence it is divisible by $n$.
+
+\subsection*{Prior work}
+Both ingredients are classical. The sequence A053316 \cite{A053316} of Henry Bottomley (March~6, 2000; formula corrected by Robert Israel, 2019) consists of the $n$-digit numbers with digits $2$ and $3$ that are divisible by $2^n$, and its recurrence is the induction of Lemma~\ref{lem:block} below. The analogous statement for the digits $1$ and $2$ (A053312 \cite{A053312}, also Bottomley's) was a problem of the 1971 All-Union (Soviet) Mathematical Olympiad, as recorded in A126933 \cite{A126933} with the reference \cite{TT}, and in \cite{Bog}. Combining a block divisible by a power of $2$ with the part of $n$ coprime to $10$ by repeating the block is the method of the solution of Problem~N7 of the 1994 IMO Shortlist (``wobbly numbers'') in \cite{IMO94}; there the number of copies is chosen so that a power of $10$ is $\equiv1$ modulo a suitable multiple of that part, and the repeated block is written as a product with a geometric sum.
+
+The closely related sequence A078239 \cite{A078239} (Amarnath Murthy, 2002) is the smallest multiple of $n$ using only prime digits, i.e.\ $n\cdot a(n)$. On February~12, 2018, Robert Israel added the comment ``Besides multiples of 10, 625 and its odd multiples have a(n)=0'', together with a Maple program that returns $0$ exactly when $10\mid n$ or $625\mid n$ and otherwise searches without a bound; the program thus presupposes, without proof, that every other $n$ has a prime-digit multiple. The PARI program in A342992 itself (Michel Marcus, April~21, 2021) makes the same presupposition: it returns $0$ exactly when $10\mid n$ or $625\mid n$ and otherwise searches without a bound. Andrew Howroyd repeated Israel's comment in A078250 \cite{A078250} in 2024. In Remark~\ref{rem:zeros} we note that the method of this paper, with a second block, proves this presupposition, so that $a(n)=0$ holds exactly when $10\mid n$ or $625\mid n$; this remark is not formalized. For digits $1,\dots,5$, a result attributed to a 2019 item in the \emph{American Mathematical Monthly} and discussed in \cite{Cook} gives a multiple of every $n$ with $10\nmid n$; it does not imply the present result.
+
+\subsection*{Status}
+The statement is still marked ``Conjecture'' in A342992; the current revision (\#60, April~22, 2021) has no later edits. We read the entry in the copy of the OEIS database used by math0, dated October~17, 2026, in which no other entry refers to A342992. The math0 referees' web searches (OEIS, arXiv, MathOverflow, Mathematics Stack Exchange, AoPS, SeqFan, Prime Curios) found no proof. The statement has no file in the formal-conjectures repository \cite{FC} at the commit pinned by math0. We therefore classify the result as new, with the caveat that it is an easy consequence of the classical lemmas above and may be known as folklore.
+
+\section{Statement}\label{sec:statement}
+
+For a finite list $w=(w_0,\dots,w_{L-1})$ of natural numbers put $\val(w)=\sum_{i=0}^{L-1}w_i10^i$ and $|w|=L$. Every $X\ge1$ has a unique \emph{digit list}, the list $w$ with entries in $\{0,\dots,9\}$, last entry $w_{L-1}\ne0$, and $\val(w)=X$; read from left to right the digits of $X$ are $w_{L-1},\dots,w_0$. The digit list of $0$ is empty. We write $u\mathbin{+\!\!+}v$ for concatenation of lists, so that
+\begin{equation}\label{eq:append}
+  \val(u\mathbin{+\!\!+}v)=\val(u)+10^{|u|}\val(v).
+\end{equation}
+In particular $u\mathbin{+\!\!+}(d)$ is $u$ with $d$ placed as a new \emph{leading} digit.
+
+The name of A342992 \cite{A342992} reads, verbatim:
+\begin{quote}\raggedright
+{\small\texttt{Smallest k such that k*n contains only prime digits, or 0 if no such k exists.}}
+\end{quote}
+and the COMMENTS section contains, verbatim (the entry's author line is \texttt{\_Metin Sariyar\_, Apr 13 2021}; the comment is unsigned):
+\begin{quote}
+{\small\texttt{Conjecture: a(n) > 0 for all n that are not divisible by 5.}}
+\end{quote}
+
+\begin{theorem}\label{thm:main}
+Let $n\ge1$ with $5\nmid n$. Then $a(n)>0$; that is, there is $k\ge1$ such that every decimal digit of $kn$ is prime.
+\end{theorem}
+
+The proof gives the following stronger statement, which implies Theorem~\ref{thm:main} because $2$ and $3$ are prime.
+
+\begin{proposition}\label{prop:23}
+Let $n\ge1$ with $5\nmid n$. Then there is $k\ge1$ such that every decimal digit of $kn$ is $2$ or $3$.
+\end{proposition}
+
+\subsection*{Lean formalization}
+The statement was formalized by math0 in \path{lean/Math0/Statements/OEIS/A342992.lean}, reviewed for fidelity and frozen (SHA-256 \texttt{d47836b6\ldots 54d7}) before any proof attempt. Its main definitions and the statement read, verbatim (the import, comments and docstrings, blank lines, the decidability instance, the computable definitions \decl{primeDigitsB} and \decl{aSearch} used for the data check, and all theorems are omitted; the main theorems are listed below):
+\begin{lstlisting}
+namespace Math0.Statements.A342992
+def PrimeDigits (m : ℕ) : Prop := 0 < m ∧ ∀ d ∈ Nat.digits 10 m, d.Prime
+open Classical in
+noncomputable def a (n : ℕ) : ℕ :=
+  if h : ∃ k, PrimeDigits (k * n) then Nat.find h else 0
+def statement : Prop := ∀ n : ℕ, 1 ≤ n → ¬ 5 ∣ n → 0 < a n
+end Math0.Statements.A342992
+\end{lstlisting}
+Here \texttt{Nat.digits 10 m} is the digit list of $m$ defined above. A digit $d<10$ is prime exactly when $d\in\{2,3,5,7\}$, so \texttt{PrimeDigits m} says that $m$ is positive and all its decimal digits are prime. The condition $0<m$ is needed because the empty digit list of $0$ would satisfy the digit condition vacuously, while $0$ is written ``0''; it also means that $k=0$ never qualifies, so the least $k$ is at least $1$, as in the entry's PARI program, which starts its search at $k=1$. \texttt{Nat.find h} is the least $k$ with \texttt{PrimeDigits (k * n)}, so \decl{a} is the sequence of the entry, and \decl{statement} is Sariyar's conjecture with the entry's offset (the hypothesis $1\le n$ is redundant, since $5\mid0$). Among other auxiliary results, the file proves the following (the proofs of the first three are omitted):
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+theorem a_pos_iff (n : ℕ) : 0 < a n ↔ ∃ k, PrimeDigits (k * n)
+theorem not_exists_of_ten_dvd {n : ℕ} (h10 : 10 ∣ n) : ¬ ∃ k, PrimeDigits (k * n)
+theorem a_eq_of_aSearch {n B v : ℕ} (h : aSearch n B = some v) : a n = v
+theorem a_four : a 4 = 8 := a_eq_of_aSearch (B := 9) (by decide +kernel)
+theorem a_data : (List.range 81).map (fun i => a (i + 1)) =
+    [2, 1, 1, 8, 1, 12, 1, 4, 3, 0, 2, 6, 4, 18, 5, 2, 15, 4, 3, 0, 12, 1, 1, 3, 1, 2, 1, 9, 8,
+      0, 12, 1, 1, 8, 1, 2, 1, 14, 7, 0, 13, 6, 54, 8, 5, 7, 5, 49, 15, 0, 5, 1, 1, 43, 1, 42, 1,
+      4, 43, 0, 12, 6, 4, 43, 5, 42, 5, 4, 8, 0, 5, 1, 1, 3, 1, 7, 1, 74, 3, 0, 93] := by
+  rw [show (fun i => a (i + 1)) = a ∘ (fun i => i + 1) from rfl, ← List.map_map]
+  exact map_a_eq_of_aSearch (B := 100) (by decide +kernel)
+\end{lstlisting}
+By \decl{a_pos_iff}, \decl{statement} is equivalent to: every $n\ge1$ with $5\nmid n$ has a positive multiple all of whose decimal digits are prime; so the value $0$ of \decl{a} cannot be reached in an unintended way. To compare \decl{a} with the OEIS data, the computable function \texttt{aSearch n B} returns \texttt{some 0} if $n>0$ and $n\equiv0\pmod{10}$, and otherwise the least $k<B$ for which a Boolean test \decl{primeDigitsB}, proved equivalent to \decl{PrimeDigits}, accepts $kn$, if there is one. By \decl{a_eq_of_aSearch}, a result \texttt{some v} determines \texttt{a n = v}: in the first case by \decl{not_exists_of_ten_dvd} (a positive multiple of $10$ has last digit $0$), and in the second case because every $k<v$ was tested and rejected. In \decl{a_data} the kernel evaluates \texttt{aSearch i 100} for $i=1,\dots,81$ and compares the results with the $81$ listed terms, including the zeros at $n=10,20,\dots,80$; \decl{map_a_eq_of_aSearch} applies \decl{a_eq_of_aSearch} termwise. The theorem \decl{a_four} checks the entry's example.
+
+\section{Proof}\label{sec:proof}
+
+We follow the Lean file \path{lean/Math0/Frontier/OEIS/A342992.lean}; each step names the corresponding declaration. For a list $w$ and $t\ge0$ let $w^{t}$ denote the concatenation of $t$ copies of $w$ (\texttt{(List.replicate t w).flatten}), so $w^0$ is empty and $w^{t+1}=w\mathbin{+\!\!+}w^{t}$.
+
+\begin{lemma}[\decl{exists_block}]\label{lem:block}
+For every $j\ge0$ there is a list $w$ with $|w|=j$, all entries in $\{2,3\}$, and $2^j\mid\val(w)$.
+\end{lemma}
+
+\begin{proof}
+Induction on $j$. For $j=0$ take the empty list, with $\val=0$. Let $w$ be as in the statement for $j$, and write $\val(w)=2^jq$. Note that $10^j=2^j5^j$. By \eqref{eq:append}, $\val(w\mathbin{+\!\!+}(d))=2^jq+d\cdot2^j5^j$.
+If $q=2r$ is even, let $w'=w\mathbin{+\!\!+}(2)$; then $\val(w')=2^j(2r+2\cdot5^j)=2^{j+1}(r+5^j)$.
+If $q=2r+1$ is odd, write $5^j=2s+1$ and let $w'=w\mathbin{+\!\!+}(3)$; then $\val(w')=2^j\bigl(2r+1+3(2s+1)\bigr)=2^{j+1}(r+3s+2)$.
+In both cases $|w'|=j+1$, the entries of $w'$ lie in $\{2,3\}$, and $2^{j+1}\mid\val(w')$.
+\end{proof}
+
+The value $q$ is determined by $w$, so the induction produces one block of each length; for $j\ge1$ its value is the term A053316$(j)$ \cite{A053316}, which begins $2, 32, 232, 3232, 23232$.
+
+\begin{lemma}[\decl{rep_props}]\label{lem:rep}
+Let $w$ be a list with $|w|=L$ and $N=\val(w)$, and let $m,D\in\mathbb N$ with $10^L\equiv1\pmod m$ and $D\mid N$. Then for every $t\ge0$,
+\[
+  \val(w^{t})\equiv tN\pmod m\qquad\text{and}\qquad D\mid\val(w^{t}).
+\]
+\end{lemma}
+
+\begin{proof}
+Induction on $t$. For $t=0$, $\val(w^0)=0$. By \eqref{eq:append}, $\val(w^{t+1})=N+10^L\val(w^{t})$. Modulo $m$ this is $\equiv N+1\cdot tN=(t+1)N$, and $D$ divides both $N$ and $10^L\val(w^{t})$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:23} and Theorem~\ref{thm:main} (\decl{result})]
+Let $n\ge1$ with $5\nmid n$. By \decl{a_pos_iff} it suffices for Theorem~\ref{thm:main} to find $k$ such that $kn>0$ and every digit of $kn$ is prime; we find one whose digits are all $2$ or $3$, which proves Proposition~\ref{prop:23}.
+
+\emph{Decomposition.} Write $n=2^em$ with $m$ odd (\decl{Nat.exists_eq_pow_mul_and_not_dvd}). Then $m\ge1$ since $n\ge1$, and $5\nmid m$ since $m\mid n$. Hence $\gcd(10,m)=1$ and $\varphi(m)\ge1$.
+
+\emph{The block.} Let $L=\varphi(m)(e+1)$, and let $w$ be the list of Lemma~\ref{lem:block} with $j=L$; put $N=\val(w)$. By Euler's theorem (\decl{Nat.ModEq.pow_totient}), $10^{\varphi(m)}\equiv1\pmod m$, hence $10^L=\bigl(10^{\varphi(m)}\bigr)^{e+1}\equiv1\pmod m$. Since $\varphi(m)\ge1$ we have $e\le L$, so $2^e\mid2^L\mid N$.
+
+\emph{Repetition.} Let $X=\val(w^{m})$. Lemma~\ref{lem:rep} with $D=2^e$ and $t=m$ gives $X\equiv mN\equiv0\pmod m$ and $2^e\mid X$. As $m$ is odd, $\gcd(2^e,m)=1$, so $n=2^em\mid X$ (\decl{Nat.Coprime.mul_dvd_of_dvd_of_dvd}).
+
+\emph{Digits.} Every entry of $w^{m}$ is an entry of $w$, so it is $2$ or $3$. In particular all entries are less than $10$ and the last entry is nonzero, so $w^{m}$ is the digit list of $X$ (\decl{Nat.digits_ofDigits}). Since $m\ge1$, $w^m=w\mathbin{+\!\!+}w^{m-1}$ has length at least $L\ge1$, so it is nonempty; as the digit list of $0$ is empty, $X>0$.
+
+\emph{Conclusion.} Put $k=X/n$. Then $kn=X>0$, and every digit of $kn$ is $2$ or $3$, hence prime. By \decl{a_pos_iff}, $a(n)>0$.
+\end{proof}
+
+\begin{remark}[Example]
+For $n=6$ we have $e=1$, $m=3$, $\varphi(3)=2$ and $L=4$. The block is $3232=2^4\cdot202$, and three copies give $X=323232323232=6\cdot53872053872$. The construction is far from minimal: $a(6)=12$, with $12\cdot6=72$.
+\end{remark}
+
+\begin{remark}[The zeros of A342992; not formalized]\label{rem:zeros}
+For $n\ge1$, $a(n)=0$ if and only if $10\mid n$ or $625\mid n$. This determines the zeros of A342992 and of A078239, and proves the presupposition of Israel's comment and program in A078239 \cite{A078239} and of the PARI program in A342992 \cite{A342992}.
+
+If $10\mid n$, every positive multiple of $n$ ends in $0$. If $625\mid n$ and $X$ is a positive multiple of $n$, then $X\bmod 10^4\in\{625i:0\le i\le15\}$; written with four digits these residues are $0000$, $0625$, $1250$, $1875$, $2500$, $3125$, $3750$, $4375$, $5000$, $5625$, $6250$, $6875$, $7500$, $8125$, $8750$, $9375$, and each contains one of the digits $0,1,4,6,8,9$. If $X\ge1000$, these four digits are the last four digits of $X$; if $X<1000$, then $X=625$, which contains $6$. This is Corneth's argument \cite{A342992}.
+
+Conversely, let $10\nmid n$ and $625\nmid n$. If $5\nmid n$, apply Theorem~\ref{thm:main}. Otherwise $n$ is odd and $n=5^fm$ with $1\le f\le3$ and $\gcd(m,10)=1$. Let $w$ be the digit list of the number formed by $\varphi(m)$ copies of $375$, so $|w|=3\varphi(m)$, $10^{|w|}\equiv1\pmod m$, and $125\mid\val(w)$ because $\val(w)\equiv375\pmod{1000}$. Lemma~\ref{lem:rep} with $D=125$ and $t=m$ shows that $X=\val(w^m)$, the number formed by $m\varphi(m)$ copies of $375$, is divisible by $125$ and by $m$, hence, as $\gcd(125,m)=1$, by $125m$ and by $n$; its digits $3,7,5$ are prime.
+
+This remark is not part of the Lean development. We checked it numerically for all $n<6000$ by a breadth-first search over residues modulo $n$, and checked the two constructions directly for smaller ranges.
+\end{remark}
+
+\section{Machine verification}\label{sec:lean}
+
+\subsection*{Files and declarations}
+The proof is in the file \path{lean/Math0/Frontier/OEIS/A342992.lean} of the math0 repository, \url{https://github.com/Foundation-0/math0}. It imports the frozen statement file \path{lean/Math0/Statements/OEIS/A342992.lean} (Section~\ref{sec:statement}) and the audit commands in \path{lean/Math0/Audit.lean}. The main declaration is \decl{Math0.Frontier.A342992.result}, of type \decl{Math0.Statements.A342992.statement}, which is Theorem~\ref{thm:main}. The multiple of Proposition~\ref{prop:23} is constructed inside the proof of \decl{result}, but Proposition~\ref{prop:23} is not stated as a separate Lean theorem, so the audit below certifies Theorem~\ref{thm:main} only. Lemmas~\ref{lem:block} and~\ref{lem:rep} are the private declarations \decl{exists_block} and \decl{rep_props}. Their statements, the head of the main theorem, and the last line of the file read, verbatim:
+\begin{lstlisting}
+private lemma exists_block (j : ℕ) : ∃ l : List ℕ, l.length = j ∧ (∀ d ∈ l, d = 2 ∨ d = 3) ∧
+    2 ^ j ∣ Nat.ofDigits 10 l := by
+private lemma rep_props (l : List ℕ) (m D : ℕ) (hm : 10 ^ l.length ≡ 1 [MOD m])
+    (hD : D ∣ Nat.ofDigits 10 l) (t : ℕ) :
+    Nat.ofDigits 10 (List.replicate t l).flatten ≡ t * Nat.ofDigits 10 l [MOD m] ∧
+      D ∣ Nat.ofDigits 10 (List.replicate t l).flatten := by
+theorem result : statement := by
+  intro n hn h5
+  rw [a_pos_iff]
+  obtain ⟨e, m, hm2, rfl⟩ := Nat.exists_eq_pow_mul_and_not_dvd (by omega : n ≠ 0) 2 (by decide)
+#math0_settles Math0.Frontier.A342992.result Math0.Statements.A342992.statement
+\end{lstlisting}
+Here \texttt{Nat.ofDigits 10 l} is $\val(l)$. The proof file uses no \texttt{native\_decide}, \texttt{sorry} or \texttt{set\_option}; its only uses of \texttt{decide} check that $2\ne1$ and that $5$ is odd. The data checks in the statement file use \texttt{decide +kernel}, which evaluates in the kernel and adds no axioms; the statement file compiles in about seven seconds.
+
+\subsection*{Audit}
+The command \texttt{\#math0\_settles}, defined in \path{lean/Math0/Audit.lean} for statements that math0 formalizes itself, fails unless (1) \decl{statement} is a \texttt{Prop}-valued definition without universe parameters; (2) \decl{statement} and \decl{result} use no axioms besides \decl{propext}, \decl{Classical.choice} and \decl{Quot.sound} (this rejects \decl{sorryAx}, \decl{Lean.ofReduceBool} from \texttt{native\_decide}, and custom axioms); and (3) the type of \decl{result} is syntactically the statement or its negation, up to metadata annotations and without unfolding. Here it reports
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+math0 audit: 'Math0.Statements.A342992.statement' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 audit: 'Math0.Frontier.A342992.result' depends on axioms [Classical.choice, Quot.sound, propext]
+math0 statement check: 'Math0.Frontier.A342992.result' proves 'Math0.Statements.A342992.statement'
+\end{lstlisting}
+
+\subsection*{Toolchain and reproduction}
+We use Lean~4 \cite{Lean4} \texttt{v4.33.1} and Mathlib \cite{Mathlib} \texttt{v4.33.1}, pinned in \path{lean/}; the repository also pins formal-conjectures \cite{FC} at commit \texttt{c77fdd4}, which this result does not use.
+To reproduce, run \path{scripts/verify.sh} from the repository root: it fetches the Mathlib build cache, builds all math0 results with \texttt{lake build} (re-running every audit command), checks that the pinned \texttt{formal\_conjectures} and \texttt{mathlib} checkouts are unmodified, and reports the number of passed statement checks. The two files can also be checked individually with \texttt{lake env lean} in the directory \path{lean}.
+
+{\small\raggedright
+\begin{thebibliography}{99}
+
+\bibitem{Bog}
+A.~Bogomolny, \emph{A problem of divisibility by $2^n$}, Cut The Knot, \url{https://www.cut-the-knot.org/arithmetic/DivisibilityFromSovietMO.shtml}.
+
+\bibitem{Cook}
+J.~D. Cook, \emph{Multiples with no large digits}, blog post, December~16, 2025, \url{https://www.johndcook.com/blog/2025/12/16/multiples-with-no-large-digits/}.
+
+\bibitem{FC}
+M.~Firsching, P.~Lezeau, S.~Mercuri, M.~Z. Horv\'ath, Y.~Dillies, C.~S\"onne, E.~Wieser, F.~Zhang, T.~Hubert, B.~Ag\"uera y Arcas, and P.~Kohli, \emph{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}, arXiv:2605.13171 [cs.AI], 2026. Repository: \url{https://github.com/google-deepmind/formal-conjectures}.
+
+\bibitem{IMO94}
+J.~Scholes, \emph{35th IMO 1994 shortlist, Problem N7}, problem and solution, 2002, \url{https://prase.cz/kalva/short/soln/sh94n7.html}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020, 367--381.
+
+\bibitem{Lean4}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and programming language}, in: Automated Deduction -- CADE 28, Lecture Notes in Comput. Sci. \textbf{12699}, Springer, 2021, 625--635.
+
+\bibitem{A053312}
+The OEIS Foundation Inc., \url{https://oeis.org/A053312}, entry by H.~Bottomley (March~6, 2000).
+
+\bibitem{A053316}
+The OEIS Foundation Inc., \url{https://oeis.org/A053316}, entry by H.~Bottomley (March~6, 2000); formula corrected by R.~Israel (October~27, 2019).
+
+\bibitem{A078239}
+The OEIS Foundation Inc., \url{https://oeis.org/A078239}, entry by A.~Murthy (November~23, 2002); comment, program and more terms by R.~Israel (February~12, 2018).
+
+\bibitem{A078250}
+The OEIS Foundation Inc., \url{https://oeis.org/A078250}, entry by A.~Murthy (November~24, 2002); comment and terms by A.~Howroyd (September~17, 2024).
+
+\bibitem{A126933}
+The OEIS Foundation Inc., \url{https://oeis.org/A126933}, entry by G.~Leversha (March~18, 2007).
+
+\bibitem{A342992}
+The OEIS Foundation Inc., \url{https://oeis.org/A342992}, entry by M.~Sariyar (April~13, 2021); comment by D.~A. Corneth (April~21, 2021); revision \#60.
+
+\bibitem{TT}
+J.~B. Tabov and P.~J. Taylor, \emph{Methods of Problem Solving, Book~1}, Australian Mathematics Trust, 1996.
+
+\end{thebibliography}
+}
+
+\end{document}
