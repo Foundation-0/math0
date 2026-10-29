@@ -904,6 +904,29 @@
    "date": "2026-10-17"
   },
   {
+   "id": "OEIS-frontier/A001040",
+   "slug": "oeis-a001040",
+   "title": "Kurkov's rook-tour conjecture for A001040: 2·n!·a(n) counts opposite-line Hamiltonian paths of K_n □ K_2",
+   "area": "Discrete geometry",
+   "source": "OEIS A001040",
+   "source_url": "https://oeis.org/A001040",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A001040.lean",
+    "decl": "Math0.Statements.A001040.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A001040.lean",
+   "our_decl": "Math0.Frontier.A001040.result",
+   "summary": "For every n ≥ 1, take the n × 2 board with squares (i,c), i ∈ [n], c ∈ {0,1}. Two different squares are a rook move apart when they share a row i or a line c (this is the graph K_n □ K_2). An open tour is a sequence that visits every square exactly once, with consecutive squares a rook move apart; a tour and its reversal count separately. Count the tours whose first and last squares lie on different lines. Kurkov conjectured that this count is 2·n!·a(n), where a(0)=0, a(1)=1 and a(m+1) = m·a(m) + a(m−1) (OEIS A001040). The statement is proved.",
+   "notes": "Conjecture as stated in OEIS: %C A001040 Conjecture: 2*n!*a(n) is the number of open tours by a rook on an (n X 2) chessboard which ends at the opposite line of length n. - _Mikhail Kurkov_, Nov 19 2019\n\nReferees: OEIS sources (read from the local mirror):\n- A001040: Kurkov's conjecture, Nov 19 2019, still marked as a conjecture in revision #140 of Oct 15 2026. The entry also has Paul Barry's 2004 formula a(n+1) = Sum_k C(n-k,k)(n-k)!/k!.\n- A001053: the companion same-line conjecture, still open in revision #131 of Oct 22 2026.\n- A096121: Hugo van der Sanden, 2004, counts directed Hamiltonian paths of the 2 x n rook graph. It contains:\n  - the recurrence a(n+1) = n(n+1)(a(n)+a(n-1));\n  - an unattributed \"Further refinement\" formula whose two summands are exactly the opposite-line and same-line counts, though they are not labeled as such;\n  - Kurkov's Feb 2019 conjecture that the total is 2*n!*A102038(n);\n  - Grossman's 2024 shoe-arrangement reading;\n  - a citation of Y. Cha's 2011 FSU thesis, Example 5.1.1, which I could not open (HTTP 403).\n- A102038: equals A001040 + A001053.\n- A269565: Andrew Howroyd's array of directed Hamiltonian paths in K_n x K_m.\n- A360878: Andrew Howroyd's May 2025 switch-decomposition formula for undirected paths.\n- A276356 and A089039: the Hamiltonian-cycle analogue.\n\nOther sources:\n- MathOverflow q/469606 (Kurkov, Apr 2024), \"On a A089039 and pair of sequences with simple recursion\". I read it: Max Alekseyev proves only the cycle formula, using Zeilberger's algorithm.\n- Web searches found no prior proof of the path refinement. They covered arXiv, MSE, MO, Google-style queries on rook tours of 2 x n boards, Hamiltonian paths of K_n x K_2, and the shoe or jealousy-free linear arrangements.",
+   "date": "2026-10-29"
+  },
+  {
    "id": "OEIS-frontier/A005590",
    "slug": "oeis-a005590",
    "title": "Zeros of a(3n) for the signed Stern sequence A005590 are exactly the fibbinary numbers",
@@ -1662,6 +1685,29 @@
    "date": "2026-10-21"
   },
   {
+   "id": "OEIS-frontier/A126127",
+   "slug": "oeis-a126127",
+   "title": "A126127: Israel's conjectured bivariate g.f. of the inverse square of A061554 holds",
+   "area": "Discrete geometry",
+   "source": "OEIS A126127",
+   "source_url": "https://oeis.org/A126127",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A126127.lean",
+    "decl": "Math0.Statements.A126127.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A126127.lean",
+   "our_decl": "Math0.Frontier.A126127.result",
+   "summary": "Let M be the infinite lower-triangular matrix with M(n,k) = binomial(n, floor((n-k)/2)) for 0 <= k <= n (A061554), and let T = M^(-2) (A126127). Then, as formal power series in x, y over Q, sum_{n>=0} sum_{k=0}^{n} T(n,k) x^n y^k = (1-x)(1-x+x^2) / (1 - xy + 3x^2 - x^3 y + x^4).",
+   "notes": "Conjecture as stated in OEIS: %F A126127 G.f. as triangle (conjectured): (1-x)*(1-x+x^2)/(1-x*y+3*x^2-x^3*y+x^4). - _Robert Israel_, Jul 07 2019\n\nReferees: OEIS A126127 (Gary W. Adamson, 2006): conjectured g.f. by Robert Israel, Jul 07 2019, still marked conjectured upstream (oeisdata seq/A126/A126127.seq, %I #10, no %E edits). OEIS A130777: \"Inverse of triangle in A061554\", Riordan array ((1-x)/(1+x^2), x/(1+x^2)) by Paul Barry, May 21 2009; together with the standard Riordan group product rule (Shapiro, Getu, Woan, Woodson, 1991), this makes the conjecture an immediate corollary, but no source found states or proves the g.f. of the square. OEIS A061554: Riordan array (1/(1-x-x^2c(x^2)), x c(x^2)) by Philippe Deléham, 2007. Web searches (OEIS, arXiv, MathOverflow/Math StackExchange, SeqFan) found no prior proof or counterexample.",
+   "date": "2026-10-29"
+  },
+  {
    "id": "OEIS-frontier/A127752",
    "slug": "oeis-a127752",
    "title": "A127752 mod 2 is the first Feigenbaum symbolic sequence A035263",
@@ -1792,6 +1838,29 @@
     "revision": "",
     "date": "2026-10-26"
    }
+  },
+  {
+   "id": "OEIS-frontier/A132616",
+   "slug": "oeis-a132616",
+   "title": "Irwin's nested sums give column 0 of the triangle A132615 (A132616)",
+   "area": "Discrete geometry",
+   "source": "OEIS A132616",
+   "source_url": "https://oeis.org/A132616",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A132616.lean",
+    "decl": "Math0.Statements.A132616.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A132616.lean",
+   "our_decl": "Math0.Frontier.A132616.result",
+   "summary": "Let T be the infinite lower-triangular matrix with T(0,0) = 1 in which, for every n ≥ 0, row n+1 is row n of T^(2n-1) followed by a 1. For n = 0 the formal exponent is 0, which gives the same row [1, 1]. Let a(n) = T(n,0) (OEIS A132616). Define nest 0 c = 1 and nest (m+1) c = Sum_{i=1..c+2m} nest m i. Then nest(n-1, 1) is Irwin's nested sum Sum_{i_1=1..1+2(n-2)} Sum_{i_2=1..i_1+2(n-3)} ... Sum_{i_(n-1)=1..i_(n-2)} 1. Claim: for every n ≥ 2, a(n) = nest(n-1, 1).",
+   "notes": "Conjecture as stated in OEIS: %F A132616 From Benedict W. J. Irwin, Nov 29 2016: Conjecture: a(n) is described by a series of nested sums, a(2) = Sum_{i=1..1} 1, a(3) = Sum_{i=1..1+2} Sum_{j=1..i} 1, a(4) = Sum_{i=1..1+4} Sum_{j=1..i+2} Sum_{k=1..j} 1, a(5) = Sum_{i=1..1+6} Sum_{j=1..i+4} Sum_{k=1..j+2} Sum_{l=1..k} 1, and so on.\n\nReferees: I found no prior proof or counterexample. Checked: the OEIS entries A132616 and A132615 (Hanna 2007, which includes the unproved \"alternate generating method\", an equivalent partial-sums form of Irwin's sums), A132617, A132618, A132619, A132610, A101479, A101481 (Kirchner 2017 recurrence, different triangle), and A304190, A304191, A304193 (Hanna 2018, conjectural g.f. links). Local mirror versions match current GitHub oeisdata, with no %E line recording a proof. Also checked S. Fried, \"Proofs of several conjectures from the OEIS\", JIS 28 (2025) Art. 25.4.3 (https://cs.uwaterloo.ca/journals/JIS/VOL28/Fried/fried15.html); S. Fried, \"Proofs of ten conjectures from the OEIS\", JIS 29 (2026) Art. 26.1.8 (https://cs.uwaterloo.ca/journals/JIS/VOL29/Fried/fried21.html); arXiv:2410.07237; arXiv:2606.09913, which proves Irwin's A007405 conjecture but not this one; and arXiv:2607.24832. None mentions A132616 or A132615. Unrelated constructions: P. Barry, arXiv:1804.06801, and arXiv:1203.4419 (Hanna's triangle A096651). Web searches of MathOverflow, Math StackExchange and SeqFan returned only the OEIS pages.",
+   "date": "2026-10-29"
   },
   {
    "id": "OEIS-frontier/A141412",
@@ -2387,6 +2456,29 @@
    "date": "2026-10-29"
   },
   {
+   "id": "OEIS-frontier/A267486",
+   "slug": "oeis-a267486",
+   "title": "O'Sullivan's Gaussian-polynomial / Chebyshev representation conjecture (A267486), proved",
+   "area": "Discrete geometry",
+   "source": "OEIS A267486",
+   "source_url": "https://oeis.org/A267486",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A267486.lean",
+    "decl": "Math0.Statements.A267486.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A267486.lean",
+   "our_decl": "Math0.Frontier.A267486.result",
+   "summary": "Fix m, n ≥ 0 and put N = n + ⌊m/2⌋, so that 2n + m + 1 - (m mod 2) = 2N + 1. Let g = g(m;n) be mn for odd m and (2n+1)m/2 for even m. Let G(m;n,x) be the coefficient of t^m in (1+t) ∏_{k=1}^{N} (1 + t² + 2t T_k(x/2)), where T_k is the Chebyshev polynomial of the first kind. Write a(m;n,k) = [x^k] G(m;n,x). The claim is that deg_x G(m;n,x) ≤ g, and that the Gaussian polynomial satisfies [2N+1, m]_q = Σ_{k=0}^{g} a(m;n,k) (1+q²)^k q^{g-k}. The Gaussian polynomial is the one defined by the q-Pascal rule [M+1,m+1] = [M,m] + q^{m+1}[M,m+1].",
+   "notes": "Conjecture as stated in OEIS: %C A267486 Conjecture: More generally, the Gaussian polynomial [2*n+m+1-(m mod 2),m]_q = Sum_{k=0..g(m;n)} a(m;n,k)*(1+q^2)^k*q^(g(m;n)-k), for m >= 0, n >= 0, where g(m;n) = m*n if m is odd and (2*n+1)*m/2 if m is even, and ... a(m;n,k) = [x^k]G(m;n,x), G(m;n,x) = (d^m/dt^m)G(m;n,t,x)/m!|_{t=0}, G(m;n,t,x) = (1+t)*Product_{k=1..n+(m - m mod 2)/2}(1 + t^2 + 2*t*T(k,x/2)). (Stephen O'Sullivan, entry author, 2016)\n\nReferees: - OEIS A267486 (local mirror, revision #23, May 30 2026) and its siblings A267120, A267482, A267483, A267484, A267485 all state the same general conjecture with no recorded proof.\n- A267482: W. Lang (Oct 19 2019) proves the m=1 case only, settling T. Baruchel's 2018 conjecture R(n,x) = S(n,x) + S(n-1,x) via [2n+1]_q = q^n S(2n, q^(1/2)+q^(-1/2)).\n- S. O'Sullivan, 'A class of high-order Runge-Kutta-Chebyshev stability polynomials', J. Comput. Phys. 300 (2015) 665-678, arXiv:1507.08631, Eqs. (19)-(20): the representation [P,k]_q = Sum r_g q^(G_k/2-g)(1+q^2)^g, with generating function (1-t)·Prod_{k=1..N}(1+t^2-2tC_k), is stated without proof (P = 2N+1).\n- O'Sullivan's follow-ups arXiv:1702.03818 and arXiv:1712.03971 do not treat it.\n- The classical Cauchy/Rothe finite q-binomial theorem, Prod_{j=0..M-1}(1+q^j t) = Sum_m q^(C(m,2))[M,m]_q t^m, makes the general identity a direct corollary, though I found no source that writes out this deduction for the conjecture.\n- Not related to this conjecture: J.-C. Liu, arXiv:2509.06357 (Chebyshev expansions of MacMahon-type q-series).",
+   "date": "2026-10-29"
+  },
+  {
    "id": "OEIS-frontier/A270668",
    "slug": "oeis-a270668",
    "title": "Mathar's generating function for column 3 of A270668 (domino tilings of (4k+1)x5 boards with central hole)",
@@ -2675,6 +2767,29 @@
    "summary": "For every n >= 5, the number T(n, n-2) of fixed polyominoes with n cells whose convex hull has width n-2 equals 8n^2 - 51n + 86. A fixed polyomino is a finite edge-connected set of grid cells, taken up to translation. The statement file encodes it as the normalized set S in N x N that has min x = 0 and min y = 0. The height is unrestricted.",
    "notes": "Conjecture as stated in OEIS: %F A308359 Conjecture: T(n,n-2) = 8*n^2 - 51*n + 86 for n >= 5.  (Entry by _R. J. Mathar_, May 22 2019; last edit Oct 10 2022.)\n\nReferees: A. Goupil, H. Cloutier, F. Nouboud, \"Enumeration of inscribed polyominos\", FPSAC 2010, DMTCS proc. AN (2010) 737-748 (https://dmtcs.episciences.org/2808; hal-01186234; cited in OEIS A196593). Theorem 1 gives pmin(b,k) = 2k+2b-3bk-8+8*C(b+k-2,b-1), so pmin(w,3) = 4w^2-3w-2. Theorem 3 (k=2, b>2) gives pmin+1(b,2) = 4b^2-16b+18. Since T(n,n-2) = pmin(n-2,3) + pmin+1(n-2,2) = 8(n-2)^2-19(n-2)+16 = 8n^2-51n+86, Mathar's 2019 conjecture follows directly. The OEIS A308359 entry (last edited Oct 2022) still says \"Conjecture\" and has no proof note. Related but not resolving: L. Marin, \"Counting Polyominoes in a Rectangle b x h\", arXiv:2406.16413 (EPTCS 403, 2024), which covers fixed width and any height. I found no MathOverflow, Math StackExchange or SeqFan discussion explicitly proving the A308359 formula.",
    "date": "2026-10-19"
+  },
+  {
+   "id": "OEIS-frontier/A320099",
+   "slug": "oeis-a320099",
+   "title": "Kagey's order-10 recurrence for no-leaf subgraphs of the 5 × n grid holds",
+   "area": "Discrete geometry",
+   "source": "OEIS A320099",
+   "source_url": "https://oeis.org/A320099",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A320099.lean",
+    "decl": "Math0.Statements.A320099.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A320099.lean",
+   "our_decl": "Math0.Frontier.A320099.result",
+   "summary": "Let a(n) be the number of edge subsets S of the 5 × n grid graph (all vertices kept) such that no vertex has degree exactly 1 in S (OEIS A320099). Then for every n > 10, a(n) = 103 a(n-1) + 1063 a(n-2) - 1873 a(n-3) - 20274 a(n-4) + 44071 a(n-5) - 10365 a(n-6) - 20208 a(n-7) + 5959 a(n-8) + 2300 a(n-9) - 500 a(n-10). This is an identity of integers.",
+   "notes": "Conjecture as stated in OEIS: %F A320099 Conjecture: a(n) = 103*a(n-1) + 1063*a(n-2) - 1873*a(n-3) - 20274*a(n-4) + 44071*a(n-5) - 10365*a(n-6) - 20208*a(n-7) + 5959*a(n-8) + 2300*a(n-9) - 500*a(n-10) for n > 10. (_Peter Kagey_, Oct 05 2018)\n\nReferees: - OEIS A320099 (Peter Kagey, Oct 05 2018; latest revision #20, Jun 09 2019): the recurrence is still listed as \"Conjecture\", with no proof recorded.\n- Related entries with no proof for 5×n: A320097 (4×n; Kagey's conjecture and Colin Barker's empirical generating function, both unproved in OEIS), A301976 (3×n, Barker's conjectures), A320101 (the n×k table) and A093129 (2×n).\n- Prior formal work on a different sequence: the-omega-institute/trureturing issue #7458 and PR #7536 (Sep 13, 2026) give a Lean transfer-matrix proof of the 3×n recurrence (A301976). The repository has no issue or pull request for A320099 or A320097.\n- Peter Kagey's problem page https://peterkagey.com/problems/083/ covers only the 2×n case.\n- General transfer-matrix background: Raff, arXiv:0809.2551; Golin et al., ANALCO 2005.\n- No arXiv, MathOverflow, Math StackExchange or SeqFan source proving or refuting the order-10 recurrence for the 5×n grid was found.",
+   "date": "2026-10-29"
   },
   {
    "id": "OEIS-frontier/A323695",
@@ -3374,6 +3489,29 @@
     "revision": "",
     "date": "2026-10-26"
    }
+  },
+  {
+   "id": "OEIS-frontier/A355360",
+   "slug": "oeis-a355360",
+   "title": "Columns 1 and 2 of the theta-series triangle A355360 are P(x)^3 and 2P(x)^6",
+   "area": "Discrete geometry",
+   "source": "OEIS A355360",
+   "source_url": "https://oeis.org/A355360",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A355360.lean",
+    "decl": "Math0.Statements.A355360.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A355360.lean",
+   "our_decl": "Math0.Frontier.A355360.result",
+   "summary": "Let A(x,y) = sum_m a_m(y) x^m be the series (a_m in Z[y]) computed by the entry's recursion a_0 = 1, a_{m+1} = y a_m - [x^{m+1}] F(a_0 + ... + a_m x^m). Here F(B) = sum_{n in Z} (-1)^n x^{n(n+1)/2} B^n = sum_{n>=0} (-1)^n x^{n(n+1)/2} (B^n - B^{-(n+1)}), and this recursion is the unique solution of x y A = F(A). Let T(n,k) = [x^n y^k] A. Then for every n >= 0:\n- T(n+1, 1) = A000716(n), the number of partitions of n into parts of 3 kinds;\n- T(n+2, 2) = 2 * A023005(n), twice the number of partitions of n into parts of 6 kinds.\nEquivalently, the y- and y^2-coefficients of A are x P^3 and 2 x^2 P^6, where P = prod_{k>=1} 1/(1-x^k). These are Hanna's conjectures (C.1) and (C.2).",
+   "notes": "Conjecture as stated in OEIS: %C A355360 Conjectures. (C.1) Column 1 equals A000716, the number of partitions into parts of 3 kinds. (C.2) Column 2 equals twice A023005, the number of partitions into parts of 6 kinds. (Paul D. Hanna, Jul 19 2022)\n\nReferees: OEIS A355360: Paul D. Hanna, Jul 19 2022. Last edit %I #7 Jul 20 2022, in both the local mirror and raw.githubusercontent oeisdata main. It has no %E lines and (C.1)/(C.2) are still labeled \"Conjectures.\"\n\nRelated entries:\n- A355350: same column conjectures, still open.\n- A355870: column-1 conjecture, still open.\n- A354650: asserts column 1 = A000716 for a different theta table, with no proof given. It cites arXiv:2609.32264 (LANTERN), which is about relation-mining and does not cover these entries.\n- A355361 through A355365: asymptotics only.\n\nNot covered in:\n- the epoch-research/LeanOpenProblems-results metadata and runs (arXiv:2608.11941; Tsoukalas et al., arXiv:2605.22763);\n- google-deepmind/formal-conjectures (FormalConjectures/OEIS/355360.lean returns 404);\n- S. Fried's arXiv:2410.07237, JIS 28 (2025) no. 4, JIS 29 (2026) Article 26.1.8, and arXiv:2607.24832 (that paper covers A355372, not A355360).\n\nWeb searches of MathOverflow, Math StackExchange, SeqFan and arXiv found no proof or counterexample. The underlying tool, Jacobi's identity prod (1-q^k)^3 = sum (-1)^n (2n+1) q^{n(n+1)/2}, is classical.",
+   "date": "2026-10-29"
   },
   {
    "id": "OEIS-frontier/A356360",

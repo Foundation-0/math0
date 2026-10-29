@@ -29,15 +29,16 @@ Two kinds of statement are used (see [Two tracks](#two-tracks)):
 ## Highlights
 
 <!-- HIGHLIGHTS:START -->
-**147 verified results.** 68 new results, 55 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
+**153 verified results.** 74 new results, 55 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
 
-New results: OEIS conjectures settled, each checked by the Lean kernel, with no earlier proof or counterexample found by an independent novelty referee. An independent assessor judged the difficulty of each of these: 0 substantial and 68 routine (a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search). Most of these conjectures had stayed open for lack of attention, not because they were hard; each result page gives the assessor's reasons.
+New results: OEIS conjectures settled, each checked by the Lean kernel, with no earlier proof or counterexample found by an independent novelty referee. An independent assessor judged the difficulty of each of these: 0 substantial and 68 routine (a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search); 6 not yet assessed. Most of these conjectures had stayed open for lack of attention, not because they were hard; each result page gives the assessor's reasons.
 
 * [3 × 3 lower triangles with neighbours differing by at most two: a(n) = 1047 n - 1459 for n > 2 (A195249)](results/oeis-a195249/README.md) ([paper](results/oeis-a195249/paper.pdf))
 * [3^(3^18) + 2 is divisible by 31^2, so Hilliard's squarefree conjecture (A083020) fails](results/oeis-a083020/README.md) ([paper](results/oeis-a083020/paper.pdf))
 * [A090905: every row ends at twice the largest prime of the previous row (Murthy's conjecture proved)](results/oeis-a090905/README.md) ([paper](results/oeis-a090905/paper.pdf))
 * [A106505: common sides of A/2A primitive triangles are periodic mod 8, so a(n+5) = a(n) + 8](results/oeis-a106505/README.md) ([paper](results/oeis-a106505/paper.pdf))
 * [A123710: the rows of inv(floor(n/k)) with four nonzero entries are 6 and the proper prime powers](results/oeis-a123710/README.md)
+* [A126127: Israel's conjectured bivariate g.f. of the inverse square of A061554 holds](results/oeis-a126127/README.md)
 * [A127752 mod 2 is the first Feigenbaum symbolic sequence A035263](results/oeis-a127752/README.md) ([paper](results/oeis-a127752/paper.pdf))
 * [A144637: (1/18) 6^n a(n)/n! is odd iff n = 2^k with k >= 1](results/oeis-a144637/README.md)
 * [A172164: the second differences of the Theodorus-spiral turns are always 18, 19, 20 or 21](results/oeis-a172164/README.md) ([paper](results/oeis-a172164/paper.pdf))
@@ -58,13 +59,18 @@ New results: OEIS conjectures settled, each checked by the Lean kernel, with no 
 * [Alexandersson's recurrence for the row polynomials of A395454 holds (rows counted from 1)](results/oeis-a395454/README.md) ([paper](results/oeis-a395454/paper.pdf))
 * [Bar tilings of the smallest-perimeter rectangle: a(n+1) = 4 a(n) for odd n >= 3 (A394981)](results/oeis-a394981/README.md) ([paper](results/oeis-a394981/paper.pdf))
 * [Barker's order-20 recurrence for the lines through an 8 x n grid holds](results/oeis-a160848/README.md) ([paper](results/oeis-a160848/paper.pdf))
+* [Columns 1 and 2 of the theta-series triangle A355360 are P(x)^3 and 2P(x)^6](results/oeis-a355360/README.md)
 * [Diagonal sums of A368846 equal A229580 (Luschny's conjecture)](results/oeis-a368846/README.md)
 * [Domino towers of height 2 and of height n-1, n-2, n-3 (A333650): all four Kagey/Luschny conjectures](results/oeis-a333650/README.md) ([paper](results/oeis-a333650/paper.pdf))
 * [Even and odd legs with odd prime factors ≡ 3 (mod 4): a(n)/n → π (A354571, A354570)](results/oeis-a354571/README.md) ([paper](results/oeis-a354571/paper.pdf))
 * [Internal n-gons in a regular n-gon: triple points occur only for n = 3, 4, 6, and otherwise there are n k^2 + 1 regions (Shannon's A357216 conjecture)](results/oeis-a357216/README.md) ([paper](results/oeis-a357216/paper.pdf))
+* [Irwin's nested sums give column 0 of the triangle A132615 (A132616)](results/oeis-a132616/README.md)
 * [Kagey's conjecture for A278212: a(n) = floor(A275815(n)/2), via exact bishop and queen maxima from flow (LP-dual) certificates](results/oeis-a278212/README.md) ([paper](results/oeis-a278212/paper.pdf))
+* [Kagey's order-10 recurrence for no-leaf subgraphs of the 5 × n grid holds](results/oeis-a320099/README.md)
 * [Kurkov's recursion for the row polynomials of convolution triangles holds](results/oeis-a357583/README.md)
+* [Kurkov's rook-tour conjecture for A001040: 2·n!·a(n) counts opposite-line Hamiltonian paths of K_n □ K_2](results/oeis-a001040/README.md)
 * [Mathar's order-6 recurrence for A121750 (even-length columns in deco polyominoes) holds for all n >= 7](results/oeis-a121750/README.md) ([paper](results/oeis-a121750/paper.pdf))
+* [O'Sullivan's Gaussian-polynomial / Chebyshev representation conjecture (A267486), proved](results/oeis-a267486/README.md)
 * [OEIS A350900: Schulte's gcd-ratio double sum is a Dirichlet convolution](results/oeis-a350900/README.md) ([paper](results/oeis-a350900/paper.pdf))
 * [Prime-Minesweeper on the A060734 array: a(n) < 6, and a(n) = 5 only at n = 6](results/oeis-a326407/README.md) ([paper](results/oeis-a326407/paper.pdf))
 * [Schulte's conjectures on A281000, T(n,k) = C(2n+1,2k+1)·Cat(n-k): antidiagonal sums and matrix inverse](results/oeis-a281000/README.md) ([paper](results/oeis-a281000/paper.pdf))
