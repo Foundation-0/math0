@@ -1,7 +1,7 @@
 # Kagey's conjecture for A278212: a(n) = floor(A275815(n)/2), via exact bishop and queen maxima from flow (LP-dual) certificates
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
-**Difficulty (independent assessment):** substantial  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A278212  
 **Date:** 2026-10-24
@@ -12,9 +12,11 @@ For every n >= 1, let a(n) be the largest total number of moves that same-colore
 
 ## Assessment
 
-The bishop half is routine. Andrew Howroyd's per-diagonal bound of 4(n-2)^2+4, given in the entry, drops to 4(n-2)^2 for n>=6 with a short corner argument: the 8 squares on the length-2 diagonals are exactly the endpoints of the four length-(n-1) diagonals. The conjecture also needs the queen bound A275815(n) <= 8(n-2)^2+1, which is essentially Alec Jones's conjecture, open since 2016. Counting moves line by line does not give that bound; it leaves a slack that grows linearly in n. The proof gets it from a linear-programming dual (flow) certificate found by computer, built on distance-to-edge classes so that one finite table covers every n>=8, and it needs 21 separately certified cases for n=4,5,6. That construction is not standard and does not follow from anything in the entries, so the result as a whole is substantial, though the bishop part on its own is not.
+Earlier rated substantial, because the queen upper bound 8(n-2)^2 seemed to need the computer-found LP-dual certificates used in the Lean proof. That bound turns out to have a one-page elementary proof for n >= 8: count moves line by line, which leaves only the empty border squares to pay for, and let each interior queen pay 2 units along each of its lines to an empty border square at most 2 squares away. A one-page charging proof of the queen bound for n >= 8 was found while assessing A275815 and then verified by two independent checks (a hand re-derivation and an exhaustive and randomized computer search for counterexamples): see results/oeis-a275815/short-proof.md. It is not formalized in Lean. With it, the whole result is a short argument plus small finite cases, so it is now rated routine. The bishop half was always routine.
 
-*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **substantial**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material. A second assessor, asked to show it is routine, agreed it is substantial. (2026-10-26)
+*Follows from:* Howroyd's per-diagonal bound in the entry (with a short corner argument) for bishops; for queens, the one-page charging proof in results/oeis-a275815/short-proof.md (verified 29 Oct 2026, not formalized).
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  *Revised:* First rated substantial, by the assessor and again by a second, adversarial assessor (26 Oct 2026), because the queen bound seemed to need computer-found certificates. Revised to routine on 29 Oct 2026, after a one-page proof of that bound was found and independently verified (results/oeis-a275815/short-proof.md). (2026-10-29)
 
 ## Verification
 
@@ -30,6 +32,8 @@ Referees: I found no prior resolution, only computation and partial bounds:
 - Jim Randell, Enigma 69 "Maximum queen moves" (enigmaticcode.wordpress.com, 2013, comments through 2025): the 6×6 case is verified by computer and the border formula is called "presumed". There is no general proof.
 - Related entries A278211, A278213 and A278214 contain no proof.
 - Searches of arXiv, MathOverflow, Math StackExchange, Puzzling, SeqFan and Google Scholar-style queries found no general proof or counterexample.
+
+Short proof (29 Oct 2026): the queen upper bound M <= 8(n-2)^2 also has a one-page charging proof for n >= 8, written up in results/oeis-a275815/short-proof.md and checked by two independent agents; it is not formalized in Lean.
 
 ## Manuscript
 

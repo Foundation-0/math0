@@ -116,6 +116,7 @@ def assessment_text(a):
             "substantial means a non-standard idea or a long argument that does not follow readily from such material. "
             + ("A second assessor, asked to show it is routine, " + ("agreed it is substantial." if a["depth"] == "substantial" else "found it routine.")
                if a["challenged"] else "")
+            + (f" *Revised:* {a['revision']}" if a.get("revision") else "")
             + f" ({a['date']})")
     return out
 

@@ -1,6 +1,7 @@
 # Kurkov's recursion for the row polynomials of convolution triangles holds
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A357583  
 **Date:** 2026-10-29
@@ -8,6 +9,14 @@
 ## Result
 
 For an integer sequence s(1), s(2), ..., let T_s(n,k) = [z^n] A(z)^k with A(z) = sum_{j>=1} s(j) z^j be its convolution triangle. Define polynomials R(n,k) in Z[x] by R(1,k) = s(k) and R(n,k) = R(n-1,k+1) + x*R(n-1,1)*R(1,k) for n > 1. Then for every n > 0 the row polynomial sum_{k=0}^{n} T_s(n,k) x^k equals x*R(n,1). In particular (s = Bell numbers) the row polynomials of A357583 are x*R(n,1) with R(1,k) = Bell(k). Both parts of the frozen statement (the Bell case and the case of an arbitrary integer sequence) are proved.
+
+## Assessment
+
+The proof guesses the closed form R(n,k) = sum_j s(k+j) E(n-1-j), where E(n) are the row polynomials, and checks it by a one-line induction. The step uses only the standard recursion E(n) = x*sum_j s(j) E(n-j), which is just the row generating function 1/(1 - xA(z)) of a convolution triangle. Setting k = 1 then gives x*R(n,1) = E(n) at once. A competent mathematician would find this in well under a page, and the general-sequence case is no harder than the Bell case, so the result is routine even though the conjecture had stood open on OEIS.
+
+*Follows from:* The standard bivariate generating function of a convolution (Riordan/PMatrix) triangle, sum_n E_n(x) z^n = 1/(1 - x A(z)) with A(z) = sum_{j>=1} s(j) z^j, which gives the row-polynomial recursion E(n) = x * sum_j s(j) E(n-j). That recursion is the PMatrix construction of A357368, and the referee notes record P(n,x) = x*sum a(n-k) P(k,x) there. Unrolling Kurkov's recursion gives the closed form R(n,k) = sum_{j=0}^{n-1} s(k+j) E(n-1-j).
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

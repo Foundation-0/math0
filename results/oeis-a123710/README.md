@@ -1,6 +1,7 @@
 # A123710: the rows of inv(floor(n/k)) with four nonzero entries are 6 and the proper prime powers
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A123710  
 **Date:** 2026-10-29
@@ -8,6 +9,14 @@
 ## Result
 
 Let A be the lower-triangular matrix with A(n,k) = floor(n/k) (A010766), and let T = A^{-1} (A123706). Let R(n) be the number of nonzero entries in row n of T (A123709), and let a(n) be the n-th smallest n with R(n) = 4 (A123710, offset 1). Let A025475(n) be the n-th term of 1, 4, 8, 9, 16, 25, ... (1 and the prime powers p^m with m >= 2). Hasler's conjecture: a(n) = A025475(n) for all n > 2. Equivalently, R(n) = 4 exactly when n = 6 or n is a proper prime power.
+
+## Assessment
+
+The proof uses the closed form T(n,k) = f(k) - f(k+1), with f(k) = mu(n/k) when k | n and 0 otherwise. That formula is already stated in cross-referenced A123706, and checking it is a short Moebius-inversion and Abel-summation calculation. Row n then has one nonzero entry for each place where f changes value. If n is not squarefree, the support of f has 2^omega(n) elements and no two of them are consecutive, so the row has 2^(omega+1) nonzero entries; this gives 4 exactly for proper prime powers. For squarefree n, a short case check (two consecutive divisors k, k+1 force k(k+1) | n) leaves only n = 6. All of this is an elementary page-length argument that follows from material already in the entry's cross-references.
+
+*Follows from:* The closed form T(n,k) = mu(n/k) - mu(n/(k+1)) given in cross-referenced A123706 (Perez Herrero, 2012), together with Hasler's 2^k / omega description of A123709 (exception n = 6). Checking the closed form is a one-line Moebius inversion (sum over d | m of mu(d) = [m = 1]).
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 
