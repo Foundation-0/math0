@@ -137,6 +137,12 @@ New results: OEIS conjectures settled, each checked by the Lean kernel, with no 
    settled are compiled by CI too, through
    [`lean/Math0/Statements.lean`](lean/Math0/Statements.lean).
 
+   Whether each statement says what its OEIS author meant is a judgement, not a machine check. Every
+   statement has therefore had two agent reviews: one before it was frozen, and one adversarial pass
+   (29 Oct 2026) that produced [review packets](review/fidelity/README.md) of ten statements each,
+   quoting the OEIS text beside the Lean statement. The packets are meant to make human review
+   quick; they are not a substitute for it.
+
 ## Why verification first
 
 Proof-shaped text is cheap to produce and expensive to check, whether a human or a model wrote

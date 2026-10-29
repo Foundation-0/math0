@@ -40,6 +40,8 @@ Related prior results on sibling sequences:
 
 The proof here follows the same template as the A363102 proof.
 
+Reading note (fidelity pass, 29 Oct 2026): the statement exempts every term equal to 49. Read strictly, the conjecture exempts only the single term a(6) = 49, which also needs the value 49 to occur only once. That holds for n < 1200 by exact computation but is not part of the Lean result.
+
 ## Manuscript
 
 [paper.pdf](paper.pdf) ([source](paper.tex))

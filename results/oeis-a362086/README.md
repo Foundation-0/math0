@@ -32,6 +32,8 @@ Referees: OEIS A362086 (local mirror, revision #35, May 09 2024): "Conjecture: E
 - T. Adamczewski, "OEIS Open: How many conjectures can language models turn into theorems?", arXiv:2608.11941 (2026), together with the AlphaProof Nexus Lean files oeis_363347_conjecture_2.lean and oeis_a363102_conjecture_1.lean. Proves the analogues for innermost -2 (A363102) and -4 (A363347).
 A362086 appears in neither the alphaproof-nexus-results repository nor the epoch-research LeanOpenProblems and LeanOpenProblems-results repositories. Searches of arXiv, MathOverflow and Math StackExchange found no proof or counterexample.
 
+Reading note (fidelity pass, 29 Oct 2026): the statement exempts every term equal to 9. Read strictly, the conjecture exempts only the single term a(5) = 9, which also needs the value 9 to occur only once. That holds for n < 1200 by exact computation but is not part of the Lean result.
+
 ## Manuscript
 
 [paper.pdf](paper.pdf) ([source](paper.tex))

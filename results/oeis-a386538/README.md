@@ -38,6 +38,8 @@ Related but not resolving:
 
 No prior proof or counterexample found.
 
+OEIS data (found in the fidelity pass of 29 Oct 2026 and recomputed exactly): with the centre on a grid point, the largest polygon is the convex hull of the grid points in the disk. Its area differs from the listed terms at n = 13, 17, 18, 22, 23 (516, 888, 990, 1498, 1628, against the listed 512, 880, 986, 1490, 1624). The entry's Maple and Mathematica programs use a shortcut that does not compute this area. The counterexample at n = 7, where the listed a(7) = 138 is correct, is unaffected.
+
 ## Manuscript
 
 [paper.pdf](paper.pdf) ([source](paper.tex))
