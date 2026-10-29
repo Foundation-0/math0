@@ -29,9 +29,9 @@ Two kinds of statement are used (see [Two tracks](#two-tracks)):
 ## Highlights
 
 <!-- HIGHLIGHTS:START -->
-**137 verified results.** 61 new results, 52 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
+**141 verified results.** 64 new results, 53 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
 
-New results: OEIS conjectures settled, each checked by the Lean kernel, with no earlier proof or counterexample found by an independent novelty referee. An independent assessor judged the difficulty of each of these: 1 substantial and 60 routine (a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search). Most of these conjectures had stayed open for lack of attention, not because they were hard; each result page gives the assessor's reasons.
+New results: OEIS conjectures settled, each checked by the Lean kernel, with no earlier proof or counterexample found by an independent novelty referee. An independent assessor judged the difficulty of each of these: 1 substantial and 60 routine (a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search); 3 not yet assessed. Most of these conjectures had stayed open for lack of attention, not because they were hard; each result page gives the assessor's reasons.
 
 * [Kagey's conjecture for A278212: a(n) = floor(A275815(n)/2), via exact bishop and queen maxima from flow (LP-dual) certificates](results/oeis-a278212/README.md) (substantial) ([paper](results/oeis-a278212/paper.pdf))
 * [3 × 3 lower triangles with neighbours differing by at most two: a(n) = 1047 n - 1459 for n > 2 (A195249)](results/oeis-a195249/README.md) ([paper](results/oeis-a195249/paper.pdf))
@@ -56,6 +56,7 @@ New results: OEIS conjectures settled, each checked by the Lean kernel, with no 
 * [Alexandersson's recurrence for the row polynomials of A395454 holds (rows counted from 1)](results/oeis-a395454/README.md) ([paper](results/oeis-a395454/paper.pdf))
 * [Bar tilings of the smallest-perimeter rectangle: a(n+1) = 4 a(n) for odd n >= 3 (A394981)](results/oeis-a394981/README.md) ([paper](results/oeis-a394981/paper.pdf))
 * [Barker's order-20 recurrence for the lines through an 8 x n grid holds](results/oeis-a160848/README.md) ([paper](results/oeis-a160848/paper.pdf))
+* [Diagonal sums of A368846 equal A229580 (Luschny's conjecture)](results/oeis-a368846/README.md)
 * [Domino towers of height 2 and of height n-1, n-2, n-3 (A333650): all four Kagey/Luschny conjectures](results/oeis-a333650/README.md) ([paper](results/oeis-a333650/paper.pdf))
 * [Even and odd legs with odd prime factors ≡ 3 (mod 4): a(n)/n → π (A354571, A354570)](results/oeis-a354571/README.md) ([paper](results/oeis-a354571/paper.pdf))
 * [Internal n-gons in a regular n-gon: triple points occur only for n = 3, 4, 6, and otherwise there are n k^2 + 1 regions (Shannon's A357216 conjecture)](results/oeis-a357216/README.md) ([paper](results/oeis-a357216/paper.pdf))
@@ -70,8 +71,10 @@ New results: OEIS conjectures settled, each checked by the Lean kernel, with no 
 * [The inverse of the 1/Catalan band triangle (A127767) has integer entries](results/oeis-a127767/README.md) ([paper](results/oeis-a127767/paper.pdf))
 * [The inverse of the triangle 1/n! [k ≤ n ≤ 2k] is an integer triangle](results/oeis-a127755/README.md)
 * [The least number of inequivalent cells of a (6k+5)-iamond is 3(k+1)](results/oeis-a369366/README.md) ([paper](results/oeis-a369366/paper.pdf))
+* [The row sums of the generalized Deutsch triangle A188474 are A137398](results/oeis-a188474/README.md)
 * [The row-LCM of denominators of the cube of the mean matrix is n · lcm(1..n)²](results/oeis-a119936/README.md) ([paper](results/oeis-a119936/paper.pdf))
 * [The subword complexity polynomial S(n,x) has leading coefficient n(n+1)/2 (A341761, Guo's conjecture)](results/oeis-a341761/README.md) ([paper](results/oeis-a341761/paper.pdf))
+* [The toothpick spiral around n hexagonal cells (A182617): a(n) = 2n + ceil(sqrt(12n - 3))](results/oeis-a182617/README.md)
 * [The triple-gcd Pascal triangle A129455: T(n,k) is an integer, divisible by C(n,k), and T(n,k)/C(n,k) is a sixth power](results/oeis-a129455/README.md) ([paper](results/oeis-a129455/paper.pdf))
 * [A116184: Adamchuk's conjectures on 37^3 dividing the numerator of sum_{k=1}^{36} 1/k^n](results/oeis-a116184/README.md) ([paper](results/oeis-a116184/paper.pdf))
 * [A262957: Israel's b(n), c(n) are coprime integers and a(n) = b(n)](results/oeis-a262957/README.md) ([paper](results/oeis-a262957/paper.pdf))
