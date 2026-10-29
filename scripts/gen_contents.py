@@ -186,8 +186,8 @@ def assessment_summary(group):
 
 
 def write_highlights(entries, counts):
-    """Refresh the generated block between the HIGHLIGHTS markers in README.md."""
-    path = os.path.join(ROOT, "README.md")
+    """Refresh the generated block between the HIGHLIGHTS markers in RESULTS.md."""
+    path = os.path.join(ROOT, "RESULTS.md")
     text = open(path).read()
     start, end = "<!-- HIGHLIGHTS:START -->", "<!-- HIGHLIGHTS:END -->"
     if start not in text or end not in text:
