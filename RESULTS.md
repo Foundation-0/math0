@@ -29,26 +29,29 @@ Two kinds of statement are used (see [Two tracks](#two-tracks)):
 ## Highlights
 
 <!-- HIGHLIGHTS:START -->
-**141 verified results.** 64 new results, 53 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
+**147 verified results.** 68 new results, 55 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
 
-New results: OEIS conjectures settled, each checked by the Lean kernel, with no earlier proof or counterexample found by an independent novelty referee. An independent assessor judged the difficulty of each of these: 1 substantial and 63 routine (a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search). Most of these conjectures had stayed open for lack of attention, not because they were hard; each result page gives the assessor's reasons.
+New results: OEIS conjectures settled, each checked by the Lean kernel, with no earlier proof or counterexample found by an independent novelty referee. An independent assessor judged the difficulty of each of these: 1 substantial and 63 routine (a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search); 4 not yet assessed. Most of these conjectures had stayed open for lack of attention, not because they were hard; each result page gives the assessor's reasons.
 
 * [Kagey's conjecture for A278212: a(n) = floor(A275815(n)/2), via exact bishop and queen maxima from flow (LP-dual) certificates](results/oeis-a278212/README.md) (substantial) ([paper](results/oeis-a278212/paper.pdf))
 * [3 × 3 lower triangles with neighbours differing by at most two: a(n) = 1047 n - 1459 for n > 2 (A195249)](results/oeis-a195249/README.md) ([paper](results/oeis-a195249/paper.pdf))
 * [3^(3^18) + 2 is divisible by 31^2, so Hilliard's squarefree conjecture (A083020) fails](results/oeis-a083020/README.md) ([paper](results/oeis-a083020/paper.pdf))
 * [A090905: every row ends at twice the largest prime of the previous row (Murthy's conjecture proved)](results/oeis-a090905/README.md) ([paper](results/oeis-a090905/paper.pdf))
 * [A106505: common sides of A/2A primitive triangles are periodic mod 8, so a(n+5) = a(n) + 8](results/oeis-a106505/README.md) ([paper](results/oeis-a106505/paper.pdf))
+* [A123710: the rows of inv(floor(n/k)) with four nonzero entries are 6 and the proper prime powers](results/oeis-a123710/README.md)
 * [A127752 mod 2 is the first Feigenbaum symbolic sequence A035263](results/oeis-a127752/README.md) ([paper](results/oeis-a127752/paper.pdf))
 * [A144637: (1/18) 6^n a(n)/n! is odd iff n = 2^k with k >= 1](results/oeis-a144637/README.md)
 * [A172164: the second differences of the Theodorus-spiral turns are always 18, 19, 20 or 21](results/oeis-a172164/README.md) ([paper](results/oeis-a172164/paper.pdf))
 * [A178295: collinear 4-subsets of {0,...,4}^n number 9^n/2 + 3*7^n/2 - 2*5^n (Mathar's conjecture, all three formulas)](results/oeis-a178295/README.md) ([paper](results/oeis-a178295/paper.pdf))
 * [A223395: walks on the 4 x 4 grid graph satisfy Hardin's recurrence, Barker's g.f. and closed form](results/oeis-a223395/README.md) ([paper](results/oeis-a223395/paper.pdf))
 * [A249151(k) = k exactly when k + 1 is prime (Karttunen's conjecture, A249434/A249151)](results/oeis-a249434/README.md) ([paper](results/oeis-a249434/paper.pdf))
+* [A275815: Jones's conjecture a(n) = 8(n-2)^2 for n >= 6 holds](results/oeis-a275815/README.md)
 * [A308107: Barker's rational generating function and order-15 recurrence for the sum of smallest sides of scalene integer triangles](results/oeis-a308107/README.md) ([paper](results/oeis-a308107/paper.pdf))
 * [A308121: for odd n > 1, row 2n is row n with its halves swapped](results/oeis-a308121/README.md) ([paper](results/oeis-a308121/paper.pdf))
 * [A332010: the average first letter of one-descent derangements has denominator 2^(n-2)](results/oeis-a332010/README.md) ([paper](results/oeis-a332010/paper.pdf))
 * [A334595: a(n) = 1 iff n is a power of two, and the records occur exactly at 1 and 2^k + 1](results/oeis-a334595/README.md) ([paper](results/oeis-a334595/paper.pdf))
 * [A338885: the smallest number in row 655 is 104, not A228286(655) = 115](results/oeis-a338885/README.md) ([paper](results/oeis-a338885/paper.pdf))
+* [A342645: diagonals of the eventual Mahonian-column polynomials](results/oeis-a342645/README.md)
 * [A348484: no two squares two steps apart; the conjectured formula holds](results/oeis-a348484/README.md) ([paper](results/oeis-a348484/paper.pdf))
 * [A355339: the central even run of the knight-move triangle has length 1 iff n = 2^m - 2](results/oeis-a355339/README.md) ([paper](results/oeis-a355339/paper.pdf))
 * [A363609: a(k^3) = 6k(k+2), the cube is the optimal polycube of k^3 dice](results/oeis-a363609/README.md) ([paper](results/oeis-a363609/paper.pdf))
@@ -60,6 +63,7 @@ New results: OEIS conjectures settled, each checked by the Lean kernel, with no 
 * [Domino towers of height 2 and of height n-1, n-2, n-3 (A333650): all four Kagey/Luschny conjectures](results/oeis-a333650/README.md) ([paper](results/oeis-a333650/paper.pdf))
 * [Even and odd legs with odd prime factors ≡ 3 (mod 4): a(n)/n → π (A354571, A354570)](results/oeis-a354571/README.md) ([paper](results/oeis-a354571/paper.pdf))
 * [Internal n-gons in a regular n-gon: triple points occur only for n = 3, 4, 6, and otherwise there are n k^2 + 1 regions (Shannon's A357216 conjecture)](results/oeis-a357216/README.md) ([paper](results/oeis-a357216/paper.pdf))
+* [Kurkov's recursion for the row polynomials of convolution triangles holds](results/oeis-a357583/README.md)
 * [Mathar's order-6 recurrence for A121750 (even-length columns in deco polyominoes) holds for all n >= 7](results/oeis-a121750/README.md) ([paper](results/oeis-a121750/paper.pdf))
 * [OEIS A350900: Schulte's gcd-ratio double sum is a Dirichlet convolution](results/oeis-a350900/README.md) ([paper](results/oeis-a350900/paper.pdf))
 * [Prime-Minesweeper on the A060734 array: a(n) < 6, and a(n) = 5 only at n = 6](results/oeis-a326407/README.md) ([paper](results/oeis-a326407/paper.pdf))

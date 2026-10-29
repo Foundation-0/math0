@@ -1591,6 +1591,29 @@
    }
   },
   {
+   "id": "OEIS-frontier/A123710",
+   "slug": "oeis-a123710",
+   "title": "A123710: the rows of inv(floor(n/k)) with four nonzero entries are 6 and the proper prime powers",
+   "area": "Discrete geometry",
+   "source": "OEIS A123710",
+   "source_url": "https://oeis.org/A123710",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A123710.lean",
+    "decl": "Math0.Statements.A123710.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A123710.lean",
+   "our_decl": "Math0.Frontier.A123710.result",
+   "summary": "Let A be the lower-triangular matrix with A(n,k) = floor(n/k) (A010766), and let T = A^{-1} (A123706). Let R(n) be the number of nonzero entries in row n of T (A123709), and let a(n) be the n-th smallest n with R(n) = 4 (A123710, offset 1). Let A025475(n) be the n-th term of 1, 4, 8, 9, 16, 25, ... (1 and the prime powers p^m with m >= 2). Hasler's conjecture: a(n) = A025475(n) for all n > 2. Equivalently, R(n) = 4 exactly when n = 6 or n is a proper prime power.",
+   "notes": "Conjecture as stated in OEIS: %F A123710 a(n) = A025475(n) for n>2 (conjectured). - _M. F. Hasler_, Feb 12 2012\n\nReferees: OEIS sequences, all read from the local mirror and checked against https://raw.githubusercontent.com/oeis/oeisdata/main/seq/:\n- A123710 (#27, Sep 05 2025): formula still marked \"(conjectured)\" (Hasler, Feb 12 2012).\n- A123709: Hasler's 2^k / omega formula with the n = 6 exception, given without proof. Links Luschny's seqcomp message http://groups.google.com/group/seqcomp/msg/2aabf27ef9b698ef (Feb 2012). The visible part of that thread has the closed form and asks for a proof of A123712 = A178212, but nothing on A123710.\n- A123706: Perez Herrero closed form T(n,k) = mu(n/k) - mu(n/(k+1)) (Feb 21 2012), without proof.\n- A123711 and A200511, A123712 and A178212: related conjectures, still open.\n- A206706: Luschny's variant triangle.\n\nOther sources:\n- OEIS wiki, \"Sequences determined by prime signature\": lists A123711 and A123712 under \"Examples which need to be checked\".\n- S. Fried, JIS 28 (2025) Art. 25.4.3; JIS 29 (2026) Art. 26.1.8; arXiv:2607.24832 (Jul 2026). None treat A123710.\n\nSearches of arXiv, MathOverflow and MSE found no proof of A123710. The SeqFan Feb 2012 archive was unreachable.",
+   "date": "2026-10-29"
+  },
+  {
    "id": "OEIS-frontier/A124526",
    "slug": "oeis-a124526",
    "title": "Hanna's conjecture A124418(n,k) = k! * A124526(n,k) (partitions with k mixed-parity blocks) proved",
@@ -2301,6 +2324,29 @@
    "date": "2026-10-24"
   },
   {
+   "id": "OEIS-frontier/A265649",
+   "slug": "oeis-a265649",
+   "title": "A265649: both of Werner Schulte's closed forms hold",
+   "area": "Discrete geometry",
+   "source": "OEIS A265649",
+   "source_url": "https://oeis.org/A265649",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A265649.lean",
+    "decl": "Math0.Statements.A265649.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A265649.lean",
+   "our_decl": "Math0.Frontier.A265649.result",
+   "summary": "Let T(0,0)=1, T(0,k)=0 for k>0, and T(n,k) = T(n-1,k-1) + (2n-1+k)·T(n-1,k) for n ≥ 1, with T(n,-1)=0. Then (i) for all 0 ≤ k ≤ n, T(n,k) = 2^(n-k)·(n-k)!·C(n,k)·Σ_{j=0}^{n-k} (-1/4)^j·C(2j+k,j)·C(n,j+k). (ii) For all n ≥ 1 and 0 ≤ k ≤ n, T(n,k) = (-1)^k·Σ_{j=0}^{n-1} A001497(n-1,j)·A021009(j+1,k). Here A001497(n,m) = (2n-m)!/(m!(n-m)!2^(n-m)) is the Bessel triangle and A021009(n,m) = (-1)^m·n!·C(n,m)/m! is the signed Laguerre triangle, both zero outside 0 ≤ m ≤ n.",
+   "notes": "Conjecture as stated in OEIS: %F A265649 Conjecture: T(n,k) = 2^(n-k)*(n-k)!*binomial(n,k)*(Sum_{j=0..n-k} (-1/4)^j* binomial(2*j+k,j)*binomial(n,j+k)).  %F A265649 Conjecture: T(n,k) = (-1)^k*Sum_{j=0..n-1} A001497(n-1,j)*A021009(j+1,k). (_Werner Schulte_, Dec 11 2015)\n\nReferees: No explicit prior proof of either formula was found, and OEIS A265649 (rev. #40, Mar 2024) still marks both as \"Conjecture\". Both are immediate special cases of known results:\n(1) L. C. Hsu and P. J.-S. Shiue, \"A unified approach to generalized Stirling numbers\", Adv. Appl. Math. 20 (1998) 366-384: generalized Stirling numbers S(n,k;α,β,r), whose defining connection relation directly gives the product formula.\n(2) R. S. Maier, \"Boson Operator Ordering Identities from Generalized Stirling and Eulerian Numbers\", arXiv:2308.10332 (v4, 9 Feb 2024), linked from the A265649 entry. Eq. (18) gives the product formula S(α,γ;r1+r2) = S(α,β;r1)S(β,γ;r2). §5, p. 19 identifies A265649 = S_{n,k}(-2,1;1). Pp. 17-18 identify A001497 = b̂^(1) = S(-2,-1;1) and A021009 = L̂^(1) = S(-1,1;1) (signed), and Thm 5.1 (ii'), (iv') gives their closed forms. Eq. (72) states the r=0 analogue S(-2,1;0) = S(-2,-1;0)S(-1,1;0) of Conjecture 2. Thm 5.2(vi) gives a different, proved 2F1 closed form for S_{n,k}(-2,1;1).\nConjecture 2 = S(-2,-1;0)·S(-1,1;1), and Conjecture 1 = S(-2,2;2)·S(2,1;-1), reindexed; both checked numerically.\nAlso checked, with no A265649 resolution found: P. Barry, arXiv:1702.04011, Example 1 (displays the array as the exponential Riordan array [1/sqrt(1-2x), 1/sqrt(1-2x)-1], with no proof of the conjectures); S. Fried's OEIS-conjecture series (arXiv:2410.07237; JIS 28 (2025) Art. 25.4.3; JIS 29 (2026) Art. 26.1.8; arXiv:2607.24832); cross-referencing entries A370419, A347204 and A035342.",
+   "date": "2026-10-29"
+  },
+  {
    "id": "OEIS-frontier/A270668",
    "slug": "oeis-a270668",
    "title": "Mathar's generating function for column 3 of A270668 (domino tilings of (4k+1)x5 boards with central hole)",
@@ -2322,6 +2368,29 @@
    "summary": "Let c_k = T(2k, 2) be the number of domino tilings of the (4k+1) x 5 board with its central cell removed (c_0 = 1 for the 1 x 5 strip with its middle cell removed). Then, in Q[[x]],\n  sum_{k>=0} c_k x^k = (-1 - 4x + 543x^2 - 6238x^3 + 17032x^4 - 6238x^5 + 543x^6 - 4x^7 - x^8) / ((x-1)(x^2-7x+1)(x^2-23x+1)(x^4-161x^3+576x^2-161x+1)).\nThis is R. J. Mathar's 2016 conjectured g.f. for \"column 3\" of OEIS A270668. Equivalently, (sum c_k x^k) * den = num.",
    "notes": "Conjecture as stated in OEIS: %F A270668 Conjectured g.f. for column 3: ( -1 -4*x +543*x^2 -6238*x^3 +17032*x^4 -6238*x^5 +543*x^6 -4*x^7 -x^8 ) / ( (x-1) *(x^2-7*x+1) *(x^2-23*x+1) *(x^4 -161*x^3 +576*x^2 -161*x +1) ). - _R. J. Mathar_, Mar 23 2016\n\nReferees: R. J. Mathar, \"A270668: Domino tilings with one monomer in the center\", PDF linked from OEIS A270668 (https://oeis.org/A270668/a270668.pdf), dated Apr 13 2016. It counts the 5 x (2m+1) floor with a central monomer by the transfer-matrix method: 50 states, nine centre configurations, and left/right Hadamard products of rational g.f.s in x = z^5. It appears to derive the column-3 g.f. that Mathar had conjectured on Mar 23 2016 in OEIS A270668 (still labelled \"Conjectured\" there). I saw its content only through search-engine extracts; the full PDF could not be downloaded. Related but not resolving: OEIS A143659 / M. Ciucu arXiv:0710.4500 (diagonal); A189003/A189006 (5xn corner-removed, same characteristic polynomial t^4-15t^3+32t^2-15t+1); A003775, A006238; B. E. Tenner, EJC 11(2) R17 (2005); Byun-Goddard arXiv:2502.05918; Stanley EC1 section 4.2.5 (Hadamard products of rational series). No prior Lean or other formalization found.",
    "date": "2026-10-25"
+  },
+  {
+   "id": "OEIS-frontier/A275815",
+   "slug": "oeis-a275815",
+   "title": "A275815: Jones's conjecture a(n) = 8(n-2)^2 for n >= 6 holds",
+   "area": "Discrete geometry",
+   "source": "OEIS A275815",
+   "source_url": "https://oeis.org/A275815",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A275815.lean",
+    "decl": "Math0.Statements.A275815.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A275815.lean",
+   "our_decl": "Math0.Frontier.A275815.result",
+   "summary": "For n >= 6, take a set S of squares on the n x n board and put a queen on each square of S. All queens have the same colour, so a queen may move along any of its 8 directions only to an empty square, and only through empty squares. Let M(S) be the total number of moves available to all the queens. Then the maximum of M(S) over all S is exactly 8(n-2)^2. In the formal version, a n = (board n).powerset.sup (totalMoves n), and the claim is that a n = 8 * (n - 2)^2 for every n >= 6.",
+   "notes": "Conjecture as stated in OEIS: Conjecture: a(n) = 8(n-2)^2 for n >= 6. - _Alec Jones_, Nov 16 2016\n\nReferees: The OEIS entry A275815 (#43, Jul 11 2021) still lists Jones's formula as a conjecture, with keyword \"more\". It records Wu's bounds 8(n-2)^2 <= a(n) <= 8n^2 (Nov 2016), a(6) from Branicky (Feb 2021) and a(7)-a(32) from Randell's MiniZinc runs (Jul 2021).\n\nJim Randell, \"Enigma 69: Maximum queen moves\", https://enigmaticcode.wordpress.com/2013/03/10/enigma-69-maximum-queen-moves/, has only computation: a 6x6 exhaustive check (2017), a MiniZinc model run up to 64x64 (2020) and solver comparisons (2025). It gives no general proof.\n\nThe cross-referenced entries A278211, A278212 and A278214 contain no proof. A278214's T(n, n^2-k) = 8k for k <= (n-2)^2 is only the easy per-empty-square bound.\n\nWeb searches of arXiv, MathOverflow, Math StackExchange, Puzzling, SeqFan and the chess-puzzle literature found no general proof or counterexample.\n\nThe one prior proof found is internal: math0's own results/oeis-a278212 (2026-10-24) already proves a(n) = 8(n-2)^2 for n >= 7 (Math0/Frontier/OEIS/A278212.lean). The present file adds the exact n=6 case (a(6) = 128, already known by computer) and states the full conjecture formally.",
+   "date": "2026-10-29"
   },
   {
    "id": "OEIS-frontier/A278212",
@@ -2910,6 +2979,29 @@
    }
   },
   {
+   "id": "OEIS-frontier/A342645",
+   "slug": "oeis-a342645",
+   "title": "A342645: diagonals of the eventual Mahonian-column polynomials",
+   "area": "Discrete geometry",
+   "source": "OEIS A342645",
+   "source_url": "https://oeis.org/A342645",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A342645.lean",
+    "decl": "Math0.Statements.A342645.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A342645.lean",
+   "our_decl": "Math0.Frontier.A342645.result",
+   "summary": "For x ≥ n, the number M(x,n) of permutations of x letters with major index n is a polynomial P_n(x) of degree ≤ n. Let T(n,k) = n!·[x^k]P_n(x). The triangle is computed by Newton interpolation of M(x,n) at x = n,…,2n.\n\n(Diagonals) For every m ≥ 0 there is Q ∈ ℚ[X] with deg Q = 2m and leading coefficient |A290030(m)/A053657(m+1)| such that T(n,n−m) = Q(n) for every n ≥ m. Here A290030(m) is the x^m-coefficient of the numerator L·B_m^(x) of Nørlund's polynomial B_m^(x) = m![t^m](t/(e^t−1))^x, where L is the least common denominator of its coefficients. A053657(m+1) = ∏_p p^{Σ_k ⌊m/((p−1)p^k)⌋}.\n\n(Formulas) T(n,n) = 1; T(n,n−1) = (n²−3n)/2; T(n,n−2) = (3n⁴−22n³+21n²−2n)/24; T(n,n−3) = (n⁶−13n⁵+37n⁴+13n³−134n²+96n)/48. Each holds for every n at which the left side is an entry of the triangle.",
+   "notes": "Conjecture as stated in OEIS: %C A342645 Conjecture: For each m, T(n,n-m) is a polynomial of degree 2m whose leading coefficient is abs(A290030(m)/A053657(m+1)). %F Conjectures: T(n,n) = 1. T(n,n-1) = (-3n + n^2)/2. T(n,n-2) = (-2n + 21n^2 - 22n^3 + 3n^4)/24. T(n,n-3) = (96n - 134n^2 + 13n^3 + 37n^4 - 13n^5 + n^6)/48. (Peter Kagey, Mar 17 2021)\n\nReferees: The conjecture itself has no prior resolution that I found. OEIS A342645 (Kagey, Mar 17 2021; last edit #25, Aug 12 2022) still states both conjectures, and the local mirror equals upstream oeisdata. Known ingredients:\n(1) The column polynomial via Euler's pentagonal expansion: E. Netto, Lehrbuch der Combinatorik (p. 96); D. Knuth, TAOCP Vol. 3, Sec. 5.1.1; Mike Earnest, MSE answer https://math.stackexchange.com/a/4065913 (linked in the entry); also G. Hegedus, arXiv:1002.2054, Thm 1.4.\n(2) Stirling polynomials: c(N,N-k) is a polynomial of degree 2k with leading coefficient 1/(2^k k!) (C. Jordan, Calculus of Finite Differences; I. Gessel and R. Stanley, Stirling polynomials, JCTA 24 (1978)); s(n,n-k) = C(n-1,k) B_k^(n).\n(3) Denominators of Norlund polynomials: J.-L. Chabert, Integer-valued polynomials on prime numbers and logarithm power expansion, Eur. J. Combin. 28 (2007) 754-761; A. Adelberg, Discrete Math. 204 (1999), Cor. 3; F. Bencherif, Sur une propriete des polynomes de Norlund, Actes CIRM 2(2) (2010) 71-77, Lemma 1 (d_n B_n^(x) is primitive in Z[x], with d_n = M_n/n! = A001898(n) and M_n = A053657(n+1)). Together with the OEIS A053657 comment a(n) = (n-1)!*A001898(n-1) (Bala, citing Chabert-Cahen), this already gives |A290030(m)/A053657(m+1)| = 1/(2^m m!).\nNot found: any source combining these into the diagonal polynomiality of A342645 or its four FORMULA identities, on arXiv, OEIS, MSE search results, or SeqFan search results. MSE pages could not be fetched directly from this machine.",
+   "date": "2026-10-29"
+  },
+  {
    "id": "OEIS-frontier/A342992",
    "slug": "oeis-a342992",
    "title": "Every n not divisible by 5 has a multiple with only prime digits (A342992)",
@@ -2995,6 +3087,29 @@
     "challenged": false,
     "date": "2026-10-26"
    }
+  },
+  {
+   "id": "OEIS-frontier/A350499",
+   "slug": "oeis-a350499",
+   "title": "Kurkov's recursion computes the free cumulants (A350499)",
+   "area": "Discrete geometry",
+   "source": "OEIS A350499",
+   "source_url": "https://oeis.org/A350499",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A350499.lean",
+    "decl": "Math0.Statements.A350499.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "known-result-first-formalization",
+   "lean_file": "lean/Math0/Frontier/OEIS/A350499.lean",
+   "our_decl": "Math0.Frontier.A350499.result",
+   "summary": "Take indeterminate moments m_1, m_2, ... over Z, and set m_0 = 1. Let M(x) = x + m_1 x^2 + m_2 x^3 + ..., let W = M^<-1> be its compositional inverse, and let C(x) = x / W(x) = sum c_n x^n, so c_n are the free cumulants. Kurkov's array is defined by R(1,k) = m_k and, for n > 1, R(n,k) = R(n-1,k+1) - sum_{j=1}^{n-1} R(j,k) R(n-j,1). Claim: R(n,1) = c_n for every n >= 1, as an identity in Z[m_1, m_2, ...].",
+   "notes": "Conjecture as stated in OEIS: Conjecture: free cumulants in terms of the free moments are R(n,1) for n > 0 where R(n,k) = R(n-1,k+1) - Sum_{j=1..n-1} R(j,k)*R(n-j,1) for n > 1, k > 0 with R(1,k) = m_k for k > 0. - _Mikhail Kurkov_, Mar 30 2025\n\nReferees: The conjecture is an immediate special case of the free-cumulant \"products as arguments\" formula, using the identification R(n,k) = κ_n(a^k, a, …, a):\n- R. Speicher, \"Multiplicative functions on the lattice of non-crossing partitions and free convolution\", Math. Ann. 298 (1994) 611–628. This contains the case where one argument is a product.\n- B. Krawczyk and R. Speicher, \"Combinatorics of free cumulants\", J. Combin. Theory Ser. A 90 (2000) 267–292, arXiv:math/9905094, Theorem 2.2.\n- A. Nica and R. Speicher, Lectures on the Combinatorics of Free Probability, LMS Lecture Note Series 335, CUP 2006, Theorem 11.12.\n\nApplying the formula to κ_{n−1}(a^k·a, a, …, a) gives Kurkov's recursion directly.\n\nNo explicit prior proof of Kurkov's formulation was found. OEIS A350499 (%I #63, Apr 04 2025; same in the current oeisdata) still lists it as \"Conjecture … – Mikhail Kurkov, Mar 30 2025\". The related entries A134264 and A133437 and the entry's own links (Copeland's blog, MathOverflow 412573, Zhou arXiv:1405.5296) do not address it.",
+   "date": "2026-10-29"
   },
   {
    "id": "OEIS-frontier/A350557",
@@ -3242,6 +3357,29 @@
     "challenged": false,
     "date": "2026-10-26"
    }
+  },
+  {
+   "id": "OEIS-frontier/A357583",
+   "slug": "oeis-a357583",
+   "title": "Kurkov's recursion for the row polynomials of convolution triangles holds",
+   "area": "Discrete geometry",
+   "source": "OEIS A357583",
+   "source_url": "https://oeis.org/A357583",
+   "statement_origin": "math0",
+   "upstream": {
+    "repo": "math0",
+    "commit": "",
+    "file": "lean/Math0/Statements/OEIS/A357583.lean",
+    "decl": "Math0.Statements.A357583.statement",
+    "category": "OEIS conjecture"
+   },
+   "mode": "settles-proves",
+   "classification": "new-result",
+   "lean_file": "lean/Math0/Frontier/OEIS/A357583.lean",
+   "our_decl": "Math0.Frontier.A357583.result",
+   "summary": "For an integer sequence s(1), s(2), ..., let T_s(n,k) = [z^n] A(z)^k with A(z) = sum_{j>=1} s(j) z^j be its convolution triangle. Define polynomials R(n,k) in Z[x] by R(1,k) = s(k) and R(n,k) = R(n-1,k+1) + x*R(n-1,1)*R(1,k) for n > 1. Then for every n > 0 the row polynomial sum_{k=0}^{n} T_s(n,k) x^k equals x*R(n,1). In particular (s = Bell numbers) the row polynomials of A357583 are x*R(n,1) with R(1,k) = Bell(k). Both parts of the frozen statement (the Bell case and the case of an arbitrary integer sequence) are proved.",
+   "notes": "Conjecture as stated in OEIS: Conjecture: row polynomials are x*R(n,1) for n > 0 where R(n,k) = R(n-1,k+1) + x*R(n-1,1)*R(1,k) for n > 1, k > 0 with R(1,k) = Bell(k) for k > 0. The same recursion seems to work for self-convolution of any other sequence. - _Mikhail Kurkov_, Apr 05 2025\n\nReferees: I found no prior resolution.\n- The OEIS entries A357583 and A340991 are unchanged upstream since Apr 06 2025 (#10 and #24) and still say \"Conjecture\" (Mikhail Kurkov, Apr 05 2025).\n- A357368, by P. Luschny, defines the convolution-triangle (PMatrix) terminology and gives the row-polynomial recursion P(n,x)=x Σ a(n-k) P(k,x), but not Kurkov's R recursion.\n- Kurkov's sibling conjectures of the same shape are still open on OEIS: A350499, A263634, A356145, A055356.\n- Neither entry is in google-deepmind/formal-conjectures, which is the corpus behind the Tsoukalas et al. dataset and Epoch's OEIS Open benchmark (arXiv 2608.11941).\n- Sela Fried's arXiv 2607.24832 and 2410.07237 do not mention either entry.\n- Searches of arXiv, MathOverflow and GitHub (including the-omega-institute/trureturing) found nothing on this recursion.\n\nRelevant background: D. E. Knuth, \"Convolution polynomials\" (arXiv:math/9207221), on the convolution-triangle framework.",
+   "date": "2026-10-29"
   },
   {
    "id": "OEIS-frontier/A362086",
