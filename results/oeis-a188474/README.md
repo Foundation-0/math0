@@ -1,6 +1,7 @@
 # The row sums of the generalized Deutsch triangle A188474 are A137398
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A188474  
 **Date:** 2026-10-29
@@ -8,6 +9,14 @@
 ## Result
 
 Let T(n,k) = sum_{j=0}^{n-k+1} (j/(n+2-j)) C(n+2-j, n-k+1) C(n+2-j, k+1) 2^(j-1), computed in Q, for 0 <= k <= n. Let A137398(m) be the number of subsequences p of S = (0,1,...,2m-1) of length m with 0 in p such that, with q the complementary subsequence, no index i < m has the property that exchanging p(i) and q(i) leaves both p and q strictly increasing. Then for every n >= 0, sum_{k=0}^{n} T(n,k) = A137398(n+2). (This is Paul Barry's 2011 conjecture "Row sums are A137398(n+1)", in the current offset of A137398.)
+
+## Assessment
+
+The row sum collapses with one application of Vandermonde's identity to the sum of 2^(j-1)(j/N)C(2N,N-j) over j. The ballot formula turns this into a geometric series in x^2C(x)^2, and a few lines of algebra show it equals the generating function already printed in A137398, which matches Callan's path decomposition there. The Lean proof does more work, because it starts from A137398's combinatorial definition: it shows that a swap keeps both lists increasing exactly when the walk has a "hump", which is Callan's path model, and then counts with first-passage numbers. That is only a short observation plus formalization effort, so the mathematics is standard and fits in about a page.
+
+*Follows from:* Vandermonde's identity and the ballot/Lagrange formula (j/N)C(2N,N-j) = [x^N](xC(x)^2)^j give the row-sum g.f. x^2C^2/(1-2x^2C^2). That equals the g.f. 2x^2/(1-2x-4x^2+sqrt(1-4x)) stated in A137398 (%F), and also Callan's 2021 path decomposition F = x(C-1)+2x(C-1)F in A137398.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

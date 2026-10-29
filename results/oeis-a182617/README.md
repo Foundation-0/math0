@@ -1,6 +1,7 @@
 # The toothpick spiral around n hexagonal cells (A182617): a(n) = 2n + ceil(sqrt(12n - 3))
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A182617  
 **Date:** 2026-10-29
@@ -8,6 +9,14 @@
 ## Result
 
 For the toothpick spiral on the hexagonal net, encoded as in Math0.Statements.A182617, let a(n) be the least number t of toothpicks at which at least n cells are ON. Then for every n > 0, a(n) = 2n + ceil(sqrt(12n - 3)). This is Librandi's conjecture from 2017.
+
+## Assessment
+
+The walk is an explicit spiral. Ring m of vertices is visited during times 6m^2+2m to 6m^2+14m+7. Cell s of cell ring j becomes ON at time 6j^2 - 1 + 2s + c, where c (1 to 6) is one more than the number of ring corners passed so far. With n = 3j(j-1)+1+s we have 12n-3 = (6j-3)^2 + 12s, and checking which pair of consecutive squares this lies between gives ceil(sqrt(12n-3)) = 6j-3+c. Equivalently, the result is Harborth's known spiral-polyhex edge count combined with Euler's formula. That is about a page of standard counting. The long Lean proof (coordinates, case analysis over the six sides) is formalization effort, not a new idea.
+
+*Follows from:* Harborth's formula 3n + ceil(sqrt(12n-3)) for the minimal edge count of an n-cell polyhex (A135708), which spiral polyhexes attain (Harary-Harborth 1976). Together with Euler's formula this gives |V| = 2n + ceil(sqrt(12n-3)) + 1 for the n-cell spiral. The toothpick path at stage n covers exactly the spiral's vertices, so a(n) = |V| - 1. The ring-by-ring increments listed in A182618 lead to the same result.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

@@ -1959,7 +1959,16 @@
    "our_decl": "Math0.Frontier.A182617.result",
    "summary": "For the toothpick spiral on the hexagonal net, encoded as in Math0.Statements.A182617, let a(n) be the least number t of toothpicks at which at least n cells are ON. Then for every n > 0, a(n) = 2n + ceil(sqrt(12n - 3)). This is Librandi's conjecture from 2017.",
    "notes": "Conjecture as stated in OEIS: %F A182617 Conjecture: a(n) = 2*n + ceiling(sqrt(12*n - 3)), for n > 0. - _Vincenzo Librandi_, Sep 20 2017\n\nReferees: OEIS A182617 (rev #35, Sep 23 2025): the formula is still marked \"Conjecture\", with no %E lines recording a resolution. No other OEIS entry in the local mirror references A182617. Related known results:\n- A135708, minimal edge count of an n-cell polyhex, 3n + ceil(sqrt(12n-3)), attributed to H. Harborth; Kupitz 1991.\n- A135711, minimal polyhex perimeter, 2*ceil(sqrt(12n-3)).\n- F. Harary and H. Harborth, \"Extremal animals\", J. Combin. Inform. System Sci. 1 (1976): spiral animals attain the minimum.\n- G. Malen, É. Roldán and R. Toalá-Enríquez, \"Extremal {p,q}-Animals\", Ann. Comb. (2023), arXiv:2109.05331, Cor. 1.9.\n- É. Roldán and R. Toalá-Enríquez, \"Isoperimetric Formulas for Hyperbolic Animals\", arXiv:2206.14910.\n- A036496 (W. C. Yang): ceil(sqrt(12n-3)) for a triangular-lattice spiral.\n- Applegate, Pol and Sloane, \"The Toothpick Sequence and Other Sequences from Cellular Automata\", Congr. Numer. 206 (2010), arXiv:1004.3036: background only, no formula for A182617.\nNone of these states or proves the A182617 formula. They imply it only together with the extra fact that the toothpick walk's vertex set at time a(n) equals the vertex set of the extremal n-cell spiral, which I found nowhere in print.",
-   "date": "2026-10-29"
+   "date": "2026-10-29",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Harborth's formula 3n + ceil(sqrt(12n-3)) for the minimal edge count of an n-cell polyhex (A135708), which spiral polyhexes attain (Harary-Harborth 1976). Together with Euler's formula this gives |V| = 2n + ceil(sqrt(12n-3)) + 1 for the n-cell spiral. The toothpick path at stage n covers exactly the spiral's vertices, so a(n) = |V| - 1. The ring-by-ring increments listed in A182618 lead to the same result.",
+    "justification": "The walk is an explicit spiral. Ring m of vertices is visited during times 6m^2+2m to 6m^2+14m+7. Cell s of cell ring j becomes ON at time 6j^2 - 1 + 2s + c, where c (1 to 6) is one more than the number of ring corners passed so far. With n = 3j(j-1)+1+s we have 12n-3 = (6j-3)^2 + 12s, and checking which pair of consecutive squares this lies between gives ceil(sqrt(12n-3)) = 6j-3+c. Equivalently, the result is Harborth's known spiral-polyhex edge count combined with Euler's formula. That is about a page of standard counting. The long Lean proof (coordinates, case analysis over the six sides) is formalization effort, not a new idea.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A188474",
@@ -1982,7 +1991,16 @@
    "our_decl": "Math0.Frontier.A188474.result",
    "summary": "Let T(n,k) = sum_{j=0}^{n-k+1} (j/(n+2-j)) C(n+2-j, n-k+1) C(n+2-j, k+1) 2^(j-1), computed in Q, for 0 <= k <= n. Let A137398(m) be the number of subsequences p of S = (0,1,...,2m-1) of length m with 0 in p such that, with q the complementary subsequence, no index i < m has the property that exchanging p(i) and q(i) leaves both p and q strictly increasing. Then for every n >= 0, sum_{k=0}^{n} T(n,k) = A137398(n+2). (This is Paul Barry's 2011 conjecture \"Row sums are A137398(n+1)\", in the current offset of A137398.)",
    "notes": "Conjecture as stated in OEIS: %C A188474 Row sums are A137398(n+1) (conjecture). Diagonal sums are A188476. (_Paul Barry_, Apr 01 2011)\n\nReferees: No prior explicit resolution of Barry's conjecture found. The A188474 entry (local mirror, revision #6, Mar 30 2012) still marks the row-sum claim as \"(conjecture)\". The relevant prior material that makes it nearly immediate:\n- **Callan's comment on OEIS A137398 (Nov 25 2021).** A137398 counts Grand Dyck paths starting with U with no peak at height 1 and no valley at height −1, with g.f. satisfying F = x(C−1)+2x(C−1)F. This is exactly the row-sum g.f. of A188474.\n- **OEIS A137398 G.f. line.** 2x²/(1−2x−4x²+√(1−4x)), the same function after rationalizing; the original authors' recurrence a(n)=2a(n−1)+2a(n−2)+Σ C(k)a(n−k−1) is also on the entry.\n- **OEIS A100754 (E. Deutsch).** Deutsch's g.f. tzr/(1−tzr) with the Narayana function r, from which Barry's r-family g.f. follows.\n- **Goy & Shattuck, Carpathian Math. Publ. 15(2) (2023) 420–436, arXiv:2303.10223.** Thm 5 eq. (25) proves that a Fine-number determinant equals A137398, taking A137398's recurrence as its definition. It does not address A188474.\n\nSearches came up empty for arXiv, the web generally, and SeqFan (not specifically found or checked). They covered \"A188474\", \"A137398\", \"generalized Deutsch triangle\", the term string 1,2,7,22,74,252,875,3078, and Barry's Riordan/Pascal-like papers (JIS 2007, 2011, 2019; arXiv 2606.22070).",
-   "date": "2026-10-29"
+   "date": "2026-10-29",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "Vandermonde's identity and the ballot/Lagrange formula (j/N)C(2N,N-j) = [x^N](xC(x)^2)^j give the row-sum g.f. x^2C^2/(1-2x^2C^2). That equals the g.f. 2x^2/(1-2x-4x^2+sqrt(1-4x)) stated in A137398 (%F), and also Callan's 2021 path decomposition F = x(C-1)+2x(C-1)F in A137398.",
+    "justification": "The row sum collapses with one application of Vandermonde's identity to the sum of 2^(j-1)(j/N)C(2N,N-j) over j. The ballot formula turns this into a geometric series in x^2C(x)^2, and a few lines of algebra show it equals the generating function already printed in A137398, which matches Callan's path decomposition there. The Lean proof does more work, because it starts from A137398's combinatorial definition: it shows that a swap keeps both lists increasing exactly when the walk has a \"hump\", which is Callan's path model, and then counts with first-passage numbers. That is only a short observation plus formalization effort, so the mathematics is standard and fits in about a page.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A195249",
@@ -3365,7 +3383,16 @@
    "our_decl": "Math0.Frontier.A368846.result",
    "summary": "Let T(n,k) = (-1)^(n+k)·2·C(2k-1,n)·C(2n+1,2k) for k > 0 and T(n,0) = 0^n. Let A229580(n) be the number of colorings of the n X 2 array with colors 0..2 that have exactly one mistake and introduce colors in row-major 0..2 order. Here the array is connected horizontally and antidiagonally, and a mistake is an edge whose two ends have the same color. Then for every k ≥ 0, |Σ_{j=0}^{k} T(k+j,k)| = A229580(k+1). Both sides equal 1 for k = 0 and (2k+1)·2^(2k-1) for k ≥ 1.",
    "notes": "Conjecture as stated in OEIS: %C A368846 Conjecture: |Sum_{j=0..k} T(k + j, k)| = A229580(k + 1) for k >= 0. (_Peter Luschny_, Jan 07 2024)\n\nReferees: No prior proof or counterexample found. Checked: the A368846 entry (local mirror and the current oeisdata GitHub raw file, both rev #26, Feb 17 2025, still \"Conjecture\", no %E). A229580: closed form (2n-1)*2^(2n-3) credited to Gerson W. Barbosa/Gerald Hillier, 2018, given without proof; the recurrence and g.f. are marked \"Empirical\". OEIS entries citing A229580 (A383608, A385601, A386227 by Navarrete, 2025) and A368846 (A368847, A368848, A369134, A369135, A369120). T. Curtright, arXiv:2401.00586 and arXiv:2502.09633; T. Curtright and C. Vignat, arXiv:2504.18998 (they discuss diagonals of the inverse matrix, not column sums of M, and call combinatorial interpretations an open question). Blair–Flórez–Mukherjee, arXiv:2203.13205, is linked from A229580; I read only its link, not the paper. Web searches on arXiv, MSE, MathOverflow and SeqFan topics found nothing.",
-   "date": "2026-10-29"
+   "date": "2026-10-29",
+   "assessment": {
+    "depth": "routine",
+    "literal_only": false,
+    "intended_status": "",
+    "follows_from": "The closed form A229580(n) = (2n-1)*2^(2n-3) is already listed in A229580 (Barbosa/Hillier, given without proof). The column sum is the standard alternating binomial sum Sum_n (-1)^n C(N,n) C(2n+1,2k), read off as a coefficient of (1+X)(1-(1+X)^2)^N = -(1+X) X^N (X+2)^N (equivalently, the N-th finite difference of a polynomial of degree N+1).",
+    "justification": "The proof has two easy parts. First, the terms with n < k vanish, so the column sum is 2(-1)^k times an alternating binomial sum. That sum is one coefficient of an explicit polynomial and comes to -(2k+1)4^(k-1), which is a few lines of standard generating-function or finite-difference work. Second, the array graph is just a path on 2n cells taken in row-major order. Counting 3-colourings of it with exactly one monochromatic edge, up to relabelling the colours, gives (2n-1)*3*2^(2n-2)/6. This matches the closed form already listed in A229580. Each step is textbook material and the whole argument fits in well under a page, so the result is routine. The length of the Lean formalization does not change that.",
+    "challenged": false,
+    "date": "2026-10-26"
+   }
   },
   {
    "id": "OEIS-frontier/A369366",
