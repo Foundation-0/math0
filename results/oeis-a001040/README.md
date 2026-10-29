@@ -1,6 +1,7 @@
 # Kurkov's rook-tour conjecture for A001040: 2·n!·a(n) counts opposite-line Hamiltonian paths of K_n □ K_2
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A001040  
 **Date:** 2026-10-29
@@ -8,6 +9,14 @@
 ## Result
 
 For every n ≥ 1, take the n × 2 board with squares (i,c), i ∈ [n], c ∈ {0,1}. Two different squares are a rook move apart when they share a row i or a line c (this is the graph K_n □ K_2). An open tour is a sequence that visits every square exactly once, with consecutive squares a rook move apart; a tour and its reversal count separately. Count the tours whose first and last squares lie on different lines. Kurkov conjectured that this count is 2·n!·a(n), where a(0)=0, a(1)=1 and a(m+1) = m·a(m) + a(m−1) (OEIS A001040). The statement is proved.
+
+## Assessment
+
+Split a directed Hamiltonian path of the 2 x n rook graph at its moves between the two lines. The path ends on the opposite line exactly when there is an odd number 2q-1 of such switches. The path is then fixed by three choices: the start line, the ordered switch rows, and how the free squares of each line fill q ordered slots. This gives 2 n! times the sum over k of C(n-1-k,k)(n-1-k)!/k!, term by term. That sum is Paul Barry's formula for a(n), already listed in the entry. Each step is a short, standard counting argument of well under a page. The Lean proof is long and checks the closed form through a first-step recursion instead of the bijection, but that is formalization work, not a new mathematical idea.
+
+*Follows from:* Paul Barry's formula a(n+1) = Sum_k C(n-k,k)(n-k)!/k! in A001040 (%F), combined with the standard decomposition of a Hamiltonian path of K_n x K_2 into runs within one line joined by switch rows. The "Further refinement" formula in A096121 already has the opposite-line count as its first summand, without saying so.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

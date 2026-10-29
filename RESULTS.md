@@ -31,7 +31,7 @@ Two kinds of statement are used (see [Two tracks](#two-tracks)):
 <!-- HIGHLIGHTS:START -->
 **153 verified results.** 74 new results, 55 first formal proofs of known results, 18 independent formal proofs, 6 misformalization reports. Full list: [CONTENTS.md](CONTENTS.md).
 
-New results: OEIS conjectures settled, each checked by the Lean kernel, with no earlier proof or counterexample found by an independent novelty referee. An independent assessor judged the difficulty of each of these: 0 substantial and 68 routine (a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search); 6 not yet assessed. Most of these conjectures had stayed open for lack of attention, not because they were hard; each result page gives the assessor's reasons.
+New results: OEIS conjectures settled, each checked by the Lean kernel, with no earlier proof or counterexample found by an independent novelty referee. An independent assessor judged the difficulty of each of these: 0 substantial and 74 routine (a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search). Most of these conjectures had stayed open for lack of attention, not because they were hard; each result page gives the assessor's reasons.
 
 * [3 × 3 lower triangles with neighbours differing by at most two: a(n) = 1047 n - 1459 for n > 2 (A195249)](results/oeis-a195249/README.md) ([paper](results/oeis-a195249/paper.pdf))
 * [3^(3^18) + 2 is divisible by 31^2, so Hilliard's squarefree conjecture (A083020) fails](results/oeis-a083020/README.md) ([paper](results/oeis-a083020/paper.pdf))

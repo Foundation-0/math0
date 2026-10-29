@@ -1,6 +1,7 @@
 # Irwin's nested sums give column 0 of the triangle A132615 (A132616)
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A132616  
 **Date:** 2026-10-29
@@ -8,6 +9,12 @@
 ## Result
 
 Let T be the infinite lower-triangular matrix with T(0,0) = 1 in which, for every n ≥ 0, row n+1 is row n of T^(2n-1) followed by a 1. For n = 0 the formal exponent is 0, which gives the same row [1, 1]. Let a(n) = T(n,0) (OEIS A132616). Define nest 0 c = 1 and nest (m+1) c = Sum_{i=1..c+2m} nest m i. Then nest(n-1, 1) is Irwin's nested sum Sum_{i_1=1..1+2(n-2)} Sum_{i_2=1..i_1+2(n-3)} ... Sum_{i_(n-1)=1..i_(n-2)} 1. Claim: for every n ≥ 2, a(n) = nest(n-1, 1).
+
+## Assessment
+
+The proof strengthens the claim to every power of the triangle: the (n,k) entry of T^p is Irwin's nested sum with outer bound p. Somos's two-argument program a(n,k) in the entry and Hanna's partial-sums "alternate generating method" in A132615 already point to this generalization. The proof then checks the semigroup law M_p M_q = M_{p+q} by a short double induction: when p goes up by one, row n+1 changes by row n of M at a shifted exponent, and the induction hypothesis matches the two sides. It ends with uniqueness of T, so M_1 = T. This is a standard strengthen-the-induction argument of about half a page, which a competent combinatorialist would find quickly once looking at the powers, a natural move for a triangle defined by its own powers. So it is routine, even though no proof had been published before.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

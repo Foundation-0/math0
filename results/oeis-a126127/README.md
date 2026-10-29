@@ -1,6 +1,7 @@
 # A126127: Israel's conjectured bivariate g.f. of the inverse square of A061554 holds
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A126127  
 **Date:** 2026-10-29
@@ -8,6 +9,14 @@
 ## Result
 
 Let M be the infinite lower-triangular matrix with M(n,k) = binomial(n, floor((n-k)/2)) for 0 <= k <= n (A061554), and let T = M^(-2) (A126127). Then, as formal power series in x, y over Q, sum_{n>=0} sum_{k=0}^{n} T(n,k) x^n y^k = (1-x)(1-x+x^2) / (1 - xy + 3x^2 - x^3 y + x^4).
+
+## Assessment
+
+A130777, which A126127 itself points to as the inverse of A061554, already identifies M^(-1) as the Riordan array ((1-x)/(1+x^2), x/(1+x^2)). The conjecture is about the square of that array. Squaring it with the standard Riordan product rule and simplifying two short rational functions gives the stated g.f. in a few lines. The Lean proof avoids Riordan machinery and uses recurrences instead, but that is formalization effort, not a new mathematical idea.
+
+*Follows from:* The cross-referenced entry A130777 says it is the inverse of A061554 and gives it as the Riordan array ((1-x)/(1+x^2), x/(1+x^2)) (Paul Barry, 2009). Its row-polynomial o.g.f. (1-z)/(1-xz+z^2) is the bivariate g.f. of M^(-1). The standard Riordan group product (g,f)*(h,l) = (g*(h o f), l o f) then gives M^(-2) = (g*(g o f), f o f), where g*(g o f) = (1-x)(1-x+x^2)/(1+3x^2+x^4) and f o f = x(1+x^2)/(1+3x^2+x^4). That is exactly Israel's g.f.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

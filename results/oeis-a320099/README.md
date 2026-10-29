@@ -1,6 +1,7 @@
 # Kagey's order-10 recurrence for no-leaf subgraphs of the 5 × n grid holds
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A320099  
 **Date:** 2026-10-29
@@ -8,6 +9,14 @@
 ## Result
 
 Let a(n) be the number of edge subsets S of the 5 × n grid graph (all vertices kept) such that no vertex has degree exactly 1 in S (OEIS A320099). Then for every n > 10, a(n) = 103 a(n-1) + 1063 a(n-2) - 1873 a(n-3) - 20274 a(n-4) + 44071 a(n-5) - 10365 a(n-6) - 20208 a(n-7) + 5959 a(n-8) + 2300 a(n-9) - 500 a(n-10). This is an identity of integers.
+
+## Assessment
+
+The proof writes a(n) as an entry of the n-th power of the standard 32 x 32 column transfer matrix, which is the textbook way to count local subgraph patterns on a strip of fixed width. The recurrence then follows from one finite linear identity among the first 11 rows of powers of T, checked by direct computation, and multiplying that identity by T^m extends it to every n. No new idea was needed: the method is standard, and once set up the conjecture is a finite computation. Most of the Lean work goes into formalizing the edge-set/column-data bijection, and that effort does not make the mathematics substantial.
+
+*Follows from:* Standard column transfer-matrix method (e.g. Raff, arXiv:0809.2551). A 32 x 32 matrix T has rows and columns indexed by the sets of horizontal edges between adjacent columns, and a(n) = (T^n)[0,0]. The recurrence then reduces to a finite check: the row vector e_0 is annihilated by x*P(T), where P is Kagey's characteristic polynomial. A Cayley-Hamilton argument does the same job.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 

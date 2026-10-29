@@ -1,6 +1,7 @@
 # O'Sullivan's Gaussian-polynomial / Chebyshev representation conjecture (A267486), proved
 
 **Classification:** New result (conjecture settled; no earlier resolution found)  
+**Difficulty (independent assessment):** routine  
 **Area:** Discrete geometry  
 **Source problem:** OEIS A267486  
 **Date:** 2026-10-29
@@ -8,6 +9,14 @@
 ## Result
 
 Fix m, n ≥ 0 and put N = n + ⌊m/2⌋, so that 2n + m + 1 - (m mod 2) = 2N + 1. Let g = g(m;n) be mn for odd m and (2n+1)m/2 for even m. Let G(m;n,x) be the coefficient of t^m in (1+t) ∏_{k=1}^{N} (1 + t² + 2t T_k(x/2)), where T_k is the Chebyshev polynomial of the first kind. Write a(m;n,k) = [x^k] G(m;n,x). The claim is that deg_x G(m;n,x) ≤ g, and that the Gaussian polynomial satisfies [2N+1, m]_q = Σ_{k=0}^{g} a(m;n,k) (1+q²)^k q^{g-k}. The Gaussian polynomial is the one defined by the q-Pascal rule [M+1,m+1] = [M,m] + q^{m+1}[M,m+1].
+
+## Assessment
+
+Put x = q + 1/q. Then 2T_k(x/2) = q^k + q^{-k}, so each factor 1 + t^2 + 2tT_k(x/2) splits as (1+tq^k)(1+tq^{-k}), and (1+t) times the product equals prod_{j=-N}^{N}(1+tq^j). The classical finite q-binomial theorem then gives the coefficient of t^m as q^{-g}[2N+1,m]_q, which is exactly the claimed expansion. The degree bound follows because [2N+1,m]_q has q-span 2g. This is the full proof, well under a page, built from two textbook facts. It settles the general conjecture as the author intended it, not only some degenerate reading.
+
+*Follows from:* The Cauchy/Rothe finite q-binomial theorem, prod_{j=0}^{M-1}(1+q^j t) = sum_m q^{C(m,2)} [M,m]_q t^m, combined with the standard Chebyshev identity 2T_k((q+1/q)/2) = q^k + q^{-k}.
+
+*How this was judged:* an independent assessor agent, asked to judge the difficulty of the mathematics and not to inflate it, rated it **routine**. Routine means a short or standard argument, a consequence of material already in the OEIS entry, its cross-references or the literature, or a finite search; substantial means a non-standard idea or a long argument that does not follow readily from such material.  (2026-10-26)
 
 ## Verification
 
