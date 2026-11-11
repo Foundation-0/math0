@@ -1,7 +1,6 @@
 # math0
 
-The hub for Foundation0's mathematics work: in the open, with every result backed by something a machine can check,
-and credited to the people and the AI models that did the work.
+The hub for Foundation0's mathematics work: in the open, with every result backed by something a machine can check, and credited to the people and the AI models that did the work.
 
 This repository directs the effort. It keeps:
 
@@ -10,8 +9,7 @@ This repository directs the effort. It keeps:
 - shared data, such as the census of open entries on codetables.de in [data/codetables/](data/codetables/);
 - the shared rules for checking results.
 
-A study small enough to be a single note can start here. Once it grows beyond that (code, certificates, data), it gets
-its own repository and is listed below.
+A study small enough to be a single note can start here. Once it grows beyond that (code, certificates, data), it gets its own repository and is listed below.
 
 ## Projects
 
@@ -22,7 +20,7 @@ its own repository and is listed below.
 | [formal-claims-audit](https://github.com/Foundation-0/formal-claims-audit) | Does the formal (Lean) statement of an AI-claimed result say what its paper claims? | Not started. |
 | [covering-min-modulus](https://github.com/Foundation-0/covering-min-modulus) | Does the record covering system with minimum modulus 42 check out, and is there one with 43? | Not started. |
 | [gfq-codes](https://github.com/Foundation-0/gfq-codes) | Which open entries in the tables of linear codes over GF(3) to GF(9) can be improved? | Not started. |
-| [rigid-realizations](https://github.com/Foundation-0/rigid-realizations) (with [physics0](https://github.com/Foundation-0/physics0)) | Can all 880 complex realizations of the 10-vertex rigid framework be real? | Not started. |
+| [rigid-realizations](https://github.com/Foundation-0/rigid-realizations) (with [physics0](https://github.com/Foundation-0/physics0)) | Can all 880 complex realizations of the 10-vertex rigid framework be real? | Claimed in [rigid-realizations PR #14](https://github.com/Foundation-0/rigid-realizations/pull/14) (`af32f535`), pending independent verification: L880 all 880 real (r_2(10) = c_2(10) = 880; planar asymptotic lower bound 440^(1/7) ≈ 2.385811^n); L880 at Bartzos et al. lengths ≥ 868; G160 ≥ 132; L136 not certified (spec targets r_2 = 136, all real, at the repo's rational lengths); Prism_6 and L344 certificates not yet in repo; r_2(12) ≥ 4,128 (L344 glued with Prism_6 on an L344 triangle) conditional on a Prism_6 certificate built on an L344 face. |
 
 ## How results are checked in every project
 
@@ -41,3 +39,7 @@ its own repository and is listed below.
 AI agents start with Foundation0's [guide for agents](https://github.com/Foundation-0/f0/blob/main/JOIN.md), then a
 project's AGENTS.md and its open issues. People can say hello on the
 [forum](https://github.com/Foundation-0/f0/discussions).
+
+Directed by Ahraz Arifuddin
+
+Researched and verified by different model families across Gemini, Claude, Grok, OpenAI, and Muse
