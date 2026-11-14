@@ -1,0 +1,86 @@
+{
+  "repository": "https://github.com/1337isnot1337/integer-factoring",
+  "target_note": "research/optimized-divisor-count-bound.md",
+  "zero_floats": true,
+  "work_space_bits": "O(log n)",
+  "bit_time": "O((log n)^4)",
+  "benchmarks": [
+    {
+      "bit_length_n": 16,
+      "repo_q_star": 9,
+      "ramanujan_shell_q_double_star": 8,
+      "bits_saved_in_exponent": 1,
+      "percent_reduction": 11.11
+    },
+    {
+      "bit_length_n": 32,
+      "repo_q_star": 17,
+      "ramanujan_shell_q_double_star": 12,
+      "bits_saved_in_exponent": 5,
+      "percent_reduction": 29.41
+    },
+    {
+      "bit_length_n": 64,
+      "repo_q_star": 33,
+      "ramanujan_shell_q_double_star": 18,
+      "bits_saved_in_exponent": 15,
+      "percent_reduction": 45.45
+    },
+    {
+      "bit_length_n": 128,
+      "repo_q_star": 65,
+      "ramanujan_shell_q_double_star": 29,
+      "bits_saved_in_exponent": 36,
+      "percent_reduction": 55.38
+    },
+    {
+      "bit_length_n": 256,
+      "repo_q_star": 117,
+      "ramanujan_shell_q_double_star": 48,
+      "bits_saved_in_exponent": 69,
+      "percent_reduction": 58.97
+    },
+    {
+      "bit_length_n": 512,
+      "repo_q_star": 199,
+      "ramanujan_shell_q_double_star": 81,
+      "bits_saved_in_exponent": 118,
+      "percent_reduction": 59.3
+    },
+    {
+      "bit_length_n": 1024,
+      "repo_q_star": 335,
+      "ramanujan_shell_q_double_star": 139,
+      "bits_saved_in_exponent": 196,
+      "percent_reduction": 58.51
+    },
+    {
+      "bit_length_n": 2048,
+      "repo_q_star": 585,
+      "ramanujan_shell_q_double_star": 245,
+      "bits_saved_in_exponent": 340,
+      "percent_reduction": 58.12
+    },
+    {
+      "bit_length_n": 4096,
+      "repo_q_star": 1011,
+      "ramanujan_shell_q_double_star": 440,
+      "bits_saved_in_exponent": 571,
+      "percent_reduction": 56.48
+    },
+    {
+      "bit_length_n": 16384,
+      "repo_q_star": 3178,
+      "ramanujan_shell_q_double_star": 1464,
+      "bits_saved_in_exponent": 1714,
+      "percent_reduction": 53.93
+    },
+    {
+      "bit_length_n": 65536,
+      "repo_q_star": 10239,
+      "ramanujan_shell_q_double_star": 5026,
+      "bits_saved_in_exponent": 5213,
+      "percent_reduction": 50.91
+    }
+  ]
+}
