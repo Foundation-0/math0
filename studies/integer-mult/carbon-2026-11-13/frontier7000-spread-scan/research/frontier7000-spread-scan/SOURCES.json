@@ -1,0 +1,45 @@
+{
+  "schema": "integer-mult-sources/v1",
+  "base_repository": "https://github.com/CrocSwap/integer-mult-bounds",
+  "base_commit": "e545235",
+  "selected_frontier_pr": 7000,
+  "audited_source_head": "93effe2a135bf57b9e484cb630d8dd057159aec9",
+  "entries": [
+    {
+      "path": "research/frontier7000-spread-scan/certificates/frontier7000_spread_scan_certificate.json",
+      "usage": "input",
+      "git_blob": "bdca2d6f2f54d3e8a2f929765bb682b89d0df38e",
+      "sha256": "c1c17165d1b1535d207b362175bed2f2151b14fb4968f55121d038397cb0ae8e"
+    },
+    {
+      "path": "research/frontier7000-spread-scan/c11_frontier7000_scanner.c",
+      "usage": "input",
+      "git_blob": "3a85d9db911c10982cb98150f0440877f7498d5f",
+      "sha256": "338954785fd6f9e691160dfa50a7866c749df0652c623cc72ba71b28f674679e"
+    },
+    {
+      "path": "research/frontier7000-spread-scan/formal/Frontier7000SpreadBounds.lean",
+      "usage": "input",
+      "git_blob": "6c0c0093c87ba6ec8f063feec8dee850bb0127df",
+      "sha256": "1f9cf23c319abb397ffd38a711ae0e87bedba4919c0a0f15fefc73575d763a06"
+    },
+    {
+      "path": "research/frontier7000-spread-scan/check_spread_scan.py",
+      "usage": "input",
+      "git_blob": "9391bdc3e2a9bec255c0fc75a8c84633849e76bc",
+      "sha256": "b34ca2c2423ad80b8ee93c24dc90eccad57fc39acd3c70508c39890226cec342"
+    },
+    {
+      "path": "research/shared-wire-split-composition/FULL-RESULT.json",
+      "usage": "provenance",
+      "sha256": "d9ba709fa5dceffe3f3abdcf34600ce188224703cfd743e6db8b58ba4816cb7",
+      "note": "Verbatim Frontier #7000 T (23,392) and P (117,612) histograms & raw_bracket"
+    },
+    {
+      "path": "certificates/frontier7000/CLAIM.json",
+      "usage": "provenance",
+      "pin": "93effe2a135bf57b9e484cb630d8dd057159aec9",
+      "note": "Frontier #7000 BIT premise (376669/100000000) & outer savings"
+    }
+  ]
+}

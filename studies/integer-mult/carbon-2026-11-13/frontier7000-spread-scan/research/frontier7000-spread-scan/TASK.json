@@ -1,0 +1,18 @@
+{
+  "schema": "integer-mult-task/v1",
+  "priority_revision": 8,
+  "original_card": {
+    "task_id": "frontier7000-paid-histogram-spread-scan",
+    "bottleneck": "Integer Multiplication Gap & Shared-Native Helper Itinerary Splits",
+    "source": "research/shared-wire-split-composition/README.md Open Question 1"
+  },
+  "scope_status": "refined",
+  "scope_change_reason": "Quantifies exact Karamata-Jensen spread headroom across all 117,612 Frontier #7000 paid calls and establishes the GL_9 commuting-spectator flag re-pivoting criterion.",
+  "time_budget_minutes": 60,
+  "outcome": "scoped_audit_and_exact_certificate",
+  "selected_frontier_changed": false,
+  "open_next_questions": [
+    "Scan consecutive per-owner MOVE pairs in `data/final.json.gz` for commuting-spectator spreads in buckets r=3, 4, 5.",
+    "Lift BIT cover premise from 0.00376669 toward admitted ordinary saving 0.00385248 once Complex crosses 0.00376669."
+  ]
+}

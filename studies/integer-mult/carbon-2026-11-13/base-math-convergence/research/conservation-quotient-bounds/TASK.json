@@ -1,0 +1,19 @@
+{
+  "schema": "integer-mult-task/v1",
+  "priority_revision": 8,
+  "original_card": {
+    "task_id": "compiler-closure-and-power-sum-bounds",
+    "bottleneck": "Native Arithmetic Operator Coverage, Dirty Restoration & Power-Sum Verification",
+    "source": "autoresearch.md (Priority Revision 8)"
+  },
+  "scope_status": "refined",
+  "scope_change_reason": "Unifies search-free cut-rank bounds, indefinite reverse-frame / Helper300 persistent+cache left-inverse restoration, and zero-float rational power-sum + Karamata-Farkas histogram bounds.",
+  "time_budget_minutes": 60,
+  "outcome": "scoped_proof_and_exact_certificate",
+  "selected_frontier_changed": false,
+  "open_next_questions": [
+    "Scan Frontier #7000 paid-call histograms for reversible mean-preserving contractions (r-d, r+d) -> (r, r).",
+    "Instantiate the Z[1/4] closed-form post-decoder L against the full 632-field Helper300 suffix invoice.",
+    "Run `lake env lean` on `formal/BaseMathConvergence.lean` in the pinned Lean CI environment."
+  ]
+}

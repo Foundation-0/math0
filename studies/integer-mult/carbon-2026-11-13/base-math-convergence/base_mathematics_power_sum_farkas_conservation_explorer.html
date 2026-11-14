@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Base-Mathematics Power-Sum &amp; Farkas Conservation Explorer</title>
+  <style>
+    body, svg, button, input, select { font-family: var(--ff-sans, 'Google Sans Flex', 'Google Sans', sans-serif); }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+    .kpi-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 10px; margin-bottom: 12px; }
+    .kpi-val { font-size: 21px; line-height: 27px; font-weight: 480; font-variant-numeric: tabular-nums; color: var(--on-surface); margin-top: 4px; font-family: var(--ff-mono, 'Google Sans Code', monospace); }
+    .kpi-sub { font-size: 12px; color: var(--on-surface-variant); margin-top: 3px; font-variant-numeric: tabular-nums; }
+    .stage-card { background: var(--surface-bright); border-radius: var(--r-m); padding: 14px 16px; margin-bottom: 12px; }
+    .bar-track { display: flex; height: 26px; border-radius: var(--r-s); overflow: hidden; gap: 2px; margin-bottom: 8px; background: var(--surface-dim); }
+    .bar-seg { display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; font-variant-numeric: tabular-nums; transition: width 0.14s ease; white-space: nowrap; overflow: hidden; }
+    .legend-row { display: flex; justify-content: space-between; align-items: center; gap: 14px; font-size: 12px; color: var(--on-surface-variant); flex-wrap: wrap; }
+    .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+    .gate-pills { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-top: 10px; }
+    .gate-pill { background: var(--surface-dim); border-radius: var(--r-s); padding: 8px 10px; font-size: 12px; color: var(--on-surface); font-variant-numeric: tabular-nums; }
+    .gate-title { color: var(--on-surface-variant); font-size: 12px; margin-bottom: 2px; }
+    .control-deck { display: flex; flex-direction: column; gap: 12px; padding: 14px 18px; background: var(--surface-bright); border-radius: var(--r-m); }
+  </style>
+</head>
+<body>
+  <div class="widget-container" id="viz-zone">
+    <div class="top-bar">
+      <div class="lumi-segmented-group" role="group" aria-label="Multiplier Block Preset">
+        <button type="button" class="lumi-segmented-btn" data-preset="p450">PR #450</button>
+        <button type="button" class="lumi-segmented-btn" data-preset="p469">Aska #469</button>
+        <button type="button" class="lumi-segmented-btn is-active" data-preset="pruned">Concavity-Pruned</button>
+        <button type="button" class="lumi-segmented-btn" data-preset="farkas">Cut-Rank Limit</button>
+      </div>
+      <span class="lumi-body-s" style="color: var(--on-surface-variant); font-family: var(--ff-mono, monospace);">Frontier #7000: κ = 0.00363005817</span>
+    </div>
+
+    <div class="kpi-strip">
+      <div class="lumi-summary-card">
+        <div class="lumi-label-s" style="color: var(--on-surface-variant);">Break-Even Exponent κ</div>
+        <div class="kpi-val" id="out-kappa">0.0013505878</div>
+        <div class="kpi-sub" id="out-delta-k">+0.2110% vs PR #450</div>
+      </div>
+      <div class="lumi-summary-card">
+        <div class="lumi-label-s" style="color: var(--on-surface-variant);">Farkas Ceiling Gap</div>
+        <div class="kpi-val" id="out-gap">1.883e-5</div>
+        <div class="kpi-sub" id="out-status">Feasible below Farkas dual</div>
+      </div>
+      <div class="lumi-summary-card">
+        <div class="lumi-label-s" style="color: var(--on-surface-variant);">Active Child Jobs (Σ n_r)</div>
+        <div class="kpi-val" id="out-jobs">46,374</div>
+        <div class="kpi-sub">Conserved work Σ r·n_r = 93,192</div>
+      </div>
+    </div>
+
+    <div class="stage-card">
+      <div class="bar-track" role="img" aria-label="Recursive power-sum bill shares by child size tier">
+        <div id="seg-r1" class="bar-seg" style="background: var(--chart-1); width: 28.2%;">r=1</div>
+        <div id="seg-r23" class="bar-seg" style="background: var(--chart-3); width: 34.1%;">r=2..3</div>
+        <div id="seg-r57" class="bar-seg" style="background: var(--chart-8); width: 10.5%;">r=5..7</div>
+        <div id="seg-rest" class="bar-seg" style="background: var(--chart-2); width: 27.2%;">r≥4,56</div>
+      </div>
+      <div class="legend-row">
+        <div>
+          <span><span class="dot" style="background: var(--chart-1);"></span>Size r=1 leaves</span>
+          <span style="margin-left: 10px;"><span class="dot" style="background: var(--chart-3);"></span>Coalesced r=2..3</span>
+          <span style="margin-left: 10px;"><span class="dot" style="background: var(--chart-8);"></span>Band r=5..7 (6¹² &lt; 5⁵·7⁷)</span>
+          <span style="margin-left: 10px;"><span class="dot" style="background: var(--chart-2);"></span>Anchors r=4,8,14,56</span>
+        </div>
+        <span id="out-567-note" style="font-family: var(--ff-mono, monospace);">Δbill(5..7): 0.00e+0</span>
+      </div>
+      <div class="gate-pills">
+        <div class="gate-pill">
+          <div class="gate-title">I. Cut-Rank Gate (Soko / #5470)</div>
+          <div id="gate-cut">n₁ ≥ 25,000 · Σ₁³ r·n_r ≥ 58,432</div>
+        </div>
+        <div class="gate-pill">
+          <div class="gate-title">II. Null-Space Gate (Weft / #5470)</div>
+          <div>ker(P)=8 → L·[P;C]=I₂₈ (ker=0)</div>
+        </div>
+        <div class="gate-pill">
+          <div class="gate-title">III. Farkas Dual Ceiling (ASMA)</div>
+          <div>κ_max = 0.0014674424 (exact Q)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="control-deck">
+      <div class="lumi-slider-row">
+        <label class="lumi-slider-label" for="in-coal">Coalesce r=1 → {2,3} (ΔN &lt; 0, saves)</label>
+        <div class="lumi-slider-container">
+          <input id="in-coal" class="lumi-slider" type="range" min="0" max="2060" step="10" value="649" style="--progress: 31.5%;">
+          <div id="val-coal" class="lumi-slider-value">-649</div>
+        </div>
+      </div>
+      <div class="lumi-slider-row">
+        <label class="lumi-slider-label" for="in-spread">Band {5,6,7} Shift (-contract / +spread)</label>
+        <div class="lumi-slider-container">
+          <input id="in-spread" class="lumi-slider" type="range" min="-154" max="231" step="11" value="0" style="--progress: 40.0%;">
+          <div id="val-spread" class="lumi-slider-value">0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function getCssVar(name, fallback = '') {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+    }
+    function contrastText(bg) {
+      const c = (bg || '').replace(/\s/g, '');
+      let r = 0, g = 0, b = 0;
+      if (c.startsWith('#')) {
+        const hex = c.slice(1);
+        const full = hex.length === 3 ? hex.split('').map(x => x + x).join('') : hex;
+        r = parseInt(full.slice(0, 2), 16);
+        g = parseInt(full.slice(2, 4), 16);
+        b = parseInt(full.slice(4, 6), 16);
+      } else {
+        const m = c.match(/\d+/g);
+        if (!m || m.length < 3) return getCssVar('--on-surface', '#000000');
+        [r, g, b] = m.map(Number);
+      }
+      const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      return lum > 0.45 ? '#000000' : '#ffffff';
+    }
+    function syncSliderProgress(slider) {
+      const min = parseFloat(slider.min || '0');
+      const max = parseFloat(slider.max || '100');
+      const val = parseFloat(slider.value || '0');
+      const pct = max > min ? ((val - min) / (max - min)) * 100 : 0;
+      slider.style.setProperty('--progress', `${pct}%`);
+    }
+
+    const M_BLK = 78;
+    const W_ROLES = 1200;
+    const KAPPA_450 = 0.001347744547714835;
+    const KAPPA_CEIL = 0.001467442448;
+    const FEE_469 = 3.85e-14;
+    const SIZES = [1, 2, 3, 4, 5, 6, 7, 8, 14, 56];
+    const BASE_450 = [27060, 11132, 3036, 3465, 1188, 462, 154, 99, 1, 184];
+
+    const coalEl = document.getElementById('in-coal');
+    const spreadEl = document.getElementById('in-spread');
+    const presetBtns = Array.from(document.querySelectorAll('.lumi-segmented-btn'));
+
+    function computeCounts(coal, spread) {
+      const c = BASE_450.slice();
+      const frac2 = 77 / 649;
+      const frac3 = 165 / 649;
+      const dn2 = Math.round(coal * frac2);
+      const remMass = coal - 2 * dn2;
+      const dn3 = Math.floor(remMass / 3);
+      const used1 = 2 * dn2 + 3 * dn3;
+      c[0] -= used1;
+      c[1] += dn2;
+      c[2] += dn3;
+      // spread > 0 spreads (6,6) -> (5,7); spread < 0 contracts (5,7) -> (6,6) (Aska #469 used -99)
+      c[4] += spread;
+      c[5] -= 2 * spread;
+      c[6] += spread;
+      return { counts: c, used1 };
+    }
+
+    function billAt(counts, a) {
+      let s = 0;
+      for (let i = 0; i < SIZES.length; i++) {
+        s += counts[i] * Math.pow(SIZES[i] / M_BLK, 1 - a);
+      }
+      return s / W_ROLES + FEE_469;
+    }
+
+    function solveBreakEven(counts) {
+      let lo = 0.0, hi = 0.003;
+      for (let it = 0; it < 64; it++) {
+        const mid = 0.5 * (lo + hi);
+        if (billAt(counts, mid) < 1.0) lo = mid;
+        else hi = mid;
+      }
+      const a = 0.5 * (lo + hi);
+      return { a, kappa: a / (1 + a) };
+    }
+
+    function updateModel(fromPreset = false) {
+      syncSliderProgress(coalEl);
+      syncSliderProgress(spreadEl);
+      const rawCoal = parseInt(coalEl.value, 10);
+      const spread = parseInt(spreadEl.value, 10);
+      const { counts, used1 } = computeCounts(rawCoal, spread);
+      const { a, kappa } = solveBreakEven(counts);
+
+      document.getElementById('val-coal').textContent = used1 === 0 ? '0' : `-${used1}`;
+      document.getElementById('val-spread').textContent = spread > 0 ? `+${spread}` : `${spread}`;
+
+      const pctGain = ((kappa - KAPPA_450) / KAPPA_450) * 100;
+      const gap = Math.max(0, KAPPA_CEIL - kappa);
+      const totalJobs = counts.reduce((acc, v) => acc + v, 0);
+      const mass123 = counts[0] + 2 * counts[1] + 3 * counts[2];
+      const cutLegal = counts[0] >= 25000 && mass123 >= 58432;
+
+      document.getElementById('out-kappa').textContent = kappa.toFixed(10);
+      document.getElementById('out-delta-k').textContent = `${pctGain >= 0 ? '+' : ''}${pctGain.toFixed(4)}% vs PR #450`;
+      document.getElementById('out-gap').textContent = gap.toExponential(3);
+      const statusEl = document.getElementById('out-status');
+      statusEl.textContent = cutLegal ? 'Cut-rank legal (below Farkas dual)' : 'Violates cut-rank floor (n₁ or Σ₁³)';
+      statusEl.style.color = cutLegal ? 'var(--positive)' : 'var(--error)';
+      document.getElementById('out-jobs').textContent = totalJobs.toLocaleString('en-US');
+
+      const d567 = (spread * Math.pow(5 / M_BLK, 1 - a) - 2 * spread * Math.pow(6 / M_BLK, 1 - a) + spread * Math.pow(7 / M_BLK, 1 - a)) / W_ROLES;
+      document.getElementById('out-567-note').textContent = `Δbill(5..7): ${d567 >= 0 ? '+' : ''}${d567.toExponential(2)}`;
+      document.getElementById('gate-cut').textContent = `n₁=${counts[0].toLocaleString('en-US')} · Σ₁³r·n=${mass123.toLocaleString('en-US')}`;
+
+      const b1 = counts[0] * Math.pow(1 / M_BLK, 1 - a);
+      const b23 = counts[1] * Math.pow(2 / M_BLK, 1 - a) + counts[2] * Math.pow(3 / M_BLK, 1 - a);
+      const b57 = counts[4] * Math.pow(5 / M_BLK, 1 - a) + counts[5] * Math.pow(6 / M_BLK, 1 - a) + counts[6] * Math.pow(7 / M_BLK, 1 - a);
+      const bRest = counts[3] * Math.pow(4 / M_BLK, 1 - a) + counts[7] * Math.pow(8 / M_BLK, 1 - a) + counts[8] * Math.pow(14 / M_BLK, 1 - a) + counts[9] * Math.pow(56 / M_BLK, 1 - a);
+      const tot = b1 + b23 + b57 + bRest;
+
+      const segs = [
+        ['seg-r1', (b1 / tot) * 100, '--chart-1', '#2575fc', 'r=1'],
+        ['seg-r23', (b23 / tot) * 100, '--chart-3', '#228a49', 'r=2..3'],
+        ['seg-r57', (b57 / tot) * 100, '--chart-8', '#997112', 'r=5..7'],
+        ['seg-rest', (bRest / tot) * 100, '--chart-2', '#5b6e9e', 'r≥4,56']
+      ];
+      segs.forEach(([id, pct, tok, fb, lbl]) => {
+        const el = document.getElementById(id);
+        el.style.width = `${pct.toFixed(1)}%`;
+        el.textContent = pct >= 11 ? `${lbl} ${pct.toFixed(1)}%` : '';
+        el.style.color = contrastText(getCssVar(tok, fb));
+      });
+
+      if (!fromPreset) {
+        presetBtns.forEach(b => b.classList.remove('is-active'));
+      }
+    }
+
+    const PRESETS = {
+      p450: [0, 0],
+      p469: [649, -99],
+      pruned: [649, 0],
+      farkas: [2060, 231]
+    };
+
+    presetBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        presetBtns.forEach(b => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+        const [cVal, sVal] = PRESETS[btn.dataset.preset];
+        coalEl.value = String(cVal);
+        spreadEl.value = String(sVal);
+        updateModel(true);
+      });
+    });
+
+    coalEl.addEventListener('input', () => updateModel(false));
+    spreadEl.addEventListener('input', () => updateModel(false));
+    updateModel(true);
+  </script>
+</body>
+</html>

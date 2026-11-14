@@ -1,0 +1,12 @@
+{
+  "package": "research/cubic-general-frames-and-2adic-obstruction",
+  "contract_version": "1.0",
+  "entrypoint": "verify.py",
+  "secondary_oracle": "independent_check.py",
+  "certificates_sha256": "697498fee5a1492d3dd86b3e27a6a434f75434d5a5f167081cad2f0c43e4c725",
+  "stages": [
+    "PASS_STAGE1_CERTIFICATE_SHA256",
+    "PASS_STAGE2_TWENTY_NEW_GENERAL_WITNESSES",
+    "PASS_STAGE3_ODD_S_2ADIC_MONIC_OBSTRUCTION"
+  ]
+}
