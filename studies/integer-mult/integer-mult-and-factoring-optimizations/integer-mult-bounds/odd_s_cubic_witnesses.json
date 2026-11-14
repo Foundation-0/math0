@@ -1,0 +1,167 @@
+{
+  "repository": "https://github.com/CrocSwap/integer-mult-bounds",
+  "odd_s_non_monic_conjecture_refuted": true,
+  "new_odd_s_general_frame_witness_count": 5,
+  "witnesses": [
+    {
+      "arity": 14,
+      "S": 91,
+      "S_is_odd": true,
+      "monic_3query_impossible_over_Z3": true,
+      "rows": [
+        [
+          5,
+          29
+        ],
+        [
+          1,
+          -7
+        ],
+        [
+          1,
+          6
+        ]
+      ],
+      "weights": [
+        "-91/32",
+        "-49/32",
+        "357"
+      ],
+      "pairwise_determinants": {
+        "d01": -64,
+        "d02": 1,
+        "d12": 13
+      },
+      "non_unit_u_count": 1,
+      "has_even_u": false
+    },
+    {
+      "arity": 18,
+      "S": 153,
+      "S_is_odd": true,
+      "monic_3query_impossible_over_Z3": true,
+      "rows": [
+        [
+          27,
+          95
+        ],
+        [
+          1,
+          18
+        ],
+        [
+          21,
+          74
+        ]
+      ],
+      "weights": [
+        "-1",
+        "27/8",
+        "17/8"
+      ],
+      "pairwise_determinants": {
+        "d01": 391,
+        "d02": 3,
+        "d12": -304
+      },
+      "non_unit_u_count": 2,
+      "has_even_u": false
+    },
+    {
+      "arity": 55,
+      "S": 1485,
+      "S_is_odd": true,
+      "monic_3query_impossible_over_Z3": true,
+      "rows": [
+        [
+          7,
+          48
+        ],
+        [
+          1,
+          9
+        ],
+        [
+          5,
+          237
+        ]
+      ],
+      "weights": [
+        "-1",
+        "10351/32",
+        "5/32"
+      ],
+      "pairwise_determinants": {
+        "d01": 15,
+        "d02": 1419,
+        "d12": 192
+      },
+      "non_unit_u_count": 2,
+      "has_even_u": false
+    },
+    {
+      "arity": 71,
+      "S": 2485,
+      "S_is_odd": true,
+      "monic_3query_impossible_over_Z3": true,
+      "rows": [
+        [
+          7,
+          257
+        ],
+        [
+          1,
+          -14
+        ],
+        [
+          5,
+          186
+        ]
+      ],
+      "weights": [
+        "-7",
+        "-3297/128",
+        "2485/128"
+      ],
+      "pairwise_determinants": {
+        "d01": -355,
+        "d02": 17,
+        "d12": 256
+      },
+      "non_unit_u_count": 2,
+      "has_even_u": false
+    },
+    {
+      "arity": 82,
+      "S": 3321,
+      "S_is_odd": true,
+      "monic_3query_impossible_over_Z3": true,
+      "rows": [
+        [
+          2,
+          97
+        ],
+        [
+          1,
+          -10
+        ],
+        [
+          1,
+          47
+        ]
+      ],
+      "weights": [
+        "82",
+        "-41",
+        "-615"
+      ],
+      "pairwise_determinants": {
+        "d01": -117,
+        "d02": -3,
+        "d12": 57
+      },
+      "non_unit_u_count": 1,
+      "has_even_u": true
+    }
+  ]
+}
