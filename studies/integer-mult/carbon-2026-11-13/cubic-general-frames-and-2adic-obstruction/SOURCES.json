@@ -1,0 +1,25 @@
+{
+  "repository": "https://github.com/CrocSwap/integer-mult-bounds",
+  "references": [
+    {
+      "id": "PR6653",
+      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/6653",
+      "scope": "17 monic 3-query dyadic arities and Open Question 1"
+    },
+    {
+      "id": "PR7475",
+      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/7475",
+      "scope": "General-frame r=24 witness and remaining open arities r=15,22,30,31"
+    },
+    {
+      "id": "PR7478",
+      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/7478",
+      "scope": "Pell recurrence classification for equal-weight repairs"
+    },
+    {
+      "id": "PR7479",
+      "url": "https://github.com/CrocSwap/integer-mult-bounds/pull/7479",
+      "scope": "3-query solvability modulo every odd integer m > 1 and r=15 global valuation question"
+    }
+  ]
+}

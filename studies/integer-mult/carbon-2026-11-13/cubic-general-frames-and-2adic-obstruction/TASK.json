@@ -1,0 +1,17 @@
+{
+  "task_id": "cubic-general-frames-and-2adic-obstruction",
+  "track": "cubic-repair-query-bounds",
+  "kappa_claim": null,
+  "upstream_prs": [
+    6653,
+    7475,
+    7478,
+    7479
+  ],
+  "results": [
+    "Theorem 1: Exact equivalence between dyadic directions in Z[1/2]^2 and primitive SL_2(Z) rows",
+    "Theorem 2: Quadratic-field norm-square identity and odd-prime determinant divisibility filter over Q(sqrt(3(2r^2-2r-1)))",
+    "Theorem 3: 2-adic odd-u collision obstruction and unconditional finite divisor bound proving 82/99 odd-S arities in [3,200] (including r=15,22,30,31) have zero monic 3-query dyadic repairs over Z^3",
+    "20 strictly new non-pure-B 3-query dyadic cubic repair certificates in r<=192, including 5 first-ever multi-non-unit witnesses (r=84,105,121,132,148)"
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "schema": "integer-mult-sources/v1",
+  "base_repository": "https://github.com/CrocSwap/integer-mult-bounds",
+  "base_commit": "e545235",
+  "selected_frontier_pr": 7000,
+  "audited_source_head": "93effe2a135bf57b9e484cb630d8dd057159aec9",
+  "entries": [
+    {
+      "path": "research/conservation-quotient-bounds/certificates/conservation_quotient_certificate.json",
+      "usage": "input",
+      "git_blob": "cd4c73e780400f1eedb1719d3510a6953fad2e3b",
+      "sha256": "e05e8ccab4c8d4e6ad17b77637d0742ae6e2d4bf96a0e87e71c6666dffb12c7d"
+    },
+    {
+      "path": "research/conservation-quotient-bounds/c11_base_verifier.c",
+      "usage": "input",
+      "git_blob": "aef318f6dc3c92f055b4b213f4d9445d698e1935",
+      "sha256": "876107e1aac9f9ce3891b041926dc634071df7433aab11cd6751780b55593c1c"
+    },
+    {
+      "path": "research/conservation-quotient-bounds/formal/BaseMathConvergence.lean",
+      "usage": "input",
+      "git_blob": "4c89ecc10b57544e398c31b7d3e77bc22d64b845",
+      "sha256": "e082232ffc776407a65f3e038aec58bd55dd83f424d540a90e84a16ec117c704"
+    },
+    {
+      "path": "research/conservation-quotient-bounds/check_certificate.py",
+      "usage": "input",
+      "git_blob": "b7d0765aa1a5ee238b4118deb0123420bc878d1f",
+      "sha256": "9631124968bbcb3289abc503372595708848d1da737378a64517ee68acecddbc"
+    },
+    {
+      "path": "certificates/selected-result.json",
+      "usage": "provenance",
+      "pin": "93effe2a135bf57b9e484cb630d8dd057159aec9",
+      "note": "Frontier #7000 rational witness kappa = 363005817/100000000000"
+    },
+    {
+      "path": "docs/research/cross-point-sharing.md",
+      "usage": "provenance",
+      "pin": "bcd4ebd",
+      "note": "Reverse-frame orthogonal complement & indefinite source-span nondegeneracy"
+    }
+  ]
+}

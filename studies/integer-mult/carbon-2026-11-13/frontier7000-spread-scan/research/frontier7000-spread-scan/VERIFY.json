@@ -1,0 +1,20 @@
+{
+  "schema": "integer-mult-verify/v1",
+  "status": "ready",
+  "commands": [
+    "{python} -W error -B {package}/verify.py --check",
+    "{python} -W error -B -m unittest discover -s {package}/tests -p 'test_*.py' -v"
+  ],
+  "inputs": [
+    "research/frontier7000-spread-scan/certificates/frontier7000_spread_scan_certificate.json",
+    "research/frontier7000-spread-scan/c11_frontier7000_scanner.c",
+    "research/frontier7000-spread-scan/formal/Frontier7000SpreadBounds.lean",
+    "research/frontier7000-spread-scan/check_spread_scan.py"
+  ],
+  "dependencies": {
+    "python": ">=3.11 (stdlib only; PYTHONOPTIMIZE / -O forbidden)",
+    "c_compiler": "gcc or clang supporting C11 __int128",
+    "lean4_kernel": "optional downstream (`formal/Frontier7000SpreadBounds.lean` scanned fail-closed)"
+  },
+  "timeout_seconds": 60
+}

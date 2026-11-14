@@ -1,0 +1,3600 @@
+{
+  "new_constructive_witnesses": [
+    {
+      "K": 13533,
+      "S": 1128,
+      "arity": 48,
+      "frame_class": "single_non_unit_general",
+      "non_unit_u_count": 1,
+      "pairwise_determinants": {
+        "d01": -704,
+        "d02": 128,
+        "d12": 64
+      },
+      "queries": [
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              2
+            ],
+            [
+              "B+=k*A",
+              6
+            ],
+            [
+              "A+=k*B",
+              14
+            ]
+          ],
+          "norm_z": -2269916,
+          "sl2_matrix": [
+            [
+              13,
+              184
+            ],
+            [
+              6,
+              85
+            ]
+          ],
+          "u": 13,
+          "v": 184,
+          "w_shifted": -131,
+          "weight": "-47/1024",
+          "weight_num": -47,
+          "weight_pow2_den": 10
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              -1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "B+=k*A",
+              39
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 98692,
+          "sl2_matrix": [
+            [
+              1,
+              -40
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": -40,
+          "w_shifted": -335,
+          "weight": "-1081/512",
+          "weight_num": -1081,
+          "weight_pow2_den": 9
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              24
+            ]
+          ],
+          "norm_z": -11132,
+          "sl2_matrix": [
+            [
+              1,
+              24
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 24,
+          "w_shifted": 49,
+          "weight": "105421/1024",
+          "weight_num": 105421,
+          "weight_pow2_den": 10
+        }
+      ],
+      "total_elementary_shears": 9
+    },
+    {
+      "K": 14109,
+      "S": 1176,
+      "arity": 49,
+      "frame_class": "single_non_unit_general",
+      "non_unit_u_count": 1,
+      "pairwise_determinants": {
+        "d01": 512,
+        "d02": 1792,
+        "d12": 256
+      },
+      "queries": [
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              -1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "B+=k*A",
+              2
+            ],
+            [
+              "A+=k*B",
+              2
+            ],
+            [
+              "B+=k*A",
+              242
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 60284644,
+          "sl2_matrix": [
+            [
+              5,
+              -1217
+            ],
+            [
+              3,
+              -730
+            ]
+          ],
+          "u": 5,
+          "v": -1217,
+          "w_shifted": -7787,
+          "weight": "245/16384",
+          "weight_num": 245,
+          "weight_pow2_den": 14
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              -1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "B+=k*A",
+              140
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 875140,
+          "sl2_matrix": [
+            [
+              1,
+              -141
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": -141,
+          "w_shifted": -943,
+          "weight": "-118139/16384",
+          "weight_num": -118139,
+          "weight_pow2_den": 14
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              115
+            ]
+          ],
+          "norm_z": 337540,
+          "sl2_matrix": [
+            [
+              1,
+              115
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 115,
+          "w_shifted": 593,
+          "weight": "43757/8192",
+          "weight_num": 43757,
+          "weight_pow2_den": 13
+        }
+      ],
+      "total_elementary_shears": 13
+    },
+    {
+      "K": 19149,
+      "S": 1596,
+      "arity": 57,
+      "frame_class": "single_non_unit_general",
+      "non_unit_u_count": 1,
+      "pairwise_determinants": {
+        "d01": 64,
+        "d02": 224,
+        "d12": 32
+      },
+      "queries": [
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              -1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "B+=k*A",
+              3
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -2
+            ]
+          ],
+          "norm_z": -131804,
+          "sl2_matrix": [
+            [
+              5,
+              -4
+            ],
+            [
+              4,
+              -3
+            ]
+          ],
+          "u": 5,
+          "v": -4,
+          "w_shifted": -589,
+          "weight": "-209/512",
+          "weight_num": -209,
+          "weight_pow2_den": 9
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              12
+            ]
+          ],
+          "norm_z": -17468,
+          "sl2_matrix": [
+            [
+              1,
+              12
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 12,
+          "w_shifted": -41,
+          "weight": "11039/512",
+          "weight_num": 11039,
+          "weight_pow2_den": 9
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              44
+            ]
+          ],
+          "norm_z": 3652,
+          "sl2_matrix": [
+            [
+              1,
+              44
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 44,
+          "w_shifted": 151,
+          "weight": "7543/256",
+          "weight_num": 7543,
+          "weight_pow2_den": 8
+        }
+      ],
+      "total_elementary_shears": 7
+    },
+    {
+      "K": 21237,
+      "S": 1770,
+      "arity": 60,
+      "frame_class": "single_non_unit_general",
+      "non_unit_u_count": 1,
+      "pairwise_determinants": {
+        "d01": -272,
+        "d02": 128,
+        "d12": 80
+      },
+      "queries": [
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              2
+            ],
+            [
+              "B+=k*A",
+              2
+            ],
+            [
+              "A+=k*B",
+              48
+            ]
+          ],
+          "norm_z": 203524,
+          "sl2_matrix": [
+            [
+              5,
+              242
+            ],
+            [
+              2,
+              97
+            ]
+          ],
+          "u": 5,
+          "v": 242,
+          "w_shifted": 857,
+          "weight": "295/1024",
+          "weight_num": 295,
+          "weight_pow2_den": 10
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              -1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "B+=k*A",
+              5
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 2788,
+          "sl2_matrix": [
+            [
+              1,
+              -6
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": -6,
+          "w_shifted": -155,
+          "weight": "-4307/128",
+          "weight_num": -4307,
+          "weight_pow2_den": 7
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              74
+            ]
+          ],
+          "norm_z": 84388,
+          "sl2_matrix": [
+            [
+              1,
+              74
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 74,
+          "w_shifted": 325,
+          "weight": "-2419/1024",
+          "weight_num": -2419,
+          "weight_pow2_den": 10
+        }
+      ],
+      "total_elementary_shears": 9
+    },
+    {
+      "K": 28149,
+      "S": 2346,
+      "arity": 69,
+      "frame_class": "single_non_unit_general",
+      "non_unit_u_count": 1,
+      "pairwise_determinants": {
+        "d01": -2048,
+        "d02": -64,
+        "d12": 64
+      },
+      "queries": [
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              2
+            ],
+            [
+              "B+=k*A",
+              15
+            ],
+            [
+              "A+=k*B",
+              31
+            ]
+          ],
+          "norm_z": -24707228,
+          "sl2_matrix": [
+            [
+              31,
+              963
+            ],
+            [
+              15,
+              466
+            ]
+          ],
+          "u": 31,
+          "v": 963,
+          "w_shifted": 1531,
+          "weight": "1955/65536",
+          "weight_num": 1955,
+          "weight_pow2_den": 16
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              -1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "B+=k*A",
+              34
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 92260,
+          "sl2_matrix": [
+            [
+              1,
+              -35
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": -35,
+          "w_shifted": -347,
+          "weight": "-523549/65536",
+          "weight_num": -523549,
+          "weight_pow2_den": 16
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              29
+            ]
+          ],
+          "norm_z": -26780,
+          "sl2_matrix": [
+            [
+              1,
+              29
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 29,
+          "w_shifted": 37,
+          "weight": "-1803683/2048",
+          "weight_num": -1803683,
+          "weight_pow2_den": 11
+        }
+      ],
+      "total_elementary_shears": 9
+    },
+    {
+      "K": 41829,
+      "S": 3486,
+      "arity": 84,
+      "frame_class": "multi_non_unit_general",
+      "non_unit_u_count": 2,
+      "pairwise_determinants": {
+        "d01": 4480,
+        "d02": 32768,
+        "d12": 128
+      },
+      "queries": [
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -2
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "A+=k*B",
+              2
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "A+=k*B",
+              3
+            ],
+            [
+              "B+=k*A",
+              111
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 80445700,
+          "sl2_matrix": [
+            [
+              11,
+              -1235
+            ],
+            [
+              4,
+              -449
+            ]
+          ],
+          "u": 11,
+          "v": -1235,
+          "w_shifted": -9247,
+          "weight": "-17513/2097152",
+          "weight_num": -17513,
+          "weight_pow2_den": 21
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              295
+            ]
+          ],
+          "norm_z": 2527780,
+          "sl2_matrix": [
+            [
+              1,
+              295
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 295,
+          "w_shifted": 1603,
+          "weight": "557345/8192",
+          "weight_num": 557345,
+          "weight_pow2_den": 13
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              2
+            ],
+            [
+              "B+=k*A",
+              3
+            ],
+            [
+              "A+=k*B",
+              313
+            ]
+          ],
+          "norm_z": 141686500,
+          "sl2_matrix": [
+            [
+              7,
+              2193
+            ],
+            [
+              3,
+              940
+            ]
+          ],
+          "u": 7,
+          "v": 2193,
+          "w_shifted": 11989,
+          "weight": "-348019/2097152",
+          "weight_num": -348019,
+          "weight_pow2_den": 21
+        }
+      ],
+      "total_elementary_shears": 13
+    },
+    {
+      "K": 45933,
+      "S": 3828,
+      "arity": 88,
+      "frame_class": "single_non_unit_general",
+      "non_unit_u_count": 1,
+      "pairwise_determinants": {
+        "d01": -352,
+        "d02": -92,
+        "d12": 52
+      },
+      "queries": [
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              2
+            ],
+            [
+              "B+=k*A",
+              2
+            ],
+            [
+              "A+=k*B",
+              54
+            ]
+          ],
+          "norm_z": -575276,
+          "sl2_matrix": [
+            [
+              5,
+              272
+            ],
+            [
+              2,
+              109
+            ]
+          ],
+          "u": 5,
+          "v": 272,
+          "w_shifted": 757,
+          "weight": "29/32",
+          "weight_num": 29,
+          "weight_pow2_den": 5
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              -1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "B+=k*A",
+              15
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 27508,
+          "sl2_matrix": [
+            [
+              1,
+              -16
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": -16,
+          "w_shifted": -271,
+          "weight": "-1073/32",
+          "weight_num": -1073,
+          "weight_pow2_den": 5
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              36
+            ]
+          ],
+          "norm_z": -44252,
+          "sl2_matrix": [
+            [
+              1,
+              36
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 36,
+          "w_shifted": 41,
+          "weight": "-319/4",
+          "weight_num": -319,
+          "weight_pow2_den": 2
+        }
+      ],
+      "total_elementary_shears": 9
+    },
+    {
+      "K": 54717,
+      "S": 4560,
+      "arity": 96,
+      "frame_class": "single_non_unit_general",
+      "non_unit_u_count": 1,
+      "pairwise_determinants": {
+        "d01": -32,
+        "d02": 608,
+        "d12": 128
+      },
+      "queries": [
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -2
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "A+=k*B",
+              2
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              40
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 3485284,
+          "sl2_matrix": [
+            [
+              5,
+              -208
+            ],
+            [
+              2,
+              -83
+            ]
+          ],
+          "u": 5,
+          "v": -208,
+          "w_shifted": -2203,
+          "weight": "-95/64",
+          "weight_num": -95,
+          "weight_pow2_den": 6
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              -1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "B+=k*A",
+              47
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 174724,
+          "sl2_matrix": [
+            [
+              1,
+              -48
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": -48,
+          "w_shifted": -479,
+          "weight": "36005/256",
+          "weight_num": 36005,
+          "weight_pow2_den": 8
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              80
+            ]
+          ],
+          "norm_z": 28804,
+          "sl2_matrix": [
+            [
+              1,
+              80
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 80,
+          "w_shifted": 289,
+          "weight": "11495/256",
+          "weight_num": 11495,
+          "weight_pow2_den": 8
+        }
+      ],
+      "total_elementary_shears": 15
+    },
+    {
+      "K": 65517,
+      "S": 5460,
+      "arity": 105,
+      "frame_class": "multi_non_unit_general",
+      "non_unit_u_count": 2,
+      "pairwise_determinants": {
+        "d01": -512,
+        "d02": -10240,
+        "d12": -512
+      },
+      "queries": [
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              2
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              2
+            ],
+            [
+              "A+=k*B",
+              107
+            ]
+          ],
+          "norm_z": 20951908,
+          "sl2_matrix": [
+            [
+              13,
+              1396
+            ],
+            [
+              5,
+              537
+            ]
+          ],
+          "u": 13,
+          "v": 1396,
+          "w_shifted": 5659,
+          "weight": "1001/262144",
+          "weight_num": 1001,
+          "weight_pow2_den": 18
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              68
+            ]
+          ],
+          "norm_z": -25916,
+          "sl2_matrix": [
+            [
+              1,
+              68
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 68,
+          "w_shifted": 199,
+          "weight": "4046315/65536",
+          "weight_num": 4046315,
+          "weight_pow2_den": 16
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -2
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "A+=k*B",
+              7
+            ],
+            [
+              "B+=k*A",
+              4
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": -391292,
+          "sl2_matrix": [
+            [
+              7,
+              -36
+            ],
+            [
+              1,
+              -5
+            ]
+          ],
+          "u": 7,
+          "v": -36,
+          "w_shifted": -1679,
+          "weight": "-53599/262144",
+          "weight_num": -53599,
+          "weight_pow2_den": 18
+        }
+      ],
+      "total_elementary_shears": 13
+    },
+    {
+      "K": 74589,
+      "S": 6216,
+      "arity": 112,
+      "frame_class": "single_non_unit_general",
+      "non_unit_u_count": 1,
+      "pairwise_determinants": {
+        "d01": 1184,
+        "d02": 1792,
+        "d12": 32
+      },
+      "queries": [
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              -1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "B+=k*A",
+              6
+            ],
+            [
+              "A+=k*B",
+              3
+            ],
+            [
+              "B+=k*A",
+              5
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": -2354780,
+          "sl2_matrix": [
+            [
+              19,
+              -120
+            ],
+            [
+              16,
+              -101
+            ]
+          ],
+          "u": 19,
+          "v": -120,
+          "w_shifted": -4957,
+          "weight": "-11/1024",
+          "weight_num": -11,
+          "weight_pow2_den": 10
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              56
+            ]
+          ],
+          "norm_z": -61820,
+          "sl2_matrix": [
+            [
+              1,
+              56
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 56,
+          "w_shifted": 113,
+          "weight": "2933/128",
+          "weight_num": 2933,
+          "weight_pow2_den": 7
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              88
+            ]
+          ],
+          "norm_z": 18436,
+          "sl2_matrix": [
+            [
+              1,
+              88
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 88,
+          "w_shifted": 305,
+          "weight": "51985/1024",
+          "weight_num": 51985,
+          "weight_pow2_den": 10
+        }
+      ],
+      "total_elementary_shears": 9
+    },
+    {
+      "K": 85677,
+      "S": 7140,
+      "arity": 120,
+      "frame_class": "single_non_unit_general",
+      "non_unit_u_count": 1,
+      "pairwise_determinants": {
+        "d01": -4096,
+        "d02": 1024,
+        "d12": 1024
+      },
+      "queries": [
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ],
+            [
+              "B+=k*A",
+              5
+            ],
+            [
+              "A+=k*B",
+              556
+            ]
+          ],
+          "norm_z": 237829156,
+          "sl2_matrix": [
+            [
+              5,
+              2781
+            ],
+            [
+              4,
+              2225
+            ]
+          ],
+          "u": 5,
+          "v": 2781,
+          "w_shifted": 15491,
+          "weight": "149345/1048576",
+          "weight_num": 149345,
+          "weight_pow2_den": 20
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              -1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "B+=k*A",
+              262
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 3215812,
+          "sl2_matrix": [
+            [
+              1,
+              -263
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": -263,
+          "w_shifted": -1817,
+          "weight": "-11044985/1048576",
+          "weight_num": -11044985,
+          "weight_pow2_den": 20
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              761
+            ]
+          ],
+          "norm_z": 18637252,
+          "sl2_matrix": [
+            [
+              1,
+              761
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 761,
+          "w_shifted": 4327,
+          "weight": "-1905785/262144",
+          "weight_num": -1905785,
+          "weight_pow2_den": 18
+        }
+      ],
+      "total_elementary_shears": 10
+    },
+    {
+      "K": 87117,
+      "S": 7260,
+      "arity": 121,
+      "frame_class": "multi_non_unit_general",
+      "non_unit_u_count": 2,
+      "pairwise_determinants": {
+        "d01": -3328,
+        "d02": -32768,
+        "d12": -256
+      },
+      "queries": [
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ],
+            [
+              "B+=k*A",
+              2
+            ],
+            [
+              "A+=k*B",
+              17
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "A+=k*B",
+              136
+            ]
+          ],
+          "norm_z": 342342052,
+          "sl2_matrix": [
+            [
+              37,
+              5067
+            ],
+            [
+              19,
+              2602
+            ]
+          ],
+          "u": 37,
+          "v": 5067,
+          "w_shifted": 21485,
+          "weight": "605/2097152",
+          "weight_num": 605,
+          "weight_pow2_den": 21
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              47
+            ]
+          ],
+          "norm_z": -85436,
+          "sl2_matrix": [
+            [
+              1,
+              47
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 47,
+          "w_shifted": 41,
+          "weight": "2424235/16384",
+          "weight_num": 2424235,
+          "weight_pow2_den": 14
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              3
+            ],
+            [
+              "B+=k*A",
+              2
+            ],
+            [
+              "A+=k*B",
+              10
+            ]
+          ],
+          "norm_z": -2708732,
+          "sl2_matrix": [
+            [
+              7,
+              73
+            ],
+            [
+              2,
+              21
+            ]
+          ],
+          "u": 7,
+          "v": 73,
+          "w_shifted": -1249,
+          "weight": "-994015/2097152",
+          "weight_num": -994015,
+          "weight_pow2_den": 21
+        }
+      ],
+      "total_elementary_shears": 10
+    },
+    {
+      "K": 91509,
+      "S": 7626,
+      "arity": 124,
+      "frame_class": "monic_high_height",
+      "non_unit_u_count": 0,
+      "pairwise_determinants": {
+        "d01": -1024,
+        "d02": -512,
+        "d12": 512
+      },
+      "queries": [
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              259
+            ]
+          ],
+          "norm_z": 1616740,
+          "sl2_matrix": [
+            [
+              1,
+              259
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 259,
+          "w_shifted": 1307,
+          "weight": "4195571/262144",
+          "weight_num": 4195571,
+          "weight_pow2_den": 18
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              -1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "B+=k*A",
+              764
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 23305060,
+          "sl2_matrix": [
+            [
+              1,
+              -765
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": -765,
+          "w_shifted": -4837,
+          "weight": "291059/262144",
+          "weight_num": 291059,
+          "weight_pow2_den": 18
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              -1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "B+=k*A",
+              252
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 3023716,
+          "sl2_matrix": [
+            [
+              1,
+              -253
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": -253,
+          "w_shifted": -1765,
+          "weight": "-2243315/131072",
+          "weight_num": -2243315,
+          "weight_pow2_den": 17
+        }
+      ],
+      "total_elementary_shears": 11
+    },
+    {
+      "K": 103749,
+      "S": 8646,
+      "arity": 132,
+      "frame_class": "multi_non_unit_general",
+      "non_unit_u_count": 2,
+      "pairwise_determinants": {
+        "d01": 33536,
+        "d02": -32768,
+        "d12": -14080
+      },
+      "queries": [
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -2
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "A+=k*B",
+              19
+            ],
+            [
+              "B+=k*A",
+              1094
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 16819154500,
+          "sl2_matrix": [
+            [
+              19,
+              -20806
+            ],
+            [
+              1,
+              -1095
+            ]
+          ],
+          "u": 19,
+          "v": -20806,
+          "w_shifted": -129833,
+          "weight": "-9229/4194304",
+          "weight_num": -9229,
+          "weight_pow2_den": 22
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              670
+            ]
+          ],
+          "norm_z": 14011300,
+          "sl2_matrix": [
+            [
+              1,
+              670
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 670,
+          "w_shifted": 3757,
+          "weight": "201427/32768",
+          "weight_num": 201427,
+          "weight_pow2_den": 15
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              -1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "B+=k*A",
+              3
+            ],
+            [
+              "A+=k*B",
+              2
+            ],
+            [
+              "B+=k*A",
+              1340
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 3379945060,
+          "sl2_matrix": [
+            [
+              7,
+              -9390
+            ],
+            [
+              5,
+              -6707
+            ]
+          ],
+          "u": 7,
+          "v": -9390,
+          "w_shifted": -58181,
+          "weight": "109385/4194304",
+          "weight_num": 109385,
+          "weight_pow2_den": 22
+        }
+      ],
+      "total_elementary_shears": 15
+    },
+    {
+      "K": 105333,
+      "S": 8778,
+      "arity": 133,
+      "frame_class": "single_non_unit_general",
+      "non_unit_u_count": 1,
+      "pairwise_determinants": {
+        "d01": -1216,
+        "d02": 16,
+        "d12": 112
+      },
+      "queries": [
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ],
+            [
+              "B+=k*A",
+              5
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "A+=k*B",
+              100
+            ]
+          ],
+          "norm_z": 1100548,
+          "sl2_matrix": [
+            [
+              11,
+              1106
+            ],
+            [
+              9,
+              905
+            ]
+          ],
+          "u": 11,
+          "v": 1106,
+          "w_shifted": 3721,
+          "weight": "77/512",
+          "weight_num": 77,
+          "weight_pow2_den": 9
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              -1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "B+=k*A",
+              9
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 292,
+          "sl2_matrix": [
+            [
+              1,
+              -10
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": -10,
+          "w_shifted": -325,
+          "weight": "-41459/512",
+          "weight_num": -41459,
+          "weight_pow2_den": 9
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              102
+            ]
+          ],
+          "norm_z": 15076,
+          "sl2_matrix": [
+            [
+              1,
+              102
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 102,
+          "w_shifted": 347,
+          "weight": "-15257/128",
+          "weight_num": -15257,
+          "weight_pow2_den": 7
+        }
+      ],
+      "total_elementary_shears": 12
+    },
+    {
+      "K": 130533,
+      "S": 10878,
+      "arity": 148,
+      "frame_class": "multi_non_unit_general",
+      "non_unit_u_count": 2,
+      "pairwise_determinants": {
+        "d01": -4096,
+        "d02": 32768,
+        "d12": 4096
+      },
+      "queries": [
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              -1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "B+=k*A",
+              2
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              2
+            ],
+            [
+              "A+=k*B",
+              2
+            ],
+            [
+              "B+=k*A",
+              32
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 41519812,
+          "sl2_matrix": [
+            [
+              19,
+              -635
+            ],
+            [
+              12,
+              -401
+            ]
+          ],
+          "u": 19,
+          "v": -635,
+          "w_shifted": -9415,
+          "weight": "-705257/67108864",
+          "weight_num": -705257,
+          "weight_pow2_den": 26
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              -1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "B+=k*A",
+              248
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 3069988,
+          "sl2_matrix": [
+            [
+              1,
+              -249
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": -249,
+          "w_shifted": -1789,
+          "weight": "9538193/8388608",
+          "weight_num": 9538193,
+          "weight_pow2_den": 23
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ],
+            [
+              "B+=k*A",
+              3
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              2
+            ],
+            [
+              "A+=k*B",
+              123
+            ]
+          ],
+          "norm_z": 8186116,
+          "sl2_matrix": [
+            [
+              11,
+              1357
+            ],
+            [
+              8,
+              987
+            ]
+          ],
+          "u": 11,
+          "v": 1357,
+          "w_shifted": 4897,
+          "weight": "3577049/67108864",
+          "weight_num": 3577049,
+          "weight_pow2_den": 26
+        }
+      ],
+      "total_elementary_shears": 20
+    },
+    {
+      "K": 170349,
+      "S": 14196,
+      "arity": 169,
+      "frame_class": "monic_high_height",
+      "non_unit_u_count": 0,
+      "pairwise_determinants": {
+        "d01": -392,
+        "d02": -136,
+        "d12": 256
+      },
+      "queries": [
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              340
+            ]
+          ],
+          "norm_z": 2729860,
+          "sl2_matrix": [
+            [
+              1,
+              340
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 340,
+          "w_shifted": 1703,
+          "weight": "-169/16",
+          "weight_num": -169,
+          "weight_pow2_den": 4
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              -1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "B+=k*A",
+              51
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 250852,
+          "sl2_matrix": [
+            [
+              1,
+              -52
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": -52,
+          "w_shifted": -649,
+          "weight": "-31265/512",
+          "weight_num": -31265,
+          "weight_pow2_den": 9
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              204
+            ]
+          ],
+          "norm_z": 616420,
+          "sl2_matrix": [
+            [
+              1,
+              204
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 204,
+          "w_shifted": 887,
+          "weight": "36673/512",
+          "weight_num": 36673,
+          "weight_pow2_den": 9
+        }
+      ],
+      "total_elementary_shears": 7
+    },
+    {
+      "K": 186909,
+      "S": 15576,
+      "arity": 177,
+      "frame_class": "monic_high_height",
+      "non_unit_u_count": 0,
+      "pairwise_determinants": {
+        "d01": 512,
+        "d02": 4096,
+        "d12": 3584
+      },
+      "queries": [
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              -1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "B+=k*A",
+              2764
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 286878340,
+          "sl2_matrix": [
+            [
+              1,
+              -2765
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": -2765,
+          "w_shifted": -16943,
+          "weight": "2024231/262144",
+          "weight_num": 2024231,
+          "weight_pow2_den": 18
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              -1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "B+=k*A",
+              2252
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 192217732,
+          "sl2_matrix": [
+            [
+              1,
+              -2253
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": -2253,
+          "w_shifted": -13871,
+          "weight": "-431585/32768",
+          "weight_num": -431585,
+          "weight_pow2_den": 15
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              1331
+            ]
+          ],
+          "norm_z": 58075780,
+          "sl2_matrix": [
+            [
+              1,
+              1331
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 1331,
+          "w_shifted": 7633,
+          "weight": "1428449/262144",
+          "weight_num": 1428449,
+          "weight_pow2_den": 18
+        }
+      ],
+      "total_elementary_shears": 11
+    },
+    {
+      "K": 202029,
+      "S": 16836,
+      "arity": 184,
+      "frame_class": "monic_high_height",
+      "non_unit_u_count": 0,
+      "pairwise_determinants": {
+        "d01": -244,
+        "d02": -20,
+        "d12": 224
+      },
+      "queries": [
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              84
+            ]
+          ],
+          "norm_z": -183260,
+          "sl2_matrix": [
+            [
+              1,
+              84
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 84,
+          "w_shifted": 137,
+          "weight": "3013/4",
+          "weight_num": 3013,
+          "weight_pow2_den": 2
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              -1
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "B+=k*A",
+              159
+            ],
+            [
+              "A+=k*B",
+              1
+            ],
+            [
+              "B+=k*A",
+              -1
+            ]
+          ],
+          "norm_z": 1558900,
+          "sl2_matrix": [
+            [
+              1,
+              -160
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": -160,
+          "w_shifted": -1327,
+          "weight": "-253/32",
+          "weight_num": -253,
+          "weight_pow2_den": 5
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              64
+            ]
+          ],
+          "norm_z": -201740,
+          "sl2_matrix": [
+            [
+              1,
+              64
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 64,
+          "w_shifted": 17,
+          "weight": "-23851/32",
+          "weight_num": -23851,
+          "weight_pow2_den": 5
+        }
+      ],
+      "total_elementary_shears": 7
+    },
+    {
+      "K": 220029,
+      "S": 18336,
+      "arity": 192,
+      "frame_class": "single_non_unit_general",
+      "non_unit_u_count": 1,
+      "pairwise_determinants": {
+        "d01": 512,
+        "d02": 4096,
+        "d12": 512
+      },
+      "queries": [
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              6
+            ],
+            [
+              "B+=k*A",
+              1
+            ],
+            [
+              "A+=k*B",
+              22
+            ]
+          ],
+          "norm_z": -7819580,
+          "sl2_matrix": [
+            [
+              7,
+              160
+            ],
+            [
+              1,
+              23
+            ]
+          ],
+          "u": 7,
+          "v": 160,
+          "w_shifted": -1721,
+          "weight": "-47177/65536",
+          "weight_num": -47177,
+          "weight_pow2_den": 16
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              96
+            ]
+          ],
+          "norm_z": -182780,
+          "sl2_matrix": [
+            [
+              1,
+              96
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 96,
+          "w_shifted": 193,
+          "weight": "2018297/8192",
+          "weight_num": 2018297,
+          "weight_pow2_den": 13
+        },
+        {
+          "elementary_shears": [
+            [
+              "A+=k*B",
+              608
+            ]
+          ],
+          "norm_z": 10440196,
+          "sl2_matrix": [
+            [
+              1,
+              608
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "u": 1,
+          "v": 608,
+          "w_shifted": 3265,
+          "weight": "35335/65536",
+          "weight_num": 35335,
+          "weight_pow2_den": 16
+        }
+      ],
+      "total_elementary_shears": 5
+    }
+  ],
+  "odd_s_monic_classification": [
+    {
+      "M": 11,
+      "S": 3,
+      "arity": 3,
+      "c": [
+        1,
+        0,
+        2
+      ],
+      "divisor_pairs_checked": 1,
+      "status": "SOLVABLE",
+      "weights": [
+        "1",
+        "-2",
+        "1"
+      ]
+    },
+    {
+      "M": 59,
+      "S": 15,
+      "arity": 6,
+      "c": [
+        3,
+        2,
+        -2
+      ],
+      "divisor_pairs_checked": 4,
+      "status": "SOLVABLE",
+      "weights": [
+        "11",
+        "-10",
+        "-1"
+      ]
+    },
+    {
+      "M": 83,
+      "S": 21,
+      "arity": 7,
+      "c": [
+        0,
+        1,
+        5
+      ],
+      "divisor_pairs_checked": 20,
+      "status": "SOLVABLE",
+      "weights": [
+        "-7",
+        "7/2",
+        "7/2"
+      ]
+    },
+    {
+      "M": 179,
+      "S": 45,
+      "arity": 10,
+      "c": null,
+      "divisor_pairs_checked": 1740,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 219,
+      "S": 55,
+      "arity": 11,
+      "c": [
+        5,
+        4,
+        -6
+      ],
+      "divisor_pairs_checked": 16,
+      "status": "SOLVABLE",
+      "weights": [
+        "45",
+        "-44",
+        "-1"
+      ]
+    },
+    {
+      "M": 363,
+      "S": 91,
+      "arity": 14,
+      "c": null,
+      "divisor_pairs_checked": 9160,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 419,
+      "S": 105,
+      "arity": 15,
+      "c": null,
+      "divisor_pairs_checked": 6744,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 611,
+      "S": 153,
+      "arity": 18,
+      "c": null,
+      "divisor_pairs_checked": 6732,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 683,
+      "S": 171,
+      "arity": 19,
+      "c": [
+        5,
+        4,
+        24
+      ],
+      "divisor_pairs_checked": 25,
+      "status": "SOLVABLE",
+      "weights": [
+        "141",
+        "-285/2",
+        "3/2"
+      ]
+    },
+    {
+      "M": 923,
+      "S": 231,
+      "arity": 22,
+      "c": null,
+      "divisor_pairs_checked": 20976,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 1011,
+      "S": 253,
+      "arity": 23,
+      "c": null,
+      "divisor_pairs_checked": 23132,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 1299,
+      "S": 325,
+      "arity": 26,
+      "c": [
+        5,
+        0,
+        20
+      ],
+      "divisor_pairs_checked": 213,
+      "status": "SOLVABLE",
+      "weights": [
+        "13",
+        "-26",
+        "13"
+      ]
+    },
+    {
+      "M": 1403,
+      "S": 351,
+      "arity": 27,
+      "c": [
+        21,
+        6,
+        0
+      ],
+      "divisor_pairs_checked": 603,
+      "status": "SOLVABLE",
+      "weights": [
+        "13",
+        "13",
+        "-26"
+      ]
+    },
+    {
+      "M": 1739,
+      "S": 435,
+      "arity": 30,
+      "c": null,
+      "divisor_pairs_checked": 44516,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 1859,
+      "S": 465,
+      "arity": 31,
+      "c": null,
+      "divisor_pairs_checked": 32792,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 2243,
+      "S": 561,
+      "arity": 34,
+      "c": null,
+      "divisor_pairs_checked": 64456,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 2379,
+      "S": 595,
+      "arity": 35,
+      "c": null,
+      "divisor_pairs_checked": 120428,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 2811,
+      "S": 703,
+      "arity": 38,
+      "c": null,
+      "divisor_pairs_checked": 68124,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 2963,
+      "S": 741,
+      "arity": 39,
+      "c": null,
+      "divisor_pairs_checked": 81816,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 3443,
+      "S": 861,
+      "arity": 42,
+      "c": [
+        -15,
+        10,
+        26
+      ],
+      "divisor_pairs_checked": 1064,
+      "status": "SOLVABLE",
+      "weights": [
+        "-7",
+        "-287/8",
+        "343/8"
+      ]
+    },
+    {
+      "M": 3611,
+      "S": 903,
+      "arity": 43,
+      "c": null,
+      "divisor_pairs_checked": 90076,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 4139,
+      "S": 1035,
+      "arity": 46,
+      "c": null,
+      "divisor_pairs_checked": 111648,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 4323,
+      "S": 1081,
+      "arity": 47,
+      "c": null,
+      "divisor_pairs_checked": 151528,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 4899,
+      "S": 1225,
+      "arity": 50,
+      "c": [
+        56,
+        49,
+        -7
+      ],
+      "divisor_pairs_checked": 628,
+      "status": "SOLVABLE",
+      "weights": [
+        "-25",
+        "50",
+        "-25"
+      ]
+    },
+    {
+      "M": 5099,
+      "S": 1275,
+      "arity": 51,
+      "c": [
+        22,
+        17,
+        -63
+      ],
+      "divisor_pairs_checked": 388,
+      "status": "SOLVABLE",
+      "weights": [
+        "239",
+        "-238",
+        "-1"
+      ]
+    },
+    {
+      "M": 5723,
+      "S": 1431,
+      "arity": 54,
+      "c": null,
+      "divisor_pairs_checked": 190352,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 5939,
+      "S": 1485,
+      "arity": 55,
+      "c": null,
+      "divisor_pairs_checked": 270476,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 6611,
+      "S": 1653,
+      "arity": 58,
+      "c": null,
+      "divisor_pairs_checked": 155488,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 6843,
+      "S": 1711,
+      "arity": 59,
+      "c": null,
+      "divisor_pairs_checked": 265628,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 7563,
+      "S": 1891,
+      "arity": 62,
+      "c": [
+        -14,
+        -15,
+        47
+      ],
+      "divisor_pairs_checked": 65,
+      "status": "SOLVABLE",
+      "weights": [
+        "-279",
+        "244",
+        "35"
+      ]
+    },
+    {
+      "M": 7811,
+      "S": 1953,
+      "arity": 63,
+      "c": null,
+      "divisor_pairs_checked": 291504,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 8579,
+      "S": 2145,
+      "arity": 66,
+      "c": null,
+      "divisor_pairs_checked": 377368,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 8843,
+      "S": 2211,
+      "arity": 67,
+      "c": null,
+      "divisor_pairs_checked": 291120,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 9659,
+      "S": 2415,
+      "arity": 70,
+      "c": null,
+      "divisor_pairs_checked": 518068,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 9939,
+      "S": 2485,
+      "arity": 71,
+      "c": null,
+      "divisor_pairs_checked": 627764,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 10803,
+      "S": 2701,
+      "arity": 74,
+      "c": null,
+      "divisor_pairs_checked": 443840,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 11099,
+      "S": 2775,
+      "arity": 75,
+      "c": null,
+      "divisor_pairs_checked": 435228,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 12011,
+      "S": 3003,
+      "arity": 78,
+      "c": null,
+      "divisor_pairs_checked": 511516,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 12323,
+      "S": 3081,
+      "arity": 79,
+      "c": null,
+      "divisor_pairs_checked": 499196,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 13283,
+      "S": 3321,
+      "arity": 82,
+      "c": null,
+      "divisor_pairs_checked": 598748,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 13611,
+      "S": 3403,
+      "arity": 83,
+      "c": null,
+      "divisor_pairs_checked": 556680,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 14619,
+      "S": 3655,
+      "arity": 86,
+      "c": null,
+      "divisor_pairs_checked": 1078760,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 14963,
+      "S": 3741,
+      "arity": 87,
+      "c": null,
+      "divisor_pairs_checked": 572364,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 16019,
+      "S": 4005,
+      "arity": 90,
+      "c": [
+        12,
+        13,
+        77
+      ],
+      "divisor_pairs_checked": 246,
+      "status": "SOLVABLE",
+      "weights": [
+        "-1869",
+        "14685/8",
+        "267/8"
+      ]
+    },
+    {
+      "M": 16379,
+      "S": 4095,
+      "arity": 91,
+      "c": [
+        -1334,
+        -1335,
+        713
+      ],
+      "divisor_pairs_checked": 145,
+      "status": "SOLVABLE",
+      "weights": [
+        "-1365",
+        "697515/512",
+        "1365/512"
+      ]
+    },
+    {
+      "M": 17483,
+      "S": 4371,
+      "arity": 94,
+      "c": null,
+      "divisor_pairs_checked": 638708,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 17859,
+      "S": 4465,
+      "arity": 95,
+      "c": null,
+      "divisor_pairs_checked": 1097444,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 19011,
+      "S": 4753,
+      "arity": 98,
+      "c": [
+        65,
+        44,
+        -12
+      ],
+      "divisor_pairs_checked": 1478,
+      "status": "SOLVABLE",
+      "weights": [
+        "97",
+        "-97/2",
+        "-97/2"
+      ]
+    },
+    {
+      "M": 19403,
+      "S": 4851,
+      "arity": 99,
+      "c": null,
+      "divisor_pairs_checked": 1385212,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 20603,
+      "S": 5151,
+      "arity": 102,
+      "c": null,
+      "divisor_pairs_checked": 604840,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 21011,
+      "S": 5253,
+      "arity": 103,
+      "c": null,
+      "divisor_pairs_checked": 605484,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 22259,
+      "S": 5565,
+      "arity": 106,
+      "c": null,
+      "divisor_pairs_checked": 1298820,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 22683,
+      "S": 5671,
+      "arity": 107,
+      "c": null,
+      "divisor_pairs_checked": 1244996,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 23979,
+      "S": 5995,
+      "arity": 110,
+      "c": null,
+      "divisor_pairs_checked": 1390572,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 24419,
+      "S": 6105,
+      "arity": 111,
+      "c": null,
+      "divisor_pairs_checked": 1413660,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 25763,
+      "S": 6441,
+      "arity": 114,
+      "c": [
+        -35,
+        14,
+        78
+      ],
+      "divisor_pairs_checked": 3348,
+      "status": "SOLVABLE",
+      "weights": [
+        "-19",
+        "-2147/32",
+        "2755/32"
+      ]
+    },
+    {
+      "M": 26219,
+      "S": 6555,
+      "arity": 115,
+      "c": null,
+      "divisor_pairs_checked": 1138356,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 27611,
+      "S": 6903,
+      "arity": 118,
+      "c": null,
+      "divisor_pairs_checked": 1444668,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 28083,
+      "S": 7021,
+      "arity": 119,
+      "c": null,
+      "divisor_pairs_checked": 2812140,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 29523,
+      "S": 7381,
+      "arity": 122,
+      "c": null,
+      "divisor_pairs_checked": 2006324,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 30011,
+      "S": 7503,
+      "arity": 123,
+      "c": null,
+      "divisor_pairs_checked": 804708,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 31499,
+      "S": 7875,
+      "arity": 126,
+      "c": null,
+      "divisor_pairs_checked": 2381808,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 32003,
+      "S": 8001,
+      "arity": 127,
+      "c": null,
+      "divisor_pairs_checked": 1946108,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 33539,
+      "S": 8385,
+      "arity": 130,
+      "c": null,
+      "divisor_pairs_checked": 1468440,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 34059,
+      "S": 8515,
+      "arity": 131,
+      "c": null,
+      "divisor_pairs_checked": 2354024,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 35643,
+      "S": 8911,
+      "arity": 134,
+      "c": null,
+      "divisor_pairs_checked": 6315192,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 36179,
+      "S": 9045,
+      "arity": 135,
+      "c": null,
+      "divisor_pairs_checked": 2611228,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 37811,
+      "S": 9453,
+      "arity": 138,
+      "c": null,
+      "divisor_pairs_checked": 946608,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 38363,
+      "S": 9591,
+      "arity": 139,
+      "c": null,
+      "divisor_pairs_checked": 1692992,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 40043,
+      "S": 10011,
+      "arity": 142,
+      "c": null,
+      "divisor_pairs_checked": 2161356,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 40611,
+      "S": 10153,
+      "arity": 143,
+      "c": null,
+      "divisor_pairs_checked": 2748888,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 42339,
+      "S": 10585,
+      "arity": 146,
+      "c": null,
+      "divisor_pairs_checked": 3444256,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 42923,
+      "S": 10731,
+      "arity": 147,
+      "c": null,
+      "divisor_pairs_checked": 2803696,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 44699,
+      "S": 11175,
+      "arity": 150,
+      "c": null,
+      "divisor_pairs_checked": 1567580,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 45299,
+      "S": 11325,
+      "arity": 151,
+      "c": null,
+      "divisor_pairs_checked": 2027808,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 47123,
+      "S": 11781,
+      "arity": 154,
+      "c": null,
+      "divisor_pairs_checked": 5186952,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 47739,
+      "S": 11935,
+      "arity": 155,
+      "c": [
+        273,
+        272,
+        -68
+      ],
+      "divisor_pairs_checked": 288,
+      "status": "SOLVABLE",
+      "weights": [
+        "-3535",
+        "7161/2",
+        "-91/2"
+      ]
+    },
+    {
+      "M": 49611,
+      "S": 12403,
+      "arity": 158,
+      "c": null,
+      "divisor_pairs_checked": 2189400,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 50243,
+      "S": 12561,
+      "arity": 159,
+      "c": null,
+      "divisor_pairs_checked": 1499448,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 52163,
+      "S": 13041,
+      "arity": 162,
+      "c": [
+        -4,
+        -25,
+        119
+      ],
+      "divisor_pairs_checked": 3611,
+      "status": "SOLVABLE",
+      "weights": [
+        "-69",
+        "-253/8",
+        "805/8"
+      ]
+    },
+    {
+      "M": 52811,
+      "S": 13203,
+      "arity": 163,
+      "c": null,
+      "divisor_pairs_checked": 2365396,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 54779,
+      "S": 13695,
+      "arity": 166,
+      "c": null,
+      "divisor_pairs_checked": 3382276,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 55443,
+      "S": 13861,
+      "arity": 167,
+      "c": null,
+      "divisor_pairs_checked": 3570152,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 57459,
+      "S": 14365,
+      "arity": 170,
+      "c": null,
+      "divisor_pairs_checked": 7059352,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 58139,
+      "S": 14535,
+      "arity": 171,
+      "c": null,
+      "divisor_pairs_checked": 5038376,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 60203,
+      "S": 15051,
+      "arity": 174,
+      "c": null,
+      "divisor_pairs_checked": 3047336,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 60899,
+      "S": 15225,
+      "arity": 175,
+      "c": null,
+      "divisor_pairs_checked": 6023124,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 63011,
+      "S": 15753,
+      "arity": 178,
+      "c": null,
+      "divisor_pairs_checked": 1411252,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 63723,
+      "S": 15931,
+      "arity": 179,
+      "c": null,
+      "divisor_pairs_checked": 3599620,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 65883,
+      "S": 16471,
+      "arity": 182,
+      "c": null,
+      "divisor_pairs_checked": 7338612,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 66611,
+      "S": 16653,
+      "arity": 183,
+      "c": null,
+      "divisor_pairs_checked": 4289196,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 68819,
+      "S": 17205,
+      "arity": 186,
+      "c": null,
+      "divisor_pairs_checked": 4416612,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 69563,
+      "S": 17391,
+      "arity": 187,
+      "c": null,
+      "divisor_pairs_checked": 5016396,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 71819,
+      "S": 17955,
+      "arity": 190,
+      "c": null,
+      "divisor_pairs_checked": 9284116,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 72579,
+      "S": 18145,
+      "arity": 191,
+      "c": null,
+      "divisor_pairs_checked": 7282048,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 74883,
+      "S": 18721,
+      "arity": 194,
+      "c": null,
+      "divisor_pairs_checked": 3786052,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 75659,
+      "S": 18915,
+      "arity": 195,
+      "c": null,
+      "divisor_pairs_checked": 5585516,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 78011,
+      "S": 19503,
+      "arity": 198,
+      "c": null,
+      "divisor_pairs_checked": 3057148,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    },
+    {
+      "M": 78803,
+      "S": 19701,
+      "arity": 199,
+      "c": null,
+      "divisor_pairs_checked": 4671332,
+      "status": "IMPOSSIBLE_OVER_Z3",
+      "weights": null
+    }
+  ],
+  "repository_target": "https://github.com/CrocSwap/integer-mult-bounds",
+  "schema": "cubic-general-frames-and-2adic-obstruction/1",
+  "summary": {
+    "multi_non_unit_arities": [
+      84,
+      105,
+      121,
+      132,
+      148
+    ],
+    "new_strict_arities": [
+      48,
+      49,
+      57,
+      60,
+      69,
+      84,
+      88,
+      96,
+      105,
+      112,
+      120,
+      121,
+      124,
+      132,
+      133,
+      148,
+      169,
+      177,
+      184,
+      192
+    ],
+    "new_strict_non_pure_b_arities_count": 20,
+    "odd_s_monic_impossible_arities": [
+      10,
+      14,
+      15,
+      18,
+      22,
+      23,
+      30,
+      31,
+      34,
+      35,
+      38,
+      39,
+      43,
+      46,
+      47,
+      54,
+      55,
+      58,
+      59,
+      63,
+      66,
+      67,
+      70,
+      71,
+      74,
+      75,
+      78,
+      79,
+      82,
+      83,
+      86,
+      87,
+      94,
+      95,
+      99,
+      102,
+      103,
+      106,
+      107,
+      110,
+      111,
+      115,
+      118,
+      119,
+      122,
+      123,
+      126,
+      127,
+      130,
+      131,
+      134,
+      135,
+      138,
+      139,
+      142,
+      143,
+      146,
+      147,
+      150,
+      151,
+      154,
+      158,
+      159,
+      163,
+      166,
+      167,
+      170,
+      171,
+      174,
+      175,
+      178,
+      179,
+      182,
+      183,
+      186,
+      187,
+      190,
+      191,
+      194,
+      195,
+      198,
+      199
+    ],
+    "odd_s_monic_impossible_count": 82,
+    "odd_s_monic_solvable_arities": [
+      3,
+      6,
+      7,
+      11,
+      19,
+      26,
+      27,
+      42,
+      50,
+      51,
+      62,
+      90,
+      91,
+      98,
+      114,
+      155,
+      162
+    ],
+    "odd_s_monic_solvable_count": 17,
+    "odd_s_range_certified": [
+      3,
+      200
+    ],
+    "odd_s_total": 99
+  },
+  "upstream_lineage": {
+    "pr_6653": "https://github.com/CrocSwap/integer-mult-bounds/pull/6653",
+    "pr_7000": "https://github.com/CrocSwap/integer-mult-bounds/pull/7000",
+    "pr_7475": "https://github.com/CrocSwap/integer-mult-bounds/pull/7475",
+    "pr_7478": "https://github.com/CrocSwap/integer-mult-bounds/pull/7478",
+    "pr_7479": "https://github.com/CrocSwap/integer-mult-bounds/pull/7479"
+  }
+}
