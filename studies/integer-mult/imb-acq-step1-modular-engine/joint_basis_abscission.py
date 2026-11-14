@@ -270,15 +270,29 @@ def scan_catalyst_abscission_splits(
 
 
 def apply_joint_abscission_split(W: dict, cand: dict) -> dict:
-    """Materializes a new valid word `W_new` with `public + 1` fields executing
-    either a single-helper (`k=1`) or coupled joint-basis (`k>=2`) catalyst split!
-    Appends the new split-tail helper role at index `new_role = W['public']`,
-    shifts all owned register indices `>= W['public']` up by `+1`, and splices the
-    exact basis-rotation / rescaling events so all original public Jacobian rows are
-    preserved AND the split helper divides into two independent productive helpers!
+    """Materializes a word `W_new` with `public + 1` fields that splits the
+    candidate's helper at `f_cut` and preserves the input polynomial of every
+    pre-split public register.
+
+    The new helper takes index `new_role = W['public']`, and owned register
+    indices `>= W['public']` shift up by 1. The split role keeps every event up
+    to its first MOVE out of `f_cut` at or after the candidate's event, so all
+    of its reads and writes at `f_cut` still see the original value. That MOVE
+    and every later MOVE of the split role are handed to the new helper, whose
+    input variable is fresh and is never read. The split role then ends at
+    `f_cut` holding the value it held there.
+
+    This is only sound when the split role is not read or written after that
+    MOVE. If it is, the split would change the linear map, so this raises
+    ValueError instead of emitting a word. The candidate's basis-rotation ops
+    (`ops_f0`, `ops_cut_*`, `ops_fend`) are not spliced in: placed as the scanner
+    built them they change what other registers read (finals 32, 33 and 34 on
+    the self-test's [30, 31] cohort), and the terminal cut above does not need
+    them. Callers should still check the result with
+    `verify_full_word_and_grid(W_new, W_ref=W)`; this function also asserts it.
     """
     n_old = W['public']
-    new_helper = n_old  # new public helper index; owned roles >= n_old shift by +1!
+    new_helper = n_old
 
     def shift_reg(r: int) -> int:
         return r + 1 if r >= n_old else r
@@ -290,50 +304,79 @@ def apply_joint_abscission_split(W: dict, cand: dict) -> dict:
             ev[2] = shift_reg(ev[2])
         return ev
 
-    prog_old = [shift_ev(e) for e in W['program']]
+    prog = [shift_ev(e) for e in W['program']]
     split_role = cand['role'] if cand['kind'] == 'k1_single_abscission' else cand['split_role']
-    f0, f_cut, f_end = cand['f0'], cand['f_cut'], cand['f_end']
-    cut_idx = cand['event_idx']
-    when = cand['when']
+    f_cut, f_end = cand['f_cut'], cand['f_end']
+    if W['final'][split_role] != f_end:
+        raise ValueError(f"split role {split_role} does not end at f_end={f_end}")
 
-    # Split point index in prog_old:
-    # If `when == 'before'`, split happens right BEFORE event `cut_idx`.
-    # If `when == 'after'`, split happens right AFTER event `cut_idx`.
-    split_pos = cut_idx if when == 'before' else cut_idx + 1
+    start = cand['event_idx']
+    depart = next(
+        (i for i in range(start, len(prog))
+         if prog[i][0] == 'MOVE' and prog[i][1] == split_role and prog[i][2] == f_cut),
+        None,
+    )
+    if depart is None:
+        raise ValueError(f"split role {split_role} never leaves f_cut={f_cut} after event {start}")
 
-    def rewrite_tail_role(ev: list) -> list:
-        ev = list(ev)
-        if ev[1] == split_role:
+    def touches(ev: list, r: int) -> bool:
+        return ev[1] == r or (ev[0] in ('ADD', 'COPY') and ev[2] == r)
+
+    new_prog = list(prog[:depart])
+    for ev in prog[depart:]:
+        if touches(ev, split_role):
+            if ev[0] != 'MOVE':
+                raise ValueError(
+                    f"split role {split_role} is used after leaving f_cut ({ev}); a split here would change the linear map"
+                )
+            ev = list(ev)
             ev[1] = new_helper
-        if ev[0] in ('ADD', 'COPY') and ev[2] == split_role:
-            ev[2] = new_helper
-        return ev
-
-    prefix = prog_old[:split_pos]
-    suffix = [rewrite_tail_role(e) for e in prog_old[split_pos:]]
-
-    if cand['kind'] == 'k1_single_abscission':
-        c_self = F(cand['scale'])
-        mid_ops = []
-        if c_self != 1:
-            mid_ops.append(['SCALE', split_role, str(F(1) / c_self), f_cut])
-            mid_ops.append(['SCALE', new_helper, str(c_self), f_cut])
-        new_prog = prefix + mid_ops + suffix
-    else:
-        ops_f0 = [list(e) for e in cand['ops_f0']]
-        ops_pre = [list(e) for e in cand['ops_cut_pre']]
-        ops_post = [rewrite_tail_role(e) for e in cand['ops_cut_post']]
-        ops_fend = [rewrite_tail_role(e) for e in cand['ops_fend']]
-        new_prog = ops_f0 + prefix + ops_pre + ops_post + suffix + ops_fend
+        new_prog.append(ev)
 
     new_initial = list(W['initial']) + [f_cut]
     new_final = list(W['final']) + [f_end]
     new_final[split_role] = f_cut
 
-    return {
+    W_new = {
         **W,
         'public': n_old + 1,
         'initial': new_initial,
         'final': new_final,
         'program': new_prog,
     }
+    old_polys = public_final_polynomials(W)
+    new_polys = public_final_polynomials(W_new)
+    changed = [r for r in range(n_old) if new_polys[r] != old_polys[r]]
+    if changed:
+        raise AssertionError(f"split changed pre-split public finals {changed[:10]}")
+    return W_new
+
+
+def public_final_polynomials(W: dict) -> list[dict[int, F]]:
+    """Forward exact evaluation: for each public register, its final value as a
+    linear polynomial {input variable: coefficient} over the public inputs."""
+    n = W['public']
+    val: dict[int, dict[int, F]] = {r: {r: F(1)} for r in range(n)}
+    for ev in W['program']:
+        op, r = ev[0], ev[1]
+        if op == 'INIT':
+            val[r] = {}
+        elif op == 'CLEAR':
+            val.pop(r, None)
+        elif op == 'SCALE':
+            q = F(ev[2])
+            val[r] = {v: c * q for v, c in val[r].items() if c * q != 0}
+        elif op == 'COPY':
+            q = F(ev[3])
+            val[r] = {v: c * q for v, c in val[ev[2]].items() if c * q != 0}
+        elif op == 'ADD':
+            q = F(ev[3])
+            acc = dict(val[r])
+            for v, c in val[ev[2]].items():
+                nv = acc.get(v, F(0)) + q * c
+                if nv != 0:
+                    acc[v] = nv
+                else:
+                    acc.pop(v, None)
+            val[r] = acc
+    return [val[r] for r in range(n)]

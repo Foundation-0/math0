@@ -328,9 +328,25 @@ def verify_full_word_and_grid(W_cand: dict, W_ref: dict | None = None, odd_scale
         return adj[:n_loc]
 
     adj_cand = compute_adj(W_cand)
-    if W_ref is not None and W_ref['public'] == W_cand['public']:
+    jacobian_check = 'not_run'
+    if W_ref is not None and W_ref['public'] in (n, n - 1):
+        # Compare the input polynomial of every reference public final. When the
+        # candidate has one extra public field (a helper split), the extra input
+        # variable must not reach any reference final, and the extra final is
+        # not compared.
+        n_ref = W_ref['public']
         adj_ref = compute_adj(W_ref)
-        bad_rows = [r for r in range(n) if adj_cand[r] != adj_ref[r]]
+
+        def project(adj: list[dict[int, F]]) -> list[dict[int, F]]:
+            return [{k: v for k, v in adj[r].items() if k < n_ref} for r in range(len(adj))]
+
+        def matches(adj: list[dict[int, F]]) -> list[int]:
+            pa = project(adj)
+            bad = [r for r in range(n_ref) if pa[r] != adj_ref[r]]
+            bad += [r for r in range(n_ref, n) if pa[r]]
+            return bad
+
+        bad_rows = matches(adj_cand)
         assert not bad_rows, f"Jacobian mismatch against reference word on rows {bad_rows[:10]}"
 
         mut_idx = next(
@@ -339,7 +355,8 @@ def verify_full_word_and_grid(W_cand: dict, W_ref: dict | None = None, odd_scale
         )
         if mut_idx is not None:
             adj_mut = compute_adj(W_cand, mutant_idx=mut_idx)
-            assert adj_mut != adj_ref, "Adversarial scalar-doubling control failed to trigger mismatch!"
+            assert matches(adj_mut), "Adversarial scalar-doubling control failed to trigger mismatch!"
+        jacobian_check = 'PASS_EXACT' if n_ref == n else 'PASS_EXACT_WITH_ONE_SPLIT_HELPER'
 
     main_set = set(W_cand['live']) | {r + 112 for r in W_cand['live']} | set(W_cand['hosted']['X2']) | set(W_cand['hosted']['Y2'])
     helpers = Counter()
@@ -359,4 +376,5 @@ def verify_full_word_and_grid(W_cand: dict, W_ref: dict | None = None, odd_scale
         'lifetimes': life,
         'odd_lcm': odd_lcm,
         'max_single_step_dyadic_bits': max_dyadic_seen,
+        'jacobian_check': jacobian_check,
     }

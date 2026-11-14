@@ -21,7 +21,11 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
 from causal_dag_coalescer import scan_family_a_fusions, scan_flag_shear_coalitions
-from joint_basis_abscission import apply_joint_abscission_split, scan_catalyst_abscission_splits
+from joint_basis_abscission import (
+    apply_joint_abscission_split,
+    public_final_polynomials,
+    scan_catalyst_abscission_splits,
+)
 from tariff_shadow_pricer import (
     certify_delta_moment_positive,
     pack_disjoint_splices,
@@ -269,7 +273,7 @@ def run_comprehensive_self_test():
     assert 'family_a_move_fusion' in s1d['selected_kinds']
     assert s1d['disjoint_splices_packed'] == 3
 
-    # Materialize & verify Block 4's Coupled k=2 Joint-Basis Abscission on top of W_packed!
+    # Materialize Block 4's [30, 31] split on top of W_packed and check it against W_packed.
     W_packed = rep['_packed_word_obj']
     absc_on_packed = scan_catalyst_abscission_splits(W_packed, max_cohort_k=3)
     joint_30_31 = next(
@@ -277,15 +281,35 @@ def run_comprehensive_self_test():
         if c['cohort'] == [30, 31] and c['f_cut'] == 3
     )
     W_split = apply_joint_abscission_split(W_packed, joint_30_31)
-    split_audit = verify_full_word_and_grid(W_split, odd_scale=1125, max_frac_bits=25)
+    polys_packed = public_final_polynomials(W_packed)
+    polys_split = public_final_polynomials(W_split)
+    changed = [r for r in range(W_packed['public']) if polys_split[r] != polys_packed[r]]
+    assert not changed, f"split changed pre-split public finals {changed}"
+    new_role = W_packed['public']
+    assert polys_split[new_role] == {new_role: 1}
+    assert all(new_role not in polys_split[r] for r in range(W_packed['public']))
+    split_audit = verify_full_word_and_grid(W_split, W_ref=W_packed, odd_scale=1125, max_frac_bits=25)
+    assert split_audit['jacobian_check'] == 'PASS_EXACT_WITH_ONE_SPLIT_HELPER'
     assert split_audit['public'] == W_packed['public'] + 1
     assert split_audit['helpers'].get(3, 0) == s1d['audit']['helpers'].get(3, 0) + 1
     assert split_audit['helpers'].get(4, 0) == s1d['audit']['helpers'].get(4, 0) + 1
     assert split_audit['helpers'].get(7, 0) == s1d['audit']['helpers'].get(7, 0) - 1
     assert split_audit['paid'] == s1d['audit']['paid']
     split_gain = certify_delta_moment_positive({7: -1, 3: 1, 4: 1}, {}, "0.003647081039689", 17)
-    print(f"  [OK] Coupled k=2 Abscission Verified : helpers delta={{7:-1, 3:+1, 4:+1}}, paid delta={{}}, est dk=+{split_gain['estimated_delta_kappa']}")
     assert split_gain['strictly_positive_proven']
+    print(f"  [OK] Split of helper 30 at f=3       : {W_packed['public']} pre-split public finals unchanged "
+          f"(Jacobian check run against the packed word)")
+    print(f"       Helpers delta {{7:-1, 3:+1, 4:+1}}, paid delta {{}}, est dk=+{split_gain['estimated_delta_kappa']} (fitted slope)")
+
+    # Negative control: a word that reads the split role after it leaves f_cut must be refused.
+    W_bad = {**W_packed, 'program': W_packed['program'] + [['ADD', 33, 30, '1', 5]]}
+    try:
+        apply_joint_abscission_split(W_bad, joint_30_31)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("split accepted a word that reads the split role after the cut")
+    print("  [OK] Split refused when the split role is read after the cut")
 
     # Verify exact PR #7480 -> PR #7481 calibration (+3.03166854e-7):
     cal_7481 = certify_delta_moment_positive({}, {1: 1, 3: -1, 4: -1, 6: 1}, "0.003646777872835", 17)
