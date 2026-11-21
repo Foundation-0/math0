@@ -1,0 +1,617 @@
+{
+  "all_passed": true,
+  "audit_id": "AUDIT-053",
+  "novelty_grade": "N1",
+  "oracle_class": "exact+anchor",
+  "part_1_step_polytope_and_farkas": {
+    "canonical_paper_point": {
+      "all_satisfied": true,
+      "constraints": {
+        "E10_flow_map_jacobian_5_53": {
+          "formula": "alpha_a - eta_d > 0 (Lem. 5.10 L2072)",
+          "satisfied": true,
+          "slack_exact": "2/3",
+          "strict": true
+        },
+        "E1_positive_wave_strength": {
+          "formula": "1 - alpha_a > 0 (Sec. 6.1, (7.3))",
+          "satisfied": true,
+          "slack_exact": "1/4",
+          "strict": true
+        },
+        "E2_leading_pressure_hessian": {
+          "formula": "alpha_a + beta_h - 1 - eta_d > 0 (Lem. 5.9 (5.49))",
+          "satisfied": true,
+          "slack_exact": "1/6",
+          "strict": true
+        },
+        "E3_div_corr_phase_advection": {
+          "formula": "alpha_a - delta_lvl - eta_d >= 0 (Thm. 5.6 L1855-1861)",
+          "satisfied": true,
+          "slack_exact": "0",
+          "strict": false
+        },
+        "E4_linear_curl_contraction": {
+          "formula": "1 - delta_lvl - eta_d >= 0 (Thm. 5.6 L1852, L1861)",
+          "satisfied": true,
+          "slack_exact": "1/4",
+          "strict": false
+        },
+        "E5_label_advection_contraction": {
+          "formula": "alpha_v - delta_lvl - eta_d >= 0 (Thm. 5.6 L1854, L1861)",
+          "satisfied": true,
+          "slack_exact": "1/2",
+          "strict": false
+        },
+        "E6_mean_induction_shift_5_40": {
+          "formula": "alpha_v - delta_lvl - eta_d - 1/2 >= 0 (Thm. 5.6 (5.40))",
+          "satisfied": true,
+          "slack_exact": "0",
+          "strict": false
+        },
+        "E7_mean_phase_advection": {
+          "formula": "alpha_a - 1/2 - eta_d > 0 (Thm. 5.6 L1877-1878)",
+          "satisfied": true,
+          "slack_exact": "1/6",
+          "strict": true
+        },
+        "E8_higher_osc_pressure_hessian": {
+          "formula": "alpha_v + delta_lvl - gamma_d - eta_d > 0 (Lem. 5.9 (5.52))",
+          "satisfied": true,
+          "slack_exact": "1/3",
+          "strict": true
+        },
+        "E9_central_gradient_err_5_50": {
+          "formula": "alpha_v + delta_lvl - gamma_d - eta_d - 1/3 >= 0 (Lem. 5.9 (5.50))",
+          "satisfied": true,
+          "slack_exact": "0",
+          "strict": false
+        }
+      },
+      "naive_p2_hessian_without_5_16_slack": "-1/12",
+      "parameters": {
+        "alpha_a": "3/4",
+        "alpha_v": "5/4",
+        "beta_h": "1/2",
+        "delta_lvl": "2/3",
+        "eta_d": "1/12",
+        "gamma_d": "3/2"
+      },
+      "tight_zero_slack_facets": [
+        "E3_div_corr_phase_advection",
+        "E6_mean_induction_shift_5_40",
+        "E9_central_gradient_err_5_50"
+      ],
+      "transverse_trick_5_16_strictly_required": true,
+      "violated": []
+    },
+    "farkas_1_no_sine_profile": {
+      "dual_weights": {
+        "E1": 1,
+        "E2": 1
+      },
+      "eliminated_row_at_beta_h_0": [
+        "0",
+        "0",
+        "0",
+        "-1",
+        "0"
+      ],
+      "proves_beta_h_gt_0_mandatory": true,
+      "witness_beta_h_0_rejected": true
+    },
+    "farkas_2_alpha_and_eta_bounds": {
+      "dual_weights_alpha_lb": {
+        "E3": 1,
+        "E8": 1
+      },
+      "dual_weights_eta_ub_e8": {
+        "E1": 2,
+        "E3": 1,
+        "E8": 1
+      },
+      "dual_weights_eta_ub_e9_sharp": {
+        "E1": 2,
+        "E3": 1,
+        "E9": 1
+      },
+      "eliminated_row_alpha_lb": [
+        "2",
+        "0",
+        "0",
+        "-2",
+        "-1"
+      ],
+      "eliminated_row_eta_ub_e8": [
+        "0",
+        "0",
+        "0",
+        "-2",
+        "1"
+      ],
+      "eliminated_row_eta_ub_e9_sharp": [
+        "0",
+        "0",
+        "0",
+        "-2",
+        "2/3"
+      ],
+      "proves_alpha_a_gt_half_plus_eta_d": true,
+      "proves_eta_d_lt_half_from_e8": true,
+      "proves_eta_d_lt_third_sharp_from_e9": true,
+      "witness_alpha_half_rejected": true,
+      "witness_eta_7_24_feasible": true,
+      "witness_eta_third_rejected": true
+    },
+    "farkas_3_transverse_trick_5_16": {
+      "naive_p2_hessian_slack": "-1/12",
+      "strictly_separates": true,
+      "with_5_16_slack": "1/3"
+    }
+  },
+  "part_2_multiscale_appendix_c": {
+    "log_tower_replay": {
+      "b": 1,
+      "lemma_1_3_all_steps_exact": true,
+      "q_sequence": [
+        1,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "q_strictly_grew": true,
+      "steps": 8,
+      "trace": [
+        {
+          "K_j": 640,
+          "L_j_plus_1_le_log_lam_prev_sq": true,
+          "j": 1,
+          "q_j": 1,
+          "q_j_plus_1": 1,
+          "ratio_num_le_den": true
+        },
+        {
+          "K_j": 640,
+          "L_j_plus_1_le_log_lam_prev_sq": true,
+          "j": 2,
+          "q_j": 1,
+          "q_j_plus_1": 2,
+          "ratio_num_le_den": true
+        },
+        {
+          "K_j": 960,
+          "L_j_plus_1_le_log_lam_prev_sq": true,
+          "j": 3,
+          "q_j": 2,
+          "q_j_plus_1": 3,
+          "ratio_num_le_den": true
+        },
+        {
+          "K_j": 1280,
+          "L_j_plus_1_le_log_lam_prev_sq": true,
+          "j": 4,
+          "q_j": 3,
+          "q_j_plus_1": 4,
+          "ratio_num_le_den": true
+        },
+        {
+          "K_j": 1600,
+          "L_j_plus_1_le_log_lam_prev_sq": true,
+          "j": 5,
+          "q_j": 4,
+          "q_j_plus_1": 5,
+          "ratio_num_le_den": true
+        },
+        {
+          "K_j": 1920,
+          "L_j_plus_1_le_log_lam_prev_sq": true,
+          "j": 6,
+          "q_j": 5,
+          "q_j_plus_1": 6,
+          "ratio_num_le_den": true
+        },
+        {
+          "K_j": 2240,
+          "L_j_plus_1_le_log_lam_prev_sq": true,
+          "j": 7,
+          "q_j": 6,
+          "q_j_plus_1": 7,
+          "ratio_num_le_den": true
+        },
+        {
+          "K_j": 2560,
+          "L_j_plus_1_le_log_lam_prev_sq": true,
+          "j": 8,
+          "q_j": 7,
+          "q_j_plus_1": 8,
+          "ratio_num_le_den": true
+        }
+      ]
+    },
+    "step_audits": [
+      {
+        "C10_exact_zero_residual": true,
+        "K_values": [
+          640,
+          640,
+          640
+        ],
+        "P_depth": 3840,
+        "all_satisfied": true,
+        "b": 1,
+        "checks": {
+          "C10_expansion_remainder_exact_7_11": {
+            "satisfied": true,
+            "slack_exact": "0",
+            "strict": false
+          },
+          "C11_rv_headroom_7_11": {
+            "satisfied": true,
+            "slack_exact": "5087/16",
+            "strict": true
+          },
+          "C12_finite_time_geom_sum_L2469": {
+            "satisfied": true,
+            "slack_exact": "2/3",
+            "strict": true
+          },
+          "C13_appendix_c_cubic_bound_L2777": {
+            "satisfied": true,
+            "slack_exact": "2490368000",
+            "strict": false
+          },
+          "C1_depth_in_B_table_L2329": {
+            "satisfied": true,
+            "slack_exact": "639",
+            "strict": false
+          },
+          "C2_parent_absorption_7_8": {
+            "satisfied": true,
+            "slack_exact": "1/64",
+            "strict": false
+          },
+          "C3_mean_cm_bound_L2441": {
+            "satisfied": true,
+            "slack_exact": "10",
+            "strict": false
+          },
+          "C4_older_grad_9_over_K_L2362": {
+            "satisfied": true,
+            "slack_exact": "11/640",
+            "strict": false
+          },
+          "C5_older_dt_grad_18_over_K_L2362": {
+            "satisfied": true,
+            "slack_exact": "11/320",
+            "strict": false
+          },
+          "C6_coupling_ratio_contraction_7_9": {
+            "satisfied": true,
+            "slack_exact": "12799/409600",
+            "strict": false
+          },
+          "C7_parent_bernstein_L2408": {
+            "satisfied": true,
+            "slack_exact": "2439673",
+            "strict": true
+          },
+          "C8_wosc_cp_exponent_L2413": {
+            "satisfied": true,
+            "slack_exact": "28827/16",
+            "strict": true
+          },
+          "C9_fourier_tail_7_12": {
+            "satisfied": true,
+            "slack_exact": "625",
+            "strict": true
+          }
+        },
+        "orders": [
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "C10_exact_zero_residual": true,
+        "K_values": [
+          640,
+          960,
+          1280
+        ],
+        "P_depth": 5760,
+        "all_satisfied": true,
+        "b": 1,
+        "checks": {
+          "C10_expansion_remainder_exact_7_11": {
+            "satisfied": true,
+            "slack_exact": "0",
+            "strict": false
+          },
+          "C11_rv_headroom_7_11": {
+            "satisfied": true,
+            "slack_exact": "7647/16",
+            "strict": true
+          },
+          "C12_finite_time_geom_sum_L2469": {
+            "satisfied": true,
+            "slack_exact": "2/3",
+            "strict": true
+          },
+          "C13_appendix_c_cubic_bound_L2777": {
+            "satisfied": true,
+            "slack_exact": "5242880000",
+            "strict": false
+          },
+          "C1_depth_in_B_table_L2329": {
+            "satisfied": true,
+            "slack_exact": "959",
+            "strict": false
+          },
+          "C2_parent_absorption_7_8": {
+            "satisfied": true,
+            "slack_exact": "1/64",
+            "strict": false
+          },
+          "C3_mean_cm_bound_L2441": {
+            "satisfied": true,
+            "slack_exact": "10",
+            "strict": false
+          },
+          "C4_older_grad_9_over_K_L2362": {
+            "satisfied": true,
+            "slack_exact": "11/640",
+            "strict": false
+          },
+          "C5_older_dt_grad_18_over_K_L2362": {
+            "satisfied": true,
+            "slack_exact": "11/320",
+            "strict": false
+          },
+          "C6_coupling_ratio_contraction_7_9": {
+            "satisfied": true,
+            "slack_exact": "51199/1638400",
+            "strict": false
+          },
+          "C7_parent_bernstein_L2408": {
+            "satisfied": true,
+            "slack_exact": "3658873",
+            "strict": true
+          },
+          "C8_wosc_cp_exponent_L2413": {
+            "satisfied": true,
+            "slack_exact": "43227/16",
+            "strict": true
+          },
+          "C9_fourier_tail_7_12": {
+            "satisfied": true,
+            "slack_exact": "945",
+            "strict": true
+          }
+        },
+        "orders": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "C10_exact_zero_residual": true,
+        "K_values": [
+          4800,
+          5760,
+          5760
+        ],
+        "P_depth": 34560,
+        "all_satisfied": true,
+        "b": 3,
+        "checks": {
+          "C10_expansion_remainder_exact_7_11": {
+            "satisfied": true,
+            "slack_exact": "0",
+            "strict": false
+          },
+          "C11_rv_headroom_7_11": {
+            "satisfied": true,
+            "slack_exact": "46047/16",
+            "strict": true
+          },
+          "C12_finite_time_geom_sum_L2469": {
+            "satisfied": true,
+            "slack_exact": "2/3",
+            "strict": true
+          },
+          "C13_appendix_c_cubic_bound_L2777": {
+            "satisfied": true,
+            "slack_exact": "576847872000",
+            "strict": false
+          },
+          "C1_depth_in_B_table_L2329": {
+            "satisfied": true,
+            "slack_exact": "5759",
+            "strict": false
+          },
+          "C2_parent_absorption_7_8": {
+            "satisfied": true,
+            "slack_exact": "1/40",
+            "strict": false
+          },
+          "C3_mean_cm_bound_L2441": {
+            "satisfied": true,
+            "slack_exact": "120",
+            "strict": false
+          },
+          "C4_older_grad_9_over_K_L2362": {
+            "satisfied": true,
+            "slack_exact": "17/640",
+            "strict": false
+          },
+          "C5_older_dt_grad_18_over_K_L2362": {
+            "satisfied": true,
+            "slack_exact": "17/320",
+            "strict": false
+          },
+          "C6_coupling_ratio_contraction_7_9": {
+            "satisfied": true,
+            "slack_exact": "1036799/33177600",
+            "strict": false
+          },
+          "C7_parent_bernstein_L2408": {
+            "satisfied": true,
+            "slack_exact": "165724793",
+            "strict": true
+          },
+          "C8_wosc_cp_exponent_L2413": {
+            "satisfied": true,
+            "slack_exact": "259227/16",
+            "strict": true
+          },
+          "C9_fourier_tail_7_12": {
+            "satisfied": true,
+            "slack_exact": "5745",
+            "strict": true
+          }
+        },
+        "orders": [
+          4,
+          5,
+          5
+        ]
+      }
+    ]
+  },
+  "part_3_craik_criminale_and_leray_schur": {
+    "gate2_so3_rotation_equivariant": true,
+    "lem21_transversality_exact": true,
+    "lem22_vorticity_strength_exact": true,
+    "lem24_moving_frame_ode_exact": true,
+    "lem25_riccati_e_ode_and_barrier_exact": true,
+    "lem27_large_term_cancellation_exact": true,
+    "sabra_helicity_contrast": {
+      "inter_scale_projection_eq_8_1_exact": "17/13",
+      "inter_scale_projection_equals_z3": true,
+      "intra_wave_helicity_zero": true,
+      "intra_wave_k_dot_curl_zero": true
+    },
+    "sec31_curl_triple_product_exact": true,
+    "sec42_arnold_brenier_identity_exact": true,
+    "sec54_pseudoinverse_equals_leray": true,
+    "sec61_flow_inverse_exact": true,
+    "sec61_shear_B_rho_nilpotent": true,
+    "sf01_23_leray_anisotropic_shear": {
+      "householder_Rk_det_minus_1": true,
+      "householder_Rk_involutory": true,
+      "p_perp_idempotent": true,
+      "p_perp_matrix": [
+        [
+          "5/7",
+          "1/7",
+          "-3/7"
+        ],
+        [
+          "1/7",
+          "13/14",
+          "3/14"
+        ],
+        [
+          "-3/7",
+          "3/14",
+          "5/14"
+        ]
+      ],
+      "p_perp_trace_equals_2": true,
+      "phi_exact": "2196/643",
+      "r_k_matrix": [
+        [
+          "3/7",
+          "2/7",
+          "-6/7"
+        ],
+        [
+          "2/7",
+          "6/7",
+          "3/7"
+        ],
+        [
+          "-6/7",
+          "3/7",
+          "-2/7"
+        ]
+      ],
+      "saddle_div_zero_residual": true,
+      "saddle_momentum_zero_residual": true,
+      "schur_scalar_exact": "-1286/25",
+      "v_exact": [
+        "-887/643",
+        "-145/643",
+        "543/643"
+      ]
+    },
+    "sf01_23_leray_euclidean": {
+      "householder_Rk_det_minus_1": true,
+      "householder_Rk_involutory": true,
+      "p_perp_idempotent": true,
+      "p_perp_matrix": [
+        [
+          "5/7",
+          "1/7",
+          "-3/7"
+        ],
+        [
+          "1/7",
+          "13/14",
+          "3/14"
+        ],
+        [
+          "-3/7",
+          "3/14",
+          "5/14"
+        ]
+      ],
+      "p_perp_trace_equals_2": true,
+      "phi_exact": "25/7",
+      "r_k_matrix": [
+        [
+          "3/7",
+          "2/7",
+          "-6/7"
+        ],
+        [
+          "2/7",
+          "6/7",
+          "3/7"
+        ],
+        [
+          "-6/7",
+          "3/7",
+          "-2/7"
+        ]
+      ],
+      "saddle_div_zero_residual": true,
+      "saddle_momentum_zero_residual": true,
+      "schur_scalar_exact": "-14",
+      "v_exact": [
+        "-15/7",
+        "-24/7",
+        "2/7"
+      ]
+    }
+  },
+  "pinned_readonly_source": {
+    "artifact": "tristanbuckmaster-cc.pdf",
+    "authors": [
+      "Levent Alpoege",
+      "Tristan Buckmaster",
+      "Matei P. Coiculescu"
+    ],
+    "pages": 55,
+    "sha256": "414f5af635c78e807d674a1bab49a440c3cf1173bc3bc7cd12f8686f80a077a3",
+    "title": "Finite-Time Singularity Formation for the Three-Dimensional Euler Equations"
+  },
+  "schema": "expedition.round4d.arm2.buckmaster_euler_cc.v1"
+}
