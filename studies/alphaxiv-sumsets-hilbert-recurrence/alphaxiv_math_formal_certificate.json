@@ -1,0 +1,853 @@
+{
+  "audit_id": "AUDIT-060",
+  "canonical_sha256": "5c29a31ca0fe770aadef15b366f34ba84cc0884e8d3f78dc5a25c83904f423ef",
+  "honest_novelty": "N1",
+  "module_1_feige_lean_and_exact_extremizer": {
+    "exact_extremizer": {
+      "bernoulli_extremizer_exact_for_n1_to_6": true,
+      "exact_grid_sha256": "a6b7756c8ad1cc3e690a2654dd12ffa4a3dc9039951c00ef0bf970aa916a7d84",
+      "matches_upstream_summary_sha256": true,
+      "max_n": 512,
+      "sample_b_n1": {
+        "1": "1/2",
+        "16": "18446744073709551616/48661191875666868481",
+        "2": "4/9",
+        "3": "27/64",
+        "4": "256/625",
+        "64": "39402006196394479212279040100143613805079739270465446667948293404245721771497210611414266254884915640806627990306816/106280802534783397713931364530281324342005826527068525942909496888153648140075413497385170558118261396884918212890625",
+        "8": "16777216/43046721"
+      },
+      "strictly_above_exp_neg1_via_taylor_S20": true,
+      "strictly_monotone_decreasing": true,
+      "taylor_s20_bound_gt_exp_neg1": "4282366656425369/11640679464960000",
+      "verified": true
+    },
+    "hardened_axiom_log_parser": {
+      "axioms_by_decl": {
+        "Feige.sharp_unit_slack_feige_complete": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "VlassisThomas.exactCalibration": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ]
+      },
+      "passed": true,
+      "verified_declarations": [
+        "Feige.sharp_unit_slack_feige_complete",
+        "VlassisThomas.exactCalibration"
+      ]
+    },
+    "live_clone_audit": {
+      "available": true,
+      "bare_assert_count": 0,
+      "crlf_count": 2,
+      "crlf_files": [
+        "reports/unit-slack/data/runtimes.csv",
+        "reports/unit-slack/data/simulation.csv"
+      ],
+      "leak_count": 0,
+      "lean_clean": true,
+      "lean_files_checked": 98,
+      "lean_findings_count": 0,
+      "lean_notices_count": 0,
+      "toolchain": "leanprover/lean4:v4.31.0",
+      "total_lean_lines": 16874,
+      "unseeded_rng_warning_count": 0,
+      "upstream_audited_declarations": 11,
+      "upstream_summary_grid_sha256": "a6b7756c8ad1cc3e690a2654dd12ffa4a3dc9039951c00ef0bf970aa916a7d84"
+    }
+  },
+  "module_2_sumsets_carry_automaton_and_cw_repair": {
+    "collatz_wielandt_audit_SUMSET_CW_01": {
+      "printed_best_ratio_across_12_variants": "563/48",
+      "printed_fails_all_12_perms_and_transposes": true,
+      "printed_vector_report_L35": [
+        "1",
+        "53/48",
+        "53/48"
+      ],
+      "repaired_certificate": {
+        "bound": "183/16",
+        "certified": true,
+        "max_ratio": "606/53",
+        "row_ratios": [
+          "137/12",
+          "606/53",
+          "137/12"
+        ]
+      },
+      "repaired_equivalent_on_pair_first_order": [
+        "1",
+        "48/53",
+        "48/53"
+      ],
+      "repaired_vector_on_M_imp": [
+        "1",
+        "53/48",
+        "1"
+      ],
+      "target_bound": "183/16",
+      "tighter_convergent_52_47_certificate": {
+        "bound": "537/47",
+        "certified": true,
+        "max_ratio": "537/47",
+        "row_ratios": [
+          "537/47",
+          "297/26",
+          "537/47"
+        ]
+      }
+    },
+    "direct_enumeration_checks": [
+      {
+        "automaton_t_k": 11,
+        "diff_mod_exact": 11,
+        "exact_match": true,
+        "gadget": "D_paper",
+        "k": 1,
+        "sum_mod_exact": 12
+      },
+      {
+        "automaton_t_k": 127,
+        "diff_mod_exact": 127,
+        "exact_match": true,
+        "gadget": "D_paper",
+        "k": 2,
+        "sum_mod_exact": 144
+      },
+      {
+        "automaton_t_k": 1475,
+        "diff_mod_exact": 1475,
+        "exact_match": true,
+        "gadget": "D_paper",
+        "k": 3,
+        "sum_mod_exact": 1728
+      },
+      {
+        "automaton_t_k": 11,
+        "diff_mod_exact": 11,
+        "exact_match": true,
+        "gadget": "D_imp",
+        "k": 1,
+        "sum_mod_exact": 12
+      },
+      {
+        "automaton_t_k": 125,
+        "diff_mod_exact": 125,
+        "exact_match": true,
+        "gadget": "D_imp",
+        "k": 2,
+        "sum_mod_exact": 144
+      },
+      {
+        "automaton_t_k": 1427,
+        "diff_mod_exact": 1427,
+        "exact_match": true,
+        "gadget": "D_imp",
+        "k": 3,
+        "sum_mod_exact": 1728
+      }
+    ],
+    "exhaustive_base12_classification": {
+      "all_6_match_exact_affine_family_Mk": true,
+      "contractive_Z12_count": 6,
+      "contractive_direct_0_to_11_count": 2,
+      "contractive_sets": [
+        {
+          "charpoly": [
+            1,
+            -14,
+            31,
+            -18
+          ],
+          "digits": [
+            0,
+            1,
+            3,
+            4,
+            5,
+            8
+          ],
+          "direct_covers_0_11": true,
+          "k_affine_param": 3,
+          "matrix": [
+            [
+              4,
+              4,
+              3
+            ],
+            [
+              3,
+              6,
+              3
+            ],
+            [
+              3,
+              4,
+              4
+            ]
+          ]
+        },
+        {
+          "charpoly": [
+            1,
+            -14,
+            31,
+            -18
+          ],
+          "digits": [
+            0,
+            3,
+            4,
+            5,
+            7,
+            8
+          ],
+          "direct_covers_0_11": false,
+          "k_affine_param": 3,
+          "matrix": [
+            [
+              4,
+              4,
+              3
+            ],
+            [
+              3,
+              6,
+              3
+            ],
+            [
+              3,
+              4,
+              4
+            ]
+          ]
+        },
+        {
+          "charpoly": [
+            1,
+            -14,
+            29,
+            -16
+          ],
+          "digits": [
+            0,
+            1,
+            2,
+            4,
+            5,
+            9
+          ],
+          "direct_covers_0_11": true,
+          "k_affine_param": 2,
+          "matrix": [
+            [
+              3,
+              6,
+              2
+            ],
+            [
+              2,
+              8,
+              2
+            ],
+            [
+              2,
+              6,
+              3
+            ]
+          ]
+        },
+        {
+          "charpoly": [
+            1,
+            -14,
+            29,
+            -16
+          ],
+          "digits": [
+            0,
+            4,
+            5,
+            7,
+            8,
+            9
+          ],
+          "direct_covers_0_11": false,
+          "k_affine_param": 2,
+          "matrix": [
+            [
+              3,
+              6,
+              2
+            ],
+            [
+              2,
+              8,
+              2
+            ],
+            [
+              2,
+              6,
+              3
+            ]
+          ]
+        },
+        {
+          "charpoly": [
+            1,
+            -14,
+            27,
+            -14
+          ],
+          "digits": [
+            0,
+            1,
+            2,
+            5,
+            9,
+            10
+          ],
+          "direct_covers_0_11": false,
+          "k_affine_param": 1,
+          "matrix": [
+            [
+              2,
+              8,
+              1
+            ],
+            [
+              1,
+              10,
+              1
+            ],
+            [
+              1,
+              8,
+              2
+            ]
+          ]
+        },
+        {
+          "charpoly": [
+            1,
+            -14,
+            27,
+            -14
+          ],
+          "digits": [
+            0,
+            1,
+            5,
+            8,
+            9,
+            10
+          ],
+          "direct_covers_0_11": false,
+          "k_affine_param": 1,
+          "matrix": [
+            [
+              2,
+              8,
+              1
+            ],
+            [
+              1,
+              10,
+              1
+            ],
+            [
+              1,
+              8,
+              2
+            ]
+          ]
+        }
+      ],
+      "covering_Z12": 288,
+      "direct_covering_0_to_11": 53,
+      "total_normalized_6_digit_sets": 462,
+      "unique_direct_optimum": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        8
+      ]
+    },
+    "improved_gadget": {
+      "charpoly": [
+        1,
+        -14,
+        31,
+        -18
+      ],
+      "depth_reduction_fraction": "7/22",
+      "digits": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        8
+      ],
+      "exact_depth_coeff_15_proved": true,
+      "exact_rate_bracket": [
+        "28561/30000",
+        "76163/80000"
+      ],
+      "matrix": [
+        [
+          4,
+          4,
+          3
+        ],
+        [
+          3,
+          6,
+          3
+        ],
+        [
+          3,
+          4,
+          4
+        ]
+      ],
+      "recurrence_residuals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "sequence_t0_to_t6": [
+        1,
+        11,
+        125,
+        1427,
+        16301,
+        186227,
+        2127533
+      ],
+      "states": [
+        [
+          0
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          -1
+        ]
+      ],
+      "z2_equalizer_commutes": true
+    },
+    "paper_gadget": {
+      "charpoly": [
+        1,
+        -14,
+        29,
+        -16
+      ],
+      "digits": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        9
+      ],
+      "exact_depth_coeff_22_proved": true,
+      "exact_rate_bracket": [
+        "11623/12000",
+        "7749/8000"
+      ],
+      "matrix": [
+        [
+          3,
+          6,
+          2
+        ],
+        [
+          2,
+          8,
+          2
+        ],
+        [
+          2,
+          6,
+          3
+        ]
+      ],
+      "sequence_t0_to_t5": [
+        1,
+        11,
+        127,
+        1475,
+        17143,
+        199259
+      ],
+      "states": [
+        [
+          0
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          -1
+        ]
+      ],
+      "z2_equalizer_commutes": true
+    },
+    "verified": true
+  },
+  "module_3_hope_hilbert_schur_and_Hn": {
+    "finite_hilbert_bareiss_and_rh4": {
+      "hilbert_rows": [
+        {
+          "cauchy_det_matches": true,
+          "det_exact": "1/12",
+          "inertia": [
+            2,
+            0,
+            0
+          ],
+          "inverse_is_pure_integer_matrix": true,
+          "kappa_F_sq_integer_floor": 373,
+          "n": 2,
+          "r_h4_audit014": "2/1",
+          "r_h4_strictly_beats_r_opt": true,
+          "r_opt_audit002": "32/29",
+          "schur_last_pivot": "1/12",
+          "schur_pivot_closed_matches": true
+        },
+        {
+          "cauchy_det_matches": true,
+          "det_exact": "1/2160",
+          "inertia": [
+            3,
+            0,
+            0
+          ],
+          "inverse_is_pure_integer_matrix": true,
+          "kappa_F_sq_integer_floor": 276843,
+          "n": 3,
+          "r_h4_audit014": "46917762/22912973",
+          "r_h4_strictly_beats_r_opt": true,
+          "r_opt_audit002": "4232/3597",
+          "schur_last_pivot": "1/180",
+          "schur_pivot_closed_matches": true
+        },
+        {
+          "cauchy_det_matches": true,
+          "det_exact": "1/6048000",
+          "inertia": [
+            4,
+            0,
+            0
+          ],
+          "inverse_is_pure_integer_matrix": true,
+          "kappa_F_sq_integer_floor": 243790549,
+          "n": 4,
+          "r_h4_audit014": "1672240842676/800306108717",
+          "r_h4_strictly_beats_r_opt": true,
+          "r_opt_audit002": "123904/100517",
+          "schur_last_pivot": "1/2800",
+          "schur_pivot_closed_matches": true
+        },
+        {
+          "cauchy_det_matches": true,
+          "det_exact": "1/266716800000",
+          "inertia": [
+            5,
+            0,
+            0
+          ],
+          "inverse_is_pure_integer_matrix": true,
+          "kappa_F_sq_integer_floor": 231215873314,
+          "n": 5,
+          "r_h4_audit014": "2992915623985371570/1407517543187058689",
+          "r_h4_strictly_beats_r_opt": true,
+          "r_opt_audit002": "10143008/7935665",
+          "schur_last_pivot": "1/44100",
+          "schur_pivot_closed_matches": true
+        },
+        {
+          "cauchy_det_matches": true,
+          "det_exact": "1/186313420339200000",
+          "inertia": [
+            6,
+            0,
+            0
+          ],
+          "inverse_is_pure_integer_matrix": true,
+          "kappa_F_sq_integer_floor": 228583771727955,
+          "n": 6,
+          "r_h4_audit014": "148510691263795313347764/68780044835870264090333",
+          "r_h4_strictly_beats_r_opt": true,
+          "r_opt_audit002": "677665024/514796637",
+          "schur_last_pivot": "1/698544",
+          "schur_pivot_closed_matches": true
+        },
+        {
+          "cauchy_det_matches": true,
+          "det_exact": "1/2067909047925770649600000",
+          "inertia": [
+            7,
+            0,
+            0
+          ],
+          "inverse_is_pure_integer_matrix": true,
+          "kappa_F_sq_integer_floor": 232080414996130780,
+          "n": 7,
+          "r_h4_audit014": "187598324783726769731082376994/85709926837651384418382955819",
+          "r_h4_strictly_beats_r_opt": true,
+          "r_opt_audit002": "248196760352/183941518327",
+          "schur_last_pivot": "1/11099088",
+          "schur_pivot_closed_matches": true
+        },
+        {
+          "cauchy_det_matches": true,
+          "det_exact": "1/365356847125734485878112256000000",
+          "inertia": [
+            8,
+            0,
+            0
+          ],
+          "inverse_is_pure_integer_matrix": true,
+          "kappa_F_sq_integer_floor": 240052201105204236529,
+          "n": 8,
+          "r_h4_audit014": "12761761743427344187648129469752/5759947377016329695549748020071",
+          "r_h4_strictly_beats_r_opt": true,
+          "r_opt_audit002": "66352873472/48141726509",
+          "schur_last_pivot": "1/176679360",
+          "schur_pivot_closed_matches": true
+        }
+      ],
+      "max_n": 8,
+      "verified": true
+    },
+    "hope_gauge_vs_schur_obstruction": {
+      "dark_mode_nullity_dim_shadow": 1,
+      "exact_bn_s_cancellation_4_cases": true,
+      "exact_gram_and_schur_t_invariance_4_cases": true,
+      "gram_inertia": [
+        2,
+        1,
+        0
+      ],
+      "gram_matrix": [
+        [
+          "9/1",
+          "9/1",
+          "0/1"
+        ],
+        [
+          "9/1",
+          "9/1",
+          "0/1"
+        ],
+        [
+          "0/1",
+          "0/1",
+          "4/1"
+        ]
+      ],
+      "hope_diagonal_cap_sq": [
+        "9/1",
+        "9/1",
+        "4/1"
+      ],
+      "hope_first_pruned_channel": 2,
+      "hope_incurred_true_error": "4/1",
+      "orthogonal_control_schur_equals_hope": true,
+      "raw_l1_breaks_all_4_cases": true,
+      "schur_first_pruned_channel": 0,
+      "schur_incurred_true_error": "0/1",
+      "true_hilbert_schur_loss": [
+        "0/1",
+        "0/1",
+        "4/1"
+      ],
+      "verified": true
+    }
+  },
+  "module_4_recurrence_and_camail_bridge": {
+    "exact_bridge": {
+      "group_solvability_obstruction": {
+        "A5_derived_series_orders": [
+          60,
+          60
+        ],
+        "A5_perfect_nonsolvable_simple": true,
+        "S4_derived_series_orders": [
+          24,
+          12,
+          4,
+          1,
+          1
+        ],
+        "S4_solvable_derived_length": 3
+      },
+      "looped_actor_fprm_contraction": {
+        "all_verified": true,
+        "cases": [
+          {
+            "a1": "3/4",
+            "a2": "1/4",
+            "code_damping_deficit": "55/2800064",
+            "code_total_strictly_lt_1": true,
+            "exact_convex_balance_equals_1": true,
+            "num_layers": 1
+          },
+          {
+            "a1": "3/4",
+            "a2": "1/4",
+            "code_damping_deficit": "943/70001024",
+            "code_total_strictly_lt_1": true,
+            "exact_convex_balance_equals_1": true,
+            "num_layers": 2
+          },
+          {
+            "a1": "9/10",
+            "a2": "1/5",
+            "code_damping_deficit": "4468559/234284500000",
+            "code_total_strictly_lt_1": true,
+            "exact_convex_balance_equals_1": true,
+            "num_layers": 3
+          },
+          {
+            "a1": "99/100",
+            "a2": "1/2",
+            "code_damping_deficit": "103940399/788279800000",
+            "code_total_strictly_lt_1": true,
+            "exact_convex_balance_equals_1": true,
+            "num_layers": 2
+          }
+        ]
+      },
+      "qrr_u1_schur_and_singularity": {
+        "a0_exact": "59/56",
+        "bad_residual_singular_at_half_and_nonmonotone": true,
+        "bad_residual_values_at_1_3__2_5__1": [
+          "2/1",
+          "4/1",
+          "2/1"
+        ],
+        "complex_linf_u1_invariant": true,
+        "horizontal_orthogonality_residual": "0/1",
+        "pythagorean_schur_residual": "0/1",
+        "real_linf_breaks_under_u1_CS11": true,
+        "u1_gauge_equivariance_3_triples": true
+      },
+      "verified": true
+    },
+    "live_clone_hygiene": {
+      "available": true,
+      "repos": {
+        "alphaxiv-hilbert-operator-for-progressive-encoding-hope-a": {
+          "bare_assert_count": 0,
+          "bare_assert_locations": [],
+          "crlf_count": 0,
+          "files_scanned": 17,
+          "leak_count": 0,
+          "present": true,
+          "py_files_scanned": 5,
+          "status": "PASS",
+          "unseeded_rng_warning_count": 0
+        },
+        "alphaxiv-settling-the-optimal-exponent-relating-sumsets-a": {
+          "bare_assert_count": 0,
+          "bare_assert_locations": [],
+          "crlf_count": 0,
+          "files_scanned": 9,
+          "leak_count": 0,
+          "present": true,
+          "py_files_scanned": 1,
+          "status": "PASS",
+          "unseeded_rng_warning_count": 0
+        },
+        "alphaxiv-when-does-recurrence-become-an-algorithm-converg": {
+          "bare_assert_count": 2,
+          "bare_assert_locations": [
+            "train_repro.py:463",
+            "train_repro.py:466"
+          ],
+          "crlf_count": 0,
+          "files_scanned": 14,
+          "leak_count": 0,
+          "present": true,
+          "py_files_scanned": 3,
+          "status": "FAIL",
+          "unseeded_rng_warning_count": 2
+        },
+        "camail-LoopedActor": {
+          "bare_assert_count": 180,
+          "bare_assert_locations": [
+            "data_scripts/build_boxoban_banks.py:38",
+            "data_scripts/build_boxoban_banks.py:42",
+            "data_scripts/build_rushhour_banks.py:29",
+            "models/fprm.py:219",
+            "models/fprm.py:128",
+            "models/fprm.py:242",
+            "models/fprm_thinker.py:102",
+            "models/fprm_thinker.py:99",
+            "models/fprm_thinker.py:140",
+            "models/fprm_thinker.py:192",
+            "models/fprm_thinker.py:143",
+            "models/fprm_thinker.py:177"
+          ],
+          "crlf_count": 0,
+          "files_scanned": 53,
+          "leak_count": 0,
+          "present": true,
+          "py_files_scanned": 41,
+          "status": "FAIL",
+          "unseeded_rng_warning_count": 13
+        },
+        "camail-Quotient_Recurrent_Reasoner_QRR": {
+          "bare_assert_count": 60,
+          "bare_assert_locations": [
+            "dataset/build_arc_dataset.py:43",
+            "dataset/build_arc_dataset.py:44",
+            "dataset/build_arc_dataset.py:46",
+            "dataset/build_arc_dataset.py:78",
+            "dataset/build_arc_dataset.py:79",
+            "dataset/build_arc_dataset.py:213",
+            "dataset/build_maze_dataset.py:83",
+            "dataset/build_sudoku_dataset.py:123",
+            "dataset/build_sudoku_dataset.py:71",
+            "dataset/make_test_subset.py:31",
+            "dataset/make_test_subset.py:35",
+            "dataset/make_test_subset.py:36"
+          ],
+          "crlf_count": 0,
+          "files_scanned": 50,
+          "leak_count": 0,
+          "present": true,
+          "py_files_scanned": 36,
+          "status": "FAIL",
+          "unseeded_rng_warning_count": 15
+        }
+      }
+    }
+  },
+  "oracle_class": "exact+anchor",
+  "pinned_read_only_anchors": {
+    "alphaxiv/feige-231f2e0b": "50b0b2de0940b7f8ebc8c7c9fd628803f4283ba4",
+    "alphaxiv/hilbert-operator-for-progressive-encoding-hope-a": "23670f903a0f6c7ce7939fc8db26d3db8082d98e",
+    "alphaxiv/settling-the-optimal-exponent-relating-sumsets-a": "756551f6888c63bd33a796b0e7b497564032e2ae",
+    "alphaxiv/when-does-recurrence-become-an-algorithm-converg": "7b48186b829192b481ff5792a288bf6f3f4a15ab",
+    "camail-official/LoopedActor": "549a4e81ebd2d823112ed1bcf008f837e0f449b5",
+    "camail-official/Quotient_Recurrent_Reasoner_QRR": "3e3c9ebecad534296482316e1c39f1063f0a6a32"
+  },
+  "schema": "aletheia.wave2.round5.arm_r5_5.alphaxiv_math_formal.v1",
+  "verdict": "ALPHAXIV_MATH_FORMAL_ALL_CHECKS_VERIFIED"
+}
