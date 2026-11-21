@@ -12,6 +12,7 @@ What is here today:
 
 - **[AREAS.md](AREAS.md)** — survey of where Foundation-0 can make progress in mathematics.
 - **[data/codetables/](data/codetables/)** — census snapshot and script for open entries on [codetables.de](data/codetables/README.md) (see that README for files and how to re-run the census).
+- **[studies/ROUND7_PURE_MATH_PROVENANCE.md](studies/ROUND7_PURE_MATH_PROVENANCE.md)** — Wave 2 Round 7 independently verified (`AUDIT-069R`, `AUDIT-070R`, `AUDIT-071R`) zero-float exact rational complexity, SAT-forensics, and benchmark-identifiability studies (`191/191` `100.0%` `aletheia v1.4.0` R5 mutation killed).
 
 Other mathematics spin-outs are listed under [Projects](#projects) below. Work is in the open: results should be backed by something a machine can re-check, with credit for people and models.
 

@@ -1,0 +1,260 @@
+{
+  "audit_id": "AUDIT-071",
+  "canonical_sha256": "5518b2fcab456c6af6032a7d9cfb9d6442c6419b92195adc652949562ff05d51",
+  "honest_novelty": "N1",
+  "image_check": {
+    "checked": false,
+    "mode": "standalone_embedded_table"
+  },
+  "module_1_table2_exact_arithmetic_and_scaling": {
+    "par2_summary_ratios_exact_match": true,
+    "par2_zero_centi_ms_discrepancy": true,
+    "ratio_cells_checked": 102,
+    "ratio_mismatches": 0,
+    "rows_audited": 30,
+    "scaling_forensics": {
+      "f2_frobenius_polynomial_gauss": {
+        "step_1024_to_4096": "153/11",
+        "step_256_to_1024": "22/3",
+        "step_64_to_256": "3/1"
+      },
+      "hard_spn_exponential_wall": {
+        "all_solvers_d32_to_d64_growth": {
+          "CMS-C 1C": "1080467/7731",
+          "CMS-X 1C": "185059/2736",
+          "CaDiCaL 1C": "213673/3083",
+          "Frobenius 1C": "1063/17",
+          "Kissat 1C": "432994/8409"
+        },
+        "exceeds_30s_timeout_at_d128": true,
+        "extrapolated_d128_at_8x_per_16bits_centi_ms": 17416192,
+        "frob_d32_to_d48_ratio": "257/34",
+        "frob_d48_to_d64_ratio": "2126/257",
+        "hard_spn_share_of_frob_total": "4933/7101",
+        "spn_n128_d64_share_of_frob_total": "4252/7101"
+      },
+      "sha256_bitsliced_enumeration": {
+        "bitsliced_evals_per_sec_exact": "6553600000/1081",
+        "bitsliced_evals_per_sec_floor": 6062534,
+        "exceeds_30s_timeout_at_k28_unsat": true,
+        "k16_unsat_over_sat_ratio": "1081/122",
+        "k20_sat_over_k16_unsat_ratio": "214/1081",
+        "k28_unsat_projected_centi_ms": 4427776
+      }
+    },
+    "solved_counts_exact_match": true,
+    "solvers": {
+      "CMS-C 1C": {
+        "finite_sum_centi_ms": 2744301,
+        "mutually_solved_finite_ratio_exact": "392043/812",
+        "mutually_solved_frob_sum_centi_ms": 5684,
+        "par2_centi_ms": 20744301,
+        "solved": 27,
+        "timeout_penalty_share_exact": "6000000/6914767",
+        "timeouts": 3
+      },
+      "CMS-X 1C": {
+        "finite_sum_centi_ms": 997586,
+        "mutually_solved_finite_ratio_exact": "498793/2842",
+        "mutually_solved_frob_sum_centi_ms": 5684,
+        "par2_centi_ms": 18997586,
+        "solved": 27,
+        "timeout_penalty_share_exact": "9000000/9498793",
+        "timeouts": 3
+      },
+      "CaDiCaL 1C": {
+        "finite_sum_centi_ms": 2808612,
+        "mutually_solved_finite_ratio_exact": "1404306/2687",
+        "mutually_solved_frob_sum_centi_ms": 5374,
+        "par2_centi_ms": 38808612,
+        "solved": 24,
+        "timeout_penalty_share_exact": "1000000/1078017",
+        "timeouts": 6
+      },
+      "Frobenius 1C": {
+        "finite_sum_centi_ms": 7101,
+        "mutually_solved_finite_ratio_exact": "1/1",
+        "mutually_solved_frob_sum_centi_ms": 7101,
+        "par2_centi_ms": 7101,
+        "solved": 30,
+        "timeout_penalty_share_exact": "0/1",
+        "timeouts": 0
+      },
+      "Kissat 1C": {
+        "finite_sum_centi_ms": 2007095,
+        "mutually_solved_finite_ratio_exact": "2007095/5374",
+        "mutually_solved_frob_sum_centi_ms": 5374,
+        "par2_centi_ms": 38007095,
+        "solved": 24,
+        "timeout_penalty_share_exact": "7200000/7601419",
+        "timeouts": 6
+      }
+    },
+    "verified": true
+  },
+  "module_2_aig_hybrid_vs_dpll_separations": {
+    "bitsliced_64way_preimage": {
+      "k6_unsat_sample": {
+        "batches_evaluated": 1,
+        "free_bits": 6,
+        "status": "UNSAT",
+        "total_batches": 1,
+        "witness": null
+      },
+      "k8_sat_target0": {
+        "batches_evaluated": 2,
+        "free_bits": 8,
+        "status": "SAT",
+        "total_batches": 4,
+        "witness": 123
+      }
+    },
+    "cec_polynomial_multiplier": [
+      {
+        "decisions": 0,
+        "poly_terms": 16,
+        "residual_nonzero_terms": 0,
+        "status": "UNSAT",
+        "width": 4
+      },
+      {
+        "decisions": 0,
+        "poly_terms": 36,
+        "residual_nonzero_terms": 0,
+        "status": "UNSAT",
+        "width": 6
+      },
+      {
+        "decisions": 0,
+        "poly_terms": 64,
+        "residual_nonzero_terms": 0,
+        "status": "UNSAT",
+        "width": 8
+      }
+    ],
+    "factor_aig_verified": {
+      "prime_65537": {
+        "aig_verified": true,
+        "factors": [],
+        "status": "UNSAT",
+        "steps": 127
+      },
+      "semiprime_10403": {
+        "aig_verified": true,
+        "factors": [
+          101,
+          103
+        ],
+        "status": "SAT",
+        "steps": 50
+      }
+    },
+    "php_cutting_planes_vs_dpll": [
+      {
+        "dpll_decisions": 5,
+        "dpll_status": "UNSAT",
+        "holes": 3,
+        "pb_status": "UNSAT",
+        "pb_steps": 1,
+        "pigeons": 4
+      },
+      {
+        "dpll_decisions": 31,
+        "dpll_status": "UNSAT",
+        "holes": 4,
+        "pb_status": "UNSAT",
+        "pb_steps": 1,
+        "pigeons": 5
+      },
+      {
+        "dpll_decisions": 241,
+        "dpll_status": "UNSAT",
+        "holes": 5,
+        "pb_status": "UNSAT",
+        "pb_steps": 1,
+        "pigeons": 6
+      }
+    ],
+    "tseitin_z2_cohomology_vs_dpll": [
+      {
+        "betti_1_z2": 4,
+        "dpll_decisions": 15,
+        "dpll_status": "UNSAT",
+        "f2_gauss_decisions": 0,
+        "f2_gauss_status": "UNSAT",
+        "n_edges": 9,
+        "n_verts": 6
+      },
+      {
+        "betti_1_z2": 5,
+        "dpll_decisions": 31,
+        "dpll_status": "UNSAT",
+        "f2_gauss_decisions": 0,
+        "f2_gauss_status": "UNSAT",
+        "n_edges": 12,
+        "n_verts": 8
+      },
+      {
+        "betti_1_z2": 6,
+        "dpll_decisions": 63,
+        "dpll_status": "UNSAT",
+        "f2_gauss_decisions": 0,
+        "f2_gauss_status": "UNSAT",
+        "n_edges": 15,
+        "n_verts": 10
+      }
+    ],
+    "verified": true
+  },
+  "module_3_np_hard_blind_spots": {
+    "critical_3sat_alpha_17_4": [
+      {
+        "extracted_xor3_blocks": 0,
+        "m_clauses": 51,
+        "n_vars": 12,
+        "ratio_exact": "17/4",
+        "sat_of_3": 2,
+        "total_dpll_decisions_3seeds": 14
+      },
+      {
+        "extracted_xor3_blocks": 0,
+        "m_clauses": 68,
+        "n_vars": 16,
+        "ratio_exact": "17/4",
+        "sat_of_3": 3,
+        "total_dpll_decisions_3seeds": 18
+      },
+      {
+        "extracted_xor3_blocks": 0,
+        "m_clauses": 85,
+        "n_vars": 20,
+        "ratio_exact": "17/4",
+        "sat_of_3": 2,
+        "total_dpll_decisions_3seeds": 28
+      },
+      {
+        "extracted_xor3_blocks": 0,
+        "m_clauses": 102,
+        "n_vars": 24,
+        "ratio_exact": "17/4",
+        "sat_of_3": 2,
+        "total_dpll_decisions_3seeds": 38
+      }
+    ],
+    "exponential_fallback_confirmed": true,
+    "verified": true,
+    "zero_xor_algebraic_shortcuts_extracted": true
+  },
+  "module_4_aletheia_v14_disclosure_gate": {
+    "compliant_disclosure_passed": true,
+    "table2_identified_disclosure_gaps": [
+      "BENCH_MISSING_TIMEOUT_SHARE",
+      "BENCH_MISSING_UNSTRUCTURED_NP",
+      "BENCH_MISSING_THEORY_COMPETITORS"
+    ]
+  },
+  "oracle_class": "exact+anchor",
+  "schema": "aletheia.wave2.round7.arm_r7_4.frobenius_sat_forensics.v1",
+  "source_image_sha256": "1af95eb5a4e57c65e5dc15d42780451b9be66cef83efe4e32ccd83528f98355d",
+  "verdict": "FROBENIUS_SAT_FORENSICS_ALL_VERIFIED"
+}
