@@ -1,0 +1,681 @@
+{
+  "audit_id": "AUDIT-080",
+  "certificate_sha256": "dc9671d3fda0adfd140986d83fbb70c6c86d1ddedc830734765a194558494d36",
+  "live_source_verification": {
+    "anchors": [
+      {
+        "anchor_id": "SC-ZHIHU-01",
+        "file": "zhihu/zhihu_2092277762245538186_score_centering.md",
+        "line": 42,
+        "verified": true
+      },
+      {
+        "anchor_id": "SC-ZHIHU-02",
+        "file": "zhihu/zhihu_2092277762245538186_score_centering.md",
+        "line": 112,
+        "verified": true
+      },
+      {
+        "anchor_id": "SC-SING-01-ZHIHU",
+        "file": "zhihu/zhihu_2092277762245538186_score_centering.md",
+        "line": 88,
+        "verified": true
+      },
+      {
+        "anchor_id": "SC-CODE-01-FULL",
+        "file": "score-centering/repo/losses.py",
+        "line": 139,
+        "verified": true
+      },
+      {
+        "anchor_id": "SC-CODE-01-HEAD",
+        "file": "score-centering/repo/losses.py",
+        "line": 143,
+        "verified": true
+      },
+      {
+        "anchor_id": "SC-CODE-02-GATE",
+        "file": "score-centering/repo/losses.py",
+        "line": 121,
+        "verified": true
+      },
+      {
+        "anchor_id": "SC-CODE-02-SEQ",
+        "file": "score-centering/repo/losses.py",
+        "line": 162,
+        "verified": true
+      },
+      {
+        "anchor_id": "SC-CODE-02-GSPO",
+        "file": "score-centering/repo/README.md",
+        "line": 132,
+        "verified": true
+      },
+      {
+        "anchor_id": "SC-CODE-02-TOPR",
+        "file": "score-centering/repo/README.md",
+        "line": 133,
+        "verified": true
+      },
+      {
+        "anchor_id": "SC-CODE-03-QTAIL",
+        "file": "score-centering/repo/losses.py",
+        "line": 146,
+        "verified": true
+      },
+      {
+        "anchor_id": "SC-CODE-03-ALPHA",
+        "file": "score-centering/repo/losses.py",
+        "line": 150,
+        "verified": true
+      },
+      {
+        "anchor_id": "SC-CODE-04-EPS",
+        "file": "score-centering/repo/losses.py",
+        "line": 147,
+        "verified": true
+      },
+      {
+        "anchor_id": "SC-CODE-05-TEST",
+        "file": "score-centering/repo/tests/test_loss.py",
+        "line": 28,
+        "verified": true
+      }
+    ],
+    "file_digests": {
+      "score-centering/arxiv_2609.20807.pdf": {
+        "bytes": 1354897,
+        "sha256": "73173515a8f1244e7c20b5ffc2a47270b1e0fe31c099b075d35460af58b64019",
+        "verified": true
+      },
+      "score-centering/arxiv_2609.20807.txt": {
+        "bytes": 56454,
+        "sha256": "a53342f3774e1effd43e386e06ae76766c0002262616d2cfa8a5726c90b87cd2",
+        "verified": true
+      },
+      "score-centering/arxiv_2609.20807_layout.txt": {
+        "bytes": 76219,
+        "sha256": "01d1959f6f0e929e60bd571f8bb9c5b16abc5b918b44846303672fbaa761ae16",
+        "verified": true
+      },
+      "score-centering/repo/README.md": {
+        "bytes": 8821,
+        "sha256": "94422aa05a3dd0e43b74427fd8c9c80612f76256ee509d43b15207ec1b190c9c",
+        "verified": true
+      },
+      "score-centering/repo/losses.py": {
+        "bytes": 9013,
+        "sha256": "c9094e9663d1770badcfc0327c41aa201e408dd0b868d6656444c4f497b04820",
+        "verified": true
+      },
+      "score-centering/repo/tests/test_loss.py": {
+        "bytes": 2087,
+        "sha256": "199fa0e2d684a6727940c7bfad9c6afee75e0446b7a0132911c9383c798aa91d",
+        "verified": true
+      },
+      "zhihu/zhihu_2092277762245538186_score_centering.md": {
+        "bytes": 9437,
+        "sha256": "74443b91fa1668f3aa15e170de2520a02f356f64be549a60de2bcc84484f6d3d",
+        "verified": true
+      }
+    },
+    "mode": "live_read_only",
+    "pinned_repo_commit": "fdca22b19793babdf08e33e5ba51537e82cbed2f",
+    "verified_anchors": 13,
+    "verified_files": 7
+  },
+  "pillar1_drift_kl_bias": {
+    "bias_sign_and_witnesses_sc_zhihu_02": {
+      "advantage_mismatch_identity": {
+        "adv_mu": [
+          "1/1",
+          "-1/1"
+        ],
+        "adv_pi": [
+          "2/1",
+          "-2/1"
+        ],
+        "delta_cov": [
+          "1/4",
+          "-1/4"
+        ],
+        "delta_l1_exact": "0/1",
+        "delta_l1_zhihu_l112_bug": "0/1",
+        "delta_l2_sq_exact": "0/1",
+        "delta_linf_exact": "0/1",
+        "drift": [
+          "0/1",
+          "0/1"
+        ],
+        "err_off_equals_delta_cov_minus_drift": true,
+        "err_off_exact": [
+          "1/4",
+          "-1/4"
+        ],
+        "err_off_zhihu_l112_bug": [
+          "1/4",
+          "-1/4"
+        ],
+        "err_sc": [
+          "1/4",
+          "-1/4"
+        ],
+        "err_sc_equals_delta_cov": true,
+        "g_off": [
+          "1/2",
+          "-1/2"
+        ],
+        "g_sc": [
+          "1/2",
+          "-1/2"
+        ],
+        "g_true": [
+          "3/4",
+          "-3/4"
+        ]
+      },
+      "binary_p": [
+        "3/4",
+        "1/4"
+      ],
+      "binary_q": [
+        "1/2",
+        "1/2"
+      ],
+      "delta_negative_sc_better": {
+        "adv_mu": [
+          "1/1",
+          "1/1"
+        ],
+        "adv_pi": [
+          "1/1",
+          "1/1"
+        ],
+        "delta_cov": [
+          "0/1",
+          "0/1"
+        ],
+        "delta_l1_exact": "-1/2",
+        "delta_l1_zhihu_l112_bug": "-1/2",
+        "delta_l2_sq_exact": "-1/8",
+        "delta_linf_exact": "-1/4",
+        "drift": [
+          "-1/4",
+          "1/4"
+        ],
+        "err_off_equals_delta_cov_minus_drift": true,
+        "err_off_exact": [
+          "1/4",
+          "-1/4"
+        ],
+        "err_off_zhihu_l112_bug": [
+          "-1/4",
+          "1/4"
+        ],
+        "err_sc": [
+          "0/1",
+          "0/1"
+        ],
+        "err_sc_equals_delta_cov": true,
+        "g_off": [
+          "-1/4",
+          "1/4"
+        ],
+        "g_sc": [
+          "0/1",
+          "0/1"
+        ],
+        "g_true": [
+          "0/1",
+          "0/1"
+        ]
+      },
+      "delta_positive_sc_worse_and_zhihu_sign_flip": {
+        "adv_mu": [
+          "3/1",
+          "-1/1"
+        ],
+        "adv_pi": [
+          "3/1",
+          "-1/1"
+        ],
+        "delta_cov": [
+          "-1/4",
+          "1/4"
+        ],
+        "delta_l1_exact": "1/2",
+        "delta_l1_zhihu_l112_bug": "-1/2",
+        "delta_l2_sq_exact": "1/8",
+        "delta_linf_exact": "1/4",
+        "drift": [
+          "-1/4",
+          "1/4"
+        ],
+        "err_off_equals_delta_cov_minus_drift": true,
+        "err_off_exact": [
+          "0/1",
+          "0/1"
+        ],
+        "err_off_zhihu_l112_bug": [
+          "-1/2",
+          "1/2"
+        ],
+        "err_sc": [
+          "-1/4",
+          "1/4"
+        ],
+        "err_sc_equals_delta_cov": true,
+        "g_off": [
+          "3/4",
+          "-3/4"
+        ],
+        "g_sc": [
+          "1/1",
+          "-1/1"
+        ],
+        "g_true": [
+          "3/4",
+          "-3/4"
+        ]
+      }
+    },
+    "drift_signal_invariance": {
+      "advantages": [
+        "4/1",
+        "0/1",
+        "0/1"
+      ],
+      "drift_vec": [
+        "-1/4",
+        "1/4",
+        "0/1"
+      ],
+      "g_off": [
+        "1/2",
+        "-1/4",
+        "-1/4"
+      ],
+      "g_sc": [
+        "3/4",
+        "-1/2",
+        "-1/4"
+      ],
+      "mean_advantage_q": "1/1",
+      "signal_cov_centered": [
+        "3/4",
+        "-1/2",
+        "-1/4"
+      ],
+      "signal_cov_raw": [
+        "3/4",
+        "-1/2",
+        "-1/4"
+      ],
+      "signal_invariance_exact": true,
+      "zero_drift_exact": true
+    },
+    "kl_direction_disproof_sc_zhihu_01": {
+      "collinearity_det_coord_0_2": "1/64",
+      "equals_any_scalar_multiple_of_reverse_kl_grad": false,
+      "equals_neg_forward_kl_grad": true,
+      "expected_score_under_p": [
+        "0/1",
+        "0/1",
+        "0/1"
+      ],
+      "expected_score_under_q": [
+        "-1/4",
+        "1/4",
+        "0/1"
+      ],
+      "grad_forward_kl_q_p": [
+        "1/4",
+        "-1/4",
+        "0/1"
+      ],
+      "grad_reverse_kl_p_q_div_ln2": [
+        "3/8",
+        "-5/16",
+        "-1/16"
+      ],
+      "neg_grad_forward_kl_q_p": [
+        "-1/4",
+        "1/4",
+        "0/1"
+      ],
+      "sampler_q": [
+        "1/4",
+        "1/2",
+        "1/4"
+      ],
+      "trainer_p": [
+        "1/2",
+        "1/4",
+        "1/4"
+      ]
+    }
+  },
+  "pillar2_topk_singularity_tail_scales": {
+    "singularity_and_eps_blowup_sc_sing_01": {
+      "eps_floor": "1/1000000",
+      "head_residual_l1_eps_floored": "9999909/100",
+      "head_residuals_eps_floored": [
+        "-999991/20",
+        "-2499977/50"
+      ],
+      "heavy_q_tail": "1/10",
+      "peaked_p_tail": "1/10000000",
+      "reconstructed_q_hat_total_mass": "91/100",
+      "rho_eps_floored": "100000/1",
+      "rho_exact_unfloored": "1000000/1",
+      "simplex_mass_deficit": "9/100",
+      "unprotected_pos_over_zero_trigger": {
+        "P_H": "1/1",
+        "Q_H": "9/10",
+        "result": "POS_INF"
+      },
+      "unprotected_zero_over_zero_trigger": {
+        "P_H": "1/1",
+        "Q_H": "1/1",
+        "result": "0/0_NaN"
+      }
+    },
+    "tail_scale_dichotomy": [
+      {
+        "alpha_mis_sc": "0/1",
+        "alpha_tis_sc": "1/5",
+        "alpha_vanilla_sc": "1/10",
+        "rho": "1/10"
+      },
+      {
+        "alpha_mis_sc": "1/1",
+        "alpha_tis_sc": "2/5",
+        "alpha_vanilla_sc": "1/5",
+        "rho": "1/5"
+      },
+      {
+        "alpha_mis_sc": "1/1",
+        "alpha_tis_sc": "1/1",
+        "alpha_vanilla_sc": "1/2",
+        "rho": "1/2"
+      },
+      {
+        "alpha_mis_sc": "1/1",
+        "alpha_tis_sc": "1/1",
+        "alpha_vanilla_sc": "1/1",
+        "rho": "1/1"
+      },
+      {
+        "alpha_mis_sc": "1/1",
+        "alpha_tis_sc": "1/1",
+        "alpha_vanilla_sc": "2/1",
+        "rho": "2/1"
+      },
+      {
+        "alpha_mis_sc": "0/1",
+        "alpha_tis_sc": "1/1",
+        "alpha_vanilla_sc": "5/1",
+        "rho": "5/1"
+      },
+      {
+        "alpha_mis_sc": "0/1",
+        "alpha_tis_sc": "1/1",
+        "alpha_vanilla_sc": "100000/1",
+        "rho": "100000/1"
+      }
+    ],
+    "topk_exact_identities": {
+      "drift_under_q_hat": [
+        "0/1",
+        "0/1",
+        "0/1",
+        "0/1"
+      ],
+      "drift_under_true_q_tail_shape_bias": [
+        "0/1",
+        "0/1",
+        "1/8",
+        "-1/8"
+      ],
+      "full_vocab_logit_grad_sum": "0/1",
+      "grad_equals_q_hat_minus_p": true,
+      "grad_topk_correction": [
+        "-1/4",
+        "0/1",
+        "1/8",
+        "1/8"
+      ],
+      "head_ids": [
+        0,
+        1
+      ],
+      "head_residual_sum": "-1/1",
+      "head_residual_sum_equals_one_minus_rho": true,
+      "head_residuals": [
+        "-3/4",
+        "-1/4"
+      ],
+      "p_head_sum": "3/4",
+      "q_hat_mass": "1/1",
+      "q_hat_reconstructed": [
+        "1/4",
+        "1/4",
+        "1/4",
+        "1/4"
+      ],
+      "q_head_sum": "1/2",
+      "rho": "2/1",
+      "sampler_q": [
+        "1/4",
+        "1/4",
+        "3/8",
+        "1/8"
+      ],
+      "tail_shape_bias_l1": "1/4",
+      "tail_shape_matches_closed_form": true,
+      "trainer_p": [
+        "1/2",
+        "1/4",
+        "1/8",
+        "1/8"
+      ]
+    }
+  },
+  "pillar3_repo_code_oracles": {
+    "SC-CODE-01_double_centering": {
+      "double_centered_drift": [
+        "1/4",
+        "-1/4",
+        "0/1"
+      ],
+      "drift_sign_flipped": true,
+      "expected_sign_flipped_drift": [
+        "1/4",
+        "-1/4",
+        "0/1"
+      ],
+      "single_centered_drift": [
+        "0/1",
+        "0/1",
+        "0/1"
+      ]
+    },
+    "SC-CODE-02_seq_is_breaks_zero_drift": {
+      "gspo_readme_l132_adv_neg1_drift_l1": "3/4",
+      "gspo_readme_l132_adv_neg1_expected_grad": [
+        "-3/8",
+        "3/8"
+      ],
+      "gspo_readme_l132_adv_pos1_drift_l1": "1/4",
+      "gspo_readme_l132_adv_pos1_expected_grad": [
+        "-1/8",
+        "1/8"
+      ],
+      "offdiag_score_seq_zero": true,
+      "topr_readme_l133_adv_neg1_drift_l1": "3/8",
+      "topr_readme_l133_adv_neg1_expected_grad": [
+        "-3/16",
+        "3/16"
+      ],
+      "topr_readme_l133_adv_pos1_expected_grad": [
+        "0/1",
+        "0/1"
+      ]
+    },
+    "SC-CODE-03_zero_tail_and_missing_support": {
+      "buggy_losses_py_alpha": "1/1",
+      "buggy_remaining_drift": [
+        "1/8",
+        "1/8",
+        "-1/8",
+        "-1/8"
+      ],
+      "hardened_alpha": "0/1",
+      "hardened_remaining_drift": [
+        "0/1",
+        "0/1",
+        "0/1",
+        "0/1"
+      ],
+      "missing_support_true_is_drift": [
+        "1/8",
+        "1/8",
+        "-1/8",
+        "-1/8"
+      ],
+      "spurious_positive_kl_lower_bound": "1/50000",
+      "unclamped_negative_q_tail": "-1/1000000"
+    },
+    "SC-CODE-05_tautological_k_eq_v_minus_1": {
+      "V": 3,
+      "k": 2,
+      "q_hat_identically_equals_q": true,
+      "rho_times_p_tail": "1/4",
+      "tail_cardinality": 1,
+      "true_q_tail": "1/4"
+    }
+  },
+  "pillar4_hardened_gate_and_bridges": {
+    "bridge_audit_073r_songe_sng01": {
+      "anti_distillation_factor_on_plus_grad_kl": "3/4",
+      "grad_forward_kl_q_p": [
+        "1/4",
+        "-1/4",
+        "0/1"
+      ],
+      "matches_plus_three_quarters_grad_kl": true,
+      "mean_advantage_q": "-3/4",
+      "off_policy_drift": [
+        "3/16",
+        "-3/16",
+        "0/1"
+      ],
+      "pass_rate": "1/4",
+      "reward_mode": "zero_minus"
+    },
+    "bridge_audit_074r_inkling_loom_ir03": {
+      "centering_mismatch_l1": "35/32",
+      "centering_mismatch_vector": [
+        "-525/1856",
+        "-245/928",
+        "5/16",
+        "15/64"
+      ],
+      "hidden_pre_truncation_tail_mass_tv": "35/64",
+      "loom_kept_vocab_fraction": "32/100029",
+      "loom_silent_top_k": 64,
+      "loom_truncated_centered_target": [
+        "31/116",
+        "27/116",
+        "-1/4",
+        "-1/4"
+      ],
+      "loom_vocab": 200058,
+      "true_full_vocab_drift": [
+        "-1/64",
+        "-1/32",
+        "1/16",
+        "-1/64"
+      ]
+    },
+    "hardened_gate_receipts": {
+      "healthy_exact_centered": {
+        "advantage": "1/1",
+        "alpha": "2/1",
+        "correction_logit_grad": [
+          "-1/4",
+          "0/1",
+          "1/8",
+          "1/8"
+        ],
+        "correction_logit_grad_sum": "0/1",
+        "correction_mode": "none",
+        "gate_status": "EXACT_CENTERED",
+        "p_tail": "1/4",
+        "q_tail": "1/2",
+        "residual_l1_norm": "1/1",
+        "residual_l1_upper_bound": "2/1",
+        "residual_l1_within_bound": true,
+        "residuals": [
+          "-3/4",
+          "-1/4"
+        ],
+        "rho_effective": "2/1",
+        "rho_raw": "2/1",
+        "sampled_token": 0
+      },
+      "peaked_trainer_damped_fallback": {
+        "advantage": "1/1",
+        "alpha": "10/1",
+        "correction_logit_grad": [
+          "-1/2000000",
+          "-4099999/10000000000000",
+          "9099999/20000000000000",
+          "9099999/20000000000000"
+        ],
+        "correction_logit_grad_sum": "0/1",
+        "correction_mode": "none",
+        "gate_status": "DAMPED_FALLBACK_REQUIRED",
+        "p_tail": "1/10000000",
+        "q_tail": "1/10",
+        "residual_l1_norm": "9099999/1000000",
+        "residual_l1_upper_bound": "10899999/1000000",
+        "residual_l1_within_bound": true,
+        "residuals": [
+          "-91/20",
+          "-4549999/1000000"
+        ],
+        "rho_effective": "10/1",
+        "rho_raw": "1000000/1",
+        "sampled_token": 0
+      },
+      "zero_tail_unclipped_is_guarded": {
+        "advantage": "1/1",
+        "alpha": "0/1",
+        "correction_logit_grad": [
+          "1/8",
+          "1/8",
+          "-1/8",
+          "-1/8"
+        ],
+        "correction_logit_grad_sum": "0/1",
+        "correction_mode": "unclipped_is",
+        "gate_status": "ZERO_TAIL_SUPPORT_GUARDED",
+        "p_tail": "1/2",
+        "q_tail": "0/1",
+        "residual_l1_norm": "1/2",
+        "residual_l1_upper_bound": "1/2",
+        "residual_l1_within_bound": true,
+        "residuals": [
+          "1/4",
+          "1/4"
+        ],
+        "rho_effective": "0/1",
+        "rho_raw": "0/1",
+        "sampled_token": 0
+      }
+    }
+  },
+  "pinned_repo_commit": "fdca22b19793babdf08e33e5ba51537e82cbed2f",
+  "schema_version": "score-centering-tomography-v1"
+}
