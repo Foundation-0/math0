@@ -12,6 +12,7 @@ What is here today:
 
 - **[AREAS.md](AREAS.md)** — survey of where Foundation-0 can make progress in mathematics.
 - **[data/codetables/](data/codetables/)** — census snapshot and script for open entries on [codetables.de](data/codetables/README.md) (see that README for files and how to re-run the census).
+- **[studies/ROUND8_PURE_MATH_PROVENANCE.md](studies/ROUND8_PURE_MATH_PROVENANCE.md)** — Wave 2 Round 8 independently verified (`AUDIT-075R`, `AUDIT-076R`, `AUDIT-077R`) zero-float exact rational DNS-over-TCP channel-capacity, Knowledge-Factory Curator governance, and `CPU-ARC` reasoning-cache governance studies (`325/325` `100.0%` `aletheia v1.4.0` R5 mutation killed).
 
 Other mathematics spin-outs are listed under [Projects](#projects) below. Work is in the open: results should be backed by something a machine can re-check, with credit for people and models.
 

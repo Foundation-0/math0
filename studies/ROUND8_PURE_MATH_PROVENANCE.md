@@ -1,0 +1,38 @@
+# Provenance and Status: Round-8 Channel-Capacity, Knowledge-Factory Governance & Reasoning-Cache Studies (`AUDIT-075R`, `AUDIT-076R`, `AUDIT-077R`)
+
+**Status: independently verified by clean-room zero-shared-code checkers (`N1`, `0` unresolved defects, `0` live red-team bypasses); submitted via Draft PR, pending `math0` maintainer review.**
+
+This drop packages three self-contained, zero-dependency Python 3 standard-library (`int`, `fractions.Fraction`) mathematical, protocol-capacity, and trace-distillation governance studies produced during Foundation-0's Wave 2 Round 8 research cycle. All three studies emit **zero floating-point numbers in their JSON certificates**, contain **zero bare `assert`s**, execute bit-identically across all four isolated interpreter modes (`-I -B`, `-I -O -B`, `-I -B -W error`, `-I -O -B -W error`), achieve **`100.0%` (`150/150` + `108/108` + `67/67` = `325/325`) AST refusal-site mutation kill** under `aletheia v1.4.0 mutate`, and pass `aletheia v1.4.0 audit-check --strict-ancestors`.
+
+No external third-party repositories, PDFs, or HTML captures are vendored here; all external sources (`southpolesteve/workers-dns-tcp @ 9a5f9002`, LangChain's *"The five components of building a 'company harness'"* & *"How to build a knowledge factory"* blog posts, and `arXiv:2611.09891v1` *CPU-ARC*) were inspected strictly read-only (`0` external PRs, issues, comments, or mutations; `0` anti-bot bypasses). All three studies execute **100% of their exact pure-$\mathbb{Q}$ mathematics, security oracles, and R5 test suites live in standalone mode**, while their committed JSON certificates preserve the sealed live-anchored `AUDIT-075R`, `AUDIT-076R`, and `AUDIT-077R` provenance records.
+
+---
+
+## Studies Included
+
+| Directory | Audit ID & Status | Oracle Class & Novelty | Exact Core Mathematics & Verification Scope | Report |
+|---|---|---|---|---|
+| [`workers-dns-tcp-channel-capacity/`](workers-dns-tcp-channel-capacity/) | `AUDIT-075R` (`VERIFIED`, `150/150` `100%` R5 killed, `check_067` `f4bbd70f...`) | `exact+anchor`, **`N1`** | Exact RFC-1035/7766 wire-framing, security (`WDT-01..WDT-08`), and pure-$\mathbb{Q}$ channel-capacity audit of `southpolesteve/workers-dns-tcp @ 9a5f9002` (`29/29` anchors) ↔ `tokenpage#13` & `warp-drive#15` (`WD-RPC-R8-01`): `65,528`-B `ARCOUNT=5437` RDATA-ptr regex bomb (`1,359,000` calls), `1,489`-query/64KB burst & `32,767.5x` pre-body alloc, DNS-0x20 & SPF/DMARC QNAME smuggling, and exact 99-digit $N_{\mathrm{valid}}(63)$ recurrence ($\lambda_+ = 18 + 6\sqrt{10}$, `[328.094, 328.095]` bits, `38.69%` wire efficiency, `65,163`-B downlink). | [WORKERS_DNS_TCP_AUDIT_REPORT.md](workers-dns-tcp-channel-capacity/WORKERS_DNS_TCP_AUDIT_REPORT.md) |
+| [`langchain-knowledge-factory-governor/`](langchain-knowledge-factory-governor/) | `AUDIT-076R` (`VERIFIED`, `108/108` = `100+8` `100%` R5 killed, `check_063` `bb6f28b8...`) | `exact+anchor`, **`N1`** | Exact isomorphism & trust-boundary tomography of LangChain's *"Company Harness"* (`Oct 24, 2026`) + *"Knowledge Factory"* (`Nov 21, 2026`, `12/12` anchors) vs. `aletheia v1.4.0` + `AUDIT-069R` Tao Gate + `warp-drive#13/#15`: pure-$\mathbb{Q}$ Biba × Bell-LaPadula lattice (`Δ_I=+3`, `Δ_C=+2`), fleet blast radius (`6/1`, `1-(19/20)^120 = 0.997878`), 4-step Pythagorean Goodhart drift (`175/256` proxy drop vs `+337/320` total error explosion, step-1 halt), multi-worker LWW/CAS conflict & 3-color DFS skill-cycle proofs, normalized Ring-0 lock, pairwise 3-role separation, and tamper-evident SHA-256 ledger. | [KNOWLEDGE_FACTORY_AUDIT_REPORT.md](langchain-knowledge-factory-governor/KNOWLEDGE_FACTORY_AUDIT_REPORT.md) |
+| [`cpu-arc-reasoning-cache-governance/`](cpu-arc-reasoning-cache-governance/) | `AUDIT-077R` (`VERIFIED`, `67/67` `100%` R5 killed, `check_068` `c64a88a1...`) | `exact+anchor`, **`N1`** | Exact pure-$\mathbb{Q}$ cost-break-even, perturbation-bug, and AST sandbox governance audit of `arXiv:2611.09891v1` (*CPU-ARC*, `24/24` PDF anchors + `32/32` table token counts) ↔ `warp-sandbox-exec.sh` (`7/7` anchors), `aletheia v1.4.0`, `songe` (`AUDIT-073R`), and Knowledge Factory (`AUDIT-076R`): `8/8` negative builder token deficits, generalized break-even collapsing `4/8` benchmarks to $N^*=\infty$ at $h=1/2, L_{\mathrm{err}}=13S$, exact unit/negation/fallback bugs (`3/20 K`, `4823/5463`, `1000x`, `{'work value': None}`), and strict AST symbol-allowlist + `do()` SHA-256 pin + canonical worktree confinement closing 3 RCE escapes. | [CPU_ARC_GOVERNANCE_AUDIT_REPORT.md](cpu-arc-reasoning-cache-governance/CPU_ARC_GOVERNANCE_AUDIT_REPORT.md) |
+
+---
+
+## Standalone Verification Commands & 4-Mode Isolated `-I` R4 Digests
+
+All commands below execute directly from `studies/` under all four isolated interpreter modes (`-I -B`, `-I -O -B`, `-I -B -W error`, `-I -O -B -W error`) with `PYTHONDONTWRITEBYTECODE=1`, exiting with code `0` and producing bit-identical output across all four modes:
+
+| Study | Command (from `studies/`) | 4/4 Isolated `-I` Stdout SHA-256 | Sealed Live Certificate SHA-256 |
+|---|---|---|---|
+| `workers-dns-tcp-channel-capacity` | `python3 -I -B workers-dns-tcp-channel-capacity/workers_dns_tcp_audit.py --standalone --json` | `c8e473b1e21e47d358edb8cfd8ec815b40d5ed1094b144d25bd329904a54f7a0` (`canonical_sha256`: `48f685be...`) | `f629f3e82f7d8cabf5b6238ed88727df2db8b7b8d5619bdc9680eb31491f2554` (`canonical_sha256`: `f882efc2...`) |
+| `workers-dns-tcp-channel-capacity` | `python3 -I -O -B -W error workers-dns-tcp-channel-capacity/test_workers_dns_tcp_r5.py` | Unittest `OK` (`15/15`, `rc=0`) across all 4 modes | `150/150` (`100.0%`) `aletheia v1.4.0 mutate` killed |
+| `langchain-knowledge-factory-governor` | `python3 -I -B langchain-knowledge-factory-governor/knowledge_factory_audit.py --standalone` | `a50d62df7dbc34fcb43db95c6c952023b3ed1bfd62d7308e3fa6117c6ce35640` (`canonical_sha256`: `71c1b53e...`) | `7f84e852283d072902207ba106f70b3384d00b2fd4041ff12cc21be25e08974b` (`canonical_sha256`: `9485e1ce...`) |
+| `langchain-knowledge-factory-governor` | `python3 -I -O -B -W error langchain-knowledge-factory-governor/test_knowledge_factory_r5.py` | Unittest `OK` (`14/14`, `rc=0`) across all 4 modes | `108/108` (`100/100` governor + `8/8` audit, `100.0%`) `aletheia v1.4.0 mutate` killed |
+| `cpu-arc-reasoning-cache-governance` | `python3 -I -B cpu-arc-reasoning-cache-governance/cpu_arc_governance_audit.py --standalone --json` | `12ca8a4cd5c19491fcbce9f67006762710b32337ca527d15a288a68ae9320425` (`canonical_sha256`: `bc06efe7...`) | `969cd32a73dbd35183c07adce48fc9031807d6c76538c40dfd4fcb8779098d88` (`canonical_sha256`: `9b274056...`) |
+| `cpu-arc-reasoning-cache-governance` | `python3 -I -O -B -W error cpu-arc-reasoning-cache-governance/test_cpu_arc_governance_r5.py` | Unittest `OK` (`7/7`, `rc=0`) across all 4 modes | `67/67` (`100.0%`) `aletheia v1.4.0 mutate` killed |
+
+---
+
+## Strict Law-4 Prior-Art Attribution (`N0` vs. `N1`)
+
+Each study report contains a complete `N0` prior-art quarantine section crediting all classical, modern, and upstream authors (RFC-1035/7766/6891, Vixie/DNS-0x20, Biba 1977 integrity lattice, Bell–LaPadula 1973 confidentiality model, Goodhart's Law, Compare-And-Swap & Tarjan/3-color DFS cycle detection, Harrison Chase & Caspar Broekhuizen / LangChain, Steve Faulkner / `southpolesteve/workers-dns-tcp`, and Belcak, Heinrich, Muralidharan, Diao, & Molchanov / `arXiv:2611.09891` `CPU-ARC`). None of those prior results are claimed as new here; all three studies are honestly classified **`N1`** (zero-float pure-$\mathbb{Q}$ verification oracles, live protocol/numerical forensics, and `100.0%` R5-killed fail-closed governance boundaries).
