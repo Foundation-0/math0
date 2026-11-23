@@ -28,6 +28,7 @@ from __future__ import annotations
 import argparse
 from dataclasses import dataclass
 from fractions import Fraction
+import hashlib
 from itertools import combinations
 import json
 import re
@@ -519,11 +520,15 @@ def run_full_bridge_matrix() -> dict[str, Any]:
         level="L3",
     )
 
-    # Free Distributive Lattice De Morgan Involution: Tr(Tr(M)) == M
+    # Free Distributive Lattice De Morgan Involution: Tr(Tr(M)) == M on two tested finite hypergraphs
     m_braf = minimal_antichain([r0, r1])
     tr_braf = minimal_transversals(m_braf, braf_u)
     tr_tr_braf = minimal_transversals(tr_braf, braf_u)
-    demorgan_involution_ok = set(m_braf) == set(tr_tr_braf)
+    path_u = ["a", "b", "c", "d"]
+    m_path = minimal_antichain([make_route(["a", "b"]), make_route(["b", "c"]), make_route(["c", "d"])])
+    tr_path = minimal_transversals(m_path, path_u)
+    tr_tr_path = minimal_transversals(tr_path, path_u)
+    demorgan_involution_ok = (set(m_braf) == set(tr_tr_braf)) and (set(m_path) == set(tr_tr_path))
 
     # Exact reproduction of Eq. 56 minimal robust cuts: {M}, {E}, {B,G}, {B,R}, {B,C}
     braf_cuts = minimal_robust_cuts_exact([r0], [egfr_rule, mel_rule], crc_ctx, braf_u)
@@ -641,7 +646,7 @@ def run_full_bridge_matrix() -> dict[str, Any]:
         and deep_cmp["differing_fields"] == ["flags"]
     )
 
-    return {
+    payload: dict[str, Any] = {
         "schema": "expedition.round4b.arm2.judegomila_canculus_onco.v1",
         "audit_id": "AUDIT-050",
         "oracle_class": "exact+anchor",
@@ -653,6 +658,7 @@ def run_full_bridge_matrix() -> dict[str, Any]:
         "all_passed": all_passed,
         "part_1_canculus_normal_form_and_closure": {
             "demorgan_involution_Tr_Tr_M_eq_M": demorgan_involution_ok,
+            "demorgan_involution_tested_hypergraphs": 2,
             "eq56_minimal_robust_cuts": braf_cuts,
             "eq56_exact_match": eq56_exact_match,
             "canc_b1_nf_functoriality_closed": nf_functoriality_ok,
@@ -681,6 +687,9 @@ def run_full_bridge_matrix() -> dict[str, Any]:
             "deep_compare_catches_hidden_diff": not deep_cmp["identical"],
         },
     }
+    canon = json.dumps(payload, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
+    payload["canonical_sha256"] = hashlib.sha256(canon).hexdigest()
+    return payload
 
 
 def main(argv: list[str] | None = None) -> int:

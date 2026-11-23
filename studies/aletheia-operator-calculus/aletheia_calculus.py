@@ -54,7 +54,7 @@ def canonical_json(obj: Any) -> str:
 
 
 # =============================================================================
-# 1. Exact Pure-Q Linear Algebra & Bunch-Kaufman Krein Inertia Engine
+# 1. Exact Pure-Q Linear Algebra & 1x1/2x2 Symmetric Congruence Inertia Engine
 # =============================================================================
 
 QMat = tuple[tuple[Fraction, ...], ...]
@@ -248,7 +248,7 @@ def qpinv_sym(m: QMat) -> QMat:
 
 
 def qinertia(m: QMat) -> tuple[int, int, int]:
-    """Exact zero-float Sylvester-Krein inertia (n_+, n_0, n_-) via Bunch-Kaufman over Q."""
+    """Exact zero-float Sylvester-Krein inertia (n_+, n_0, n_-) via first-nonzero-pivot 1x1/2x2 hyperbolic symmetric congruence over Q."""
     require(is_symmetric(m), "NOT_SYMMETRIC", "Krein inertia requires symmetric matrix")
     n = len(m)
     a = [list(row) for row in m]
@@ -949,9 +949,6 @@ def verify_glyph_registry() -> dict[str, Any]:
             and cat == "Sm"
             and ch in GLYPH_TO_TOKEN
             and g["ascii_fallback"] in ASCII_TO_TOKEN
-            and g["lean4_hits"] == 0
-            and g["expedition_hits"] == 0
-            and g["sessions_hits"] == 0
             and cp not in seen_cp
         )
         all_ok = all_ok and ok_row
@@ -960,8 +957,13 @@ def verify_glyph_registry() -> dict[str, Any]:
     return {
         "schema_verified": data["schema"],
         "glyph_count": len(rows),
-        "all_category_Sm_and_zero_collision": all_ok,
+        "all_category_Sm_and_lexer_bound": all_ok,
         "unicode_ascii_lexer_bound": all_ok,
+        "external_corpus_scan_not_recomputed_in_tree": True,
+        "external_collision_scan_scope": (
+            "0/227,540 Lean 4 collision count is recorded from external AUDIT-051 scan; "
+            "scan script and third-party Lean 4 corpora are not vendored in math0."
+        ),
         "glyphs": rows,
     }
 
@@ -1022,7 +1024,7 @@ def ramanujan_cert_matrix(n: int, edges: list[tuple[int, int]]) -> QMat:
 
 
 def run_compressed_theorems() -> dict[str, Any]:
-    """Execute 7 compressed expedition theorems directly via Unicode & ASCII expressions."""
+    """Execute 13 compressed expedition theorem checks (grouped as T1..T7) directly via Unicode & ASCII expressions."""
     results: list[dict[str, Any]] = []
 
     def check_both(tid: str, u_expr: str, a_expr: str, env: dict[str, Any]) -> None:
@@ -1487,7 +1489,7 @@ def _lipschitz_z2_mix(x: Fraction, y: Fraction) -> Fraction:
 
 
 def run_probe_c6_linear_monopole_subadditivity_metric() -> dict[str, Any]:
-    """Probe C6 (NEW UNCONDITIONAL THEOREM): Linear Monopole Subadditivity & Rational Metric on H^1(G, B; Z_2)."""
+    """Probe C6: Linear Monopole Subadditivity & Rational Metric Axioms on H^1(G, B; Z_2)."""
     cases: list[dict[str, Any]] = []
 
     def check_pair(name: str, g: WeightedGraph, c1: CocycleZ2, c2: CocycleZ2) -> dict[str, Any]:
@@ -1496,6 +1498,7 @@ def run_probe_c6_linear_monopole_subadditivity_metric() -> dict[str, Any]:
         phi1: Fraction = eval_expr("Phi(L ⦷ c1)", env)
         phi2: Fraction = eval_expr("Phi(L ⦷ c2)", env)
         phi12: Fraction = eval_expr("Phi(L ⦷ (c1 * c2))", env)
+        phi21: Fraction = eval_expr("Phi(L ⦷ (c2 * c1))", env)
         x1 = g.harmonic_extension(c1.signs)
         x2 = g.harmonic_extension(c2.signs)
         z_wit = tuple(_lipschitz_z2_mix(a, b) for a, b in zip(x1, x2))
@@ -1506,9 +1509,11 @@ def run_probe_c6_linear_monopole_subadditivity_metric() -> dict[str, Any]:
         )
         e_z = g.dirichlet_energy(c12.signs, z_wit)
         sub_ok = phi12 <= e_z <= phi1 + phi2
+        sym_ok = phi12 == phi21
         return {
             "name": name,
-            "verified": bc_ok and lip_ok and sub_ok,
+            "verified": bc_ok and lip_ok and sub_ok and sym_ok,
+            "symmetric": sym_ok,
             "phi_1": frac_str(phi1),
             "phi_2": frac_str(phi2),
             "phi_12": frac_str(phi12),
@@ -1553,6 +1558,27 @@ def run_probe_c6_linear_monopole_subadditivity_metric() -> dict[str, Any]:
         CocycleZ2((1, -1, 1, 1, 1, 1, 1, 1, 1, 1)),
     ))
 
+    # Explicit metric-axiom checks (identity, interior coboundary vanishing, positivity on non-trivial classes, symmetry)
+    triv_odd = CocycleZ2(tuple(1 for _ in range(len(g_odd.edges))))
+    phi_triv_odd: Fraction = eval_expr("Phi(L ⦷ c)", {"L": g_odd, "c": triv_odd})
+    # Vertex 0 in g_odd has only interior incident edges (0,1), (2,0), (0,3) -> exact interior coboundary delta_{0}
+    cobound_odd = CocycleZ2(tuple(-1 if (u == 0 or v == 0) else 1 for u, v, _w in g_odd.edges))
+    phi_cobound_odd: Fraction = eval_expr("Phi(L ⦷ c)", {"L": g_odd, "c": cobound_odd})
+    triv_k4 = CocycleZ2(tuple(1 for _ in range(len(g_k4.edges))))
+    phi_triv_k4: Fraction = eval_expr("Phi(L ⦷ c)", {"L": g_k4, "c": triv_k4})
+    nontriv_pos = all(
+        Fraction(c["phi_1"]) > 0 and Fraction(c["phi_2"]) > 0 and Fraction(c["phi_12"]) > 0
+        for c in cases
+    )
+    all_sym = all(c["symmetric"] for c in cases)
+    metric_axioms_ok = (
+        phi_triv_odd == 0
+        and phi_cobound_odd == 0
+        and phi_triv_k4 == 0
+        and nontriv_pos
+        and all_sym
+    )
+
     rng = random.Random(20260406)
     random_ok = 0
     for _ in range(12):
@@ -1576,8 +1602,16 @@ def run_probe_c6_linear_monopole_subadditivity_metric() -> dict[str, Any]:
 
     return {
         "probe": "C6_linear_monopole_subadditivity_metric",
-        "all_verified": all(c["verified"] for c in cases) and random_ok == 12,
+        "all_verified": all(c["verified"] for c in cases) and metric_axioms_ok and random_ok == 12,
         "theorem": "Phi_B(L ⦷ (chi1*chi2)) <= E_{chi1*chi2}(z) <= Phi_B(L ⦷ chi1) + Phi_B(L ⦷ chi2) via exact rational 1-Lipschitz witness z_v = sgn(x1)sgn(x2)min(|x1|,|x2|)",
+        "metric_axioms_tested_graphs": {
+            "trivial_cocycle_odd_btz_zero": phi_triv_odd == 0,
+            "interior_coboundary_odd_btz_zero": phi_cobound_odd == 0,
+            "trivial_cocycle_k4_zero": phi_triv_k4 == 0,
+            "all_structured_nontrivial_classes_strictly_positive": nontriv_pos,
+            "all_structured_pairs_symmetric": all_sym,
+            "all_metric_axioms_ok": metric_axioms_ok,
+        },
         "structured_cases": cases,
         "random_extreme_weight_cases_certified": f"{random_ok}/12",
     }
@@ -1599,7 +1633,7 @@ def run_all() -> dict[str, Any]:
         "C6": run_probe_c6_linear_monopole_subadditivity_metric(),
     }
     all_ok = (
-        reg["all_category_Sm_and_zero_collision"]
+        reg["all_category_Sm_and_lexer_bound"]
         and all(t["verified"] for t in thms["theorems"])
         and probes["C1"]["all_defects_strictly_PSD_even_for_asymmetric_K3"]
         and probes["C2"]["all_verified"]

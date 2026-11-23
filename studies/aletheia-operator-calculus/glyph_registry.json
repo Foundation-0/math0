@@ -6,6 +6,8 @@
   "executable_engine_owner": "fractals-probe",
   "target_audit": "AUDIT-051",
   "collision_audit": {
+    "provenance": "external_audit_051_not_recomputed_in_tree",
+    "provenance_note": "The 227,540-file Lean 4 collision scan was recorded during external AUDIT-051; the scan script and third-party Lean 4 repositories are not vendored in math0.",
     "unicode_blocks_searched": [
       "U+27C0..U+27EF (Miscellaneous Mathematical Symbols-A)",
       "U+2980..U+29FF (Miscellaneous Mathematical Symbols-B)",
@@ -171,7 +173,7 @@
       "func_syntax": "INERTIA(A)",
       "domain": "A in Sym_n(Q)",
       "codomain": "(n_+, n_0, n_-) in N^3 with n_+ + n_0 + n_- = n",
-      "exact_semantics": "Zero-float exact Bunch-Kaufman / Bareiss Sylvester-Krein inertia triple",
+      "exact_semantics": "Zero-float exact first-nonzero-pivot 1x1/2x2 hyperbolic congruence / Bareiss Sylvester-Krein inertia triple",
       "invariance_group": "GL(n, Q) congruence x Q_{>0} scaling",
       "sf_classes": ["SF-01"],
       "lean4_hits": 0,

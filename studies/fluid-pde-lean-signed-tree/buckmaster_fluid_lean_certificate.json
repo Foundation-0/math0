@@ -1,399 +1,15 @@
 {
   "arm": "R4D-1",
-  "canonical_sha256": "1dc63efcd463e29937155dae66e018f5750e0a2a707f463ae6ba02b66686490f",
+  "canonical_sha256": "75c7b2677816ad17e3570f426b1693ee1a9ec932ef2fad26e5fbcb6f15fdb660",
   "honest_novelty_claim": "N1",
   "oracle_class": "exact+anchor",
   "part1_three_repo_lean4_tomography": {
-    "aletheia_version": "1.2.0",
-    "navier_stokes_forensics": {
-      "comparator_listed_theorem_count": 19,
-      "nov20_unrebuilt_patch_static_sync": {
-        "azimuthal_bounded_lines_synced": true,
-        "cell_layer_and_statement_defs_have_patched_weight": true,
-        "modeWeight_defined_as_abs_plus_half": true,
-        "vanish_lines_synced": true,
-        "weight_le_uses_unfold_modeWeight_le_rfl": true
-      },
-      "paper_cited_unreleased_cert_sha256": "3f7a335b84b6c7631742cacc5343dfcd11cf72f5221ff79b2b9268790b4b22c5",
-      "paper_pdf_bytes": 1615293,
-      "paper_pdf_sha256": "4a01929b2f8a595637bbbe1dfef9724e5de768d31283d62415ce045e2ed69901",
-      "print_axioms_theorem_count": 27,
-      "unlisted_in_comparator_count": 8,
-      "unlisted_in_comparator_theorems": [
-        "Breakdown.isExtendedCertificate_withUnitWeight",
-        "Breakdown.isExtendedCertificate_atProfile",
-        "Breakdown.CoerciveWeak.IsWeakSecondDerivState.secondDeriv_symm",
-        "Breakdown.CoerciveWeak.vortGradMap_secondDerivField",
-        "Breakdown.CoerciveWeak.pieceMultiplierDensityWeak",
-        "Breakdown.certificate_breakdown_on_space",
-        "Breakdown.extended_certificate_breakdown_on_space",
-        "Breakdown.fractional_certificate_breakdown"
-      ]
-    },
-    "pairwise_sha256_file_overlaps": {
-      "tb_fluid_affinecore<->oai_nse": 0,
-      "tb_fluid_affinecore<->tb_fluid_boussinesq": 32,
-      "tb_fluid_affinecore<->tb_fluid_euler": 32,
-      "tb_fluid_boussinesq<->oai_nse": 0,
-      "tb_fluid_boussinesq<->tb_fluid_euler": 37,
-      "tb_fluid_euler<->oai_nse": 0,
-      "tb_navier_stokes<->oai_nse": 0,
-      "tb_navier_stokes<->tb_fluid_affinecore": 0,
-      "tb_navier_stokes<->tb_fluid_boussinesq": 0,
-      "tb_navier_stokes<->tb_fluid_euler": 0
-    },
-    "pinned_commits": {
-      "openai/NavierStokesAndEuler": "f9e8bc5b38b6e212696e8a30e3e91517af887bbd",
-      "tristanbuckmaster/fluid_lean": "d0124689230b58b4f86e7b90ac59de06404b3b6b",
-      "tristanbuckmaster/navier-stokes": "ad53419de079eb8f95f60313473374624a348546"
-    },
-    "subprojects": {
-      "oai_nse": {
-        "clean_proof_files": 2657,
-        "comparator_configs": [
-          {
-            "config_file": "ComparatorChallenges/Euler.json",
-            "enable_nanoda": true,
-            "failures": [],
-            "passed": true,
-            "theorem_count": 2
-          },
-          {
-            "config_file": "ComparatorChallenges/NavierStokes.json",
-            "enable_nanoda": true,
-            "failures": [],
-            "passed": true,
-            "theorem_count": 2
-          }
-        ],
-        "comparator_passed_count": 2,
-        "comparator_total_count": 2,
-        "decide_plus_kernel_calls": 0,
-        "finding_codes": {
-          "LEAN4_SORRY": 4
-        },
-        "lean_files": 2659,
-        "native_decide_calls": 0,
-        "non_sorry_trust_escapes": 0,
-        "prefilter_audited_by_aletheia": 5,
-        "toolchain": "leanprover/lean4:v4.34.0-rc2",
-        "total_lines": 643991,
-        "unclean_files": [
-          {
-            "codes": [
-              "LEAN4_SORRY"
-            ],
-            "file": "ComparatorChallenges/Euler.lean",
-            "finding_count": 2,
-            "lines": [
-              88,
-              184
-            ]
-          },
-          {
-            "codes": [
-              "LEAN4_SORRY"
-            ],
-            "file": "ComparatorChallenges/NavierStokes.lean",
-            "finding_count": 2,
-            "lines": [
-              277,
-              284
-            ]
-          }
-        ],
-        "unclean_files_count": 2
-      },
-      "tb_fluid_affinecore": {
-        "clean_proof_files": 1180,
-        "comparator_configs": [
-          {
-            "config_file": "comparator.json",
-            "enable_nanoda": true,
-            "failures": [],
-            "passed": true,
-            "theorem_count": 1
-          }
-        ],
-        "comparator_passed_count": 1,
-        "comparator_total_count": 1,
-        "decide_plus_kernel_calls": 0,
-        "finding_codes": {
-          "LEAN4_SORRY": 1
-        },
-        "lean_files": 1181,
-        "native_decide_calls": 0,
-        "non_sorry_trust_escapes": 0,
-        "prefilter_audited_by_aletheia": 1,
-        "toolchain": "leanprover/lean4:v4.32.2",
-        "total_lines": 353285,
-        "unclean_files": [
-          {
-            "codes": [
-              "LEAN4_SORRY"
-            ],
-            "file": "Challenge.lean",
-            "finding_count": 1,
-            "lines": [
-              271
-            ]
-          }
-        ],
-        "unclean_files_count": 1
-      },
-      "tb_fluid_boussinesq": {
-        "clean_proof_files": 1452,
-        "comparator_configs": [
-          {
-            "config_file": "comparator.json",
-            "enable_nanoda": true,
-            "failures": [],
-            "passed": true,
-            "theorem_count": 1
-          }
-        ],
-        "comparator_passed_count": 1,
-        "comparator_total_count": 1,
-        "decide_plus_kernel_calls": 13547,
-        "finding_codes": {
-          "LEAN4_SORRY": 1
-        },
-        "lean_files": 1453,
-        "native_decide_calls": 0,
-        "non_sorry_trust_escapes": 0,
-        "prefilter_audited_by_aletheia": 1,
-        "toolchain": "leanprover/lean4:v4.32.2",
-        "total_lines": 486170,
-        "unclean_files": [
-          {
-            "codes": [
-              "LEAN4_SORRY"
-            ],
-            "file": "Challenge.lean",
-            "finding_count": 1,
-            "lines": [
-              80
-            ]
-          }
-        ],
-        "unclean_files_count": 1
-      },
-      "tb_fluid_euler": {
-        "clean_proof_files": 1113,
-        "comparator_configs": [
-          {
-            "config_file": "comparator.json",
-            "enable_nanoda": true,
-            "failures": [],
-            "passed": true,
-            "theorem_count": 1
-          }
-        ],
-        "comparator_passed_count": 1,
-        "comparator_total_count": 1,
-        "decide_plus_kernel_calls": 8750,
-        "finding_codes": {
-          "LEAN4_SORRY": 1
-        },
-        "lean_files": 1114,
-        "native_decide_calls": 0,
-        "non_sorry_trust_escapes": 0,
-        "prefilter_audited_by_aletheia": 1,
-        "toolchain": "leanprover/lean4:v4.32.2",
-        "total_lines": 975942,
-        "unclean_files": [
-          {
-            "codes": [
-              "LEAN4_SORRY"
-            ],
-            "file": "Challenge.lean",
-            "finding_count": 1,
-            "lines": [
-              67
-            ]
-          }
-        ],
-        "unclean_files_count": 1
-      },
-      "tb_navier_stokes": {
-        "clean_proof_files": 2261,
-        "comparator_configs": [
-          {
-            "config_file": "comparator-cell-layer.json",
-            "enable_nanoda": false,
-            "failures": [],
-            "passed": false,
-            "theorem_count": 3
-          },
-          {
-            "config_file": "comparator-certificate.json",
-            "enable_nanoda": false,
-            "failures": [],
-            "passed": false,
-            "theorem_count": 9
-          },
-          {
-            "config_file": "comparator-fractional-cell-system.json",
-            "enable_nanoda": false,
-            "failures": [],
-            "passed": false,
-            "theorem_count": 1
-          },
-          {
-            "config_file": "comparator-fractional-certificate.json",
-            "enable_nanoda": false,
-            "failures": [],
-            "passed": false,
-            "theorem_count": 1
-          },
-          {
-            "config_file": "comparator-fractional.json",
-            "enable_nanoda": false,
-            "failures": [],
-            "passed": false,
-            "theorem_count": 2
-          },
-          {
-            "config_file": "comparator.json",
-            "enable_nanoda": false,
-            "failures": [],
-            "passed": false,
-            "theorem_count": 3
-          }
-        ],
-        "comparator_passed_count": 0,
-        "comparator_total_count": 6,
-        "decide_plus_kernel_calls": 0,
-        "finding_codes": {
-          "LEAN4_SORRY": 24
-        },
-        "lean_files": 2271,
-        "native_decide_calls": 0,
-        "non_sorry_trust_escapes": 0,
-        "prefilter_audited_by_aletheia": 10,
-        "toolchain": "leanprover/lean4:v4.33.1",
-        "total_lines": 618331,
-        "unclean_files": [
-          {
-            "codes": [
-              "LEAN4_SORRY"
-            ],
-            "file": "CellLayerChallenge.lean",
-            "finding_count": 3,
-            "lines": [
-              7052,
-              7073,
-              7080
-            ]
-          },
-          {
-            "codes": [
-              "LEAN4_SORRY"
-            ],
-            "file": "CellLayerTheorems.lean",
-            "finding_count": 3,
-            "lines": [
-              16,
-              22,
-              29
-            ]
-          },
-          {
-            "codes": [
-              "LEAN4_SORRY"
-            ],
-            "file": "CertificateChallenge.lean",
-            "finding_count": 1,
-            "lines": [
-              220
-            ]
-          },
-          {
-            "codes": [
-              "LEAN4_SORRY"
-            ],
-            "file": "Challenge.lean",
-            "finding_count": 3,
-            "lines": [
-              102,
-              105,
-              108
-            ]
-          },
-          {
-            "codes": [
-              "LEAN4_SORRY"
-            ],
-            "file": "CoerciveChallenge.lean",
-            "finding_count": 4,
-            "lines": [
-              530,
-              582,
-              601,
-              959
-            ]
-          },
-          {
-            "codes": [
-              "LEAN4_SORRY"
-            ],
-            "file": "ExtendedCertificateChallenge.lean",
-            "finding_count": 3,
-            "lines": [
-              259,
-              263,
-              267
-            ]
-          },
-          {
-            "codes": [
-              "LEAN4_SORRY"
-            ],
-            "file": "ExtendedCoerciveChallenge.lean",
-            "finding_count": 3,
-            "lines": [
-              213,
-              232,
-              368
-            ]
-          },
-          {
-            "codes": [
-              "LEAN4_SORRY"
-            ],
-            "file": "FractionalCellSystemChallenge.lean",
-            "finding_count": 1,
-            "lines": [
-              4449
-            ]
-          },
-          {
-            "codes": [
-              "LEAN4_SORRY"
-            ],
-            "file": "FractionalCertificateChallenge.lean",
-            "finding_count": 1,
-            "lines": [
-              337
-            ]
-          },
-          {
-            "codes": [
-              "LEAN4_SORRY"
-            ],
-            "file": "FractionalChallenge.lean",
-            "finding_count": 2,
-            "lines": [
-              76,
-              80
-            ]
-          }
-        ],
-        "unclean_files_count": 10
-      }
-    },
-    "total_lean_files_scanned": 8678,
-    "total_lean_lines_scanned": 3077719
+    "external_repos_verified_in_this_run": false,
+    "mode": "standalone_no_external_clones",
+    "note": "External third-party Lean 4 repositories (tristanbuckmaster/navier-stokes@ad53419d, tristanbuckmaster/fluid_lean@d0124689, openai/NavierStokesAndEuler@f9e8bc5b) are not vendored in standalone math0; the 8,678-file AUDIT-052 forensics table in REPORT_R4D_1_BUCKMASTER_FLUID_LEAN.md is an external record not recomputed in standalone mode.",
+    "subprojects": {},
+    "total_lean_files_scanned": 0,
+    "total_lean_lines_scanned": 0
   },
   "part2_signed_tree_multifrontal_schur": {
     "adversarial_mutants_all_killed": true,
@@ -417,6 +33,7 @@
         "leaf_L": {
           "max_gershgorin_ratio": "0",
           "neg_col_count": 0,
+          "passes_node_enclosure": true,
           "pivots": [
             0,
             1
@@ -426,6 +43,7 @@
         "leaf_R": {
           "max_gershgorin_ratio": "0",
           "neg_col_count": 0,
+          "passes_node_enclosure": true,
           "pivots": [
             2,
             3
@@ -435,6 +53,7 @@
         "root": {
           "max_gershgorin_ratio": "0",
           "neg_col_count": 2,
+          "passes_node_enclosure": true,
           "pivots": [
             4,
             5
@@ -485,6 +104,7 @@
         "leaf_L": {
           "max_gershgorin_ratio": "1",
           "neg_col_count": 0,
+          "passes_node_enclosure": true,
           "pivots": [
             0,
             1
@@ -494,6 +114,7 @@
         "leaf_R": {
           "max_gershgorin_ratio": "0",
           "neg_col_count": 0,
+          "passes_node_enclosure": true,
           "pivots": [
             2,
             3
@@ -503,6 +124,7 @@
         "root": {
           "max_gershgorin_ratio": "0",
           "neg_col_count": 2,
+          "passes_node_enclosure": true,
           "pivots": [
             4,
             5

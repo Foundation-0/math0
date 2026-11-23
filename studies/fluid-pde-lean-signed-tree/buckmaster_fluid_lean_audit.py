@@ -54,6 +54,16 @@ def verify_no_floats(obj: Any, path: str = "$") -> None:
             verify_no_floats(v, f"{path}[{idx}]")
 
 
+def has_no_floats(obj: Any) -> bool:
+    if isinstance(obj, float):
+        return False
+    if isinstance(obj, dict):
+        return all(has_no_floats(v) for v in obj.values())
+    if isinstance(obj, (list, tuple)):
+        return all(has_no_floats(v) for v in obj)
+    return True
+
+
 def mat_zero(rows: int, cols: int) -> list[list[Fraction]]:
     return [[Fraction(0) for _ in range(cols)] for _ in range(rows)]
 
@@ -128,7 +138,7 @@ def is_symmetric(M: list[list[Fraction]]) -> bool:
 
 def exact_symmetric_inertia(mat: list[list[int | Fraction]]) -> tuple[int, int, int]:
     """Exact (n_pos, n_zero, n_neg) inertia of a symmetric rational matrix
-    via exact 1x1 / 2x2 Bunch-Kaufman rational congruence over Q.
+    via exact first-nonzero-pivot 1x1 / 2x2 hyperbolic symmetric congruence over Q.
     """
     if not isinstance(mat, list) or not mat:
         raise ValueError("Matrix must be non-empty")
@@ -313,12 +323,13 @@ _HARD_ESCAPE_PREFILTER_RE = re.compile(
 )
 
 
-def run_three_repo_lean4_tomography() -> dict[str, Any]:
+def run_three_repo_lean4_tomography(require_live_repos: bool = False) -> dict[str, Any]:
     """Commit-pinned live aletheia v1.2.0 tomography across:
       1. tristanbuckmaster/navier-stokes (2,271 Lean files + 6 comparator*.json + paper/)
       2. tristanbuckmaster/fluid_lean ({affinecore, boussinesq-blowup, euler-blowup}, 3,748 Lean files + 3 comparator.json)
       3. openai/NavierStokesAndEuler (2,659 Lean files + 2 ComparatorChallenges/*.json)
     Resolves all paths relative to __file__ (zero personal path leaks).
+    Pass require_live_repos=True (--require-live-repos) to fail closed when external clones are absent.
     """
     here = Path(__file__).resolve()
     aletheia_root = here.parents[3] / "publish" / "aletheia" if len(here.parents) > 3 else None
@@ -337,13 +348,19 @@ def run_three_repo_lean4_tomography() -> dict[str, Any]:
     )
     clones_ok = bool(repo_dirs) and all((rdir / ".git").exists() for rdir in repo_dirs.values())
     if not (aletheia_ok and clones_ok):
+        if require_live_repos:
+            raise FileNotFoundError(
+                "External third-party Lean 4 clones and aletheia are absent; "
+                "cannot run live 3-repo tomography under --require-live-repos."
+            )
         return {
             "mode": "standalone_no_external_clones",
+            "external_repos_verified_in_this_run": False,
             "note": (
                 "External third-party Lean 4 repositories (tristanbuckmaster/navier-stokes@ad53419d, "
                 "tristanbuckmaster/fluid_lean@d0124689, openai/NavierStokesAndEuler@f9e8bc5b) are not "
-                "vendored in standalone math0; see buckmaster_fluid_lean_certificate.json for the "
-                "sealed 8,678-file AUDIT-052 aletheia v1.2.0 forensics record."
+                "vendored in standalone math0; the 8,678-file AUDIT-052 forensics table in "
+                "REPORT_R4D_1_BUCKMASTER_FLUID_LEAN.md is an external record not recomputed in standalone mode."
             ),
             "total_lean_files_scanned": 0,
             "total_lean_lines_scanned": 0,
@@ -561,7 +578,7 @@ def check_abs_quad_bound(diff_mat: list[list[Fraction]], err_mat: list[list[Frac
     """Sufficient & exact PSD certificate for:
       forall x, quadValue (diff_mat) x + quadValue err_mat (|x|) >= 0
     We check the exact stronger condition: err_mat >= 0 entrywise, symmetric, and
-    when err_mat == 0, diff_mat >= 0 (exact Bunch-Kaufman inertia n_neg == 0);
+    when err_mat == 0, diff_mat >= 0 (exact 1x1/2x2 symmetric congruence inertia n_neg == 0);
     when err_mat != 0, we check entrywise |M_err| <= err_mat or exact PSD decomposition
     diff_mat = P - Delta with P >= 0 and |Delta_{ij}| <= err_mat_{ij}!
     Even sharper: for any symmetric err_mat >= 0, if diff_mat is split as diff_mat + err_mat_diag >= 0?
@@ -738,7 +755,13 @@ def verify_signed_tree_certificate(tree: dict[str, Any]) -> dict[str, Any]:
             "pos_col_count": len(pos_cols),
             "neg_col_count": len(neg_cols_v),
             "max_gershgorin_ratio": frac_str(max_row_ratio),
+            "passes_node_enclosure": True,
         }
+
+    all_nodes_ok = len(node_diags) == len(nodes) and all(
+        d["passes_node_enclosure"] for d in node_diags.values()
+    )
+    pivot_count_ok = len(columns) <= n_free
 
     # --- Global Tree-Telescoping Coercivity & Sylvester Inertia Verification ---
     M_total = mat_zero(dim, dim)
@@ -752,7 +775,7 @@ def verify_signed_tree_certificate(tree: dict[str, Any]) -> dict[str, Any]:
     all_neg_cols = [[require_exact_rational(x, "Fm") for x in c["vec"]] for c in columns]
     FmFmT_all = mat_gram_cols(all_neg_cols, dim)
 
-    # Theorem: M_total - (D_slack - Fm Fm^T) >= 0 (verified by exact Bunch-Kaufman PSD!)
+    # Theorem: M_total - (D_slack - Fm Fm^T) >= 0 (verified by exact 1x1/2x2 symmetric congruence PSD!)
     P_lifted = mat_add(M_total, FmFmT_all)
     surplus = mat_sub(P_lifted, D_slack)
     in_surplus = exact_symmetric_inertia(surplus)
@@ -769,7 +792,8 @@ def verify_signed_tree_certificate(tree: dict[str, Any]) -> dict[str, Any]:
     M_restr = mat_mul(mat_mul(mat_transpose(K_mat), M_total), K_mat)
     in_restr = exact_symmetric_inertia(M_restr)
     minors_restr = exact_bareiss_leading_minors(M_restr)
-    if in_restr[0] != len(ker_basis) or in_restr[1] != 0 or in_restr[2] != 0 or not all(x > 0 for x in minors_restr):
+    minors_all_pos = len(minors_restr) == len(ker_basis) and all(x > 0 for x in minors_restr)
+    if in_restr[0] != len(ker_basis) or in_restr[1] != 0 or in_restr[2] != 0 or not minors_all_pos:
         raise RuntimeError(f"Restricted operator on ker(Fm^T) not strictly PD: {in_restr}")
 
     # AUDIT-002 R_opt & AUDIT-014 R_H4 on lifted PSD P = M_total + Fm Fm^T, Q = -Fm Fm^T
@@ -792,7 +816,8 @@ def verify_signed_tree_certificate(tree: dict[str, Any]) -> dict[str, Any]:
         for i in range(dim)
     ]
     M_rot = mat_mul(mat_mul(Q_orth, M_total), Q_orth)
-    if exact_symmetric_inertia(M_rot) != in_total:
+    householder_ok = exact_symmetric_inertia(M_rot) == in_total
+    if not householder_ok:
         raise RuntimeError("O(dim, Q) invariance failed on M_total")
 
     return {
@@ -802,17 +827,17 @@ def verify_signed_tree_certificate(tree: dict[str, Any]) -> dict[str, Any]:
         "node_count": len(nodes),
         "null_pair_count": len(null_pairs),
         "neg_column_count": len(columns),
-        "passes_all_node_enclosures": True,
-        "passes_pivot_count": True,
+        "passes_all_node_enclosures": all_nodes_ok,
+        "passes_pivot_count": pivot_count_ok,
         "global_inertia": list(in_total),
         "surplus_psd_inertia": list(in_surplus),
         "ker_FmT_dim": len(ker_basis),
         "restricted_ker_FmT_inertia": list(in_restr),
-        "restricted_ker_FmT_all_bareiss_minors_pos": True,
+        "restricted_ker_FmT_all_bareiss_minors_pos": minors_all_pos,
         "restricted_r_opt_x10000": spec_restr["r_opt_x10000"],
         "restricted_r_h4_x10000": spec_restr["r_h4_x10000"],
         "audit002_r_opt_on_M_total": frac_str(r_opt_val),
-        "O_dim_Q_householder_invariant": True,
+        "O_dim_Q_householder_invariant": householder_ok,
         "node_diagnostics": node_diags,
     }
 
@@ -1119,17 +1144,13 @@ def run_patch_weight_and_sperner_box_check() -> dict[str, Any]:
         return (ix != 0 and fx <= px, iy != 0 and fy <= py)
 
     # Verify FixedPointBox boundary conditions h0 (x_i = 0 => not lab_i) and h1 (x_i = p => lab_i)
+    boundary_ok = True
     for ix in range(p_grid + 1):
         for iy in range(p_grid + 1):
             l0, l1 = lab(ix, iy)
-            if ix == 0 and l0:
-                raise RuntimeError("Boundary h0 violated at ix=0")
-            if iy == 0 and l1:
-                raise RuntimeError("Boundary h0 violated at iy=0")
-            if ix == p_grid and not l0:
-                raise RuntimeError("Boundary h1 violated at ix=p")
-            if iy == p_grid and not l1:
-                raise RuntimeError("Boundary h1 violated at iy=p")
+            if (ix == 0 and l0) or (iy == 0 and l1) or (ix == p_grid and not l0) or (iy == p_grid and not l1):
+                boundary_ok = False
+                raise RuntimeError(f"Boundary h0/h1 violated at ({ix}, {iy})")
 
     # Enumerate all 2 * p_grid^2 Kuhn simplices in [0..p_grid]^2:
     # A 2D simplex (v0, v1, v2) is complete (FixedPointBox.lean:88) iff for each i in {0, 1}
@@ -1178,7 +1199,7 @@ def run_patch_weight_and_sperner_box_check() -> dict[str, Any]:
         "fixed_point_box_sperner_2d": {
             "grid_resolution_p": p_grid,
             "total_kuhn_simplices": 2 * p_grid * p_grid,
-            "boundary_h0_h1_verified": True,
+            "boundary_h0_h1_verified": boundary_ok,
             "complete_sperner_simplex_count": len(complete_simplices),
             "odd_parity_certified": len(complete_simplices) % 2 == 1,
             "exact_fixed_point": [frac_str(fp_exact[0]), frac_str(fp_exact[1])],
@@ -1222,19 +1243,21 @@ def run_r3_negative_controls() -> dict[str, Any]:
     }
 
 
-def run_all_audits(write_certificate: bool = False) -> dict[str, Any]:
-    part1 = run_three_repo_lean4_tomography()
+def run_all_audits(write_certificate: bool = False, require_live_repos: bool = False) -> dict[str, Any]:
+    part1 = run_three_repo_lean4_tomography(require_live_repos=require_live_repos)
     part2 = run_signed_tree_adversarial_suite()
     part3 = run_patch_weight_and_sperner_box_check()
     part4 = run_r3_negative_controls()
 
+    parts_check = (part1, part2, part3, part4)
+    zero_floats_ok = has_no_floats(parts_check)
     payload: dict[str, Any] = {
         "probe_id": "AUDIT-052",
         "arm": "R4D-1",
         "title": "3-Repo Fluid-PDE Lean 4 Forensics (tristanbuckmaster/navier-stokes, fluid_lean, openai/NavierStokesAndEuler) & Pure-Q SignedTree Multifrontal Schur-Complement Verifier",
         "oracle_class": "exact+anchor",
         "honest_novelty_claim": "N1",
-        "zero_floats_certified": True,
+        "zero_floats_certified": zero_floats_ok,
         "part1_three_repo_lean4_tomography": part1,
         "part2_signed_tree_multifrontal_schur": part2,
         "part3_nov20_weight_and_sperner_box": part3,
@@ -1253,7 +1276,8 @@ def run_all_audits(write_certificate: bool = False) -> dict[str, Any]:
 def main(argv: list[str] | None = None) -> int:
     args = sys.argv[1:] if argv is None else argv
     write_cert = "--write-cert" in args
-    res = run_all_audits(write_certificate=write_cert)
+    require_live = "--require-live-repos" in args
+    res = run_all_audits(write_certificate=write_cert, require_live_repos=require_live)
     p1 = res["part1_three_repo_lean4_tomography"]
     p2 = res["part2_signed_tree_multifrontal_schur"]
     p3 = res["part3_nov20_weight_and_sperner_box"]
@@ -1266,7 +1290,7 @@ def main(argv: list[str] | None = None) -> int:
         "total_lean_files_scanned": p1["total_lean_files_scanned"],
         "total_lean_lines_scanned": p1["total_lean_lines_scanned"],
         "tb_ns_comparator_pass": (
-            "standalone_sealed"
+            "standalone_not_verified"
             if standalone
             else f"{p1['subprojects']['tb_navier_stokes']['comparator_passed_count']}/{p1['subprojects']['tb_navier_stokes']['comparator_total_count']}"
         ),

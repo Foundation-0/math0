@@ -1,11 +1,11 @@
 # The Aletheia Operator Calculus (Wave 2 Round 4C — `AUDIT-051`)
 
 - **Arm / Owners:** Glyph Registry & Collision Audit (`session-cartographer`) + Executable Engine & Commutator Discovery (`fractals-probe`, Arm R4C)
-- **Artifacts (`symbiosis/round4/operator-calculus/`):**
-  - `GLYPH_REGISTRY.md` & `glyph_registry.json` — canonical 8-glyph registry (`0 / 227,540` Lean 4 collisions, `0` expedition collisions, `0` session collisions; all 8 verified Unicode `Sm`)
-  - `aletheia_calculus.py` — zero-float pure Python 3 stdlib Unicode/ASCII lexer, precedence parser, typed exact $\mathbb{Q}/\mathbb{Z}$ evaluator, 13-check compressed theorem suite, and 6-probe commutator/composition discovery engine
-  - `test_aletheia_calculus_r5.py` — 5-group R1–R5 verification, coordinate/gauge invariance, unseen-instance, and adversarial refusal suite (`100.0%` mutation kill via `aletheia mutate`)
-  - `aletheia_calculus_certificate.json` — zero-float canonical JSON certificate (`canonical_sha256 = 3ced28694a7ce21e982128e2d59d4b86df61294ca487659b7ff4416649486377`)
+- **Artifacts (`studies/aletheia-operator-calculus/`):**
+  - `GLYPH_REGISTRY.md` & `glyph_registry.json` — canonical 8-glyph registry (`7/8` composition shorthands + `1/8` `⫩` execution gate; all 8 verified Unicode `Sm` and Unicode/ASCII lexer-bound in-tree; the `0 / 227,540` Lean 4 collision count is recorded from an external `AUDIT-051` scan whose script and third-party corpora are not vendored in `math0`)
+  - `aletheia_calculus.py` — zero-float pure Python 3 stdlib Unicode/ASCII lexer, precedence parser, typed exact $\mathbb{Q}/\mathbb{Z}$ evaluator, 13-check compressed theorem suite (`T1..T7`), and 6-probe commutator/composition discovery engine
+  - `test_aletheia_calculus_r5.py` — 5-group R1–R5 verification, coordinate/gauge invariance, unseen-instance, and adversarial refusal suite (`72/72` `100.0%` killed under external `Foundation-0/aletheia v2.0.0 @ 7227bcc5`, recorded in [`../ROUND4_MUTATION_RECEIPTS.json`](../ROUND4_MUTATION_RECEIPTS.json))
+  - `aletheia_calculus_certificate.json` — zero-float canonical JSON certificate (`canonical_sha256 = 1803a7cb025601c37a0b7113347b51d2f2a2e72781e018c46eae5f8e1f35bf6f`; file / `--json` stdout SHA-256 = `096a444916bf430d9f89a339312429763a34c978d6bd9b1f0ed0a5a484afa22a`)
   - `ALETHEIA_OPERATOR_CALCULUS.md` — this report
 - **Oracle Class & Honest Law-4 Novelty Tag:** `exact` (zero floats in JSON or any exact theorem; float64 appears ONLY inside Probe `C5`'s negative comparison predicate) | **`N1`** (clean-room zero-float executable operator calculus + exact cross-domain compositional laws, with two sharp candidate `N2` theorems — `C1` Nonlinear Schur–Unmasking Loewner Screening Positivity and `C6` Unconditional Linear Monopole Subadditivity / Rational Metric on $H^1(G, B; \mathbb{Z}_2)$ — kept honestly scoped at `N1` pending external literature review; zero symbolic theater, zero external writes).
 
@@ -18,7 +18,7 @@ Every classical theorem used as an ingredient or baseline in this calculus is qu
 | Classical Result | Primary Prior Art | Role in `AUDIT-051` |
 |---|---|---|
 | Quotient formula for iterated nonsingular Schur complements | Crabtree & Haynsworth (1969) | Baseline for `T1` and smooth branch of Probe `C2` |
-| Sylvester law of inertia, Bunch–Kaufman pivoting, Haynsworth inertia additivity, generalized singular Schur inertia | Sylvester (1852); Haynsworth (1968); Carlson–Haynsworth–Markham (1974); Bunch–Kaufman (1977) | Exact $\mathbb{Q}$ engine behind `⦺`, `T2`, and Probe `C2` |
+| Sylvester law of inertia, symmetric congruence elimination, Haynsworth inertia additivity, generalized singular Schur inertia | Sylvester (1852); Haynsworth (1968); Carlson–Haynsworth–Markham (1974) | Exact $\mathbb{Q}$ first-nonzero-pivot 1x1/2x2 hyperbolic congruence engine behind `⦺`, `T2`, and Probe `C2` |
 | Matrix concavity / Jensen inequality for Schur complements of SPD matrices | Lieb (1973); Ando (1979) | Theoretical backbone of Probe `C3` (`[⧄_B, ⟠_G]`) |
 | Signed graph Laplacians, invertibility of unbalanced graphs, bundle DtN maps | Harary (1953); Zaslavsky (1982); Curtis–Ingerman–Morrow (1998); Kenyon (2011) | Foundation for `⦷` (`L ⦷ χ`) |
 | Electrical effective resistance, Rayleigh monotonicity, Kirchhoff/Foster cycle energy | Kirchhoff (1847); Foster (1948); Doyle–Snell (1984) | Foundation for `⧇`, `T3`, and Rayleigh bound in Probe `C4` |
@@ -30,7 +30,7 @@ Every classical theorem used as an ingredient or baseline in this calculus is qu
 
 ## 2. Canonical 8-Glyph Executable Grammar & LaTeX Bindings
 
-Every glyph is empirically verified `0 / 227,540` across 4 major-lab Lean 4 corpora, `0` across expedition sources, and `0` across `gemini-sessions/` (`glyph_registry.json`), and bound 1-to-1 to both Unicode and ASCII fallback tokens in `aletheia_calculus.py` (with AST parity verified in `test_aletheia_calculus_r5.py`):
+Every glyph is verified in-tree by `verify_glyph_registry()` for Unicode `Sm` category, codepoint/UTF-8 hex integrity, and 1-to-1 Unicode/ASCII lexer binding in `aletheia_calculus.py` (with AST parity verified in `test_aletheia_calculus_r5.py`). The `0 / 227,540` 4-repo Lean 4 collision count was recorded in an external `AUDIT-051` scan (`glyph_registry.json`; scan script and third-party Lean corpora are not vendored in `math0`):
 
 | ID | Glyph | Codepoint | ASCII | Prec / Fixity | Portable LaTeX Macro | Exact Typed Semantics (Zero Floats) |
 |---|---|---|---|---|---|---|
@@ -112,7 +112,7 @@ Against 3 `CS-11` adversarial mutants (`131836323/93222358` vs $\sqrt{2}$, exact
 **Theorem (5-Line Elementary Proof — Discovered by Computing the `⦷` Homomorphism Defect):**
 For **every** connected positive-weighted graph $G = (B \sqcup I, E, w)$ and **every** pair $\chi_1, \chi_2 \in H^1(G, B; \mathbb{Z}_2)$, the boundary monopole unmasking functional $\Phi_B(\chi) := \mathbf{1}_B^\top (L \mathbin{⦷} \chi) \mathbf{1}_B \in \mathbb{Q}_{\ge 0}$ satisfies **linear subadditivity without a square root**:
 $$\Phi_B(L \mathbin{⦷} (\chi_1 \chi_2)) \;\le\; \mathcal{E}_{\chi_1 \chi_2}(z) \;\le\; \Phi_B(L \mathbin{⦷} \chi_1) + \Phi_B(L \mathbin{⦷} \chi_2),$$
-making $d_{\mathrm{hol}}(\chi_1, \chi_2) := \Phi_B(L \mathbin{⦷} (\chi_1 \chi_2))$ a **true rational metric** on $H^1(G, B; \mathbb{Z}_2)$.
+making $d_{\mathrm{hol}}(\chi_1, \chi_2) := \Phi_B(L \mathbin{⦷} (\chi_1 \chi_2))$ a pseudometric on $Z^1(G, B; \mathbb{Z}_2)$ that descends to a **rational metric on $H^1(G, B; \mathbb{Z}_2)$** (since $\Phi_B(\chi) = 0$ iff $L^\chi$ admits a constant-magnitude signed-harmonic extension equal to $+1$ on $B$, i.e., iff $\chi$ is an interior coboundary $[\chi] = 0$ on connected graphs; `aletheia_calculus.py` explicitly verifies identity $\Phi_B(1)=0$, interior coboundary vanishing $\Phi_B(\delta_0)=0$, symmetry $\Phi_B(\chi_1\chi_2)=\Phi_B(\chi_2\chi_1)$, and strict positivity on all tested non-trivial relative classes in `metric_axioms_tested_graphs`).
 
 *Proof:* Define $f(x, y) := \operatorname{sgn}(x)\operatorname{sgn}(y)\min(|x|, |y|)$. Then (1) $f$ is continuous and piecewise linear on $\mathbb{R}^2$ with $\|\nabla f\|_2 \equiv 1$ a.e., hence globally Euclidean 1-Lipschitz: $(f(a,c) - f(b,d))^2 \le (a - b)^2 + (c - d)^2$ for all $a,b,c,d \in \mathbb{R}$; (2) $f$ is $\mathbb{Z}_2 \times \mathbb{Z}_2$-equivariant ($f(s_1 x, s_2 y) = s_1 s_2 f(x, y)$) with $f(1, 1) = 1$; (3) for exact rational signed-harmonic minimizers $x^{(1)}, x^{(2)} \in \mathbb{Q}^{|V|}$ ($x^{(i)}|_B = \mathbf{1}_B$), setting $z_v := f(x^{(1)}_v, x^{(2)}_v) \in \mathbb{Q}$ preserves $z|_B = \mathbf{1}_B$ and satisfies $(z_u - \chi_1\chi_2(e) z_v)^2 \le (x^{(1)}_u - \chi_1(e) x^{(1)}_v)^2 + (x^{(2)}_u - \chi_2(e) x^{(2)}_v)^2$ on every edge; (4) multiplying by $w_e > 0$ and summing gives $\Phi_B(\chi_1 \chi_2) \le \mathcal{E}_{\chi_1 \chi_2}(z) \le \Phi_B(\chi_1) + \Phi_B(\chi_2)$. $\blacksquare$
 
@@ -128,17 +128,18 @@ making $d_{\mathrm{hol}}(\chi_1, \chi_2) := \Phi_B(L \mathbin{⦷} (\chi_1 \chi_
 
 ## 5. R1–R5 Verification Receipts & Falsification Criteria
 
-- **Reproducibility Commands (`symbiosis/round4/operator-calculus/`):**
+- **Reproducibility Commands (`studies/aletheia-operator-calculus/`):**
   ```bash
-  # 4-mode isolated R4 bit-identical replay
+  # 4-mode isolated R4 bit-identical replay (stdlib only; zero external deps)
   for f in "-I -B" "-I -O -B" "-I -B -W error" "-I -O -B -W error"; do
-    python3 $f aletheia_calculus.py --json | sha256sum
-    python3 $f test_aletheia_calculus_r5.py
+    PYTHONDONTWRITEBYTECODE=1 python3 $f aletheia_calculus.py --json | sha256sum
+    PYTHONDONTWRITEBYTECODE=1 python3 $f test_aletheia_calculus_r5.py
   done
-  # aletheia v1.2.0 audit-check & 100% mutation kill
-  PYTHONPATH=../../../publish/aletheia python3 -B -W error -m aletheia audit-check . \
+  # External Foundation-0/aletheia v2.0.0 (@ 7227bcc5) audit-check & mutation receipt
+  # (pinned output recorded in ../ROUND4_MUTATION_RECEIPTS.json: 72/72 killed, 0 survivors)
+  python3 -B -m aletheia audit-check . --strict-ancestors --safety-scan \
     --scripts aletheia_calculus.py test_aletheia_calculus_r5.py --json
-  PYTHONPATH=../../../publish/aletheia python3 -B -W error -m aletheia mutate aletheia_calculus.py \
-    --work-root . --add-cwd --test-cmd "python3 -I -O -B -W error test_aletheia_calculus_r5.py" --json
+  python3 -B -m aletheia mutate aletheia_calculus.py --work-root . --add-cwd \
+    --max-mutants 0 --test-cmd "python3 -I -O -B -W error test_aletheia_calculus_r5.py" --json
   ```
-- **Falsification Criteria:** `AUDIT-051` fails if (1) any of the 8 glyphs has a Unicode/Lean/expedition collision or fails Unicode-vs-ASCII AST/eval parity; (2) any of the 13 compressed theorems or 6 commutator probes (`C1..C6`) fails independent SymPy verification on either reported or unseen weighted graphs/indefinite matrices; (3) any single float appears in `aletheia_calculus_certificate.json`; (4) any operator breaks vertex-relabeling or interior-coboundary gauge invariance; or (5) any mutant survives `aletheia mutate` (`< 100%`) or any isolated `-I` R4 / `audit-check` gate fails.
+- **Falsification Criteria:** `AUDIT-051` fails if (1) any of the 8 glyphs fails Unicode `Sm` / UTF-8 / Unicode-vs-ASCII AST/eval parity; (2) any of the 13 compressed theorem checks or 6 commutator probes (`C1..C6`, including `metric_axioms_tested_graphs`) fails independent exact verification on reported or unseen weighted graphs/indefinite matrices; (3) any single float appears in `aletheia_calculus_certificate.json`; (4) any operator breaks vertex-relabeling or interior-coboundary gauge invariance; or (5) any mutant survives external `Foundation-0/aletheia v2.0.0 mutate --max-mutants 0` (`< 100%`) or any isolated `-I` R4 gate fails.

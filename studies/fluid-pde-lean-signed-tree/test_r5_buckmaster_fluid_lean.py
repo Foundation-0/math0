@@ -74,7 +74,16 @@ class TestBuckmasterFluidLeanR5(unittest.TestCase):
     def test_02_part1_three_repo_tomography(self) -> None:
         p1 = self.live_all["part1_three_repo_lean4_tomography"]
         if p1.get("mode") == "standalone_no_external_clones":
-            p1 = json.loads(self.cert_path.read_text(encoding="utf-8"))["part1_three_repo_lean4_tomography"]
+            # Standalone checkout does not vendor third-party Lean 4 repos; verify honest stub
+            # and verify fail-closed --require-live-repos refusal (zero circular cert self-reads).
+            self.assertIs(p1["external_repos_verified_in_this_run"], False)
+            self.assertEqual(p1["total_lean_files_scanned"], 0)
+            self.assertEqual(p1["total_lean_lines_scanned"], 0)
+            self.assertEqual(p1["subprojects"], {})
+            with self.assertRaises(FileNotFoundError):
+                bfl.run_three_repo_lean4_tomography(require_live_repos=True)
+            return
+
         self.assertEqual(p1["total_lean_files_scanned"], 8678)
         self.assertEqual(p1["total_lean_lines_scanned"], 3077719)
         subs = p1["subprojects"]
@@ -166,7 +175,9 @@ class TestBuckmasterFluidLeanR5(unittest.TestCase):
             "part4_r3_negative_controls",
         ):
             self.assertEqual(self.live_all[section], raw[section], f"Live/sealed mismatch in {section}")
-        if self.live_all["part1_three_repo_lean4_tomography"].get("mode") != "standalone_no_external_clones":
+        live_mode = self.live_all["part1_three_repo_lean4_tomography"].get("mode")
+        raw_mode = raw["part1_three_repo_lean4_tomography"].get("mode")
+        if live_mode == raw_mode:
             self.assertEqual(self.live_all["canonical_sha256"], saved_sha)
 
 

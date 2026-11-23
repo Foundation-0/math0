@@ -10,6 +10,8 @@
 
 ## 0. Executive Summary
 
+> **Standalone vs. External Audit Boundary:** In standalone `math0`, external third-party Lean 4 repositories (`tristanbuckmaster/navier-stokes`, `tristanbuckmaster/fluid_lean`, `openai/NavierStokesAndEuler`) are **not vendored**. Running `buckmaster_fluid_lean_audit.py` and `test_r5_buckmaster_fluid_lean.py` in this tree recomputes **100% of Parts 2–4 live** (pure-$\mathbb{Q}$ `SignedTree` multifrontal Schur-complement verifier, `6/6` adversarial mutants, Nov 20 weight shift, 2D Kuhn/Sperner parity, `10/10` R3 controls, and full `canonical_sha256` integrity against `buckmaster_fluid_lean_certificate.json`), while Part 1 explicitly emits `"external_repos_verified_in_this_run": false` (and fails closed with `FileNotFoundError` under `--require-live-repos`). Section 2 below records the externally executed `8,678`-file `AUDIT-052` forensics snapshot against the pinned third-party commits.
+
 We perform a commit-pinned, zero-false-positive forensic audit across **8,678 Lean 4 files (3,077,719 lines)** and **11 `comparator*.json` configurations** spanning three landmark fluid-PDE formalization repositories:
 1. **`tristanbuckmaster/navier-stokes`** (`ad53419de079eb8f95f60313473374624a348546`, pushed `2026-11-20`, Lean `v4.33.1`, L. Alpöge & T. Buckmaster — conditional formalization of **unforced 3D Navier–Stokes** finite-time blow-up on $\mathbb{R}^3$ and $\mathbb{T}^3$ via a backward discretely self-similar profile with 19-fold azimuthal symmetry).
 2. **`tristanbuckmaster/fluid_lean`** (`d0124689230b58b4f86e7b90ac59de06404b3b6b`, pushed `2026-09-08`, Lean `v4.32.2`, Claude / Anthropic under L. Alpöge — three unconditional **forced** blow-up formalizations: `affinecore`, `boussinesq-blowup`, `euler-blowup`).
@@ -24,7 +26,7 @@ We perform a commit-pinned, zero-false-positive forensic audit across **8,678 Le
    - **Independent Provenance Check (Pairwise SHA-256 Overlap):** `fluid_lean` shares `32`–`37` vendored `cm24-r2`/`CZCore` files across its three sub-projects; `tristanbuckmaster/*` and `openai/NavierStokesAndEuler` have **`0`** shared `.lean` file hashes.
 3. **Exact Pure-$\mathbb{Q}$ Verification of Alpöge–Buckmaster's Multifrontal `Certificate.SignedTree` Coercivity Engine (`CellLayerChallenge.lean:2051–2210`, `SF-01 #24`):**
    We extract the exact finite-dimensional spectral core of `tristanbuckmaster/navier-stokes` — a **multifrontal sparse Schur-complement elimination tree (`SignedTree`)** with weighted-Gershgorin enclosures (`PassesRealNodeEnclosure`), telescoping `NullPair` (`+N, -N`) balancing, positive/negative columns $F_+, F_-$, and root-count guard `|Column| <= |B|` (`PassesPivotCount`) — and implement a zero-float verbatim pure-$\mathbb{Q}$ verifier:
-   - Certifies both an **exact zero-slack 3-node multifrontal tree with `NullPair` cancellation** and a **perturbed weighted-Gershgorin interval-enclosure tree** ($E, F \ge 0$, $R_\nu \neq 0$, non-uniform weights $w_j > 0$), proving via exact Bunch–Kaufman inertia (`AUDIT-041`) and Bareiss leading minors (`AUDIT-027`) that $M_{\mathrm{total}} \succeq D_{\mathrm{slack}} - F_- F_-^\top$, global inertia is `(4, 0, 2)` (`n_- = 2 \le |B| = 2`, `n_+ = 4 \ge |A| = 4`), the restriction to $\ker(F_-^\top)$ is strictly PD `(4, 0, 0)` (all `4/4` leading minors $> 0$, `R_opt = R_{H4} = 4`), positive `AUDIT-002 R_opt` holds on $M_{\mathrm{total}}$, and inertia is `0`-residual $O(6, \mathbb{Q})$ Householder invariant.
+   - Certifies both an **exact zero-slack 3-node multifrontal tree with `NullPair` cancellation** and a **perturbed weighted-Gershgorin interval-enclosure tree** ($E, F \ge 0$, $R_\nu \neq 0$, non-uniform weights $w_j > 0$), proving via exact first-nonzero-pivot 1x1/2x2 hyperbolic symmetric congruence inertia (`AUDIT-041`) and Bareiss leading minors (`AUDIT-027`) that $M_{\mathrm{total}} \succeq D_{\mathrm{slack}} - F_- F_-^\top$, global inertia is `(4, 0, 2)` (`n_- = 2 \le |B| = 2`, `n_+ = 4 \ge |A| = 4`), the restriction to $\ker(F_-^\top)$ is strictly PD `(4, 0, 0)` (all `4/4` leading minors $> 0$, `R_opt = R_{H4} = 4`), positive `AUDIT-002 R_opt` holds on $M_{\mathrm{total}}$, and inertia is `0`-residual $O(6, \mathbb{Q})$ Householder invariant.
    - Kills **`6/6` adversarial `SignedTree` mutants** (violating `row_bound`, `slack_le`, `root_front_nonneg`, `column_count > |B|`, `every_variable_pivoted`, and `error_matrix_nonneg`), proving every clause of `PassesRealNodeEnclosure` and `PassesPivotCount` is load-bearing.
 4. **Exact 2D Sperner Grid-Simplex Witness for `FixedPointBox.lean:49–61` (`AUDIT-015R` Bridge):** Pure-$\mathbb{Q}$ verification of the discrete Kuhn-triangulation Sperner labeling (`lab x i := x i != 0 ∧ f(pt x) i <= pt x i`) on $[0, 1]^2$ at odd resolution $p = 7$ (`98` Kuhn simplices), certifying exact odd parity (`1` complete simplex) enclosing the unique rational fixed point `(1/2, 1/2)`.
 5. **Bidirectional Symbiosis:** Documents concretely how `fluid_lean`'s `decide +kernel` fixed-point rational tables + our `AUDIT-027` Reduced Bareiss PSD / `AUDIT-015R` Bernstein box certifiers provide a direct zero-float blueprint for replacing external Arb/FLINT verification of `SignedTree` enclosures with kernel-decided rational certificates.
@@ -37,7 +39,7 @@ All PDE theorems, Lean 4 formalizations, Brouwer/Sperner fixed-point theory, Ger
 
 ---
 
-## 2. Three-Repo `aletheia v1.2.0` Forensic Comparison (`8,678` Files, `3,077,719` Lines)
+## 2. External Three-Repo `aletheia v1.2.0` Forensic Comparison (`8,678` Files, `3,077,719` Lines — External `AUDIT-052` Record)
 
 | Subproject | Pinned Commit | Toolchain | `.lean` Files | Total Lines | Clean Proof Files | Challenge `sorry`s | Non-`sorry` Trust Escapes | `decide +kernel` | `native_decide` | `aletheia v1.2.0` Comparator Audit |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---|
@@ -68,14 +70,19 @@ $$M_{\mathrm{total}} = \sum_{l \in \mathrm{Leaves}} L_l \;\succeq\; D_{\mathrm{s
 
 ---
 
-## 4. Exact Reproduction Commands (4-Mode Isolated `-I` R4 + `aletheia audit-check`)
+## 4. Exact Reproduction Commands (4-Mode Isolated `-I` R4 + Certificate Integrity)
+
+- **Standalone Certificate (`buckmaster_fluid_lean_certificate.json`):** `canonical_sha256 = 75c7b2677816ad17e3570f426b1693ee1a9ec932ef2fad26e5fbcb6f15fdb660` (matches live standalone `run_all_audits()` directly; verified in `test_05_certificate_file_integrity_and_zero_floats`).
+- **4-Mode Isolated `-I` Stdout SHA-256 (`-I -B`, `-I -O -B`, `-I -B -W error`, `-I -O -B -W error`):**
+  - `buckmaster_fluid_lean_audit.py`: `faf583d29b4c16354523b014234d0723382cfe22750372ac71238b9ae1757570`
+  - `test_r5_buckmaster_fluid_lean.py`: `9f3cb0fe3353b04c26d275cd8613ade6f51296584ad4e0727330888a664fb067` (`5/5` tests OK, including fail-closed `--require-live-repos` refusal when external clones are absent).
 
 ```bash
 for f in "-I -B" "-I -O -B" "-I -B -W error" "-I -O -B -W error"; do
-  python3 $f buckmaster_fluid_lean_audit.py | sha256sum
-  python3 $f test_r5_buckmaster_fluid_lean.py 2>/dev/null | sha256sum
+  PYTHONDONTWRITEBYTECODE=1 python3 $f buckmaster_fluid_lean_audit.py | sha256sum
+  PYTHONDONTWRITEBYTECODE=1 python3 $f test_r5_buckmaster_fluid_lean.py 2>/dev/null | sha256sum
 done
 
-PYTHONPATH=../../../publish/aletheia python3 -B -W error -m aletheia audit-check . \
-  --scripts buckmaster_fluid_lean_audit.py test_r5_buckmaster_fluid_lean.py --json
+# Fail-closed check when external third-party Lean 4 clones are absent (exits nonzero):
+PYTHONDONTWRITEBYTECODE=1 python3 -I -B buckmaster_fluid_lean_audit.py --require-live-repos
 ```

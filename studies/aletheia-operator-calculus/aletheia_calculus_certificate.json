@@ -1,5 +1,5 @@
 {
-  "canonical_sha256": "3ced28694a7ce21e982128e2d59d4b86df61294ca487659b7ff4416649486377",
+  "canonical_sha256": "1803a7cb025601c37a0b7113347b51d2f2a2e72781e018c46eae5f8e1f35bf6f",
   "commutator_discovery_probes": {
     "C1": {
       "all_defects_strictly_PSD_even_for_asymmetric_K3": true,
@@ -203,6 +203,14 @@
     },
     "C6": {
       "all_verified": true,
+      "metric_axioms_tested_graphs": {
+        "all_metric_axioms_ok": true,
+        "all_structured_nontrivial_classes_strictly_positive": true,
+        "all_structured_pairs_symmetric": true,
+        "interior_coboundary_odd_btz_zero": true,
+        "trivial_cocycle_k4_zero": true,
+        "trivial_cocycle_odd_btz_zero": true
+      },
       "probe": "C6_linear_monopole_subadditivity_metric",
       "random_extreme_weight_cases_certified": "12/12",
       "structured_cases": [
@@ -213,6 +221,7 @@
           "phi_1_plus_2": "11/4",
           "phi_2": "11/8",
           "subadditive_slack": "3/4",
+          "symmetric": true,
           "verified": true,
           "witness_energy_E_z": "35/16"
         },
@@ -223,6 +232,7 @@
           "phi_1_plus_2": "64/21",
           "phi_2": "32/21",
           "subadditive_slack": "16/21",
+          "symmetric": true,
           "verified": true,
           "witness_energy_E_z": "368/147"
         },
@@ -233,6 +243,7 @@
           "phi_1_plus_2": "2324199156/207069811",
           "phi_2": "399780/58019",
           "subadditive_slack": "47270455824720/13813005882377",
+          "symmetric": true,
           "verified": true,
           "witness_energy_E_z": "27623053428/3366204361"
         },
@@ -243,6 +254,7 @@
           "phi_1_plus_2": "7701024/788749",
           "phi_2": "1200/221",
           "subadditive_slack": "136302798144/44337947537",
+          "symmetric": true,
           "verified": true,
           "witness_energy_E_z": "8872888/1221025"
         }
@@ -334,7 +346,9 @@
     "theorems_verified": 13
   },
   "glyph_registry_verification": {
-    "all_category_Sm_and_zero_collision": true,
+    "all_category_Sm_and_lexer_bound": true,
+    "external_collision_scan_scope": "0/227,540 Lean 4 collision count is recorded from external AUDIT-051 scan; scan script and third-party Lean 4 corpora are not vendored in math0.",
+    "external_corpus_scan_not_recomputed_in_tree": true,
     "glyph_count": 8,
     "glyphs": [
       {

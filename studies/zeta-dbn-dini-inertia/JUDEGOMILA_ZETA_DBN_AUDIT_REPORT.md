@@ -4,9 +4,10 @@
 - **Oracle Class:** `exact+anchor`
 - **Honest Novelty Classification:** **`N1`** (strict read-only external tomography, zero-float reference hardening closing `J-01`/`J-02`, live `aletheia v1.2.0` CLI defect discovery, and exact $\mathbb{Q}/\mathbb{Q}[i]$ cross-domain operator correspondence; all upstream mathematical theorems strictly quarantined as `N0`)
 - **Read-Only Posture:** `100%` read-only on all external repositories (`0` writes, `0` PRs, `0` issues, `0` external comments; `git status --porcelain` verified empty on both pinned clones)
-- **Pinned Read-Only Sources:**
+- **Pinned Read-Only Sources (External, Not Vendored in `math0`):**
   - `judegomila/dbn-lambda-01787854-candidate-audit` @ `a74738deb6d5e0f76887cb36901da08b68dca705`
   - `judegomila/zeta-explorer` @ `694eb35f9144ad223d6f8a6afa7398a116146b1b`
+- **Standalone vs. External Audit Boundary:** Running `judegomila_zeta_dbn_tomography.py`, `hardened_dini_and_r5_mutator.py`, and `test_judegomila_r5.py` in standalone `math0` recomputes **100% of the pure-$\mathbb{Q}/\mathbb{Q}[i]$ mathematics live** (Part 3A Polymath 15 exact rational identities, Part 3B `-O` negative-truncation proof, Part 4 Sylvester–Schur inertia / $\mathbb{Q}[i]$ singular Schur 4-axiom Moore–Penrose / degree-4 backward-heat PDE polynomial-coefficient & 3-point residual witness, and all 12 R5 hardened-Dini test groups). Parts 1, 2, 3B–3E external clone SHA256SUMS, 326-file Lean 4 census, 10/10 `dbn-audit` subprocess replays, and `aletheia/cli.py:94` CLI bug reproduction require the unvendored read-only clones and external `aletheia` checkout; in standalone mode, those sections emit `"external_repos_verified_in_this_run": false` (and `--require-live-repos` fails closed with `FileNotFoundError`).
 
 ---
 
@@ -83,13 +84,13 @@ Every structural correspondence below is backed by an **independent, pure-$\math
 
 1. **`frozen-rung/Inertia.lean` $\longleftrightarrow$ `SF-01` Sylvester–Schur Inertia & Compression Monotonicity (`AUDIT-027`/`041`/`043`/`044`):**
    - `FrozenRung.negIndex_fromBlocks_schur` proves $\mathrm{ind}_-(Q) = \mathrm{ind}_-(C) + \mathrm{ind}_-(A - B C^{-1} B^{\mathsf{H}})$ and compression monotonicity $\mathrm{ind}_-(P^{\mathsf{H}} Q P) \le \mathrm{ind}_-(Q)$ in zero-sorry Lean 4.
-   - Our pure-$\mathbb{Q}$ Bunch–Kaufman congruence engine (`exact_symmetric_inertia_q`) verifies the exact identity on both a passive `C > 0` $5\times 5$ block form (`Q:(3,0,2) = C:(2,0,0) + Q_eff:(1,0,2)`) and an active zero-diagonal hyperbolic block `C = [[0,2],[2,0]]` (`Q:(3,0,2) = C:(1,0,1) + Q_eff:(2,0,1)`), plus compression monotonicity `ind_-(P^T Q P) = 2 <= 2`.
+   - Our pure-$\mathbb{Q}$ first-nonzero-pivot 1x1/2x2 hyperbolic symmetric congruence engine (`exact_symmetric_inertia_q`) verifies the exact identity on both a passive `C > 0` $5\times 5$ block form (`Q:(3,0,2) = C:(2,0,0) + Q_eff:(1,0,2)`) and an active zero-diagonal hyperbolic block `C = [[0,2],[2,0]]` (`Q:(3,0,2) = C:(1,0,1) + Q_eff:(2,0,1)`), plus compression monotonicity `ind_-(P^T Q P) = 2 <= 2`.
 2. **`geometric-compression/check_frame_geometry.py` $\longleftrightarrow$ `AUDIT-002` `R_opt` Blindness & `AUDIT-027`/`039`/`041` Singular Schur Pseudoinverse:**
    - **Indefinite Trace-Ratio Control (`check_indefinite_trace_control`):** On `diag(-1, 1, ..., 1)` ($n = 100$), $\mathrm{tr} = 98$, $\mathrm{tr}(M^2) = 100$, so normalized ratio $R = n\,\mathrm{tr}(M^2)/\mathrm{tr}(M)^2 = \frac{2500}{2401} < \frac{21}{20}$ despite having eigenvalue $-1 < 0$ — the exact same structural blindness behind our `CS-11` / `R_opt` falsification (`AUDIT-002`, `AUDIT-045`).
    - **Singular Schur Complement (`check_pseudoinverse`):** Using pure Gaussian rationals $\mathbb{Q}[i]$ (`(Fraction, Fraction)` pairs, zero SymPy), we verify all 4 Moore–Penrose axioms for rank-1 $D = C_e^{\mathsf{H}} C_e = \begin{pmatrix}2&2\\2&2\end{pmatrix}$ ($D^+ = \frac{1}{8}\begin{pmatrix}1&1\\1&1\end{pmatrix}$), range compatibility $D D^+ B = B$, exact orthogonal projector $\Pi = C_e D^+ C_e^{\mathsf{H}}$, Schur–geometric residual equality $E - B^{\mathsf{H}} D^+ B = C_o^{\mathsf{H}}(I - \Pi)C_o$, exact minimum squared distance $y^{\mathsf{H}}(E - B^{\mathsf{H}} D^+ B)y = \|C_o y - C_e x_{\min}\|^2 = 3$ for $y = (2, 1+i)^{\mathsf{T}}$, and exact normal-equation orthogonality $C_e^{\mathsf{H}}(C_o y - C_e x_{\min}) = 0$.
 3. **`flow_blindness/RequestProject/Main.lean` + `engine/ROADMAP.md` (`10` Adversarial Controls) $\longleftrightarrow$ `SF-04` / Aletheia Law 3:**
    - `FlowBlindness.softClass_noGo` proves that any class of profiles invariant under backward heat flow ($\Phi \mapsto e^{-\varepsilon u^2}\Phi$) and containing the genuine profile cannot prove RH, given $0 \le \Lambda$ (Rodgers–Tao).
-   - We verify an exact degree-4 rational backward-heat polynomial witness $H_t(z) = z^4 - 12(t - \Lambda) z^2 + 12(t - \Lambda)^2$ satisfying $\partial_t H_t + \partial_z^2 H_t \equiv 0$ identically over $\mathbb{Q}$, with $\mathrm{IsDBNConstant}(H, \Lambda)$ holding for both $\Lambda = 0$ (RH witness) and $\Lambda = 1/5$ (positive-$\Lambda$ Davenport–Heilbronn control), demonstrating concretely why backward-invariant predicates collapse at $t = -1$.
+   - We verify an exact degree-4 rational backward-heat polynomial witness $H_t(z) = z^4 - 12(t - \Lambda) z^2 + 12(t - \Lambda)^2$ by checking both exact monomial-coefficient cancellation in $\partial_t H_t + \partial_z^2 H_t$ (`coeff_z2 = -12 + 12 = 0`, `coeff_tau = 24 - 24 = 0`, `pde_polynomial_coeffs_zero: true`) and 3 rational sample-point residuals (`pde_3point_residuals_all_zero: true`), with $\mathrm{IsDBNConstant}(H, \Lambda)$ holding for both $\Lambda = 0$ (RH witness) and $\Lambda = 1/5$ (positive-$\Lambda$ Davenport–Heilbronn control), demonstrating concretely why backward-invariant predicates collapse at $t = -1$.
    - We verify all `10` graph controls in `research-checkpoints/rh-push-2026-11-16/engine/ROADMAP.md:13` (`ctl-DH`, `ctl-HEAT`, `ctl-TW+`, `ctl-TW-`, `ctl-EA`, `ctl-NR`, `ctl-B`, `ctl-U`, `ctl-THW`, `ctl-PA`) — an independent convergent parallel to Aletheia Law-3 / R5 negative controls!
 4. **`klein-annulus-coupling-2026-11-14/README.md` $\longleftrightarrow$ `SF-01` + `AUDIT-042`/`043` Annular/Horizon Blindness:**
    - Its core head-null obstruction $E - B^* D^{-1} B \succeq 0$ and $E_{KK} - E_{KR} A_R^{-1} E_{RK} \succeq 0$ is structurally isomorphic to our `SF-01` fiber-elimination Schur pushforward across boundary/horizon cuts.
@@ -116,16 +117,19 @@ Every structural correspondence below is backed by an **independent, pure-$\math
 
 ## 7. Verification Artifacts, Reproducibility & Falsification Criteria
 
-- **Artifacts in `symbiosis/round4/judegomila-zeta-dbn/`:**
-  - `judegomila_zeta_dbn_tomography.py` (4/4 isolated `-I` R4 stdout SHA-256: `8df310130d4df08759387665357b94779551dbafc44c1071bb0006b9d0a1fece`; `--with-mutate` canonical SHA-256: `9d068b40201b0a8ff759aa739e1a4f867ca2ba86a31b8be209c8e880d0b429dd`; `0` floats in JSON; `0` bare asserts)
-  - `hardened_dini_and_r5_mutator.py` (4/4 isolated `-I` R4 stdout SHA-256: `b5ebba7e47a5c8e760376886df6eee0d1f4a6e6c00f14c0f95e07bf4b7c45ad5`; **`37/37` (`100.0%`, `0` survivors)** under `aletheia v1.2.0 mutate`)
-  - `test_judegomila_r5.py` (4/4 isolated `-I` R4 stdout SHA-256: `90030b5fb53e87e7a66d34099294bd0cabf03c5637f573c4f532f4f1c58e1c46`; `12` test groups PASS)
+- **Artifacts in `studies/zeta-dbn-dini-inertia/` (Standalone 4-Mode Isolated `-I` Digests):**
+  - `judegomila_zeta_dbn_tomography.py` (4/4 isolated `-I` standalone stdout SHA-256: `d073a29161d54a402c2cd081498c59a11def20d45efa3f6500148aad9c20bbdf`; `AUDIT_049_CANONICAL_SHA256`: `66aee283a7183f6898a816c69227cb2f11e5177b75f7e76401c7dc74a580ff49`; `0` floats in JSON; `0` bare asserts; fails closed with `FileNotFoundError` under `--require-live-repos` when external clones are absent)
+  - `hardened_dini_and_r5_mutator.py` (4/4 isolated `-I` standalone stdout SHA-256: `e907524d267a0b04e69ea9f2e516e8d65acdda9bae276c9c8a63523498c39390`; **`37/37` (`100.0%`, `0` survivors)** under external `Foundation-0/aletheia v2.0.0 @ 7227bcc5` — pinned receipt in [`../ROUND4_MUTATION_RECEIPTS.json`](../ROUND4_MUTATION_RECEIPTS.json))
+  - `test_judegomila_r5.py` (4/4 isolated `-I` standalone stdout SHA-256: `90030b5fb53e87e7a66d34099294bd0cabf03c5637f573c4f532f4f1c58e1c46`; `12` test groups PASS)
   - `JUDEGOMILA_ZETA_DBN_AUDIT_REPORT.md` (this report)
-- **Exact Reproduction Commands (from `symbiosis/round4/judegomila-zeta-dbn/`):**
+- **Exact Standalone Reproduction Commands (from `studies/zeta-dbn-dini-inertia/`):**
   ```bash
   for f in "-I -B" "-I -O -B" "-I -B -W error" "-I -O -B -W error"; do
     PYTHONDONTWRITEBYTECODE=1 python3 $f judegomila_zeta_dbn_tomography.py | sha256sum
+    PYTHONDONTWRITEBYTECODE=1 python3 $f hardened_dini_and_r5_mutator.py | sha256sum
+    PYTHONDONTWRITEBYTECODE=1 python3 $f test_judegomila_r5.py | sha256sum
   done
-  PYTHONDONTWRITEBYTECODE=1 python3 -I -B judegomila_zeta_dbn_tomography.py --with-mutate
+  # Fail-closed check when external third-party clones are absent (exits nonzero):
+  PYTHONDONTWRITEBYTECODE=1 python3 -I -B judegomila_zeta_dbn_tomography.py --require-live-repos
   ```
-- **Falsification Criteria:** This audit fails if (1) either read-only repo clone is dirty or differs from its pinned commit SHA, (2) any of the `326` Lean 4 finding counts or the `aletheia/cli.py:94` overwrite bug fails to reproduce, (3) any of the `10/10` stdlib `dbn-audit` replays, Polymath 15 exact rational identities, or pure-$\mathbb{Q}/\mathbb{Q}[i]$ operator proofs fails independent verification, (4) `hardened_dini_and_r5_mutator.py` drops below `100.0%` R5 mutation kill rate or breaks under `python3 -I -O -B`, or (5) `aletheia v1.2.0 audit-check` fails on `symbiosis/round4/judegomila-zeta-dbn/`.
+- **Falsification Criteria:** This audit fails if (1) any exact rational Polymath 15 identity, `-O` negative-truncation proof, pure-$\mathbb{Q}/\mathbb{Q}[i]$ operator proof, or fail-closed `--require-live-repos` refusal fails independent verification, (2) `hardened_dini_and_r5_mutator.py` drops below `100.0%` (`37/37`) under external `Foundation-0/aletheia v2.0.0 mutate --max-mutants 0` or breaks under `python3 -I -O -B`, (3) when run against the pinned external clones, either clone differs from its pinned commit SHA or any of the `326` Lean 4 finding counts / `10/10` stdlib `dbn-audit` replays fails to reproduce, or (4) `aletheia v2.0.0 audit-check` fails on `studies/zeta-dbn-dini-inertia/`.

@@ -10,7 +10,9 @@ ZERO bare asserts. Strictly READ-ONLY analysis of the local PDF artifact.
 from __future__ import annotations
 
 from fractions import Fraction
+import hashlib
 import json
+from pathlib import Path
 import sys
 from typing import Any
 
@@ -118,6 +120,26 @@ def _is_spd3(m: list[list[Fraction]]) -> bool:
 #         (Sections 3.2, 5.1, 5.5-5.7, 6.1 — SF-05)
 # ---------------------------------------------------------------------------
 
+# Single authoritative linear constraint table for Section 5/6 single-step exponents.
+# Each entry is (cid, formula_desc, (c_aa, c_bh, c_dl, c_ed, c_const), strict), where
+# slack = c_aa*alpha_a + c_bh*beta_h + c_dl*delta_lvl + c_ed*eta_d + c_const
+# (using alpha_v = alpha_a + beta_h and gamma_d = 1 + beta_h).
+STEP_POLYTOPE_CONSTRAINTS: tuple[
+    tuple[str, str, tuple[Fraction, Fraction, Fraction, Fraction, Fraction], bool], ...
+] = (
+    ("E1_positive_wave_strength", "1 - alpha_a > 0 (Sec. 6.1, (7.3))", (Fraction(-1), Fraction(0), Fraction(0), Fraction(0), Fraction(1)), True),
+    ("E2_leading_pressure_hessian", "alpha_a + beta_h - 1 - eta_d > 0 (Lem. 5.9 (5.49))", (Fraction(1), Fraction(1), Fraction(0), Fraction(-1), Fraction(-1)), True),
+    ("E3_div_corr_phase_advection", "alpha_a - delta_lvl - eta_d >= 0 (Thm. 5.6 L1855-1861)", (Fraction(1), Fraction(0), Fraction(-1), Fraction(-1), Fraction(0)), False),
+    ("E4_linear_curl_contraction", "1 - delta_lvl - eta_d >= 0 (Thm. 5.6 L1852, L1861)", (Fraction(0), Fraction(0), Fraction(-1), Fraction(-1), Fraction(1)), False),
+    ("E5_label_advection_contraction", "alpha_v - delta_lvl - eta_d >= 0 (Thm. 5.6 L1854, L1861)", (Fraction(1), Fraction(1), Fraction(-1), Fraction(-1), Fraction(0)), False),
+    ("E6_mean_induction_shift_5_40", "alpha_v - delta_lvl - eta_d - 1/2 >= 0 (Thm. 5.6 (5.40))", (Fraction(1), Fraction(1), Fraction(-1), Fraction(-1), Fraction(-1, 2)), False),
+    ("E7_mean_phase_advection", "alpha_a - 1/2 - eta_d > 0 (Thm. 5.6 L1877-1878)", (Fraction(1), Fraction(0), Fraction(0), Fraction(-1), Fraction(-1, 2)), True),
+    ("E8_higher_osc_pressure_hessian", "alpha_v + delta_lvl - gamma_d - eta_d > 0 (Lem. 5.9 (5.52))", (Fraction(1), Fraction(0), Fraction(1), Fraction(-1), Fraction(-1)), True),
+    ("E9_central_gradient_err_5_50", "alpha_v + delta_lvl - gamma_d - eta_d - 1/3 >= 0 (Lem. 5.9 (5.50))", (Fraction(1), Fraction(0), Fraction(1), Fraction(-1), Fraction(-4, 3)), False),
+    ("E10_flow_map_jacobian_5_53", "alpha_a - eta_d > 0 (Lem. 5.10 L2072)", (Fraction(1), Fraction(0), Fraction(0), Fraction(-1), Fraction(0)), True),
+)
+
+
 def evaluate_step_polytope_exact(
     alpha_a: int | Fraction,
     beta_h: int | Fraction,
@@ -141,24 +163,11 @@ def evaluate_step_polytope_exact(
     alpha_v = aa + bh  # leading velocity |A1| ~ lambda^{-alpha_v} (paper: 5/4)
     gamma_d = Fraction(1) + bh  # fast derivative |kappa| h^{-1} ~ lambda^{1 + beta_h} (paper: 3/2)
 
-    # All slacks written as LHS >= 0 (or strict > 0 where marked strict=True)
-    constraints: list[tuple[str, str, Fraction, bool]] = [
-        ("E1_positive_wave_strength", "1 - alpha_a > 0 (Sec. 6.1, (7.3))", Fraction(1) - aa, True),
-        ("E2_leading_pressure_hessian", "alpha_a + beta_h - 1 - eta_d > 0 (Lem. 5.9 (5.49))", alpha_v - Fraction(1) - ed, True),
-        ("E3_div_corr_phase_advection", "alpha_a - delta_lvl - eta_d >= 0 (Thm. 5.6 L1855-1861)", aa - dl - ed, False),
-        ("E4_linear_curl_contraction", "1 - delta_lvl - eta_d >= 0 (Thm. 5.6 L1852, L1861)", Fraction(1) - dl - ed, False),
-        ("E5_label_advection_contraction", "alpha_v - delta_lvl - eta_d >= 0 (Thm. 5.6 L1854, L1861)", alpha_v - dl - ed, False),
-        ("E6_mean_induction_shift_5_40", "alpha_v - delta_lvl - eta_d - 1/2 >= 0 (Thm. 5.6 (5.40))", alpha_v - dl - ed - Fraction(1, 2), False),
-        ("E7_mean_phase_advection", "alpha_a - 1/2 - eta_d > 0 (Thm. 5.6 L1877-1878)", aa - Fraction(1, 2) - ed, True),
-        ("E8_higher_osc_pressure_hessian", "alpha_v + delta_lvl - gamma_d - eta_d > 0 (Lem. 5.9 (5.52))", alpha_v + dl - gamma_d - ed, True),
-        ("E9_central_gradient_err_5_50", "alpha_v + delta_lvl - gamma_d - eta_d - 1/3 >= 0 (Lem. 5.9 (5.50))", alpha_v + dl - gamma_d - ed - Fraction(1, 3), False),
-        ("E10_flow_map_jacobian_5_53", "alpha_a - eta_d > 0 (Lem. 5.10 L2072)", aa - ed, True),
-    ]
-
     entries: dict[str, dict[str, Any]] = {}
     tight_facets: list[str] = []
     violated: list[str] = []
-    for cid, desc, slack, strict in constraints:
+    for cid, desc, (c_aa, c_bh, c_dl, c_ed, c_const), strict in STEP_POLYTOPE_CONSTRAINTS:
+        slack = c_aa * aa + c_bh * bh + c_dl * dl + c_ed * ed + c_const
         ok = (slack > 0) if strict else (slack >= 0)
         if ok and slack == 0:
             tight_facets.append(cid)
@@ -211,24 +220,18 @@ def certify_farkas_obstructions_exact() -> dict[str, Any]:
     sine_test = evaluate_step_polytope_exact(
         Fraction(3, 4), Fraction(0, 1), Fraction(2, 3), Fraction(1, 12)
     )
-    # Farkas dual check on row vectors (coeff of [alpha_a, beta_h, delta_lvl, eta_d], const):
-    # E1: [-1,  0, 0,  0,  1] > 0
-    # E2: [ 1,  1, 0, -1, -1] > 0
-    # At beta_h = 0, summing 1*E1 + 1*E2 eliminates alpha_a identically: [0, 0, 0, -1, 0] => -eta_d > 0!
-    row_e1 = [Fraction(-1), Fraction(0), Fraction(0), Fraction(0), Fraction(1)]
-    row_e2_bh0 = [Fraction(1), Fraction(0), Fraction(0), Fraction(-1), Fraction(-1)]
+    # Derive Farkas rows directly from STEP_POLYTOPE_CONSTRAINTS (single source of truth).
+    row_by_id = {cid: list(coeffs) for cid, _desc, coeffs, _strict in STEP_POLYTOPE_CONSTRAINTS}
+    row_e1 = row_by_id["E1_positive_wave_strength"]
+    row_e2 = row_by_id["E2_leading_pressure_hessian"]
+    # Restricting beta_h = 0 zeros out the beta_h coefficient (index 1) of E2.
+    row_e2_bh0 = [row_e2[0], Fraction(0), row_e2[2], row_e2[3], row_e2[4]]
     farkas_sine_sum = [row_e1[i] + row_e2_bh0[i] for i in range(5)]
 
     # Obstruction 2: Farkas duals on general (alpha_a, beta_h, delta_lvl, eta_d)
-    # E3: [ 1, 0, -1, -1,    0] >= 0
-    # E8: [ 1, 0,  1, -1,   -1] > 0   (beta_h cancels identically in alpha_v - gamma_d = alpha_a - 1)
-    # E9: [ 1, 0,  1, -1, -4/3] >= 0  (Lem. 5.9 (5.50) |E_c| <= lambda^{-1/3})
-    # Sum E3 + E8        = [2, 0, 0, -2,  -1] > 0  <=>  alpha_a > 1/2 + eta_d
-    # Sum E3 + E8 + 2*E1 = [0, 0, 0, -2,   1] > 0  <=>  eta_d < 1/2
-    # Sum E3 + E9 + 2*E1 = [0, 0, 0, -2, 2/3] > 0  <=>  eta_d < 1/3 (exact sharp ceiling of E1..E10!)
-    row_e3 = [Fraction(1), Fraction(0), Fraction(-1), Fraction(-1), Fraction(0)]
-    row_e8 = [Fraction(1), Fraction(0), Fraction(1), Fraction(-1), Fraction(-1)]
-    row_e9 = [Fraction(1), Fraction(0), Fraction(1), Fraction(-1), Fraction(-4, 3)]
+    row_e3 = row_by_id["E3_div_corr_phase_advection"]
+    row_e8 = row_by_id["E8_higher_osc_pressure_hessian"]
+    row_e9 = row_by_id["E9_central_gradient_err_5_50"]
     farkas_alpha_lb = [row_e3[i] + row_e8[i] for i in range(5)]
     farkas_eta_ub_e8 = [row_e3[i] + row_e8[i] + 2 * row_e1[i] for i in range(5)]
     farkas_eta_ub_e9 = [row_e3[i] + row_e9[i] + 2 * row_e1[i] for i in range(5)]
@@ -776,7 +779,7 @@ def run_full_audit() -> dict[str, Any]:
         and part3["sabra_helicity_contrast"]["intra_wave_k_dot_curl_zero"]
         and part3["sabra_helicity_contrast"]["inter_scale_projection_equals_z3"]
     )
-    return {
+    payload: dict[str, Any] = {
         "schema": "expedition.round4d.arm2.buckmaster_euler_cc.v1",
         "audit_id": "AUDIT-053",
         "oracle_class": "exact+anchor",
@@ -796,13 +799,19 @@ def run_full_audit() -> dict[str, Any]:
         "part_3_craik_criminale_and_leray_schur": part3,
         "all_passed": all_passed,
     }
+    canon = json.dumps(payload, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
+    payload["canonical_sha256"] = hashlib.sha256(canon).hexdigest()
+    return payload
 
 
 def main(argv: list[str] | None = None) -> int:
     args = sys.argv[1:] if argv is None else argv
     res = run_full_audit()
+    if "--write-cert" in args:
+        out_path = Path(__file__).resolve().parent / "buckmaster_euler_cc_results.json"
+        out_path.write_text(json.dumps(res, indent=2, sort_keys=True, allow_nan=False) + "\n", encoding="utf-8")
     if "--json" in args:
-        print(json.dumps(res, indent=2, sort_keys=True))
+        print(json.dumps(res, indent=2, sort_keys=True, allow_nan=False))
     else:
         print(f"Round-4D Arm R4D-2 Alpoege-Buckmaster-Coiculescu cc.pdf: all_passed={res['all_passed']}")
     return 0 if res["all_passed"] else 1

@@ -4,7 +4,7 @@
 Tests:
   G1: Registry integrity & Unicode/ASCII parser precedence + AST parity
   G2: Coordinate/vertex-relabeling & gauge invariance across all 8 operators
-  G3: Exact values & structural laws of all 7 compressed expedition theorems
+  G3: Exact values & structural laws of all 13 compressed expedition theorem checks (grouped as T1..T7)
   G4: All 6 commutator/composition discovery probes (C1..C6) + fresh unseen instances
   G5: Adversarial R5 refusal controls (non-symmetric, floats, OOB, boundary twist,
       singular solve, duplicate index, overlapping union, invalid sign, lex/parse errors)
@@ -40,7 +40,8 @@ def expect_error(code: str, fn) -> None:
 def test_group_1_registry_and_parser() -> None:
     reg = ac.verify_glyph_registry()
     check(reg["glyph_count"] == 8, "Expected 8 glyphs")
-    check(reg["all_category_Sm_and_zero_collision"] is True, "Collision flag false")
+    check(reg["all_category_Sm_and_lexer_bound"] is True, "Glyph category/lexer binding flag false")
+    check(reg["external_corpus_scan_not_recomputed_in_tree"] is True, "Expected honest external scan scope flag")
 
     # Verify precedence: ⧄ (60) binds tighter than ⟠ (50), ⦺ (70) tighter than ⩩ (30)
     t_u = ac.Parser(ac.tokenize("⦺(A ⧄ B) ⩩ (1, 0, 0)")).parse()
@@ -101,7 +102,7 @@ def test_group_2_coordinate_and_gauge_invariance() -> None:
     g3 = ac.ObserverGroup(kind="perm_group", elements=((0, 1, 2), (1, 2, 0), (2, 0, 1)))
     check(ac.eval_expr("(M ⟠ G) ⟠ G ⩩ M ⟠ G", {"M": m, "G": g3}) is True, "Equalizer not idempotent")
 
-    # 5. Bunch-Kaufman 2x2 hyperbolic pivot path (zero diagonal matrix!)
+    # 5. First-nonzero-pivot 2x2 hyperbolic elimination path (zero diagonal matrix!)
     h2 = ac.qmat([[0, 3, 0, 0], [3, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, -5]])
     check(ac.op_krein_inertia(h2) == ac.InertiaTriple(1, 1, 2), "2x2 hyperbolic pivot inertia wrong")
 
@@ -133,6 +134,7 @@ def test_group_3_full_engine_and_exact_values() -> None:
     check(p["C5"]["exact_kill_ratio"] == "1/1" and p["C5"]["float64_kill_ratio"] == "0/1", "C5 killshot wrong")
     check(p["C6"]["structured_cases"][0]["subadditive_slack"] == "3/4", "C6 odd BTZ slack wrong")
     check(p["C6"]["structured_cases"][1]["subadditive_slack"] == "16/21", "C6 even BTZ slack wrong")
+    check(p["C6"]["metric_axioms_tested_graphs"]["all_metric_axioms_ok"] is True, "C6 metric axioms wrong")
     check(p["C6"]["random_extreme_weight_cases_certified"] == "12/12", "C6 random count wrong")
 
 

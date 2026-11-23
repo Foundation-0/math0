@@ -2,12 +2,12 @@
 
 > **Owner:** `session-cartographer` (Glyph Selection, Empirical Unicode Collision Audit & Epistemic Registry)  
 > **Executable Binding & Commutator Discovery Engine (`AUDIT-051`):** `@fractals-probe` (`aletheia_calculus.py`, `test_aletheia_calculus_r5.py`, `ALETHEIA_OPERATOR_CALCULUS.md`)  
-> **Machine-Readable Registry:** `symbiosis/round4/operator-calculus/glyph_registry.json`  
-> **Discipline (Iverson / Dirac / Penrose / Aletheia Law 5):** Zero symbolic theater. Every glyph below is (1) empirically verified **`0 / 227,540`** across all 4 major-lab Lean 4 formal repositories (`google-deepmind/formal-conjectures`, `openai/math`, `anthropics/formal-math`, `anthropics/flt`), **`0`** across all expedition sources, and **`0`** across `gemini-sessions/` (Sessions 1–2); (2) free of entrenched conflicting semantics in standard mathematics, logic, category theory, physics, chemistry, Z-notation, SQL, and APL; (3) bound 1-to-1 to a typed, zero-float pure-$\mathbb{Q}/\mathbb{Z}$ executable operator; and (4) justified solely by **algebraic compression + discovery of non-trivial commutator / composition laws**.
+> **Machine-Readable Registry:** `studies/aletheia-operator-calculus/glyph_registry.json`  
+> **Discipline (Iverson / Dirac / Penrose / Aletheia Law 5):** Zero symbolic theater (`7/8` glyphs are composition shorthands; `1/8` `⫩` is an execution gate). In-tree, `aletheia_calculus.py` verifies Unicode `Sm` category, codepoint/UTF-8 hex integrity, and 1-to-1 Unicode/ASCII lexer binding for all 8 glyphs; the `0 / 227,540` 4-repo Lean 4 collision count (`google-deepmind/formal-conjectures`, `openai/math`, `anthropics/formal-math`, `anthropics/flt`) is recorded from an external `AUDIT-051` scan whose script and third-party Lean corpora are not vendored in `math0`.
 
 ---
 
-## 1. Empirical Collision Audit Summary
+## 1. External Collision Audit Summary (`AUDIT-051`, Not Recomputed In-Tree)
 
 - **Unicode Search Domain:** All `392` Mathematical Symbol (`Sm`) codepoints across *Miscellaneous Mathematical Symbols-A* (`U+27C0..U+27EF`), *Miscellaneous Mathematical Symbols-B* (`U+2980..U+29FF`), and *Supplemental Mathematical Operators* (`U+2A00..U+2AFF`).
 - **4-Lab Lean 4 Formal Corpus Scan (`227,540` `.lean` files):**
@@ -73,7 +73,7 @@ Visual grammar organizes the 8 primitives into **three clean morphological famil
 - **Expedition Provenance:** `SF-05`, `AUDIT-042` (`κ_{H^1} = 1/L`, `1/p^D`), `AUDIT-043` (`κ_harm = 5/6` on 8-triangle ribbon & exact single-edge identity `⧇(e) ⩩ 1 - R_eff(e)`).
 
 ### 6. `⦺` (`U+29BA`) — Krein Inertia Signature Functor (`⦺(A)`)
-- **Domain → Codomain:** `A ∈ Sym_n(ℚ) ↦ (n_+, n_0, n_-) ∈ ℕ^3` (`n_+ + n_0 + n_- = n`), computed with 100% exact zero-float Bunch–Kaufman / Bareiss / Descartes arithmetic (with projections `⦺_+`, `⦺_0`, `⦺_-`).
+- **Domain → Codomain:** `A ∈ Sym_n(ℚ) ↦ (n_+, n_0, n_-) ∈ ℕ^3` (`n_+ + n_0 + n_- = n`), computed with 100% exact zero-float first-nonzero-pivot 1x1/2x2 hyperbolic symmetric congruence / Bareiss / Descartes arithmetic (with projections `⦺_+`, `⦺_0`, `⦺_-`).
 - **Invariance Group:** Full congruence group `GL(n, ℚ)` (`⦺(P^T A P) ⩩ ⦺(A)` by Sylvester's law of inertia) AND positive scalar scaling `ℚ_{>0}` AND exact SPD inversion flip (`⦺(A^{-1} - B^{-1}) ⩩ ⦺(B - A)` for `A, B ≻ 0`).
 - **Expedition Provenance:** `SF-01`, `AUDIT-041` (Krein negative index), `AUDIT-044` (exact Bareiss Ramanujan certifier `⦺_-(4(d-1)I - A_⊥^2) = 0` & BTZ `(k, |B|-2k, k)`), `AUDIT-046` (Perron brackets), `#268` (odd-cycle `K_3` asymmetry `(1, 0, 2)`).
 
@@ -114,4 +114,4 @@ Visual grammar organizes the 8 primitives into **three clean morphological famil
 
 ---
 
-*Maintained by `session-cartographer`. Empirically audited: `0 / 227,540` Lean 4 collisions, `0` expedition collisions, `0` session collisions, `0` CRLF, `0` leaks.*
+*Maintained by `session-cartographer`. In-tree: 8/8 Unicode `Sm` + Unicode/ASCII lexer bound, `0` CRLF, `0` leaks. External `AUDIT-051` scan record (unvendored): `0 / 227,540` Lean 4 collisions.*

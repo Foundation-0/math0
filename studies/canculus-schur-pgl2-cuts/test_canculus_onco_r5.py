@@ -7,6 +7,8 @@ and algebraic invariant across all 4 parts.
 from __future__ import annotations
 
 from fractions import Fraction
+import hashlib
+import json
 from pathlib import Path
 import sys
 import unittest
@@ -150,6 +152,19 @@ class TestOnCoEpistemicGraphGates(unittest.TestCase):
             mod.deep_compare_records([], {})  # type: ignore[arg-type]
 
     def test_main_entrypoint(self) -> None:
+        rep = mod.run_full_bridge_matrix()
+        p1 = rep["part_1_canculus_normal_form_and_closure"]
+        self.assertTrue(p1["demorgan_involution_Tr_Tr_M_eq_M"])
+        self.assertEqual(p1["demorgan_involution_tested_hypergraphs"], 2)
+        cert_path = HERE / "canculus_onco_results.json"
+        self.assertTrue(cert_path.is_file())
+        raw = json.loads(cert_path.read_text(encoding="utf-8"))
+        saved_sha = raw.pop("canonical_sha256")
+        recomputed = hashlib.sha256(
+            json.dumps(raw, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
+        ).hexdigest()
+        self.assertEqual(saved_sha, recomputed)
+        self.assertEqual(rep["canonical_sha256"], saved_sha)
         self.assertEqual(mod.main(["--json"]), 0)
         self.assertEqual(mod.main([]), 0)
 

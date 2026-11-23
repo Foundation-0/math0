@@ -134,18 +134,24 @@ def _verify_sha256sums(base_dir: Path, sums_file: Path) -> dict[str, object]:
     return {"checked_files": checked, "mismatches": 0, "status": "PASS"}
 
 
-def audit_part1_provenance() -> dict[str, object]:
+def audit_part1_provenance(require_live_repos: bool = False) -> dict[str, object]:
     if not _external_clones_available():
+        if require_live_repos:
+            raise FileNotFoundError(
+                "External third-party clones (dbn-audit, zeta-explorer) are absent; "
+                "cannot run live provenance verification under --require-live-repos."
+            )
         return {
             "mode": "standalone_no_external_clones",
+            "external_repos_verified_in_this_run": False,
             "pinned_expected_shas": {
                 "judegomila/dbn-lambda-01787854-candidate-audit": EXPECTED_DBN_SHA,
                 "judegomila/zeta-explorer": EXPECTED_ZETA_SHA,
             },
             "note": (
                 "External third-party repositories are not vendored in standalone math0; "
-                "see JUDEGOMILA_ZETA_DBN_AUDIT_REPORT.md for the verified 443/443 + 27/27 "
-                "SHA256SUMS record."
+                "see JUDEGOMILA_ZETA_DBN_AUDIT_REPORT.md for the externally recorded 443/443 + 27/27 "
+                "SHA256SUMS record (not recomputed in standalone mode)."
             ),
         }
     dbn_git = _git_info(DBN_REPO, EXPECTED_DBN_SHA)
@@ -233,14 +239,21 @@ def _audit_lean_tree(repo: Path, audit_lean4_source, bucket_fn) -> dict[str, obj
     }
 
 
-def audit_part2_lean_and_cli(aletheia_mod, audit_lean4_source, build_parser) -> dict[str, object]:
+def audit_part2_lean_and_cli(
+    aletheia_mod, audit_lean4_source, build_parser, require_live_repos: bool = False
+) -> dict[str, object]:
     if aletheia_mod is None or not _external_clones_available():
+        if require_live_repos:
+            raise FileNotFoundError(
+                "External clones or aletheia are absent; cannot run live 326-file Lean 4 audit under --require-live-repos."
+            )
         return {
             "mode": "standalone_no_external_clones",
+            "external_repos_verified_in_this_run": False,
             "note": (
                 "Live 326-file Lean 4 audit and aletheia v1.2.0 cli.py check require external "
                 "read-only clones and aletheia v1.2.0; see JUDEGOMILA_ZETA_DBN_AUDIT_REPORT.md "
-                "for the verified AUDIT-049 record."
+                "for the externally recorded AUDIT-049 census (not recomputed in standalone mode)."
             ),
         }
     dbn_lean = _audit_lean_tree(
@@ -381,6 +394,7 @@ def audit_part3_dbn_and_hygiene(hardened_mod) -> dict[str, object]:
     if not _external_clones_available():
         return {
             "mode": "standalone_pure_math_only",
+            "external_repos_verified_in_this_run": False,
             "exact_polymath15_rational_checks": exact_checks,
             "hygiene_j02_o_truncation_proof": {
                 "unpatched_floor_trunc_minus_1_over_100_under_O": unpatched_o_bug_output,
@@ -499,7 +513,7 @@ def _mat_inv_q(a: list[list[Fraction]]) -> list[list[Fraction]]:
 
 
 def exact_symmetric_inertia_q(mat: list[list[Fraction]]) -> tuple[int, int, int]:
-    """Exact (n_pos, n_zero, n_neg) inertia of a symmetric rational matrix via Bunch-Kaufman congruence."""
+    """Exact (n_pos, n_zero, n_neg) inertia of a symmetric rational matrix via first-nonzero-pivot 1x1/2x2 hyperbolic symmetric congruence."""
     n = len(mat)
     a = [[Fraction(mat[i][j]) for j in range(n)] for i in range(n)]
     for i in range(n):
@@ -724,8 +738,9 @@ def audit_part4_cross_domain_operators() -> dict[str, object]:
     dist_sq = qi_norm2(diff_vec)
     orth_vec = qi_matmul(qi_dagger(ce), diff_vec)
     orth_ok = orth_vec == [[QI_ZERO], [QI_ZERO]]
+    mp_all_ok = all((mp1, mp2, mp3, mp4))
     _require(
-        all((mp1, mp2, mp3, mp4, range_ok, proj_ok, schur_eq_geom, quad_val == (dist_sq, Fraction(0)), orth_ok)),
+        all((mp_all_ok, range_ok, proj_ok, schur_eq_geom, quad_val == (dist_sq, Fraction(0)), orth_ok)),
         "exact Q[i] singular Schur pseudoinverse identity failed",
     )
 
@@ -738,16 +753,21 @@ def audit_part4_cross_domain_operators() -> dict[str, object]:
     #   d_z^2 H = 12 z^2 - 24(t - lam)  =>  d_t H + d_z^2 H == 0 identically!
     # Roots satisfy z^2 = (6 +/- 2*sqrt(6)) * (t - lam); since 6 - 2*sqrt(6) > 0
     # (36 > 24), all 4 roots are real iff t >= lam, and non-real for every t < lam!
+    # Exact symbolic monomial-coefficient check on (z^2, tau = t - lam):
+    coeff_dt_z2, coeff_dt_tau = Fraction(-12), Fraction(24)
+    coeff_dzz_z2, coeff_dzz_tau = Fraction(12), Fraction(-24)
+    poly_coeffs_zero = (coeff_dt_z2 + coeff_dzz_z2 == 0) and (coeff_dt_tau + coeff_dzz_tau == 0)
     flow_cases: dict[str, dict[str, object]] = {}
     for label, lam in (("RH_witness_lam0", Fraction(0)), ("DH_control_lam1_5", Fraction(1, 5))):
         # Check exact polynomial PDE residual at 3 rational test points (t, z)
         pde_residuals = []
         for t_val, z_val in ((Fraction(0), Fraction(3)), (Fraction(-1), Fraction(5, 2)), (Fraction(7, 10), Fraction(-2))):
             tau = t_val - lam
-            dt_h = -12 * z_val * z_val + 24 * tau
-            dzz_h = 12 * z_val * z_val - 24 * tau
+            dt_h = coeff_dt_z2 * z_val * z_val + coeff_dt_tau * tau
+            dzz_h = coeff_dzz_z2 * z_val * z_val + coeff_dzz_tau * tau
             pde_residuals.append(dt_h + dzz_h)
-        _require(all(r == 0 for r in pde_residuals), f"PDE residual nonzero in {label}")
+        sample_residuals_zero = all(r == 0 for r in pde_residuals)
+        _require(poly_coeffs_zero and sample_residuals_zero, f"PDE residual nonzero in {label}")
         # Verify softClass_noGo contradiction: S(0) & backward-invariant => S(-1),
         # while at t = -1, tau = -1 - lam < 0 => z^2 roots strictly negative => no real zeros!
         tau_minus_1 = Fraction(-1) - lam
@@ -756,7 +776,8 @@ def audit_part4_cross_domain_operators() -> dict[str, object]:
         _require(not all_real_at_minus_1, f"expected non-real zeros at t=-1 for {label}")
         flow_cases[label] = {
             "lambda": str(lam),
-            "pde_residuals_all_zero": True,
+            "pde_polynomial_coeffs_zero": poly_coeffs_zero,
+            "pde_3point_residuals_all_zero": sample_residuals_zero,
             "has_only_real_zeros_at_t0": all_real_at_0,
             "has_only_real_zeros_at_t_minus_1": all_real_at_minus_1,
             "tau_at_t_minus_1": str(tau_minus_1),
@@ -777,6 +798,7 @@ def audit_part4_cross_domain_operators() -> dict[str, object]:
     else:
         controls_present = {
             "mode": "standalone_no_external_clones",
+            "external_repos_verified_in_this_run": False,
             "expected_controls": list(OBSTRUCTION_CONTROLS),
         }
 
@@ -798,7 +820,7 @@ def audit_part4_cross_domain_operators() -> dict[str, object]:
             "normalized_ratio_exact": str(norm_ratio),
             "below_21_over_20_despite_neg_eig": norm_ratio < Fraction(21, 20),
             "singular_schur_rank_D": 1,
-            "moore_penrose_4_axioms": True,
+            "moore_penrose_4_axioms": mp_all_ok,
             "range_compatibility_exact": range_ok,
             "orthogonal_projector_exact": proj_ok,
             "schur_equals_geometric_residual": schur_eq_geom,
@@ -858,14 +880,19 @@ def main() -> int:
         action="store_true",
         help="Also run live head-to-head aletheia mutate benchmark (~25s)",
     )
+    ap.add_argument(
+        "--require-live-repos",
+        action="store_true",
+        help="Fail closed if external third-party clones or aletheia are absent",
+    )
     args = ap.parse_args()
 
     hardened, aletheia_mod, audit_lean4_source, build_parser, run_mutation_suite = _load_local_modules()
     report: dict[str, object] = {
         "audit_id": "AUDIT-049",
-        "part1_provenance_and_seals": audit_part1_provenance(),
+        "part1_provenance_and_seals": audit_part1_provenance(require_live_repos=args.require_live_repos),
         "part2_lean4_and_cli_tomography": audit_part2_lean_and_cli(
-            aletheia_mod, audit_lean4_source, build_parser
+            aletheia_mod, audit_lean4_source, build_parser, require_live_repos=args.require_live_repos
         ),
         "part3_dbn_exact_and_hygiene": audit_part3_dbn_and_hygiene(hardened),
         "part4_cross_domain_operators": audit_part4_cross_domain_operators(),

@@ -7,6 +7,7 @@ inequality, Farkas infeasibility witness, Leray Schur complement, and exact iden
 from __future__ import annotations
 
 from fractions import Fraction
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -177,6 +178,20 @@ class TestBuckmasterEulerCCAudit(unittest.TestCase):
         self.assertTrue(res["all_passed"])
         _assert_no_floats(self, json.loads(json.dumps(res)))
         self.assertEqual(mod.main([]), 0)
+
+    def test_certificate_integrity_and_farkas_row_derivation(self) -> None:
+        cert_path = Path(__file__).resolve().parent / "buckmaster_euler_cc_results.json"
+        self.assertTrue(cert_path.is_file(), "buckmaster_euler_cc_results.json missing")
+        raw = json.loads(cert_path.read_text(encoding="utf-8"))
+        _assert_no_floats(self, raw)
+        saved_sha = raw.pop("canonical_sha256")
+        recomputed = hashlib.sha256(
+            json.dumps(raw, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
+        ).hexdigest()
+        self.assertEqual(saved_sha, recomputed)
+        live = mod.run_full_audit()
+        self.assertEqual(live["canonical_sha256"], saved_sha)
+        self.assertEqual(len(mod.STEP_POLYTOPE_CONSTRAINTS), 10)
 
 
 if __name__ == "__main__":

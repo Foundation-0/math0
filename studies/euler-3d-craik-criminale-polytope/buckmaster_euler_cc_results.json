@@ -1,6 +1,7 @@
 {
   "all_passed": true,
   "audit_id": "AUDIT-053",
+  "canonical_sha256": "4c23ad27c94ae03aad41aa257f174ff0b0aca7a795821f15ce159cc79cdeaf36",
   "novelty_grade": "N1",
   "oracle_class": "exact+anchor",
   "part_1_step_polytope_and_farkas": {
