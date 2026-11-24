@@ -1,81 +1,93 @@
-# Track S14 (`AUDIT-109`): Clean-Room Cryptanalysis Audit of `MiniMax-AI/Research` & Exact Law-5 Operator Bridge to `mcproof`, `math0` & `siliquant`
+# Clean-Room Cryptanalysis Audit of `MiniMax-AI/Research` (`57842cef`)
 
-- **Audit ID:** `AUDIT-109` / `AUDIT-109R` (Zone-B hardened closing `MM109-BUG-01..04`: canonical string-key JSON roundtrip, Lean string/char-literal comment stripping, per-challenge TII-94 + `.git/HEAD` live verification, and non-zero SHA / strict JSON-type enforcement).
-- **Pinned Upstream Portal (Strictly Read-Only, `0` External Writes):** `MiniMax-AI/Research` @ `57842cef92e84eaf8e2535b12f48ba5586080ddd` (`Cryptography/{BentSum,ARADI,COLM,SBC-VOLE,Blender,TII-McEliece,HAWK}`, plus open Issues `#1` & `#2` by `@ziyang-theory`; `0` open/closed PRs at snapshot).
-- **Dual-Mode Provenance Boundary (`--standalone` vs. `--live`):** Offline `--standalone` mode recomputes all three pure-$\mathbb{Z}/\mathbb{F}_2/\mathbb{F}_{2^m}/\mathbb{Q}$ mathematical pillars live from scratch while replaying the pinned `MiniMax-AI/Research @ 57842cef` file-hash / Lean-purity / SNF / TII-94 manifest (`diag_source = "standalone_pinned_fixture"`, `live_portal_inspected = false`; it does NOT hash local upstream `.lean` files from disk). Live on-disk hashing and scanning of `BentSum/lean/`, `snf_audit_vectors.json`, `Blender/paper/main.tex`, all `94` rows of `verified_tii_94_summary.json`, and `.git/HEAD` execute strictly in `--live --research-dir <path>` mode (`diag_source = "live_portal_read"`, `live_portal_inspected = true`).
-- **Governance Standard:** Aletheia v2.0.0 (pure Python 3 stdlib `int`/`Fraction`, `0` floats, `0` bare `assert`s, `0` shared code with upstream, strict Law 4 `N0`/`N1` attribution, strict Law 5 zero-metaphor exact operators).
-- **Novelty Classification (Law 4 Honest Default):**
-  - **`N0` (Prior Art & Upstream Cryptanalysis):** All underlying cryptanalytic results and formalizations belong strictly to `MiniMax-AI/Research` and cited literature (Tokareva 2014/2016; Shaporenko 2022; Feng et al. `arXiv:2610.32239`; NSA ARADI ePrint 2024/1240; Bellini et al. LATINCRYPT 2025; COLM CAESAR / J. Cryptol. 2024; Huth & Joux SBC-VOLE Asiacrypt 2025; Bradbury Blender NIST SHA-3; Patterson 1975 / MacWilliams–Sloane 1977 Goppa locator identity; Ducas et al. HAWK ASIACRYPT 2022; Straznickas & Weis ePrint 2026/1593; `@ziyang-theory` Issues `#1` & `#2`).
-  - **`N1` (Independent Clean-Room Audit & Cross-Repo Operator Bridge):** Independent zero-shared-code pure-$\mathbb{Z}/\mathbb{F}_2/\mathbb{F}_{2^m}/\mathbb{Q}$ re-verification of all 7 portal mechanisms, exact formal rulings on open `Blender-256` Issues `#1` & `#2` (showing why §3.3 prose contradicts Theorem 2 while the shifted-subspace algorithm itself is sound), and concrete Law-5 mathematical operator bridges to `Proven-Commons/mcproof`, `Foundation-0/math0`, and `Moissanite-Labs/siliquant`.
-
----
-
-## 1. Pillar 1: `BentSum` (`arXiv:2610.32239`) Lean 4 Purity & Pure-$\mathbb{Z}$ Walsh–Hadamard Audit
-
-1. **Aletheia v2.0.0 Lean 4 Static Purity Audit (`Cryptography/BentSum/lean/`):**
-   - `aletheia v2.0.0 audit-check Cryptography/BentSum/lean --lean-audit --allow-project-import Mathlib BentSum` -> **`PASS`** (`5` `.lean` files scanned, **`0` findings**, `0` notices): zero `sorry`, zero `sorryAx`, zero `axiom`, zero `native_decide`, zero `unsafe`, zero `implemented_by`, zero `admit`.
-   - Pinned SHA-256 file manifest:
-     - `BentSum.lean`: `6bcd5557d4cc90b94e2dde3781b667261376d454363f2ee53c533540e73127de`
-     - `BentSum/Basic.lean`: `db88b32349a4815f9050892e4d89e698b7e2b9743221e257d1dd53f134707961`
-     - `BentSum/Congruence.lean`: `8ff756e7dd01ace03e83de619906ab6427779fd55a579958c8d1044eaaf3693b`
-     - `BentSum/Counterexample.lean`: `d03e1786d2e894266aece0a82841fecef31c445c043c9af668dd01bb3682c5ea`
-     - `BentSum/Derivative.lean`: `53e614fa14c3ac2436b6f611a4f1fbba731031ef7c767b0f7e95ca0ebc0af72b`
-2. **Independent Zero-Shared-Code Pure-$\mathbb{Z}$ Walsh–Hadamard & ANF Verification:**
-   - **$q_3$ on $\mathbb{F}_2^6$** ($z_0 z_1 + z_2 z_3 + z_4 z_5$): $\mathrm{wt}(q_3) = 28$, $\deg(q_3) = 2$, $W_{q_3}(\omega)^2 = 64$ for all `64` $\omega$ (**bent**).
-   - **Tokareva Bent-Sum Counterexample `cylQ3(4)` on $\mathbb{F}_2^8$** ($x_0 x_1 q_3(x_2,\dots,x_7)$): $\mathrm{wt} = 28$, exact ANF $\deg = 4 = n/2$, support strictly inside codimension-$2$ coset $\{x_0 = x_1 = 1\}$, $\mathrm{wt} \bmod 8 = 4 \neq 0$ (contradicting the bent-sum weight congruence $2^{k+1} = 8 \mid \mathrm{wt}$), and exhaustive 256-direction check confirms unique constant derivative $(a, c) = (0, 0)$.
-   - **Positive Bent-Sum Congruence Control ($n=8$):** Explicit Maiorana–McFarland pair $g(u,v) = u \cdot v$ and $h = g + u_0 u_1 u_2$ (both verified bent via exact FWHT) has signed-indicator Walsh spectrum $\widehat{\varphi}(\omega) \in \{0, \pm 16\}$, Parseval support count $N = 8$ (even) on `zeroOn({0,1})`, and $\mathrm{wt}(u_0 u_1 u_2) = 32 = 8 \cdot 4$ ($8 \mid 32$).
-   - **Tokareva Derivative Counterexample `liftCylQ3(4)` on $\mathbb{F}_2^{10}$** ($x_1 + \mathrm{cylQ3}(4)(x_2,\dots,x_9)$): balanced ($\mathrm{wt} = 512$), exact ANF $\deg = 4 = n/2 - 1$, exhaustive 1,024-vector period check confirms period set is strictly $\{0, e_0\}$ (`[0, 1]`).
-   - **Positive Bent-Derivative Control ($n=10$):** $g_{10}(a, b, z) = a b + a u_0 u_1 u_2 + u \cdot v$ verified bent ($W^2 = 1024$ for all `1024` $\omega$) with exact directional derivative $D_{e_0} g_{10} = x_1 + u_0 u_1 u_2$.
+- **Pinned Upstream Reference (Not Vendored Here):** `MiniMax-AI/Research` @ `57842cef92e84eaf8e2535b12f48ba5586080ddd` (`Cryptography/{BentSum,ARADI,COLM,SBC-VOLE,Blender,TII-McEliece,HAWK}`, plus upstream Issues `#1` & `#2`).
+- **Novelty Classification:** **`N0`** (all underlying cryptanalytic constructions, theorems, and algebraic identities belong to `MiniMax-AI/Research` and cited prior art: Tokareva 2014/2016; Shaporenko 2022; Feng et al. `arXiv:2610.32239`; NSA ARADI ePrint 2024/1240; Bellini et al. LATINCRYPT 2025; COLM CAESAR / J. Cryptol. 2024; Huth & Joux SBC-VOLE Asiacrypt 2025; Bradbury Blender NIST SHA-3; Goppa / Patterson 1975 / MacWilliams–Sloane 1977; Cassels / Conway–Sloane; Lenstra–Lenstra–Lovász 1982; Ducas et al. HAWK ASIACRYPT 2022; Straznickas & Weis ePrint 2026/1593; no full-text prior-art record is shipped here).
+- **Runtime & Exactness:** Pure Python 3 standard library only (`int`, `fractions.Fraction`; zero floats on certified paths or JSON, zero bare `assert` statements, zero shared code with upstream).
+- **Scope Architecture:** Three computational verification pillars plus a fail-closed canonical JSON certification and `--verify FILE` validator. Declared upstream file manifests, counts, and paper-text booleans are isolated in `declared_upstream_inputs` strictly outside `all_gates_passed`, and every claim is tagged with its evidence scope (`exact`, `sampled`, `definitional`, or `anchor`).
+- **Dual-Mode Provenance Boundary (`--standalone` vs. `--live`):**
+  - `--standalone` (used to generate the committed `minimax_cryptanalysis_certificate.json`, `live_portal_inspected = false`, `diag_source = "standalone_pinned_fixture"`) recomputes all three pure-$\mathbb{Z}/\mathbb{F}_2/\mathbb{F}_{2^m}/\mathbb{Q}$ computational pillars offline from scratch while recording the declared pinned upstream metadata in `declared_upstream_inputs`. It does **not** read upstream files from disk.
+  - `--live --research-dir <path>` (`live_portal_inspected = true`, `diag_source = "live_portal_read"`) inspects a local read-only checkout, enforces `.git/HEAD == 57842cef...` (refusing trees without `.git/HEAD` unless `--upstream-commit` is passed explicitly), enforces pinned SHA-256 digests on all 5 Lean files, `snf_audit_vectors.json`, and `verified_tii_94_summary.json` (failing closed with `PIN_HASH_MISMATCH`), runs the upgraded Lean 4 lexical token scanner, validates all 94 TII challenge rows, and checks `Blender/paper/main.tex`.
 
 ---
 
-## 2. Pillar 2: Clean-Room Verification of Fast Algebraic Operators & Live Peer Errata
+## 1. Pillar 1: `BentSum` (`arXiv:2610.32239`) — Pure-$\mathbb{Z}$ Walsh–Hadamard & ANF Verification
 
-1. **`ARADI` (NSA ePrint 2024/1240):**
-   - Independently verified all 4 word maps $L_0=(11,8,14), L_1=(10,9,11), L_2=(9,4,14), L_3=(8,9,7)$ are $\mathbb{F}_2$-involutions ($L_j^2 = I_{32}$), with canceling-mask subspace dimensions `[0, 0, 0, 8]` — **`L_3` is uniquely symmetric and orthogonal ($L_3^\top L_3 = I_{32}$)** and decomposes by BFS into `8` disjoint 4-column islands.
-   - Super-S-box ANF degrees collapse to `[3, 3]` (no degree-4 `wxyz` term).
-   - LATINCRYPT 2025 blind-column audit across all `32` single-column input diffs at $r_0 = 0$: blind-column histogram `{"8": 16, "13": 16}` (maximum `24 / 32` covered columns).
-   - Analytical 5-round zero-sum certificate on the 48-point cube prefix derives **`198` universal equations** (`99` row $x$ + `99` row $z$, per-island nullities `[16, 12, 10, 12, 18, 0, 16, 15]`) with **`0` empirical violations** across 2 seeded independent 640-bit round-key trials (`396` checks).
-   - Mitigation $L_3' = (7, 3, 11)$ verified involutive with `0` canceling masks.
-2. **`COLM` (2-Query Splice Forgery over $\mathbb{F}_{2^{128}} = \mathbb{F}_2[x]/(x^{128}+x^7+x^2+x+1)$):**
-   - Exact $3 \cdot 3^{-1} = 1$; fade relation $\sum_{k \in \{1,2,3,8,129\}} x^{k-1} = 0$ with $\mathrm{rank}\{x^0,\dots,x^{127}\} = 128$ and $\mathrm{rank}\{x^0,\dots,x^{128}\} = 128$ (minimum fade length $\ell = 130$).
-   - Transplant condition $\deg(x^{m-1}/3) \le m - 2$ first holds at **`m = 129`**, yielding exact transplant index set **`{1, 3, 4, 5, 6, 7, 129, 130}`**.
-   - $\mathrm{COLM}_\tau$ obstruction verified for all $\tau \in \{1,\dots,127\}$ ($\deg(x^\tau/3) = 127 > \tau - 1$).
-   - Exact pure-$\mathbb{Q}$ J. Cryptol. 2024 Theorem 2 bound at $(q=2, s=1, a=6, m=390 \implies \sigma=795)$: `4428155 / 2^128 < 2^-105`, contradicted by probability-`1` splice forgery.
-3. **`SBC-VOLE` (Single-Signature Linear Key Recovery over $\mathbb{F}_{2^{257}} = \mathbb{F}_2[x]/(x^{257}+x^{12}+1)$):**
-   - Frobenius test $x^{2^{257}} \equiv x$ confirms irreducibility (`257` prime).
-   - Clean-room end-to-end attack at full cryptographic dimension ($n = 130$, `256` secret bits, `257` public $\mathbb{F}_2$ equations from a single transcript `(\Delta, B, F_x, F_y, u, v)`): achieves $\mathbb{F}_2$-rank `255` (`free_nullity = 1`) on our seeded SplitMix64 instance and recovers all `256` secret bits identically via the public NSBC check.
-4. **`Blender-256` Open Issues `#1` & `#2` (`@ziyang-theory`) & 2-Adic SNF Subgroup Steering:**
-   - **Theorem 2 Parity Obstruction:** Starting from standard IV, $p(W^{\mathrm{IV}}) = (1, 0, 1, 0, 0, 1) \in \mathbb{F}_2^6$ traverses an 8-cycle of distinct non-zero vectors satisfying permanent invariants **`p_4 = p_0 ^ 1`** and **`p_5 = p_1 ^ 1`** under arbitrary message fragments.
-   - **Ruling on Issue `#1` (`CONFIRMED — SCOPE OVERCLAIM`):** `Blender/paper/main.tex` Proposition 6 (`L758–L764`) and Contributions (`L139`) claim `24` bytes (`ceil(13/4) = 4` prefix words + `2` active words) as the *"global minimum"*, whereas the proof rules out $\ell \le 23$ strictly **within the two-step silent-carry healing family**.
-   - **Ruling on Issue `#2` (`CONFIRMED — PROSE CONFLICT, ALGORITHM SOUND`):** §3.3 (`L644`) states *"steer $W_0, W_2, W_4, W_6 \in \{x, \neg x\}$ to enter $\mathcal{C}_x$"*, which is impossible from standard IV because $\mathrm{wt}(0)=0$ and $\mathrm{wt}(\mathtt{0xFFFFFFFF})=32$ are both even, forcing $p_0 = p_4 = 0$ in contradiction to Theorem 2 (`p_4 = p_0 ^ 1`). Live clean-room 12-step entry (`W'_0 in {x, ~x}`) confirms the **actual algorithm** never puts $W_0, W_2, W_4, W_6 \in \{x, \neg x\}$ — it locks onto the non-zero shifted phase constants $D^{(\phi)}$ preserving `p_4 = p_0 ^ 1`!
-   - **2-Adic SNF Subgroup Closure over $(\mathbb{Z}/2^{32}\mathbb{Z})^8$:** Verified BOTH directly from the standard Blender-256 IV (`snf_from_iv_*`) AND against shipped `snf_audit_vectors.json` (`sha256: 6dbb69fa...`, `100/100` `GF(2)` XOR failures vs `100/100` exact modular superpositions): unshifted clean walks yield `[0, 0, 1, 1, 2, 2, 3, 3]` (index $2^{12}$), while multi-shifted clean walks close the rank defect to `[0, 0, 1, 1, 1, 1, 1, 1]` (maximal parity subgroup $H_{\mathrm{par}}$ of index $2^6 = 2^{m-2}$).
+**Claim Scope:** `exact` (all 19 computational checks in Pillar 1).
+
+1. **Counterexample Hypotheses & Scope Note:**
+   - Tokareva's conjecture states that every Boolean function $f : \mathbb{F}_2^n \to \mathbb{F}_2$ (even $n \ge 4$) of algebraic degree $\le n/2$ can be expressed as a sum of two bent functions ($f = g + h$).
+   - By the codimension-$k$ weight-congruence theorem (Feng et al. `arXiv:2610.32239`, not re-proved in Python), if $f$ is supported in a codimension-$k$ affine coset ($k < n/2$) and $f = g + h$ for two bent functions $g, h$, then $2^{k+1} \mid \mathrm{wt}(f)$.
+   - Consequently, a counterexample satisfying $\deg(f) \le n/2$ with $2^{k+1} \nmid \mathrm{wt}(f)$ is proved **not** to be a sum of any two bent functions (any search for bent pairs summing to it will find none). Python verifies the finite $n \in \{6, 8, 10\}$ hypotheses, truth tables, Walsh spectra, ANF degrees, coset containment, periods, and Maiorana–McFarland positive controls:
+     - **$q_3$ on $\mathbb{F}_2^6$** ($z_0 z_1 + z_2 z_3 + z_4 z_5$): $\mathrm{wt}(q_3) = 28$, $\deg(q_3) = 2$, $W_{q_3}(\omega)^2 = 64$ for all `64` $\omega$ (bent).
+     - **`cylQ3(4)` on $\mathbb{F}_2^8$** ($x_0 x_1 q_3(x_2,\dots,x_7)$): satisfies the Tokareva hypothesis ($\deg = 4 = n/2$, even $n=8$), support strictly inside codimension-$2$ coset $\{x_0 = x_1 = 1\}$ ($k=2 < 4$), $\mathrm{wt} = 28 \equiv 4 \pmod 8$ ($8 \nmid 28$), unique constant derivative $(a, c) = (0, 0)$ over all `256` directions, and $g_8 + \mathrm{cylQ3}(4)$ is explicitly verified not bent.
+     - **Positive Bent-Sum Control ($n=8$):** Maiorana–McFarland pair $g_8(u,v) = u \cdot v$ and $h_8 = g_8 + u_0 u_1 u_2$ (both verified bent via exact FWHT) satisfies $\widehat{\varphi}(\omega) \in \{0, \pm 16\}$, Parseval support count $N = 8$ on `zeroOn({0,1})`, and $\mathrm{wt}(u_0 u_1 u_2) = 32$ ($8 \mid 32$).
+     - **`liftCylQ3(4)` on $\mathbb{F}_2^{10}$** ($x_1 + \mathrm{cylQ3}(4)(x_2,\dots,x_9)$): satisfies the balanced derivative hypothesis ($\mathrm{wt} = 512$, $\deg = 4 = n/2 - 1$), and exhaustive 1,024-vector scan confirms period set is strictly $\{0, e_0\}$ (`[0, 1]`).
+     - **Positive Bent-Derivative Control ($n=10$):** $g_{10}(a, b, z) = a b + a u_0 u_1 u_2 + u \cdot v$ verified bent ($W^2 = 1024$ for all `1024` $\omega$) with exact directional derivative $D_{e_0} g_{10} = x_1 + u_0 u_1 u_2$.
+2. **Lean 4 Lexical Token Scanner (`minimax_cryptanalysis_audit.py:scan_lean4_lexical`):**
+   - Runs strictly in `--live` mode (and unit tests) as a **lexical token scan** — **not** Lean kernel elaboration (Lean itself is not executed in this study).
+   - Strips `--` line comments, nested `/- ... -/` block comments, standard `"..."` strings, char literals `'c'` (preserving Lean identifier primes), and Lean 4 raw string literals `r"..."` and `r#"..."#` (where `\` is not an escape character).
+   - Scans stripped text for `12` soundness-bypass patterns: `sorry`, `sorryAx`, `axiom`, `native_decide`, `decide +native` (including `-flag` combinations, multiline forms, and `decide (config := { ... native := true ... })`), `unsafe`, `implemented_by`, `admit`, `extern` (including `@[extern ...]` / `opaque` with `extern`), `ofReduceBool` (including `Lean.ofReduceBool`), `ofReduceNat`, and `set_option debug.skipKernelTC`.
+   - Declared upstream 5-file SHA-256 manifest is recorded in `declared_upstream_inputs` (outside `all_gates_passed`).
 
 ---
 
-## 3. Pillar 3: Law-5 Exact-Operator Bridge to `mcproof`, `math0` & `siliquant`
+## 2. Pillar 2: Clean-Room Verification of ARADI, COLM, SBC-VOLE & Blender-256
 
-1. **`TII-McEliece` Primal-Shortened Goppa Operator -> `Foundation-0/math0` (`PR #3/#4` `gfq` Codes):**
-   - Clean-room $\mathbb{F}_{2^5}$ binary Goppa code $(n=24, m=5, t=3, k=9)$ with $g(X) = X^3 + X^2 + a X + 1$ yields `13` minimum weight-$7$ codewords ALL satisfying Theorem 1 ($\sigma'_S(X) = g(X)^2$, $e_2(z_S) = g_{t-1}^2$) and Theorem 2(3) ($\binom{7}{2} \equiv 3 \pmod 2$). Primal shortening to $n'=21$ preserves $g(X)$ identically (`6` codewords) while quadratically compressing the odd-weight relation feature count $F(d) = 1 + d + \binom{d}{2}$.
-   - Exact pure-$\mathbb{Q}$ compression ratios: **`TII-125`** $(507, 9, 7 \to n'=237)$: `98347 / 15052 = 6.533816×`; **`TII-250`** $(1010, 10, 12 \to n'=467)$: `395606 / 60032 = 197803 / 30016 = 6.589919×` (`6.59×`). Campaign manifest (`c7bc0c0c...`): `94` solved (`89` Route A, `5` Route B, `55` first-bloods).
-   - **Concrete `math0` Bridge:** Primal column-window shortening preserves alternant/Goppa locator invariants while shrinking degree-2 relation systems quadratically in $k' = n' - r$, directly supporting shortened-subcode weight/distance pruning in `math0`'s `gfq` linear-code verifier (`PR #3/#4`).
-2. **`HAWK` Parity Sublattice & Exact Unimodular Gram Operator -> `math0` & `Moissanite-Labs/siliquant` (`lattice/`):**
-   - Exact rank-$8$ clean-room verification via fraction-free Bareiss integer determinant:
-     - Parity-congruence sublattice $\Lambda' = 2\Lambda_\tau + \mathbb{Z} w_0$ transform $H \in \mathbb{Z}^{8 \times 8}$ satisfies $|\det(H)| = 128 = 2^{n-1}$ and $\det(H G H^\top) = 2^{14} \det(G) = 2^{2(n-1)} \det(G)$, multiplying covolume by $2^{n-1}$ at fixed $\lambda_1$ (halving the asymptotic Hermite ratio and isolating $\pm V_\tau$ with spectral gap $\lambda_2/\lambda_1 = 2$; BKZ block-size drops `34 / 49 / 81` for `HAWK-256/512/1024`; `HAWK-256` Hermite ratio `4222/10000 < 1` forces required root Hermite factor `< 1`).
-     - Exact triangular backward-substitution unimodular transform recovery ($U B_{\mathrm{raw}} = B_{\mathrm{good}}$, $|\det U| = 1$, $G_{\mathrm{red}} = U G_{\mathrm{raw}} U^\top$) preserves $\det(G)$ identically while compressing max Gram diagonal from `31,954` to `41` (`31954/41`, `779.37×`).
-   - **Concrete `siliquant` & `math0` Bridge:** (a) Congruence-sublattice closure ($\Lambda' = 2\Lambda + \mathbb{Z} w_0$) provides an exact integer covolume/spectral-gap refinement operator for parity-constrained lattice codebooks (`D_n`/`E_8`); (b) Cholesky embedding + integer triangular unimodular recovery eliminates condition-number squaring ($\kappa(G) = \kappa(B)^2$) in Hessian-weighted lattice quantization (`siliquant` `experiments/lattice-vs-scalar-rounding-2026-11-15/`); (c) `BentSum/lean/` (`5` files, `0` banned constructs) serves as a clean Mathlib benchmark for `Proven-Commons/mcproof` and `math0` Hadamard/`CW(n,k)` support congruences.
+1. **`ARADI` (NSA ePrint 2024/1240; `12 exact` checks + `1 sampled` check):**
+   - `exact`: All 4 word maps $L_0=(11,8,14), L_1=(10,9,11), L_2=(9,4,14), L_3=(8,9,7)$ are $\mathbb{F}_2$-involutions ($L_j^2 = I_{32}$) with canceling-mask dimensions `[0, 0, 0, 8]`; $L_3$ is uniquely symmetric and orthogonal ($L_3^\top L_3 = I_{32}$) with `8` disjoint 4-column islands; super-S-box ANF degrees collapse to `[3, 3]`; LATINCRYPT 2025 single-column blind-column histogram is `{"8": 16, "13": 16}` (max `24/32` covered); analytical 5-round zero-sum derivation on the 48-point cube prefix yields `198` equations (`99` row $x$ + `99` row $z$, island nullities `[16, 12, 10, 12, 18, 0, 16, 15]`); mitigation $L_3' = (7, 3, 11)$ is involutive with `0` canceling masks.
+   - `sampled`: Empirical 5-round zero-violation check records `0 / 396` violations across **`2` seeded round-key trials** (`seed = 0x20261122a8ad1001`, `198` equations per trial; a 4-round negative control triggers nonzero violations).
+2. **`COLM` ($\mathbb{F}_{2^{128}} = \mathbb{F}_2[x]/(x^{128}+x^7+x^2+x+1)$; `5 exact` checks):**
+   - `exact`: Exact Rabin irreducibility proof confirms $x^{128}+x^7+x^2+x+1$ is irreducible over $\mathbb{F}_2$ ($x^{2^{128}} \equiv x$ and $\gcd(x^{2^{64}}+x, f) = 1$); exact inverse $3 \cdot 3^{-1} = 1$; transplant condition $\deg(x^{m-1}/3) \le m - 2$ first holds at `m = 129`, giving transplant set `{1, 3, 4, 5, 6, 7, 129, 130}`; $\mathrm{COLM}_\tau$ obstruction holds for all $\tau \in \{1,\dots,127\}$ ($\deg(x^\tau / 3) = 127$).
+   - `definitional` (outside `checks` / `all_gates_passed`): Fade relation $\sum_{k \in \{1,2,3,8,129\}} x^{k-1} = 0$ (the defining polynomial) and polynomial-basis ranks `[128, 128]`.
+   - `anchor` (outside `checks` / `all_gates_passed`): J. Cryptol. 2024 Theorem 2 arithmetic at published parameters `(q=2, s=1, a=6, m=390)` yields $\sigma = 795$ and `4428155 / 2^128 < 2^-105`.
+3. **`SBC-VOLE` ($\mathbb{F}_{2^{257}} = \mathbb{F}_2[x]/(x^{257}+x^{12}+1)$; `1 exact` check + `3 sampled` checks):**
+   - `exact`: Frobenius test $x^{2^{257}} \equiv x$ proves irreducibility (257 is prime).
+   - `sampled` (`seed = 0x202611220109abcd`, **`1` trial**): On this specific seeded SplitMix64 instance ($n=130$, 256 secret bits, 257 $\mathbb{F}_2$ equations from one transcript), the linear system has `gf2_linear_rank = 255` and `free_nullity = 1`, recovering all 256 secret bits identically. The exact `(rank=255, free_nullity=1)` split is **seed-specific** (other seeds frequently yield full rank 256, nullity 0).
+4. **`Blender-256` (`2 sampled` checks + `4 exact` standard-IV checks; conditional upstream issue rulings in `declared_upstream_inputs`):**
+   - `sampled` (`start_state = standard_blender256_iv_only`, `seed = 0x20261122b1e4de25`, **`24`-step stream, `1` trial**): Starting from the **standard Blender-256 IV** (not arbitrary start states; a zero/random start state breaks the invariant), the 6-bit chain parity vector traverses an 8-cycle of distinct vectors obeying `p_4 = p_0 ^ 1` and `p_5 = p_1 ^ 1`.
+   - `exact` (from standard Blender-256 IV): Clean-room 12-step DFS entry obeys `p_4 = p_0 ^ 1, p_5 = p_1 ^ 1` and never sets $W_0, W_2, W_4, W_6 \in \{0, \mathtt{0xFFFFFFFF}\}$; from-IV 2-adic SNF over $(\mathbb{Z}/2^{32}\mathbb{Z})^8$ closes from `[0, 0, 1, 1, 2, 2, 3, 3]` (unshifted) to `[0, 0, 1, 1, 1, 1, 1, 1]` (multi-shifted).
+   - `definitional` (outside `checks`): `wt(0)=0` and `wt(0xFFFFFFFF)=32` are both even; Proposition 6 two-step length arithmetic `((13+3)//4 + 2)*4 = 24` bytes; modular superposition over $\mathbb{Z}/2^{32}\mathbb{Z}$ is an additive identity.
+   - **Conditional Upstream Issue Rulings (recorded in `declared_upstream_inputs`, outside `all_gates_passed`):**
+     - *Issue `#1`:* Given upstream `Blender/paper/main.tex` at pinned commit `57842cef` stating `"global minimum"` for the two-step silent-carry healing family, Proposition 6 arithmetic establishes a 24-byte minimum only within that two-step family, not globally.
+     - *Issue `#2`:* Given upstream `Blender/paper/main.tex` at pinned commit `57842cef` §3.3 stating `"steer W_0, W_2, W_4, W_6 in {x, ~x}"`, that prose conflicts with the Theorem 2 standard-IV invariant `p_4 = p_0 ^ 1`, whereas clean-room 12-step entry stays on shifted phase constants obeying Theorem 2.
 
 ---
 
-## 4. Reproduction Commands
+## 3. Pillar 3: Background Algebraic Identities Verified in This Audit
+
+**Scope Disclaimer:** Both identities below are **classical background algebraic identities verified in this audit** (`exact`). No code in this study reads, imports, or modifies objects in `math0` code-table scripts, `siliquant`, or `mcproof`. In particular, the Goppa identity operates on **binary** (`GF(2)`) subfield subcodes over $\mathbb{F}_{2^5}$, whereas this repository's code-table work targets $\mathbb{F}_3$ to $\mathbb{F}_9$.
+
+1. **Binary Goppa Shortening & Minimum-Weight Identity (`TII-McEliece`; `8 exact` checks):**
+   - `exact`: Clean-room binary Goppa code $\Gamma(L, g)$ over $\mathbb{F}_{2^5}$ ($n=24, m=5, t=3, k=9$, $g(X) = X^3 + X^2 + a X + 1$, root-free on $\mathbb{F}_{2^5}$) has `13` minimum weight-$7$ codewords, all satisfying Theorem 1 ($\sigma'_S(X) = g(X)^2$ and $e_2(z_S) = g_{t-1}^2$).
+   - `exact` (full-code shortening equality): Shortening $\Gamma(L, g)$ to $n'=21$ yields a `64`-codeword (`dim=6`, `6` weight-7 words) subcode that is explicitly verified **set-equal** to $\Gamma(L[:21], g)$ constructed directly on the shorter support $L[:21]$.
+   - `definitional` / `anchor` (outside `checks`): Odd-pair parity $\binom{7}{2} \equiv 3 \pmod 2$ (`definitional`); quadratic feature count $F(d) = 1 + d + \binom{d}{2}$ evaluated on published TII-125 (`98347/15052 = 6.533816`) and TII-250 (`197803/30016 = 6.589919`) parameters (`anchor`); campaign summary `94` solved (`89` Route A, `5` Route B, `55` first-bloods) sits in `declared_upstream_inputs`.
+2. **Rank-8 Parity-Sublattice Gram-Determinant Law & Blind Exact LLL (`HAWK`; `11 exact` checks):**
+   - `exact`: Planted inverse verification ($U_{\text{rec}} B_{\text{raw}} = B_{\text{good}}$, $|\det U_{\text{rec}}| = 1$, $\det G_{\text{red}} = \det G_{\text{raw}} > 0$, max diagonal `31,954 -> 41`) **plus blind exact pure-$\mathbb{Q}$ LLL reduction** directly on $B_{\text{raw}}$ (without receiving $B_{\text{good}}$), recovering unimodular $U_{\text{LLL}}$ ($|\det U_{\text{LLL}}| = 1$, $U_{\text{LLL}} B_{\text{raw}} = B_{\text{LLL}}$, exact Gram determinant invariance) and `max_diag = 41`.
+   - `exact`: Parity-congruence sublattice $H$ explicitly verified to satisfy BOTH $H \mathbb{Z}^8 = 2 \mathbb{Z}^8 + \mathbb{Z} u_{\text{parity}}$ (every row mod 2 in $\{0, u_{\text{parity}} \bmod 2\}$ with $|\det H| = 128 = 2^{n-1}$, rejecting non-parity index-128 matrices such as $\mathrm{diag}(2,\dots,2,1)$) AND the standard Gram-determinant scaling identity $\det(H G H^\top) = 2^{14} \det(G)$.
+   - `anchor` (outside `checks`): Published HAWK BKZ block-size differences `92-58=34`, `205-156=49`, `432-351=81` and HAWK-256 Hermite ratio `4222/10000 < 1`.
+
+---
+
+## 4. Exact Offline Reproduction
+
+Run from `studies/expedition-minimax-cryptanalysis-audit109r/` (100% offline, Python 3 standard library only):
 
 ```bash
-# 1. Offline standalone verification (recomputes all 3 mathematical pillars + replays pinned portal manifest)
-python3 -I -B -W error symbiosis/stream/track-s14-minimax-cryptanalysis/minimax_cryptanalysis_audit.py --standalone --json
+# 1. Offline standalone certificate generation (bit-identical across -I -B, -I -O -B, -I -B -W error, PYTHONHASHSEED=42 -B)
+python3 -I -B minimax_cryptanalysis_audit.py --standalone --json | sha256sum
+python3 -I -O -B minimax_cryptanalysis_audit.py --standalone --json | sha256sum
+python3 -I -B -W error minimax_cryptanalysis_audit.py --standalone --json | sha256sum
+PYTHONHASHSEED=42 python3 -B minimax_cryptanalysis_audit.py --standalone --json | sha256sum
 
-# 2. Live read-only audit against a local MiniMax-AI/Research checkout (@ 57842cef)
-python3 -I -B -W error symbiosis/stream/track-s14-minimax-cryptanalysis/minimax_cryptanalysis_audit.py --live --research-dir <path/to/MiniMax-AI-Research> --output symbiosis/stream/track-s14-minimax-cryptanalysis/minimax_cryptanalysis_certificate.json
+# 2. Strict fail-closed verification of the committed certificate (re-derives all 3 pillars & checks canonical bytes)
+python3 -I -O -B -W error minimax_cryptanalysis_audit.py --verify minimax_cryptanalysis_certificate.json
 
-# 3. Assertion-free R5 adversarial & mutation-killing test suite
-python3 -I -O -B -W error symbiosis/stream/track-s14-minimax-cryptanalysis/test_minimax_cryptanalysis_r5.py
+# 3. Assertion-free R5 adversarial, wrong-value, Lean 4 raw-string, and --verify forgery suite (4/4 groups OK)
+python3 -I -O -B -W error test_minimax_cryptanalysis_r5.py
+
+# 4. File integrity check
+sha256sum -c SHA256SUMS
+
+# 5. Optional live read-only audit against a local MiniMax-AI/Research checkout (@ 57842cef)
+python3 -I -B -W error minimax_cryptanalysis_audit.py --live --research-dir <path/to/MiniMax-AI-Research>
 ```

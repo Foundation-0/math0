@@ -1,59 +1,56 @@
-# Clean-Room Cryptanalysis Audit of `MiniMax-AI/Research` & Exact Law-5 Operator Bridge (`AUDIT-109R`)
+# Clean-Room Cryptanalysis Audit of `MiniMax-AI/Research` (`57842cef`)
 
-> **Status:** Independently `VERIFIED` across 2 model families (`AUDIT-109R`, `honest_novelty_tier: N1` engineering/audit and cross-repository operator bridge over `N0` `MiniMax-AI/Research @ 57842cef` and cited cryptanalytic literature; human review pending).
-> **Seats:** Author `continuum-bridge` · Clean-Room Verifiers: `Muse Code` (Meta) and `verifier`.
-> **Runtime Dependencies:** Python 3 standard library only (`int`, `fractions.Fraction`; zero floats on trust paths or JSON, zero bare `assert`s, zero external writes).
+> **Status:** Claimed, pending maintainer review (`novelty: N0`; all underlying mathematical constructions and cryptanalytic results belong to `MiniMax-AI/Research @ 57842cef` and cited prior art — no full-text prior-art record is shipped here).
+> **Runtime Dependencies:** Python 3 standard library only (`int`, `fractions.Fraction`, `hashlib`, `json`; zero floats on certified paths or JSON, zero bare `assert`s, zero external writes).
 
-## 1. Contents (Byte-Identical Frozen `AUDIT-109R` Package)
+## 1. Contents
+
+All seven study files are checksummed in [`SHA256SUMS`](SHA256SUMS) (`sha256sum -c SHA256SUMS`).
 
 | File | SHA-256 | Role |
 |---|---|---|
-| [`minimax_cryptanalysis_oracle.py`](minimax_cryptanalysis_oracle.py) | `71e9f77f319bf9425ede6beed139fda3c26b66daf43b9262d4670174d55fe1a1` | Zero-shared-code pure-$\mathbb{Z}/\mathbb{F}_2/\mathbb{F}_{2^m}/\mathbb{Q}$ verification of all 7 portal mechanisms (`BentSum`, `ARADI`, `COLM`, `SBC-VOLE`, `Blender-256`, `TII-McEliece`, `HAWK`) |
-| [`minimax_cryptanalysis_audit.py`](minimax_cryptanalysis_audit.py) | `6836a5fef6fe5d0dfcc78930d72f758c301ba407d295471bc664c6bbe7f12360` | Dual-mode certifier (`--standalone --json` 100% offline; `--live --research-dir <path>` on-disk SHA-256, Lean comment/string stripper, SNF, `main.tex`, TII-94 per-challenge & `.git/HEAD` audit) |
-| [`test_minimax_cryptanalysis_r5.py`](test_minimax_cryptanalysis_r5.py) | `f59de4d03663ff1c2a705401549ec101c3b662ca80c4e9bd3f4dd6ba480b96e3` | Assertion-free R5 adversarial, forgery, Lean-comment/string, TII-94 tamper, and mutation-killing suite (`3/3` groups OK) |
-| [`minimax_cryptanalysis_certificate.json`](minimax_cryptanalysis_certificate.json) | `a764ad2729c96b2cfc669285f37f88cf3aeeb657da6d3fea431e695dc4637788` | Pinned `--live` canonical string-key JSON certificate against `MiniMax-AI/Research @ 57842cef` (inner `certificate_sha256: 43adabf9fd67fcaa...`, `ROUNDTRIP_OK=True`) |
-| [`MINIMAX_CRYPTANALYSIS_REPORT.md`](MINIMAX_CRYPTANALYSIS_REPORT.md) | `146f78fc80ec7dcd92af35f447d3fbb9244258a1ae1ffcbed4af0cc8c564922a` | Full 3-pillar cryptanalysis audit report, formal rulings on `Blender-256` Issues `#1` & `#2`, and Law-5 operator bridges to `mcproof`, `math0`, and `siliquant` |
+| [`minimax_cryptanalysis_oracle.py`](minimax_cryptanalysis_oracle.py) | `516ae0fc6b27b0731b0c433e69ffa007da820d85536c03ab782f718b62547a0f` | Pure-$\mathbb{Z}/\mathbb{F}_2/\mathbb{F}_{2^m}/\mathbb{Q}$ verifier for all 3 computational pillars (7 mechanisms), strict type/depth/bit-cap guards, and separate `declared_upstream_inputs` reporting outside `all_gates_passed` |
+| [`minimax_cryptanalysis_audit.py`](minimax_cryptanalysis_audit.py) | `aed17e77134595d51d7cb969121c7ecdec977f28a1534fd073e5025a69506fdf` | Offline `--standalone` certifier, pin-enforcing `--live --research-dir <path>` inspector (with Lean 4 lexical scanner covering `r"..."`/`r#"..."#` and `decide +native`), and strict `--verify FILE` validator |
+| [`test_minimax_cryptanalysis_r5.py`](test_minimax_cryptanalysis_r5.py) | `1c441a3f4d5acaaaec9c9ef58320655eb94ea252e2a20e48eda4305208becbfb` | Assertion-free R5 adversarial, wrong-value (`72/72` computational check entries), Lean 4 raw-string/token bypass, live-pin, and `--verify FILE` forgery test suite (`4/4` groups OK) |
+| [`minimax_cryptanalysis_certificate.json`](minimax_cryptanalysis_certificate.json) | `f32bdeb9015f48a323a40e954d04c27a14549aedaf4018d6c4d5662ca7564866` | Offline `--standalone --json` canonical LF JSON certificate (`live_portal_inspected: false`, inner `certificate_sha256: 6c54dbad534a929d...`), reproducible byte-for-byte offline and verified by `--verify` |
+| [`MINIMAX_CRYPTANALYSIS_REPORT.md`](MINIMAX_CRYPTANALYSIS_REPORT.md) | `3dbdd6c9730235e3a6a8462bfd91e93b1d259aaa6ec48a8f096713cf0c2c8f78` | Full 3-pillar technical report with `exact`/`sampled`/`definitional`/`anchor` scope tags and conditional upstream issue notes |
+| [`PROVENANCE.md`](PROVENANCE.md) | `e1d87ee46d5c953ba72b47d2fc463c199263f4a1f5f996dbfacbf4ec5a60a5a4` | Provenance record, commands run, unchecked claims boundary, and post-review change log |
 
-## 2. Three Certified Pillars (`MiniMax-AI/Research @ 57842cef`)
+## 2. Three Computational Pillars (+ Certification & `--verify` Wrapper)
 
-- **Pillar 1 (`BentSum`, `arXiv:2610.32239`):** Aletheia v2.0.0 Lean 4 purity audit of `Cryptography/BentSum/lean/` (`5` files, `0` `sorry`/`axiom`/`native_decide`/`unsafe`) + zero-shared-code exact FWHT & ANF verification of $q_3$ ($\mathrm{wt}=28, \deg=2$), Tokareva bent-sum counterexample `cylQ3(4)` ($\mathrm{wt}=28 \equiv 4 \pmod 8$), positive Maiorana–McFarland bent-sum control ($8 \mid 32$), derivative counterexample `liftCylQ3(4)` (period set `{0, 1}`), and positive bent-derivative control ($n=10$).
-- **Pillar 2 (Fast Algebraic Operators & Open Peer Issues `#1`/`#2`):**
-  - `ARADI`: exact $\mathbb{F}_2$-involution & canceling-mask dimensions `[0, 0, 0, 8]` ($L_3$ uniquely orthogonal with `8` 4-column islands), super-S-box ANF degrees `[3, 3]`, LATINCRYPT 2025 blind-column histogram `{"8": 16, "13": 16}`, `198` universal 5-round zero-sum equations (`0/396` violations), and involutive mitigation $L_3'=(7,3,11)$ (`0` masks).
-  - `COLM`: exact $\mathbb{F}_{2^{128}}$ fade length $\ell=130$, transplant threshold $m=129$ (`{1, 3, 4, 5, 6, 7, 129, 130}`), $\mathrm{COLM}_\tau$ obstruction for $\tau=1..127$, and exact pure-$\mathbb{Q}$ bound `4428155 / 2^128 < 2^-105`.
-  - `SBC-VOLE`: irreducible $\mathbb{F}_{2^{257}}$ (`x^257 + x^12 + 1`) full-dimension $n=130$ single-transcript attack (`rank=255`, `free_nullity=1`, exact 256-bit secret recovery).
-  - `Blender-256`: formal rulings on open Issues `#1` (`CONFIRMED — SCOPE OVERCLAIM`: `24`-byte minimum proved only within 2-step silent-carry healing) and `#2` (`CONFIRMED — PROSE CONFLICT, ALGORITHM SOUND`: §3.3 prose violates Theorem 2 `p_4 = p_0 ^ 1` while the shifted-subspace algorithm stays on non-zero phase constants $D^{(\phi)}$) + 2-adic SNF closure `[0, 0, 1, 1, 2, 2, 3, 3] -> [0, 0, 1, 1, 1, 1, 1, 1]` over $(\mathbb{Z}/2^{32}\mathbb{Z})^8$.
-- **Pillar 3 (Law-5 Exact-Operator Bridges to `math0`, `siliquant` & `mcproof`):**
-  - `TII-McEliece` -> `Foundation-0/math0` (`gfq` codes): clean-room $\mathbb{F}_{2^5}$ Goppa $(24, 9, 7)$ primal shortening ($n'=21$) preserving $g(X)$ while quadratically compressing odd-weight relation features (`TII-125`: `98347/15052 = 6.533816×`; `TII-250`: `197803/30016 = 6.589919×`; `94` solved = `89` Route A + `5` Route B, `55` first-bloods).
-  - `HAWK` -> `math0` & `Moissanite-Labs/siliquant`: fraction-free Bareiss rank-8 parity sublattice $\Lambda' = 2\Lambda_\tau + \mathbb{Z} w_0$ ($|\det H| = 128$, $\det(H G H^\top) = 2^{14}\det(G)$) + exact unimodular triangular Gram conditioning recovery ($|\det U| = 1$, max Gram diagonal `31,954 -> 41`, `779.37×`).
+Declared upstream fixture constants (5-file Lean manifest, Blender SNF witness counts/exponents, upstream Issue `#1`/`#2` paper-text flags, and TII-94 campaign totals `94/89/5/55`) are stored in `declared_upstream_inputs` strictly **outside** `all_gates_passed`.
 
-## 3. Exact Offline Reproduction (3-Mode Isolated `-I` R4 Parity)
+- **Pillar 1 (`BentSum`, `arXiv:2610.32239` — `exact`):** Pure-$\mathbb{Z}$ FWHT & ANF verification of $q_3$ ($\mathrm{wt}=28, \deg=2$, bent), Tokareva bent-sum counterexample `cylQ3(4)` ($\deg=4=n/2$, coset $\{x_0=x_1=1\}$, $\mathrm{wt}=28 \equiv 4 \pmod 8$, $g_8 + \mathrm{cylQ3}(4)$ not bent), positive Maiorana–McFarland bent-sum control ($8 \mid 32$), derivative counterexample `liftCylQ3(4)` (balanced, $\deg=4$, period set `{0, 1}`), and positive bent-derivative control ($n=10$). In `--live` mode, `scan_lean4_lexical` performs a 12-construct **lexical token scan** (not Lean kernel elaboration), handling `r"..."`/`r#"..."#` raw strings, `decide +native` (incl. `-flag`, multiline, and `(config := { native := true })`), `Lean.ofReduceBool`/`ofReduceNat`, `extern`, and `set_option debug.skipKernelTC`.
+- **Pillar 2 (Fast Algebraic Cryptanalysis & `Blender-256`):**
+  - `ARADI` (`12 exact` + `1 sampled`): $\mathbb{F}_2$-involutions & canceling-mask dims `[0, 0, 0, 8]`, $L_3$ uniquely symmetric/orthogonal with `8` 4-column islands, super-S-box ANF degrees `[3, 3]`, LATINCRYPT 2025 blind-column histogram `{"8": 16, "13": 16}`, `198` 5-round zero-sum equations (`0/396` violations across `2` seeded trials — `sampled`), and mitigation $L_3'=(7,3,11)$ (`0` masks).
+  - `COLM` (`5 exact`; fade/rank labeled `definitional`, J. Cryptol. 2024 bound labeled `anchor`): exact Rabin irreducibility proof of $x^{128}+x^7+x^2+x+1$, exact $3^{-1}$, transplant threshold $m=129$ (`{1, 3, 4, 5, 6, 7, 129, 130}`), and $\mathrm{COLM}_\tau$ obstruction for $\tau=1..127$.
+  - `SBC-VOLE` (`1 exact` + `3 sampled`): Frobenius irreducibility of $x^{257}+x^{12}+1$ (`exact`), plus single-transcript 256-bit linear key recovery on `1` seeded SplitMix64 trial (`seed=0x202611220109abcd`, seed-specific `rank=255, free_nullity=1` — `sampled`).
+  - `Blender-256` (`2 sampled` + `4 exact` from standard IV): Theorem 2 8-cycle invariants `p_4 = p_0 ^ 1, p_5 = p_1 ^ 1` (`sampled` over `24`-step stream from **standard Blender-256 IV only**), clean-room 12-step entry obeying Theorem 2, and from-IV 2-adic SNF closure `[0, 0, 1, 1, 2, 2, 3, 3] -> [0, 0, 1, 1, 1, 1, 1, 1]`. Upstream Issue `#1` & `#2` rulings are stated conditionally in `declared_upstream_inputs`.
+- **Pillar 3 (Background Algebraic Identities Verified in This Audit — `exact`, zero external-repo integration):**
+  - Binary Goppa shortening (`TII-McEliece`, `8 exact`): clean-room binary (`GF(2)` subfield subcode over $\mathbb{F}_{2^5}$; distinct from `math0`'s $\mathbb{F}_3..\mathbb{F}_9$ code tables) Goppa $(24, 9, 7)$ Theorem 1 checks on all `13` weight-7 words, plus explicit **full-code set equality** verifying the $n'=21$ shortened code (`64` codewords, dim `6`, `6` weight-7 words) equals $\Gamma(L[:21], g)$ on the shorter support (`TII-125`/`TII-250` `F(d)` ratios stored as `anchor`).
+  - Rank-8 parity-sublattice & Gram-conditioning identities (`HAWK`, `11 exact`): explicit check that $H$ generates $2\mathbb{Z}^8 + \mathbb{Z} u_{\text{parity}}$ ($|\det H| = 128$, rejecting non-parity index-128 matrices) with $\det(H G H^\top) = 2^{14}\det(G)$, planted unimodular inverse check, **plus blind exact pure-$\mathbb{Q}$ LLL reduction** directly on $B_{\text{raw}}$ (without $B_{\text{good}}$) recovering max Gram diagonal `41` (`|det U_LLL| = 1`; published BKZ drops & Hermite ratio stored as `anchor`).
+
+## 3. Exact Offline Reproduction
 
 From this directory (100% offline, Python 3 standard library only):
 
 ```bash
-# 1. Offline standalone verification (3-mode bit-identical cfc9a09e544c5cbd...):
+# 1. Offline standalone certificate generation (4-mode bit-identical f32bdeb9015f48a3...):
 python3 -I -B minimax_cryptanalysis_audit.py --standalone --json | sha256sum
 python3 -I -O -B minimax_cryptanalysis_audit.py --standalone --json | sha256sum
 python3 -I -B -W error minimax_cryptanalysis_audit.py --standalone --json | sha256sum
+PYTHONHASHSEED=42 python3 -B minimax_cryptanalysis_audit.py --standalone --json | sha256sum
 
-# 2. Canonical string-key roundtrip check on committed pinned live certificate (a764ad27...):
-python3 -I -O -B -c '
-import hashlib, json, pathlib
-d = json.loads(pathlib.Path("minimax_cryptanalysis_certificate.json").read_text(encoding="utf-8"))
-inner = d["certificate_sha256"]
-body = {k: v for k, v in d.items() if k != "certificate_sha256"}
-recomputed = hashlib.sha256(json.dumps(body, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
-if not (recomputed == inner and d["all_gates_passed"] and d["live_portal_inspected"]):
-    raise SystemExit(f"mismatch: {recomputed} != {inner}")
-print("ROUNDTRIP_OK=True INNER_SHA=" + inner)
-'
+# 2. Strict fail-closed verification of the committed certificate (parses strictly, re-derives all 3 pillars, verifies canonical bytes):
+python3 -I -O -B -W error minimax_cryptanalysis_audit.py --verify minimax_cryptanalysis_certificate.json
 
-# 3. Assertion-free R5 adversarial & mutation-killing suite (3/3 groups OK):
+# 3. Assertion-free R5 adversarial, wrong-value, Lean 4 raw-string, and --verify forgery suite (4/4 groups OK):
 python3 -I -O -B -W error test_minimax_cryptanalysis_r5.py
+
+# 4. File integrity check against SHA256SUMS:
+sha256sum -c SHA256SUMS
 ```
 
 **Offline (`--standalone`) vs. Live (`--live`) Provenance Boundary:**
-- `--standalone --json` and `test_minimax_cryptanalysis_r5.py` execute 100% offline from any clone of `main`: `--standalone` recomputes all three pure-$\mathbb{Z}/\mathbb{F}_2/\mathbb{F}_{2^m}/\mathbb{Q}$ mathematical pillars live from scratch while replaying the pinned `MiniMax-AI/Research @ 57842cef` portal manifest (`diag_source = "standalone_pinned_fixture"`, `live_portal_inspected = false`; it does not read upstream files from disk).
-- [`minimax_cryptanalysis_certificate.json`](minimax_cryptanalysis_certificate.json) (`a764ad27...`, inner `43adabf9fd67fcaa...`) is the pinned `--live --research-dir <path>` certificate generated against a read-only checkout of `MiniMax-AI/Research @ 57842cef`, verifying live SHA-256 digests, comment/string-stripped Lean purity across `BentSum/lean/`, `snf_audit_vectors.json`, `Blender/paper/main.tex`, all `94` rows of `verified_tii_94_summary.json`, and `.git/HEAD` (`diag_source = "live_portal_read"`, `live_portal_inspected = true`).
-
-**External Verification Receipts:** `3/3` R5 OK; `aletheia v2.0.0 mutate --max-mutants 0`: `69/69` (`20` audit + `49` oracle, `100.0%`) KILLED + `93/93` (`39+54`, `100.0%`) AST `BoolOp` KILLED (`0` survivors, `truncated=False`); `aletheia v2.0.0 audit-check --strict-ancestors --safety-scan PASS` (`0` defects, `0` leaks, `0` safety findings); dual-family verified by `Muse Code` (Meta) and `verifier` (`0` Zone-B bypasses).
+- `--standalone --json`, `--verify minimax_cryptanalysis_certificate.json`, and `test_minimax_cryptanalysis_r5.py` execute 100% offline from any clone of this repository. The committed `minimax_cryptanalysis_certificate.json` is honestly generated in `--standalone` mode (`live_portal_inspected: false`, `diag_source: "standalone_pinned_fixture"`), matching `--standalone --json` byte-for-byte.
+- `--live --research-dir <path>` inspects a local checkout of `MiniMax-AI/Research @ 57842cef`, enforces `.git/HEAD == 57842cef...` (refusing missing `.git` unless `--upstream-commit` is explicitly passed), enforces every pinned SHA-256 digest (`PIN_HASH_MISMATCH` on drift), and `--verify FILE` refuses any `"mode": "live_portal_audit"` certificate unless `--research-dir <path>` is provided.
