@@ -1,0 +1,364 @@
+{
+  "canonical_sha256": "cd9b2a1dad5b1b6110874d072945391eed78747bb1165c36b664a8f17df5926d",
+  "catalog_summary": {
+    "catalog_canonical_sha256": "21a60829aed7e047d4426cd514f509c3bf40cec726a3b9b2115e880eeac954d3",
+    "gsi_r_notes_with_public_artifacts": 15,
+    "nov16_white_papers_labelled_independently_checked": 13,
+    "nov16_white_papers_with_public_artifacts": 0,
+    "public_artifact_ratio": "15/31",
+    "siliquant_mapped_domains_count": 11,
+    "total_hosted_download_files": 48,
+    "total_research_domains": 31
+  },
+  "honest_novelty_tier": "N0",
+  "mode": "live_artifact_verification",
+  "oracle_class": "exact",
+  "pillar1_circulant_weighing_matrices": {
+    "cw120_180_lean_purity": {
+      "banned_tokens": [],
+      "clean": true,
+      "lines": 15
+    },
+    "cw120_36": {
+      "classes_verified": 6,
+      "distinct_orbits": 6,
+      "k": 36,
+      "n": 120,
+      "valid": true
+    },
+    "cw180_36": {
+      "classes_verified": 12,
+      "distinct_orbits": 12,
+      "k": 36,
+      "n": 180,
+      "valid": true
+    },
+    "lj_weight16_verified": 10,
+    "lj_weight4_verified": 199,
+    "total_cw_verified": 227
+  },
+  "pillar2_hadamard_good_williamson_tmatrices": {
+    "bordered_williamson_type": {
+      "WT47.json": {
+        "core_length": 46,
+        "core_offdiag_paf_sum": -4,
+        "order": 47,
+        "row_sums": [
+          2,
+          0,
+          0,
+          0
+        ],
+        "valid": true
+      },
+      "WT83.json": {
+        "core_length": 82,
+        "core_offdiag_paf_sum": -4,
+        "order": 83,
+        "row_sums": [
+          0,
+          2,
+          0,
+          0
+        ],
+        "valid": true
+      }
+    },
+    "good5355_lean_purity": {
+      "banned_tokens": [],
+      "clean": true,
+      "lines": 28
+    },
+    "good_53": {
+      "hadamard_order": 212,
+      "kind": "good_matrices",
+      "order": 53,
+      "row_sum_sq_total": 212,
+      "row_sums": [
+        1,
+        9,
+        9,
+        -7
+      ],
+      "valid": true
+    },
+    "good_55": {
+      "hadamard_order": 220,
+      "kind": "good_matrices",
+      "order": 55,
+      "row_sum_sq_total": 220,
+      "row_sums": [
+        1,
+        7,
+        -13,
+        -1
+      ],
+      "valid": true
+    },
+    "hadamard_repo_t_matrices_verified": 34,
+    "t_matrix_max_order": 197,
+    "t_matrix_min_order": 9,
+    "williamson_75": {
+      "hadamard_order": 300,
+      "kind": "williamson_matrices",
+      "order": 75,
+      "row_sum_sq_total": 300,
+      "row_sums": [
+        11,
+        7,
+        7,
+        -9
+      ],
+      "valid": true
+    }
+  },
+  "pillar3_difference_sets_and_binary_codes": {
+    "candidate_binary_codes": [
+      {
+        "claimed_d": 27,
+        "exhaustive_dmin_proved": false,
+        "file": "cert_111_37_u10.json",
+        "gf2_rank": 37,
+        "k": 37,
+        "min_generator_row_weight": 39,
+        "n": 111,
+        "scope_note": "generator_rank_and_row_weight_only_not_exhaustive_dmin",
+        "valid": true
+      },
+      {
+        "claimed_d": 42,
+        "exhaustive_dmin_proved": false,
+        "file": "cert_152_38_u7.json",
+        "gf2_rank": 38,
+        "k": 38,
+        "min_generator_row_weight": 66,
+        "n": 152,
+        "scope_note": "generator_rank_and_row_weight_only_not_exhaustive_dmin",
+        "valid": true
+      },
+      {
+        "claimed_d": 35,
+        "exhaustive_dmin_proved": false,
+        "file": "cert_159_53_u10.json",
+        "gf2_rank": 53,
+        "k": 53,
+        "min_generator_row_weight": 53,
+        "n": 159,
+        "scope_note": "generator_rank_and_row_weight_only_not_exhaustive_dmin",
+        "valid": true
+      },
+      {
+        "claimed_d": 46,
+        "exhaustive_dmin_proved": false,
+        "file": "cert_172_43_u6.json",
+        "gf2_rank": 43,
+        "k": 43,
+        "min_generator_row_weight": 82,
+        "n": 172,
+        "scope_note": "generator_rank_and_row_weight_only_not_exhaustive_dmin",
+        "valid": true
+      },
+      {
+        "claimed_d": 37,
+        "exhaustive_dmin_proved": false,
+        "file": "cert_174_58_u7.json",
+        "gf2_rank": 58,
+        "k": 58,
+        "min_generator_row_weight": 79,
+        "n": 174,
+        "scope_note": "generator_rank_and_row_weight_only_not_exhaustive_dmin",
+        "valid": true
+      }
+    ],
+    "cyclic_ds_465_l31_orbits_verified": 729,
+    "l31_sum_neg10_count": 577,
+    "l31_sum_pos10_count": 152,
+    "rds_364_2_243_81": {
+      "group_order": 728,
+      "k": 243,
+      "mu": 81,
+      "n_ker": 2,
+      "non_forbidden_diffs_verified": 726,
+      "v": 364,
+      "valid": true
+    }
+  },
+  "pillar4_ising_cluster_expansion_and_quantum": {
+    "agpd_cluster_expansion_cells_verified": 24,
+    "ising_3d_dos": {
+      "omega_4x4x4_periodic.txt": {
+        "bipartite_symmetric": true,
+        "dims": [
+          4,
+          4,
+          4
+        ],
+        "energy_levels": 91,
+        "ground_state_degeneracy": 2,
+        "moments_verified": [
+          "m0=2^N",
+          "m1=0",
+          "m2=3N*2^N",
+          "m3=0",
+          "m4=(3N(9N-2)+24*P4)*2^N"
+        ],
+        "n_edges": 192,
+        "n_sites": 64,
+        "one_flip_degeneracy": 128,
+        "p4_four_cycles": 240,
+        "valid": true
+      },
+      "omega_5x5x4_periodic.txt": {
+        "bipartite_symmetric": false,
+        "dims": [
+          5,
+          5,
+          4
+        ],
+        "energy_levels": 128,
+        "ground_state_degeneracy": 2,
+        "moments_verified": [
+          "m0=2^N",
+          "m1=0",
+          "m2=3N*2^N",
+          "m3=0",
+          "m4=(3N(9N-2)+24*P4)*2^N"
+        ],
+        "n_edges": 300,
+        "n_sites": 100,
+        "one_flip_degeneracy": 200,
+        "p4_four_cycles": 325,
+        "valid": true
+      }
+    },
+    "quantum_16fault_witnesses": [
+      {
+        "file": "witness_A23swap_Xtype_16faults.json",
+        "n_faults": 16,
+        "sector": "X"
+      },
+      {
+        "file": "witness_A23swap_Ztype_16faults.json",
+        "n_faults": 16,
+        "sector": "Z"
+      },
+      {
+        "file": "witness_Xtype_16faults.json",
+        "n_faults": 16,
+        "sector": "X"
+      },
+      {
+        "file": "witness_Ztype_16faults.json",
+        "n_faults": 16,
+        "sector": "Z"
+      }
+    ],
+    "quantum_sha256sums_verified": 7
+  },
+  "pillar5_siliquant_sparse_rotation_bridge": {
+    "cw120_36_class0_1hot": {
+      "actual_peak_sq_ratio": "1/36",
+      "cauchy_schwarz_bound_holds": true,
+      "dense_adds_per_output": 120,
+      "dense_op_reduction_factor": "10/3",
+      "energy_conserved": true,
+      "input_support_size": 1,
+      "k": 36,
+      "n": 120,
+      "one_hot_peak_sq_ratio": "1/36",
+      "proper": true,
+      "signed_add_density": "3/10",
+      "signed_adds_per_output": 36,
+      "t_sparse_cauchy_schwarz_bound": "1/36",
+      "valid": true,
+      "x_norm_sq": 10000,
+      "y_inf_abs": 100,
+      "y_norm_sq": 360000,
+      "zero_multiplications": true
+    },
+    "cw120_36_class0_2hot": {
+      "actual_peak_sq_ratio": "25/612",
+      "cauchy_schwarz_bound_holds": true,
+      "dense_adds_per_output": 120,
+      "dense_op_reduction_factor": "10/3",
+      "energy_conserved": true,
+      "input_support_size": 2,
+      "k": 36,
+      "n": 120,
+      "one_hot_peak_sq_ratio": "1/36",
+      "proper": true,
+      "signed_add_density": "3/10",
+      "signed_adds_per_output": 36,
+      "t_sparse_cauchy_schwarz_bound": "1/18",
+      "valid": true,
+      "x_norm_sq": 10625,
+      "y_inf_abs": 125,
+      "y_norm_sq": 382500,
+      "zero_multiplications": true
+    },
+    "cw180_36_class0_1hot": {
+      "actual_peak_sq_ratio": "1/36",
+      "cauchy_schwarz_bound_holds": true,
+      "dense_adds_per_output": 180,
+      "dense_op_reduction_factor": "5",
+      "energy_conserved": true,
+      "input_support_size": 1,
+      "k": 36,
+      "n": 180,
+      "one_hot_peak_sq_ratio": "1/36",
+      "proper": true,
+      "signed_add_density": "1/5",
+      "signed_adds_per_output": 36,
+      "t_sparse_cauchy_schwarz_bound": "1/36",
+      "valid": true,
+      "x_norm_sq": 10000,
+      "y_inf_abs": 100,
+      "y_norm_sq": 360000,
+      "zero_multiplications": true
+    },
+    "cw98_16_1hot": {
+      "actual_peak_sq_ratio": "1/16",
+      "cauchy_schwarz_bound_holds": true,
+      "dense_adds_per_output": 98,
+      "dense_op_reduction_factor": "49/8",
+      "energy_conserved": true,
+      "input_support_size": 1,
+      "k": 16,
+      "n": 98,
+      "one_hot_peak_sq_ratio": "1/16",
+      "proper": true,
+      "signed_add_density": "8/49",
+      "signed_adds_per_output": 16,
+      "t_sparse_cauchy_schwarz_bound": "1/16",
+      "valid": true,
+      "x_norm_sq": 10000,
+      "y_inf_abs": 100,
+      "y_norm_sq": 160000,
+      "zero_multiplications": true
+    },
+    "siliquant_mapped_domains_count": 11
+  },
+  "pinned_certificate_sha256s": {
+    "candidate-binary-codes/cert_111_37_u10.json": "ca79c355ea912a32de2de6d74b7c0f154a25d1f0d8e65ad885c5d4b7c889e513",
+    "candidate-binary-codes/cert_152_38_u7.json": "00005790aa81b6d4f871fc149c24f1ea9a40d83ca6a41d8a4891780405593587",
+    "candidate-binary-codes/cert_159_53_u10.json": "aeecd00a9c4c665c6bd30405feac195fdba6327a98f88d19db9ee1559c1cc598",
+    "candidate-binary-codes/cert_172_43_u6.json": "8ae5e0c80d6408cb52e2548ad47947118be0d9b616b947e8995f68c4ab38d836",
+    "candidate-binary-codes/cert_174_58_u7.json": "713b8ec45c47ad5b001c4e1caa11b87ef9624ce323123e721ab93fefc5926f0e",
+    "circulant-weighing-matrices/CW120_180.lean": "b10582aa985454c0c843144b11a06be44899b9dd8317a63c7c2d41d0c0919835",
+    "circulant-weighing-matrices/cw120_36_classes.json": "9431fff19f516e27b7568a03d24b28d730cec1cf4b9f1a691d0e3052df8cd681",
+    "circulant-weighing-matrices/cw180_36_classes.json": "395657f90a84bf88779c621ece83444ba820079d625144a00449d001cdfb77ec",
+    "circulant-weighing-matrices/lj_weight16.json": "ec30ecf521bdf5e9d0875e6a8e1a233887a7ee5d26122f0b8e06db3d26c1b145",
+    "circulant-weighing-matrices/lj_weight4.json": "e5d9ab318e2ffa2f07f23f7a0dd2d7aeef64a5eaa2f60a11a1f0408149657274",
+    "cluster-expansion-ground-states/ground_states.json": "9c8c6224dcc4ea1859e5964177c1828a47a57f9066af43eb1ef4a41ec021a111",
+    "cluster-expansion-ground-states/instances.json": "47cf3b2555ce94c45c1944d8527a4586e2edf32e9d1a0e3952145d05f0d78bcd",
+    "cyclic-difference-set-465/data/L31_orbit_reps.txt": "9976eff808078ed0e1c502b89ebb594fec37863ec836895bdf725e85b4813a28",
+    "good-matrices-53-55/Good5355.lean": "63ac8dd7d5b261e7c4ef36036e990bacba67a57f09d890fb145d44a7136d2330",
+    "good-matrices-53-55/ck_good.py": "5201bcb4e8a403778b928c6ae8e250daacb1ddc4341a3aadaaaaf93dcf8eedb5",
+    "good-matrices-53-55/mutants.py": "bb04c0766540b2a6df78441f9a05922f53d2bc898e01d903aa1c59e2cb662e22",
+    "ising-3d-density-of-states/omega_4x4x4_periodic.txt": "ee86099495ea42013ece24a4a1ef26a36bacc7272eb80dc2731b4e4c0e044105",
+    "ising-3d-density-of-states/omega_5x5x4_periodic.txt": "8bf96fdb747a3eca0ff1a9b8e287ae5e3d1d8a46d5c4307fed69d977e7dfc5d2",
+    "singer-relative-difference-sets/objects/rds_364_2_243_81.json": "5cdc703d5585c8b4b15a1c6dfbbcf3dfa5a86294c8571ed01c5e54f1bc1ec37a",
+    "williamson-good-order-75/williamson_75_set.txt": "4ad0a3293ed84a117b32fdf8ca677109db88d4be518a9d76ae64a635311c777f"
+  },
+  "schema": "aletheia.audit101.generalised_si_certificate.v1"
+}
