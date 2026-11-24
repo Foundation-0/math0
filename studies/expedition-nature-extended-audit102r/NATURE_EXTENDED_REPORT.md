@@ -2,13 +2,14 @@
 
 - **Audit ID:** `AUDIT-102`
 - **Schema:** `aletheia.nature_extended_audit.v1`
-- **Governance Standard:** Aletheia v2.0.0 (`OWN_TERMS_FIRST`, Law 2b, Law 4 honest `N0`/`N1` attribution, Law 5 strict zero-metaphor operator discipline, pure Python 3 stdlib `int`/`Fraction`, zero floats, zero bare `assert`s, zero external writes)
+- **Governance Standard:** Aletheia v2.0.0 (`OWN_TERMS_FIRST`, Law 2b, Law 4 honest `N0` attribution, Law 5 strict zero-metaphor operator discipline, pure Python 3 stdlib `int`/`Fraction`, zero floats, zero bare `assert`s, zero external writes)
 - **Committed Certificate:** `nature_extended_certificate.json`
-  - **File SHA-256:** `a97a174bd79a51c9a351de15d0ce02a2137b9658952d451c6f349e20fa048beb`
-  - **Inner `canonical_sha256`:** `431dfc2d793108e2a4c1f9b9dd564243abcd5bcbeca7853b16a5cfb57491b79f`
+  - **File SHA-256:** `27f9da8604899aa58d1fd1a58044e54da3aaee9340c8b64ea94fe24e7a7735bb`
+  - **Inner `canonical_sha256`:** `c96a0dc5e35a66b70d577c688a6ccedc1bfcfab6e97ea0dced40749efb3fe571`
 - **Novelty Classification (Law 4 Honest Attribution):**
   - **`N0` (Classical Prior Art):** All 5 underlying biological/mathematical models (`NATX-N0-01`..`NATX-N0-08`, DOI-verified primary sources below).
-  - **`N1` (Engineering / Audit):** Strictly limited to the pure-$\mathbb{Q}$ exact rational certifier, exhaustive $L = 8$ recombinant-hole enumeration, exact integer-spectrum $C_6$ Turing reaction–diffusion solver, tie-free scale-invariant Kirchhoff $k$-NN flocking audit, and `siliquant` symmetric absmax / $D_8$ homeostatic commutation witnesses.
+  - **`N0` (Self-Contained Pure-$\mathbb{Q}$ Certifier):** The executable pure-$\mathbb{Q}$ certifier (`nature_extended_oracle.py`, `nature_extended_certifier.py`), exhaustive $L = 8$ recombinant-hole enumeration, exact integer-spectrum $C_6$ Turing reaction–diffusion solver, tie-free scale-invariant Kirchhoff $k$-NN flocking audit, and `siliquant` symmetric absmax / $D_8$ homeostatic commutation witnesses are classified at `N0` (independent verification and exact rational restatement; no novelty claim above `N0`).
+- **Fail-Closed Validation Scope:** `validate_certificate()` checks schema/type/domain invariants, `canonical_sha256`, AND exact deterministic recomputation parity against `_assemble_nature_extended_certificate()` (`ERR_CERT_VALUE_MISMATCH`), so `0` altered re-hashed certificates pass. CLI `--check` reads raw bytes, rejects CR/CRLF (`ERR_CERT_CRLF`), invalid UTF-8 / unreadable files (`ERR_CERT_READ`), duplicate JSON keys / floats / oversized integer literals (`> 1000` digits), and exits cleanly with status `2` and zero Python tracebacks.
 
 ---
 
@@ -124,15 +125,17 @@ Control C provides a concrete pure-$\mathbb{Q}$ witness showing why a discrete s
 
 ## 8. Reproduction Commands
 
+Run from `studies/expedition-nature-extended-audit102r/` (100% offline, Python 3 standard library only):
+
 ```bash
-# 1. Strictly verify committed certificate (rejects duplicate JSON keys, floats, & byte drift)
-python3 -I -O -B -W error symbiosis/stream/track-s4b-nature-extended/nature_extended_certifier.py --check symbiosis/stream/track-s4b-nature-extended/nature_extended_certificate.json
+# 1. Strictly verify committed certificate (rejects duplicate JSON keys, floats, CRLF, value tamper & byte drift)
+python3 -I -O -B -W error nature_extended_certifier.py --check nature_extended_certificate.json
 
 # 2. Verify 4-mode isolated -I deterministic replay matches committed JSON byte-for-byte
 for f in "-I -B" "-I -O -B" "-I -B -W error" "-I -O -B -W error"; do
-  python3 $f symbiosis/stream/track-s4b-nature-extended/nature_extended_certifier.py --json | sha256sum
+  python3 $f nature_extended_certifier.py --json | sha256sum
 done
 
 # 3. Run assertion-free R5 known-answer, control, and validator-tamper suite (7/7 groups)
-python3 -I -O -B -W error symbiosis/stream/track-s4b-nature-extended/test_nature_extended_r5.py
+python3 -I -O -B -W error test_nature_extended_r5.py
 ```

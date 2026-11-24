@@ -1,18 +1,17 @@
-# Extended Nature-Inspired Exact Operators — Pure-$\mathbb{Q}$ Five-Pillar Certifier (`AUDIT-102R`)
+# Extended Nature-Inspired Exact Operators — Pure-$\mathbb{Q}$ Five-Pillar Certifier
 
-> **Status:** Independently `VERIFIED` across 2 model families (`AUDIT-102R`, `honest_novelty_tier: N1` engineering/audit over `N0` classical literature `NATX-N0-01`..`08`; human review pending).
-> **Seats:** Author `spectral-prover` · Clean-Room Verifiers: `Muse Code` (Meta) and `verifier`.
+> **Standing:** Offline pure-stdlib certifier and R5 test suite (`honest_novelty_tier: N0` — classical prior-art models `NATX-N0-01`..`08` and self-contained exact rational restatement/certifier; no novelty claim above `N0`).
 > **Runtime Dependencies:** Python 3 standard library only (`int`, `fractions.Fraction`; zero floats on trust paths or JSON, zero bare `assert`s, zero external writes).
 
-## 1. Contents (Byte-Identical Frozen `AUDIT-102R` Package)
+## 1. Shipped Files (Exact In-PR SHA-256)
 
 | File | SHA-256 | Role |
 |---|---|---|
-| [`nature_extended_oracle.py`](nature_extended_oracle.py) | `a65f46181833e493325a7965a69d63bc169a7616cfd8b1dfc9012ae223278b3b` | Pure-$\mathbb{Q}$ exact solvers for all 5 pillars + `11` dynamic must-fail controls (`2+2+3+2+2`) + fail-closed `validate_certificate()` |
-| [`nature_extended_certifier.py`](nature_extended_certifier.py) | `7ab45f45271e30abe8588d574fa6ce2ba44fbd23f1ee26597b953f0862d037f9` | Strict deterministic CLI (`--json`, `--output`, `--check` rejecting duplicate JSON keys, float literals, and byte drift) |
-| [`test_nature_extended_r5.py`](test_nature_extended_r5.py) | `93c597814c21bc4ff813727a03fd7615806ed81676bd8b8cb8def2acbd42dbf9` | Assertion-free R5 known-answer, control, and tamper suite (`7/7` groups OK) |
-| [`nature_extended_certificate.json`](nature_extended_certificate.json) | `a97a174bd79a51c9a351de15d0ce02a2137b9658952d451c6f349e20fa048beb` | Canonical offline certificate (inner `canonical_sha256: 431dfc2d793108e2a4c1f9b9dd564243abcd5bcbeca7853b16a5cfb57491b79f`) |
-| [`NATURE_EXTENDED_REPORT.md`](NATURE_EXTENDED_REPORT.md) | `787bd41217e3dc2044b57d49095e0c835c98092f270edf106b2e78896d2c38ac` | Full report with DOI-verified `N0` literature table, exact rational tables, and honest scope boundaries |
+| [`nature_extended_oracle.py`](nature_extended_oracle.py) | `ba8c2d03012ed51d0cf99ac98dcfd56bb57d925923144f2d34e774ff0ca69666` | Pure-$\mathbb{Q}$ exact solvers for all 5 pillars + `11` dynamic must-fail controls (`2+2+3+2+2`) + fail-closed `validate_certificate()` (verifies schema, invariants, `canonical_sha256`, and exact oracle recomputation parity) |
+| [`nature_extended_certifier.py`](nature_extended_certifier.py) | `e5ff7c1f931f5db4470ca9ed0d35072d6f64234faeb4d6d0ee542f37de58f8cd` | Strict deterministic CLI (`--json`, `--output`, `--check` rejecting duplicate JSON keys, floats, CRLF, invalid UTF-8, oversized ints `>1000` digits, value drift, and byte drift with clean exit `2`) |
+| [`test_nature_extended_r5.py`](test_nature_extended_r5.py) | `d94bf2aefc1b8a5af33826a2d8142447ad3755bdd4553d689e7bf616b00d1c1f` | Assertion-free R5 known-answer, control, value-tamper, and CLI error-handling suite (`7/7` groups OK) |
+| [`nature_extended_certificate.json`](nature_extended_certificate.json) | `27f9da8604899aa58d1fd1a58044e54da3aaee9340c8b64ea94fe24e7a7735bb` | Canonical offline certificate (inner `canonical_sha256: c96a0dc5e35a66b70d577c688a6ccedc1bfcfab6e97ea0dced40749efb3fe571`) |
+| [`NATURE_EXTENDED_REPORT.md`](NATURE_EXTENDED_REPORT.md) | `da76f6338c8d3d40ad30209f79267831673ab5e23d9a0f9c1e00eaee2cebb107` | Full report with DOI-verified `N0` literature table, exact rational tables, and scope boundaries |
 
 ## 2. Five Certified Pure-$\mathbb{Q}$ Pillars & `11` Must-Fail Controls (Zero Metaphors)
 
@@ -24,20 +23,20 @@
 
 ## 3. Exact Offline Reproduction (4-Mode Isolated `-I` R4 Parity)
 
-From this directory (100% offline, Python 3 standard library only):
+From this directory (`studies/expedition-nature-extended-audit102r/`, 100% offline, Python 3 standard library only):
 
 ```bash
-# 1. Strict byte-for-byte verification against committed certificate (a97a174b...):
+# 1. Strict byte-for-byte verification against committed certificate (27f9da86...):
 python3 -I -O -B -W error nature_extended_certifier.py --check nature_extended_certificate.json
 
-# 2. 4-mode isolated -I deterministic recomputation parity (all match a97a174b...):
+# 2. 4-mode isolated -I deterministic recomputation parity (all match 27f9da86...):
 python3 -I -B nature_extended_certifier.py --json | sha256sum
 python3 -I -O -B nature_extended_certifier.py --json | sha256sum
 python3 -I -B -W error nature_extended_certifier.py --json | sha256sum
 python3 -I -O -B -W error nature_extended_certifier.py --json | sha256sum
 
-# 3. Assertion-free R5 known-answer, control & tamper suite (7/7 groups OK):
+# 3. Assertion-free R5 known-answer, control, value-tamper & CLI suite (7/7 groups OK):
 python3 -I -O -B -W error test_nature_extended_r5.py
 ```
 
-**External Verification Receipts:** `7/7` R5 OK; `aletheia v2.0.0 mutate --max-mutants 0`: `167/167` (`164` oracle + `3` certifier, `100.0%`) KILLED (`0` survivors, `truncated=False`); `aletheia v2.0.0 audit-check --strict-ancestors --safety-scan PASS` (`0` defects, `0` leaks, `0` safety findings); independently verified by `Muse Code` (Meta) and `verifier` (`27/27` adversarial probes, `0` bypasses, `0` crashes).
+**Reproducible Local Checks:** `7/7` R5 groups pass across `-I -B`, `-I -O -B`, `-I -B -W error`, and `PYTHONHASHSEED=42 -B`; `aletheia mutate --max-mutants 0` kills `172/172` (`166` oracle + `6` certifier, `0` survivors, `truncated=False`).

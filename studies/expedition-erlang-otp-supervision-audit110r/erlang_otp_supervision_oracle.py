@@ -24,9 +24,12 @@ Foundation-0/aletheia v2.1+ Two-Zone Hybrid Swarms:
 
   Pillar 4 (p4_monitor_vs_link_fault_isolation):
     Exact process-table signal propagation comparing unidirectional monitor
-    (Zone-B verifier crash emits DOWN + blocks promotion with 0 collateral kills)
-    against bidirectional link with trap_exit=False (kills coordinator + siblings)
-    and trap_exit=True (traps abnormal EXIT but still yields to untrappable kill).
+    (Zone-B verifier crash or external exit(verifier_1, kill) -> reason "killed"
+    emits DOWN + blocks promotion with 0 collateral kills) against bidirectional
+    link with trap_exit=False (kills coordinator + siblings) and trap_exit=True
+    (traps abnormal EXIT and propagated "killed" from external exit(verifier_1, kill),
+    while an explicit direct untrappable "kill" signal targeting coordinator still
+    terminates coordinator with reason "killed").
 
   Pillar 5 (p5_exo1200_aletheia_bridge):
     Exact operational bridge extending Moissanite-Labs/exo#1200 SupervisionPolicy
@@ -37,9 +40,9 @@ Foundation-0/aletheia v2.1+ Two-Zone Hybrid Swarms:
 
 Honest Law-4 novelty tier:
   - N0: Classical Erlang/OTP supervision tree semantics (Armstrong 2003;
-    Armstrong, Virding, Wikstrom & Williams 1996; Erlang/OTP supervisor.erl).
-  - N1 (engineering/audit): Executable pure-Z/Q soundness certifier and
-    Frozen-Snapshot rest_for_one Non-Churn bridge for exo#1200 + aletheia v2.1+.
+    Armstrong, Virding, Wikstrom & Williams 1996; Erlang/OTP supervisor.erl)
+    and self-contained pure-Z/Q operational restatement/certifier bridging
+    exo#1200 + aletheia v2.1+ (no new mathematical claim above N0).
 """
 from __future__ import annotations
 
@@ -61,7 +64,7 @@ FRAC_RE = re.compile(r"^(0|[1-9][0-9]*)/([1-9][0-9]*)$")
 
 RESTART_POLICIES: tuple[str, ...] = ("permanent", "transient", "temporary")
 EXIT_REASONS: tuple[str, ...] = ("normal", "shutdown", "abnormal")
-SIGNAL_EXIT_REASONS: tuple[str, ...] = ("normal", "shutdown", "abnormal", "kill")
+SIGNAL_EXIT_REASONS: tuple[str, ...] = ("normal", "shutdown", "abnormal", "kill", "killed")
 RESTART_STRATEGIES: tuple[str, ...] = ("one_for_one", "one_for_all", "rest_for_one")
 
 EXO1200_FAILURE_CLASSES: frozenset[str] = frozenset({
@@ -936,21 +939,38 @@ def run_pillar_4() -> dict[str, Any]:
     sim_monitor = simulate_process_fault(procs_no_trap, [], monitors, "verifier_1", "abnormal")
     cert_monitor = certify_zone_b_isolation(sim_monitor, "coordinator")
 
+    # External exit(verifier_1, kill) terminates verifier_1 with exit reason "killed".
+    # Unidirectional monitor delivers DOWN(..., "killed") with 0 collateral kills and blocks promotion.
+    sim_monitor_killed = simulate_process_fault(procs_no_trap, [], monitors, "verifier_1", "killed")
+    cert_monitor_killed = certify_zone_b_isolation(sim_monitor_killed, "coordinator")
+
     sim_link_trap_abn = simulate_process_fault(procs_trap, links, [], "verifier_1", "abnormal")
     coord_trap_abn = sim_link_trap_abn["processes"]["coordinator"]
+
+    # Erlang/OTP distinction: when verifier_1 is killed externally by exit(verifier_1, kill),
+    # its propagated link exit reason is "killed", which a linked coordinator with trap_exit=True CAN trap.
+    sim_link_trap_killed = simulate_process_fault(procs_trap, links, [], "verifier_1", "killed")
+    coord_trap_killed = sim_link_trap_killed["processes"]["coordinator"]
 
     sim_link_notrap = simulate_process_fault(procs_no_trap, links, [], "verifier_1", "abnormal")
     cert_link_notrap = certify_zone_b_isolation(sim_link_notrap, "coordinator")
 
+    # Direct untrappable "kill" signal targeting coordinator (as in direct exit(coordinator, kill)):
+    # bypasses trap_exit=True, kills coordinator with exit_reason "killed", and cascades to verifier_2.
     sim_link_trap_kill = simulate_process_fault(procs_trap, links, [], "verifier_1", "kill")
     cert_link_trap_kill = certify_zone_b_isolation(sim_link_trap_kill, "coordinator")
 
     return {
         "passed": all([
             cert_monitor["passed"] is True,
+            cert_monitor_killed["passed"] is True,
             coord_trap_abn["state"] == "ALIVE",
             len(coord_trap_abn["inbox"]) == 1,
             coord_trap_abn["inbox"][0]["tag"] == "EXIT",
+            coord_trap_killed["state"] == "ALIVE",
+            len(coord_trap_killed["inbox"]) == 1,
+            coord_trap_killed["inbox"][0]["tag"] == "EXIT",
+            coord_trap_killed["inbox"][0]["reason"] == "killed",
             cert_link_notrap["passed"] is False,
             cert_link_trap_kill["passed"] is False,
         ]),
@@ -963,12 +983,30 @@ def run_pillar_4() -> dict[str, Any]:
             "down_tag": sim_monitor["processes"]["coordinator"]["inbox"][0]["tag"],
             "down_ref": sim_monitor["processes"]["coordinator"]["inbox"][0]["ref"],
         },
+        "monitor_zone_b_isolation_on_killed": {
+            "coordinator_state": sim_monitor_killed["processes"]["coordinator"]["state"],
+            "sibling_verifier_state": sim_monitor_killed["processes"]["verifier_2"]["state"],
+            "collateral_kill_count": sim_monitor_killed["collateral_kill_count"],
+            "promotion_blocked": sim_monitor_killed["processes"]["coordinator"]["promotion_blocked"],
+            "down_messages_received": len(sim_monitor_killed["processes"]["coordinator"]["inbox"]),
+            "down_tag": sim_monitor_killed["processes"]["coordinator"]["inbox"][0]["tag"],
+            "down_ref": sim_monitor_killed["processes"]["coordinator"]["inbox"][0]["ref"],
+            "down_reason": sim_monitor_killed["processes"]["coordinator"]["inbox"][0]["reason"],
+        },
         "link_with_trap_exit_abnormal": {
             "coordinator_state": coord_trap_abn["state"],
             "sibling_verifier_state": sim_link_trap_abn["processes"]["verifier_2"]["state"],
             "collateral_kill_count": sim_link_trap_abn["collateral_kill_count"],
             "exit_messages_received": len(coord_trap_abn["inbox"]),
             "exit_tag": coord_trap_abn["inbox"][0]["tag"],
+        },
+        "link_with_trap_exit_outside_killed": {
+            "coordinator_state": coord_trap_killed["state"],
+            "sibling_verifier_state": sim_link_trap_killed["processes"]["verifier_2"]["state"],
+            "collateral_kill_count": sim_link_trap_killed["collateral_kill_count"],
+            "exit_messages_received": len(coord_trap_killed["inbox"]),
+            "exit_tag": coord_trap_killed["inbox"][0]["tag"],
+            "exit_reason": coord_trap_killed["inbox"][0]["reason"],
         },
         "must_fail_link_without_trap_exit_kills_coordinator": {
             "rejected": cert_link_notrap["passed"] is False,
@@ -1381,7 +1419,7 @@ def build_erlang_otp_supervision_certificate() -> dict[str, Any]:
         "audit_id": AUDIT_ID,
         "novelty_tier": {
             "classical_semantics": "N0",
-            "pure_q_hybrid_bridge": "N1",
+            "pure_q_hybrid_bridge": "N0",
         },
         "primary_sources": {
             "armstrong_2003_kth_urn": "urn:nbn:se:kth:diva-3658",
@@ -1592,7 +1630,9 @@ def _validate_p4(p4: Any) -> None:
         {
             "passed",
             "monitor_zone_b_isolation",
+            "monitor_zone_b_isolation_on_killed",
             "link_with_trap_exit_abnormal",
+            "link_with_trap_exit_outside_killed",
             "must_fail_link_without_trap_exit_kills_coordinator",
             "must_fail_kill_bypasses_trap_exit",
         },
@@ -1621,6 +1661,29 @@ def _validate_p4(p4: Any) -> None:
     _req_strict_str_eq(mon["down_tag"], "DOWN", "p4.mon.down_tag")
     _req_strict_str_eq(mon["down_ref"], "mon-v1", "p4.mon.down_ref")
 
+    mon_k = _req_exact_keys(
+        p4["monitor_zone_b_isolation_on_killed"],
+        {
+            "coordinator_state",
+            "sibling_verifier_state",
+            "collateral_kill_count",
+            "promotion_blocked",
+            "down_messages_received",
+            "down_tag",
+            "down_ref",
+            "down_reason",
+        },
+        "p4.mon_killed",
+    )
+    _req_strict_str_eq(mon_k["coordinator_state"], "ALIVE", "p4.mon_killed.coord")
+    _req_strict_str_eq(mon_k["sibling_verifier_state"], "ALIVE", "p4.mon_killed.sibling")
+    _req_strict_int_range(mon_k["collateral_kill_count"], 0, 0, "p4.mon_killed.kills")
+    _req_bool_eq(mon_k["promotion_blocked"], True, "p4.mon_killed.promotion_blocked")
+    _req_strict_int_range(mon_k["down_messages_received"], 1, 1, "p4.mon_killed.down_cnt")
+    _req_strict_str_eq(mon_k["down_tag"], "DOWN", "p4.mon_killed.down_tag")
+    _req_strict_str_eq(mon_k["down_ref"], "mon-v1", "p4.mon_killed.down_ref")
+    _req_strict_str_eq(mon_k["down_reason"], "killed", "p4.mon_killed.down_reason")
+
     lt = _req_exact_keys(
         p4["link_with_trap_exit_abnormal"],
         {
@@ -1637,6 +1700,25 @@ def _validate_p4(p4: Any) -> None:
     _req_strict_int_range(lt["collateral_kill_count"], 0, 0, "p4.lt.kills")
     _req_strict_int_range(lt["exit_messages_received"], 1, 1, "p4.lt.exit_cnt")
     _req_strict_str_eq(lt["exit_tag"], "EXIT", "p4.lt.exit_tag")
+
+    lt_k = _req_exact_keys(
+        p4["link_with_trap_exit_outside_killed"],
+        {
+            "coordinator_state",
+            "sibling_verifier_state",
+            "collateral_kill_count",
+            "exit_messages_received",
+            "exit_tag",
+            "exit_reason",
+        },
+        "p4.lt_killed",
+    )
+    _req_strict_str_eq(lt_k["coordinator_state"], "ALIVE", "p4.lt_killed.coord")
+    _req_strict_str_eq(lt_k["sibling_verifier_state"], "ALIVE", "p4.lt_killed.sibling")
+    _req_strict_int_range(lt_k["collateral_kill_count"], 0, 0, "p4.lt_killed.kills")
+    _req_strict_int_range(lt_k["exit_messages_received"], 1, 1, "p4.lt_killed.exit_cnt")
+    _req_strict_str_eq(lt_k["exit_tag"], "EXIT", "p4.lt_killed.exit_tag")
+    _req_strict_str_eq(lt_k["exit_reason"], "killed", "p4.lt_killed.exit_reason")
 
     mf1 = _req_exact_keys(
         p4["must_fail_link_without_trap_exit_kills_coordinator"],
@@ -1742,7 +1824,7 @@ def validate_certificate(cert: Any) -> bool:
 
     nt = _req_exact_keys(cert["novelty_tier"], {"classical_semantics", "pure_q_hybrid_bridge"}, "novelty_tier")
     _req_strict_str_eq(nt["classical_semantics"], "N0", "novelty_tier.classical_semantics")
-    _req_strict_str_eq(nt["pure_q_hybrid_bridge"], "N1", "novelty_tier.pure_q_hybrid_bridge")
+    _req_strict_str_eq(nt["pure_q_hybrid_bridge"], "N0", "novelty_tier.pure_q_hybrid_bridge")
 
     ps = _req_exact_keys(
         cert["primary_sources"],

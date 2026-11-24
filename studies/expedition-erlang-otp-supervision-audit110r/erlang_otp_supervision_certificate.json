@@ -1,9 +1,9 @@
 {
   "audit_id": "AUDIT-110",
-  "canonical_sha256": "338d6b1619e6b5aeac8ae772f8e45459e2153a633f162695553472ec17fae87d",
+  "canonical_sha256": "46415faef56963a3fc9df1601f76c3b6b5b5394a92513c15cb5108f2846b1325",
   "novelty_tier": {
     "classical_semantics": "N0",
-    "pure_q_hybrid_bridge": "N1"
+    "pure_q_hybrid_bridge": "N0"
   },
   "pillars": {
     "p1_restart_policy_matrix": {
@@ -202,10 +202,28 @@
         "exit_tag": "EXIT",
         "sibling_verifier_state": "ALIVE"
       },
+      "link_with_trap_exit_outside_killed": {
+        "collateral_kill_count": 0,
+        "coordinator_state": "ALIVE",
+        "exit_messages_received": 1,
+        "exit_reason": "killed",
+        "exit_tag": "EXIT",
+        "sibling_verifier_state": "ALIVE"
+      },
       "monitor_zone_b_isolation": {
         "collateral_kill_count": 0,
         "coordinator_state": "ALIVE",
         "down_messages_received": 1,
+        "down_ref": "mon-v1",
+        "down_tag": "DOWN",
+        "promotion_blocked": true,
+        "sibling_verifier_state": "ALIVE"
+      },
+      "monitor_zone_b_isolation_on_killed": {
+        "collateral_kill_count": 0,
+        "coordinator_state": "ALIVE",
+        "down_messages_received": 1,
+        "down_reason": "killed",
         "down_ref": "mon-v1",
         "down_tag": "DOWN",
         "promotion_blocked": true,

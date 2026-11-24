@@ -1224,7 +1224,7 @@ def audit_synaptic_homeostatic_siliquant_exact() -> dict:
 # ---------------------------------------------------------------------------
 
 
-def build_nature_extended_certificate() -> dict:
+def _assemble_nature_extended_certificate() -> dict:
     p1 = audit_kinetic_proofreading_exact()
     p2 = audit_immune_negative_selection_exact()
     p3 = audit_turing_reaction_diffusion_exact()
@@ -1255,7 +1255,7 @@ def build_nature_extended_certificate() -> dict:
         },
         "law4_novelty": {
             "classical_mechanisms_class": "N0",
-            "engineering_certifier_class": "N1",
+            "engineering_certifier_class": "N0",
             "primary_source_count": len(LAW4_N0_PRIMARY_SOURCES),
         },
         "law5_discipline": {
@@ -1273,6 +1273,11 @@ def build_nature_extended_certificate() -> dict:
     }
     digest = hashlib.sha256(canonical_json_bytes(payload)).hexdigest()
     payload["canonical_sha256"] = digest
+    return payload
+
+
+def build_nature_extended_certificate() -> dict:
+    payload = _assemble_nature_extended_certificate()
     validate_certificate(payload)
     return payload
 
@@ -1745,8 +1750,8 @@ def validate_certificate(cert) -> None:
     _req_exact_keys(l4, _LAW4_KEYS, "law4_novelty")
     if _req_nonempty_str(l4, "classical_mechanisms_class", "law4_novelty") != "N0":
         raise NatureExtendedError("ERR_CERT_LAW4", "classical mechanisms must be N0")
-    if _req_nonempty_str(l4, "engineering_certifier_class", "law4_novelty") != "N1":
-        raise NatureExtendedError("ERR_CERT_LAW4", "engineering certifier must be N1")
+    if _req_nonempty_str(l4, "engineering_certifier_class", "law4_novelty") != "N0":
+        raise NatureExtendedError("ERR_CERT_LAW4", "engineering certifier must be N0")
     _req_int_eq(l4, "primary_source_count", len(EXPECTED_SOURCE_IDS), "law4_novelty")
 
     l5 = _req_dict(cert["law5_discipline"], "law5_discipline")
@@ -1797,3 +1802,10 @@ def validate_certificate(cert) -> None:
     expected_digest = hashlib.sha256(canonical_json_bytes(unsigned)).hexdigest()
     if not _is_strict_str(digest) or digest != expected_digest:
         raise NatureExtendedError("ERR_CERT_SHA", "canonical_sha256 must be matching strict lowercase hex str")
+
+    expected = _assemble_nature_extended_certificate()
+    if canonical_json_bytes(cert) != canonical_json_bytes(expected):
+        raise NatureExtendedError(
+            "ERR_CERT_VALUE_MISMATCH",
+            "certificate values do not match deterministic oracle recomputation",
+        )

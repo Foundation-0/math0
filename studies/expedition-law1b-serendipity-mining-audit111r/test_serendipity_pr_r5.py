@@ -9,8 +9,10 @@ and `-I -B -W error`. Kills 100% of `aletheia mutate --max-mutants 0 --add-cwd` 
 """
 from __future__ import annotations
 
+from contextlib import redirect_stderr, redirect_stdout
 from fractions import Fraction
 import hashlib
+import io
 import json
 from pathlib import Path
 import sys
@@ -48,7 +50,9 @@ def _valid_law1b_spec(**kw: object) -> dict[str, object]:
                 "snapshot_sha256": "cd" * 32,
                 "mechanism_class": "DENOMINATOR_OR_WEIGHT_BIAS",
                 "evidence_standing": "EXECUTED_EXACT_WITNESS",
+                "operator_id": "M1_MICROBATCH_WEIGHTING",
                 "honest_novelty": "N0",
+                "prior_art_record": None,
                 "operator_summary": "Weighted micro-batch accumulation witness",
             },
             {
@@ -59,20 +63,15 @@ def _valid_law1b_spec(**kw: object) -> dict[str, object]:
                 "snapshot_sha256": "ef" * 32,
                 "mechanism_class": "QUANTILE_OR_INDEX_BOUNDARY",
                 "evidence_standing": "CATALOGED_LEAD",
+                "operator_id": None,
                 "honest_novelty": "N0",
+                "prior_art_record": None,
                 "operator_summary": "Closed-unmerged quantile boundary lead",
             },
         ],
     }
     base.update(kw)
     return base
-
-
-def _make_fake_intake(root: Path) -> None:
-    """Create a minimal valid 8-repo intake tree matching PINNED_REPO_SNAPSHOTS for live tests."""
-    # Note: we copy exact hashes by creating files with exact matching hashes? No — in synthetic
-    # unit tests we test verify_live_intake error branches using temporary dirs!
-    (root / "deep_diffs").mkdir(parents=True, exist_ok=True)
 
 
 class TestSerendipityPrR5(unittest.TestCase):
@@ -302,18 +301,27 @@ class TestSerendipityPrR5(unittest.TestCase):
         e0 = base_entries[0]
         e1 = base_entries[1]
 
-        # Valid single-bucket repos (closed_unmerged=0 or open=0), exact per-repo boundary equality, and N1 on EXECUTED_EXACT_WITNESS
+        # Valid single-bucket repos (closed_unmerged=0 or open=0), N0 with optional prior_art_record,
+        # and N1 on EXECUTED_EXACT_WITNESS ONLY when paired with a certified operator_id and clean prior_art_record
         ok_open_only = spo.certify_law1b_serendipity_mining(
             _valid_law1b_spec(
                 repos=[{**base_repo, "fetched": 6, "open": 1, "closed_unmerged": 0, "merged": 5}],
-                mined_entries=[{**e0, "honest_novelty": "N1"}],
+                mined_entries=[{**e0, "honest_novelty": "N1", "prior_art_record": "Prior-art audit 2026-11-22: 0 matches"}],
             )
         )
         self.assertTrue(ok_open_only["certified"])
+        self.assertEqual(ok_open_only["certified_operator_ids"], ["M1_MICROBATCH_WEIGHTING"])
         ok_cu_only = spo.certify_law1b_serendipity_mining(
             _valid_law1b_spec(
                 repos=[{**base_repo, "fetched": 6, "open": 0, "closed_unmerged": 1, "merged": 5}],
-                mined_entries=[{**e1, "evidence_standing": "EXECUTED_EXACT_WITNESS"}],
+                mined_entries=[
+                    {
+                        **e1,
+                        "evidence_standing": "EXECUTED_EXACT_WITNESS",
+                        "operator_id": "M2_NEAREST_RANK_QUANTILE",
+                        "prior_art_record": "Hyndman & Fan (1996) R-1",
+                    }
+                ],
             )
         )
         self.assertTrue(ok_cu_only["certified"])
@@ -364,12 +372,18 @@ class TestSerendipityPrR5(unittest.TestCase):
             (_valid_law1b_spec(mined_entries=[{**e0, "snapshot_sha256": "a" * 64}, e1]), "L1B_ENTRY_INVALID_SNAPSHOT_SHA"),
             (_valid_law1b_spec(mined_entries=[{**e0, "mechanism_class": "BOGUS"}, e1]), "L1B_ENTRY_INVALID_MECHANISM_CLASS"),
             (_valid_law1b_spec(mined_entries=[{**e0, "evidence_standing": "BOGUS"}, e1]), "L1B_ENTRY_INVALID_STANDING"),
+            (_valid_law1b_spec(mined_entries=[{**e0, "operator_id": ["M1_MICROBATCH_WEIGHTING"]}, e1]), "L1B_WITNESS_UNKNOWN_OPERATOR"),
+            (_valid_law1b_spec(mined_entries=[{**e0, "operator_id": "M99_BOGUS"}, e1]), "L1B_WITNESS_UNKNOWN_OPERATOR"),
+            (_valid_law1b_spec(mined_entries=[e0, {**e1, "operator_id": "M1_MICROBATCH_WEIGHTING"}]), "L1B_LEAD_FORBIDS_OPERATOR_ID"),
             (_valid_law1b_spec(mined_entries=[{**e0, "honest_novelty": "N9"}, e1]), "L1B_ENTRY_INVALID_NOVELTY"),
             (_valid_law1b_spec(mined_entries=[e0, {**e1, "honest_novelty": "N1"}]), "L1B_LEAD_CANNOT_CLAIM_ABOVE_N0"),
+            (_valid_law1b_spec(mined_entries=[{**e0, "prior_art_record": "  "}, e1]), "L1B_INVALID_PRIOR_ART_RECORD"),
+            (_valid_law1b_spec(mined_entries=[{**e0, "honest_novelty": "N1", "prior_art_record": None}, e1]), "L1B_NOVELTY_ABOVE_N0_REQUIRES_PRIOR_ART"),
+            (_valid_law1b_spec(mined_entries=[{**e0, "honest_novelty": "N2", "prior_art_record": " "}, e1]), "L1B_NOVELTY_ABOVE_N0_REQUIRES_PRIOR_ART"),
             (_valid_law1b_spec(mined_entries=[{**e0, "operator_summary": " "}, e1]), "L1B_ENTRY_EMPTY_SUMMARY"),
             (_valid_law1b_spec(mined_entries=[e0]), "L1B_CLOSED_UNMERGED_BLIND_SPOT"),
             (_valid_law1b_spec(mined_entries=[e1]), "L1B_OPEN_PR_BLIND_SPOT"),
-            (_valid_law1b_spec(mined_entries=[{**e0, "evidence_standing": "CATALOGED_LEAD"}, e1]), "L1B_ZERO_EXECUTED_WITNESSES"),
+            (_valid_law1b_spec(mined_entries=[{**e0, "evidence_standing": "CATALOGED_LEAD", "operator_id": None}, e1]), "L1B_ZERO_EXECUTED_WITNESSES"),
             # S12-L1B-02: per-repo open / closed_unmerged bucket caps enforced
             (
                 _valid_law1b_spec(
@@ -391,18 +405,26 @@ class TestSerendipityPrR5(unittest.TestCase):
     def test_05_certifier_standalone_check_and_intake_guards(self) -> None:
         cert = spc.build_certificate(mode="standalone")
         self.assertTrue(cert["all_checks_passed"])
-        self.assertEqual(cert["must_fail_controls_verified"], 6)
+        self.assertEqual(cert["mode"], "standalone")
+        self.assertFalse(cert["intake_verification"]["verified_on_disk"])
+        self.assertEqual(cert["must_fail_controls_verified"], 9)
         self.assertEqual(cert["law1b_gate"]["total_prs_fetched"], 1437)
         self.assertEqual(cert["law1b_gate"]["total_unmerged_prs"], 387)
         self.assertEqual(cert["law1b_gate"]["closed_unmerged_mined"], 12)
         self.assertEqual(cert["law1b_gate"]["open_mined"], 12)
+        self.assertEqual(cert["law1b_gate"]["certified_operator_ids"], sorted(spo.CERTIFIED_OPERATOR_IDS))
 
-        # Strict JSON parser guards
+        # Strict JSON parser guards (CRLF, invalid UTF-8, floats, constants, dup keys, oversized 5000-digit ints)
+        self._expect_err(lambda: spc.loads_strict_json(b'{"a": 1}\r\n'), "JSON_CRLF_FORBIDDEN")
         self._expect_err(lambda: spc.loads_strict_json(b"\xff\xfe"), "JSON_INVALID_UTF8")
         self._expect_err(lambda: spc.loads_strict_json(b"{bad"), "JSON_DECODE_ERROR")
         self._expect_err(lambda: spc.loads_strict_json(b'{"a": 1.25}'), "JSON_FLOAT_FORBIDDEN")
         self._expect_err(lambda: spc.loads_strict_json(b'{"a": NaN}'), "JSON_CONSTANT_FORBIDDEN")
         self._expect_err(lambda: spc.loads_strict_json(b'{"a": 1, "a": 2}'), "JSON_DUPLICATE_KEY")
+        self.assertEqual(spc.loads_strict_json(('{"n": ' + ("9" * 1000) + "}").encode("utf-8"))["n"], int("9" * 1000))
+        self.assertEqual(spc.loads_strict_json(('{"n": -' + ("9" * 1000) + "}").encode("utf-8"))["n"], -int("9" * 1000))
+        self._expect_err(lambda: spc.loads_strict_json(('{"n": ' + ("9" * 1001) + "}").encode("utf-8")), "JSON_INT_TOO_LARGE")
+        self._expect_err(lambda: spc.loads_strict_json(('{"n": ' + ("9" * 5000) + "}").encode("utf-8")), "JSON_INT_TOO_LARGE")
 
         # build_certificate mode guards
         self._expect_err(lambda: spc.build_certificate(mode="bogus"), "CERT_INVALID_MODE")
@@ -433,15 +455,16 @@ class TestSerendipityPrR5(unittest.TestCase):
             _write_and_expect({**cert, "external_writes": False}, "CERT_NONZERO_EXTERNAL_WRITES", rehash=True)
             _write_and_expect({**cert, "external_writes": 999}, "CERT_NONZERO_EXTERNAL_WRITES", rehash=True)
             _write_and_expect({**cert, "all_checks_passed": False}, "CERT_NOT_ALL_PASSED")
-            _write_and_expect({**cert, "must_fail_controls": [1, 2, 3, 4, 5, 6]}, "CERT_CONTROL_COUNT_MISMATCH")
+            _write_and_expect({**cert, "must_fail_controls": [1, 2, 3, 4, 5, 6, 7, 8, 9]}, "CERT_CONTROL_COUNT_MISMATCH")
             _write_and_expect({**cert, "must_fail_controls": {"k": {}}, "must_fail_controls_verified": True}, "CERT_CONTROL_COUNT_MISMATCH")
             _write_and_expect({**cert, "must_fail_controls_verified": 99}, "CERT_CONTROL_COUNT_MISMATCH")
             _write_and_expect({**cert, "canonical_sha256": "0" * 64}, "CERT_INVALID_CANONICAL_SHA")
             _write_and_expect({**cert, "canonical_sha256": "ab" * 32}, "CERT_CANONICAL_SHA_MISMATCH")
             _write_and_expect({**cert, "intake_verification": {}}, "CERT_INTAKE_VERIFICATION_MISMATCH", rehash=True)
+            # Forging a standalone cert into mode="live", verified_on_disk=True and re-hashing MUST fail without --intake-root!
             _write_and_expect(
-                {**cert, "mode": "live", "intake_verification": {**cert["intake_verification"], "verified_on_disk": False}},
-                "CERT_INTAKE_VERIFICATION_MISMATCH",
+                {**cert, "mode": "live", "intake_verification": {**cert["intake_verification"], "verified_on_disk": True}},
+                "CERT_LIVE_REQUIRES_INTAKE_ROOT",
                 rehash=True,
             )
             _write_and_expect(
@@ -454,10 +477,24 @@ class TestSerendipityPrR5(unittest.TestCase):
             bad_ctrls = {k: {**v, "rejected": False} for k, v in cert["must_fail_controls"].items()}
             _write_and_expect({**cert, "must_fail_controls": bad_ctrls}, "CERT_CONTROLS_MISMATCH", rehash=True)
 
-            # CLI --check on malformed JSON returns structured exit 2 without traceback
-            malformed_p = root / "malformed.json"
-            malformed_p.write_text("{bad json\n", encoding="utf-8")
-            self.assertEqual(spc.main(["--check", str(malformed_p)]), 2)
+            # CLI --check on malformed JSON & 5000-digit int returns structured exit 2 without traceback
+            for fname, raw_txt, exp_code in (
+                ("malformed.json", "{bad json\n", "JSON_DECODE_ERROR"),
+                ("huge_int.json", '{"n": ' + ("9" * 5000) + "}\n", "JSON_INT_TOO_LARGE"),
+            ):
+                bad_p = root / fname
+                bad_p.write_text(raw_txt, encoding="utf-8")
+                err_buf = io.StringIO()
+                with redirect_stderr(err_buf):
+                    self.assertEqual(spc.main(["--check", str(bad_p)]), 2)
+                self.assertIn(exp_code, err_buf.getvalue())
+                self.assertNotIn("Traceback", err_buf.getvalue())
+
+            # CLI --check on valid standalone cert succeeds cleanly
+            out_buf = io.StringIO()
+            with redirect_stdout(out_buf):
+                self.assertEqual(spc.main(["--check", str(good_p)]), 0)
+            self.assertTrue(json.loads(out_buf.getvalue())["valid"])
 
         # verify_live_intake error guards on synthetic dirs
         with tempfile.TemporaryDirectory() as td:
@@ -572,10 +609,110 @@ class TestSerendipityPrR5(unittest.TestCase):
                 self._expect_err(lambda: spc.verify_live_intake(d), "INTAKE_HEEDLE_ISSUES_MISMATCH")
                 (d / "Moissanite-Labs__heedle_issues.json").write_text('[{"number": 2}]\n', encoding="utf-8")
                 self._expect_err(lambda: spc.verify_live_intake(d), "INTAKE_HEEDLE_ISSUES_MISMATCH")
+
+                # 4. Synthetic verify_live_intake + live build_certificate + --check --intake-root SUCCESS path
+                deep_raw2 = (json.dumps({"head_sha": "56" * 20}) + "\n").encode("utf-8")
+                deep_sha2 = hashlib.sha256(deep_raw2).hexdigest()
+                (d / "deep_diffs" / "p2.json").write_bytes(deep_raw2)
+                (d / "deep_diffs" / "DEEP_MINING_MANIFEST.json").write_text(
+                    json.dumps(
+                        [
+                            {"repo": "OrgA/r1", "number": 1, "status": "open", "file": "p1.json", "sha256": deep_sha, "head_sha": "12" * 20},
+                            {"repo": "OrgA/r1", "number": 2, "status": "closed_unmerged", "file": "p2.json", "sha256": deep_sha2, "head_sha": "56" * 20},
+                        ]
+                    )
+                    + "\n",
+                    encoding="utf-8",
+                )
+                (d / "Moissanite-Labs__heedle_issues.json").write_text(
+                    json.dumps([{"number": 2}, {"number": 3}, {"number": 6}, {"number": 7}]) + "\n",
+                    encoding="utf-8",
+                )
+                spc.CANONICAL_MINED_ENTRIES = [
+                    {
+                        "repo": "OrgA/r1",
+                        "number": 1,
+                        "status": "open",
+                        "head_sha": "12" * 20,
+                        "snapshot_sha256": deep_sha,
+                        "mechanism_class": "DENOMINATOR_OR_WEIGHT_BIAS",
+                        "evidence_standing": "EXECUTED_EXACT_WITNESS",
+                        "operator_id": "M1_MICROBATCH_WEIGHTING",
+                        "honest_novelty": "N0",
+                        "prior_art_record": None,
+                        "operator_summary": "Synthetic open witness",
+                    },
+                    {
+                        "repo": "OrgA/r1",
+                        "number": 2,
+                        "status": "closed_unmerged",
+                        "head_sha": "56" * 20,
+                        "snapshot_sha256": deep_sha2,
+                        "mechanism_class": "QUANTILE_OR_INDEX_BOUNDARY",
+                        "evidence_standing": "CATALOGED_LEAD",
+                        "operator_id": None,
+                        "honest_novelty": "N0",
+                        "prior_art_record": None,
+                        "operator_summary": "Synthetic closed-unmerged lead",
+                    },
+                ]
+                live_info = spc.verify_live_intake(d)
+                self.assertTrue(live_info["verified_on_disk"])
+                self.assertEqual(live_info["repos_verified"], 1)
+                self.assertEqual(live_info["deep_pr_files_verified"], 2)
+                self.assertEqual(live_info["deep_open_count"], 1)
+                self.assertEqual(live_info["deep_closed_unmerged_count"], 1)
+                self.assertEqual(live_info["heedle_issues_verified"], 4)
+
+                live_cert = spc.build_certificate(mode="live", intake_root=d)
+                self.assertTrue(live_cert["all_checks_passed"])
+                self.assertEqual(live_cert["mode"], "live")
+                self.assertTrue(live_cert["intake_verification"]["verified_on_disk"])
+                live_p = d / "live_cert.json"
+                live_p.write_text(json.dumps(live_cert, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+                # Live cert fails without intake_root, succeeds with matching intake_root, fails on tampered live intake_verification
+                self._expect_err(lambda: spc.validate_saved_certificate(live_p), "CERT_LIVE_REQUIRES_INTAKE_ROOT")
+                check_res = spc.validate_saved_certificate(live_p, intake_root=d)
+                self.assertTrue(check_res["valid"])
+                self.assertEqual(check_res["mode"], "live")
+                out_live = io.StringIO()
+                with redirect_stdout(out_live):
+                    self.assertEqual(spc.main(["--check", str(live_p), "--intake-root", str(d)]), 0)
+                self.assertEqual(json.loads(out_live.getvalue())["mode"], "live")
+
+                tampered_live_body = {
+                    k: v for k, v in live_cert.items() if k != "canonical_sha256"
+                }
+                tampered_live_body["intake_verification"] = {
+                    **live_cert["intake_verification"],
+                    "verified_on_disk": False,
+                }
+                tampered_live = {
+                    **tampered_live_body,
+                    "canonical_sha256": spo.canonical_sha256(tampered_live_body),
+                }
+                tampered_live_p = d / "tampered_live.json"
+                tampered_live_p.write_text(json.dumps(tampered_live, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+                self._expect_err(
+                    lambda: spc.validate_saved_certificate(tampered_live_p, intake_root=d),
+                    "CERT_INTAKE_VERIFICATION_MISMATCH",
+                )
             finally:
                 spc.PINNED_REPO_SNAPSHOTS = orig_repos
                 spc.CANONICAL_MINED_ENTRIES = orig_entries
 
 
+def run_deterministic_suite() -> int:
+    suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestSerendipityPrR5)
+    buf = io.StringIO()
+    result = unittest.TextTestRunner(stream=buf, verbosity=0).run(suite)
+    if not result.wasSuccessful():
+        sys.stderr.write(buf.getvalue())
+        return 1
+    sys.stdout.write(f"PASS AUDIT-111R R5_TESTS={result.testsRun}/{result.testsRun}\n")
+    return 0
+
+
 if __name__ == "__main__":
-    unittest.main()
+    raise SystemExit(run_deterministic_suite())

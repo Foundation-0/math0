@@ -9,9 +9,9 @@
 
 ## 1. Motivation: Closing Anti-Pattern `CS-15` (Merged-Only Tunnel Vision)
 
-Standard research audits and repository reviews inspect only a repository's default branch (`main`) and published releases. Across the eight active repositories audited in Track S12 (`1,437` total PRs fetched read-only on 2026-11-22), **`387 / 1,437` (`129 / 479`, ~26.9%)** of pull requests are **unmerged** (`296` open + `91` closed-unmerged).
+Standard research audits and repository reviews inspect only a repository's default branch (`main`) and published releases. In the Track S12 read-only GitHub API snapshot collected on 2026-11-22 across eight repositories (queried via `pulls?state=all&per_page=100` in default newest-first order, **page-capped at `500` items for `Moissanite-Labs/exo` and `800` items for `NandhaKishorM/laya`** — not full repository histories), the fetched sample contained `1,437` PR records of which `387` (`296` open + `91` closed-unmerged) were unmerged. Because the two largest repositories were page-capped and no exhaustive triage of all `387` unmerged PRs or matched merged-PR baseline/null was compiled, this study is framed strictly as a **curated catalogue of `24` mined unmerged PR entries (`11` self-contained pure-$\mathbb{Z}/\mathbb{Q}$ operator restatements + `13` cataloged leads) at honest novelty `N0`**, not a repo-wide statistical prevalence measurement.
 
-Empirical mining of those unmerged branches demonstrates that high-signal mathematical defects, negative controls, lexer/parser security counterexamples, honest multi-seed refutations, pre-freeze protocol cancellations, and alternate architectural prototypes frequently live *outside* `main`:
+Concrete examples from this curated catalogue show that high-signal mathematical defects, negative controls, lexer/parser security counterexamples, multi-seed refutations, pre-freeze protocol cancellations, and alternate architectural prototypes can appear in unmerged PRs:
 
 - **Closed-unmerged bugfixes and exact reproducers** (e.g., `NandhaKishorM/laya#698` nearest-rank p95 overshoot at every multiple of 20; `laya#693`/`#683` self-cancelling minimum-offset drop; `laya#1411` `10**400` JSON `OverflowError`; `Moissanite-Labs/exo#428` presence-file key forgery; `exo#490` backtick backslash-newline collapse; `exo#402` `gh` option-value target smuggling).
 - **Closed-unmerged architectural prototypes** (e.g., `chuanqisun/spaceship#5` browser WebGPU hidden-state steering & attention-box logit biasing with side-by-side unsteered counterfactual replay; `spaceship#3` 4-pane parallel comparison arena; `spaceship#2` `pointerId`-scoped multi-touch gesture arbitration).
@@ -45,13 +45,15 @@ Implemented in pure Python 3 stdlib (`int` / `Fraction`, zero floats, zero bare 
 2. **`G-1b.2` — Exact Provenance Pinning & Closed Mechanism Taxonomy:**
    - Every repository row pins a non-uniform 64-char lowercase hex `prs_json_sha256` of its frozen `state=all` PR listing.
    - Every mined PR entry pins `(repo, number)` uniquely (case-insensitive repo match, positive integer PR number), valid `status` in `{"open", "closed_unmerged"}`, non-uniform 40-char lowercase hex `head_sha`, non-uniform 64-char lowercase hex `snapshot_sha256`, clean-ASCII `operator_summary`, and `mechanism_class` from the closed 9-class taxonomy (`DENOMINATOR_OR_WEIGHT_BIAS`, `QUANTILE_OR_INDEX_BOUNDARY`, `AFFINE_OR_RANGE_PROJECTION`, `ALGEBRAIC_KERNEL_EQUIVALENCE`, `LEXER_OR_PARSER_SECURITY_BYPASS`, `CRYPTO_PIN_OR_STATE_MACHINE`, `EMPIRICAL_REFUTATION_OR_FREEZE`, `INTERNAL_STEERING_OR_ARCHITECTURE`, `EXACT_CERTIFIER_OR_DOMAIN_TOOL`).
-3. **`G-1b.3` — Non-Metaphorical Operator Discipline:**
+3. **`G-1b.3` — Non-Metaphorical Operator Membership & Prior-Art Discipline:**
    - At least one mined entry MUST have `evidence_standing == "EXECUTED_EXACT_WITNESS"` (`L1B_ZERO_EXECUTED_WITNESSES`).
-   - Any entry with `evidence_standing == "CATALOGED_LEAD"` MUST have `honest_novelty == "N0"` (`L1B_LEAD_CANNOT_CLAIM_ABOVE_N0`).
+   - Every `EXECUTED_EXACT_WITNESS` entry MUST bind `"operator_id"` to a member of the closed certified operator set `CERTIFIED_OPERATOR_IDS` (`M1`–`M5` witnesses implemented in `serendipity_pr_oracle.py`; otherwise `L1B_WITNESS_UNKNOWN_OPERATOR`).
+   - Every `CATALOGED_LEAD` entry MUST set `"operator_id": null` (`L1B_LEAD_FORBIDS_OPERATOR_ID`) and MUST have `honest_novelty == "N0"` (`L1B_LEAD_CANNOT_CLAIM_ABOVE_N0`).
+   - Any entry claiming `honest_novelty in {"N1", "N2"}` MUST provide a non-empty clean-ASCII `"prior_art_record"` citation (`L1B_NOVELTY_ABOVE_N0_REQUIRES_PRIOR_ART`); `N0` entries allow `"prior_art_record": null` or a clean-ASCII citation (`L1B_INVALID_PRIOR_ART_RECORD`).
 4. **`G-1b.4` — Zero-Write Portal Integrity:**
    - `external_writes` MUST equal strict integer `0` (`L1B_NONZERO_EXTERNAL_WRITES`).
 
-> **Declared-Record Scope Boundary:** Consistent with Aletheia v2.0 (`aletheia/gates_v2.py` & `spec/LAWS_AND_GATES.md`), `certify_law1b_serendipity_mining(spec)` certifies that a caller-supplied Law-1b mining record is well-formed and satisfies guards `G-1b.1`–`G-1b.4`. It does **not** verify from the dict alone that the referenced GitHub snapshots exist on disk or match the pinned digests; live byte-level SHA-256 verification of the frozen intake JSON files is performed separately by `serendipity_pr_certifier.py --live --intake-root <dir>`.
+> **Declared-Record & Restatement Scope Boundary:** `certify_law1b_serendipity_mining(spec)` is a declared-record schema, operator-membership, and prior-art-citation gate enforcing `G-1b.1`–`G-1b.4` on a caller-supplied record. It does **not** query the GitHub API or verify on-disk intake snapshots from the dict alone, and the `M1`–`M5` operators restate the extracted mechanisms in self-contained pure-$\mathbb{Z}/\mathbb{Q}$ Python rather than executing upstream repository code. Live byte-level SHA-256 verification of on-disk intake snapshots is performed separately by `serendipity_pr_certifier.py --live --intake-root <dir>` and `serendipity_pr_certifier.py --check <live_cert.json> --intake-root <dir>`.
 
 ---
 

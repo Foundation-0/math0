@@ -58,6 +58,20 @@ MECHANISM_CLASSES = frozenset(
 PR_STATUSES = frozenset({"open", "closed_unmerged"})
 EVIDENCE_STANDINGS = frozenset({"EXECUTED_EXACT_WITNESS", "CATALOGED_LEAD"})
 NOVELTY_LABELS = frozenset({"N0", "N1", "N2"})
+CERTIFIED_OPERATOR_IDS = frozenset(
+    {
+        "M1_MICROBATCH_WEIGHTING",
+        "M2_NEAREST_RANK_QUANTILE",
+        "M3_AFFINE_SCORE_PROJECTION",
+        "M4_SPAN_POOLING_EQUIVALENCE",
+        "M5_BACKTICK_LINE_CONTINUATION",
+        "M5_HEREDOC_TERMINATOR",
+        "M5_XARGS_GETOPT_COMMAND",
+        "M5_GH_TARGET_REPO",
+        "M5_PINNED_PEER_ENVELOPE",
+        "M5_WAKE_BUDGET_FSM",
+    }
+)
 
 REPO_ROW_KEYS = frozenset({"repo", "fetched", "open", "closed_unmerged", "merged", "prs_json_sha256"})
 MINED_ENTRY_KEYS = frozenset(
@@ -69,7 +83,9 @@ MINED_ENTRY_KEYS = frozenset(
         "snapshot_sha256",
         "mechanism_class",
         "evidence_standing",
+        "operator_id",
         "honest_novelty",
+        "prior_art_record",
         "operator_summary",
     }
 )
@@ -753,6 +769,7 @@ def certify_law1b_serendipity_mining(spec: dict[str, Any]) -> dict[str, Any]:
     cu_mined = 0
     witness_count = 0
     lead_count = 0
+    witness_ops_used: set[str] = set()
     class_counts: dict[str, int] = {}
 
     for ent in entries:
@@ -783,11 +800,24 @@ def certify_law1b_serendipity_mining(spec: dict[str, Any]) -> dict[str, Any]:
         standing = ent["evidence_standing"]
         if standing not in EVIDENCE_STANDINGS:
             raise SerendipityError("L1B_ENTRY_INVALID_STANDING")
+        op_id = ent["operator_id"]
+        if standing == "EXECUTED_EXACT_WITNESS":
+            if not isinstance(op_id, str) or op_id not in CERTIFIED_OPERATOR_IDS:
+                raise SerendipityError("L1B_WITNESS_UNKNOWN_OPERATOR")
+            witness_ops_used.add(op_id)
+        elif op_id is not None:
+            raise SerendipityError("L1B_LEAD_FORBIDS_OPERATOR_ID")
         novelty = ent["honest_novelty"]
         if novelty not in NOVELTY_LABELS:
             raise SerendipityError("L1B_ENTRY_INVALID_NOVELTY")
         if standing == "CATALOGED_LEAD" and novelty != "N0":
             raise SerendipityError("L1B_LEAD_CANNOT_CLAIM_ABOVE_N0")
+        prior_art = ent["prior_art_record"]
+        if novelty == "N0":
+            if prior_art is not None and not is_clean_ascii(prior_art):
+                raise SerendipityError("L1B_INVALID_PRIOR_ART_RECORD")
+        elif not is_clean_ascii(prior_art):
+            raise SerendipityError("L1B_NOVELTY_ABOVE_N0_REQUIRES_PRIOR_ART")
         if not is_clean_ascii(ent["operator_summary"]):
             raise SerendipityError("L1B_ENTRY_EMPTY_SUMMARY")
 
@@ -831,5 +861,6 @@ def certify_law1b_serendipity_mining(spec: dict[str, Any]) -> dict[str, Any]:
         "closed_unmerged_mined": cu_mined,
         "executed_exact_witnesses": witness_count,
         "cataloged_leads": lead_count,
+        "certified_operator_ids": sorted(witness_ops_used),
         "mechanism_class_counts": dict(sorted(class_counts.items())),
     }

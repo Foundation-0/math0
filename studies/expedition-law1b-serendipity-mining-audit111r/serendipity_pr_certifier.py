@@ -107,7 +107,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "5ff56e7dc06533e00140b5a8c1b495f0fcaa68704d12cd503aafe9cf45af9f0e",
         "mechanism_class": "DENOMINATOR_OR_WEIGHT_BIAS",
         "evidence_standing": "EXECUTED_EXACT_WITNESS",
+        "operator_id": "M1_MICROBATCH_WEIGHTING",
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "Micro-batch item-count weighted loss accumulation eliminates CS-10 uneven-window bias",
     },
     {
@@ -118,7 +120,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "f740f90f2ffa10ab78dfb133b920ddf67ef5fbaf0242c442e322da8ea2ba4d28",
         "mechanism_class": "QUANTILE_OR_INDEX_BOUNDARY",
         "evidence_standing": "EXECUTED_EXACT_WITNESS",
+        "operator_id": "M2_NEAREST_RANK_QUANTILE",
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "Exact nearest-rank p95 ceil(19n/20)-1 fixes +1 overshoot on every multiple of 20",
     },
     {
@@ -129,7 +133,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "9a9084a0d03c098dfd014486ad5054384fb3b17732e452a59a7a16e0a5f794e8",
         "mechanism_class": "AFFINE_OR_RANGE_PROJECTION",
         "evidence_standing": "EXECUTED_EXACT_WITNESS",
+        "operator_id": "M3_AFFINE_SCORE_PROJECTION",
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "Bare score projection preserves non-zero minimum offset instead of self-cancelling",
     },
     {
@@ -140,7 +146,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "d37be3796614e4ac4389d53830b71feadaebb4cd8d65a95a25b4b34d9e14244e",
         "mechanism_class": "AFFINE_OR_RANGE_PROJECTION",
         "evidence_standing": "EXECUTED_EXACT_WITNESS",
+        "operator_id": "M3_AFFINE_SCORE_PROJECTION",
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "Independent closed-unmerged confirmation of minimum-offset preservation on bare score",
     },
     {
@@ -151,7 +159,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "fd9f71e81a31fda2c33ba6735259b3091c51e7c783ec93ab8abfd02bbcdb5583",
         "mechanism_class": "ALGEBRAIC_KERNEL_EQUIVALENCE",
         "evidence_standing": "EXECUTED_EXACT_WITNESS",
+        "operator_id": "M4_SPAN_POOLING_EQUIVALENCE",
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "Direct contiguous span pooling equals scatter-add/bincount with 0 Q-residual and clears _cap",
     },
     {
@@ -162,7 +172,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "ee557e63680ec04d5e50f2633da679d19b632472f247bb5334abadf7a44de890",
         "mechanism_class": "LEXER_OR_PARSER_SECURITY_BYPASS",
         "evidence_standing": "EXECUTED_EXACT_WITNESS",
+        "operator_id": "M5_BACKTICK_LINE_CONTINUATION",
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "Bash drops odd backslash-newline inside backticks before command lexing",
     },
     {
@@ -173,7 +185,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "a2e5cd5f9698ae34b48c64ceaaa36c05517deef8ac355323c717fe9dac55976a",
         "mechanism_class": "LEXER_OR_PARSER_SECURITY_BYPASS",
         "evidence_standing": "EXECUTED_EXACT_WITNESS",
+        "operator_id": "M5_HEREDOC_TERMINATOR",
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "Unquoted heredoc terminator joins odd backslash-newlines; <<- strips tabs on joined line only",
     },
     {
@@ -184,7 +198,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "c9c221c326ad470ca1d4b9dfdcc85e0d2f52e7acd87dea86a744767c1e9c5f25",
         "mechanism_class": "LEXER_OR_PARSER_SECURITY_BYPASS",
         "evidence_standing": "EXECUTED_EXACT_WITNESS",
+        "operator_id": "M5_XARGS_GETOPT_COMMAND",
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "GNU/BSD xargs getopt parsing prevents option values masking invoked command",
     },
     {
@@ -195,7 +211,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "392f3b64f0caeed4cc88b323e12b9974f1b52fad88cce7768c614ed22cdf4965",
         "mechanism_class": "LEXER_OR_PARSER_SECURITY_BYPASS",
         "evidence_standing": "EXECUTED_EXACT_WITNESS",
+        "operator_id": "M5_GH_TARGET_REPO",
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "gh target resolved from -R/operands only, never option values such as --body/--duplicate-of",
     },
     {
@@ -206,7 +224,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "5100b085b572c55c53f3e204f1181711d5424ce4b060f0790986be950ecaec60",
         "mechanism_class": "CRYPTO_PIN_OR_STATE_MACHINE",
         "evidence_standing": "EXECUTED_EXACT_WITNESS",
+        "operator_id": "M5_PINNED_PEER_ENVELOPE",
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "Peer envelope verified strictly against seat pinned key, never mutable presence file",
     },
     {
@@ -217,7 +237,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "719457d3d3162ec4365c21d4067522f21fc5da96f5f26523a12aa7e678267a0e",
         "mechanism_class": "CRYPTO_PIN_OR_STATE_MACHINE",
         "evidence_standing": "EXECUTED_EXACT_WITNESS",
+        "operator_id": "M5_WAKE_BUDGET_FSM",
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "Wake-budget FSM renewed only on principal turn; peer/bus/job/stop cannot reset cap",
     },
     {
@@ -228,7 +250,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "584c23ede3fd66556032a999847c8a99b8ad96d668468d365e74205e4efeba04",
         "mechanism_class": "QUANTILE_OR_INDEX_BOUNDARY",
         "evidence_standing": "CATALOGED_LEAD",
+        "operator_id": None,
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "10**400 JSON integer temperature raises OverflowError in float() unless caught fail-closed",
     },
     {
@@ -239,7 +263,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "deb28af25587e187ce747ca27453e2a0a16bbed12b795f15b174c91943478076",
         "mechanism_class": "CRYPTO_PIN_OR_STATE_MACHINE",
         "evidence_standing": "CATALOGED_LEAD",
+        "operator_id": None,
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "apply_confidence_gate leaves stale low_confidence flag on re-gate unless cleared per call",
     },
     {
@@ -250,7 +276,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "1a4659d11755be4ffa49626b537261881a9d41b6dae5a3ee265dbdabdba24438",
         "mechanism_class": "AFFINE_OR_RANGE_PROJECTION",
         "evidence_standing": "CATALOGED_LEAD",
+        "operator_id": None,
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "Canonical sorting of unordered choice criteria restores Gate-2 permutation invariance",
     },
     {
@@ -261,7 +289,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "74ce147bb1899f063d89fa3e2a9f72546aa984e5d0d652bab64d90e83af4f000",
         "mechanism_class": "EMPIRICAL_REFUTATION_OR_FREEZE",
         "evidence_standing": "CATALOGED_LEAD",
+        "operator_id": None,
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "Three-seed panel refutes single-seed 1.85pt soft-CE lead over rlcd (0.7763 vs 0.7762)",
     },
     {
@@ -272,7 +302,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "360fae5dd77dc678a0db567ad318206b2213fd1496e0ee4c7c3fb6a67ccad5a2",
         "mechanism_class": "CRYPTO_PIN_OR_STATE_MACHINE",
         "evidence_standing": "CATALOGED_LEAD",
+        "operator_id": None,
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "Fused ONNX export verifier must receive selected checkpoint instead of cached English weights",
     },
     {
@@ -283,7 +315,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "7d06f15c057ac884469b62a57c46895aa72dbb0a2afc41014fea3eaeb7c4c9bc",
         "mechanism_class": "EXACT_CERTIFIER_OR_DOMAIN_TOOL",
         "evidence_standing": "CATALOGED_LEAD",
+        "operator_id": None,
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "Standalone inference-only Rust port of VegaML runtime (2,367 LOC)",
     },
     {
@@ -294,7 +328,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "12b1a9ba78d930d1c566c958d7a190156e8562234a8fe037b401609d5c826a15",
         "mechanism_class": "INTERNAL_STEERING_OR_ARCHITECTURE",
         "evidence_standing": "CATALOGED_LEAD",
+        "operator_id": None,
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "In-browser WebGPU hidden-state steering and attention-box biasing with unsteered replay",
     },
     {
@@ -305,7 +341,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "9f6f8c80442f4c4e409a7ed1a73119303a834ccdf0916e89fa93a5ef910be960",
         "mechanism_class": "INTERNAL_STEERING_OR_ARCHITECTURE",
         "evidence_standing": "CATALOGED_LEAD",
+        "operator_id": None,
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "Four-pane parallel model comparison arena (spec-003) over shared opening prompt",
     },
     {
@@ -316,7 +354,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "a99b8648485b15c6b2e46b3e82b0ff2ee72045489d38f0d496914db390d96850",
         "mechanism_class": "INTERNAL_STEERING_OR_ARCHITECTURE",
         "evidence_standing": "CATALOGED_LEAD",
+        "operator_id": None,
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "Proposed session queue beside Heedle instrument paired with Issues #2/#3/#6 tide/1 OKLCH host",
     },
     {
@@ -327,7 +367,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "88f1ceae3c484847c0e7467f077df2fea6f6a7ed4e58b5d8336289ffb8972484",
         "mechanism_class": "EXACT_CERTIFIER_OR_DOMAIN_TOOL",
         "evidence_standing": "CATALOGED_LEAD",
+        "operator_id": None,
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "Exact region-gain Phi formula and closed-form scale proof for ball/cross-polytope codebooks",
     },
     {
@@ -338,7 +380,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "26b6e847ec561742089947a1fdf7810711c0b4e9a7c768d803c75f33b75fa6e0",
         "mechanism_class": "EMPIRICAL_REFUTATION_OR_FREEZE",
         "evidence_standing": "CATALOGED_LEAD",
+        "operator_id": None,
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "Sign-lineage exact chance law for gated MLPs, two validity checks, and sign-flip evasion",
     },
     {
@@ -349,7 +393,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "5cacc7fd6bcdee1ba96de2d346b581ddcc1a46788aa96c47161522a2ee7fc819",
         "mechanism_class": "EMPIRICAL_REFUTATION_OR_FREEZE",
         "evidence_standing": "CATALOGED_LEAD",
+        "operator_id": None,
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "Pre-freeze cancellation of CBC Experiment C catching information-theoretic identifiability trap",
     },
     {
@@ -360,7 +406,9 @@ CANONICAL_MINED_ENTRIES: list[dict[str, Any]] = [
         "snapshot_sha256": "9b272c406135cfb11048e7a088714d8e9a35c68409c0216fd153acf6ded26462",
         "mechanism_class": "EXACT_CERTIFIER_OR_DOMAIN_TOOL",
         "evidence_standing": "CATALOGED_LEAD",
+        "operator_id": None,
         "honest_novelty": "N0",
+        "prior_art_record": None,
         "operator_summary": "Stdlib GF(q) (q in 2..9) exact minimum-distance checker with Brouwer-Zimmermann certificates",
     },
 ]
@@ -399,7 +447,19 @@ def _no_duplicate_json_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     return out
 
 
+MAX_JSON_INT_DIGITS = 1000
+
+
+def _parse_bounded_json_int(raw: str) -> int:
+    digits = raw[1:] if raw.startswith("-") else raw
+    if len(digits) > MAX_JSON_INT_DIGITS:
+        raise spo.SerendipityError("JSON_INT_TOO_LARGE", str(len(digits)))
+    return int(raw)
+
+
 def loads_strict_json(raw_bytes: bytes) -> Any:
+    if b"\r" in raw_bytes:
+        raise spo.SerendipityError("JSON_CRLF_FORBIDDEN")
     try:
         text = raw_bytes.decode("utf-8")
     except UnicodeDecodeError as exc:
@@ -409,9 +469,12 @@ def loads_strict_json(raw_bytes: bytes) -> Any:
             text,
             parse_float=_reject_json_float,
             parse_constant=_reject_json_constant,
+            parse_int=_parse_bounded_json_int,
             object_pairs_hook=_no_duplicate_json_keys,
         )
-    except json.JSONDecodeError as exc:
+    except spo.SerendipityError:
+        raise
+    except (json.JSONDecodeError, ValueError) as exc:
         raise spo.SerendipityError("JSON_DECODE_ERROR", str(exc)) from exc
 
 
@@ -677,6 +740,46 @@ def build_certificate(*, mode: str, intake_root: Path | None = None) -> dict[str
             ),
             "L1B_LEAD_CANNOT_CLAIM_ABOVE_N0",
         ),
+        "witness_unknown_operator_rejected": _expect_serendipity_error(
+            lambda: spo.certify_law1b_serendipity_mining(
+                {
+                    **mining_spec,
+                    "mined_entries": [
+                        {**e, "operator_id": "M99_BOGUS"} if e["evidence_standing"] == "EXECUTED_EXACT_WITNESS" else e
+                        for e in mined_entries
+                    ],
+                }
+            ),
+            "L1B_WITNESS_UNKNOWN_OPERATOR",
+        ),
+        "witness_claiming_n2_without_prior_art_rejected": _expect_serendipity_error(
+            lambda: spo.certify_law1b_serendipity_mining(
+                {
+                    **mining_spec,
+                    "mined_entries": [
+                        {**e, "honest_novelty": "N2", "prior_art_record": None}
+                        if e["evidence_standing"] == "EXECUTED_EXACT_WITNESS"
+                        else e
+                        for e in mined_entries
+                    ],
+                }
+            ),
+            "L1B_NOVELTY_ABOVE_N0_REQUIRES_PRIOR_ART",
+        ),
+        "lead_with_operator_id_rejected": _expect_serendipity_error(
+            lambda: spo.certify_law1b_serendipity_mining(
+                {
+                    **mining_spec,
+                    "mined_entries": [
+                        {**e, "operator_id": "M1_MICROBATCH_WEIGHTING"}
+                        if e["evidence_standing"] == "CATALOGED_LEAD"
+                        else e
+                        for e in mined_entries
+                    ],
+                }
+            ),
+            "L1B_LEAD_FORBIDS_OPERATOR_ID",
+        ),
         "uniform_hex_placeholder_sha_rejected": _expect_serendipity_error(
             lambda: spo.certify_law1b_serendipity_mining(
                 {**mining_spec, "mined_entries": [{**mined_entries[0], "head_sha": "0" * 40}] + mined_entries[1:]}
@@ -739,8 +842,12 @@ def build_certificate(*, mode: str, intake_root: Path | None = None) -> dict[str
     return body
 
 
-def validate_saved_certificate(cert_path: Path) -> dict[str, Any]:
-    """Verify a saved certificate JSON strictly (no floats, no dup keys, exact inner SHA & recomputed parity)."""
+def validate_saved_certificate(cert_path: Path, *, intake_root: Path | None = None) -> dict[str, Any]:
+    """Verify a saved certificate JSON strictly (no floats, no dup keys, exact inner SHA & recomputed parity).
+
+    Live-mode certificates (`mode == "live"`) require `--intake-root` and re-hash the intake files on disk;
+    standalone-mode certificates verify offline against deterministic standalone recomputation.
+    """
     if not cert_path.is_file():
         raise spo.SerendipityError("CERT_FILE_NOT_FOUND")
     obj = loads_strict_json(cert_path.read_bytes())
@@ -772,9 +879,15 @@ def validate_saved_certificate(cert_path: Path) -> dict[str, Any]:
     if recomputed_sha != saved_sha:
         raise spo.SerendipityError("CERT_CANONICAL_SHA_MISMATCH")
 
-    # Cross-check intake_verification, operator witnesses, law1b gate & controls bit-for-bit
+    # Cross-check intake_verification, operator witnesses, law1b gate & controls bit-for-bit.
+    # Live certificates MUST re-verify the intake snapshot on disk via --intake-root.
     expected_standalone = build_certificate(mode="standalone")
-    expected_intake = {**expected_standalone["intake_verification"], "verified_on_disk": obj["mode"] == "live"}
+    if obj["mode"] == "live":
+        if intake_root is None:
+            raise spo.SerendipityError("CERT_LIVE_REQUIRES_INTAKE_ROOT")
+        expected_intake = verify_live_intake(intake_root)
+    else:
+        expected_intake = expected_standalone["intake_verification"]
     if not spo.strict_typed_equal(obj["intake_verification"], expected_intake):
         raise spo.SerendipityError("CERT_INTAKE_VERIFICATION_MISMATCH")
     if not spo.strict_typed_equal(obj["operator_witnesses"], expected_standalone["operator_witnesses"]):
@@ -798,7 +911,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         if args.check is not None:
-            res = validate_saved_certificate(args.check)
+            res = validate_saved_certificate(args.check, intake_root=args.intake_root)
             print(json.dumps(res, indent=2, sort_keys=True))
             return 0
 

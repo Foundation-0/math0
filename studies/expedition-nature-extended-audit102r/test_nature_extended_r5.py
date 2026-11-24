@@ -423,8 +423,11 @@ def test_group7_certificate_validator_and_cli_fail_closed() -> None:
     _tamper(lambda c: c["governance"].__setitem__("zero_floats", False), "ERR_CERT_BOOL", "gov flag False")
     _tamper(lambda c: c["governance"].__setitem__("zero_floats", 1), "ERR_CERT_BOOL", "gov flag int 1")
     _tamper(lambda c: c["governance"].pop("zero_floats"), "ERR_CERT_KEYS", "gov flag missing")
+    _check(cert["law4_novelty"]["classical_mechanisms_class"] == "N0", "law4 classical N0")
+    _check(cert["law4_novelty"]["engineering_certifier_class"] == "N0", "law4 engineering N0")
     _tamper(lambda c: c["law4_novelty"].__setitem__("classical_mechanisms_class", "N2"), "ERR_CERT_LAW4", "law4 N2")
-    _tamper(lambda c: c["law4_novelty"].__setitem__("engineering_certifier_class", "N3"), "ERR_CERT_LAW4", "law4 eng")
+    _tamper(lambda c: c["law4_novelty"].__setitem__("engineering_certifier_class", "N1"), "ERR_CERT_LAW4", "law4 eng N1")
+    _tamper(lambda c: c["law4_novelty"].__setitem__("engineering_certifier_class", "N3"), "ERR_CERT_LAW4", "law4 eng N3")
     _tamper(lambda c: c["law4_novelty"].__setitem__("primary_source_count", 7), "ERR_CERT_INT", "law4 count")
     _tamper(lambda c: c["law4_novelty"].__setitem__("primary_source_count", _SubInt(8)), "ERR_CERT_INT", "law4 count subint", resign=False)
     _tamper(lambda c: c["law4_novelty"].__setitem__("primary_source_count", True), "ERR_CERT_INT", "law4 count bool")
@@ -576,10 +579,30 @@ def test_group7_certificate_validator_and_cli_fail_closed() -> None:
     flipped = ("0" if cert["canonical_sha256"][0] != "0" else "1") + cert["canonical_sha256"][1:]
     _tamper(lambda c: c.__setitem__("canonical_sha256", flipped), "ERR_CERT_SHA", "sha mismatch", resign=False)
 
-    # CLI certifier round-trip tests (--output, --check, --check --json, --json, drift detection)
+    # Value-recomputation parity checks: altering numeric fields within schema bounds and re-hashing must fail closed!
+    _tamper(
+        lambda c: c["pillars"]["p1_kinetic_proofreading"]["stages"][0].__setitem__("flux_correct", [1, 0]),
+        "ERR_CERT_VALUE_MISMATCH",
+        "p1 tampered flux_correct rehashed",
+    )
+    _tamper(
+        lambda c: c["pillars"]["p2_immune_negative_selection"]["r_sweep"][2].__setitem__(
+            "detector_count", c["pillars"]["p2_immune_negative_selection"]["r_sweep"][2]["detector_count"] + 1
+        ),
+        "ERR_CERT_VALUE_MISMATCH",
+        "p2 tampered detector_count rehashed",
+    )
+
+    # CLI certifier round-trip tests (--output, --check, --check --json, --json, drift & error handling)
+    _check(nec._load_strict_json('{"n": ' + ("9" * 1000) + "}")["n"] == int("9" * 1000), "1000-digit int accepted")
+    _check(nec._load_strict_json('{"n": -' + ("9" * 1000) + "}")["n"] == -int("9" * 1000), "-1000-digit int accepted")
+    _expect_error(lambda: nec._load_strict_json('{"n": ' + ("9" * 1001) + "}"), "ERR_CERT_JSON", "1001-digit int rejected")
+    _expect_error(lambda: nec._load_strict_json('{"n": ' + ("9" * 5000) + "}"), "ERR_CERT_JSON", "5000-digit int rejected")
+
     with tempfile.TemporaryDirectory() as tmpdir:
         out_path = os.path.join(tmpdir, "cert.json")
         orig_stdout = sys.stdout
+        orig_stderr = sys.stderr
         try:
             buf = io.StringIO()
             sys.stdout = buf
@@ -611,30 +634,60 @@ def test_group7_certificate_validator_and_cli_fail_closed() -> None:
             sys.stdout = buf6
             rc6 = nec.main(["--output", out_path2, "--json"])
             _check(rc6 == 0 and json.loads(buf6.getvalue()) == cert and os.path.isfile(out_path2), "cli --output --json")
+
+            # CLI error paths emit typed ERR lines on stderr with rc=2 and zero Python tracebacks
+            err_buf = io.StringIO()
+            sys.stderr = err_buf
+            rc_miss = nec.main(["--check", os.path.join(tmpdir, "missing.json")])
+            _check(
+                rc_miss == 2 and "ERR ERR_CERT_READ" in err_buf.getvalue() and "Traceback" not in err_buf.getvalue(),
+                "cli --check missing returns rc=2 typed err",
+            )
+
+            err_buf2 = io.StringIO()
+            sys.stderr = err_buf2
+            rc_io = nec.main(["--output", tmpdir])
+            _check(
+                rc_io == 2 and "ERR ERR_CERT_IO" in err_buf2.getvalue() and "Traceback" not in err_buf2.getvalue(),
+                "cli --output dir returns rc=2 typed IO err",
+            )
         finally:
             sys.stdout = orig_stdout
+            sys.stderr = orig_stderr
 
-        # Drift check: alter a non-validated text field and re-sign -> valid schema but drifts from fresh recomputation
+        # Value drift: alter text field and re-sign -> caught directly by validate_certificate()
         drifted = copy.deepcopy(cert)
         drifted["law5_discipline"]["operator_scope"] = "modified_scope"
         _resign(drifted)
         drift_path = os.path.join(tmpdir, "drifted.json")
         with open(drift_path, "w", encoding="utf-8", newline="\n") as fh:
             fh.write(nec.format_pretty_json(drifted))
-        _expect_error(lambda: nec.check_certificate_file(drift_path), "ERR_CERT_DRIFT", "cli drift detect")
+        _expect_error(lambda: nec.check_certificate_file(drift_path), "ERR_CERT_VALUE_MISMATCH", "cli value drift detect")
 
-        # Strict JSON file checks: duplicate keys, float literal, NaN constant, malformed JSON, non-canonical bytes
+        # Strict JSON file checks: duplicate keys, float literal, NaN, malformed JSON, 5000-digit int, CRLF, invalid UTF-8, missing, non-canonical bytes
         for fname, content, code in (
             ("dup.json", '{"a": 1, "a": 2}\n', "ERR_CERT_JSON"),
             ("flt.json", '{"a": 1.5}\n', "ERR_CERT_FLOAT"),
             ("nan.json", '{"a": NaN}\n', "ERR_CERT_FLOAT"),
             ("bad.json", "{bad\n", "ERR_CERT_JSON"),
+            ("huge.json", '{"n": ' + ("9" * 5000) + "}\n", "ERR_CERT_JSON"),
             ("compact.json", json.dumps(cert, sort_keys=True, separators=(",", ":")) + "\n", "ERR_CERT_DRIFT"),
         ):
             p = os.path.join(tmpdir, fname)
             with open(p, "w", encoding="utf-8", newline="\n") as fh:
                 fh.write(content)
             _expect_error(lambda path=p: nec.check_certificate_file(path), code, f"cli strict {fname}")
+
+        crlf_path = os.path.join(tmpdir, "crlf.json")
+        with open(crlf_path, "wb") as fh:
+            fh.write(nec.format_pretty_json(cert).replace("\n", "\r\n").encode("utf-8"))
+        _expect_error(lambda: nec.check_certificate_file(crlf_path), "ERR_CERT_CRLF", "cli CRLF rejected")
+
+        bad_utf8_path = os.path.join(tmpdir, "bad_utf8.json")
+        with open(bad_utf8_path, "wb") as fh:
+            fh.write(b"\xff\xfe\x00\x01")
+        _expect_error(lambda: nec.check_certificate_file(bad_utf8_path), "ERR_CERT_READ", "cli invalid UTF-8 rejected")
+        _expect_error(lambda: nec.check_certificate_file(os.path.join(tmpdir, "nope.json")), "ERR_CERT_READ", "cli missing file rejected")
 
 
 def main() -> int:

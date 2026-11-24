@@ -26,6 +26,9 @@ from erlang_otp_supervision_oracle import (  # noqa: E402
 )
 
 
+_MAX_JSON_INT_DIGITS = 1000
+
+
 def format_pretty_json(cert: dict) -> str:
     return json.dumps(cert, indent=2, sort_keys=True, allow_nan=False) + "\n"
 
@@ -42,12 +45,19 @@ def _load_strict_json(raw_text: str):
     def _reject_float(token: str):
         raise OtpSupervisionError("ERR_CERT_FLOAT", f"float literal forbidden: {token!r}")
 
+    def _parse_bounded_int(token: str) -> int:
+        digits = token[1:] if token.startswith("-") else token
+        if len(digits) > _MAX_JSON_INT_DIGITS:
+            raise OtpSupervisionError("ERR_CERT_JSON", f"integer literal exceeds {_MAX_JSON_INT_DIGITS} digits")
+        return int(token)
+
     try:
         return json.loads(
             raw_text,
             object_pairs_hook=_no_dup_keys,
             parse_float=_reject_float,
             parse_constant=_reject_float,
+            parse_int=_parse_bounded_int,
         )
     except OtpSupervisionError:
         raise
@@ -56,8 +66,17 @@ def _load_strict_json(raw_text: str):
 
 
 def check_certificate_file(path: str) -> dict:
-    with open(path, "r", encoding="utf-8") as fh:
-        raw_text = fh.read()
+    try:
+        with open(path, "rb") as fh:
+            raw_bytes = fh.read()
+    except OSError as exc:
+        raise OtpSupervisionError("ERR_CERT_READ", f"cannot read certificate file: {exc}") from exc
+    if b"\r" in raw_bytes:
+        raise OtpSupervisionError("ERR_CERT_CRLF", "CR/CRLF line endings forbidden in canonical certificate")
+    try:
+        raw_text = raw_bytes.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise OtpSupervisionError("ERR_CERT_READ", f"invalid UTF-8 in certificate file: {exc}") from exc
     loaded = _load_strict_json(raw_text)
     validate_certificate(loaded)
     fresh = build_erlang_otp_supervision_certificate()
@@ -75,26 +94,31 @@ def main(argv=None) -> int:
     parser.add_argument("--check", metavar="PATH", help="Validate & recompute-verify certificate PATH")
     args = parser.parse_args(argv)
 
-    if args.check:
-        cert = check_certificate_file(args.check)
-        if args.json:
-            sys.stdout.write(format_pretty_json(cert))
-        else:
-            sys.stdout.write(
-                f"OK AUDIT-110 canonical_sha256={cert['canonical_sha256']} "
-                f"pillars={cert['summary']['pillars_passed']} "
-                f"controls={cert['summary']['must_fail_controls_verified']}\n"
-            )
-        return 0
+    try:
+        if args.check:
+            cert = check_certificate_file(args.check)
+            if args.json:
+                sys.stdout.write(format_pretty_json(cert))
+            else:
+                sys.stdout.write(
+                    f"OK AUDIT-110 canonical_sha256={cert['canonical_sha256']} "
+                    f"pillars={cert['summary']['pillars_passed']} "
+                    f"controls={cert['summary']['must_fail_controls_verified']}\n"
+                )
+            return 0
 
-    cert = build_erlang_otp_supervision_certificate()
-    rendered = format_pretty_json(cert)
-    if args.output:
-        with open(args.output, "w", encoding="utf-8", newline="\n") as fh:
-            fh.write(rendered)
-    if args.json or not args.output:
-        sys.stdout.write(rendered)
-    return 0
+        cert = build_erlang_otp_supervision_certificate()
+        rendered = format_pretty_json(cert)
+        if args.output:
+            with open(args.output, "w", encoding="utf-8", newline="\n") as fh:
+                fh.write(rendered)
+        if args.json or not args.output:
+            sys.stdout.write(rendered)
+        return 0
+    except (OtpSupervisionError, OSError) as exc:
+        code = exc.code if isinstance(exc, OtpSupervisionError) else "ERR_CERT_IO"
+        sys.stderr.write(f"ERR {code}: {exc}\n")
+        return 2
 
 
 if __name__ == "__main__":

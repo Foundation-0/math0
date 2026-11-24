@@ -391,6 +391,27 @@ def test_pillar_4() -> None:
     sim_link_norm_tr = oracle.simulate_process_fault(procs_trap, [["coordinator", "verifier_1"]], [], "verifier_1", "normal")
     _check(sim_link_norm_tr["processes"]["coordinator"]["inbox"] == [{"tag": "EXIT", "from": "verifier_1", "reason": "normal"}], "normal link trapped")
 
+    # Monitor under external exit(verifier_1, kill) -> reason "killed" (and direct "kill"): 0 collateral kills + promotion blocked
+    sim_mon_killed = oracle.simulate_process_fault(procs_base, [], monitors, "verifier_1", "killed")
+    cert_mon_killed = oracle.certify_zone_b_isolation(sim_mon_killed, "coordinator")
+    _check(cert_mon_killed["passed"] is True, "monitor isolates killed verifier")
+    _check(sim_mon_killed["processes"]["coordinator"]["inbox"][0]["reason"] == "killed", "monitor DOWN reason killed")
+    sim_mon_kill = oracle.simulate_process_fault(procs_base, [], monitors, "verifier_1", "kill")
+    _check(oracle.certify_zone_b_isolation(sim_mon_kill, "coordinator")["passed"] is True, "monitor isolates kill")
+
+    # External exit(verifier_1, kill) -> reason "killed" across link:
+    # - trap_exit=True TRAPS "killed" and stays ALIVE (0 collateral kills)
+    # - trap_exit=False dies with reason "killed" and cascades to verifier_2
+    sim_link_trap_killed = oracle.simulate_process_fault(procs_trap, [["coordinator", "verifier_1"], ["coordinator", "verifier_2"]], [], "verifier_1", "killed")
+    _check(sim_link_trap_killed["processes"]["coordinator"]["state"] == "ALIVE", "trap_exit=True traps propagated killed")
+    _check(sim_link_trap_killed["processes"]["coordinator"]["inbox"] == [{"tag": "EXIT", "from": "verifier_1", "reason": "killed"}], "trapped killed EXIT msg")
+    _check(sim_link_trap_killed["collateral_kill_count"] == 0, "0 collateral kills when trapping killed")
+
+    sim_link_notrap_killed = oracle.simulate_process_fault(procs_base, [["coordinator", "verifier_1"], ["coordinator", "verifier_2"]], [], "verifier_1", "killed")
+    _check(sim_link_notrap_killed["processes"]["coordinator"]["state"] == "TERMINATED", "trap_exit=False dies on killed")
+    _check(sim_link_notrap_killed["processes"]["coordinator"]["exit_reason"] == "killed", "trap_exit=False exit reason killed")
+    _check(sim_link_notrap_killed["collateral_kill_count"] == 2, "trap_exit=False cascades killed")
+
     # 3-hop kill propagation: verifier_1 -(kill)-> coordinator(trap=True) dies with "killed",
     # then propagates "killed" to verifier_2(trap=True) which TRAPS "killed" and survives!
     procs_both_trap = {
@@ -577,9 +598,24 @@ def test_pillar_5() -> None:
 def test_certificate_validator() -> None:
     cert = oracle.build_erlang_otp_supervision_certificate()
     _check(oracle.validate_certificate(cert) is True, "fresh cert validates")
+    _check(cert["novelty_tier"]["classical_semantics"] == "N0", "classical_semantics N0")
+    _check(cert["novelty_tier"]["pure_q_hybrid_bridge"] == "N0", "pure_q_hybrid_bridge N0")
     _check(cert["summary"]["pillars_passed"] == 5, "5 pillars")
     _check(cert["summary"]["must_fail_controls_verified"] == 10, "10 controls")
     _check(cert["summary"]["floats_used"] == 0, "0 floats")
+
+    # Novelty inflation & P4 new-control tampers rejected
+    c_n1 = copy.deepcopy(cert)
+    c_n1["novelty_tier"]["pure_q_hybrid_bridge"] = "N1"
+    _expect_err(lambda: oracle.validate_certificate(_resign(c_n1)), "ERR_SCHEMA_STR", "novelty N1 rejected")
+
+    c_p4_mk = copy.deepcopy(cert)
+    c_p4_mk["pillars"]["p4_monitor_vs_link_fault_isolation"]["monitor_zone_b_isolation_on_killed"]["down_reason"] = "abnormal"
+    _expect_err(lambda: oracle.validate_certificate(_resign(c_p4_mk)), "ERR_SCHEMA_STR", "p4 monitor killed reason tamper")
+
+    c_p4_lk = copy.deepcopy(cert)
+    c_p4_lk["pillars"]["p4_monitor_vs_link_fault_isolation"]["link_with_trap_exit_outside_killed"]["exit_reason"] = "kill"
+    _expect_err(lambda: oracle.validate_certificate(_resign(c_p4_lk)), "ERR_SCHEMA_STR", "p4 link killed reason tamper")
 
     # Isolate all 3 clauses of _count_verified_must_fail_controls
     cnt = oracle._count_verified_must_fail_controls({
@@ -649,12 +685,16 @@ def test_certifier_cli() -> None:
     cert = oracle.build_erlang_otp_supervision_certificate()
     pretty = certifier.format_pretty_json(cert)
 
-    # Strict JSON loader rejects duplicates, floats, NaN, and invalid syntax
+    # Strict JSON loader rejects duplicates, floats, NaN, oversized ints, and invalid syntax
     _expect_err(lambda: certifier._load_strict_json('{"a": 1, "a": 2}'), "ERR_CERT_JSON", "dup json key")
     _expect_err(lambda: certifier._load_strict_json('{"a": 1.5}'), "ERR_CERT_FLOAT", "float json literal")
     _expect_err(lambda: certifier._load_strict_json('{"a": NaN}'), "ERR_CERT_FLOAT", "NaN json literal")
     _expect_err(lambda: certifier._load_strict_json('{bad json'), "ERR_CERT_JSON", "invalid json")
     _expect_err(lambda: certifier._load_strict_json(12345), "ERR_CERT_JSON", "non-str json")
+    _check(certifier._load_strict_json('{"n": ' + ("9" * 1000) + "}")["n"] == int("9" * 1000), "1000-digit int accepted")
+    _check(certifier._load_strict_json('{"n": -' + ("9" * 1000) + "}")["n"] == -int("9" * 1000), "-1000-digit int accepted")
+    _expect_err(lambda: certifier._load_strict_json('{"n": ' + ("9" * 1001) + "}"), "ERR_CERT_JSON", "1001-digit int rejected")
+    _expect_err(lambda: certifier._load_strict_json('{"n": ' + ("9" * 5000) + "}"), "ERR_CERT_JSON", "5000-digit int rejected")
 
     with tempfile.TemporaryDirectory() as tmpdir:
         out_path = os.path.join(tmpdir, "cert.json")
@@ -699,6 +739,42 @@ def test_certifier_cli() -> None:
         with open(drift_path, "w", encoding="utf-8", newline="\n") as fh:
             fh.write(json.dumps(cert, sort_keys=True) + "\n")
         _expect_err(lambda: certifier.check_certificate_file(drift_path), "ERR_CERT_DRIFT", "byte drift rejected")
+
+        # CRLF, invalid UTF-8, missing file, and 5000-digit int rejected with typed errors and clean CLI exit 2
+        crlf_path = os.path.join(tmpdir, "crlf.json")
+        with open(crlf_path, "wb") as fh:
+            fh.write(pretty.replace("\n", "\r\n").encode("utf-8"))
+        _expect_err(lambda: certifier.check_certificate_file(crlf_path), "ERR_CERT_CRLF", "CRLF rejected")
+
+        bad_utf8_path = os.path.join(tmpdir, "bad_utf8.json")
+        with open(bad_utf8_path, "wb") as fh:
+            fh.write(b"\xff\xfe\x00\x01")
+        _expect_err(lambda: certifier.check_certificate_file(bad_utf8_path), "ERR_CERT_READ", "invalid UTF-8 rejected")
+        _expect_err(lambda: certifier.check_certificate_file(os.path.join(tmpdir, "missing.json")), "ERR_CERT_READ", "missing file rejected")
+
+        huge_path = os.path.join(tmpdir, "huge.json")
+        with open(huge_path, "w", encoding="utf-8", newline="\n") as fh:
+            fh.write('{"n": ' + ("9" * 5000) + "}\n")
+        _expect_err(lambda: certifier.check_certificate_file(huge_path), "ERR_CERT_JSON", "5000-digit file rejected")
+
+        err_buf = io.StringIO()
+        orig_stderr = sys.stderr
+        try:
+            sys.stderr = err_buf
+            rc_err = certifier.main(["--check", crlf_path])
+            _check(
+                rc_err == 2 and "ERR ERR_CERT_CRLF" in err_buf.getvalue() and "Traceback" not in err_buf.getvalue(),
+                "CLI --check CRLF exits 2 cleanly",
+            )
+            err_buf2 = io.StringIO()
+            sys.stderr = err_buf2
+            rc_io = certifier.main(["--output", tmpdir])
+            _check(
+                rc_io == 2 and "ERR ERR_CERT_IO" in err_buf2.getvalue() and "Traceback" not in err_buf2.getvalue(),
+                "CLI --output dir exits 2 cleanly",
+            )
+        finally:
+            sys.stderr = orig_stderr
 
 
 def main() -> int:

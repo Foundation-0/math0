@@ -1,6 +1,6 @@
 {
   "audit_id": "AUDIT-102",
-  "canonical_sha256": "431dfc2d793108e2a4c1f9b9dd564243abcd5bcbeca7853b16a5cfb57491b79f",
+  "canonical_sha256": "c96a0dc5e35a66b70d577c688a6ccedc1bfcfab6e97ea0dced40749efb3fe571",
   "governance": {
     "aletheia_version": "2.0.0",
     "strict_law4_n0_quarantine": true,
@@ -11,7 +11,7 @@
   },
   "law4_novelty": {
     "classical_mechanisms_class": "N0",
-    "engineering_certifier_class": "N1",
+    "engineering_certifier_class": "N0",
     "primary_source_count": 8
   },
   "law5_discipline": {

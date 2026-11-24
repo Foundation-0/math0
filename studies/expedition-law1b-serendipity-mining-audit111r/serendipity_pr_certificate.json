@@ -1,6 +1,6 @@
 {
   "all_checks_passed": true,
-  "canonical_sha256": "d1c16ed9a5eb37829bd0fa7fbe5c2c83d2083cdda01efb89230de00031696910",
+  "canonical_sha256": "0b6f34ae7786c2fe2104615724ced0cd7b68dfdf009699c09c5d5c3a8c1c028b",
   "external_writes": 0,
   "honest_novelty": "N0",
   "intake_verification": {
@@ -12,11 +12,23 @@
     "heedle_issues_verified": 4,
     "intake_summary_sha256": "2456c15109f45fb78a4b43df7995aa0c93a8c8f9993a8c7db981971a859e587b",
     "repos_verified": 8,
-    "verified_on_disk": true
+    "verified_on_disk": false
   },
   "law1b_gate": {
     "cataloged_leads": 13,
     "certified": true,
+    "certified_operator_ids": [
+      "M1_MICROBATCH_WEIGHTING",
+      "M2_NEAREST_RANK_QUANTILE",
+      "M3_AFFINE_SCORE_PROJECTION",
+      "M4_SPAN_POOLING_EQUIVALENCE",
+      "M5_BACKTICK_LINE_CONTINUATION",
+      "M5_GH_TARGET_REPO",
+      "M5_HEREDOC_TERMINATOR",
+      "M5_PINNED_PEER_ENVELOPE",
+      "M5_WAKE_BUDGET_FSM",
+      "M5_XARGS_GETOPT_COMMAND"
+    ],
     "closed_unmerged_mined": 12,
     "executed_exact_witnesses": 11,
     "mechanism_class_counts": {
@@ -41,7 +53,7 @@
     "unmerged_fraction": "129/479",
     "verdict": "LAW1B_MINING_CERTIFIED"
   },
-  "mode": "live",
+  "mode": "standalone",
   "must_fail_controls": {
     "closed_unmerged_blind_spot_rejected": {
       "actual_code": "L1B_CLOSED_UNMERGED_BLIND_SPOT",
@@ -58,6 +70,11 @@
       "expected_code": "L1B_LEAD_CANNOT_CLAIM_ABOVE_N0",
       "rejected": true
     },
+    "lead_with_operator_id_rejected": {
+      "actual_code": "L1B_LEAD_FORBIDS_OPERATOR_ID",
+      "expected_code": "L1B_LEAD_FORBIDS_OPERATOR_ID",
+      "rejected": true
+    },
     "m4_overlapping_spans_rejected": {
       "actual_code": "M4_OVERLAPPING_SPANS",
       "expected_code": "M4_OVERLAPPING_SPANS",
@@ -72,9 +89,19 @@
       "actual_code": "L1B_ENTRY_INVALID_HEAD_SHA",
       "expected_code": "L1B_ENTRY_INVALID_HEAD_SHA",
       "rejected": true
+    },
+    "witness_claiming_n2_without_prior_art_rejected": {
+      "actual_code": "L1B_NOVELTY_ABOVE_N0_REQUIRES_PRIOR_ART",
+      "expected_code": "L1B_NOVELTY_ABOVE_N0_REQUIRES_PRIOR_ART",
+      "rejected": true
+    },
+    "witness_unknown_operator_rejected": {
+      "actual_code": "L1B_WITNESS_UNKNOWN_OPERATOR",
+      "expected_code": "L1B_WITNESS_UNKNOWN_OPERATOR",
+      "rejected": true
     }
   },
-  "must_fail_controls_verified": 6,
+  "must_fail_controls_verified": 9,
   "operator_witnesses": {
     "m1_microbatch_2_1": {
       "exact_match": true,

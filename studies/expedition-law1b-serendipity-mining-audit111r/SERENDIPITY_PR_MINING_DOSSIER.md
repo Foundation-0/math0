@@ -1,29 +1,29 @@
-# Track S12 — Law-1b Unmerged-PR Serendipity Dossier (8 Portals, 1,437 PRs Scanned)
+# Track S12 — Law-1b Curated Unmerged-PR Serendipity Dossier (8 Portals, 24 Cataloged Entries)
 
 **Audit Track:** Track S12 (`track-s12-serendipity-pr-mining`)  
-**Protocol:** Aletheia Law 1b (Exhaustive Serendipity & Unmerged-PR Portal Mining — draft spec in [`SERENDIPITY_AND_UNMERGED_PR_MINING.md`](SERENDIPITY_AND_UNMERGED_PR_MINING.md))  
+**Protocol:** Aletheia Law 1b (draft spec in [`SERENDIPITY_AND_UNMERGED_PR_MINING.md`](SERENDIPITY_AND_UNMERGED_PR_MINING.md))  
 **External Writes:** `0` (strictly read-only GitHub API intake)  
-**Honest Novelty Standing:** `N0` (independent verification, exact pure-$\mathbb{Z}/\mathbb{Q}$ re-formulation, and Law-5 cross-pollination of upstream open and closed-unmerged mechanisms)
+**Honest Novelty Standing:** `N0` (curated catalogue of `24` mined unmerged PR entries: `11` self-contained pure-$\mathbb{Z}/\mathbb{Q}$ operator restatements + `13` cataloged leads; no novelty claim above `N0`)
 
 ---
 
-## 1. Eight-Portal Read-Only Intake Census (`2026-11-22`)
+## 1. Eight-Portal Read-Only Intake Snapshot (`2026-11-22`, Page-Capped on Large Repos)
 
-Every portal below was queried with `state=all` (paginated) and frozen under `../intake-serendipity-prs/` with exact SHA-256 digests (`intake_summary.json`: `2456c15109f4...`, `DEEP_MINING_MANIFEST.json`: `c315b6621bf4...`, `Moissanite-Labs__heedle_issues.json`: `875808d793ef...`):
+Each portal below was queried read-only via `GET /repos/{owner}/{repo}/pulls?state=all&per_page=100` (default newest-first ordering). **Pagination cap disclosure:** `Moissanite-Labs/exo` was capped at `5` pages (`500` newest PRs; highest PR number observed `#1192`) and `NandhaKishorM/laya` was capped at `8` pages (`800` newest PRs; highest PR number observed `#1524`), so those two rows are **newest-first samples, not full repository histories**. The raw intake JSON directory is **not shipped in this PR**; its SHA-256 digests are recorded in [`serendipity_pr_certifier.py`](serendipity_pr_certifier.py) (`intake_summary.json`: `2456c15109f4...`, `DEEP_MINING_MANIFEST.json`: `c315b6621bf4...`, `Moissanite-Labs__heedle_issues.json`: `875808d793ef...`), and the committed [`serendipity_pr_certificate.json`](serendipity_pr_certificate.json) is generated offline in `--standalone` mode (`"mode": "standalone"`, `"verified_on_disk": false`).
 
-| Repository Portal | Fetched | Merged | Open | Closed-Unmerged | Unmerged Share | Frozen `*_prs.json` SHA-256 (prefix) |
-|---|---:|---:|---:|---:|---:|---|
-| `NandhaKishorM/laya` | 800 | 692 | 52 | 56 | `108/800` (`27/200`) | `d52729dcd73e...` |
-| `Moissanite-Labs/exo` | 500 | 267 | 213 | 20 | `233/500` | `667e67a21034...` |
-| `NandhaKishorM/vegaml` | 61 | 47 | 6 | 8 | `14/61` | `3fca3f41b058...` |
-| `Moissanite-Labs/weft-loom` | 31 | 22 | 9 | 0 | `9/31` | `4f04a6e3f8c9...` |
-| `Foundation-0/math0` | 20 | 9 | 10 | 1 | `11/20` | `976d6c50aac1...` |
-| `Moissanite-Labs/siliquant` | 17 | 9 | 5 | 3 | `8/17` | `3e3c0f1e04ab...` |
-| `chuanqisun/spaceship` | 4 | 1 | 0 | 3 | `3/4` | `60ec0ef10a46...` |
-| `Moissanite-Labs/heedle` | 4 | 3 | 1 | 0 | `1/4` | `6056665aa73c...` |
-| **Total (8 Portals)** | **1,437** | **1,050** | **296** | **91** | **`387/1437` (`129/479`)** | **`40` deep PRs (`19` open, `21` closed) + `4` `heedle` issues** |
+| Repository Portal | Sampling Scope | Fetched | Merged | Open | Closed-Unmerged | Sampled Unmerged | Pinned `*_prs.json` SHA-256 (prefix) |
+|---|---|---:|---:|---:|---:|---:|---|
+| `NandhaKishorM/laya` | Page-capped (8 pages, newest-first) | 800 | 692 | 52 | 56 | `108/800` | `d52729dcd73e...` |
+| `Moissanite-Labs/exo` | Page-capped (5 pages, newest-first) | 500 | 267 | 213 | 20 | `233/500` | `667e67a21034...` |
+| `NandhaKishorM/vegaml` | All fetched (< 1 page) | 61 | 47 | 6 | 8 | `14/61` | `3fca3f41b058...` |
+| `Moissanite-Labs/weft-loom` | All fetched (< 1 page) | 31 | 22 | 9 | 0 | `9/31` | `4f04a6e3f8c9...` |
+| `Foundation-0/math0` | All fetched (< 1 page) | 20 | 9 | 10 | 1 | `11/20` | `976d6c50aac1...` |
+| `Moissanite-Labs/siliquant` | All fetched (< 1 page) | 17 | 9 | 5 | 3 | `8/17` | `3e3c0f1e04ab...` |
+| `chuanqisun/spaceship` | All fetched (< 1 page) | 4 | 1 | 0 | 3 | `3/4` | `60ec0ef10a46...` |
+| `Moissanite-Labs/heedle` | All fetched (< 1 page) | 4 | 3 | 1 | 0 | `1/4` | `6056665aa73c...` |
+| **Sample Total (8 Portals)** | **Mixed (2 page-capped, 6 uncapped)** | **1,437** | **1,050** | **296** | **91** | **`387` sampled unmerged** | **`40` deep PRs (`19` open, `21` closed) + `4` `heedle` issues** |
 
-Key structural takeaway: **`91` closed-unmerged PRs** across these 8 repositories — including `3/4` PRs on `chuanqisun/spaceship`, `56` on `laya`, `20` on `exo`, and `8` on `vegaml` — are completely invisible to any `main`-only or `open`-only audit.
+**Methodology & Scope Boundary:** No exhaustive triage table of all `387` sampled unmerged PRs and no matched merged-PR baseline/null were compiled, so no repo-wide unmerged-share or yield-rate claim is made. From the `40` inspected deep-diff PRs, `24` entries (`12` open, `12` closed-unmerged) were curated into the canonical catalogue below: `11` restated as self-contained pure-$\mathbb{Z}/\mathbb{Q}$ operators (`M1`–`M5`, executing independent Python arithmetic/lexer/FSM models rather than upstream repository code) and `13` recorded strictly as `CATALOGED_LEAD` items at `N0`.
 
 ---
 
@@ -59,7 +59,7 @@ Six concrete security & state-machine mechanisms mined from unmerged `exo` PRs:
 6. **`exo#1192` [open] (`2817df6e...`):** Wake-budget finite-state machine ensures `peer_turn`/`bus_turn`/`job_turn`/`stop` never reset the wake cap (`denied_wakes = 2` on exhausted cap), while only `principal_turn` renews it (`denied_wakes = 0`).
 
 ### M6. Fail-Closed Law-1b Serendipity-Mining Governance Gate (`certify_law1b_serendipity_mining`)
-Certifies the complete 8-repo census (`1,437` PRs, `387` unmerged, `24` canonical pinned entries: `11` `EXECUTED_EXACT_WITNESS` + `13` `CATALOGED_LEAD`, `12` open + `12` closed-unmerged across all 9 mechanism classes) with `6/6` must-fail controls verified (`closed_unmerged` blind spot, non-zero external writes, lead claiming `N2`, uniform-hex placeholder SHA, float input, overlapping spans).
+Declared-record schema, operator-membership, and prior-art-citation gate over the 8-portal sample metadata (`1,437` fetched PRs, `387` sampled unmerged, `24` curated entries: `11` `EXECUTED_EXACT_WITNESS` bound to `CERTIFIED_OPERATOR_IDS` + `13` `CATALOGED_LEAD` with `operator_id: null`, `12` open + `12` closed-unmerged across all 9 mechanism classes) with `9/9` must-fail controls verified (`closed_unmerged` blind spot, non-zero external writes, lead claiming `N2`, witness naming unknown operator, witness claiming `N2` without `prior_art_record`, lead supplying `operator_id`, uniform-hex placeholder SHA, float input, overlapping spans).
 
 ---
 
@@ -92,12 +92,13 @@ Certifies the complete 8-repo census (`1,437` PRs, `387` unmerged, `24` canonica
 
 ---
 
-## 4. Clean-Room Verification Receipts (`aletheia v2.0.0`, `AUDIT-111R`)
+## 4. Offline Verification & Reproducibility Commands
 
-- **Oracle, Certifier & Spec:** [`serendipity_pr_oracle.py`](serendipity_pr_oracle.py) (`3a007778...`), [`serendipity_pr_certifier.py`](serendipity_pr_certifier.py) (`70124740...`), [`test_serendipity_pr_r5.py`](test_serendipity_pr_r5.py) (`e22b43e4...`), [`serendipity_pr_certificate.json`](serendipity_pr_certificate.json) (`45605806...`), [`SERENDIPITY_AND_UNMERGED_PR_MINING.md`](SERENDIPITY_AND_UNMERGED_PR_MINING.md) (`30849d5f...`).
-- **3-Mode Isolated `-I` R4 Parity (`-I -B`, `-I -O -B`, `-I -B -W error`):**
-  - `--live --intake-root ../intake-serendipity-prs --json` == disk `serendipity_pr_certificate.json` bit-identically (`sha256: 45605806ff3a4f39...`, inner `canonical_sha256: d1c16ed9a5eb3782...`, `--check` `valid: true`, ZERO floats).
-  - `--standalone --json` bit-identical offline (`sha256: fed8ac72d0b7e2fa...`, ZERO floats).
-  - `test_serendipity_pr_r5.py`: **`5/5` OK** (`-I -O -B -W error`).
-- **R5 Mutation & AST `BoolOp` Kill:** `aletheia v2.0.0 mutate --max-mutants 0 --add-cwd` **`90/90` (`oracle`) + `40/40` (`certifier`) = `130/130` (`100.0%`) KILLED, `0` survivors, `truncated=False`**; exhaustive AST `BoolOp` raise-guard sub-clause sweep **`88/88` (`oracle`) + `20/20` (`certifier`) = `108/108` (`100.0%`) KILLED, `0` survivors**.
-- **Hygiene & Safety:** `aletheia v2.0.0 audit-check . --strict-ancestors --safety-scan --scripts serendipity_pr_certifier.py test_serendipity_pr_r5.py` **`PASS`** (`6` files, `2/2` R4, `0` defects, `0` leaks, `0` bare `assert`s, `0` safety findings, `PYCACHE=0`).
+Run inside `studies/expedition-law1b-serendipity-mining-audit111r/` (100% offline, Python 3 stdlib only):
+
+- **Shipped Files:** [`serendipity_pr_oracle.py`](serendipity_pr_oracle.py) (`d5d45f37...`), [`serendipity_pr_certifier.py`](serendipity_pr_certifier.py) (`78f0fdad...`), [`test_serendipity_pr_r5.py`](test_serendipity_pr_r5.py) (`d9b2721f...`), [`serendipity_pr_certificate.json`](serendipity_pr_certificate.json) (`3319a686...`, `--standalone` mode, inner `canonical_sha256: 0b6f34ae...`), [`SERENDIPITY_AND_UNMERGED_PR_MINING.md`](SERENDIPITY_AND_UNMERGED_PR_MINING.md).
+- **4-Mode Isolated `-I` R4 Parity (`-I -B`, `-I -O -B`, `-I -B -W error`, `-I -O -B -W error`):**
+  - `python3 -I -B serendipity_pr_certifier.py --standalone --json` matches committed `serendipity_pr_certificate.json` bit-for-bit (`sha256: 3319a686e7b30122...`, inner `canonical_sha256: 0b6f34ae7786c2fe...`, `"mode": "standalone"`, `"verified_on_disk": false`, ZERO floats).
+  - `python3 -I -O -B -W error serendipity_pr_certifier.py --check serendipity_pr_certificate.json` returns `{"valid": true, "mode": "standalone", ...}`; `--check` refuses any `"live"` certificate unless `--intake-root <dir>` is supplied and re-hashed on disk (`CERT_LIVE_REQUIRES_INTAKE_ROOT`), and rejects CRLF (`JSON_CRLF_FORBIDDEN`) and oversized integers (`> 1000` digits, `JSON_INT_TOO_LARGE`) with clean exit code `2` and zero Python tracebacks.
+  - `python3 -I -O -B -W error test_serendipity_pr_r5.py` emits deterministic `PASS AUDIT-111R R5_TESTS=5/5` (zero wall-clock timing output; includes synthetic `verify_live_intake()` success-path and `--check --intake-root` verification).
+- **Mutation Coverage:** `aletheia v2.0.0 mutate --max-mutants 0 --add-cwd`: `94/94` (`serendipity_pr_oracle.py`) + `44/44` (`serendipity_pr_certifier.py`) = `138/138` (`100.0%`) KILLED, `0` survivors, `truncated=False`.

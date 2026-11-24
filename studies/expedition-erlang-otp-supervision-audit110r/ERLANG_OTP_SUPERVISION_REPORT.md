@@ -2,8 +2,8 @@
 
 - **Audit ID:** `AUDIT-110` (`track-s11-erlang-otp-supervision`)
 - **Schema Version:** `erlang-otp-supervision-oracle/v1`
-- **Certificate `canonical_sha256` (inner body):** `338d6b1619e6b5aeac8ae772f8e45459e2153a633f162695553472ec17fae87d`
-- **Certificate File SHA-256 (`erlang_otp_supervision_certificate.json`, 4-mode `-I` parity):** `23757e7d665aeb4255bf6ffa81011355952b894c07836ffbb630399ae52570fe`
+- **Certificate `canonical_sha256` (inner body):** `46415faef56963a3fc9df1601f76c3b6b5b5394a92513c15cb5108f2846b1325`
+- **Certificate File SHA-256 (`erlang_otp_supervision_certificate.json`, 4-mode `-I` parity):** `f0444050b2927de80000a1ac7de6caf3239263a808037aa6fa0719d9401593a5`
 - **Arithmetic & Runtime Hygiene:** Pure Python 3 stdlib (`int` / `fractions.Fraction`), `0` IEEE-754 `float`s, `0` bare `assert` statements, `0` external writes, LF-only.
 
 ---
@@ -14,7 +14,7 @@
 |---|---|---|
 | Classical Erlang/OTP supervision semantics (restart policies, restart strategies, sliding-window intensity/period escalation, `link` / `trap_exit` / `monitor` signal semantics) | **`N0`** | Joe Armstrong (2003), *Making reliable distributed systems in the presence of software errors*, PhD Thesis, Royal Institute of Technology (KTH), Stockholm (`urn:nbn:se:kth:diva-3658`, `TRITA-IMIT-LECS AVH 03:09`, `ISRN KTH/IMIT/LECS/AVH-03/09-SE`); Joe Armstrong, Robert Virding, Claes Wikström & Mike Williams (1996), *Concurrent Programming in ERLANG* (2nd ed., Prentice Hall, `ISBN 978-0-13-508301-7`); Erlang/OTP `stdlib/src/supervisor.erl`. |
 | Standalone durable attempt ledger & zero-retry `SupervisionPolicy` | **`N0`** | `Moissanite-Labs/exo` PR `#1200` (`src/exo/core/group_supervision.py`, pinned commit `ccdc929ace0a62152e23e10b0fd219d76df7b6f1`, SHA-256 `b5c38a6f60151093eb320e431577fe48f1f5022c66058b87f99f55559c38f9e8`). |
-| Pure-$\mathbb{Z}/\mathbb{Q}$ executable soundness certifier + Frozen-Snapshot `rest_for_one` Non-Churn bridge for `exo#1200` & `aletheia v2.1+` Two-Zone Hybrid Swarms | **`N1`** *(engineering/audit)* | Executable zero-float state-machine certifier (`erlang_otp_supervision_oracle.py`), fail-closed certificate validator, 10 explicit must-fail controls, and formal composition of `exo#1200` `I2` sticky-stop/pre-dispatch gates with OTP `rest_for_one` and unidirectional `monitor` isolation. |
+| Pure-$\mathbb{Z}/\mathbb{Q}$ executable soundness certifier + Frozen-Snapshot `rest_for_one` Non-Churn bridge for `exo#1200` & `aletheia v2.1+` Two-Zone Hybrid Swarms | **`N0`** | Self-contained zero-float state-machine operational restatement and certifier (`erlang_otp_supervision_oracle.py`), fail-closed certificate validator, 10 explicit must-fail controls, and composition of `exo#1200` `I2` sticky-stop/pre-dispatch gates with OTP `rest_for_one` and unidirectional `monitor` isolation (no novelty claim above `N0`). |
 
 **Law-5 Scope Boundary:** Every statement below specifies an exact finite-state transition function, rational inequality, or process-signal propagation rule verified by deterministic execution. This artifact verifies finite-state transition traces and fail-closed schema invariants in pure Python; it does not verify live OS signal delivery, BEAM VM scheduler timing, or live multi-host network partitions.
 
@@ -66,16 +66,18 @@ Matching Erlang/OTP `stdlib/src/supervisor.erl` (`Threshold = Now - Period`, ret
 
 ### Pillar 4 — Asymmetric Fault-Isolation Theorem: `monitor` vs. `link` $\pm$ `trap_exit` (`p4_monitor_vs_link_fault_isolation`)
 
-Exact BFS signal propagation on `{coordinator (zone_a_coordinator), verifier_1 (zone_b_verifier), verifier_2 (zone_b_verifier)}`:
+Exact BFS signal propagation on `{coordinator (zone_a_coordinator), verifier_1 (zone_b_verifier), verifier_2 (zone_b_verifier)}`, distinguishing **propagated `"killed"`** (from an external `exit(verifier_1, kill)`) from a **direct untrappable `"kill"` signal** targeting `coordinator` (`exit(coordinator, kill)`):
 
-| Attachment Topology | `verifier_1` Exit | `coordinator` State | `verifier_2` State | Collateral Kills | Result |
+| Attachment Topology | Signal / `verifier_1` Exit | `coordinator` State | `verifier_2` State | Collateral Kills | Result |
 |---|---|---|---|---|---|
-| Unidirectional `monitor` (`mon-v1`, `mon-v2`) | `abnormal` | `ALIVE` (`promotion_blocked=true`, 1 `DOWN`) | `ALIVE` | `0` | **Certified Zone-B Isolation (`PASS`)** |
-| Bidirectional `link` + `coordinator.trap_exit=True` | `abnormal` | `ALIVE` (1 `EXIT` inbox message) | `ALIVE` | `0` | Traps `abnormal`, **not** `kill` |
+| Unidirectional `monitor` (`mon-v1`, `mon-v2`, `trap_exit=False`) | `abnormal` | `ALIVE` (`promotion_blocked=true`, 1 `DOWN`) | `ALIVE` | `0` | **Certified Zone-B Isolation (`PASS`)** |
+| Unidirectional `monitor` (`mon-v1`, `mon-v2`, `trap_exit=False`) | `killed` *(external `exit(verifier_1, kill)`)* | `ALIVE` (`promotion_blocked=true`, 1 `DOWN`, `reason="killed"`) | `ALIVE` | `0` | **Certified Zone-B Isolation on `killed` (`PASS`)** |
+| Bidirectional `link` + `coordinator.trap_exit=True` | `abnormal` | `ALIVE` (1 `EXIT` inbox message) | `ALIVE` | `0` | Traps `abnormal` |
+| Bidirectional `link` + `coordinator.trap_exit=True` | `killed` *(external `exit(verifier_1, kill)`)* | `ALIVE` (1 `EXIT` inbox message, `reason="killed"`) | `ALIVE` | `0` | **Traps propagated `"killed"`** (Erlang/OTP semantics) |
 | Bidirectional `link` + `coordinator.trap_exit=False` | `abnormal` | `TERMINATED` | `TERMINATED` | `2` (`["coordinator", "verifier_2"]`) | **Must-Fail Control 6 (`ERR_COORDINATOR_COLLATERAL_KILL`)** |
-| Bidirectional `link` + `coordinator.trap_exit=True` | `kill` | `TERMINATED` (`exit_reason="killed"`) | `TERMINATED` (`"killed"`) | `2` (`["coordinator", "verifier_2"]`) | **Must-Fail Control 7 (`ERR_COORDINATOR_COLLATERAL_KILL`)** |
+| Bidirectional `link` + `coordinator.trap_exit=True` | direct `kill` signal *(models `exit(coordinator, kill)`)* | `TERMINATED` (`exit_reason="killed"`) | `TERMINATED` (`"killed"`) | `2` (`["coordinator", "verifier_2"]`) | **Must-Fail Control 7 (`ERR_COORDINATOR_COLLATERAL_KILL`)** |
 
-Because OTP `kill` bypasses `trap_exit=True` on a linked process (killing the target with reason `"killed"`, which then cascades to any `trap_exit=False` siblings), **unidirectional `monitor` is strictly stronger than `link + trap_exit=True`** for air-gapped Zone-B verifiers.
+**Exact Erlang/OTP `kill` vs. `killed` Semantics:** When an external process kills `verifier_1` via `exit(verifier_1, kill)`, Erlang/OTP terminates `verifier_1` with exit reason **`"killed"`** (not `"kill"`). Across a bidirectional link, a linked `coordinator` with `trap_exit=True` **can** trap the propagated `"killed"` exit signal (staying `ALIVE`, certified in `link_with_trap_exit_outside_killed`), whereas a linked `coordinator` with `trap_exit=False` dies with `"killed"` and cascades to linked siblings. Only a **direct** untrappable `"kill"` signal aimed at `coordinator` (`exit(coordinator, kill)`) bypasses `trap_exit=True` (certified in `must_fail_kill_bypasses_trap_exit`). Unidirectional `monitor` avoids bidirectional failure coupling altogether—delivering `DOWN` (`reason="abnormal"` or `"killed"`) with `0` collateral kills and setting `promotion_blocked=True` without requiring `trap_exit=True` on `coordinator`.
 
 ### Pillar 5 — `Moissanite-Labs/exo#1200` `SupervisionPolicy` $\times$ `Foundation-0/aletheia v2.1+` Bridge (`p5_exo1200_aletheia_bridge`)
 
@@ -114,39 +116,32 @@ To extend `Moissanite-Labs/exo#1200` (`src/exo/core/group_supervision.py`) into 
 
 ---
 
-## 4. Verification & Reproducibility Receipts
+## 4. Verification & Reproducibility Commands
 
-Run inside the Track S11 directory (`track-s11-erlang-otp-supervision/`):
+Run inside this study directory (`studies/expedition-erlang-otp-supervision-audit110r/`):
 
 ```bash
-# 1. Strict JSON + schema + canonical byte-parity check
+# 1. Strict JSON + schema + CRLF + canonical byte-parity check (clean exit 2 on invalid input, zero tracebacks)
 python3 -I -B -W error erlang_otp_supervision_certifier.py --check erlang_otp_supervision_certificate.json
 
-# 2. 4-mode isolated -I determinism parity (all 4 hashes == 23757e7d665aeb4255bf6ffa81011355952b894c07836ffbb630399ae52570fe)
+# 2. 4-mode isolated -I determinism parity (all 4 hashes == f0444050b2927de80000a1ac7de6caf3239263a808037aa6fa0719d9401593a5)
 for flags in "-I -B" "-I -O -B" "-I -B -W error" "-I -O -B -W error"; do
   python3 $flags erlang_otp_supervision_certifier.py --json | sha256sum
 done
 
 # 3. Assertion-free R5 verification suite (8/8 OK under -I -O -B -W error)
 python3 -I -O -B -W error test_erlang_otp_supervision_r5.py
-
-# 4. Aletheia v2.0.0 audit-check --strict-ancestors, safety-scan, and exhaustive mutation testing
-python3 -B -W error -m aletheia audit-check . --strict-ancestors --scripts erlang_otp_supervision_certifier.py test_erlang_otp_supervision_r5.py
-python3 -B -W error -m aletheia safety-scan .
-python3 -B -W error -m aletheia mutate erlang_otp_supervision_oracle.py --work-root . --add-cwd --max-mutants 0 --test-cmd "python3 -I -O -B -W error test_erlang_otp_supervision_r5.py"
-python3 -B -W error -m aletheia mutate erlang_otp_supervision_certifier.py --work-root . --add-cwd --max-mutants 0 --test-cmd "python3 -I -O -B -W error test_erlang_otp_supervision_r5.py"
 ```
 
-| Gate | Exact Result |
+| Gate | Reproducible In-PR Result |
 |---|---|
-| Certificate `--check` | `OK AUDIT-110 canonical_sha256=338d6b1619e6b5aeac8ae772f8e45459e2153a633f162695553472ec17fae87d pillars=5 controls=10` |
-| 4-Mode Isolated `-I` Determinism | Bit-identical `23757e7d665aeb4255bf6ffa81011355952b894c07836ffbb630399ae52570fe` across `-I -B`, `-I -O -B`, `-I -B -W error`, `-I -O -B -W error` (exact match to committed JSON) |
+| Certificate `--check` | `OK AUDIT-110 canonical_sha256=46415faef56963a3fc9df1601f76c3b6b5b5394a92513c15cb5108f2846b1325 pillars=5 controls=10` |
+| 4-Mode Isolated `-I` Determinism | Bit-identical `f0444050b2927de80000a1ac7de6caf3239263a808037aa6fa0719d9401593a5` across `-I -B`, `-I -O -B`, `-I -B -W error`, `-I -O -B -W error` (exact match to committed JSON) |
 | R5 Assertion-Free Suite (`-I -O -B -W error`) | `PASS AUDIT-110 R5_TESTS=8/8` |
-| `aletheia mutate --max-mutants 0` | **`104/104`** (`erlang_otp_supervision_oracle.py`) + **`3/3`** (`erlang_otp_supervision_certifier.py`) = **`107/107` (`100.0%` killed, `0` survived, `truncated=False`)** |
-| Full-AST `BoolOp` (`And`/`Or`) Sub-Clause Sweep | **`80/80` (`100.0%` killed, `0` survived)** across both `.py` modules |
-| `aletheia audit-check --strict-ancestors` & `safety-scan` | `PASS` / `CLEAN` (`5` files, `2/2` R4, `0` defects, `0` leaks, `0` safety findings, `PYCACHE=0`) |
+| `aletheia mutate --max-mutants 0` | `104/104` (`erlang_otp_supervision_oracle.py`) + `6/6` (`erlang_otp_supervision_certifier.py`) = `110/110` (`100.0%` killed, `0` survived, `truncated=False`) |
 
-### `AUDIT-110R` Hardening Closures
+### Hardening Notes
 
 1. **`OTP110-BUG-01` (`apply_strategy_crash` / `_should_strategy_restart`):** Under `one_for_all` and `rest_for_one`, `temporary` children (dead or alive when terminated by a sibling crash) are never restarted, and already-dead `transient` children are never resurrected; only `permanent` children and crashed/running `transient` children restart, matching Erlang/OTP `stdlib/src/supervisor.erl`.
 2. **`OTP110-BUG-02` (`certify_intensity_trace` & `certify_hybrid_swarm_run`):** Trailing events after `MAX_RESTART_INTENSITY_EXCEEDED` fail closed with `ERR_EVENT_AFTER_ESCALATION`, and trailing events after terminal `promote` fail closed with `ERR_EVENT_AFTER_PROMOTE`.
+3. **Erlang `kill` vs. `killed` & CLI Hardening:** Pillar 4 explicitly certifies both `monitor_zone_b_isolation_on_killed` and `link_with_trap_exit_outside_killed` alongside direct-`kill` bypass (`must_fail_kill_bypasses_trap_exit`); `--check` reads raw bytes, rejects CR/CRLF (`ERR_CERT_CRLF`), invalid UTF-8 / unreadable files (`ERR_CERT_READ`), oversized integer literals (`> 1000` digits, `ERR_CERT_JSON`), and exits `2` cleanly with zero Python tracebacks.
