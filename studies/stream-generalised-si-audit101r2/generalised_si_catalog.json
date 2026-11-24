@@ -1,0 +1,823 @@
+{
+  "canonical_sha256": "21a60829aed7e047d4426cd514f509c3bf40cec726a3b9b2115e880eeac954d3",
+  "domains": [
+    {
+      "category": "Combinatorial designs",
+      "evidence_labels": [
+        "Independently checked"
+      ],
+      "gsi_github_repos": [
+        "https://github.com/vatskishan03/Hadamard"
+      ],
+      "has_public_artifacts": true,
+      "hosted_files": [],
+      "hosted_files_count": 0,
+      "id": "GSI-R-0001",
+      "index": 1,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "exact Goethals-Seidel / T-matrix / Williamson PAF certificates",
+      "page_html_sha256": "275d437e5d44b2ff074ef540ef37fa4e7cd4c83e1ce692485827f3a7b966e5fd",
+      "series": "gsi_r_note",
+      "siliquant_exact_bridge": {
+        "exact_operator_bridge": "Non-2^m orthogonal Hadamard rotations (Goethals-Seidel, 34 T-matrices, WT47/WT83, and Paley-block / Miyamoto-block constructions in vatskishan03/Hadamard/hadamard/PALEY_BLOCKS.md & MIYAMOTO_BLOCKS.md) extending PR#24 Hadamard E8_Had outlier-flattening beyond 2^m widths with exact 1/n 1-hot squared peak ratio",
+        "targets": [
+          "Moissanite-Labs/siliquant:bounds/",
+          "Moissanite-Labs/siliquant:shape/",
+          "PR#24",
+          "Issue#25"
+        ]
+      },
+      "slug": "hadamard-matrices",
+      "target_org_repo": "Foundation-0/math0",
+      "title": "We construct Hadamard matrices of 34 orders for which Table 4 of Cati and Pasechnik lists no known matrix",
+      "url": "https://www.generalised.si/research/hadamard-matrices"
+    },
+    {
+      "category": "Combinatorial designs",
+      "evidence_labels": [
+        "Independently checked"
+      ],
+      "gsi_github_repos": [
+        "https://github.com/vatskishan03/Hadamard"
+      ],
+      "has_public_artifacts": true,
+      "hosted_files": [],
+      "hosted_files_count": 0,
+      "id": "GSI-R-0002",
+      "index": 2,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "exact skew-type & symmetric Hadamard PAF certificates",
+      "page_html_sha256": "d93ac8911695b63474e93e6fb2cbf3e02feb6173799bc67546b08a3284d38092",
+      "series": "gsi_r_note",
+      "siliquant_exact_bridge": {
+        "exact_operator_bridge": "Skew-symmetric Hadamard & Paley skew negacyclic 4x4 block constructions (vatskishan03/Hadamard/skew/PALEY_SKEW.md) giving zero-multiply orthogonal rotations Q = H/sqrt(n) with H + H^T = 2I",
+        "targets": [
+          "Moissanite-Labs/siliquant:bounds/",
+          "Moissanite-Labs/siliquant:shape/",
+          "PR#24",
+          "Issue#25"
+        ]
+      },
+      "slug": "skew-symmetric-hadamard",
+      "target_org_repo": "Foundation-0/math0",
+      "title": "We construct skew-Hadamard matrices of order 4v for 106 odd v < 2500, and symmetric ones for 85, each listed as undecided in the 2025 census",
+      "url": "https://www.generalised.si/research/skew-symmetric-hadamard"
+    },
+    {
+      "category": "Quantum error correction",
+      "evidence_labels": [
+        "Independently checked"
+      ],
+      "gsi_github_repos": [
+        "https://github.com/vatskishan03/Quantum"
+      ],
+      "has_public_artifacts": true,
+      "hosted_files": [],
+      "hosted_files_count": 0,
+      "id": "GSI-R-0003",
+      "index": 3,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "exact 16-fault undetectable logical-error circuit witnesses on [[288,12,18]]",
+      "page_html_sha256": "cbb90fa408ef11ebb0f95a4bed03da54efeddecc02f16378a5c4ae4e0f1808bd",
+      "series": "gsi_r_note",
+      "siliquant_exact_bridge": null,
+      "slug": "two-gross-circuit-distance",
+      "target_org_repo": "Foundation-0/quantum",
+      "title": "IBM\u2019s two-gross [[288, 12, 18]] memory circuit has circuit distance exactly 16, below the published upper bound of 18",
+      "url": "https://www.generalised.si/research/two-gross-circuit-distance"
+    },
+    {
+      "category": "Combinatorial designs",
+      "evidence_labels": [
+        "Independently checked"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": true,
+      "hosted_files": [
+        "/files/cyclic-difference-set-465/aux/lajolla_smallest.py",
+        "/files/cyclic-difference-set-465/check.py",
+        "/files/cyclic-difference-set-465/data/L31_orbit_reps.txt",
+        "/files/cyclic-difference-set-465/ds3/ds1111.py",
+        "/files/cyclic-difference-set-465/ds3/ds1561.py",
+        "/files/cyclic-difference-set-465/ds3/ds2185.py"
+      ],
+      "hosted_files_count": 6,
+      "id": "GSI-R-0004",
+      "index": 4,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "exact Z_31 quotient group-ring orbit invariants (sum^2=100, PAF=0) for (465,145,45)",
+      "page_html_sha256": "7630e72fb42b306906babf715e8dca32e3ba777df9a55d8bc917a5b6a3cad299",
+      "series": "gsi_r_note",
+      "siliquant_exact_bridge": null,
+      "slug": "cyclic-difference-set-465",
+      "target_org_repo": "Foundation-0/math0",
+      "title": "No cyclic (465, 145, 45) difference set exists, and so none exists in any abelian group of order 465",
+      "url": "https://www.generalised.si/research/cyclic-difference-set-465"
+    },
+    {
+      "category": "Combinatorial designs",
+      "evidence_labels": [
+        "Independently checked",
+        "Internal",
+        "One engine"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": true,
+      "hosted_files": [
+        "/files/circulant-weighing-matrices/CW120_180.lean",
+        "/files/circulant-weighing-matrices/check_objects.py",
+        "/files/circulant-weighing-matrices/check_orbits.py",
+        "/files/circulant-weighing-matrices/cw120_36_classes.json",
+        "/files/circulant-weighing-matrices/cw180_36_classes.json",
+        "/files/circulant-weighing-matrices/lj_weight16.json",
+        "/files/circulant-weighing-matrices/lj_weight4.json"
+      ],
+      "hosted_files_count": 7,
+      "id": "GSI-R-0005",
+      "index": 5,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "exact proper CW(n,k) sparse autocorrelation & orbit-inequivalence certificates + Lean 4",
+      "page_html_sha256": "cf8b0605895adfb9f080cc516ec94b4005dac0abe3cdf5928e5fa3dd4a8bb1e6",
+      "series": "gsi_r_note",
+      "siliquant_exact_bridge": {
+        "exact_operator_bridge": "Sparse {-1,0,+1} orthogonal circulant weighing rotations Q = W(n,k)/sqrt(k) (CW(120,36), CW(180,36), CW(98,16)): exact energy conservation ||Wx||_2^2 = k||x||_2^2, exact 1/k 1-hot squared outlier peak, zero multiplications, and exact n/k signed-add reduction (10/3x, 5x, 49/8x) vs dense rotations for SIMD/Pallas & TPU v5e dequant",
+        "targets": [
+          "Moissanite-Labs/siliquant:bounds/",
+          "Moissanite-Labs/siliquant:shape/",
+          "PR#24",
+          "PR#26",
+          "Issue#25"
+        ]
+      },
+      "slug": "circulant-weighing-matrices",
+      "target_org_repo": "Foundation-0/math0",
+      "title": "Proper circulant weighing matrices exist for CW(120, 36), which Tan (2018) excludes; CW(180, 36), listed \u201cOpen\u201d; and 209 pairs listed \u201cNo\u201d in La Jolla version 1.3",
+      "url": "https://www.generalised.si/research/circulant-weighing-matrices"
+    },
+    {
+      "category": "Combinatorial designs",
+      "evidence_labels": [
+        "Independently checked"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": true,
+      "hosted_files": [
+        "/files/good-matrices-53-55/Good5355.lean",
+        "/files/good-matrices-53-55/ck_good.py",
+        "/files/good-matrices-53-55/mutants.py",
+        "/files/good-matrices-53-55/vgood.py"
+      ],
+      "hosted_files_count": 4,
+      "id": "GSI-R-0006",
+      "index": 6,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "exact skew/symmetric Good-matrix PAF quadruples (H_212, H_220) + Lean 4",
+      "page_html_sha256": "ca4dea166ffff6344e0e43d791b3523add8a6e8372d62c9cb5e24bfb25626ea2",
+      "series": "gsi_r_note",
+      "siliquant_exact_bridge": {
+        "exact_operator_bridge": "Explicit order-53/55 Good quadruples (incl. Paley order-53 context) producing non-2^m skew-type Hadamard rotations H_212 & H_220 with exact 1/212 and 1/220 1-hot squared peak",
+        "targets": [
+          "Moissanite-Labs/siliquant:bounds/",
+          "Moissanite-Labs/siliquant:shape/",
+          "PR#24",
+          "Issue#25"
+        ]
+      },
+      "slug": "good-matrices-53-55",
+      "target_org_repo": "Foundation-0/math0",
+      "title": "Circulant good matrices of orders 53 and 55 exist; one explicit set of each is given",
+      "url": "https://www.generalised.si/research/good-matrices-53-55"
+    },
+    {
+      "category": "Combinatorial designs",
+      "evidence_labels": [
+        "Internal",
+        "One engine"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": true,
+      "hosted_files": [
+        "/files/williamson-good-order-75/verify_williamson.py",
+        "/files/williamson-good-order-75/williamson_75_set.txt"
+      ],
+      "hosted_files_count": 2,
+      "id": "GSI-R-0007",
+      "index": 7,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "exact symmetric Williamson quadruple (H_300) bitword & PAF certificate",
+      "page_html_sha256": "655056fb7e3ecbafcec3679b55845920a1ada502814424ba89a90f7b7a0789bb",
+      "series": "gsi_r_note",
+      "siliquant_exact_bridge": {
+        "exact_operator_bridge": "Explicit order-75 symmetric Williamson quadruple producing non-2^m Hadamard rotation H_300 with exact 1/300 1-hot squared outlier flattening",
+        "targets": [
+          "Moissanite-Labs/siliquant:bounds/",
+          "Moissanite-Labs/siliquant:shape/",
+          "PR#24",
+          "Issue#25"
+        ]
+      },
+      "slug": "williamson-good-order-75",
+      "target_org_repo": "Foundation-0/math0",
+      "title": "An exhaustive computer search finds exactly one inequivalent set of circulant Williamson matrices of order 75 and no circulant good matrices of order 75",
+      "url": "https://www.generalised.si/research/williamson-good-order-75"
+    },
+    {
+      "category": "Integer sequences",
+      "evidence_labels": [
+        "One engine"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": false,
+      "hosted_files": [],
+      "hosted_files_count": 0,
+      "id": "GSI-R-0008",
+      "index": 8,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "exact enumeration counts for Z_27/Z_29/Z_31 complete mappings (OEIS A003111; unreleased)",
+      "page_html_sha256": "b32981da2587656468eb0c33467345489f7bd4142681a4fda4d50a2094f9d218",
+      "series": "gsi_r_note",
+      "siliquant_exact_bridge": null,
+      "slug": "complete-mappings-cyclic-groups",
+      "target_org_repo": "Foundation-0/math0",
+      "title": "We computed that \u2124_27, \u2124_29 and \u2124_31 have 164,135,223,171,169,785; 18,674,231,142,723,249,003; and 2,427,915,096,775,283,929,115 complete mappings that fix 0, values that would extend OEIS A003111 to a(15)",
+      "url": "https://www.generalised.si/research/complete-mappings-cyclic-groups"
+    },
+    {
+      "category": "Integer sequences",
+      "evidence_labels": [
+        "One engine"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": false,
+      "hosted_files": [],
+      "hosted_files_count": 0,
+      "id": "GSI-R-0009",
+      "index": 9,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "exact mass-formula / inequivalence counts for binary self-dual codes & stabilizer states (unreleased)",
+      "page_html_sha256": "2aa3cd645d8914d5adc439950e12ceabc1e687ca76f9590503897eaf2d24761f",
+      "series": "gsi_r_note",
+      "siliquant_exact_bridge": {
+        "exact_operator_bridge": "Type II doubly-even binary self-dual codes map via Construction A Lambda(C) = (C + 2 Z^n)/sqrt(2) to even unimodular lattices generalizing E8 ([8,4,4]) and Leech Lambda_24 for Issue#4 codebook geometry (GSI counts unreleased)",
+        "targets": [
+          "Moissanite-Labs/siliquant:lattice/",
+          "Issue#4"
+        ]
+      },
+      "slug": "self-dual-codes-stabilizer-states",
+      "target_org_repo": "Foundation-0/gfq-codes",
+      "title": "We computed the numbers of inequivalent binary self-dual codes of even length from 42 to 56 and of inequivalent stabilizer states on 13 to 20 qubits",
+      "url": "https://www.generalised.si/research/self-dual-codes-stabilizer-states"
+    },
+    {
+      "category": "Coding theory and telecom",
+      "evidence_labels": [
+        "One engine"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": true,
+      "hosted_files": [
+        "/files/5g-nr-ldpc-minimum-distances/check.py",
+        "/files/5g-nr-ldpc-minimum-distances/check_table.py",
+        "/files/5g-nr-ldpc-minimum-distances/nr_bg.json",
+        "/files/5g-nr-ldpc-minimum-distances/subcode_distances.json"
+      ],
+      "hosted_files_count": 4,
+      "id": "GSI-R-0010",
+      "index": 10,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "exact 5G NR LDPC minimum-distance parity-check witnesses",
+      "page_html_sha256": "c2395a77361f8b88287934b8ab5c23dce13ef3388bf68de1a0c65b4f28f25e84",
+      "series": "gsi_r_note",
+      "siliquant_exact_bridge": {
+        "exact_operator_bridge": "Exact binary parity-check minimum-distance witnesses directly bound minimum Euclidean squared norm d_min/2 of Construction A lattice codebooks",
+        "targets": [
+          "Moissanite-Labs/siliquant:lattice/",
+          "Issue#4"
+        ]
+      },
+      "slug": "5g-nr-ldpc-minimum-distances",
+      "target_org_repo": "Foundation-0/gfq-codes",
+      "title": "In Table 4 of arXiv:2607.04716v1 on 5G NR LDPC sub-codes, d(C\u2032(E[4], 48)) is 5, not 6, and we compute d(C(E[4], 192)) = 10, not 8",
+      "url": "https://www.generalised.si/research/5g-nr-ldpc-minimum-distances"
+    },
+    {
+      "category": "Quantum error correction",
+      "evidence_labels": [
+        "Internal",
+        "One engine"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": true,
+      "hosted_files": [
+        "/files/bivariate-bicycle-circuit-distances/extended_code.py"
+      ],
+      "hosted_files_count": 1,
+      "id": "GSI-R-0011",
+      "index": 11,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "exact bivariate-bicycle schedule circuit-distance certificates",
+      "page_html_sha256": "4bea97ce89882f7cf109ef57cfca3b620e9fc7d9fc8988f0b8347a9d854b57ed",
+      "series": "gsi_r_note",
+      "siliquant_exact_bridge": null,
+      "slug": "bivariate-bicycle-circuit-distances",
+      "target_org_repo": "Foundation-0/quantum",
+      "title": "Two non-interleaved schedules and the period-11 schedule of G. Pan (to 40 cycles) give [[288, 12, 18]] memory circuits of circuit distance 18",
+      "url": "https://www.generalised.si/research/bivariate-bicycle-circuit-distances"
+    },
+    {
+      "category": "Combinatorial designs",
+      "evidence_labels": [
+        "One engine"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": true,
+      "hosted_files": [
+        "/files/singer-relative-difference-sets/objects/rds_364_2_243_81.json",
+        "/files/singer-relative-difference-sets/verify_objects.py"
+      ],
+      "hosted_files_count": 2,
+      "id": "GSI-R-0012",
+      "index": 12,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "exact RDS(364,2,243,81) difference-multiset certificate in Z_728",
+      "page_html_sha256": "65a3b267c01562dc12e63bcc3c56f4a64b7792bfec33e23d5f426b2d057d1827",
+      "series": "gsi_r_note",
+      "siliquant_exact_bridge": null,
+      "slug": "singer-relative-difference-sets",
+      "target_org_repo": "Foundation-0/math0",
+      "title": "No cyclic relative difference set with nontrivial kernel lifts a cyclic (364, 121, 40), (255, 127, 63), (1464, 133, 12) or (2380, 183, 14) difference set",
+      "url": "https://www.generalised.si/research/singer-relative-difference-sets"
+    },
+    {
+      "category": "SAT, optimisation and proof",
+      "evidence_labels": [
+        "Internal",
+        "One engine"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": true,
+      "hosted_files": [
+        "/files/sat-competition-refutations/farkas_35ec95b9b2398fb522db178855016ae0.json",
+        "/files/sat-competition-refutations/farkas_3a1f1b4b9a521737cc760017fe9d8b43.json",
+        "/files/sat-competition-refutations/farkas_6cb995b1c550beb579c53e27f6ca881a.json",
+        "/files/sat-competition-refutations/farkas_6f6a20cd654701b5e7fe9e9e0e5e7787.json",
+        "/files/sat-competition-refutations/farkas_78e8f5b0d59512cc4910fd63b4acb7fa.json",
+        "/files/sat-competition-refutations/farkas_c05d4d3ecd06a2e3942fea09159dd27b.json",
+        "/files/sat-competition-refutations/farkas_cb66276897e4d1ff1368a4430598e11c.json",
+        "/files/sat-competition-refutations/farkas_check.py",
+        "/files/sat-competition-refutations/parity_42f1311ce504db8cc0cb590a568da20a.json",
+        "/files/sat-competition-refutations/parity_refute.py"
+      ],
+      "hosted_files_count": 10,
+      "id": "GSI-R-0013",
+      "index": 13,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "exact Farkas & GF(2)-parity unsatisfiability refutation certificates",
+      "page_html_sha256": "73a80758340742b1969f57ad2bc5e05bffeba8ba778db9e69e09663159e50dd8",
+      "series": "gsi_r_note",
+      "siliquant_exact_bridge": null,
+      "slug": "sat-competition-refutations",
+      "target_org_repo": "Proven-Commons/mcproof",
+      "title": "Eleven SAT Competition 2025 main-track formulas listed as \u2018unknown\u2019 in the Global Benchmark Database have checkable refutation certificates",
+      "url": "https://www.generalised.si/research/sat-competition-refutations"
+    },
+    {
+      "category": "SAT, optimisation and proof",
+      "evidence_labels": [
+        "Internal"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": true,
+      "hosted_files": [
+        "/files/metabolic-minimal-cut-sets/mcs_count.py"
+      ],
+      "hosted_files_count": 1,
+      "id": "GSI-R-0014",
+      "index": 14,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "exact minimal cut-set enumeration on 95-reaction E. coli core stoichiometry",
+      "page_html_sha256": "05e9de08ed521dbc1384894b26f03a555fc299cf77b988229225b91581018d8d",
+      "series": "gsi_r_note",
+      "siliquant_exact_bridge": null,
+      "slug": "metabolic-minimal-cut-sets",
+      "target_org_repo": "Foundation-0/bi0",
+      "title": "We enumerate minimal cut sets of the 95-reaction E. coli core network up to size 4, 87\u2013215 times faster than our mixed-integer baseline in single runs",
+      "url": "https://www.generalised.si/research/metabolic-minimal-cut-sets"
+    },
+    {
+      "category": "Physics and materials",
+      "evidence_labels": [
+        "Internal"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": true,
+      "hosted_files": [
+        "/files/cluster-expansion-ground-states/check.py",
+        "/files/cluster-expansion-ground-states/ground_states.json",
+        "/files/cluster-expansion-ground-states/instances.json"
+      ],
+      "hosted_files_count": 3,
+      "id": "GSI-R-0015",
+      "index": 15,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "exact integer pair-model ground-state energy certificates on 24 Ag-Pd cells",
+      "page_html_sha256": "cad49240e9416b8dfc811b4324a4294e811a05ce0c7f0da631aebe518b073b64",
+      "series": "gsi_r_note",
+      "siliquant_exact_bridge": null,
+      "slug": "cluster-expansion-ground-states",
+      "target_org_repo": "Foundation-0/physics0",
+      "title": "We find exact ground states of 24 compact Ag\u2013Pd pair-model cells with 8.5 to over 7,000 times less CPU time than Huang et al.\u2019s cell solver",
+      "url": "https://www.generalised.si/research/cluster-expansion-ground-states"
+    },
+    {
+      "category": "Physics and materials",
+      "evidence_labels": [
+        "Internal"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": true,
+      "hosted_files": [
+        "/files/ising-3d-density-of-states/omega_4x4x4_periodic.txt",
+        "/files/ising-3d-density-of-states/omega_5x5x4_periodic.txt"
+      ],
+      "hosted_files_count": 2,
+      "id": "GSI-R-0016",
+      "index": 16,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "exact periodic 3D Ising density-of-states partition & 0th-4th moment identities",
+      "page_html_sha256": "f5e6e32404f99b1ab8a181a78d0a2d50809c0ff800e49e7c44a757d20d4c3fee",
+      "series": "gsi_r_note",
+      "siliquant_exact_bridge": null,
+      "slug": "ising-3d-density-of-states",
+      "target_org_repo": "Foundation-0/physics0",
+      "title": "Our symmetry-reduced transfer-matrix program took 1.6 times as long as our engine to compute the periodic 4 \u00d7 4 \u00d7 4 Ising density of states exactly",
+      "url": "https://www.generalised.si/research/ising-3d-density-of-states"
+    },
+    {
+      "category": "Coding theory and telecom",
+      "evidence_labels": [
+        "Candidate"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": true,
+      "hosted_files": [
+        "/files/candidate-binary-codes/cert_111_37_u10.json",
+        "/files/candidate-binary-codes/cert_152_38_u7.json",
+        "/files/candidate-binary-codes/cert_159_53_u10.json",
+        "/files/candidate-binary-codes/cert_172_43_u6.json",
+        "/files/candidate-binary-codes/cert_174_58_u7.json",
+        "/files/candidate-binary-codes/certcheck.py"
+      ],
+      "hosted_files_count": 6,
+      "id": "GSI-R-0017",
+      "index": 17,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "exact GF(2) full-rank quasi-cyclic binary linear code generator certificates",
+      "page_html_sha256": "dfc6ec018d0726ad4fb3c0f4ad31347f4a2f0570424039867a9a627540dd3d1b",
+      "series": "gsi_r_note",
+      "siliquant_exact_bridge": {
+        "exact_operator_bridge": "Quasi-cyclic binary linear code generators ([111,37]..[174,58]) map via Construction A to high-dimensional lattice codebooks (exhaustive d_min lower bound still open)",
+        "targets": [
+          "Moissanite-Labs/siliquant:lattice/",
+          "Issue#4"
+        ]
+      },
+      "slug": "candidate-binary-codes",
+      "target_org_repo": "Foundation-0/gfq-codes",
+      "title": "Five explicit binary linear codes of length 111 to 174 have minimum distance above the lower bounds listed at codetables.de on 16 November 2026",
+      "url": "https://www.generalised.si/research/candidate-binary-codes"
+    },
+    {
+      "category": "The system",
+      "evidence_labels": [
+        "Internal"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": false,
+      "hosted_files": [],
+      "hosted_files_count": 0,
+      "id": "GSI-R-0018",
+      "index": 18,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "structure-detector -> solver-compiler -> verify loop architecture vs Aletheia/mcproof",
+      "page_html_sha256": "58e2f56c8cdb5623ef614ca6933964808e772b3eefa574eb66a80412b1cdd292",
+      "series": "gsi_r_note",
+      "siliquant_exact_bridge": null,
+      "slug": "solver-compiler-and-factory",
+      "target_org_repo": "Foundation-0/aletheia",
+      "title": "The lab\u2019s solver system gave the right class for 5 of 8 blind in-class models and fired on none of 3 negatives",
+      "url": "https://www.generalised.si/research/solver-compiler-and-factory"
+    },
+    {
+      "category": "Superconductivity",
+      "evidence_labels": [
+        "Independently checked"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": false,
+      "hosted_files": [],
+      "hosted_files_count": 0,
+      "id": "WP-01",
+      "index": 19,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "linearised Eliashberg T_c upper-bound white paper (0 public certificate files)",
+      "page_html_sha256": "1da1bffadd1889bb499fb58791a8ff167cce78fdc97a0162b86b5bc85affb119",
+      "series": "nov16_white_paper",
+      "siliquant_exact_bridge": null,
+      "slug": "superconducting-tc-ceiling",
+      "target_org_repo": "Foundation-0/physics0",
+      "title": "A sharp ceiling on T_c in linearised Eliashberg theory",
+      "url": "https://www.generalised.si/research/superconducting-tc-ceiling"
+    },
+    {
+      "category": "Superconductivity",
+      "evidence_labels": [
+        "Independently checked"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": false,
+      "hosted_files": [],
+      "hosted_files_count": 0,
+      "id": "WP-02",
+      "index": 20,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "empirical Eliashberg ceiling screen on published electron-phonon tables (0 public files)",
+      "page_html_sha256": "9bc5e84c3c8bca8f0a6a7d38adb7722fba10d71b679033e0008f146a5e5c36c8",
+      "series": "nov16_white_paper",
+      "siliquant_exact_bridge": null,
+      "slug": "tc-ceilings-published-data",
+      "target_org_repo": "Foundation-0/physics0",
+      "title": "Published electron-phonon data against the Eliashberg ceiling",
+      "url": "https://www.generalised.si/research/tc-ceilings-published-data"
+    },
+    {
+      "category": "The electron gas",
+      "evidence_labels": [
+        "Independently checked",
+        "One engine"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": false,
+      "hosted_files": [],
+      "hosted_files_count": 0,
+      "id": "WP-03",
+      "index": 21,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "computer-assisted 3D/2D jellium & Lieb-Oxford lower-bound certificates (0 public files)",
+      "page_html_sha256": "bbbe2850d1e5c53c2c04d194df8bad129b6308a1952b938783646f891338f131",
+      "series": "nov16_white_paper",
+      "siliquant_exact_bridge": null,
+      "slug": "jellium-lower-bounds",
+      "target_org_repo": "Foundation-0/physics0",
+      "title": "Lower bounds for jellium, and the limit of smearing bounds",
+      "url": "https://www.generalised.si/research/jellium-lower-bounds"
+    },
+    {
+      "category": "Long-range order",
+      "evidence_labels": [
+        "Independently checked"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": false,
+      "hosted_files": [],
+      "hosted_files_count": 0,
+      "id": "WP-04",
+      "index": 22,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "certified phase diagram bounds for 2D dipolar Ising & dipolar spin ice (0 public files)",
+      "page_html_sha256": "330644da0970943d14efffec35f6b55f1aadec407d4f337847b77d517afcdf21",
+      "series": "nov16_white_paper",
+      "siliquant_exact_bridge": null,
+      "slug": "dipolar-magnet-ground-states",
+      "target_org_repo": "Foundation-0/physics0",
+      "title": "Ground states of the 2D dipolar Ising model and of dipolar spin ice",
+      "url": "https://www.generalised.si/research/dipolar-magnet-ground-states"
+    },
+    {
+      "category": "Long-range order",
+      "evidence_labels": [
+        "Independently checked",
+        "One engine"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": false,
+      "hosted_files": [],
+      "hosted_files_count": 0,
+      "id": "WP-05",
+      "index": 23,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "certified triangular/periodic lattice-gas ground-state windows (0 public files)",
+      "page_html_sha256": "a02cc58b78f1acb3386e6c42c3ce73b50f560928d67b16519c13a7fe785f05e9",
+      "series": "nov16_white_paper",
+      "siliquant_exact_bridge": null,
+      "slug": "lattice-gas-ground-states",
+      "target_org_repo": "Foundation-0/physics0",
+      "title": "Certified ground states of long-range lattice gases",
+      "url": "https://www.generalised.si/research/lattice-gas-ground-states"
+    },
+    {
+      "category": "Materials design",
+      "evidence_labels": [
+        "Independently checked"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": false,
+      "hosted_files": [],
+      "hosted_files_count": 0,
+      "id": "WP-06",
+      "index": 24,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "certified periodic ion-allocation global-minimum bounds (0 public files)",
+      "page_html_sha256": "f1a186ec70976cb943099674023079980ce34d877b9a51711c610b19dda1329c",
+      "series": "nov16_white_paper",
+      "siliquant_exact_bridge": null,
+      "slug": "certified-crystal-structure-prediction",
+      "target_org_repo": "Foundation-0/physics0",
+      "title": "Certified global optima for periodic ion allocation",
+      "url": "https://www.generalised.si/research/certified-crystal-structure-prediction"
+    },
+    {
+      "category": "Materials design",
+      "evidence_labels": [
+        "Independently checked",
+        "One engine"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": false,
+      "hosted_files": [],
+      "hosted_files_count": 0,
+      "id": "WP-07",
+      "index": 25,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "smallest quaternary SQS cells & variational diffusion brackets (0 public files)",
+      "page_html_sha256": "7344af14b01d3bb4a72564dfa797df9f9dca054dfce516b33ee0471a0e5304da",
+      "series": "nov16_white_paper",
+      "siliquant_exact_bridge": null,
+      "slug": "perfect-sqs-and-diffusion",
+      "target_org_repo": "Foundation-0/physics0",
+      "title": "Perfect quasirandom alloy cells and certified diffusion brackets",
+      "url": "https://www.generalised.si/research/perfect-sqs-and-diffusion"
+    },
+    {
+      "category": "Catalysis",
+      "evidence_labels": [
+        "Independently checked"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": false,
+      "hosted_files": [],
+      "hosted_files_count": 0,
+      "id": "WP-08",
+      "index": 26,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "log-concave Eyring turnover-frequency volcano & OER dynamic cap bounds (0 public files)",
+      "page_html_sha256": "a0becd9d5137ed51d05473998b4206545e0360858ba57ab29dfa6bd59a08483b",
+      "series": "nov16_white_paper",
+      "siliquant_exact_bridge": null,
+      "slug": "catalysis-limits",
+      "target_org_repo": "Foundation-0/bi0",
+      "title": "Log-concave turnover frequency and a dynamic cap for oxygen evolution",
+      "url": "https://www.generalised.si/research/catalysis-limits"
+    },
+    {
+      "category": "Quantum error correction",
+      "evidence_labels": [
+        "Candidate",
+        "Independently checked",
+        "One engine"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": false,
+      "hosted_files": [],
+      "hosted_files_count": 0,
+      "id": "WP-09",
+      "index": 27,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "bivariate-bicycle depth-8 syndrome-cycle distance vs logical error-rate study (0 public files)",
+      "page_html_sha256": "2582c5738f3b3eccc472aa5fed8ff4b47a6982f20c45767d9678f96e57acd617",
+      "series": "nov16_white_paper",
+      "siliquant_exact_bridge": null,
+      "slug": "syndrome-cycles-bivariate-bicycle-codes",
+      "target_org_repo": "Foundation-0/quantum",
+      "title": "What circuit distance buys in bivariate-bicycle syndrome cycles",
+      "url": "https://www.generalised.si/research/syndrome-cycles-bivariate-bicycle-codes"
+    },
+    {
+      "category": "Chip design",
+      "evidence_labels": [
+        "Independently checked"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": false,
+      "hosted_files": [],
+      "hosted_files_count": 0,
+      "id": "WP-10",
+      "index": 28,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "Poisson shot-noise EUV contact-printing failure-probability brackets (0 public files)",
+      "page_html_sha256": "512b3a6f79b68d11b62c3b29d286d065e866aa050eb4f1fd0c93c49d36c300a4",
+      "series": "nov16_white_paper",
+      "siliquant_exact_bridge": {
+        "exact_operator_bridge": "Physical EUV stochastic defect floor bounding SRAM/logic yield beneath Issue#25 serving roofline (0 public GSI certificate files)",
+        "targets": [
+          "Moissanite-Labs/siliquant:bounds/",
+          "Issue#25"
+        ]
+      },
+      "slug": "euv-stochastic-failure-certificates",
+      "target_org_repo": "Foundation-0/silic0n",
+      "title": "Certified pointwise EUV failure probabilities and a photon dose floor",
+      "url": "https://www.generalised.si/research/euv-stochastic-failure-certificates"
+    },
+    {
+      "category": "Chip design",
+      "evidence_labels": [
+        "Independently checked"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": false,
+      "hosted_files": [],
+      "hosted_files_count": 0,
+      "id": "WP-11",
+      "index": 29,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "Urbach-tail ballistic steep-switch on/off & switching-energy bounds (0 public files)",
+      "page_html_sha256": "7f79345da1b95b36c45bacb3c44f8a676637c5d0fb40e72a027112cdab383c50",
+      "series": "nov16_white_paper",
+      "siliquant_exact_bridge": {
+        "exact_operator_bridge": "Ballistic Urbach-tail switching-energy lower bound directly constraining energy-per-op ceilings in Issue#25 dequant roofline (0 public GSI certificate files)",
+        "targets": [
+          "Moissanite-Labs/siliquant:bounds/",
+          "Issue#25"
+        ]
+      },
+      "slug": "steep-switch-limits",
+      "target_org_repo": "Foundation-0/silic0n",
+      "title": "Steep-switch limits and minimum energy per switching event",
+      "url": "https://www.generalised.si/research/steep-switch-limits"
+    },
+    {
+      "category": "Chip design",
+      "evidence_labels": [
+        "Independently checked"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": false,
+      "hosted_files": [],
+      "hosted_files_count": 0,
+      "id": "WP-12",
+      "index": 30,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "ISPD 2005 half-perimeter wirelength lower-bound certificates (0 public files)",
+      "page_html_sha256": "c0d88a48bd04798380e9d92978ea03eab9cc71da0830ced7046591075307a4ab",
+      "series": "nov16_white_paper",
+      "siliquant_exact_bridge": {
+        "exact_operator_bridge": "Certified wirelength lower bounds directly constraining on-chip interconnect energy & bandwidth ceilings in Issue#25 roofline (0 public GSI certificate files)",
+        "targets": [
+          "Moissanite-Labs/siliquant:bounds/",
+          "Issue#25"
+        ]
+      },
+      "slug": "placement-lower-bounds",
+      "target_org_repo": "Foundation-0/silic0n",
+      "title": "Certified wirelength lower bounds for the ISPD 2005 benchmarks",
+      "url": "https://www.generalised.si/research/placement-lower-bounds"
+    },
+    {
+      "category": "Chip design",
+      "evidence_labels": [
+        "Independently checked"
+      ],
+      "gsi_github_repos": [],
+      "has_public_artifacts": false,
+      "hosted_files": [],
+      "hosted_files_count": 0,
+      "id": "WP-13",
+      "index": 31,
+      "law4_default_novelty_tier": "N0",
+      "law5_exact_operator_mapping": "diameter-2/3 defect-2 Moore-bound non-existence & 19-comparator median-9 proof (0 public files)",
+      "page_html_sha256": "ee99d544493a8dfe3974da64490097a71c89b699165b1bb58e5cd66084146056",
+      "series": "nov16_white_paper",
+      "siliquant_exact_bridge": null,
+      "slug": "moore-bound-defect-two",
+      "target_org_repo": "Foundation-0/math0",
+      "title": "Graphs two below the Moore bound, and the median of nine inputs",
+      "url": "https://www.generalised.si/research/moore-bound-defect-two"
+    }
+  ],
+  "gsi_r_notes_count": 18,
+  "gsi_r_notes_with_public_artifacts": 15,
+  "llms_full_txt_sha256": "4fd19c6ec3817b331054dcb187da6356047655b405d0e0164de92f5305ce1db2",
+  "llms_txt_sha256": "cb23f2a0ec7790a8bbaf33e3da1187c0617311f4572fe8c7aba44e9ab9697c59",
+  "nov16_white_papers_count": 13,
+  "nov16_white_papers_labelled_independently_checked": 13,
+  "nov16_white_papers_with_public_artifacts": 0,
+  "public_artifact_ratio": "15/31",
+  "schema": "aletheia.audit101.generalised_si_catalog.v1",
+  "siliquant_mapped_domains_count": 11,
+  "site": "https://www.generalised.si",
+  "sitemap_sha256": "9cb9d66815ef426177d3e04e5069210559b72e52a6a58654eac0e05e7879400f",
+  "total_hosted_download_files": 48,
+  "total_research_domains": 31
+}
