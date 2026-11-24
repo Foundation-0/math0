@@ -12,6 +12,7 @@ What is here today:
 
 - **[AREAS.md](AREAS.md)** — survey of where Foundation-0 can make progress in mathematics.
 - **[data/codetables/](data/codetables/)** — census snapshot and script for open entries on [codetables.de](data/codetables/README.md) (see that README for files and how to re-run the census).
+- **[studies/ROUND4_PURE_MATH_PROVENANCE.md](studies/ROUND4_PURE_MATH_PROVENANCE.md)** — five independently verified, zero-float pure-stdlib mathematical studies (`AUDIT-049`, `050`, `051`, `052`, `053R`): 8-glyph Aletheia operator calculus, 3D Euler Craik–Criminale Farkas polytope & Leray Schur, fluid-PDE `SignedTree` multifrontal Schur & Sperner parity, DBN/Dini exact rational & Sylvester–Schur inertia verification, and adaptive-pathway Schur/$PGL(2)$/De Morgan/tropical duality.
 - **[studies/ROUND5_PURE_MATH_PROVENANCE.md](studies/ROUND5_PURE_MATH_PROVENANCE.md)** — two independently verified, zero-float pure-stdlib mathematical studies (`AUDIT-058R`, `AUDIT-060`, `49/49` + `49/49` R5 mutation-killed): CAMAIL SSM/DeltaNet/RKHS Schur & lattice-quantization exact tomography, and alphaXiv formal-math (Feige Lean 4 census, sumset carry-automaton Collatz–Wielandt repair & 462-set base-12 classification, HOPE Hilbert Schur obstruction & finite $H_2..H_8$, and $S_4/A_5$/FPRM/QRR recurrence bridges).
 
 Other mathematics spin-outs are listed under [Projects](#projects) below. Work is in the open: results should be backed by something a machine can re-check, with credit for people and models.

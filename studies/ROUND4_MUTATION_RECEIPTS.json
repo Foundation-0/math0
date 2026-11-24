@@ -1,0 +1,75 @@
+{
+  "all_100_percent_killed": true,
+  "audit_052_fluid_note": "studies/fluid-pde-lean-signed-tree/ (AUDIT-052) verifies 6/6 built-in adversarial SignedTree mutants and 10/10 R3 domain/type controls directly in pure Python stdlib without claiming an external AST mutator kill count.",
+  "canonical_sha256": "c1f607299c9634fb9faa1a2b1e8c6f78604b822cb557fc32969f7b6e80d7ebde",
+  "mutator": {
+    "boundary_mutations_enabled": true,
+    "max_mutants_flag": 0,
+    "pinned_commit": "7227bcc5dadb0f1b275a4ae9e7695b4323384f06",
+    "repository": "Foundation-0/aletheia",
+    "version": "2.0.0"
+  },
+  "note": "All AST refusal/boundary mutation receipts below were generated live against the exact committed study files using Foundation-0/aletheia v2.0.0 (unvendored external tool pinned to commit above). All counts are exact integers/rational strings (zero floating-point values).",
+  "schema": "foundation0.math0.round4_mutation_receipts.v1",
+  "studies": [
+    {
+      "audit_id": "AUDIT-051",
+      "kill_ratio_exact": "72/72",
+      "killed": 72,
+      "reproduce_cmd": "python3 -B -m aletheia mutate aletheia_calculus.py --work-root . --add-cwd --max-mutants 0 --test-cmd \"python3 -I -O -B -W error test_aletheia_calculus_r5.py\" --json",
+      "study": "aletheia-operator-calculus",
+      "survived": 0,
+      "target_file": "studies/aletheia-operator-calculus/aletheia_calculus.py",
+      "target_sha256": "8e83d49d2796b20f1d55483444d80776f6fda98b8bc19c2ac1877fbe1b7f37b8",
+      "test_file": "studies/aletheia-operator-calculus/test_aletheia_calculus_r5.py",
+      "test_sha256": "8c9ac241bd1507e36842f2e7983e518dc8c32a33e21da17be8f15fa80fbb5d05",
+      "total_mutants": 72,
+      "truncated": false
+    },
+    {
+      "audit_id": "AUDIT-050",
+      "kill_ratio_exact": "34/34",
+      "killed": 34,
+      "reproduce_cmd": "python3 -B -m aletheia mutate canculus_onco_bridge.py --work-root . --add-cwd --max-mutants 0 --test-cmd \"python3 -I -O -B -W error test_canculus_onco_r5.py\" --json",
+      "study": "canculus-schur-pgl2-cuts",
+      "survived": 0,
+      "target_file": "studies/canculus-schur-pgl2-cuts/canculus_onco_bridge.py",
+      "target_sha256": "0b4a1aa72fada77b5f590f0106a603d3ef3ffaa40c209fa378806be6719b274e",
+      "test_file": "studies/canculus-schur-pgl2-cuts/test_canculus_onco_r5.py",
+      "test_sha256": "665e0419efab394fb90c70f039d313a994dca7249de065fd23d0d8f068f5a59a",
+      "total_mutants": 34,
+      "truncated": false
+    },
+    {
+      "audit_id": "AUDIT-053R",
+      "kill_ratio_exact": "17/17",
+      "killed": 17,
+      "reproduce_cmd": "python3 -B -m aletheia mutate buckmaster_euler_cc_audit.py --work-root . --add-cwd --max-mutants 0 --test-cmd \"python3 -I -O -B -W error test_buckmaster_euler_cc_r5.py\" --json",
+      "study": "euler-3d-craik-criminale-polytope",
+      "survived": 0,
+      "target_file": "studies/euler-3d-craik-criminale-polytope/buckmaster_euler_cc_audit.py",
+      "target_sha256": "14bd8fad30399a1acab5575aee39496d33a14babb9df4fc116af744b7f8171b9",
+      "test_file": "studies/euler-3d-craik-criminale-polytope/test_buckmaster_euler_cc_r5.py",
+      "test_sha256": "69e394ee7f7c020bed43374c7de2304cde913da122553902c5fc51de2a87533c",
+      "total_mutants": 17,
+      "truncated": false
+    },
+    {
+      "audit_id": "AUDIT-049",
+      "kill_ratio_exact": "37/37",
+      "killed": 37,
+      "reproduce_cmd": "python3 -B -m aletheia mutate hardened_dini_and_r5_mutator.py --work-root . --add-cwd --max-mutants 0 --test-cmd \"python3 -I -O -B -W error test_judegomila_r5.py\" --json",
+      "study": "zeta-dbn-dini-inertia",
+      "survived": 0,
+      "target_file": "studies/zeta-dbn-dini-inertia/hardened_dini_and_r5_mutator.py",
+      "target_sha256": "ee3f35c3bb4806504f49f8f20822f3698a92d358935b791a69a22d07bad595a6",
+      "test_file": "studies/zeta-dbn-dini-inertia/test_judegomila_r5.py",
+      "test_sha256": "c3bd4a3941be7fc89fd3b986f1b7747547336993ab42a5094e1c6774f219b8f2",
+      "total_mutants": 37,
+      "truncated": false
+    }
+  ],
+  "total_killed_all_4_targets": 160,
+  "total_mutants_all_4_targets": 160,
+  "total_survived_all_4_targets": 0
+}

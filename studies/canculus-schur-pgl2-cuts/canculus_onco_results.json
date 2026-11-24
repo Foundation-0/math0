@@ -1,0 +1,131 @@
+{
+  "all_passed": true,
+  "audit_id": "AUDIT-050",
+  "canonical_sha256": "10d9db09393257aa612cf6ca678ab2dca9e3a7ec4353fbd1e1f1ee9d79815cfe",
+  "novelty_grade": "N1",
+  "oracle_class": "exact+anchor",
+  "part_1_canculus_normal_form_and_closure": {
+    "canc_b1_nf_functoriality_closed": true,
+    "canc_b2_non_monotone_rules_encoded_closed": true,
+    "demorgan_involution_Tr_Tr_M_eq_M": true,
+    "demorgan_involution_tested_hypergraphs": 2,
+    "eq56_exact_match": true,
+    "eq56_minimal_robust_cuts": [
+      [
+        "E"
+      ],
+      [
+        "M"
+      ],
+      [
+        "B",
+        "C"
+      ],
+      [
+        "B",
+        "G"
+      ],
+      [
+        "B",
+        "R"
+      ]
+    ],
+    "prop78_non_upward_closed_transition": [
+      true,
+      false,
+      true
+    ]
+  },
+  "part_2_schur_pgl2_feedback": {
+    "canc_b3_exact_crit_1_3_3_0p3": {
+      "alpha_crit": "7/27",
+      "exact_equality_at_crit": true,
+      "r_at_crit": "3/10",
+      "r_at_crit_ge_theta": true,
+      "regime": "intermediate"
+    },
+    "cross_ratio_alpha": "3/2",
+    "cross_ratio_r": "3/2",
+    "cross_ratio_y": "3/2",
+    "default_braf_crit": {
+      "alpha_crit": "3/22",
+      "exact_equality_at_crit": true,
+      "r_at_crit": "11/20",
+      "r_at_crit_ge_theta": true,
+      "regime": "intermediate"
+    },
+    "pgl2_cross_ratio_and_conservation_exact": true
+  },
+  "part_3_tropical_timed_closure": {
+    "crc_timed": {
+      "timed_routes": [
+        {
+          "route": [
+            "B",
+            "E",
+            "M"
+          ],
+          "time": "0",
+          "witness": "BASELINE"
+        },
+        {
+          "route": [
+            "C",
+            "E",
+            "G",
+            "M",
+            "R"
+          ],
+          "time": "12",
+          "witness": "rho_EGFR"
+        }
+      ],
+      "tropical_dual_optimal": true
+    },
+    "horizon_checks_exact": true,
+    "melanoma_timed": {
+      "timed_routes": [
+        {
+          "route": [
+            "B",
+            "E",
+            "M"
+          ],
+          "time": "0",
+          "witness": "BASELINE"
+        },
+        {
+          "route": [
+            "C",
+            "E",
+            "M",
+            "R"
+          ],
+          "time": "1440",
+          "witness": "rho_MAPK_reactivation"
+        }
+      ],
+      "tropical_dual_optimal": true
+    }
+  },
+  "part_4_onco_epistemic_graph_gates": {
+    "deep_compare_catches_hidden_diff": true,
+    "diff_data_only_auto_ship": true,
+    "diff_unknown_config_fail_closed": true,
+    "link_sense_errors": [
+      "trial-1.cancers -> brain-mets (expected kind=cancer, got term)"
+    ],
+    "link_sense_glossary_mislink_caught": true,
+    "valid_graph": {
+      "backlink_count": 3,
+      "entity_count": 3,
+      "link_sense_errors": [],
+      "valid": true
+    }
+  },
+  "pinned_readonly_commits": {
+    "judegomila/OnCo": "d43842087851281084d0f9e7171f555635361e7f",
+    "judegomila/canculus": "ef76861b4e84adc7c629713df72fe53a99928c71"
+  },
+  "schema": "expedition.round4b.arm2.judegomila_canculus_onco.v1"
+}

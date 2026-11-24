@@ -1,0 +1,409 @@
+{
+  "canonical_sha256": "1803a7cb025601c37a0b7113347b51d2f2a2e72781e018c46eae5f8e1f35bf6f",
+  "commutator_discovery_probes": {
+    "C1": {
+      "all_defects_strictly_PSD_even_for_asymmetric_K3": true,
+      "cases": [
+        {
+          "defect_is_psd": true,
+          "exact_screening_identity": true,
+          "inertia_delta_B": [
+            1,
+            4,
+            1
+          ],
+          "inertia_delta_CC": [
+            1,
+            1,
+            1
+          ],
+          "inertia_screening_defect_PSD": [
+            2,
+            4,
+            0
+          ],
+          "krein_monotone": true,
+          "monopole_monotone": true,
+          "name": "btz_depth2_L3",
+          "phi_B": "44/35",
+          "phi_C": "8/5",
+          "screening_drop": "12/35"
+        },
+        {
+          "defect_is_psd": true,
+          "exact_screening_identity": true,
+          "inertia_delta_B": [
+            1,
+            0,
+            2
+          ],
+          "inertia_delta_CC": [
+            1,
+            0,
+            2
+          ],
+          "inertia_screening_defect_PSD": [
+            3,
+            0,
+            0
+          ],
+          "krein_monotone": true,
+          "monopole_monotone": true,
+          "name": "asymmetric_K3_screened",
+          "phi_B": "1064/311",
+          "phi_C": "664/73",
+          "screening_drop": "128832/22703"
+        },
+        {
+          "defect_is_psd": true,
+          "exact_screening_identity": true,
+          "inertia_delta_B": [
+            1,
+            1,
+            1
+          ],
+          "inertia_delta_CC": [
+            1,
+            1,
+            1
+          ],
+          "inertia_screening_defect_PSD": [
+            2,
+            1,
+            0
+          ],
+          "krein_monotone": true,
+          "monopole_monotone": true,
+          "name": "concentric_3layer_C2_to_C1",
+          "phi_B": "252/143",
+          "phi_C": "20/9",
+          "screening_drop": "592/1287"
+        },
+        {
+          "defect_is_psd": true,
+          "exact_screening_identity": true,
+          "inertia_delta_B": [
+            1,
+            1,
+            1
+          ],
+          "inertia_delta_CC": [
+            1,
+            1,
+            1
+          ],
+          "inertia_screening_defect_PSD": [
+            2,
+            1,
+            0
+          ],
+          "krein_monotone": true,
+          "monopole_monotone": true,
+          "name": "concentric_3layer_C1_to_B",
+          "phi_B": "468/425",
+          "phi_C": "252/143",
+          "screening_drop": "40176/60775"
+        }
+      ],
+      "cases_verified": 4,
+      "probe": "C1_schur_unmask_loewner_screening",
+      "three_layer_monopole_chain": [
+        "20/9",
+        "252/143",
+        "468/425"
+      ]
+    },
+    "C2": {
+      "all_verified": true,
+      "coupled_associator_inertia": [
+        1,
+        1,
+        0
+      ],
+      "coupled_associator_rank": 1,
+      "generalized_indefinite_singular_krein_exact": "12/12",
+      "nonsingular_B_nested_shadow_preserved": {
+        "dim_dark": 1,
+        "r_cross": 1
+      },
+      "probe": "C2_nested_shadow_and_singular_associator",
+      "singular_associator_coupled_nonzero": true,
+      "singular_associator_decoupled_vanishes": true
+    },
+    "C3": {
+      "all_verified": true,
+      "g_invariant_exact_commutation": true,
+      "non_invariant_strict_PSD_trials": "8/8",
+      "probe": "C3_schur_equalizer_matrix_jensen",
+      "sample_jensen_gap_inertia": [
+        3,
+        0,
+        0
+      ]
+    },
+    "C4": {
+      "all_verified": true,
+      "cases": [
+        {
+          "asymmetry_beta": "1/8",
+          "c_harm_dirichlet": "11/24",
+          "c_harm_ungrounded": "1/3",
+          "exact_match": true,
+          "name": "odd_btz_mouth_edge",
+          "phi_direct": "11/8",
+          "phi_woodbury": "11/8",
+          "rayleigh_monotone": true
+        },
+        {
+          "asymmetry_beta": "0/1",
+          "c_harm_dirichlet": "1/3",
+          "c_harm_ungrounded": "0/1",
+          "exact_match": true,
+          "name": "odd_btz_cut_bridge",
+          "phi_direct": "4/3",
+          "phi_woodbury": "4/3",
+          "rayleigh_monotone": true
+        },
+        {
+          "asymmetry_beta": "324/1187",
+          "c_harm_dirichlet": "719/1187",
+          "c_harm_ungrounded": "35/71",
+          "exact_match": true,
+          "name": "asymmetric_weighted_triangle",
+          "phi_direct": "8628/1607",
+          "phi_woodbury": "8628/1607",
+          "rayleigh_monotone": true
+        },
+        {
+          "asymmetry_beta": "-1/1",
+          "c_harm_dirichlet": "0/1",
+          "c_harm_ungrounded": "0/1",
+          "exact_match": true,
+          "name": "dead_end_dangling_bridge",
+          "phi_direct": "0/1",
+          "phi_woodbury": "0/1",
+          "rayleigh_monotone": true
+        }
+      ],
+      "cases_verified": 4,
+      "probe": "C4_woodbury_monopole_dirichlet_obstruction"
+    },
+    "C5": {
+      "all_verified": true,
+      "exact_gate_passed": true,
+      "exact_kill_ratio": "1/1",
+      "exact_residuals_refuted": {
+        "phi_F41_F40": "1/10472279279564025",
+        "sqrt2_convergent": "1/8690408031080164",
+        "tiny_1e_18": "1/1000000000000000000"
+      },
+      "float64_gate_passed": false,
+      "float64_kill_ratio": "0/1",
+      "probe": "C5_r5_gate_exact_vs_float64_killshot"
+    },
+    "C6": {
+      "all_verified": true,
+      "metric_axioms_tested_graphs": {
+        "all_metric_axioms_ok": true,
+        "all_structured_nontrivial_classes_strictly_positive": true,
+        "all_structured_pairs_symmetric": true,
+        "interior_coboundary_odd_btz_zero": true,
+        "trivial_cocycle_k4_zero": true,
+        "trivial_cocycle_odd_btz_zero": true
+      },
+      "probe": "C6_linear_monopole_subadditivity_metric",
+      "random_extreme_weight_cases_certified": "12/12",
+      "structured_cases": [
+        {
+          "name": "btz_odd_L3_L3",
+          "phi_1": "11/8",
+          "phi_12": "2/1",
+          "phi_1_plus_2": "11/4",
+          "phi_2": "11/8",
+          "subadditive_slack": "3/4",
+          "symmetric": true,
+          "verified": true,
+          "witness_energy_E_z": "35/16"
+        },
+        {
+          "name": "btz_even_L4_L4",
+          "phi_1": "32/21",
+          "phi_12": "16/7",
+          "phi_1_plus_2": "64/21",
+          "phi_2": "32/21",
+          "subadditive_slack": "16/21",
+          "symmetric": true,
+          "verified": true,
+          "witness_energy_E_z": "368/147"
+        },
+        {
+          "name": "weighted_K4_disjoint",
+          "phi_1": "201072/46397",
+          "phi_12": "520452/66707",
+          "phi_1_plus_2": "2324199156/207069811",
+          "phi_2": "399780/58019",
+          "subadditive_slack": "47270455824720/13813005882377",
+          "symmetric": true,
+          "verified": true,
+          "witness_energy_E_z": "27623053428/3366204361"
+        },
+        {
+          "name": "weighted_K4_adjacent",
+          "phi_1": "201072/46397",
+          "phi_12": "376032/56213",
+          "phi_1_plus_2": "7701024/788749",
+          "phi_2": "1200/221",
+          "subadditive_slack": "136302798144/44337947537",
+          "symmetric": true,
+          "verified": true,
+          "witness_energy_E_z": "8872888/1221025"
+        }
+      ],
+      "theorem": "Phi_B(L \u29b7 (chi1*chi2)) <= E_{chi1*chi2}(z) <= Phi_B(L \u29b7 chi1) + Phi_B(L \u29b7 chi2) via exact rational 1-Lipschitz witness z_v = sgn(x1)sgn(x2)min(|x1|,|x2|)"
+    }
+  },
+  "compressed_expedition_theorems": {
+    "theorems": [
+      {
+        "ascii_expr": "(M |/| D) |/| C_after_D =#= M |/| (D | C)",
+        "id": "T1_quotient_in_stages",
+        "unicode_expr": "(M \u29c4 D) \u29c4 C_after_D \u2a69 M \u29c4 (D | C)",
+        "verified": true
+      },
+      {
+        "ascii_expr": "(+-0)(Ms) =#= (+-0)(Ms_BB) + (+-0)(Ms |/| B)",
+        "id": "T2a_haynsworth_smooth",
+        "unicode_expr": "\u29ba(Ms) \u2a69 \u29ba(Ms_BB) + \u29ba(Ms \u29c4 B)",
+        "verified": true
+      },
+      {
+        "ascii_expr": "(+-0)_-(Mx) =#= rk(Mx |\\| B)",
+        "id": "T2b_singular_shadow_krein",
+        "unicode_expr": "\u29ba_-(Mx) \u2a69 rk(Mx \u29c5 B)",
+        "verified": true
+      },
+      {
+        "ascii_expr": "[o](e0) =#= 15/31",
+        "id": "T3a_hodge_resistance",
+        "unicode_expr": "\u29c7(e0) \u2a69 15/31",
+        "verified": true
+      },
+      {
+        "ascii_expr": "[o](d0f) =#= 0",
+        "id": "T3b_coboundary_zero",
+        "unicode_expr": "\u29c7(d0f) \u2a69 0",
+        "verified": true
+      },
+      {
+        "ascii_expr": "(+-0)_-(R_pet) =#= 0",
+        "id": "T4a_ramanujan_petersen",
+        "unicode_expr": "\u29ba_-(R_pet) \u2a69 0",
+        "verified": true
+      },
+      {
+        "ascii_expr": "(+-0)_-(R_dumb) =#= 1",
+        "id": "T4b_non_ramanujan_dumbbell14",
+        "unicode_expr": "\u29ba_-(R_dumb) \u2a69 1",
+        "verified": true
+      },
+      {
+        "ascii_expr": "N1 <=> G_mult =#= -1/12",
+        "id": "T5_mellin_equalizer",
+        "unicode_expr": "N1 \u27e0 G_mult \u2a69 -1/12",
+        "verified": true
+      },
+      {
+        "ascii_expr": "(+-0)(L_odd (||) chi1) =#= (1, 2, 1)",
+        "id": "T6a_btz_balanced_k1",
+        "unicode_expr": "\u29ba(L_odd \u29b7 chi1) \u2a69 (1, 2, 1)",
+        "verified": true
+      },
+      {
+        "ascii_expr": "(+-0)(L_odd (||) (chi1 * chi2)) =#= (2, 0, 2)",
+        "id": "T6b_btz_balanced_k2",
+        "unicode_expr": "\u29ba(L_odd \u29b7 (chi1 * chi2)) \u2a69 (2, 0, 2)",
+        "verified": true
+      },
+      {
+        "ascii_expr": "(+-0)(L_k3 (||) chi_k3) =#= (1, 0, 2)",
+        "id": "T6c_k3_asymmetric_102",
+        "unicode_expr": "\u29ba(L_k3 \u29b7 chi_k3) \u2a69 (1, 0, 2)",
+        "verified": true
+      },
+      {
+        "ascii_expr": "kill(T_ex _|T x) =#= 1",
+        "id": "T7a_r5_exact_kill_1",
+        "unicode_expr": "kill(T_ex \u2ae9 x) \u2a69 1",
+        "verified": true
+      },
+      {
+        "ascii_expr": "kill(T_vac _|T x) =#= 0",
+        "id": "T7b_r5_vacuous_kill_0",
+        "unicode_expr": "kill(T_vac \u2ae9 x) \u2a69 0",
+        "verified": true
+      }
+    ],
+    "theorems_verified": 13
+  },
+  "glyph_registry_verification": {
+    "all_category_Sm_and_lexer_bound": true,
+    "external_collision_scan_scope": "0/227,540 Lean 4 collision count is recorded from external AUDIT-051 scan; scan script and third-party Lean 4 corpora are not vendored in math0.",
+    "external_corpus_scan_not_recomputed_in_tree": true,
+    "glyph_count": 8,
+    "glyphs": [
+      {
+        "ascii": "|/|",
+        "codepoint": "U+29C4",
+        "id": "OP-01",
+        "unicode_name": "SQUARED RISING DIAGONAL SLASH"
+      },
+      {
+        "ascii": "|\\|",
+        "codepoint": "U+29C5",
+        "id": "OP-02",
+        "unicode_name": "SQUARED FALLING DIAGONAL SLASH"
+      },
+      {
+        "ascii": "(||)",
+        "codepoint": "U+29B7",
+        "id": "OP-03",
+        "unicode_name": "CIRCLED PARALLEL"
+      },
+      {
+        "ascii": "<=>",
+        "codepoint": "U+27E0",
+        "id": "OP-04",
+        "unicode_name": "LOZENGE DIVIDED BY HORIZONTAL RULE"
+      },
+      {
+        "ascii": "[o]",
+        "codepoint": "U+29C7",
+        "id": "OP-05",
+        "unicode_name": "SQUARED SMALL CIRCLE"
+      },
+      {
+        "ascii": "(+-0)",
+        "codepoint": "U+29BA",
+        "id": "OP-06",
+        "unicode_name": "CIRCLE DIVIDED BY HORIZONTAL BAR AND TOP HALF DIVIDED BY VERTICAL BAR"
+      },
+      {
+        "ascii": "=#=",
+        "codepoint": "U+2A69",
+        "id": "OP-07",
+        "unicode_name": "TRIPLE HORIZONTAL BAR WITH TRIPLE VERTICAL STROKE"
+      },
+      {
+        "ascii": "_|T",
+        "codepoint": "U+2AE9",
+        "id": "OP-08",
+        "unicode_name": "SHORT UP TACK ABOVE SHORT DOWN TACK"
+      }
+    ],
+    "schema_verified": "aletheia.operator_calculus.glyph_registry.v1",
+    "unicode_ascii_lexer_bound": true
+  },
+  "oracle_class": "exact",
+  "schema": "aletheia.wave2.round4c.operator_calculus.v1",
+  "verdict": "ALETHEIA_OPERATOR_CALCULUS_ALL_LAWS_VERIFIED"
+}

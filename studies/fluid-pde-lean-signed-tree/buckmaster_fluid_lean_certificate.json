@@ -1,0 +1,215 @@
+{
+  "arm": "R4D-1",
+  "canonical_sha256": "75c7b2677816ad17e3570f426b1693ee1a9ec932ef2fad26e5fbcb6f15fdb660",
+  "honest_novelty_claim": "N1",
+  "oracle_class": "exact+anchor",
+  "part1_three_repo_lean4_tomography": {
+    "external_repos_verified_in_this_run": false,
+    "mode": "standalone_no_external_clones",
+    "note": "External third-party Lean 4 repositories (tristanbuckmaster/navier-stokes@ad53419d, tristanbuckmaster/fluid_lean@d0124689, openai/NavierStokesAndEuler@f9e8bc5b) are not vendored in standalone math0; the 8,678-file AUDIT-052 forensics table in REPORT_R4D_1_BUCKMASTER_FLUID_LEAN.md is an external record not recomputed in standalone mode.",
+    "subprojects": {},
+    "total_lean_files_scanned": 0,
+    "total_lean_lines_scanned": 0
+  },
+  "part2_signed_tree_multifrontal_schur": {
+    "adversarial_mutants_all_killed": true,
+    "adversarial_mutants_killed": 6,
+    "adversarial_mutants_total": 6,
+    "exact_multifrontal_tree_with_nullpair": {
+      "O_dim_Q_householder_invariant": true,
+      "audit002_r_opt_on_M_total": "50/99",
+      "dim": 6,
+      "global_inertia": [
+        4,
+        0,
+        2
+      ],
+      "ker_FmT_dim": 4,
+      "n_free": 2,
+      "n_slaved": 4,
+      "neg_column_count": 2,
+      "node_count": 3,
+      "node_diagnostics": {
+        "leaf_L": {
+          "max_gershgorin_ratio": "0",
+          "neg_col_count": 0,
+          "passes_node_enclosure": true,
+          "pivots": [
+            0,
+            1
+          ],
+          "pos_col_count": 2
+        },
+        "leaf_R": {
+          "max_gershgorin_ratio": "0",
+          "neg_col_count": 0,
+          "passes_node_enclosure": true,
+          "pivots": [
+            2,
+            3
+          ],
+          "pos_col_count": 2
+        },
+        "root": {
+          "max_gershgorin_ratio": "0",
+          "neg_col_count": 2,
+          "passes_node_enclosure": true,
+          "pivots": [
+            4,
+            5
+          ],
+          "pos_col_count": 0
+        }
+      },
+      "null_pair_count": 1,
+      "passes_all_node_enclosures": true,
+      "passes_pivot_count": true,
+      "restricted_ker_FmT_all_bareiss_minors_pos": true,
+      "restricted_ker_FmT_inertia": [
+        4,
+        0,
+        0
+      ],
+      "restricted_r_h4_x10000": 40000,
+      "restricted_r_opt_x10000": 40000,
+      "surplus_psd_inertia": [
+        4,
+        2,
+        0
+      ]
+    },
+    "mutant_details": {
+      "mut1_violate_gershgorin_row_bound": "REJECTED:row_bound violated at node leaf_L, row 0: 1/24 > 61/1500",
+      "mut2_violate_slack_le_margin": "REJECTED:slack_le violated at node leaf_L, j=0",
+      "mut3_violate_root_front_nonneg": "REJECTED:root_front_nonneg violated: front[root] has negative eigenvalue",
+      "mut4_violate_column_count_gt_B": "REJECTED:column_count violated: 3 > n_free=2",
+      "mut5_violate_every_variable_pivoted": "REJECTED:every_variable_pivoted violated: missing [0]",
+      "mut6_violate_error_matrix_nonneg": "REJECTED:Error matrix nonnegativity violated at leaf_L"
+    },
+    "perturbed_gershgorin_enclosure_tree": {
+      "O_dim_Q_householder_invariant": true,
+      "audit002_r_opt_on_M_total": "60481729/116047009",
+      "dim": 6,
+      "global_inertia": [
+        4,
+        0,
+        2
+      ],
+      "ker_FmT_dim": 4,
+      "n_free": 2,
+      "n_slaved": 4,
+      "neg_column_count": 2,
+      "node_count": 3,
+      "node_diagnostics": {
+        "leaf_L": {
+          "max_gershgorin_ratio": "1",
+          "neg_col_count": 0,
+          "passes_node_enclosure": true,
+          "pivots": [
+            0,
+            1
+          ],
+          "pos_col_count": 2
+        },
+        "leaf_R": {
+          "max_gershgorin_ratio": "0",
+          "neg_col_count": 0,
+          "passes_node_enclosure": true,
+          "pivots": [
+            2,
+            3
+          ],
+          "pos_col_count": 2
+        },
+        "root": {
+          "max_gershgorin_ratio": "0",
+          "neg_col_count": 2,
+          "passes_node_enclosure": true,
+          "pivots": [
+            4,
+            5
+          ],
+          "pos_col_count": 0
+        }
+      },
+      "null_pair_count": 1,
+      "passes_all_node_enclosures": true,
+      "passes_pivot_count": true,
+      "restricted_ker_FmT_all_bareiss_minors_pos": true,
+      "restricted_ker_FmT_inertia": [
+        4,
+        0,
+        0
+      ],
+      "restricted_r_h4_x10000": 40000,
+      "restricted_r_opt_x10000": 40000,
+      "surplus_psd_inertia": [
+        6,
+        0,
+        0
+      ]
+    }
+  },
+  "part3_nov20_weight_and_sperner_box": {
+    "fixed_point_box_sperner_2d": {
+      "boundary_h0_h1_verified": true,
+      "complete_simplices": [
+        {
+          "contains_exact_fixed_point": true,
+          "vertices_grid": [
+            [
+              3,
+              3
+            ],
+            [
+              4,
+              3
+            ],
+            [
+              4,
+              4
+            ]
+          ]
+        }
+      ],
+      "complete_sperner_simplex_count": 1,
+      "exact_fixed_point": [
+        "1/2",
+        "1/2"
+      ],
+      "grid_resolution_p": 7,
+      "odd_parity_certified": true,
+      "total_kuhn_simplices": 98
+    },
+    "nov20_weight_shift": {
+      "exact_identity": "(|m| + 1/2)^2 - (m^2 + 1/4) == |m|",
+      "kappa_19_old_weight": "1445/4",
+      "kappa_19_patched_weight": "1521/4",
+      "kappa_19_relaxation_factor": "1521/1445",
+      "range_m_verified": [
+        -30,
+        30
+      ]
+    }
+  },
+  "part4_r3_negative_controls": {
+    "all_rejected": true,
+    "controls_passed": 10,
+    "controls_total": 10,
+    "details": {
+      "reject_asymmetric_inertia": "REJECTED:ValueError",
+      "reject_bool_exact_int": "REJECTED:TypeError",
+      "reject_bool_exact_rational": "REJECTED:TypeError",
+      "reject_dim_mismatch_mat_add": "REJECTED:ValueError",
+      "reject_empty_inertia": "REJECTED:ValueError",
+      "reject_float_exact_int": "REJECTED:TypeError",
+      "reject_float_exact_rational": "REJECTED:TypeError",
+      "reject_float_json_guard": "REJECTED:ValueError",
+      "reject_infeasible_r_opt": "REJECTED:ValueError",
+      "reject_negative_b_r_opt": "REJECTED:ValueError"
+    }
+  },
+  "probe_id": "AUDIT-052",
+  "title": "3-Repo Fluid-PDE Lean 4 Forensics (tristanbuckmaster/navier-stokes, fluid_lean, openai/NavierStokesAndEuler) & Pure-Q SignedTree Multifrontal Schur-Complement Verifier",
+  "zero_floats_certified": true
+}
