@@ -828,6 +828,12 @@ class TestMinimaxCryptanalysisR5(unittest.TestCase):
         self.assertEqual(a._strip_lean_comments('def unclosed := "abc'), 'def unclosed := ""')
         self.assertEqual(a._strip_lean_comments('def unclosed_raw := r#"abc'), 'def unclosed_raw := ""')
         self.assertEqual(a._strip_lean_comments("def bar := r + 1"), "def bar := r + 1")
+        self.assertEqual(a._strip_lean_comments("r"), "r")
+        self.assertEqual(a._strip_lean_comments("r#"), "r#")
+        self.assertEqual(a._strip_lean_comments("'a"), "'a")
+        self.assertEqual(a.scan_lean4_lexical('r"sorry" ++ x'), [])
+        self.assertEqual(a.scan_lean4_lexical('r"\\" ; sorry ; "x'), ["sorry"])
+        self.assertEqual(a.scan_lean4_lexical('def x := bar_r"\\"\ntheorem t : False := by sorry\ndef y := "x"'), [])
         self.assertTrue(a._is_lean_ident_char("a"))
         self.assertTrue(a._is_lean_ident_char("_"))
         self.assertFalse(a._is_lean_ident_char(" "))
@@ -861,6 +867,69 @@ class TestMinimaxCryptanalysisR5(unittest.TestCase):
         self.assertEqual(a.scan_lean4_lexical("def y := Lean.ofReduceNat 0\n"), ["ofReduceNat"])
         self.assertEqual(a.scan_lean4_lexical('@[extern "c_bad"] opaque badFn : Nat\n'), ["extern"])
         self.assertEqual(a.scan_lean4_lexical("set_option debug.skipKernelTC true\n"), ["set_option debug.skipKernelTC"])
+
+        # Lean 4 interpolated strings s!"..." / m!"..." / f!"..." & DecideConfig variants
+        self.assertEqual(a._strip_lean_comments('s!"abc"'), '""')
+        self.assertEqual(a._strip_lean_comments('s!"a{sorry}b"'), ' sorry ""')
+        self.assertEqual(a._strip_lean_comments("{ a := 1 }"), "{ a := 1 }")
+        self.assertEqual(a.scan_lean4_lexical('def s : String := s!"{(sorry : Nat)}"\n'), ["sorry"])
+        self.assertEqual(a.scan_lean4_lexical('def s := s!"{by sorry}"\n'), ["sorry"])
+        self.assertEqual(a.scan_lean4_lexical('def s := s!"{sorryAx}"\n'), ["sorryAx"])
+        self.assertEqual(a.scan_lean4_lexical('s!"{sorry}" ++ x'), ["sorry"])
+        self.assertEqual(a.scan_lean4_lexical('def m := m!"{admit}"\n'), ["admit"])
+        self.assertEqual(a.scan_lean4_lexical('def f := f!"{native_decide}"\n'), ["native_decide"])
+        self.assertEqual(a.scan_lean4_lexical('def s := s!"a { s!"{sorry}" } b"\n'), ["sorry"])
+        self.assertEqual(a.scan_lean4_lexical('def s := s!"{ { a := 1 } ; sorry }"\n'), ["sorry"])
+        self.assertEqual(a.scan_lean4_lexical('def s := s!"{ /- } -/ sorry }"\n'), ["sorry"])
+        self.assertEqual(a.scan_lean4_lexical('def s := s!"{ let a := "}"; sorry }"\n'), ["sorry"])
+        self.assertEqual(a.scan_lean4_lexical('def s := s!"{ let c := \'}\'; sorry }"\n'), ["sorry"])
+        self.assertEqual(a.scan_lean4_lexical('def s := s!"-- {sorry}"\n'), ["sorry"])
+        self.assertEqual(a.scan_lean4_lexical('def s := s!"{ by decide (config := { native := true }) }"\n'), ["decide +native"])
+        self.assertEqual(a.scan_lean4_lexical('def s := s!"\\\\" ; sorry\n'), ["sorry"])
+        self.assertEqual(a.scan_lean4_lexical('def s := s!"{sorry'), ["sorry"])
+        # Benign interpolated-string controls (0 false positives)
+        self.assertEqual(
+            a.scan_lean4_lexical(
+                'def ok1 := s!"hello \\{sorry\\}"\n'
+                'def ok2 := s!"\\"sorry\\""\n'
+                'def ok3 := s!"sorry"\n'
+                'def ok4 := s!"{1} sorry"\n'
+                'def ok5 := foo_s!"{sorry}"\n'
+                'def ok6 := k!"{sorry}"\n'
+            ),
+            [],
+        )
+        # Parenthesized/type-ascribed decide config & bound DecideConfig records (+ benign non-FP)
+        self.assertEqual(
+            a.scan_lean4_lexical("theorem t : True := by decide (config := ({ native := true } : Lean.Elab.Tactic.DecideConfig))\n"),
+            ["decide +native"],
+        )
+        self.assertEqual(
+            a.scan_lean4_lexical("def cfg : DecideConfig := { native := true }\ntheorem t : True := by decide (config := cfg)\n"),
+            ["decide +native"],
+        )
+        self.assertEqual(
+            a.scan_lean4_lexical("def cfg : Lean.Elab.Tactic.DecideConfig := ({ kernel := false, native := true })\n"),
+            ["decide +native"],
+        )
+        self.assertEqual(
+            a.scan_lean4_lexical("def cfg := ({ native := true } : Lean.Elab.Tactic.DecideConfig)\n"),
+            ["decide +native"],
+        )
+        self.assertEqual(
+            a.scan_lean4_lexical("def cfg := { native := true : DecideConfig }\n"),
+            ["decide +native"],
+        )
+        self.assertEqual(
+            a.scan_lean4_lexical(
+                "def ok1 : DecideConfig := { native := false }\n"
+                "def ok2 : DecideConfig := { my_native := true }\n"
+                "def ok3 := ({ native := false } : Lean.Elab.Tactic.DecideConfig)\n"
+                "def ok4 : OtherConfig := { native := true }\n"
+                "def ok5 := ({ native := true } : OtherConfig)\n"
+            ),
+            [],
+        )
 
         # --- Live loader pin enforcement, no-.git refusal & CLI tests ---
         self._assert_err("PATH_REQUIRED", a.run_audit, True, None)
@@ -1070,6 +1139,13 @@ class TestMinimaxCryptanalysisR5(unittest.TestCase):
                 with mock.patch.object(a, "run_audit", return_value={"all_gates_passed": True}) as m_ra, mock.patch.object(sys, "stdout", io.StringIO()):
                     self.assertEqual(a.main(["--research-dir", syn_root, "--upstream-commit", o.UPSTREAM_COMMIT]), 0)
                     m_ra.assert_called_once_with(live=True, research_dir=syn_root, upstream_commit=o.UPSTREAM_COMMIT)
+
+                # Unmocked CLI error handling (--live without --research-dir -> rc=2, coded stderr, 0 tracebacks)
+                cli_err = io.StringIO()
+                with mock.patch.object(sys, "stderr", cli_err):
+                    self.assertEqual(a.main(["--live"]), 2)
+                self.assertIn("AUDIT_FAILED PATH_REQUIRED", cli_err.getvalue())
+                self.assertNotIn("Traceback", cli_err.getvalue())
 
 
 def run_all():

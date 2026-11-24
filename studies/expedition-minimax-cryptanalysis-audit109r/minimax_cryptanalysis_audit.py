@@ -98,7 +98,10 @@ _LEAN_BANNED_WORD_RE = re.compile(
 )
 _LEAN_DECIDE_NATIVE_RE = re.compile(
     r"\bdecide(?:\s+[+-][A-Za-z_][A-Za-z0-9_]*)*\s+\+native\b"
-    r"|\bdecide\s*\(\s*config\s*:=\s*\{[^}]*\bnative\s*:=\s*true\b[^}]*\}\s*\)"
+    r"|\bdecide\s*\(\s*config\s*:=\s*(?:\(\s*)*\{[^}]*\bnative\s*:=\s*true\b[^}]*\}(?:\s*:\s*[^)]*)?(?:\s*\))*\s*\)"
+    r"|\bDecideConfig\b[^:=;\n]*:=\s*(?:\(\s*)*\{[^}]*\bnative\s*:=\s*true\b[^}]*\}"
+    r"|\{[^}]*\bnative\s*:=\s*true\b[^}]*\}\s*:\s*(?:[A-Za-z_][A-Za-z0-9_]*\.)*DecideConfig\b"
+    r"|\{[^}]*\bnative\s*:=\s*true\b[^}]*:\s*(?:[A-Za-z_][A-Za-z0-9_]*\.)*DecideConfig\b[^}]*\}"
 )
 _LEAN_SKIP_KERNEL_TC_RE = re.compile(
     r"\b(?:set_option\s+(?:debug\.)?)?skipKernelTC\b"
@@ -112,68 +115,17 @@ def _is_lean_ident_char(ch):
 def _strip_lean_comments(text):
     """Strip Lean 4 comments (-- ..., nested /- ... -/) and string/raw-string/char literals.
 
-    Handles both multi-hash raw strings r#"..."# and zero-hash raw strings r"..." where
-    backslash is NOT an escape character.
+    Handles multi-hash raw strings r#"..."#, zero-hash raw strings r"..." (where backslash is
+    NOT an escape character), and interpolated strings s!"..." / m!"..." / f!"..." (stripping
+    literal text and escaped \\{ / \\} while retaining live {...} expressions for scanning).
     """
     out = []
     i = 0
     n = len(text)
     depth = 0
+    interp_stack = []
     while i < n:
-        if depth == 0:
-            if text[i : i + 2] == "--":
-                nl = text.find("\n", i)
-                if nl == -1:
-                    break
-                out.append("\n")
-                i = nl + 1
-            elif text[i : i + 2] == "/-":
-                depth = 1
-                i += 2
-            elif text[i] == "r" and (i == 0 or not _is_lean_ident_char(text[i - 1])):
-                j = i + 1
-                while j < n and text[j] == "#":
-                    j += 1
-                if j < n and text[j] == '"':
-                    hashes = j - (i + 1)
-                    i = j + 1
-                    closing = '"' + ("#" * hashes)
-                    end_pos = text.find(closing, i)
-                    if end_pos == -1:
-                        out.append('""')
-                        i = n
-                    else:
-                        out.append('""')
-                        i = end_pos + len(closing)
-                else:
-                    out.append(text[i])
-                    i += 1
-            elif text[i] == '"':
-                i += 1
-                while i < n:
-                    ch = text[i]
-                    if ch == "\\":
-                        i += 2
-                    elif ch == '"':
-                        i += 1
-                        break
-                    else:
-                        i += 1
-                out.append('""')
-            elif text[i] == "'" and (i == 0 or not _is_lean_ident_char(text[i - 1])):
-                if i + 3 < n and text[i + 1] == "\\" and text[i + 3] == "'":
-                    out.append("''")
-                    i += 4
-                elif i + 2 < n and text[i + 1] not in ("'", "\n", "\\") and text[i + 2] == "'":
-                    out.append("''")
-                    i += 3
-                else:
-                    out.append(text[i])
-                    i += 1
-            else:
-                out.append(text[i])
-                i += 1
-        else:
+        if depth > 0:
             if text[i : i + 2] == "/-":
                 depth += 1
                 i += 2
@@ -182,6 +134,90 @@ def _strip_lean_comments(text):
                 i += 2
             else:
                 i += 1
+        elif interp_stack and interp_stack[-1] == 0:
+            ch = text[i]
+            if ch == "\\":
+                i += 2
+            elif ch == '"':
+                interp_stack.pop()
+                out.append('""')
+                i += 1
+            elif ch == "{":
+                interp_stack[-1] = 1
+                out.append(" ")
+                i += 1
+            else:
+                i += 1
+        elif text[i : i + 2] == "--":
+            nl = text.find("\n", i)
+            if nl == -1:
+                break
+            out.append("\n")
+            i = nl + 1
+        elif text[i : i + 2] == "/-":
+            depth = 1
+            i += 2
+        elif (
+            text[i] in ("s", "m", "f")
+            and text[i + 1 : i + 3] == '!"'
+            and (i == 0 or not _is_lean_ident_char(text[i - 1]))
+        ):
+            interp_stack.append(0)
+            i += 3
+        elif text[i] == "r" and (i == 0 or not _is_lean_ident_char(text[i - 1])):
+            j = i + 1
+            while j < n and text[j] == "#":
+                j += 1
+            if j < n and text[j] == '"':
+                hashes = j - (i + 1)
+                i = j + 1
+                closing = '"' + ("#" * hashes)
+                end_pos = text.find(closing, i)
+                if end_pos == -1:
+                    out.append('""')
+                    i = n
+                else:
+                    out.append('""')
+                    i = end_pos + len(closing)
+            else:
+                out.append(text[i])
+                i += 1
+        elif text[i] == '"':
+            i += 1
+            while i < n:
+                ch = text[i]
+                if ch == "\\":
+                    i += 2
+                elif ch == '"':
+                    i += 1
+                    break
+                else:
+                    i += 1
+            out.append('""')
+        elif text[i] == "'" and (i == 0 or not _is_lean_ident_char(text[i - 1])):
+            if i + 3 < n and text[i + 1] == "\\" and text[i + 3] == "'":
+                out.append("''")
+                i += 4
+            elif i + 2 < n and text[i + 1] not in ("'", "\n", "\\") and text[i + 2] == "'":
+                out.append("''")
+                i += 3
+            else:
+                out.append(text[i])
+                i += 1
+        elif interp_stack and text[i] == "{":
+            interp_stack[-1] += 1
+            out.append("{")
+            i += 1
+        elif interp_stack and text[i] == "}":
+            interp_stack[-1] -= 1
+            if interp_stack[-1] == 0:
+                out.append(" ")
+            else:
+                out.append("}")
+            i += 1
+        else:
+            out.append(text[i])
+            i += 1
     return "".join(out)
 
 
@@ -601,7 +637,11 @@ def main(argv=None):
         return 0
 
     use_live = args.live or (args.research_dir is not None)
-    cert = run_audit(live=use_live, research_dir=args.research_dir, upstream_commit=args.upstream_commit)
+    try:
+        cert = run_audit(live=use_live, research_dir=args.research_dir, upstream_commit=args.upstream_commit)
+    except MinimaxCryptError as exc:
+        sys.stderr.write(f"AUDIT_FAILED {exc.code}: {exc.detail}\n")
+        return 2
     raw = canonical_json_bytes(cert)
     if args.output:
         with open(args.output, "wb") as fh:
