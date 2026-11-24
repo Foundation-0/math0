@@ -107,6 +107,33 @@ area 4 of physics0's survey; coordinate with it there.
 - 57 of the Written-on-the-Wall II conjectures are now in formal-conjectures.
 - No maintained list of which ones remain open.
 
+## 7. Multi-agent PuzzleScript & Sokoban Eval Frontier bounds
+
+Jonah Ostroff's 66-room *Heroes of Sokoban* trilogy (Parts I, II, and III) has a live shortest-route and lower-bound
+benchmark on the Sokoban Eval Frontier (`soko.banteg.xyz/frontier`, context post `banteg.xyz/posts/sokoban/`). As of
+12 November 2026, 63 of 66 rooms are closed (`live == known == proven_floor`, trilogy floor 3,000; composite known
+ceiling lowered from 3,064 to 3,063 by an 84-key chiral-mirror trajectory on Room `III-20`, `sha256: eecbea96b091` and
+`4edff1ad8c90`, beating the 85-key holdout). Only three Part III rooms retain an open optimality gap:
+
+- **`III-14` (14x7, Bard + Druid, 9 purple switches):** 48 known / 43 published floor (`5`-key gap). Total weighing
+  atoms are conserved (`popcnt(crates) + popcnt(walls) == 38`). Exact-state multi-core A* over a 39.7M-state 2-Atom
+  Quotient Pattern Database certifies `floor >= 35` from scratch (`0` step inconsistencies across 110.8M edges);
+  closing `43 -> 48` turns on formalizing the 5-key Column-6 blow-off lock (`x = 7` is open floor rather than wall).
+- **`III-20` (15x9, 5 heroes + 12 Goblins):** 84 known / 74 floor (`10`-key gap). Dungeon walls, goblins, and goals
+  have exact vertical reflection (`y <-> 8 - y`), while the `Action` hero-switch cycle `(1 -> 2 -> 3 -> 4 -> 6 -> 1)`
+  is chiral.
+- **`III-21` (23x13, all 6 heroes):** 316 known / 268 floor (`48`-key gap). Monolithic pattern databases exceed RAM;
+  natural target for exact rational LP cost-partitioning (`gfq-codes` style `Fraction` dual multipliers) across
+  per-hero and switch-zone quotients.
+
+**Checking.** For upper bounds (`VERIFIED`), replay across at least two zero-shared-code PuzzleScript interpreters with
+per-frame 64-bit state digests and a 10-mutation adequacy suite. For lower bounds (`PROVEN` / `VERIFIED`), verify
+directed quotient graph homomorphisms (`h(s) <= 1 + h(s')` on every transition) with full-state transposition equality
+— never hash-tag-only pruning (a 35-second `III-14` run at 27.66M states produced 22,658 live 64-bit hash collisions).
+
+**Odds.** High chance of closing `III-14` (`43 -> 48`) via strip-transfer or cost-partitioned quotient certificates;
+moderate chance of raising `III-20` and `III-21` floors via rational operator-counting duals.
+
 ## Practical advice
 
 - Contact maintainers before submitting in bulk: Grassl, Gordon, Radziszowski, and the OEIS editors.
