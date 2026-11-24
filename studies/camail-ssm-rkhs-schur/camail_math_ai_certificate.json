@@ -1,0 +1,265 @@
+{
+  "canonical_sha256": "2d3e646fa11628cf12b191b71f15f3fe46f808dae82f46d05d6fdca335716295",
+  "oracle_class": "exact+anchor",
+  "pillars": {
+    "P1": {
+      "all_verified": true,
+      "camail_b1_exact_qi_proof": {
+        "bug_equals_conjugated_observability": true,
+        "source_anchor": "camail-compressm@2910a88a compressm/reduction/balanced_truncation.py:49-50",
+        "tr_PQ_true": "116/1",
+        "tr_P_conjQ": "68/1",
+        "tr_buggy_LoT_Lc": "68/1",
+        "tr_fixed_LoH_Lc": "116/1"
+      },
+      "deltanet_schur_pruning_and_sp09_shadow": {
+        "naive_minus_schur_PSD_inertia": [
+          1,
+          1,
+          0
+        ],
+        "sp09_krein_inertia": [
+          3,
+          0,
+          1
+        ],
+        "sp09_shadow": {
+          "dim_dark": 1,
+          "r_cross": 1
+        }
+      },
+      "lti_lyapunov_and_schur_spa": {
+        "dc_gain_direct_truncation": "5/1",
+        "dc_gain_full": "220/19",
+        "dc_gain_schur_spa": "220/19",
+        "direct_dc_error": "-125/19",
+        "lyap_P_inertia": [
+          3,
+          0,
+          0
+        ],
+        "lyap_Q_inertia": [
+          3,
+          0,
+          0
+        ],
+        "spa_dc_error": "0/1"
+      },
+      "pillar": "P1_compressm_and_linear_attention_pruning",
+      "stable_rank_r_opt_rh4_hierarchy": {
+        "cs11_rank3_vs_rank4_separation": {
+          "R_H4_rank3_diag_2_1_1_0": "3/1",
+          "R_H4_rank4_diag_2_43_13_13": "219/61",
+          "shared_R_opt": "8/3",
+          "shared_sr": "2/1"
+        },
+        "spectrum_4_2_1_1": {
+          "R_H4": "89/23",
+          "R_opt": "32/11",
+          "bareiss_lower_15over4I_minus_G": [
+            3,
+            0,
+            1
+          ],
+          "bareiss_upper_4I_minus_G": [
+            3,
+            1,
+            0
+          ],
+          "exact_rank": 4,
+          "sr": "2/1"
+        }
+      }
+    },
+    "P2": {
+      "all_verified": true,
+      "exact_lattice_amplification_laws": {
+        "G_E8_exact": "929/12960",
+        "G_E8_over_G_Z_exact": "929/1080",
+        "G_Z_exact": "1/12",
+        "decay_table": [
+          {
+            "decay_alpha": "1/2",
+            "det_amp_sq": "4/1",
+            "det_over_sr_separation": "3/1",
+            "sr_amp": "4/3",
+            "sr_mse_E8_over_Z": "929/1080",
+            "worst_case_Leech24_over_Z24": "1/3"
+          },
+          {
+            "decay_alpha": "7/8",
+            "det_amp_sq": "64/1",
+            "det_over_sr_separation": "15/1",
+            "sr_amp": "64/15",
+            "sr_mse_E8_over_Z": "929/1080",
+            "worst_case_Leech24_over_Z24": "1/3"
+          },
+          {
+            "decay_alpha": "15/16",
+            "det_amp_sq": "256/1",
+            "det_over_sr_separation": "31/1",
+            "sr_amp": "256/31",
+            "sr_mse_E8_over_Z": "929/1080",
+            "worst_case_Leech24_over_Z24": "1/3"
+          },
+          {
+            "decay_alpha": "63/64",
+            "det_amp_sq": "4096/1",
+            "det_over_sr_separation": "127/1",
+            "sr_amp": "4096/127",
+            "sr_mse_E8_over_Z": "929/1080",
+            "worst_case_Leech24_over_Z24": "1/3"
+          }
+        ],
+        "rho2_Z24_vs_E8x3_vs_Leech24": [
+          6,
+          3,
+          2
+        ]
+      },
+      "gdn_hadamard_equivariance_exact_Q": {
+        "R_k_R_v_exact_orthogonal": true,
+        "readout_exact_zero_residual_3steps": true,
+        "source_anchor": "camail-LoReS@1529d48e lores/backends/hf/qwen3_5/rotations.py:43-78",
+        "state_conjugation_S_rot_eq_Rk_S_RvT": true
+      },
+      "pillar": "P2_lores_siliquant_recurrent_quantization"
+    },
+    "P3": {
+      "all_verified": true,
+      "camail_b4_exact_krein_refutation": {
+        "gamma_half_buggy_D2": "-31/1536",
+        "gamma_half_buggy_krein": [
+          8,
+          0,
+          1
+        ],
+        "gamma_half_buggy_schur_opt": "-64483/3194880",
+        "gamma_half_fixed_D2": "1/1536",
+        "gamma_half_fixed_krein": [
+          9,
+          0,
+          0
+        ],
+        "gamma_half_fixed_schur_opt": "2077/3194880",
+        "gamma_one_hidden_coincidence": "1/768",
+        "gamma_two_spurious_floor": "1/6",
+        "source_anchor": "camail-neuro-lds@9671e84b scripts/utils.py:189 (seqL2ctr_weighted)"
+      },
+      "exact_2d_fibonacci_vs_halton_rkhs_schur": [
+        {
+          "D2_star_equal": "1399/147456",
+          "D2_star_schur_opt": "43880983/22184460288",
+          "D_inf_star": "15/64",
+          "N": 8,
+          "name": "Fib_8_origin",
+          "rkhs_gram_inertia": [
+            9,
+            0,
+            0
+          ],
+          "schur_reduction_ratio": "210476752/43880983"
+        },
+        {
+          "D2_star_equal": "3695/1179648",
+          "D2_star_schur_opt": "294224466533/124050198233088",
+          "D_inf_star": "41/256",
+          "N": 8,
+          "name": "Fib_8_midpoint",
+          "rkhs_gram_inertia": [
+            9,
+            0,
+            0
+          ],
+          "schur_reduction_ratio": "388561233920/294224466533"
+        },
+        {
+          "D2_star_equal": "1301/331776",
+          "D2_star_schur_opt": "6831718651/2781527703552",
+          "D_inf_star": "2/9",
+          "N": 8,
+          "name": "Halton_8",
+          "rkhs_gram_inertia": [
+            9,
+            0,
+            0
+          ],
+          "schur_reduction_ratio": "10907261352/6831718651"
+        },
+        {
+          "D2_star_equal": "1093/257049",
+          "D2_star_schur_opt": "4185123021789698627/4833635520130705072980",
+          "D_inf_star": "28/169",
+          "N": 13,
+          "name": "Fib_13_origin",
+          "rkhs_gram_inertia": [
+            14,
+            0,
+            0
+          ],
+          "schur_reduction_ratio": "20553138209068545860/4185123021789698627"
+        },
+        {
+          "D2_star_equal": "12215/8225568",
+          "D2_star_schur_opt": "3858857397643022462134699/3891410770068042004180620288",
+          "D_inf_star": "79/676",
+          "N": 13,
+          "name": "Fib_13_midpoint",
+          "rkhs_gram_inertia": [
+            14,
+            0,
+            0
+          ],
+          "schur_reduction_ratio": "825537129322708571285920/551265342520431780304957"
+        },
+        {
+          "D2_star_equal": "361931/63078912",
+          "D2_star_schur_opt": "776696206815716414543/692080905707226168164352",
+          "D_inf_star": "119/468",
+          "N": 13,
+          "name": "Halton_13",
+          "rkhs_gram_inertia": [
+            14,
+            0,
+            0
+          ],
+          "schur_reduction_ratio": "671096788954052196582144/131261658951856074057767"
+        }
+      ],
+      "pillar": "P3_neuro_lds_rkhs_schur_discrepancy"
+    },
+    "P4": {
+      "all_verified": true,
+      "discretax_deltanet_wy_inversion": {
+        "chunk_size": 4,
+        "exact_inverse_verified": true,
+        "source_anchor": "camail-discretax@d7428128 src/discretax/sequence_mixers/deltanet.py:56-60"
+      },
+      "loopedactor_contraction_bridge": {
+        "coupled_contraction_q": "7/8",
+        "source_anchor": "camail-LoopedActor@549a4e81 models/fprm.py:59-64",
+        "step4_a_posteriori_factor": "2401/512",
+        "unscaled_lipschitz": "3/2"
+      },
+      "pillar": "P4_qrr_discretax_loopedactor_bridges",
+      "qrr_u1_gauge_exact_qi": {
+        "dressed_attention_score_exact": "1273/260",
+        "dressed_equals_connection_form": true,
+        "phases_tested": 6,
+        "pythagorean_u1_orbit_ip_norm_sq": "49/1",
+        "source_anchor": "camail-QRR@3e3c9ebe models/gauge_layers.py:26-29,105-124"
+      }
+    }
+  },
+  "pinned_camail_repos": {
+    "camail-LinearAttentionPruning": "919d8667d951c385e08510bc1267c2e7049a4f56",
+    "camail-LoReS": "1529d48ed974ade54745d4ab22369693d7a8e10b",
+    "camail-LoopedActor": "549a4e81ebd2d823112ed1bcf008f837e0f449b5",
+    "camail-Quotient_Recurrent_Reasoner_QRR": "3e3c9ebecad534296482316e1c39f1063f0a6a32",
+    "camail-compressm": "2910a88a273004e624351788126736aede7ab81f",
+    "camail-discretax": "d74281286a3d785c37288fea478eb7d3ea5201f6",
+    "camail-neuro-lds": "9671e84b9dfa18056a670b13d2f3b42c779906de"
+  },
+  "schema": "aletheia.wave2.round5.camail_math_ai_symbiosis.v1",
+  "verdict": "CAMAIL_MATH_AI_SYMBIOSIS_ALL_VERIFIED"
+}
