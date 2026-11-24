@@ -385,7 +385,10 @@ class Test03ZoneBFileIOHardlinksTOCTOUAndCLI(unittest.TestCase):
 
             if Path("/dev/null").exists():
                 self._expect_err("NON_REGULAR_FILE", audit.read_regular_file_bytes, Path("/dev/null"))
-                self._expect_err("NON_REGULAR_FILE", audit.write_regular_file_bytes, Path("/dev/null"), b"x")
+            if hasattr(os, "mkfifo"):
+                nonreg_fifo = td / "nonreg_fifo"
+                os.mkfifo(nonreg_fifo)
+                self._expect_err("NON_REGULAR_FILE", audit.write_regular_file_bytes, nonreg_fifo, b"x")
 
             if Path("/proc/kallsyms").exists():
                 try:

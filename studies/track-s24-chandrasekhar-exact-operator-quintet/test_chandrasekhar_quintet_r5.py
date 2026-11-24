@@ -630,9 +630,12 @@ class TestTrackS24ChandrasekharQuintet(unittest.TestCase):
             self.assertEqual(fifo_w_ctx.exception.code, "NON_REGULAR_FILE")
             with self.assertRaises(oracle.ChandrasekharError):
                 audit.read_regular_file_bytes(Path("/dev/null"))
-            with self.assertRaises(oracle.ChandrasekharError) as devnull_ctx:
-                audit.write_regular_file_bytes(Path("/dev/null"), b"x\n")
-            self.assertEqual(devnull_ctx.exception.code, "NON_REGULAR_FILE")
+            if hasattr(os, "mkfifo"):
+                nonreg_fifo = root / "nonreg_fifo"
+                os.mkfifo(nonreg_fifo)
+                with self.assertRaises(oracle.ChandrasekharError) as nonreg_ctx:
+                    audit.write_regular_file_bytes(nonreg_fifo, b"x\n")
+                self.assertEqual(nonreg_ctx.exception.code, "NON_REGULAR_FILE")
             with self.assertRaises(oracle.ChandrasekharError):
                 audit.read_regular_file_bytes(root)
             with self.assertRaises(oracle.ChandrasekharError):
