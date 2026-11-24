@@ -1,0 +1,682 @@
+{
+  "anchors": {
+    "all_anchors_matched": true,
+    "all_file_digests_matched": true,
+    "anchor_mode": "live_readonly",
+    "anchors": [
+      {
+        "expected_line": 388,
+        "id": "SC-EQ3",
+        "matched": true,
+        "path": "score-centering/arxiv_2609.20807.txt"
+      },
+      {
+        "expected_line": 406,
+        "id": "SC-FWD-KL",
+        "matched": true,
+        "path": "score-centering/arxiv_2609.20807.txt"
+      },
+      {
+        "expected_line": 994,
+        "id": "SC-EQ10-TAIL",
+        "matched": true,
+        "path": "score-centering/arxiv_2609.20807.txt"
+      },
+      {
+        "expected_line": 1067,
+        "id": "SC-JAX-FLOOR",
+        "matched": true,
+        "path": "score-centering/arxiv_2609.20807.txt"
+      },
+      {
+        "expected_line": 121,
+        "id": "SC-LOSSES-RATIO",
+        "matched": true,
+        "path": "score-centering/repo/losses.py"
+      },
+      {
+        "expected_line": 147,
+        "id": "SC-LOSSES-RHO",
+        "matched": true,
+        "path": "score-centering/repo/losses.py"
+      },
+      {
+        "expected_line": 42,
+        "id": "SC-ZHIHU-SLIP",
+        "matched": true,
+        "path": "zhihu/zhihu_2092277762245538186_score_centering.md"
+      },
+      {
+        "expected_line": 375,
+        "id": "RIPO-DGEOM",
+        "matched": true,
+        "path": "ripo/arxiv_2607.10169.txt"
+      },
+      {
+        "expected_line": 415,
+        "id": "RIPO-EQ11",
+        "matched": true,
+        "path": "ripo/arxiv_2607.10169.txt"
+      },
+      {
+        "expected_line": 566,
+        "id": "RIPO-DUALCLIP",
+        "matched": true,
+        "path": "ripo/arxiv_2607.10169.txt"
+      },
+      {
+        "expected_line": 567,
+        "id": "RIPO-NOKL",
+        "matched": true,
+        "path": "ripo/arxiv_2607.10169.txt"
+      },
+      {
+        "expected_line": 27,
+        "id": "RIPO-ZHIHU-VAR",
+        "matched": true,
+        "path": "zhihu/zhihu_2098101007368640039_ripo.md"
+      },
+      {
+        "expected_line": 279,
+        "id": "RZ-D3-PEAK",
+        "matched": true,
+        "path": "reinforce-zero/REINFORCE-Zero.txt"
+      },
+      {
+        "expected_line": 374,
+        "id": "RZ-SC-VS-IS",
+        "matched": true,
+        "path": "reinforce-zero/REINFORCE-Zero.txt"
+      },
+      {
+        "expected_line": 1666,
+        "id": "RZ-THM1",
+        "matched": true,
+        "path": "reinforce-zero/REINFORCE-Zero.txt"
+      },
+      {
+        "expected_line": 14,
+        "id": "RZ-ALG-DECOMP",
+        "matched": true,
+        "path": "reinforce-zero/REINFORCE-Zero/ALGORITHM.md"
+      },
+      {
+        "expected_line": 19,
+        "id": "RZ-TOPK-CONTRACT",
+        "matched": true,
+        "path": "reinforce-zero/zero-mismatch-rl/skill/numerical-contracts.md"
+      }
+    ],
+    "anchors_total": 17,
+    "anchors_verified": 17,
+    "file_digests": [
+      {
+        "expected_sha256": "a53342f3774e1effd43e386e06ae76766c0002262616d2cfa8a5726c90b87cd2",
+        "matched": true,
+        "observed_sha256": "a53342f3774e1effd43e386e06ae76766c0002262616d2cfa8a5726c90b87cd2",
+        "path": "score-centering/arxiv_2609.20807.txt"
+      },
+      {
+        "expected_sha256": "c9094e9663d1770badcfc0327c41aa201e408dd0b868d6656444c4f497b04820",
+        "matched": true,
+        "observed_sha256": "c9094e9663d1770badcfc0327c41aa201e408dd0b868d6656444c4f497b04820",
+        "path": "score-centering/repo/losses.py"
+      },
+      {
+        "expected_sha256": "74443b91fa1668f3aa15e170de2520a02f356f64be549a60de2bcc84484f6d3d",
+        "matched": true,
+        "observed_sha256": "74443b91fa1668f3aa15e170de2520a02f356f64be549a60de2bcc84484f6d3d",
+        "path": "zhihu/zhihu_2092277762245538186_score_centering.md"
+      },
+      {
+        "expected_sha256": "05cf523283d28da243cc54038038b72a69b10783637cc34f0697fd4fc413e689",
+        "matched": true,
+        "observed_sha256": "05cf523283d28da243cc54038038b72a69b10783637cc34f0697fd4fc413e689",
+        "path": "ripo/arxiv_2607.10169.txt"
+      },
+      {
+        "expected_sha256": "d5a529c9e0c1a43294dce6e3b793affd476d4df9f243f37926c0accf08c23792",
+        "matched": true,
+        "observed_sha256": "d5a529c9e0c1a43294dce6e3b793affd476d4df9f243f37926c0accf08c23792",
+        "path": "zhihu/zhihu_2098101007368640039_ripo.md"
+      },
+      {
+        "expected_sha256": "5d2abc64df9674b690abffd62c72c2c88da9fe8942457f1ca85471db253702b8",
+        "matched": true,
+        "observed_sha256": "5d2abc64df9674b690abffd62c72c2c88da9fe8942457f1ca85471db253702b8",
+        "path": "reinforce-zero/REINFORCE-Zero.txt"
+      },
+      {
+        "expected_sha256": "0d02ac35222ae8877134c6c23c7eff1ef76b771f8dda120053231ab78c4f73a9",
+        "matched": true,
+        "observed_sha256": "0d02ac35222ae8877134c6c23c7eff1ef76b771f8dda120053231ab78c4f73a9",
+        "path": "reinforce-zero/REINFORCE-Zero/ALGORITHM.md"
+      },
+      {
+        "expected_sha256": "c620e1e8a79fe2e69965f0fbae206f136c5fa2b644d078bd6a790d93092c3a03",
+        "matched": true,
+        "observed_sha256": "c620e1e8a79fe2e69965f0fbae206f136c5fa2b644d078bd6a790d93092c3a03",
+        "path": "reinforce-zero/zero-mismatch-rl/skill/numerical-contracts.md"
+      }
+    ],
+    "files_total": 8
+  },
+  "arm": "R9-5",
+  "audit_id": "AUDIT-082",
+  "canonical_sha256": "14020a61d781cf7bf8cee0c424af650e0a569d151b16a575cb34a51b502a5b78",
+  "certifier_cases": {
+    "hardened_unified_step": {
+      "admitted": true,
+      "diagnostics": {
+        "chi2_tim": {
+          "den": 1,
+          "num": 0
+        },
+        "d3_upper_bound": {
+          "den": 4284,
+          "num": 31
+        },
+        "is_second_moment": {
+          "den": 72,
+          "num": 73
+        },
+        "learner_half_chi2": {
+          "den": 144,
+          "num": 1
+        },
+        "observed_max_tim_ratio": {
+          "den": 1,
+          "num": 1
+        },
+        "residual_drift": {
+          "den": 1,
+          "num": 0
+        },
+        "step_contraction_rho": {
+          "den": 288,
+          "num": 145
+        },
+        "topk_tail_rho": {
+          "den": 1,
+          "num": 1
+        }
+      },
+      "reasons": [],
+      "status": "ADMITTED_UNIFIED_RL_STEP"
+    },
+    "multi_trap_unaligned_step": {
+      "admitted": false,
+      "diagnostics": {
+        "chi2_tim": {
+          "den": 39072800,
+          "num": 84746137
+        },
+        "d3_upper_bound": {
+          "den": 3930080,
+          "num": 1196777
+        },
+        "is_second_moment": {
+          "den": 34969,
+          "num": 38605
+        },
+        "learner_half_chi2": {
+          "den": 87846,
+          "num": 7225
+        },
+        "observed_max_tim_ratio": {
+          "den": 4,
+          "num": 121
+        },
+        "residual_drift": {
+          "den": 29282,
+          "num": 1349
+        },
+        "step_contraction_rho": {
+          "den": 874225,
+          "num": 1270329
+        },
+        "topk_tail_rho": {
+          "den": 4,
+          "num": 1
+        }
+      },
+      "reasons": [
+        "TII_KERNEL_FLAGS_UNALIGNED",
+        "TII_RATIO_EXCEEDS_BOUND",
+        "TII_CHI2_EXCEEDS_BOUND",
+        "RIPO_NOISY_ROLLOUT_BASIS_POLICY",
+        "RIPO_LOWER_CLIP_DEAD_ZONE_ENABLED",
+        "TRUST_REGION_BUDGET_EXCEEDED",
+        "IS_SECOND_MOMENT_EXCEEDED",
+        "D3_DIAGNOSTIC_EXCEEDED",
+        "STEP_SIZE_STABILITY_VIOLATED",
+        "NAIVE_SC_POLICY_UNSOUND",
+        "SCORE_CENTERING_RESIDUAL_DRIFT_NONZERO",
+        "TOPK_TAIL_MASS_RATIO_EXCEEDED",
+        "TOPK_RIPO_SPLIT_TAIL_VIOLATION",
+        "NON_BREGMAN_CLIPPED_KL_REVERSAL"
+      ],
+      "status": "REJECTED_UNIFIED_RL_STEP"
+    }
+  },
+  "cross_pollination_targets": [
+    "Moissanite-Labs/warp-drive#12 (AUDIT-064 WI-4 Fisher-Schur)",
+    "Moissanite-Labs/warp-drive#15 (AUDIT-066R Stage-1 RuntimeFlags)",
+    "Moissanite-Labs/warp-drive#21 (AUDIT-073R songe SNG-01 Bregman KL)",
+    "Moissanite-Labs/siliquant#26 (AUDIT-068R Magnitude)",
+    "Moissanite-Labs/siliquant#27 (AUDIT-074R Inkling LOOM-IR-03 Top-64)"
+  ],
+  "novelty_class": "N1",
+  "oracle_class": "exact+anchor",
+  "pinned_vectors": {
+    "reinforce_zero_alphaxiv": "alphaXiv:2611.reinforce-zero-kernel-alignment-asynchronous-rl",
+    "reinforce_zero_repo": "hijkzzz/REINFORCE-Zero@a22153de4b8c4b47faf5bf88a598d6d54801bfc7",
+    "ripo_arxiv": "arXiv:2607.10169v2",
+    "score_centering_arxiv": "arXiv:2609.20807v1",
+    "score_centering_repo": "martin-marek/score-centering@fdca22b19793babdf08e33e5ba51537e82cbed2f",
+    "zero_mismatch_rl_repo": "Inferact/zero-mismatch-rl@136aca87d8158adae94b5a272fa4a8a6d5cd6939"
+  },
+  "proofs": {
+    "t1_three_axis_factorization": {
+      "chi2_tim_aligned": {
+        "den": 1,
+        "num": 0
+      },
+      "chi2_tim_unaligned": {
+        "den": 20,
+        "num": 1
+      },
+      "factorization_exact": true,
+      "fisher_schur_bridge": {
+        "f00": {
+          "den": 100,
+          "num": 61
+        },
+        "f01": {
+          "den": 100,
+          "num": 17
+        },
+        "f11": {
+          "den": 100,
+          "num": 49
+        },
+        "fisher_quad_half": {
+          "den": 3200,
+          "num": 9
+        },
+        "ripo_equals_wi4_fisher_exact": true,
+        "ripo_half_chi2": {
+          "den": 3200,
+          "num": 9
+        },
+        "schur_complement_s": {
+          "den": 49,
+          "num": 27
+        },
+        "schur_strictly_below_f00": true
+      },
+      "reinforce_zero_thm1": {
+        "eta": {
+          "den": 5,
+          "num": 3
+        },
+        "kappa_1_5_a_lo": {
+          "den": 390625,
+          "num": 1317913
+        },
+        "kappa_1_5_certified_unstable": true,
+        "kappa_1_5_eta_max_hi": {
+          "den": 1317913,
+          "num": 781250
+        },
+        "kappa_1_5_exp_lo": {
+          "den": 1250,
+          "num": 1301
+        },
+        "kappa_1_5_rho_lo": {
+          "den": 9765625,
+          "num": 9908092
+        },
+        "kappa_zero_c": {
+          "den": 250,
+          "num": 9
+        },
+        "kappa_zero_eta_max": {
+          "den": 3,
+          "num": 2
+        },
+        "kappa_zero_rho": {
+          "den": 25,
+          "num": 22
+        },
+        "kappa_zero_stable": true,
+        "kappa_zero_v0": {
+          "den": 1,
+          "num": 2
+        },
+        "kappa_zero_v_inf": {
+          "den": 10,
+          "num": 3
+        }
+      }
+    },
+    "t2_trap01_naive_sc_ripo": {
+      "cov_q_w_s": {
+        "den": 15,
+        "num": 4
+      },
+      "delta": {
+        "den": 25,
+        "num": 1
+      },
+      "expected_weight_ew": {
+        "den": 18,
+        "num": 19
+      },
+      "naive_drift_equals_cov_exact": true,
+      "naive_sc_ripo_drift": {
+        "den": 15,
+        "num": 4
+      },
+      "naive_sc_sign_reversed": true,
+      "naive_sc_worse_magnitude": true,
+      "sampler_mean_score_s_bar_q": {
+        "den": 2,
+        "num": -1
+      },
+      "uncentered_ripo_drift": {
+        "den": 180,
+        "num": -47
+      },
+      "weighted_sc_additive_drift": {
+        "den": 1,
+        "num": 0
+      },
+      "weighted_sc_exact_zero": true,
+      "weighted_sc_normalized_drift": {
+        "den": 1,
+        "num": 0
+      },
+      "weights": [
+        {
+          "den": 10,
+          "num": 13
+        },
+        {
+          "den": 10,
+          "num": 7
+        },
+        {
+          "den": 2,
+          "num": 3
+        }
+      ]
+    },
+    "t3_trap02_topk_ripo_split_tail": {
+      "part_a_split_tail": {
+        "all_tested_scalar_alphas_nonzero_drift": true,
+        "eq10_scalar_alpha_residuals": {
+          "alpha_1_2_clipped_t2": {
+            "den": 29282,
+            "num": -145
+          },
+          "alpha_1_4_vanilla_rho": {
+            "den": 29282,
+            "num": 995
+          },
+          "alpha_1_unclipped": {
+            "den": 29282,
+            "num": -2425
+          }
+        },
+        "pass_case_eq10_alpha1_residual": {
+          "den": 1,
+          "num": 0
+        },
+        "pass_case_exact_zero_drift": true,
+        "q_hat_zero_reconstruction_error": true,
+        "rho": {
+          "den": 4,
+          "num": 1
+        },
+        "split_tail_weights": [
+          {
+            "den": 1,
+            "num": 2
+          },
+          {
+            "den": 1,
+            "num": 4
+          }
+        ],
+        "sufficiency_holds_in_pass_case": true,
+        "sufficiency_lhs": {
+          "den": 1936,
+          "num": 225
+        },
+        "sufficiency_rhs_pass": {
+          "den": 1936,
+          "num": 225
+        },
+        "sufficiency_rhs_split": {
+          "den": 1936,
+          "num": 25
+        },
+        "sufficiency_violated_in_split_case": true,
+        "tail_ratios_identical": true,
+        "tail_weights_strictly_split": true,
+        "true_ews_split": {
+          "den": 29282,
+          "num": -2473
+        }
+      },
+      "part_b_tail_singularity_and_loom": {
+        "alpha_mis_floored": {
+          "den": 1,
+          "num": 0
+        },
+        "alpha_sc_floored": {
+          "den": 1,
+          "num": 20000
+        },
+        "alpha_tis_floored": {
+          "den": 1,
+          "num": 1
+        },
+        "loom_ir03_paper_eps_spurious_rho": {
+          "den": 546875,
+          "num": 1
+        },
+        "loom_ir03_rho_exact": {
+          "den": 1,
+          "num": 0
+        },
+        "loom_ir03_spurious_nonzero_under_eps_floor": true,
+        "mis_drops_entire_tail": true,
+        "normalization_broken_by_floor": true,
+        "q_hat_sum_under_floor": {
+          "den": 5000,
+          "num": 4901
+        },
+        "rho_exact_peaked": {
+          "den": 1,
+          "num": 2000000
+        },
+        "rho_floored_peaked": {
+          "den": 1,
+          "num": 20000
+        },
+        "tis_immune_to_rho_blowup": true
+      }
+    },
+    "t4_trap03_tim_vs_ripo_dead_zone": {
+      "ripo_heteroscedasticity": {
+        "exceeds_20x": true,
+        "heteroscedasticity_ratio": {
+          "den": 121,
+          "num": 2500
+        },
+        "v_q_1_2000": {
+          "den": 2000,
+          "num": 121
+        },
+        "v_q_4_5": {
+          "den": 4,
+          "num": 5
+        }
+      },
+      "ripo_lower_clip_dead_zone": {
+        "delta": {
+          "den": 20,
+          "num": 1
+        },
+        "dual_clip_floor": {
+          "den": 2,
+          "num": 1
+        },
+        "dual_clip_geom_dist": {
+          "den": 320,
+          "num": 1
+        },
+        "eps": {
+          "den": 1,
+          "num": 2
+        },
+        "isometry_shrink_factor": {
+          "den": 1,
+          "num": 16
+        },
+        "neg_adv_ratio_unclipped_raw": true,
+        "q_token": {
+          "den": 80,
+          "num": 1
+        },
+        "raw_lower_bound": {
+          "den": 1,
+          "num": -1
+        },
+        "raw_lower_negative": true,
+        "raw_upper_bound": {
+          "den": 1,
+          "num": 3
+        }
+      },
+      "sync_tim_explosion": {
+        "chi2_divergence": {
+          "den": 37,
+          "num": 363
+        },
+        "is_second_moment": {
+          "den": 37,
+          "num": 400
+        },
+        "second_moment_exceeds_10x": true,
+        "tv_distance": {
+          "den": 1000,
+          "num": 99
+        }
+      },
+      "tim_trust_region_corruption": {
+        "delta": {
+          "den": 25,
+          "num": 1
+        },
+        "noisy_ripo_dist": {
+          "den": 25,
+          "num": 1
+        },
+        "noisy_ripo_passes": true,
+        "overshoot_factor": {
+          "den": 1,
+          "num": 289
+        },
+        "p_admitted": {
+          "den": 20,
+          "num": 7
+        },
+        "p_old": {
+          "den": 100,
+          "num": 1
+        },
+        "q_noisy": {
+          "den": 4,
+          "num": 1
+        },
+        "true_learner_dist": {
+          "den": 25,
+          "num": 289
+        }
+      }
+    },
+    "t5_trap04_songe_bregman_d3_sandwich": {
+      "clipped_kl_reversal": {
+        "bregman_pulls_toward_teacher": true,
+        "clip_hi": {
+          "den": 1,
+          "num": 2
+        },
+        "clipped_reverses_gradient_anti_teacher": true,
+        "dl_dq0_bregman": {
+          "den": 3969,
+          "num": -2031616
+        },
+        "dl_dq0_clipped": {
+          "den": 3969,
+          "num": 512
+        },
+        "dl_dz0_bregman": {
+          "den": 63,
+          "num": -496
+        },
+        "dl_dz0_clipped": {
+          "den": 504,
+          "num": 1
+        },
+        "dl_dz0_forward_kl": {
+          "den": 64,
+          "num": -31
+        },
+        "forward_kl_pulls_toward_teacher": true,
+        "p_teacher": {
+          "den": 2,
+          "num": 1
+        },
+        "q_student": {
+          "den": 64,
+          "num": 1
+        }
+      },
+      "d3_ripo_sandwich": {
+        "w_1_2_half_sq": {
+          "den": 8,
+          "num": 1
+        },
+        "w_1_2_hi": {
+          "den": 4,
+          "num": 1
+        },
+        "w_1_2_lo": {
+          "den": 6,
+          "num": 1
+        },
+        "w_1_2_ordered": true,
+        "w_1_vanishes": true,
+        "w_3_2_half_sq": {
+          "den": 8,
+          "num": 1
+        },
+        "w_3_2_hi": {
+          "den": 10,
+          "num": 1
+        },
+        "w_3_2_lo": {
+          "den": 12,
+          "num": 1
+        },
+        "w_3_2_ordered": true
+      }
+    }
+  },
+  "title": "Unified Off-Policy RL Geometry & Kernel-Invariance Composition",
+  "zero_float_enforced": true
+}
