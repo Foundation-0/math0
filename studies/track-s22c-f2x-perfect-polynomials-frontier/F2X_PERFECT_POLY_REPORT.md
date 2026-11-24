@@ -152,6 +152,6 @@ All checks executed strictly sequentially (`OPENBLAS_NUM_THREADS=1 OMP_NUM_THREA
 | --- | ---: | ---: | :---: | --- |
 | `f2x_perfect_poly_oracle.py` | 920 | 32,721 | `0644` | `1d4df80841fe8cd365ab084e6e633b78781788e975ef4932d04437fc2ffb6ff6` |
 | `f2x_perfect_poly_audit.py` | 894 | 39,240 | `0644` | `8cd479e78511cd03aee606c318c8082c54ccb959ac0afc1e9941ce9e296de27e` |
-| `test_f2x_perfect_poly_r5.py` | 945 | 56,425 | `0644` | `61f2b44f938e9b31aa007f60406220c4b0569e7fa2984bc3cb41b37cb880fdf7` |
+| `test_f2x_perfect_poly_r5.py` | 950 | 56,799 | `0644` | `eb719cf291b6266b0a5b7d93c50e402d4a44a39ddf50ae7327e7783c2ad62962` |
 | `f2x_perfect_poly_certificate.json` | 1 | 5,622 | `0600` | `5969b8ca5ca45db4c502eec153040c21b932a75d9dcb344821bbf25e6d8ea7dc` |
 | `F2X_PERFECT_POLY_REPORT.md` | — | — | `0644` | *(this report; verified via `aletheia v2.0.0 audit-check --strict-ancestors --safety-scan`)* |

@@ -305,13 +305,18 @@ class TestTrackS22bOddPerfectCyclotomic(unittest.TestCase):
         _check(type(audit.parse_strict_json_text(json.dumps({"x": ok_d}), "d64")) is dict, "depth 64 failed")
         _expect_err(lambda: audit.parse_strict_json_text(json.dumps({"x": [ok_d]}), "d65"), "MAX_DEPTH_EXCEEDED", "depth 65")
 
-        # /proc/kallsyms st_size==0 capped read guard (S21F-BUG-01) & /dev/null non-regular write guard
+        # /proc/kallsyms st_size==0 capped read guard, read-only /dev/null guard, & scratch FIFO write guard
         proc_kallsyms = Path("/proc/kallsyms")
         if proc_kallsyms.exists():
             _expect_err(lambda: audit.read_regular_bytes_capped(proc_kallsyms, "kallsyms", max_bytes=16), "FILE_TOO_LARGE", "/proc/kallsyms cap")
         dev_null = Path("/dev/null")
         if dev_null.exists():
-            _expect_err(lambda: audit.write_regular_bytes_safe(dev_null, b"{}\n", "devnull"), "NOT_A_REGULAR_FILE", "/dev/null write")
+            _expect_err(lambda: audit.read_regular_bytes_capped(dev_null, "devnull"), "NOT_A_REGULAR_FILE", "/dev/null read")
+        if hasattr(os, "mkfifo"):
+            with tempfile.TemporaryDirectory(prefix="s22b_fifo_") as ftd:
+                nonreg_fifo = Path(ftd) / "nonreg_fifo"
+                os.mkfifo(nonreg_fifo)
+                _expect_err(lambda: audit.write_regular_bytes_safe(nonreg_fifo, b"{}\n", "nonreg_fifo"), "NOT_A_REGULAR_FILE", "scratch FIFO write")
 
         with tempfile.TemporaryDirectory(prefix="s22b_zb_") as td:
             root = Path(td)

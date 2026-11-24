@@ -120,5 +120,5 @@ $$(1 + u)^3 + Q_1(1 + u) - 2(1 + u_c)^3 u \equiv (u - u_c)^2(u + 2u_c + 3) \ge 0
 - **Frozen File Manifest (`wc -lc` & SHA-256):**
   - `chandrasekhar_quintet_oracle.py` (`1,450` L, `61,594` B): `3b4caaae0adf3dff3ed28ca602df8b1aae6b82e82c05487281b6ecb3adfdbce8`
   - `chandrasekhar_quintet_audit.py` (`484` L, `20,786` B): `040ca193e3da4a0c366366bc276f228f584321c569574ddca7f35220dd1e077b`
-  - `test_chandrasekhar_quintet_r5.py` (`736` L, `38,135` B): `3eca311090c891e468dfd3118d300f9559fe52b5b4c40aa137d4cc94ecd7cdf1`
+  - `test_chandrasekhar_quintet_r5.py` (`739` L, `38,267` B): `6f36f90a89018d72eba6cb2146c36aadb9075199dc3839f51100f44544406cd2`
   - `chandrasekhar_quintet_certificate.json` (`1` L, `4,608` B): `a7de250dabd9152efdb3f23a2085694678aaed5313981aec71785a7d27a5f1a9` (`payload_sha256: 71d54bef4c687befea12938cc192091bb79332101b4dbc3c4466d8f42d8aff35`, `certificate_sha256: 6926281500f719d62d618e2494fab27a5c85ac34f0745e2717393dc63db013fc`)

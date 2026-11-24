@@ -18,7 +18,7 @@
 | --- | --- | --- | --- |
 | `leonardo_codices_oracle.py` | `1772` | `77941` | `ba42c87a2c7a1ed59c295be9872536b0ff269e0a8962cd3714d97073ef5e7f72` |
 | `leonardo_codices_audit.py` | `545` | `25668` | `f982f23801e44672f671050cc28d8b389e74979325e26d9e49d4c7188af5b9e2` |
-| `test_leonardo_codices_r5.py` | `957` | `57098` | `541cdf74eb9e27b9e7be30b4925c653b3660fc60065fc3c44385633b79444097` |
+| `test_leonardo_codices_r5.py` | `960` | `57218` | `5e56bd35b9c96b48e807793566085b3a79cc19e0f15bee3801120b76a0b7f208` |
 | `leonardo_codices_certificate.json` | `1` | `15075` | `9eec31665b5e4b96e7b486fde40f21813f161924d64c04e7155cf459db587438` |
 
 ---

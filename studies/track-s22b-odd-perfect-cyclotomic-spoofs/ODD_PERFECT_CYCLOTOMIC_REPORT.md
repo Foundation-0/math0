@@ -180,6 +180,6 @@ All verification gates ran sequentially under `OPENBLAS_NUM_THREADS=1 OMP_NUM_TH
 | :--- | :---: | :---: | :--- |
 | `odd_perfect_cyclotomic_oracle.py` | `888` | `34,043` | `c0fee1a24fc7220a9bbe58fa1700437ef1cbae230dec7b72c89bec7f9332a307` |
 | `odd_perfect_cyclotomic_audit.py` | `410` | `17,056` | `cf796bd090b1d1c53897d6a9ece9db42fc7e76599602be82e46625b8d3640cb9` |
-| `test_odd_perfect_cyclotomic_r5.py` | `479` | `34,159` | `5bb5e72aa750cc08af1bf21ba583176cda15f302fc59444d18e505b629daee85` |
+| `test_odd_perfect_cyclotomic_r5.py` | `484` | `34,507` | `8c83c3084206b25641e931b389ebcb9a246d5bd391e65669754ce1179ee98a1f` |
 | `odd_perfect_cyclotomic_certificate.json` | `1` | `11,293` | `6a30f9b113108dec0db2e11f70530a38237602e7daeae79b29b8d2e116f4a089` |
 | `ODD_PERFECT_CYCLOTOMIC_REPORT.md` | *(this report)* | *(see delivery manifest)* | *(omitted to prevent self-hash cycle)* |
