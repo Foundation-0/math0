@@ -1,4 +1,4 @@
-"""Track S23a: Pure-Z/Q/Q[i] Chandrasekhar-Kendall Force-Free States, Magnetic
+"""Pure-Z/Q/Q[i] Chandrasekhar-Kendall Force-Free States, Magnetic
 Helicity Conservation, Knotted Flux Tubes, and Exact Helical-Basis FFT/NTT
 Spectral Convolutions.
 
@@ -26,6 +26,7 @@ MAX_RATIONAL_CHARS = 256
 MAX_FORMAT_BITS = 4096
 
 _HEX_LOWER = frozenset("0123456789abcdef")
+_ASCII_DIGITS = frozenset("0123456789")
 _CERT_KEYS = frozenset({"schema", "track_id", "payload_sha256", "certificate_sha256", "payload"})
 
 # Dual NTT-friendly primes: p_1 = 119*2^23 + 1, p_2 = 5*2^25 + 1 (both primitive root 3)
@@ -94,7 +95,7 @@ def require_str(val: Any, label: str, max_len: int = 4096) -> str:
 
 def require_hex64(val: Any, label: str) -> str:
     s = require_str(val, label, max_len=64)
-    if len(s) != 64 or not s.isascii() or any(ch not in _HEX_LOWER for ch in s):
+    if len(s) != 64 or any(ch not in _HEX_LOWER for ch in s):
         raise CKHelicityError("INVALID_HEX64", f"{label} must be 64 lowercase ASCII hex chars")
     return s
 
@@ -106,7 +107,7 @@ def constant_time_hex64_equal(left: Any, right: Any, label: str) -> bool:
 
 
 def _is_canonical_unsigned_digits(s: str) -> bool:
-    if not s or not s.isascii() or not s.isdigit():
+    if not s or any(ch not in _ASCII_DIGITS for ch in s):
         return False
     if len(s) > 1 and s[0] == "0":
         return False
@@ -1760,7 +1761,7 @@ def build_standalone_certificate() -> dict[str, Any]:
 
 
 def validate_certificate_payload(cert: Any, full_replay: bool = True) -> dict[str, Any]:
-    """Zone-B hardened in-memory certificate validator (callable directly by S19c fuzzer)."""
+    """Zone-B hardened in-memory certificate validator (callable directly in-process)."""
     require_bool(full_replay, "full_replay")
     validate_json_tree_iterative(cert)
     if type(cert) is not dict:

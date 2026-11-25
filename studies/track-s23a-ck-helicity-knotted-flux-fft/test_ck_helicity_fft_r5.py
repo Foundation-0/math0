@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Track S23a R5 Adversarial & Mutation-Kill Test Suite.
+"""Adversarial & Mutation-Kill Test Suite for CK Helicity & Spectral FFT/NTT.
 
 Zero external dependencies, zero bare asserts (100% python3 -O parity).
 Fast Zone-B, TOCTOU, deleted-CWD, surrogate, hardlink, and tamper tests run first
@@ -14,11 +14,14 @@ import io
 import json
 import os
 from pathlib import Path
+import stat
 import subprocess
 import sys
 import tempfile
 import threading
+from types import SimpleNamespace
 import unittest
+from unittest import mock
 
 _THIS_DIR = str(Path(__file__).resolve().parent)
 if _THIS_DIR not in sys.path:
@@ -120,6 +123,8 @@ class Test01ZoneBPrimitives(unittest.TestCase):
         self._expect_err("INVALID_RATIONAL_STR", oracle.parse_exact_rational, "3/1")
         self._expect_err("INVALID_RATIONAL_STR", oracle.parse_exact_rational, "1/a")
         self._expect_err("INVALID_RATIONAL_STR", oracle.parse_exact_rational, "a/2")
+        self._expect_err("INVALID_RATIONAL_STR", oracle.parse_exact_rational, "1/")
+        self._expect_err("INVALID_RATIONAL_STR", oracle.parse_exact_rational, "-")
         self._expect_err("NON_CANONICAL_RATIONAL", oracle.parse_exact_rational, "2/4")
         self._expect_err("NON_CANONICAL_RATIONAL", oracle.parse_exact_rational, "-6/9")
         old_max = oracle.MAX_RATIONAL_CHARS
@@ -354,7 +359,7 @@ class Test03ZoneBFileIOHardlinksTOCTOUAndCLI(unittest.TestCase):
                 else:
                     os.environ["PWD"] = old_pwd
 
-            # Missing file, directory, chmod 000, read-only dir write, FIFO (zero hang!), /dev/null
+            # Missing file, directory, chmod 000, read-only dir write, FIFO (zero hang!)
             self._expect_err("FILE_READ_ERROR", audit.read_regular_file_bytes, td / "missing.json")
             self._expect_err("NON_REGULAR_FILE", audit.read_regular_file_bytes, real_dir)
             self._expect_err("NON_REGULAR_FILE", audit.write_regular_file_bytes, real_dir, b"x")
@@ -377,11 +382,10 @@ class Test03ZoneBFileIOHardlinksTOCTOUAndCLI(unittest.TestCase):
             self._expect_err("NON_REGULAR_FILE", audit.read_regular_file_bytes, fifo)
             self._expect_err("NON_REGULAR_FILE", audit.write_regular_file_bytes, fifo, b"x")
 
-            if Path("/dev/null").exists():
-                self._expect_err("NON_REGULAR_FILE", audit.read_regular_file_bytes, Path("/dev/null"))
             if hasattr(os, "mkfifo"):
                 nonreg_fifo = td / "nonreg_fifo"
                 os.mkfifo(nonreg_fifo)
+                self._expect_err("NON_REGULAR_FILE", audit.read_regular_file_bytes, nonreg_fifo)
                 self._expect_err("NON_REGULAR_FILE", audit.write_regular_file_bytes, nonreg_fifo, b"x")
 
             if Path("/proc/kallsyms").exists():
@@ -436,9 +440,12 @@ class Test03ZoneBFileIOHardlinksTOCTOUAndCLI(unittest.TestCase):
             finally:
                 os.chdir(old_cwd)
 
-        # 2. Live >= 500 concurrent renameat2(RENAME_EXCHANGE) TOCTOU read + write stress test
-        libc = ctypes.CDLL(None, use_errno=True)
-        renameat2 = getattr(libc, "renameat2", None)
+        # 2. Live >= 500 concurrent renameat2(RENAME_EXCHANGE) TOCTOU read + write stress test (Linux only)
+        if sys.platform == "linux":
+            libc = ctypes.CDLL(None, use_errno=True)
+            renameat2 = getattr(libc, "renameat2", None)
+        else:
+            renameat2 = None
         if renameat2 is not None:
             AT_FDCWD = -100
             RENAME_EXCHANGE = 2
@@ -554,6 +561,124 @@ class Test03ZoneBFileIOHardlinksTOCTOUAndCLI(unittest.TestCase):
             )
             self.assertEqual(proc.returncode, 2)
             self.assertEqual(json.loads(proc.stderr)["error_code"], "SYMLINK_FORBIDDEN")
+
+    def test_darwin_system_root_alias_normalization(self) -> None:
+        root_lnk = SimpleNamespace(st_mode=stat.S_IFLNK | 0o777, st_uid=0)
+        root_dir = SimpleNamespace(st_mode=stat.S_IFDIR | 0o755, st_uid=0)
+        user_lnk = SimpleNamespace(st_mode=stat.S_IFLNK | 0o777, st_uid=1000)
+
+        def _fake_readlink(p: str) -> str:
+            if p == "/var":
+                return "private/var"
+            if p == "/tmp":
+                return "/private/tmp"
+            if p == "/etc":
+                return "private/etc"
+            raise OSError("unexpected readlink")
+
+        with (
+            mock.patch.object(audit.sys, "platform", "darwin"),
+            mock.patch.object(audit.os, "lstat", return_value=root_lnk),
+            mock.patch.object(audit.os, "readlink", side_effect=_fake_readlink),
+        ):
+            self.assertEqual(
+                audit._normalize_darwin_system_prefix(Path("/var/folders/xx/cert.json")),
+                Path("/private/var/folders/xx/cert.json"),
+            )
+            self.assertEqual(
+                audit._normalize_darwin_system_prefix(Path("/tmp/cert.json")),
+                Path("/private/tmp/cert.json"),
+            )
+            self.assertEqual(
+                audit._normalize_darwin_system_prefix(Path("/etc/cert.json")),
+                Path("/private/etc/cert.json"),
+            )
+            self.assertEqual(
+                audit._normalize_darwin_system_prefix(Path("/opt/cert.json")),
+                Path("/opt/cert.json"),
+            )
+            self.assertEqual(
+                audit._normalize_darwin_system_prefix(Path("a/var/folders/xx/cert.json")),
+                Path("a/var/folders/xx/cert.json"),
+            )
+            self.assertEqual(
+                audit._normalize_darwin_system_prefix(Path("/tmp"), allow_exact=True),
+                Path("/private/tmp"),
+            )
+            self.assertEqual(
+                audit._normalize_darwin_system_prefix(Path("/"), allow_exact=True),
+                Path("/"),
+            )
+            self.assertEqual(audit._normalize_darwin_system_prefix(Path("/tmp")), Path("/tmp"))
+            self.assertEqual(
+                audit._normalize_darwin_system_prefix(Path("/tmp/../etc/passwd")),
+                Path("/tmp/../etc/passwd"),
+            )
+
+            captured: list[list[str]] = []
+
+            def _fake_step(start_fd: int, comps: list[str], label: str) -> int:
+                captured.append(list(comps))
+                return start_fd
+
+            with mock.patch.object(audit, "_step_dir_fd_chain", side_effect=_fake_step):
+                dfd, leaf = audit._open_parent_dir_fd(Path("/var/folders/xx/cert.json"))
+                os.close(dfd)
+                self.assertEqual(leaf, "cert.json")
+                self.assertEqual(captured[-1], ["private", "var", "folders", "xx"])
+
+                dfd2, leaf2 = audit._open_parent_dir_fd(Path("/var/folders/xx/evil_link/cert.json"))
+                os.close(dfd2)
+                self.assertEqual(leaf2, "cert.json")
+                self.assertEqual(captured[-1], ["private", "var", "folders", "xx", "evil_link"])
+
+                old_pwd = os.environ.get("PWD")
+                try:
+                    os.environ["PWD"] = "/tmp"
+                    audit._check_logical_pwd_no_symlinks()
+                    self.assertEqual(captured[-1], ["private", "tmp"])
+                finally:
+                    if old_pwd is None:
+                        os.environ.pop("PWD", None)
+                    else:
+                        os.environ["PWD"] = old_pwd
+
+        for bad_stat in (root_dir, user_lnk):
+            with (
+                mock.patch.object(audit.sys, "platform", "darwin"),
+                mock.patch.object(audit.os, "lstat", return_value=bad_stat),
+                mock.patch.object(audit.os, "readlink", side_effect=_fake_readlink),
+            ):
+                self.assertEqual(
+                    audit._normalize_darwin_system_prefix(Path("/var/folders/xx/cert.json")),
+                    Path("/var/folders/xx/cert.json"),
+                )
+        with (
+            mock.patch.object(audit.sys, "platform", "darwin"),
+            mock.patch.object(audit.os, "lstat", return_value=root_lnk),
+            mock.patch.object(audit.os, "readlink", return_value="private/evil"),
+        ):
+            self.assertEqual(
+                audit._normalize_darwin_system_prefix(Path("/var/folders/xx/cert.json")),
+                Path("/var/folders/xx/cert.json"),
+            )
+        with (
+            mock.patch.object(audit.sys, "platform", "darwin"),
+            mock.patch.object(audit.os, "lstat", side_effect=OSError("no access")),
+        ):
+            self.assertEqual(
+                audit._normalize_darwin_system_prefix(Path("/var/folders/xx/cert.json")),
+                Path("/var/folders/xx/cert.json"),
+            )
+        with (
+            mock.patch.object(audit.sys, "platform", "linux"),
+            mock.patch.object(audit.os, "lstat", return_value=root_lnk),
+            mock.patch.object(audit.os, "readlink", side_effect=_fake_readlink),
+        ):
+            self.assertEqual(
+                audit._normalize_darwin_system_prefix(Path("/var/folders/xx/cert.json")),
+                Path("/var/folders/xx/cert.json"),
+            )
 
 
 class Test04PayloadAndAuditTamperMatrix(unittest.TestCase):

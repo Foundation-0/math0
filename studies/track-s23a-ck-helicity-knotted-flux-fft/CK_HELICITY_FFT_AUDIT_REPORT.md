@@ -1,13 +1,13 @@
-# Track S23a: Chandrasekhar–Kendall Force-Free States, Magnetic Helicity Conservation, Knotted Flux Tubes & Helical-Basis FFT/NTT Spectral Convolutions
+# Chandrasekhar–Kendall Force-Free States, Magnetic Helicity Conservation, Knotted Flux Tubes & Helical-Basis FFT/NTT Spectral Convolutions
 
-- **Track:** `S23a` (`track-s23a-ck-helicity-knotted-flux-fft`)
-- **Oracle Class:** `exact` (pure Python 3 standard library; `int`, `fractions.Fraction`, and Gaussian rationals $\mathbb{Q}[i]$ only; `0` floats on trust paths; `0` bare `assert`s; `0` external dependencies; `0` RNG; Zone-B hardened CLI and in-memory API)
+- **Study:** `track-s23a-ck-helicity-knotted-flux-fft`
+- **Oracle Class:** `exact` (pure Python 3 standard library; `int`, `fractions.Fraction`, and Gaussian rationals $\mathbb{Q}[i]$ only; `0` floats on trust paths; `0` bare `assert`s; `0` external dependencies; `0` RNG; fail-closed CLI and in-memory API)
 - **Novelty Classification:** `N1` (new zero-float pure-$\mathbb{Z}/\mathbb{Q}/\mathbb{Q}[i]$ executable certificate engine combining combinatorial knotted flux-tube helicity & Borromean obstruction, cylindrical CK power-series & Pythagorean-quadruple $6\times 6$ helical projectors, 3D polynomial Chandrasekhar–Fermi virial integration, Waleffe helical triad conservation, and exact 3D $\mathbb{Q}[i]$-FFT + dual-prime NTT/CRT spectral convolution parity atop `N0` classical MHD/topology foundations)
-- **Scope Honesty:** Certifies exact algebraic and combinatorial identities over $\mathbb{Z}$, $\mathbb{Q}$, and $\mathbb{Q}[i]$ on finite formal power-series truncations, finite Pythagorean wavevector shells, polynomial fields on $[-1, 1]^3$, and discrete periodic lattices ($\mathbb{Z}_4^3$, $\mathbb{Z}_8^3$); does **not** claim infinite-dimensional continuum PDE existence/regularity or compute non-Abelian Chern–Simons homotopy invariants inside this certificate (see explicit Law-5 Borromean disclosure below).
+- **Scope Honesty:** Certifies exact algebraic and combinatorial identities over $\mathbb{Z}$, $\mathbb{Q}$, and $\mathbb{Q}[i]$ on finite formal power-series truncations, finite Pythagorean wavevector shells, polynomial fields on $[-1, 1]^3$, and discrete periodic lattices ($\mathbb{Z}_4^3$, $\mathbb{Z}_8^3$); does **not** claim infinite-dimensional continuum PDE existence/regularity or compute non-Abelian Chern–Simons homotopy invariants inside this certificate (see explicit Borromean obstruction disclosure below).
 
 ---
 
-## 1. Theorem 1 — Knotted Flux-Tube Abelian $U(1)$ Helicity, Framing & Law-5 Borromean Obstruction
+## 1. Theorem 1 — Knotted Flux-Tube Abelian $U(1)$ Helicity, Framing & Borromean Obstruction
 
 Using Moffatt's topological helicity decomposition $H = \sum_{i \ne j} \Phi_i \Phi_j \operatorname{Lk}_{ij} + \sum_i \Phi_i^2 (\operatorname{Tw}_i + \operatorname{Wr}_i)$ from exact signed crossing diagrams ($\operatorname{Lk}_{ij} = \frac{1}{2}\sum_{c \in (i,j)} \varepsilon(c) \in \mathbb{Z}$, $\operatorname{Wr}_i = \sum_{c \in (i,i)} \varepsilon(c) \in \mathbb{Z}$), with explicit Călugăreanu–White–Fuller Reidemeister I compensation ($\operatorname{Wr}_i \mapsto \operatorname{Wr}_i + k$, $\operatorname{Tw}_i \mapsto \operatorname{Tw}_i - k$):
 
@@ -20,11 +20,11 @@ Using Moffatt's topological helicity decomposition $H = \sum_{i \ne j} \Phi_i \P
 | **`T(2,5)` Cinquefoil Cable** | `2 / 30` | `[1/2, 3/2]` | `[[0, 10], [10, 0]]` | `['10', '10']` | `15` | `40` | `true` |
 | **`T(3,4)` Torus Cable** | `2 / 40` | `[1, 1/3]` | `[[0, 12], [12, 0]]` | `['12', '12']` | `8` | `64/3` | `true` |
 | **Whitehead Link** | `2 / 5` | `[2, 3]` | `[[0, 0], [0, 0]]` | `['0', '0']` | `0` | `0` | `true` |
-| **Borromean Rings (Law-5)** | `3 / 6` | `[2, 3, 5]` | `0` (all pairs) | `['0', '0', '0']` | `0` | `0` | `true` |
+| **Borromean Rings (Obstruction)** | `3 / 6` | `[2, 3, 5]` | `0` (all pairs) | `['0', '0', '0']` | `0` | `0` | `true` |
 
 - **Exact Torus-Surface Framing Identity:** For every positive $(p,q)$ torus braid $(\sigma_1 \cdots \sigma_{p-1})^q$, $\operatorname{Wr} = (p-1)q$, $\operatorname{Tw}_{\mathrm{torus}} = q$, and parallel-cable linking $\operatorname{Lk}(C_1, C_2) = pq = \operatorname{Wr} + \operatorname{Tw}_{\mathrm{torus}}$ (`6`, `10`, `12`).
 - **Exact Chiral Anti-Symmetry:** $H_{\mathrm{mutual}}(\text{Hopf}_+) = +5 = -H_{\mathrm{mutual}}(\text{Hopf}_-)$.
-- **Explicit Law-5 Obstruction (Borromean Rings):** This certificate directly computes and proves from the 6-crossing Borromean diagram that all 3 pairwise Gauss linking numbers vanish ($\operatorname{Lk}_{01} = \operatorname{Lk}_{12} = \operatorname{Lk}_{20} = 0$), forcing Abelian $U(1)$ mutual helicity $H_{\mathrm{mutual}} = 0$ identically for all fluxes. Milnor's triple linking invariant $|\bar{\mu}(1,2,3)| = 1$ (Milnor 1954, `N0`) is cited classically as the higher non-Abelian Brunnian invariant that separates the Borromean rings from the 3-unlink (complementing non-Abelian $SU(2)_k$ Chern–Simons / Jones-polynomial link invariants).
+- **Explicit Abelian Obstruction (Borromean Rings):** This certificate directly computes and proves from the 6-crossing Borromean diagram that all 3 pairwise Gauss linking numbers vanish ($\operatorname{Lk}_{01} = \operatorname{Lk}_{12} = \operatorname{Lk}_{20} = 0$), forcing Abelian $U(1)$ mutual helicity $H_{\mathrm{mutual}} = 0$ identically for all fluxes. Milnor's triple linking invariant $|\bar{\mu}(1,2,3)| = 1$ (Milnor 1954, `N0`) is cited classically as the higher non-Abelian Brunnian invariant that separates the Borromean rings from the 3-unlink (complementing non-Abelian $SU(2)_k$ Chern–Simons / Jones-polynomial link invariants).
 - **Negative `must_fail` Control:** An odd inter-component crossing sum (`[(0, 1, +1)]`) fails closed with `ODD_CROSSING_SUM`.
 
 ---
@@ -73,30 +73,30 @@ Across all **7** integer-norm Pythagorean wavevectors $\mathbf{k} \in \{(1,0,0),
 
 ---
 
-## 4. Law-4 Novelty Accounting (`N0` vs `N1`) & Verification Receipts
+## 4. Novelty Accounting (`N0` vs `N1`) & Verification Receipts
 
 ### `N0` Classical Foundations
 - Gauss linking integral (1833), Călugăreanu–White–Fuller ribbon theorem (1959–1971), Moffatt topological magnetic helicity (1969), Berger–Field relative helicity (1984), Milnor triple linking invariant (1954).
 - Chandrasekhar–Fermi virial theorem (1953), Chandrasekhar–Kendall force-free eigenstates (1957), Woltjer (1958) / Arnold (1974) helicity lower bound, Waleffe (1992) helical triad decomposition.
 - Cooley–Tukey radix-2 FFT butterfly (1965), Pollard's finite-field Number-Theoretic Transform (1971), and classical Chinese Remainder Theorem (CRT).
 
-### `N1` New Contributions in Track S23a
-- Unified zero-float pure-$\mathbb{Z}/\mathbb{Q}/\mathbb{Q}[i]$ executable certificate engine (`ck_helicity_fft_oracle.py`) paired with a Zone-B hardened CLI performing full pure-$\mathbb{Q}$ deterministic replay and secondary algebraic cross-checking (`ck_helicity_fft_audit.py`), reserving zero-shared-code verification strictly for independent external auditors.
+### `N1` New Contributions in This Study
+- Unified zero-float pure-$\mathbb{Z}/\mathbb{Q}/\mathbb{Q}[i]$ executable certificate engine (`ck_helicity_fft_oracle.py`) paired with a hardened CLI performing full pure-$\mathbb{Q}$ deterministic replay and secondary algebraic cross-checking (`ck_helicity_fft_audit.py`), reserving zero-shared-code verification strictly for independent external auditors.
 - Exact symbolic polynomial verification and $[-1, 1]^3$ Gauss integration of the Chandrasekhar–Fermi Maxwell stress divergence identity, exact Pythagorean-norm $(7, 3, 6)$ compressible-velocity triad conservation witness, and bit-exact 3D $\mathbb{Q}[i]$-FFT / dual-prime NTT+CRT cross-product spectral convolution parity.
 
 ### Verification & Hardening Receipts (`100.0% PASS`)
-- **Isolated Interpreter Parity (`-I -B`, `-I -O -B`, `-I -B -W error`, plus `PYTHONHASHSEED=42 -I -B` and `-I -O -B -W error`):**
+- **Isolated Interpreter Parity (`-I -B`, `-I -O -B`, `-I -B -W error`, `-I -O -B -W error`, `PYTHONHASHSEED=42 -B`):**
   - `--standalone --json` bit-identical **`b55631b1be71e8e46c5f6d153015c83b65bdf73bde7788933053e84b64aa6d31`** (`payload_sha256: 58ac1991e9e2a24b35cd3805bba1c42e1dad9518798fb36b469205708ddfcccb`, `certificate_sha256: 0ba996aaea3dfad160172eaae722e76fa385e77b1461b1ffe81c0053fd165df1`).
-  - `--check ck_helicity_fft_certificate.json --json` bit-identical **`1eab8fb2726123a312b0f84c040aeebc3c23aaa08f04a928c1e7bbb276aaa57d`** (`valid: true`); `test_ck_helicity_fft_r5.py` **`13/13 OK`** (`0` warnings, `0` bare `assert`s).
-- **Live `aletheia v2.0.0 mutate --max-mutants 0 --work-root . --add-cwd`:**
+  - `--check ck_helicity_fft_certificate.json --json` bit-identical **`1eab8fb2726123a312b0f84c040aeebc3c23aaa08f04a928c1e7bbb276aaa57d`** (`valid: true`); `test_ck_helicity_fft_r5.py` **`14/14 OK`** (`0` warnings, `0` bare `assert`s).
+- **Live Mutation Testing (`--max-mutants 0`):**
   - `ck_helicity_fft_oracle.py`: **`78/78` (`100.0%`, `survived=0`, `truncated=False`) KILLED**.
   - `ck_helicity_fft_audit.py`: **`43/43` (`100.0%`, `survived=0`, `truncated=False`) KILLED**.
   - **Combined:** **`121/121` (`100.0%`) KILLED**.
-- **Exhaustive AST `BoolOp` (`and` $\leftrightarrow$ `or`, `timeout=30`) Sweep:**
-  - `ck_helicity_fft_oracle.py`: **`24/24`** + `ck_helicity_fft_audit.py`: **`14/14`** = **`38/38` (`100.0%`, `survived=[]`) KILLED**.
-- **Zone-B Adversarial Fuzzing:**
-  - **`23/23` CLI + `18/18` In-Memory = `41/41` (`100.0%`, `bypasses=0`, `crashes=0`, `status: PASS`)**.
-- **Zone-B I/O, TOCTOU & CLI Hardening:**
-  - Atomic per-component `dir_fd` (`openat` with `O_RDONLY | O_DIRECTORY | O_NOFOLLOW`) directory traversal + leaf `O_NOFOLLOW | O_NONBLOCK` + `os.fstat(fd)` `S_ISREG` + capped streaming reads (`MAX_JSON_BYTES = 1,048,576`, safe on `/proc/kallsyms`).
-  - Atomic write via `O_CREAT | O_EXCL | O_NOFOLLOW` temp file inside the pinned `dir_fd` + `os.replace(..., src_dir_fd=dfd, dst_dir_fd=dfd)` after verifying existing target is regular and `st_nlink == 1` (`HARDLINK_FORBIDDEN`, preserving original hardlinked bytes; live-tested across `>= 600` concurrent `renameat2(RENAME_EXCHANGE)` read+write swaps with `0` leaks and `0` clobbers).
-  - Deleted-CWD fail-closed handling (`CWD_UNAVAILABLE`, `rc=2`), lone UTF-16 surrogate rejection on `Path`, `PWD`, and `argv` (`INVALID_UTF8_SURROGATE`, `rc=2`), exact `Path` type, `/dev/null` & FIFO zero-hang refusal, `chmod 000` clean `FILE_READ_ERROR`, strict zero-abbreviation CLI rejecting both space-separated (`--write --json`, `--check --json`) and `=`-syntax (`--write=--json`, `--check=--json`, `--write=`, `--check=`, `--wr=--json`) flag-like/empty paths (`rc=2`, `0` files created), `0` trust-path floats, and `aletheia v2.0.0 audit-check --strict-ancestors --safety-scan --scripts ck_helicity_fft_audit.py test_ck_helicity_fft_r5.py PASS` (`5` files, `2/2` parity scripts).
+- **Exhaustive AST `BoolOp` (`and` $\leftrightarrow$ `or`) & Darwin Prefix `SUBCOND_DEL` Sweep:**
+  - `ck_helicity_fft_oracle.py`: **`24/24`** + `ck_helicity_fft_audit.py`: **`17/17`** = **`41/41` (`100.0%`, `survived=[]`) KILLED**, plus **`6/6` (`100.0%`)** `SUBCOND_DEL` on `_normalize_darwin_system_prefix`.
+- **Adversarial Input Boundary Fuzzing:**
+  - **`25/25` CLI + `19/19` In-Memory (default `full_replay=True`) = `44/44` (`100.0%`, `bypasses=0`, `crashes=0`, `status: PASS`)**.
+- **File I/O, TOCTOU, macOS Compatibility & CLI Hardening:**
+  - Atomic per-component `dir_fd` (`openat` with `O_RDONLY | O_DIRECTORY | O_NOFOLLOW`) directory traversal with verified root-owned macOS Darwin system-prefix normalization (`/var`, `/tmp`, `/etc` $\to$ `/private/*` without resolving user symlinks) + leaf `O_NOFOLLOW | O_NONBLOCK` + `os.fstat(fd)` `S_ISREG` + capped streaming reads (`MAX_JSON_BYTES = 1,048,576`, safe on `/proc/kallsyms`).
+  - Atomic write via `O_CREAT | O_EXCL | O_NOFOLLOW` temp file inside the pinned `dir_fd` + `os.replace(..., src_dir_fd=dfd, dst_dir_fd=dfd)` after verifying existing target is regular and `st_nlink == 1` (`HARDLINK_FORBIDDEN`, preserving original hardlinked bytes; live-tested on Linux across `>= 600` concurrent `renameat2(RENAME_EXCHANGE)` read+write swaps with `0` leaks and `0` clobbers, cleanly skipped on non-Linux).
+  - Deleted-CWD fail-closed handling (`CWD_UNAVAILABLE`, `rc=2`), lone UTF-16 surrogate rejection on `Path`, `PWD`, and `argv` (`INVALID_UTF8_SURROGATE`, `rc=2`), exact `Path` type, scratch `os.mkfifo` non-regular file zero-hang refusal, `chmod 000` clean `FILE_READ_ERROR`, strict zero-abbreviation CLI rejecting both space-separated (`--write --json`, `--check --json`) and `=`-syntax (`--write=--json`, `--check=--json`, `--write=`, `--check=`, `--wr=--json`) flag-like/empty paths (`rc=2`, `0` files created), `0` trust-path floats, and static ancestor/safety audit **`PASS`** (`5` files, `2/2` parity scripts, `0` findings).
