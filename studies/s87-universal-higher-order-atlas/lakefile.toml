@@ -1,0 +1,6 @@
+name = "UniversalHigherOrderAtlas"
+version = "0.1.0"
+defaultTargets = ["UniversalHigherOrderAtlas"]
+
+[[lean_lib]]
+name = "UniversalHigherOrderAtlas"
