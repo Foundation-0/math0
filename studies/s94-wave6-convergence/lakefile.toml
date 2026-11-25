@@ -1,0 +1,6 @@
+name = "Wave6ConvergenceOperators"
+version = "0.1.0"
+defaultTargets = ["Wave6ConvergenceOperators"]
+
+[[lean_lib]]
+name = "Wave6ConvergenceOperators"
