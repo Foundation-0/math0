@@ -1,0 +1,302 @@
+{
+  "audit_id": "AUDIT-110",
+  "canonical_sha256": "46415faef56963a3fc9df1601f76c3b6b5b5394a92513c15cb5108f2846b1325",
+  "novelty_tier": {
+    "classical_semantics": "N0",
+    "pure_q_hybrid_bridge": "N0"
+  },
+  "pillars": {
+    "p1_restart_policy_matrix": {
+      "matrix_cells_verified": 9,
+      "must_fail_temporary_restarted": {
+        "error_code": "ERR_TEMPORARY_CHILD_RESTARTED",
+        "rejected": true
+      },
+      "must_fail_transient_clean_exit_restarted": {
+        "normal_error_code": "ERR_TRANSIENT_CLEAN_EXIT_RESTARTED",
+        "rejected": true,
+        "shutdown_error_code": "ERR_TRANSIENT_CLEAN_EXIT_RESTARTED"
+      },
+      "passed": true,
+      "restart_false_count": 5,
+      "restart_true_count": 4,
+      "transition_table": [
+        {
+          "action": "restart",
+          "exit_reason": "normal",
+          "policy": "permanent",
+          "should_restart": true
+        },
+        {
+          "action": "restart",
+          "exit_reason": "shutdown",
+          "policy": "permanent",
+          "should_restart": true
+        },
+        {
+          "action": "restart",
+          "exit_reason": "abnormal",
+          "policy": "permanent",
+          "should_restart": true
+        },
+        {
+          "action": "drop_child",
+          "exit_reason": "normal",
+          "policy": "transient",
+          "should_restart": false
+        },
+        {
+          "action": "drop_child",
+          "exit_reason": "shutdown",
+          "policy": "transient",
+          "should_restart": false
+        },
+        {
+          "action": "restart",
+          "exit_reason": "abnormal",
+          "policy": "transient",
+          "should_restart": true
+        },
+        {
+          "action": "drop_child",
+          "exit_reason": "normal",
+          "policy": "temporary",
+          "should_restart": false
+        },
+        {
+          "action": "drop_child",
+          "exit_reason": "shutdown",
+          "policy": "temporary",
+          "should_restart": false
+        },
+        {
+          "action": "drop_child",
+          "exit_reason": "abnormal",
+          "policy": "temporary",
+          "should_restart": false
+        }
+      ]
+    },
+    "p2_restart_strategies_and_non_churn": {
+      "must_fail_mid_audit_snapshot_churn": {
+        "error_code": "ERR_SNAPSHOT_CHURN",
+        "rejected": true,
+        "stale_count": 3,
+        "stale_downstream_ids": [
+          "airlock_snapshot",
+          "verifier_a",
+          "verifier_b"
+        ]
+      },
+      "one_for_all": {
+        "generations_after": [
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        "restarted_order": [
+          "planner",
+          "author",
+          "airlock_snapshot",
+          "verifier_a",
+          "verifier_b"
+        ],
+        "terminated_order": [
+          "verifier_b",
+          "verifier_a",
+          "airlock_snapshot",
+          "planner"
+        ]
+      },
+      "one_for_one": {
+        "generations_after": [
+          1,
+          2,
+          1,
+          1,
+          1
+        ],
+        "restarted_order": [
+          "author"
+        ],
+        "terminated_order": []
+      },
+      "passed": true,
+      "rest_for_one": {
+        "generations_after": [
+          1,
+          2,
+          2,
+          2,
+          2
+        ],
+        "restarted_order": [
+          "author",
+          "airlock_snapshot",
+          "verifier_a",
+          "verifier_b"
+        ],
+        "stale_downstream_count": 0,
+        "terminated_order": [
+          "verifier_b",
+          "verifier_a",
+          "airlock_snapshot"
+        ],
+        "upstream_planner_untouched": true
+      },
+      "snapshot_sha_v1": "b4c89c9938c3a2a4b37bfd127ea51c6df28fc43f30d8c7ed0132e6cf6174a8d2",
+      "snapshot_sha_v2": "b3c35285a80c960f0bb81ed36f4f71529850f1fedf25f3a87e56989b56761a3c"
+    },
+    "p3_sliding_window_intensity_escalation": {
+      "integer_boundary_trace": {
+        "evicted_at_t6": 1,
+        "final_active_window": [
+          "5/1",
+          "6/1",
+          "10/1"
+        ],
+        "final_decision": "MAX_RESTART_INTENSITY_EXCEEDED",
+        "inclusive_boundary_active_at_t5": 2,
+        "max_restarts": 2,
+        "steps_checked": 4,
+        "window_ticks": "5/1"
+      },
+      "must_fail_intensity_bypass": {
+        "error_code": "ERR_INTENSITY_LIMIT_BYPASS",
+        "rejected": true,
+        "step_index": 2
+      },
+      "must_fail_non_monotonic_tick": {
+        "error_code": "ERR_NON_MONOTONIC_TICK",
+        "rejected": true,
+        "step_index": 1
+      },
+      "passed": true,
+      "rational_q_trace": {
+        "evicted_at_2_3": 1,
+        "final_active_window": [
+          "2/3",
+          "5/6",
+          "1/1"
+        ],
+        "final_decision": "MAX_RESTART_INTENSITY_EXCEEDED",
+        "inclusive_boundary_active_at_1_3": 2,
+        "max_restarts": 2,
+        "steps_checked": 5,
+        "window_ticks": "1/3"
+      },
+      "two_level_tree_escalation": {
+        "root_terminated": true,
+        "root_terminated_at": "5/1",
+        "sub_escalations": 2,
+        "sub_restarts_by_root": 1
+      }
+    },
+    "p4_monitor_vs_link_fault_isolation": {
+      "link_with_trap_exit_abnormal": {
+        "collateral_kill_count": 0,
+        "coordinator_state": "ALIVE",
+        "exit_messages_received": 1,
+        "exit_tag": "EXIT",
+        "sibling_verifier_state": "ALIVE"
+      },
+      "link_with_trap_exit_outside_killed": {
+        "collateral_kill_count": 0,
+        "coordinator_state": "ALIVE",
+        "exit_messages_received": 1,
+        "exit_reason": "killed",
+        "exit_tag": "EXIT",
+        "sibling_verifier_state": "ALIVE"
+      },
+      "monitor_zone_b_isolation": {
+        "collateral_kill_count": 0,
+        "coordinator_state": "ALIVE",
+        "down_messages_received": 1,
+        "down_ref": "mon-v1",
+        "down_tag": "DOWN",
+        "promotion_blocked": true,
+        "sibling_verifier_state": "ALIVE"
+      },
+      "monitor_zone_b_isolation_on_killed": {
+        "collateral_kill_count": 0,
+        "coordinator_state": "ALIVE",
+        "down_messages_received": 1,
+        "down_reason": "killed",
+        "down_ref": "mon-v1",
+        "down_tag": "DOWN",
+        "promotion_blocked": true,
+        "sibling_verifier_state": "ALIVE"
+      },
+      "must_fail_kill_bypasses_trap_exit": {
+        "collateral_kill_count": 2,
+        "collateral_kills": [
+          "coordinator",
+          "verifier_2"
+        ],
+        "coordinator_exit_reason": "killed",
+        "coordinator_state": "TERMINATED",
+        "error_code": "ERR_COORDINATOR_COLLATERAL_KILL",
+        "rejected": true
+      },
+      "must_fail_link_without_trap_exit_kills_coordinator": {
+        "collateral_kill_count": 2,
+        "collateral_kills": [
+          "coordinator",
+          "verifier_2"
+        ],
+        "coordinator_state": "TERMINATED",
+        "error_code": "ERR_COORDINATOR_COLLATERAL_KILL",
+        "rejected": true
+      },
+      "passed": true
+    },
+    "p5_exo1200_aletheia_bridge": {
+      "exo1200_group_supervision_sha256": "b5c38a6f60151093eb320e431577fe48f1f5022c66058b87f99f55559c38f9e8",
+      "exo1200_ref_commit": "ccdc929ace0a62152e23e10b0fd219d76df7b6f1",
+      "exo1200_zero_retry_default_action": "final",
+      "exo1200_zero_retry_default_reason": "retry_budget_exhausted",
+      "hybrid_clean_run": {
+        "author_attempts": 2,
+        "down_events_observed": 1,
+        "final_snapshot_sha256": "b3c35285a80c960f0bb81ed36f4f71529850f1fedf25f3a87e56989b56761a3c",
+        "promoted": true,
+        "zone_a_restarts": 1
+      },
+      "must_fail_hybrid_exo1200_external_effects": {
+        "error_code": "ERR_UNRECONCILED_EXTERNAL_EFFECTS",
+        "rejected": true,
+        "step_index": 0
+      },
+      "must_fail_hybrid_exo1200_stopped_restart": {
+        "error_code": "ERR_STOPPED_TASK_RESTARTED",
+        "rejected": true,
+        "step_index": 1
+      },
+      "must_fail_hybrid_promotion_while_down": {
+        "error_code": "ERR_PROMOTION_BLOCKED_BY_DOWN",
+        "rejected": true,
+        "step_index": 2
+      },
+      "passed": true
+    }
+  },
+  "primary_sources": {
+    "armstrong_1996_isbn13": "978-0-13-508301-7",
+    "armstrong_2003_isrn": "KTH/IMIT/LECS/AVH-03/09-SE",
+    "armstrong_2003_kth_urn": "urn:nbn:se:kth:diva-3658",
+    "exo1200_group_supervision_sha256": "b5c38a6f60151093eb320e431577fe48f1f5022c66058b87f99f55559c38f9e8",
+    "exo1200_ref_commit": "ccdc929ace0a62152e23e10b0fd219d76df7b6f1",
+    "otp_module": "stdlib/src/supervisor.erl"
+  },
+  "schema_version": "erlang-otp-supervision-oracle/v1",
+  "summary": {
+    "all_passed": true,
+    "floats_used": 0,
+    "must_fail_controls_verified": 10,
+    "pillars_passed": 5,
+    "pillars_total": 5
+  },
+  "track_id": "track-s11-erlang-otp-supervision"
+}
