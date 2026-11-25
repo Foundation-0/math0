@@ -1,0 +1,6 @@
+name = "ClassicalHeritageAtlas"
+version = "0.1.0"
+defaultTargets = ["ClassicalHeritageAtlas"]
+
+[[lean_lib]]
+name = "ClassicalHeritageAtlas"
