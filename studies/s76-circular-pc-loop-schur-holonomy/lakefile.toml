@@ -1,0 +1,6 @@
+name = "CircularPCLoopSchur"
+version = "0.1.0"
+defaultTargets = ["CircularPCLoopSchur"]
+
+[[lean_lib]]
+name = "CircularPCLoopSchur"
