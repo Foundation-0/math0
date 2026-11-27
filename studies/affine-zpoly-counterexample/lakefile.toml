@@ -1,0 +1,5 @@
+name = "ZPolyCounterexample"
+defaultTargets = ["ZPolyCounterexample"]
+
+[[lean_lib]]
+name = "ZPolyCounterexample"
